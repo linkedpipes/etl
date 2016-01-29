@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+  <body>
+
+    {% include header.html %}
+
+    <div class="page-content">
+      <div class="wrapper">
+        {{ content }}
+      </div>
+    </div>
+
+    {% include footer.html %}
+
+<!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="{{ "/js/bin/materialize.min.js" | prepend: site.baseurl }}" ></script>
+      <script type="text/javascript" src="{{ "/js/init.js" | prepend: site.baseurl }}" ></script>
+   </body>
+
+</html>

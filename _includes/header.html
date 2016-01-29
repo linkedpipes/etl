@@ -1,0 +1,16 @@
+<header class="site-header">
+
+<nav class="light-blue lighten-1" role="navigation">
+	<div class="nav-wrapper container">
+		<a id="logo-container" href="{{ site.baseurl }}" class="brand-logo">LinkedPipes</a>
+		<ul class="right hide-on-med-and-down">
+		{% for my_page in site.pages %}
+		  {% if my_page.title %}
+		  <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+		  {% endif %}
+		{% endfor %}
+		</ul>
+
+	</div>
+</nav>
+</header>
