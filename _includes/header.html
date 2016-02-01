@@ -1,16 +1,22 @@
 <header class="site-header">
-
-<nav class="light-blue lighten-1" role="navigation">
-	<div class="nav-wrapper container">
-		<a id="logo-container" href="http://linkedpipes.com" class="brand-logo">LinkedPipes</a>
-		<ul class="right hide-on-med-and-down">
-		{% for my_page in site.pages %}
-		  {% if my_page.title %}
-		  <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
-		  {% endif %}
-		{% endfor %}
-		</ul>
-
-	</div>
-</nav>
+	<nav class="light-blue lighten-1" role="navigation">
+		<div class="nav-wrapper container">
+			<a id="logo-container" href="{{ site.url }}" class="brand-logo">LinkedPipes ETL</a>
+			<ul class="right hide-on-med-and-down">
+			{% for my_page in site.pages %}
+			  {% if my_page.title %}
+			  <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+			  {% endif %}
+			{% endfor %}
+			</ul>
+			<ul id="slide-out" class="side-nav">
+			{% for my_page in site.pages %}
+			  {% if my_page.title %}
+			  <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+			  {% endif %}
+			{% endfor %}
+			</ul>
+			<a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>			
+		</div>
+	</nav>
 </header>

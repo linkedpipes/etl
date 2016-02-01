@@ -1,0 +1,59 @@
+---
+layout: default
+title: Installation
+---
+
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <h1 class="header center orange-text">ETL Installation</h1>
+    </div>
+  </div>
+
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <h3 class="header center orange-text">From source</h3>
+    </div>
+  </div>
+  <div class="container">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row">
+        <div class="col s12 m6 l3">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">filter_1</i></h2>
+			<h5 class="center">Clone from GitHub</h5>
+			<p class="light center-align">First, <a href="https://github.com/linkedpipes/etl">clone the project from GitHub</a>. You can do that from command line using <code>git clone https://github.com/linkedpipes/etl</code> or you can use <a href="https://tortoisegit.org/">TortoiseGit</a>.</p>
+          </div>
+        </div>
+
+        <div class="col s12 m6 l3">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">filter_2</i></h2>
+            <h5 class="center">Build using Maven</h5>
+            <p class="light center-align">Once the project is cloned, build it using Maven's <code>mvn install</code> command.</p>
+          </div>
+        </div>
+
+        <div class="col s12 m6 l3">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">filter_3</i></h2>
+            <h5 class="center">Configure using text editor</h5>
+
+            <p class="light center-align">Copy the <a href="https://github.com/linkedpipes/etl"><code>configuration.properties.sample</code></a> file to <code>deploy/configuration.properties</code> and edit it in your favorite text editor, setting the paths to working directories, etc.</p>
+          </div>
+        </div>
+        <div class="col s12 m6 l3">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">filter_4</i></h2>
+            <h5 class="center">Run our 3 components</h5>
+
+            <p class="light center-align">Once configured, you are ready to go. Currently, the ETL project consists of three components, which are ran individually from the deploy folder. Either run them in three separate console windows, or in shell or <a href="https://www.cygwin.com/">Cygwin</a> on the background, e.g. <code>./executor.sh &amp;</code>, <code>./executor-monitor.sh &amp;</code> and <code>./executor-view.sh &amp;</code></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  </div>
