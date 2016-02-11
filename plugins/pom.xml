@@ -27,6 +27,7 @@
         <module>t-xslt</module>
         <module>x-virtuoso</module>
         <module>e-httpGetFile</module>
+        <module>e-sparqlEndpoint</module>
         <module>e-textHolder</module>
         <module>l-dcatApToCkan</module>
     </modules>
