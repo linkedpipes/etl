@@ -46,6 +46,7 @@ We recommend using [Cygwin] and proceeding as with Linux. Otherwise, in the ```d
  * ```executor-monitor.bat```
  * ```frontend.bat```
 
+Unless configured otherwise, LinkedPipes ETL should now run on ```http://localhost:8080```.
 ## Plugins - DPUs
 There are data processing units (DPUs) in the plugins directory. Detailed description of how to create your own coming soon.
 
