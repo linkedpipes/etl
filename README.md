@@ -33,7 +33,7 @@ Now edit the configuration file, mainly adding paths to working, storage, log an
 To run LP-ETL, you need to run the three components it consists of. For debugging purposes, it is useful to store the console logs.
 
 ### Linux
-```
+```sh
 $ cd deploy
 $ ./executor.sh >> executor.log &
 $ ./executor-monitor.sh >> executor-monitor.log &
@@ -52,6 +52,33 @@ There are data processing units (DPUs) in the plugins directory. Detailed descri
 
 ## Known issues
  * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
+
+## Update script
+Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse if you wish. The script sets path to Java 8, kills running components (yeah, it is dirty), the repo is cloned in ```/opt/etl``` and we store the console logs in ```/data/lp/```
+```sh
+#!/bin/bash
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+echo Killing Executor
+kill `ps ax | grep /executor.jar | grep -v grep | awk '{print $1}'`
+echo Killing Executor-monitor
+kill `ps ax | grep /executor-monitor.jar | grep -v grep | awk '{print $1}'`
+echo Killing Executor-view
+kill `ps ax | grep nodejs | grep -v grep | awk '{print $1}'`
+cd /opt/etl
+echo Git Pull
+git pull
+echo Mvn install
+mvn clean install
+cd deploy
+echo Running executor
+./executor.sh >> /data/lp/executor.log &
+echo Running executor-monitor
+./executor-monitor.sh >> /data/lp/executor-monitor.log &
+echo Runninch executor-view
+./frontend.sh >> /data/lp/frontend.log &
+echo Disowning
+disown
+```
 
 [Java 8]: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
 [Git]: <https://git-scm.com/>
