@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if [ ! -d "./frontend/node_modules" ]; then
     echo Downloading libraries ...
     cd ./frontend
