@@ -1,0 +1,5 @@
+Icons from https://design.google.com/icons/
+
+Licensed under https://creativecommons.org/licenses/by/4.0/legalcode.
+
+In each image the default color attribute was removed.

@@ -1,0 +1,70 @@
+#
+# Configuration file.
+#
+
+#
+#
+
+# Port used by REST API.
+executor.webserver.port = 8085
+
+# URI used to acess executor. Must NOT end with '/'.
+executor.webserver.uri = http://localhost:8085
+
+# Path to directory, where program data are stored.
+executor.execution.working_directory = {PATH TO WORKING DIRECTORY}
+
+# Prefix attached used to construct the execution uri.
+# This should be set so the executions are dereferencable. Must end with '/'.
+executor.execution.uriPrefix = http://localhost:8080/resources/executions/
+
+# Directory used for core logs.
+executor.log.directory = {WHERE TO STORE LOGS OF EXECUTOR}
+
+# TRACE, DEBUG, INFO, WARN, ERROR
+executor.log.core.level = INFO
+
+# Path to directory with utilized libraries.
+executor.osgi.lib.directory = {DIRECTORY WITH OSGI LIBRARIES ie, deploy/osgi}
+
+# Path to the OSGI working directory, used bundles are stored here.
+executor.osgi.working.directory = .felix/
+
+#
+#
+
+# Port used by REST API, used by executor-monitor.webserver.uri.
+executor-monitor.webserver.port = 8081
+
+# URI where executor-monitor can be accessed. Must end with '/'.
+executor-monitor.webserver.uri = http://localhost:8081/api/v1/
+
+# Directory used for logs.
+executor-monitor.log.directory = {WHERE TO STORE LOGS OF EXECUTOR MONITOR}
+
+# TRACE, DEBUG, INFO, WARN, ERROR
+executor-monitor.log.core.level = INFO
+
+# Port where the executor-monitor FTP server listen. The server is used to browse debug content of an execution.
+executor-monitor.ftp.port = 2221
+
+# External URI that should be used to access debug FTP server from outside. Must NOT end on '/'.
+executor-monitor.ftp.uri = ftp://localhost:2221
+
+#
+#
+
+# Port for web server - for now used by storage.domain.
+frontend.webserver.port = 8080
+
+storage.components.directory = {PATH TO DIRECTORY WITH COMPONENTS ie. deploy/components}
+
+# Used to construct URI with path to components file (jar file). This value is platform dependant:
+# Win: file:
+# Linux:  file:/
+storage.components.path.prefix = {file:/ OR file:/}
+
+storage.pipelines.directory = {STORAGE DIRECTORY FOR PIPELINE DEFINITIONS}
+
+# Prefix used to create URI of templates and pipelines, should be dereferencable. Must NOT end on '/'.
+domain.uri = http://localhost:8080

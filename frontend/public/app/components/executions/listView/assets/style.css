@@ -1,0 +1,19 @@
+/* Execution list. */
+
+.table_row_wait_for_delete {
+    opacity: 0.2;
+    transition: opacity 2s linear;
+}
+
+/* Center text in progress bar. */
+.progress {
+    position: relative;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+    text-align: center;
+}

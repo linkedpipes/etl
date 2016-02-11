@@ -1,0 +1,65 @@
+<div layout="row" layout-align="space-around">
+    <div class="container" style="max-width: 66em;width: 100%;">
+        <md-content>
+            <div ng-show="!repository.loaded" layout="row">
+                <span flex="50"/>
+                <img src="app/components/pipelines/listView/assets/img/loading.gif" class="center-block" title="Loading..."
+                     style="padding-top: 5em"/>
+            </div>
+            <md-list ng-show="repository.loaded">
+                <md-list-item ng-repeat="item in repository.data| orderBy:'-start'" ng-click="onExecution(item)" class="md-2-line">
+                    <div class="md-primary">
+                        <md-icon md-svg-icon="{{item.icon.name}}" class="lp-icon-avatar md-avatar" ng-style="item.icon.style"></md-icon>
+                    </div>
+                    <div class="md-list-item-text">
+                        <div class="lp-font-list-label">{{item.label}}</div>
+                        <div ng-switch on="item.view" class="lp-font-list-content">
+                            <span ng-switch-when="QUEUED">
+
+                            </span>
+                            <span ng-switch-when="RUNNNING">
+                                <span hide-xs>
+                                    <span>{{item.start| date:'yyyy-MM-dd HH:mm:ss'}}</span> - ...</br>
+                                </span>
+                                <md-progress-linear md-mode="determinate" value="{{item.pipelineProgress.value}}"></md-progress-linear>
+                            </span>
+                            <span ng-switch-when="FINISHED" hide-xs>
+                                <span>{{item.start| date:'yyyy-MM-dd HH:mm:ss'}}</span> -
+                                <span>{{item.end| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                <br/>Size: <span>{{item.executionDirectorySize / 1048576| number : 2 }} mB</span>
+                            </span>
+                            <span ng-switch-when="FAILED" hide-xs>
+                                <span>{{item.start| date:'yyyy-MM-dd HH:mm:ss'}}</span> -
+                                <span>{{item.end| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                <br/>Size: <span>{{item.executionDirectorySize / 1048576| number : 2 }} mB</span>
+                            </span>
+                        </div>
+                    </div>
+                    <md-button ng-click='onPipeline(item)' class="md-icon-button md-secondary" aria-label="Edit">
+                        <md-icon md-svg-icon="edit" class="lp-icon"></md-icon>
+                    </md-button>
+                    <md-button ng-click='onExecute(item)' class="md-icon-button md-secondary" aria-label="Execute">
+                        <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon>
+                    </md-button>
+                    <md-button ng-click='onDelete(item)' class="md-icon-button md-secondary" aria-label="Delete" ng-disabled="item.running">
+                        <md-icon md-svg-icon="delete" class="lp-icon"></md-icon>
+                    </md-button>
+                    <md-menu class="md-secondary" md-position-mode="target-right target" >
+                        <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                            <md-icon md-svg-icon="more_vert" class="lp-icon"></md-icon>
+                        </md-button>
+                        <md-menu-content>
+                            <md-menu-item>
+                                <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank">See logs</md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank"
+                                           download="{{item.label}}_{{item.start|date:'yyyy-MM-dd_HH-mm-ss'}}.log" >Download logs</md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-divider></md-divider>
+            </md-list>
+        </md-content>
+    </div>
+</div>

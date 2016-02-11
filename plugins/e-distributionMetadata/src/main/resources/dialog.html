@@ -1,0 +1,118 @@
+<div class="container-flow">
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label" for="downloadURL">Download URL:</label>
+            <input type="text" class="form-control" id="downloadURL" ng-model="dialog.downloadURL"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="mediaType">Media (MIME) type:</label>
+            <input type="text" class="form-control" id="mediaType" ng-model="dialog.mediaType"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="accessURL">Access URL:</label>
+            <input type="text" class="form-control" id="accessURL" ng-model="dialog.accessURL"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="exampleResources">Example resources (comma separated):</label>
+            <input type="text" class="form-control input-sm" id="exampleResources" ng-model="dialog.exampleResources"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="sparqlEndpointUrl">SPARQL Endpoint URL:</label>
+            <input type="text" class="form-control" id="sparqlEndpointUrl" ng-model="dialog.sparqlEndpointUrl"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="schemaType">Schema MIME type:</label>
+            <input type="text" class="form-control" id="schemaType" ng-model="dialog.schemaType"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="schemaFromDataset" ng-model="dialog.schemaFromDataset"> Use human readable documentation from dataset as schema (not recommended unless both empty)</label>
+        </div> <!-- > tfSchema -->
+        <div class="form-group">
+            <label class="control-label" for="schema">Schema URL:</label>
+            <input type="text" class="form-control" id="schema" ng-model="dialog.schema" ng-disabled="dialog.schemaFromDataset"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="useDatasetURIfromInput" ng-model="dialog.useDatasetURIfromInput"> Get dataset URI from dataset</label>
+        </div> <!-- > tfDatasetURI -->
+        <div class="form-group">
+            <label class="control-label" for="datasetURI">Dataset URL:</label>
+            <input type="text" class="form-control" id="datasetURI" ng-model="dialog.datasetURI" ng-disabled="dialog.useDatasetURIfromInput"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="generateDistroURIFromDataset" ng-model="dialog.generateDistroURIFromDataset"> Generate distribution URI from dataset (+"/distribution")</label>
+        </div> <!-- > tfDistributionURI -->
+        <div class="form-group">
+            <label class="control-label" for="distributionURI">Distribution URI:</label>
+            <input type="text" class="form-control" id="distributionURI" ng-model="dialog.distributionURI" ng-disabled="dialog.generateDistroURIFromDataset"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="originalLanguageFromDataset" ng-model="dialog.originalLanguageFromDataset"> Get original language from dataset</label>
+        </div> <!-- > tfLanguage -->
+        <div class="form-group">
+            <label class="control-label" for="language_orig">Original language (RDF language tag, e.g. cs):</label>
+            <input type="text" class="form-control" id="language_orig" ng-model="dialog.language_orig" ng-disabled="dialog.originalLanguageFromDataset"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="originalLanguageFromDataset" ng-model="dialog.titleFromDataset"> Get title from dataset</label>
+        </div> <!-- > tfTitle, tfTitleEn -->
+        <div class="form-group">
+            <label class="control-label" for="title_orig">Dataset title in original language:</label>
+            <input type="text" class="form-control" id="title_orig" ng-model="dialog.title_orig" ng-disabled="dialog.titleFromDataset"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="title_en">Dataset title in English:</label>
+            <input type="text" class="form-control" id="title_en" ng-model="dialog.title_en" ng-disabled="dialog.titleFromDataset"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="descriptionFromDataset" ng-model="dialog.descriptionFromDataset"> Get description from dataset</label>
+        </div> <!-- > tfDesc, tfDescEn -->
+        <div class="form-group">
+            <label class="control-label" for="desc_orig">Description in original language:</label>
+            <input type="text" class="form-control" id="desc_orig" ng-model="dialog.desc_orig" ng-disabled="dialog.descriptionFromDataset"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="desc_en">Description in English:</label>
+            <input type="text" class="form-control" id="desc_en" ng-model="dialog.desc_en" ng-disabled="dialog.descriptionFromDataset"/>
+        </div>
+
+        <div class="checkbox">
+            <label> <input type="checkbox" id="issuedFromDataset" ng-model="dialog.issuedFromDataset"> Use issued date from dataset</label>
+        </div> <!-- > dfIssued -->
+        <div class="form-group">
+            <label class="control-label" for="issued">Issued:</label>
+            <input type="date" class="form-control" id="issued" ng-model="dialog.issued" ng-disabled="dialog.issuedFromDataset || dialog.issuedFromDataset"/>
+        </div>
+
+        <div class="checkbox">
+            <label> <input type="checkbox" id="issuedFromDataset" ng-model="dialog.useNow" ng-disabled="dialog.issuedFromDataset"> Use current date as modified</label>
+        </div> <!-- > dfModified -->
+        <div class="form-group">
+            <label class="control-label" for="modified">Modified</label>
+            <input type="date" class="form-control" id="modified" ng-model="dialog.modified" ng-disabled="dialog.useNow"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="useTemporal" ng-model="dialog.useTemporal"> Use temporal coverage</label>
+        </div> <!-- > chkTemporalFromInput, dfTemporalStart, dfTemporalEnd, chkNowTemporalEnd -->
+        <div class="checkbox">
+            <label> <input type="checkbox" id="temporalFromDataset" ng-model="dialog.temporalFromDataset" ng-disabled="!dialog.useTemporal"> Use temporal coverage from dataset</label>
+        </div> <!-- > dfTemporalStart, dfTemporalEnd, chkNowTemporalEnd -->
+        <div class="form-group">
+            <label class="control-label" for="temporalStart">Temporal coverage start:</label>
+            <input type="date" class="form-control" id="temporalStart" ng-model="dialog.temporalStart" ng-disabled="!dialog.useTemporal || dialog.temporalFromDataset"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="temporalEnd">Temporal coverage end</label>
+            <input type="date" class="form-control" id="temporalEnd" ng-model="dialog.temporalEnd" ng-disabled="dialog.useNowTemporalEnd || !dialog.useTemporal || dialog.temporalFromDataset"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="useNowTemporalEnd" ng-model="dialog.useNowTemporalEnd" ng-disabled="!dialog.useTemporal || dialog.temporalFromDataset"> Use current date as temporal coverage end</label>
+        </div> <!-- dfTemporalEnd -->
+        <div class="checkbox">
+            <label> <input type="checkbox" id="licenseFromDataset" ng-model="dialog.licenseFromDataset"> Use license from dataset</label>
+        </div> <!-- lsLicenses -->
+        <div class="form-group">
+            <label class="control-label" for="license">License URI:</label>
+            <input type="text" class="form-control" id="license" ng-model="dialog.license" ng-disabled="dialog.licenseFromDataset"/>
+        </div>
+    </div>
+</div>

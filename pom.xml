@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.linkedpipes</groupId>
+    <artifactId>linkedpipes</artifactId>
+    <version>0.0.0</version>
+    <packaging>pom</packaging>
+    <name>LinkedPipes</name>
+    <description>Master build project.</description>
+
+    <modules>
+        <module>build-checkstyle</module>
+        <module>pom-parent</module>
+        <module>pom-dpu</module>
+        <!-- API. -->
+        <module>api-executor-v1</module>
+        <module>api-commons</module>
+        <module>api-dpu-v1</module>
+        <module>dataunit-sesame</module>
+        <module>dataunit-system</module>
+        <!-- Implementation. -->
+        <module>utils-core</module>
+        <module>api-dpu-v1-impl</module>
+        <module>dataunit-sesame-impl</module>
+        <module>dataunit-system-impl</module>
+        <!-- Applications. -->
+        <module>commons-code</module>
+        <module>commons-entities</module>
+        <module>executor</module>
+        <module>executor-monitor</module>
+        <!-- Plugins. -->
+        <module>plugins</module>
+        <!-- Deploy. -->
+        <module>deploy-dependencies</module>
+        <module>test-environment</module>
+        <module>frontend</module>
+    </modules>
+
+</project>

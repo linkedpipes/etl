@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.linkedpipes</groupId>
+    <artifactId>frontend</artifactId>
+    <version>0.0.0</version>
+    <packaging>pom</packaging>
+    <name>lp-frontend</name>
+
+    <properties>
+        <deploy.directory>../deploy/frontend/</deploy.directory>
+    </properties>
+
+    <profiles>
+        <profile>
+            <activation>
+                <property>
+                    <name>!noDeploy</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${deploy.directory}"/>
+                                        <copy todir="${deploy.directory}/..">
+                                            <fileset dir="{project.build.directory}/../deploy">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}"/>
+                                        <copy todir="${deploy.directory}">
+                                            <fileset dir="${project.build.directory}/..">
+                                                <exclude name="target/**"/>
+                                                <exclude name="pom.xml"/>
+                                                <exclude name="deploy/**"/>
+                                            </fileset>
+                                        </copy>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

@@ -1,0 +1,17 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>[%thread] %-5level %logger{25} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- We need to leave this at the ALL level so we do not filter for other appenders. -->
+    <root level="ALL">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

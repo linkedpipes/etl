@@ -1,0 +1,52 @@
+<div>
+    <form role="form">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="fileName">Output file name:</label>
+                    <input type="text" class="form-control" id="fileName" ng-model="dialog.fileName">
+                </div>
+                <div class="form-group">
+                    <label for="sheetFilter">Sheet filter:</label>
+                    <input type="text" class="form-control" id="sheetFilter" ng-model="dialog.sheetFilter">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="rowStart">Row start:</label>
+                    <input type="number" class="form-control" id="rowStart" ng-model="dialog.rowStart">
+                </div>
+                <div class="form-group">
+                    <label for="rowEnd">Row end:</label>
+                    <input type="number" class="form-control" id="rowEnd" ng-model="dialog.rowEnd">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="columnStart">Column start:</label>
+                    <input type="number" class="form-control" id="columnStart" ng-model="dialog.columnStart">
+                </div>
+                <div class="form-group">
+                    <label for="columnEnd">Column end:</label>
+                    <input type="number" class="form-control" id="columnEnd" ng-model="dialog.columnEnd">
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 2em">
+            <div class="col-sm-12">
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="dialog.header"> Has header
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="dialog.numericParse"> Advanced numeric parse
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="dialog.skipEmptyRows"> Skip empty rows
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="dialog.includeSheetName"> Include sheet name
+                </label>
+            </div>
+        </div>
+    </form>
+</div>

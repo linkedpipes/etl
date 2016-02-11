@@ -1,0 +1,11 @@
+{
+    "@context": {
+        "graphMerger" : "http://plugins.linkedpipes.com/ontology/t-graphMerger#"
+    },
+    "@graph": [
+        {
+            "@id": "http://localhost/resources/configuration",
+            "@type" : ["http://plugins.linkedpipes.com/ontology/t-graphMerger#Configuration"]
+        }
+    ]
+}

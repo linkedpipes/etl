@@ -1,0 +1,47 @@
+<div class="container-flow">
+    <div class="row">
+
+        <div class="form-group">
+            <label class="control-label" for="host">Host address:</label>
+            <input type="text" class="form-control" id="host" ng-model="dialog.host"/>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="fileName">Name of file to load:</label>
+            <input type="text" class="form-control" id="fileName" ng-model="dialog.fileName"/>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="targetGraph">Target graph:</label>
+            <input type="text" class="form-control" id="targetGraph" ng-model="dialog.targetGraph"/>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="loadDirectory">Directory with files to upload:</label>
+            <input type="text" class="form-control" id="loadDirectory" ng-model="dialog.loadDirectory"/>
+        </div>
+
+        <label class="checkbox-inline">
+            <input type="checkbox" ng-model="dialog.clearGraph"> Clear destination graph
+        </label>
+
+        <label class="checkbox-inline">
+            <input type="checkbox" ng-model="dialog.clearLoadList"> Clear load list
+        </label>
+
+        <div class="form-group">
+            <label class="control-label" for="userName">User name:</label>
+            <input type="text" class="form-control" id="userName" ng-model="dialog.userName"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="password">Password:</label>
+            <input type="text" class="form-control" id="password" ng-model="dialog.password"/>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="statusUpdate">Interval of status update:</label>
+            <input type="number" class="form-control" id="statusUpdate" ng-model="dialog.statusUpdate"/>
+        </div>
+
+    </div>
+</div>

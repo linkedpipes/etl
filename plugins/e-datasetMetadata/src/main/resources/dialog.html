@@ -1,0 +1,172 @@
+<!--
+    'datasetURI': '',
+     NOT USED 'distributionURI': '',
+     NOT USED 'useDatasetURIfromInput': true,
+    'language_orig': '',
+    'title_cs': '',
+    'title_en': '',
+    'desc_cs': '',
+    'desc_en': '',
+                'authors': [],
+    'publisherURI': '',
+    'publisherName': '',
+                'license': '',
+                'sources': [],
+                'languages': [],
+                'keywords_orig': [],
+                'keywords_en': [],
+                'themes': [],
+    'contactPoint': '',
+    'contactPointName': '',
+    'periodicity': '',
+    'useNow': true,
+    'useNowTemporalEnd': false,
+    'useTemporal': true,
+    'modified': '',
+    'issued': '',
+    'identifier': '',
+    'landingPage': '',
+    'temporalEnd': '',
+    'temporalStart': '',
+    'spatial': '',
+    'schema': ''
+
+        licenses.add("https://creativecommons.org/licenses/by/4.0/");
+        licenses.add("https://creativecommons.org/licenses/by-sa/4.0/");
+        licenses.add("http://opendatacommons.org/licenses/pddl/1.0/");
+
+        publishers.add("http://opendata.cz");
+
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/cs");
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/en");
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/sk");
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/it");
+-->
+<div class="container-flow">
+    <form role="form">
+        <div class="form-group">
+            <label class="control-label" for="datasetURI">Dataset URI:</label>
+            <input type="text" class="form-control input-sm" id="datasetURI" ng-model="dialog.datasetURI"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="language_orig">Original language (RDF language tag, e.g. cs):</label>
+            <input type="text" class="form-control input-sm" id="language_orig" ng-model="dialog.language_orig"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="title_cs">Dataset title original language:</label>
+            <input type="text" class="form-control input-sm" id="title_cs" ng-model="dialog.title_cs"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="title_en">Dataset title in English:</label>
+            <input type="text" class="form-control input-sm" id="title_en" ng-model="dialog.title_en"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="desc_cs">Description in original language:</label>
+            <input type="text" class="form-control input-sm" id="desc_cs" ng-model="dialog.desc_cs"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="desc_en">Description in English:</label>
+            <input type="text" class="form-control input-sm" id="desc_en" ng-model="dialog.desc_en"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="issued">Issued:</label>
+            <input type="date" class="form-control input-sm" id="issued" ng-model="dialog.issued"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="modified">Modified:</label>
+            <input type="date" class="form-control input-sm" id="modified" ng-model="dialog.modified" ng-disabled="dialog.useNow"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="useNowTemporalEnd" ng-model="dialog.useNow"> Use current date as modified</label>
+        </div> <!-- > modified -->
+        <div class="form-group">
+            <label class="control-label" for="identifier">Identifier:</label>
+            <input type="text" class="form-control input-sm" id="identifier" ng-model="dialog.identifier"/>
+        </div>
+
+<!-- Keywords in original language -->
+<!-- Keywords in English -->
+<!-- Languages -->
+<div class="form-group">
+    <label class="control-label" for="keywords_orig">Keywords in original language (comma separated):</label>
+    <input type="text" class="form-control input-sm" id="keywords_orig" ng-model="dialog.keywords_orig"/>
+</div>
+<div class="form-group">
+    <label class="control-label" for="keywords_en">Keywords in English (comma separated):</label>
+    <input type="text" class="form-control input-sm" id="keywords_en" ng-model="dialog.keywords_en"/>
+</div>
+<div class="form-group">
+    <label class="control-label" for="languages">Languages URI (comma separated):</label>
+    <input type="text" class="form-control input-sm" id="languages" ng-model="dialog.languages"/>
+</div>
+
+        <div class="form-group">
+            <label class="control-label" for="contactPointName">Contact point name:</label>
+            <input type="text" class="form-control input-sm" id="contactPointName" ng-model="dialog.contactPointName"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="contactPoint">Contact point email:</label>
+            <input type="text" class="form-control input-sm" id="contactPoint" ng-model="dialog.contactPoint"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="publisherURI">Publisher URI:</label>
+            <input type="text" class="form-control input-sm" id="publisherURI" ng-model="dialog.publisherURI"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="publisherName">Publisher name:</label>
+            <input type="text" class="form-control input-sm" id="publisherName" ng-model="dialog.publisherName"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="useTemporal" ng-model="dialog.useTemporal"> Use temporal coverage</label>
+        </div><!-- > dfTemporalStart, dfTemporalEnd, chkNowTemporalEnd -->
+        <div class="form-group">
+            <label class="control-label" for="temporalStart">Temporal coverage start:</label>
+            <input type="date" class="form-control input-sm" id="temporalStart" ng-model="dialog.temporalStart" ng-disabled="!dialog.useTemporal"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="temporalEnd">Temporal coverage end:</label>
+            <input type="date" class="form-control input-sm" id="temporalEnd" ng-model="dialog.temporalEnd" ng-disabled="dialog.useNowTemporalEnd || !dialog.useTemporal"/>
+        </div>
+        <div class="checkbox">
+            <label> <input type="checkbox" id="useNow" ng-model="dialog.useNowTemporalEnd" ng-disabled="!dialog.useTemporal"> Use current date as temporal coverage end</label>
+        </div> <!-- > dfTemporalEnd -->
+        <div class="form-group">
+            <label class="control-label" for="spatial">Spatial coverage URI:</label>
+            <input type="text" class="form-control " id="spatial" ng-model="dialog.spatial"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="periodicity">Periodicity:</label>
+            <input type="text" class="form-control input-sm" id="periodicity" ng-model="dialog.periodicity"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="schema">Human readable documentation URL:</label>
+            <input type="text" class="form-control input-sm" id="schema" ng-model="dialog.schema"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="landingPage">Landing page URL:</label>
+            <input type="text" class="form-control input-sm" id="landingPage" ng-model="dialog.landingPage"/>
+        </div>
+        <!-- licenses -->
+        <!-- Sources -->
+        <!-- Themes -->
+        <!-- Selected authors -->
+
+<div class="form-group">
+    <label class="control-label" for="license">Licenses URI:</label>
+    <input type="text" class="form-control input-sm" id="license" ng-model="dialog.license"/>
+</div>
+<div class="form-group">
+    <label class="control-label" for="sources">Sources URI(comma separated):</label>
+    <input type="text" class="form-control input-sm" id="sources" ng-model="dialog.sources"/>
+</div>
+<div class="form-group">
+    <label class="control-label" for="themes">Themes URI(comma separated):</label>
+    <input type="text" class="form-control input-sm" id="themes" ng-model="dialog.themes"/>
+</div>
+<div class="form-group">
+    <label class="control-label" for="authors">Authors URI (comma separated):</label>
+    <input type="text" class="form-control input-sm" id="authors" ng-model="dialog.authors"/>
+</div>
+
+    </form>
+</div>

@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.linkedpipes</groupId>
+    <artifactId>dependencies</artifactId>
+    <version>0.0.0</version>
+    <packaging>pom</packaging>
+    <name>lp-deploy-dependencies</name>
+
+    <properties>
+        <deploy.directory>../deploy</deploy.directory>
+        <plugins.directory>../plugins</plugins.directory>
+    </properties>
+
+    <profiles>
+        <profile>
+            <activation>
+                <property>
+                    <name>!noDeploy</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.7</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <!-- Apache POI (excel) bundle dependencies. -->
+                                        <dependency>
+                                            <groupId>commons-codec</groupId>
+                                            <artifactId>commons-codec</artifactId>
+                                            <version>1.9</version>
+                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.santuario</groupId>
+                                            <artifactId>xmlsec</artifactId>
+                                            <version>2.0.1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.servicemix.bundles</groupId>
+                                            <artifactId>org.apache.servicemix.bundles.jsch</artifactId>
+                                            <version>0.1.49_1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.servicemix.bundles</groupId>
+                                            <artifactId>org.apache.servicemix.bundles.poi</artifactId>
+                                            <version>3.11_1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.servicemix.bundles</groupId>
+                                            <artifactId>org.apache.servicemix.bundles.xmlresolver</artifactId>
+                                            <version>1.2_5</version>
+                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                        </dependency>
+                                        <!-- Apache commons. -->
+                                        <dependency>
+                                            <groupId>commons-io</groupId>
+                                            <artifactId>commons-io</artifactId>
+                                            <version>2.4</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.eclipse.birt.runtime</groupId>
+                                            <artifactId>org.apache.commons.logging</artifactId>
+                                            <version>1.1.1.v201101211721</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-lang3</artifactId>
+                                            <version>3.3.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <!-- OSGI Implementation. -->
+                                        <dependency>
+                                            <groupId>org.apache.felix</groupId>
+                                            <artifactId>org.apache.felix.scr</artifactId>
+                                            <version>1.8.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <!-- OSGI. -->
+                                        <dependency>
+                                            <groupId>org.apache.httpcomponents</groupId>
+                                            <artifactId>httpclient-osgi</artifactId>
+                                            <version>4.4.1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.httpcomponents</groupId>
+                                            <artifactId>httpcore-osgi</artifactId>
+                                            <version>4.4.1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.osgi</groupId>
+                                            <artifactId>org.osgi.compendium</artifactId>
+                                            <version>5.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.osgi</groupId>
+                                            <artifactId>org.osgi.core</artifactId>
+                                            <version>5.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <!-- Jackson. -->
+                                        <dependency>
+                                            <groupId>com.fasterxml.jackson.core</groupId>
+                                            <artifactId>jackson-annotations</artifactId>
+                                            <version>2.6.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.fasterxml.jackson.core</groupId>
+                                            <artifactId>jackson-core</artifactId>
+                                            <version>2.6.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.fasterxml.jackson.core</groupId>
+                                            <artifactId>jackson-databind</artifactId>
+                                            <version>2.6.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <!-- Sesame - it looks for now this is not working. -->
+                                        <!--<dependency>
+                                            <groupId>org.openrdf.sesame</groupId>
+                                            <artifactId>sesame-runtime</artifactId>
+                                            <version>2.8.7</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>-->
+                                        <!-- Others. -->
+                                        <dependency>
+                                            <groupId>org.jsoup</groupId>
+                                            <artifactId>jsoup</artifactId>
+                                            <version>1.8.3</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.google.guava</groupId>
+                                            <artifactId>guava</artifactId>
+                                            <version>18.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.github.jsonld-java</groupId>
+                                            <artifactId>jsonld-java</artifactId>
+                                            <version>0.7.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.mapdb</groupId>
+                                            <artifactId>mapdb</artifactId>
+                                            <version>1.0.8</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.opencsv</groupId>
+                                            <artifactId>opencsv</artifactId>
+                                            <version>3.3</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <!-- Apache service mix. -->
+                                        <dependency>
+                                            <groupId>org.apache.servicemix.bundles</groupId>
+                                            <artifactId>org.apache.servicemix.bundles.libthrift</artifactId>
+                                            <version>0.9.2_1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.servicemix.bundles</groupId>
+                                            <artifactId>org.apache.servicemix.bundles.spatial4j</artifactId>
+                                            <version>0.4.1_1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <!-- Core libraries -->
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>api-commons</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>api-dpu-v1</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>api-dpu-v1-impl</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>utils-core</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>dataunit-sesame</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>dataunit-sesame-impl</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>dataunit-system</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>dataunit-system-impl</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
+                                        <!-- Core components. -->
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-httpGetFile</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-httpGetFile/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesFilter</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesFilter/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-filesToScp</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-filesToScp/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-datasetMetadata</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-datasetMetadata/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-distributionMetadata</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-distributionMetadata/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesToRdf</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesToRdf/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-graphMerger</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-graphMerger/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-packZip</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-packZip/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-rdfToFile</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-rdfToFile/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlConstruct</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-sparqlConstruct/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlSelect</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-sparqlSelect/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlUpdate</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-sparqlUpdate/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-tabular</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-tabular/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-textHolder</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-textHolder/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-dcatApToCkan</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-dcatApToCkan/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-excelToCsv</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-excelToCsv/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-unpack</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-unpack/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-unpackZip</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-unpackZip/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-xslt</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-xslt/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>x-virtuoso</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/x-virtuoso/</outputDirectory>
+                                        </dependency>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Copy definition and config component files. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- Download sesame from our storage. -->
+                                        <get dest="${deploy.directory}/osgi/external">
+                                            <url url="http://uv.opendata.cz/osgi/sesame/sesame-runtime-osgi-4.0.1-SNAPSHOT-custom.jar"/>
+                                        </get>
+                                        <mkdir dir="${deploy.directory}/components/e-httpGetFile/"/>
+                                        <copy todir="${deploy.directory}/components/e-httpGetFile/">
+                                            <fileset dir="${plugins.directory}/e-httpGetFile/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesFilter/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesFilter/">
+                                            <fileset dir="${plugins.directory}/t-filesFilter/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-filesToScp/"/>
+                                        <copy todir="${deploy.directory}/components/l-filesToScp/">
+                                            <fileset dir="${plugins.directory}/l-filesToScp/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-datasetMetadata/"/>
+                                        <copy todir="${deploy.directory}/components/e-datasetMetadata/">
+                                            <fileset dir="${plugins.directory}/e-datasetMetadata/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-distributionMetadata/"/>
+                                        <copy todir="${deploy.directory}/components/e-distributionMetadata/">
+                                            <fileset dir="${plugins.directory}/e-distributionMetadata/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesToRdf/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesToRdf/">
+                                            <fileset dir="${plugins.directory}/t-filesToRdf/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-graphMerger/"/>
+                                        <copy todir="${deploy.directory}/components/t-graphMerger/">
+                                            <fileset dir="${plugins.directory}/t-graphMerger/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-packZip/"/>
+                                        <copy todir="${deploy.directory}/components/t-packZip/">
+                                            <fileset dir="${plugins.directory}/t-packZip/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-rdfToFile/"/>
+                                        <copy todir="${deploy.directory}/components/t-rdfToFile/">
+                                            <fileset dir="${plugins.directory}/t-rdfToFile/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-sparqlConstruct/"/>
+                                        <copy todir="${deploy.directory}/components/t-sparqlConstruct/">
+                                            <fileset dir="${plugins.directory}/t-sparqlConstruct/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-sparqlSelect/"/>
+                                        <copy todir="${deploy.directory}/components/t-sparqlSelect/">
+                                            <fileset dir="${plugins.directory}/t-sparqlSelect/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-sparqlUpdate/"/>
+                                        <copy todir="${deploy.directory}/components/t-sparqlUpdate/">
+                                            <fileset dir="${plugins.directory}/t-sparqlUpdate/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-tabular/"/>
+                                        <copy todir="${deploy.directory}/components/t-tabular/">
+                                            <fileset dir="${plugins.directory}/t-tabular/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-textHolder/"/>
+                                        <copy todir="${deploy.directory}/components/e-textHolder/">
+                                            <fileset dir="${plugins.directory}/e-textHolder/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-dcatApToCkan/"/>
+                                        <copy todir="${deploy.directory}/components/l-dcatApToCkan/">
+                                            <fileset dir="${plugins.directory}/l-dcatApToCkan/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-excelToCsv/"/>
+                                        <copy todir="${deploy.directory}/components/t-excelToCsv/">
+                                            <fileset dir="${plugins.directory}/t-excelToCsv/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-unpack/"/>
+                                        <copy todir="${deploy.directory}/components/t-unpack/">
+                                            <fileset dir="${plugins.directory}/t-unpack/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-unpackZip/"/>
+                                        <copy todir="${deploy.directory}/components/t-unpackZip/">
+                                            <fileset dir="${plugins.directory}/t-unpackZip/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-xslt/"/>
+                                        <copy todir="${deploy.directory}/components/t-xslt/">
+                                            <fileset dir="${plugins.directory}/t-xslt/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/x-virtuoso/"/>
+                                        <copy todir="${deploy.directory}/components/x-virtuoso/">
+                                            <fileset dir="${plugins.directory}/x-virtuoso/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <!-- -->
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

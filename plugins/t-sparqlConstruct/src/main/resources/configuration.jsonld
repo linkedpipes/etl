@@ -1,0 +1,9 @@
+{
+    "@graph": [
+        {
+            "@id": "http://localhost/resources/configuration",
+            "@type" : ["http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"],
+            "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}"
+        }
+    ]
+}

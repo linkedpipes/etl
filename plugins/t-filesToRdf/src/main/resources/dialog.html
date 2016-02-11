@@ -1,0 +1,25 @@
+<div class="container-flow">
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label" for="commitSize">Commit size:</label>
+            <input type="number" class="form-control" id="commitSize" ng-model="dialog.commitSize"/>
+        </div>
+        <div class="form-group">
+            <label for="mimeType">Format: </label>
+            <select ng-model="dialog.mimeType" id="mimeType">
+                <option value="">Determine by extension</option>
+                <option value="application/rdf+xml">RDF/XML</option>
+                <option value="application/n-triples">N-Triples</option>
+                <option value="text/turtle">Turtle</option>
+                <option value="text/rdf+n3">N3</option>
+                <option value="application/trix">TriX</option>
+                <option value="application/trig">TriG</option>
+                <option value="application/x-binary-rdf">BinaryRDF</option>
+                <option value="application/n-quads">N-Quads</option>
+                <option value="application/ld+json">JSON-LD</option>
+                <option value="application/rdf+json">RDF/JSON</option>
+                <option value="application/xhtml+xml">RDFa</option>
+            </select>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+<div flex layout="column">
+    <md-content style="width:100%;" layout="row" layout-align="space-around center">
+        <md-button ng-click="onDetail($event)" style="width: 95%" aria-label="Edit detail">
+            <div style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align: left;height: 2.5em;">
+                {{data.label}}
+            </div>
+        </md-button>
+    </md-content>
+
+    <md-content id="canvas" >
+        <pipeline-canvas api="canvasApi"></pipeline-canvas>
+    </md-content>
+
+    <md-content hide show-gt-sm layout="row" layout-align="space-around center">
+        <md-button ng-click="onSave()">
+            Save
+        </md-button>
+        <md-button ng-click="onSaveAndClose()">
+            Save and Close
+        </md-button>
+        <md-button ng-click="onExecute()">
+            Save and Execute
+        </md-button>
+        <md-button ng-click="onCopy()">
+            Copy and Open
+        </md-button>
+        <md-button ng-click="onClose()">
+            Close
+        </md-button>
+        <md-button ng-click="onReload()">
+            Reload
+        </md-button>
+        <md-button ng-click="onDelete($event)">
+            Delete
+        </md-button>
+    </md-content>
+
+    <md-content hide-gt-sm layout="row" layout-align="space-around center">
+        <md-button ng-click="onSave()" aria-label="Save and Close">
+            <md-icon md-menu-origin md-svg-icon="done" style="color:black;"></md-icon>
+        </md-button>
+        <md-button ng-click="onExecute()" aria-label="Save and Execute">
+            <md-icon md-menu-origin md-svg-icon="play_circle_outline" style="color:black;"></md-icon>
+        </md-button>
+        <md-button ng-click="onDelete()" aria-label="Delete">
+            <md-icon md-menu-origin md-svg-icon="delete" style="color:black;"></md-icon>
+        </md-button>
+    </md-content>
+
+    <div id="componentMenu" style="position:absolute;overflow:visible;width:0px;" ng-show="status.menuVisible && !status.moving">
+        <span class="topLine" style="position:relative;top:-60px;">
+            <md-button class="md-fab md-mini" style="position:absolute;left:-30px;" aria-label="Edit" ng-click="onEditComponent()">
+                <md-icon md-menu-origin md-svg-src="edit"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-mini" style="position:absolute;left:20px;" aria-label="Delete" ng-click="onDeleteComponent()">
+                <md-icon md-menu-origin md-svg-src="delete"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-mini" style="position:absolute;left:70px;" aria-label="Copy" ng-click="onCopyComponent()">
+                <md-icon md-menu-origin md-svg-src="copy"></md-icon>
+            </md-button>
+        </span>
+        <span class="bottomLine" style="position:relative;">
+            <md-button class="md-fab md-mini" style="position:absolute;left:-30px;top:55px;" aria-label="Prerequisity" ng-click="onPrerequisityComponent()">
+                <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
+            </md-button>
+        </span>
+    </div>
+
+</div>

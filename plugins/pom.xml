@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.linkedpipes</groupId>
+    <artifactId>plugins</artifactId>
+    <version>0.0.0</version>
+    <packaging>pom</packaging>
+    <name>lp-plugins</name>
+    <description>Plugins master build project.</description>
+
+    <modules>
+        <module>t-excelToCsv</module>
+        <module>t-filesFilter</module>
+        <module>l-filesToScp</module>
+        <module>e-datasetMetadata</module>
+        <module>e-distributionMetadata</module>
+        <module>t-filesToRdf</module>
+        <module>t-graphMerger</module>
+        <module>t-packZip</module>
+        <module>t-rdfToFile</module>
+        <module>t-sparqlConstruct</module>
+        <module>t-sparqlSelect</module>
+        <module>t-sparqlUpdate</module>
+        <module>t-tabular</module>
+        <module>t-unpack</module>
+        <module>t-unpackZip</module>
+        <module>t-xslt</module>
+        <module>x-virtuoso</module>
+        <module>e-httpGetFile</module>
+        <module>e-textHolder</module>
+        <module>l-dcatApToCkan</module>
+    </modules>
+
+</project>

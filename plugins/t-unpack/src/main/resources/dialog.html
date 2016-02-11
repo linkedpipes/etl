@@ -1,0 +1,16 @@
+<div class="container-flow">
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label" for="usePrefix">Unpack each file into separated directory:</label>
+            <input type="checkbox" id="usePrefix" ng-model="dialog.usePrefix">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="fileType">Format:</label>
+            <select id="fileType" ng-model="dialog.format">
+                <option value="http://plugins.linkedpipes.com/ontology/t-unpack#auto">auto</option>
+                <option value="http://plugins.linkedpipes.com/ontology/t-unpack#zip">zip</option>
+                <option value="http://plugins.linkedpipes.com/ontology/t-unpack#bzip2">bzip2</option>
+            </select>
+        </div>
+    </div>
+</div>

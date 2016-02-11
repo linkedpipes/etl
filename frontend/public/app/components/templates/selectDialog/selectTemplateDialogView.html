@@ -1,0 +1,39 @@
+<md-dialog aria-label="Select template"  ng-cloak>
+    <form>
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h4>Insert component</h4>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="onCancel()">
+                    <md-icon md-svg-src="close_small" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <form name="pipelineForm" ng-submit="onSubmit()">
+                    <div layout-gt-xs="row">
+                        <md-input-container>
+                            <label>Filter by name</label>
+                            <input ng-model="search.label" md-autofocus/>
+                        </md-input-container>
+                    </div>
+                </form>
+
+                <md-list>
+                    <md-list-item class="md-1-line" ng-repeat="item in data| filter: {label: search.label}"
+                                  ng-click="onSelect(item)">
+                        <div class="md-list-item-text" layout="column">
+                            <p>{{item['label']}}</p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+
+            </div>
+        </md-dialog-content>
+
+    </form>
+</md-dialog>
+

@@ -1,0 +1,9 @@
+{
+    "@graph": [
+        {
+            "@id": "http://localhost/resources/configuration",
+            "@type" : ["http://plugins.linkedpipes.com/ontology/t-packZip#Configuration"],
+            "http://plugins.linkedpipes.com/ontology/t-packZip#fileName": "output.ttl"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "@graph": [
+        {
+            "@id": "http://localhost/resources/configuration",
+            "@type" : ["http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"],
+            "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": "output.txt",
+            "http://plugins.linkedpipes.com/ontology/e-textHolder#content": ""
+        }
+    ]
+}

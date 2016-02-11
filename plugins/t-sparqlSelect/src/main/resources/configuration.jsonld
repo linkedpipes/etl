@@ -1,0 +1,10 @@
+{
+    "@graph": [
+        {
+            "@id": "http://localhost/resources/configuration",
+            "@type" : ["http://plugins.linkedpipes.com/ontology/t-sparqlSelect#Configuration"],
+            "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#query": "SELECT { ?s ?p ?o } WHERE { ?s ?p ?o}",
+            "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#fileName": "table.csv"
+        }
+    ]
+}

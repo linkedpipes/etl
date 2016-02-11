@@ -1,0 +1,19 @@
+.sub-menu {
+  display: none;
+  position: relative;
+  position:fixed;
+  bottom:70px;
+  right:30px;
+  padding-top: 10px;
+  padding-bottom: 40px;
+}
+
+.pipelines_list_add {
+  position:fixed;
+  bottom:30px;
+  right:30px;
+}
+
+.pipelines_list_add:hover .sub-menu {
+  display: block;
+}

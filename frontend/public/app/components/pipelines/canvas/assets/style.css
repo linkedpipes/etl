@@ -1,0 +1,59 @@
+.no-left-right-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.no-margin {
+    margin: 0px;
+}
+
+#canvas {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#canvas svg {
+    border-style: solid;
+    border-width: 1px;
+    height: -moz-calc(100vh - 169px); /* Firefox */
+    height: -webkit-calc(100vh - 169px); /* Chrome, Safari */
+    height: calc(100vh - 169px); /* IE9+ and future browsers */
+}
+
+/* Joint modification. */
+
+.available-magnet {
+    fill: yellow;
+}
+
+.available-cell rect {
+    stroke-dasharray: 5, 2;
+}
+
+/* Buttons. */
+
+.component-selection {
+    position:absolute;
+    pointer-events:none;
+    border:1px dashed #000;
+    border-radius:5px;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    user-drag:none;
+    z-index: 1;
+}
+
+.component-selection .action {
+    /*width:30px;*/
+    /*height:30px;*/
+    /*color: red;*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: center center;*/
+    /*background-size: 29px 29px;*/
+    pointer-events:auto;
+    cursor: pointer;
+}
+

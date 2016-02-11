@@ -1,0 +1,122 @@
+<div>
+    <form role="form">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="delimiterChar">Delimeter:</label>
+                    <input type="text" class="form-control input-sm" id="delimiterChar" placeholder=","
+                           ng-model="dialog.delimeter">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="quoteChar">Quote:</label>
+                    <input type="text" class="form-control input-sm" id="quoteChar" placeholder="\""
+                           ng-model="dialog.quote">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="encoding">Encoding:</label>
+                    <input type="text" class="form-control input-sm" id="encoding" placeholder="UTF-8"
+                           ng-model="dialog.encoding">
+                </div>
+            </div>
+        </div>
+        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.header"> Table has header</label>
+        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.trim"> Trim</label>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="aboutUrl">Default resource URI template:</label>
+                    <input type="text" class="form-control input-sm" id="aboutUrl" placeholder="{row-with-id}"
+                           ng-model="dialog.aboutUrl">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="rowLimit">Rows skip:</label>
+                    <input type="number" class="form-control input-sm" id="rowLimit" ng-model="dialog.skipRows"
+                           style="width:7em">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="rowLimit">Rows limit:</label>
+                    <input type="number" class="form-control input-sm" id="rowLimit" ng-model="dialog.rowLimit"
+                           style="width:7em">
+                </div>
+            </div>
+        </div>
+        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.normalOutput"> Output metadata</label>
+        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.fullMapping"> Generate full mapping</label>
+        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.useBaseUri"> Use URI base</label>
+        <div class="form-group" ng-show="dialog.useBaseUri">
+            <label for="rowLimit">URI base:</label>
+            <input type="text" class="form-control input-sm" id="rowLimit" ng-model="dialog.baseUri">
+        </div>
+    </form>
+    <div class="row" ng-hide="dialog.fullMapping">
+        <div class="table-responsive">
+            <form class="form-inline">
+                <table class="table">
+                    <tr>
+                        <th><button ng-click="onAdd()" class="btn btn-info btn-xs">+</button></th>
+                        <th class="col-md-2">Name</th>
+                        <th></th>
+                        <th class="col-md-1">Type</th>
+                        <th class="col-md-4">Predicate</th>
+                        <th class="col-md-5">Setting</th>
+                    </tr>
+                    <tr ng-repeat="item in dialog.columns">
+
+                        <td><button ng-click="onDelete($index)" class="btn btn-danger btn-xs">-</button></td>
+                        <td>
+                            <input type="text" class="form-control input-sm" placeholder="name" ng-model="item.name"
+                                   size="12">
+                        </td>
+                        <td><input type="checkbox" ng-model="item.required" title="Required"></td>
+                        <td>
+                            <select ng-model="item.type">
+                                <option value="ignore">Ignore</option>
+                                <option value="typed">Typed</option>
+                                <option value="string">String</option>
+                                <option value="url">URL</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control input-sm" placeholder="predicate"
+                                   ng-model="item.propertyUrl" style="width:95%">
+                        </td>
+                        <td>
+                            <div ng-show="item.type === 'typed'">
+                                <div class="form-group">
+                                    <label for="type">Type: </label>
+                                    <select ng-model="item.datatype" id="type">
+                                        <option value="http://www.w3.org/2001/XMLSchema#integer">integer</option>
+                                        <option value="http://www.w3.org/2001/XMLSchema#float">float</option>
+                                        <option value="http://www.w3.org/2001/XMLSchema#decimal">decimal</option>
+                                        <option value="http://www.w3.org/2001/XMLSchema#double">double</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div ng-show="item.type === 'string'">
+                                <div class="form-group">
+                                    <label for="language">Language: </label>
+                                    <input type="text" class="form-control input-sm" ng-model="item.lang"
+                                           id="language" maxlength="4" size="4" style="width:5em;">
+                                </div>
+                            </div>
+                            <div ng-show="item.type === 'url'">
+                                <input type="text" class="form-control input-sm" ng-model="item.valueUrl"
+                                       style="width:100%">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+
+</div>

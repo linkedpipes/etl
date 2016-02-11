@@ -1,0 +1,225 @@
+package com.linkedpipes.plugin.transformer.excel.to.csv;
+
+import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ *
+ * @author Petr Škoda
+ */
+@RdfToPojo.Type(uri = ExcelToCsvVocabulary.CONFIGURATION)
+public class ExcelToCsvConfiguration {
+
+    public static final String FILE_HOLDER = "{FILE}";
+
+    public static final String SHEET_HOLDER = "{SHEET}";
+
+    /**
+     * Row and column starts from 1 (as visible in excel).
+     */
+    @RdfToPojo.Type(uri = ExcelToCsvVocabulary.VIRTUAL_COLUMN)
+    public static class VirtualColumn {
+
+        @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW)
+        private int row;
+
+        @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN)
+        private int column;
+
+        @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_NAME)
+        private String name;
+
+        public VirtualColumn() {
+        }
+
+        public VirtualColumn(int row, int column, String name) {
+            this.row = row;
+            this.column = column;
+            this.name = name;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public void setRow(int row) {
+            this.row = row;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+
+        public void setColumn(int column) {
+            this.column = column;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
+
+    /**
+     * Pattern used to generate output file name.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_FILE_NAME)
+    private String fileNamePattern = SHEET_HOLDER + "-" + FILE_HOLDER + ".csv";
+
+    /**
+     * Regexp used to match sheet name.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_SHEET_FILTER)
+    private String sheetFilter = ".*";
+
+    /**
+     * Number of rows to skip.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW_START)
+    private int rowsSkip = 0;
+
+    /**
+     * Number of initial columns to skip.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN_START)
+    private int columnsSkip = 0;
+
+    /**
+     * Number of rows to read at max.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW_END)
+    private int rowsCount = -1;
+
+    /**
+     * Should be set, it -1 then the number of rows is determined by the header size.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN_END)
+    private int columnsCount = -1;
+
+    /**
+     * List of virtual columns, column has value of given cell.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_VIRTUAL_COLUMN)
+    private List<VirtualColumn> virtualColumns = new LinkedList<>();
+
+    /**
+     * True if data has header.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_HEADER)
+    private boolean headerPresented = true;
+
+    /**
+     * If true then double values are checked to be dates.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_NUMERIC_PARSE)
+    private boolean numericParse = true;
+
+    /**
+     * If true empty rows are not put to output.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_SKIP_EMPTY_ROWS)
+    private boolean skipEmptyRows = true;
+
+    /**
+     * If true sheet name is included as special column named 'sheet_name'.
+     */
+    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_INCLUDE_SHEET_NAME)
+    private boolean includeSheetName = false;
+
+    public ExcelToCsvConfiguration() {
+    }
+
+    public String getFileNamePattern() {
+        return fileNamePattern;
+    }
+
+    public void setFileNamePattern(String fileNamePattern) {
+        this.fileNamePattern = fileNamePattern;
+    }
+
+    public String getSheetFilter() {
+        return sheetFilter;
+    }
+
+    public void setSheetFilter(String sheetFilter) {
+        this.sheetFilter = sheetFilter;
+    }
+
+    public int getRowsSkip() {
+        return rowsSkip;
+    }
+
+    public void setRowsSkip(int rowsSkip) {
+        this.rowsSkip = rowsSkip;
+    }
+
+    public int getColumnsSkip() {
+        return columnsSkip;
+    }
+
+    public void setColumnsSkip(int columnsSkip) {
+        this.columnsSkip = columnsSkip;
+    }
+
+    public int getRowsCount() {
+        return rowsCount;
+    }
+
+    public void setRowsCount(int rowsCount) {
+        this.rowsCount = rowsCount;
+    }
+
+    public int getColumnsCount() {
+        return columnsCount;
+    }
+
+    public void setColumnsCount(int columnsCount) {
+        this.columnsCount = columnsCount;
+    }
+
+    public List<VirtualColumn> getVirtualColumns() {
+        return virtualColumns;
+    }
+
+    public void setVirtualColumns(List<VirtualColumn> virtualColumns) {
+        this.virtualColumns = virtualColumns;
+    }
+
+    public boolean isHeaderPresented() {
+        return headerPresented;
+    }
+
+    public void setHeaderPresented(boolean headerPresented) {
+        this.headerPresented = headerPresented;
+    }
+
+    public boolean isNumericParse() {
+        return numericParse;
+    }
+
+    public void setNumericParse(boolean numericParse) {
+        this.numericParse = numericParse;
+    }
+
+    public boolean isSkipEmptyRows() {
+        return skipEmptyRows;
+    }
+
+    public void setSkipEmptyRows(boolean skipEmptyRows) {
+        this.skipEmptyRows = skipEmptyRows;
+    }
+
+    public boolean isIncludeSheetName() {
+        return includeSheetName;
+    }
+
+    public void setIncludeSheetName(boolean includeSheetName) {
+        this.includeSheetName = includeSheetName;
+    }
+
+}

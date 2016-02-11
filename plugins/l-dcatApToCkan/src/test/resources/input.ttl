@@ -1,0 +1,62 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+@prefix ckan: <http://linked.opendata.cz/ontology/ckan/> .
+
+<http://my.new.dataset.cz/contactPoint> a <http://www.w3.org/2006/vcard/ns#VCard> ;
+	<http://www.w3.org/2006/vcard/ns#hasEmail> "contact@mydataset.cz" .
+
+<http://my.new.dataset.cz/temporal> a <http://purl.org/dc/terms/PeriodOfTime> ;
+	<http://schema.org/startDate> "2010-02-01"^^xsd:date ;
+	<http://schema.org/endDate> "2015-02-26"^^xsd:date .
+
+<http://eurovoc.scheme/2> a <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http:///eurovoc.scheme/1> a <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http://my.new.dataset.cz> a <http://www.w3.org/ns/dcat#Dataset> ;
+	<http://purl.org/dc/terms/title> "Můj dataset"@cs , "English dataset"@en ;
+	<http://purl.org/dc/terms/description> "Můj popis"@cs , "My description"@en ;
+	<http://purl.org/dc/terms/issued> "2015-02-01"^^xsd:date ;
+	<http://purl.org/dc/terms/modified> "2015-03-02"^^xsd:date ;
+	<http://purl.org/dc/terms/identifier> "CTIA_1" ;
+	<http://www.w3.org/ns/dcat#keyword> "kwOrig1"@cs , "kwOrig2"@cs , "kwEn1"@en , "kwEn2"@en ;
+	<http://purl.org/dc/terms/language> <http://id.loc.gov/vocabulary/iso639-1/cs> , <http://id.loc.gov/vocabulary/iso639-1/en> ;
+	<http://www.w3.org/ns/adms#contactPoint> <http://my.new.dataset.cz/contactPoint> ;
+	<http://purl.org/dc/terms/accrualPeriodicity> "R-P1Y" ;
+	<http://www.w3.org/ns/dcat#landingPage> "http://my.landingpage.url" ;
+	<http://purl.org/dc/terms/temporal> <http://my.new.dataset.cz/temporal> ;
+	<http://purl.org/dc/terms/spatial> <http://ruian.stat.cz> ;
+	<http://purl.org/dc/terms/references> <http://my.schema.url> ;
+	<http://purl.org/dc/terms/publisher> <http://opendata.cz> ;
+	<http://purl.org/dc/terms/license> <http://opendatacommons.org/licenses/pddl/1.0/> ;
+	<http://purl.org/dc/terms/source> <http://my.source.first> , <http://my.source.second> ;
+	ckan:datasetID "datasetIDFromRDF" ;
+	<http://www.w3.org/ns/dcat#theme> <http://eurovoc.scheme/2> , <http:///eurovoc.scheme/1> .
+
+<http://my.new.dataset.cz> <http://www.w3.org/ns/dcat#distribution> <http://mydistro/csv> .
+
+<http://mydistro/csv> a <http://www.w3.org/ns/dcat#Distribution> , <http://rdfs.org/ns/void#Dataset> ;
+	<http://purl.org/dc/terms/title> "Můj dataset"@cs , "English dataset"@en ;
+	<http://purl.org/dc/terms/description> "Můj popis"@cs , "My description"@en ;
+	<http://purl.org/dc/terms/issued> "2015-02-01"^^xsd:date ;
+	<http://purl.org/dc/terms/modified> "2015-03-02"^^xsd:date ;
+	<http://purl.org/dc/terms/temporal> <http://mydistro/csv/temporal> ;
+	<http://purl.org/dc/terms/spatial> <http://ruian.stat.cz> ;
+	<http://purl.org/dc/terms/license> <http://opendatacommons.org/licenses/pddl/1.0/> ;
+	<http://www.w3.org/2007/05/powder-s#describedBy> <http://my.schema.url> ;
+	<https://project-open-data.cio.gov/v1.1/schema/#distribution-describedByType> "text/csv" ;
+	<http://www.w3.org/ns/dcat#accessURL> <http://my.access.rul> ;
+	<http://www.w3.org/ns/dcat#downloadURL> <http://my.download.url/yetanotherone2> ;
+	<http://rdfs.org/ns/void#dataDump> <http://my.download.url> ;
+	<http://rdfs.org/ns/void#sparqlEndpoint> <http://linked.opendata.cz/sparql> ;
+	<http://www.w3.org/ns/dcat#mediaType> "text/turtle" ;
+	<http://purl.org/dc/terms/format> "text/turtle" ;
+	<http://rdfs.org/ns/void#exampleResource> <http://example2.org> , <http://example1.org> .
+
+<http://mydistro/csv/temporal> a <http://purl.org/dc/terms/PeriodOfTime> ;
+	<http://schema.org/startDate> "2011-02-01"^^xsd:date ;
+	<http://schema.org/endDate> "2015-02-26"^^xsd:date .

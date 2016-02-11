@@ -1,0 +1,13 @@
+{
+    "name": "Executor-View",
+    "version": "1.0.0",
+    "dependencies":
+            {
+                "express": "~4.13.3",
+                "ejs": "~1.0.0",
+                "body-parser": "~1.13.3",
+                "request": "2.61.0",
+                "node-uuid": "1.4.0",
+                "properties-reader": "0.0.11"
+            }
+}

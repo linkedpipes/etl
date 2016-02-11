@@ -1,0 +1,46 @@
+<div layout="row" layout-align="space-around">
+    <div class="container" style="max-width: 66em;width: 100%;">
+        <md-content>
+            <div ng-show="!repository.loaded" layout="row">
+                <span flex="50"/>
+                <img src="app/components/pipelines/listView/assets/img/loading.gif" class="center-block" title="Loading..."
+                     style="padding-top: 5em"/>
+            </div>
+            <md-list ng-show="repository.loaded">
+                <md-list-item ng-repeat="item in repository.data" ng-click="onPipeline(item)" class="md-2-line" >
+                    <span class="md-primary">
+                        <!--<md-checkbox ng-model="message.selected"></md-checkbox>-->
+                    </span>
+                    <span class="md-list-item-text">
+                        <div class="lp-font-list-label">{{item.label}}</div>
+                        <div></div>
+                    </span>
+                    <span class="md-secondary" ng-click="onExecute(item)" aria-label="Execute">
+                        <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon>
+                    </span>
+                    <md-divider></md-divider>
+                </md-list-item>
+            </md-list>
+        </md-content>
+        <div style="height: 5em;"></div>
+        <div class="lock-size" layout="column" ng-show="repository.loaded">
+            <md-fab-speed-dial md-direction="up" style="position: fixed;" md-open="fap.isOpen"
+                               class="md-scale md-fab-bottom-right speed-dial"
+                               ng-mouseenter="fap.isOpen = true" ng-mouseleave="fap.isOpen = false">
+                <md-fab-trigger>
+                    <md-button aria-label="menu" class="md-fab md-warn">
+                        <md-icon md-svg-icon="menu" style="color:white;"></md-icon>
+                    </md-button>
+                </md-fab-trigger>
+                <md-fab-actions>
+                    <md-button aria-label="Create new" class="md-fab md-raised" ng-click="onCreate()">
+                        <md-icon md-svg-icon="add" style="color:black;"></md-icon>
+                    </md-button>
+                    <md-button aria-label="Upload existing" class="md-fab md-raised" ng-click="onUpload()">
+                        <md-icon md-svg-icon="file_upload" style="color:black;"></md-icon>
+                    </md-button>
+                </md-fab-actions>
+            </md-fab-speed-dial>
+        </div>
+    </div>
+</div>

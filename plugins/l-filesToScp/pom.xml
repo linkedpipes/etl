@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.linkedpipes</groupId>
+        <artifactId>pom-dpu</artifactId>
+        <version>0.0.0</version>
+        <relativePath>../../pom-dpu/pom.xml</relativePath>
+    </parent>
+    <groupId>com.linkedpipes</groupId>
+    <artifactId>l-filesToScp</artifactId>
+    <version>0.0.0</version>
+    <packaging>bundle</packaging>
+    <name>plugin l-filesToScp</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>api-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>api-dpu-v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>dataunit-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.53</version>
+        </dependency>
+        <dependency> <!-- Optional com.jcraft dependency. -->
+            <groupId>com.jcraft</groupId>
+            <artifactId>jzlib</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
