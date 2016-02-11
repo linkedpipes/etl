@@ -20,17 +20,17 @@ executor.webserver.uri = http://localhost:8085
 # Path to debug data. Debug data can be large.
 # Windows ex: C:\\Tools\\lp\\etl\\working
 # Linux ex: /data/lp/etl/working
-executor.execution.working_directory = 
+executor.execution.working_directory =
 
 # Prefix used for the IRIs of pipelines executions. Can be used
-# to ensure ability to dereference the IRIs. 
+# to ensure ability to dereference the IRIs.
 # Must end with '/'.
 executor.execution.uriPrefix = http://localhost:8080/resources/executions/
 
 # Directory used for logs.
 # Windows ex: C:\\Tools\\lp\\etl\\log
 # Linux ex: /data/lp/log
-executor.log.directory = 
+executor.log.directory =
 
 # TRACE, DEBUG, INFO, WARN, ERROR
 executor.log.core.level = INFO
@@ -39,7 +39,7 @@ executor.log.core.level = INFO
 # folder where you cloned the repository.
 # Windows ex: C:\\Users\\Kuba\\Documents\\GitHub\\etl\\deploy\\osgi
 # Linux ex: /opt/lp/etl/deploy/osgi
-executor.osgi.lib.directory = 
+executor.osgi.lib.directory =
 
 # Path to OSGI working directory, used bundles are stored here.
 executor.osgi.working.directory = .felix/
@@ -51,23 +51,23 @@ executor.osgi.working.directory = .felix/
 # Port used by executor-monitor REST API.
 executor-monitor.webserver.port = 8081
 
-# URL of the executor-monitor REST API to be used. 
+# URL of the executor-monitor REST API to be used.
 # Must end with '/'.
 executor-monitor.webserver.uri = http://localhost:8081/api/v1/
 
 # Directory used for logs.
 # Windows ex: C:\\Tools\\lp\\etl\\log
 # Linux ex: /data/lp/log
-executor-monitor.log.directory = 
+executor-monitor.log.directory =
 
 # TRACE, DEBUG, INFO, WARN, ERROR
 executor-monitor.log.core.level = INFO
 
-# FTP Port for executor-monitor. 
+# FTP Port for executor-monitor.
 # The FTP server is used to browse debug content of an execution.
 executor-monitor.ftp.port = 2221
 
-# External URL that should be used to access debug FTP server from outside. 
+# External URL that should be used to access debug FTP server from outside.
 # Must NOT end on '/'.
 executor-monitor.ftp.uri = ftp://localhost:2221
 
@@ -80,19 +80,19 @@ frontend.webserver.port = 8080
 
 # Windows ex: C:\\Users\\Kuba\\Documents\\GitHub\\etl\\deploy\\components
 # Linux ex: /opt/lp/etl/deploy/components
-storage.components.directory = 
+storage.components.directory =
 
-# Used to construct URI with path to components file (jar file). 
+# Used to construct URI with path to components file (jar file).
 # This value is platform dependent:
 # Windows ex: file:
-# Linux ex: file:/
-storage.components.path.prefix = 
+# Linux ex: file://
+storage.components.path.prefix =
 
 # Storage directory for pipelines definition
 # Windows ex: C:\\Tools\\lp\\etl\\pipelines
 # Linux ex: /data/lp/etl/pipelines
-storage.pipelines.directory = 
+storage.pipelines.directory =
 
-# Prefix used to create URI of templates and pipelines, should be dereferencable. 
+# Prefix used to create URI of templates and pipelines, should be dereferencable.
 # Must NOT end with '/'.
 domain.uri = http://localhost:8080
