@@ -26,3 +26,10 @@
 .bold {
 	font-weight: bold ;
 }
+
+ul.side-nav li.logo {
+    text-align: left;
+	font-size: 16pt;
+#    margin-top: 32px;
+#    margin-bottom: 80px;
+}

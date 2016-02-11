@@ -8,13 +8,16 @@
 			  <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
 			  {% endif %}
 			{% endfor %}
+			<li><a href="http://linkedpipes.com">LinkedPipes</a></li>
 			</ul>
 			<ul id="slide-out" class="side-nav">
-			{% for my_page in site.pages %}
-			  {% if my_page.title %}
-			  <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
-			  {% endif %}
-			{% endfor %}
+				<li class="logo light-blue lighten-1">LinkedPipes ETL</li>
+				{% for my_page in site.pages %}
+				  {% if my_page.title %}
+				  <li><a href="{{ my_page.url | prepend: site.baseurl }}" class="waves-effect waves-orange">{{ my_page.title }}</a></li>
+				  {% endif %}
+				{% endfor %}
+			<li><a class="waves-effect waves-orange" href="http://linkedpipes.com">LinkedPipes</a></li>
 			</ul>
 			<a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>			
 		</div>
