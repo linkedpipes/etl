@@ -96,3 +96,16 @@ storage.pipelines.directory =
 # Prefix used to create URI of templates and pipelines, should be dereferencable.
 # Must NOT end with '/'.
 domain.uri = http://localhost:8080
+
+# Apache Jena Fuseki is used for debugging RDF data.
+# The path must contain the file fuseki-server.jar. 
+# Whenever new Fuseki instances is created
+# a copy of this directory is created.
+# From a clean Fuseki instalation (unzip) remove:
+#   bin foder
+#   fuseki-server
+#   fuseki-server.bat
+#   fuseki.war
+# Windows ex: C:\\Tools\\apache-jena-fuseki
+# Linux ex: /opt/apache-jena-fuseki
+external.fuseki.path = 
