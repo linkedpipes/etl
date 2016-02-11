@@ -1,70 +1,98 @@
 #
-# Configuration file.
+# LinkedPipes ETL Configuration file.
+# http://etl.linkedpipes.com
 #
 
-#
-#
+##############
+#  Executor  #
+##############
 
-# Port used by REST API.
+# Port used by executor REST API.
 executor.webserver.port = 8085
 
-# URI used to acess executor. Must NOT end with '/'.
+# URL of the executor REST API to be used. Must NOT end with '/'.
+# This can be used for setups where execturor and executor-monitor
+# run on one machine and the frontend on another. If all components
+# run on the same machine, this is http://localhost:8085 or the
+# port from executor.webserver.port
 executor.webserver.uri = http://localhost:8085
 
-# Path to directory, where program data are stored.
-executor.execution.working_directory = {PATH TO WORKING DIRECTORY}
+# Path to debug data. Debug data can be large.
+# Windows ex: C:\\Tools\\lp\\etl\\working
+# Linux ex: /data/lp/etl/working
+executor.execution.working_directory = 
 
-# Prefix attached used to construct the execution uri.
-# This should be set so the executions are dereferencable. Must end with '/'.
+# Prefix used for the IRIs of pipelines executions. Can be used
+# to ensure ability to dereference the IRIs. 
+# Must end with '/'.
 executor.execution.uriPrefix = http://localhost:8080/resources/executions/
 
-# Directory used for core logs.
-executor.log.directory = {WHERE TO STORE LOGS OF EXECUTOR}
+# Directory used for logs.
+# Windows ex: C:\\Tools\\lp\\etl\\log
+# Linux ex: /data/lp/log
+executor.log.directory = 
 
 # TRACE, DEBUG, INFO, WARN, ERROR
 executor.log.core.level = INFO
 
-# Path to directory with utilized libraries.
-executor.osgi.lib.directory = {DIRECTORY WITH OSGI LIBRARIES ie, deploy/osgi}
+# Path to utilized libraries. This is usually the deploy/osgi
+# folder where you cloned the repository.
+# Windows ex: C:\\Users\\Kuba\\Documents\\GitHub\\etl\\deploy\\osgi
+# Linux ex: /opt/lp/etl/deploy/osgi
+executor.osgi.lib.directory = 
 
-# Path to the OSGI working directory, used bundles are stored here.
+# Path to OSGI working directory, used bundles are stored here.
 executor.osgi.working.directory = .felix/
 
-#
-#
+######################
+#  Executor-monitor  #
+######################
 
-# Port used by REST API, used by executor-monitor.webserver.uri.
+# Port used by executor-monitor REST API.
 executor-monitor.webserver.port = 8081
 
-# URI where executor-monitor can be accessed. Must end with '/'.
+# URL of the executor-monitor REST API to be used. 
+# Must end with '/'.
 executor-monitor.webserver.uri = http://localhost:8081/api/v1/
 
 # Directory used for logs.
-executor-monitor.log.directory = {WHERE TO STORE LOGS OF EXECUTOR MONITOR}
+# Windows ex: C:\\Tools\\lp\\etl\\log
+# Linux ex: /data/lp/log
+executor-monitor.log.directory = 
 
 # TRACE, DEBUG, INFO, WARN, ERROR
 executor-monitor.log.core.level = INFO
 
-# Port where the executor-monitor FTP server listen. The server is used to browse debug content of an execution.
+# FTP Port for executor-monitor. 
+# The FTP server is used to browse debug content of an execution.
 executor-monitor.ftp.port = 2221
 
-# External URI that should be used to access debug FTP server from outside. Must NOT end on '/'.
+# External URL that should be used to access debug FTP server from outside. 
+# Must NOT end on '/'.
 executor-monitor.ftp.uri = ftp://localhost:2221
 
-#
-#
+##############
+#  Frontend  #
+##############
 
 # Port for web server - for now used by storage.domain.
 frontend.webserver.port = 8080
 
-storage.components.directory = {PATH TO DIRECTORY WITH COMPONENTS ie. deploy/components}
+# Windows ex: C:\\Users\\Kuba\\Documents\\GitHub\\etl\\deploy\\components
+# Linux ex: /opt/lp/etl/deploy/components
+storage.components.directory = 
 
-# Used to construct URI with path to components file (jar file). This value is platform dependant:
-# Win: file:
-# Linux:  file:/
-storage.components.path.prefix = {file:/ OR file:/}
+# Used to construct URI with path to components file (jar file). 
+# This value is platform dependent:
+# Windows ex: file:
+# Linux ex: file:/
+storage.components.path.prefix = 
 
-storage.pipelines.directory = {STORAGE DIRECTORY FOR PIPELINE DEFINITIONS}
+# Storage directory for pipelines definition
+# Windows ex: C:\\Tools\\lp\\etl\\pipelines
+# Linux ex: /data/lp/etl/pipelines
+storage.pipelines.directory = 
 
-# Prefix used to create URI of templates and pipelines, should be dereferencable. Must NOT end on '/'.
+# Prefix used to create URI of templates and pipelines, should be dereferencable. 
+# Must NOT end with '/'.
 domain.uri = http://localhost:8080
