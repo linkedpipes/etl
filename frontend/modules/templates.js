@@ -2,6 +2,8 @@
 // Manages templates - shoudl be standalone component.
 //
 
+'use strict';
+
 var gFs = require('fs');
 var gConfiguration = require('./configuration');
 var gPath = require('path');

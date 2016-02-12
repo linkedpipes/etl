@@ -2,6 +2,8 @@
 // Manage pipeline storage - should be standalone component.
 //
 
+'use strict';
+
 var gFs = require('fs');
 var gStream = require('stream');
 var gUuid = require('node-uuid');
