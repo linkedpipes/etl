@@ -5,23 +5,433 @@ title: DPUs
 
   <div class="container">
 	<div class="row">
-		<div class="col s11 m11 l11">
-			<div id="documentation" class="section scrollspy">
+		<div class="col s12">
+			<div class="section">
 			  <h2 class="header center orange-text">DPUs</h2>
 			  <h5 class="header center ">Data Processing Units</h5>
 			  <div class="icon-block">
-				<p class="light center">A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.</p>
+				<p class="light center">
+				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
+				There are three basic types of DPUs.
+				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
+				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
+				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
+				</p>
 			  </div>
 			</div>
 		</div>
-<!--		<div class="col s1 m1 l1">
-		  <ul class="section table-of-contents">
-			<li><a href="#documentation">Documentation</a></li>
-			<li><a href="#introduction">Introduction</a></li>
-			<li><a href="#structure">Structure</a></li>
-			<li><a href="#initialization">Intialization</a></li>
-		  </ul>
+	    <h3 class="header center orange-text">List of available DPUs</h3>
+	    <p class="light center">First, we provide a quick overview of the available DPUs. Red are extractors, blue are transformers and green are loaders. Grey are special purpose DPUs.</p>
+	  <div class="col s12 m6 l4">
+		  <div class="card small red lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/e-httpget.png" alt="HTTP get">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">HTTP get<i class="material-icons right">more_vert</i></span>
+			  <p>Downloads files from the Web using HTTP.
+			</div>
+			<div class="card-reveal red lighten-4">
+			  <span class="card-title grey-text text-darken-4">HTTP get<i class="material-icons right">close</i></span>
+			  <p>
+				Extractor, allows the user to download a file from the web.
+			  </p>
+				<dl>
+					<dt>File URL</dt>
+					<dd>URL from which the file should be downloaded</dd>
+					<dt>File name</dt>
+					<dd>File name under which the file will be visible in the pipeline</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+	
+	  <div class="col s12 m6 l4">
+		  <div class="card small red lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/e-sparql.png" alt="SPARQL endpoint">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">SPARQL endpoint<i class="material-icons right">more_vert</i></span>
+			  <p>Extracts RDF triples from a SPARQL endpoint.
+			  <a href="#httpget">Detailed configuration</a></p>
+			</div>
+			<div class="card-reveal red lighten-4">
+			  <span class="card-title grey-text text-darken-4">SPARQL endpoint<i class="material-icons right">close</i></span>
+			  <p>
+				Extractor, allows the user to extract RDF triples from a SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#construct">Construct query</a>.
+			  </p>
+				<dl>
+					<dt>Endpoint</dt>
+					<dd>URL of the SPARQL endpoint to be queried</dd>
+					<dt>SPARQL Construct query</dt>
+					<dd>Query for extraction of triples from the endpoint</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small red lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/e-textholder.png" alt="Text holder">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Text holder<i class="material-icons right">more_vert</i></span>
+			  <p>Inputs the given text as a file.
+			</div>
+			<div class="card-reveal red lighten-4">
+			  <span class="card-title grey-text text-darken-4">Text holder<i class="material-icons right">close</i></span>
+			  <p>
+				Extractor, allows the user to input any text as a file into the pipeline.
+			  </p>
+				<dl>
+					<dt>Output file name</dt>
+					<dd>File name under which the file will be visible in the pipeline</dd>
+					<dt>File content</dt>
+					<dd>Text content of the file</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small green lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/l-filestoscp.png" alt="Files to SCP">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Files to SCP<i class="material-icons right">more_vert</i></span>
+			  <p>Loads files via the SCP protocol.
+			</div>
+			<div class="card-reveal green lighten-4">
+			  <span class="card-title grey-text text-darken-4">Files to SCP<i class="material-icons right">close</i></span>
+			  <p>
+				Loader, allows the user to transfer a file to a server via the SCP protocol.
+			  </p>
+				<dl>
+					<dt>Host address</dt>
+					<dd>Address of the target server for the file upload. E.g. <code>obeu.vse.cz</code></dd>
+					<dt>Port</dt>
+					<dd>SSH port to use. Typically <code>22</code></dd>
+					<dt>Target directory</dt>
+					<dd>Directory on the server where the file should be uploaded. E.g.<code>~/upload/</code></dd>
+					<dt>Create the target directory</dt>
+					<dd>When checked, tries to create the target directory, when it is not present on the server. Fails otherwise.</dd>
+					<dt>User name</dt>
+					<dd>User name for the server</dd>
+					<dt>Password</dt>
+					<dd>Password for the server. Note that this is plain text and not secure in any way.</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+	  
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-filestordf.png" alt="Files to RDF">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Files to RDF<i class="material-icons right">more_vert</i></span>
+			  <p>Converts RDF files to RDF data.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Files to RDF<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to convert RDF files (Files Data Unit) to RDF data (RDF data unit).
+			  </p>
+				<dl>
+					<dt>Commit size</dt>
+					<dd>Number of triples processed before commiting to database</dd>
+					<dt>Format</dt>
+					<dd><a href="https://www.w3.org/TR/rdf11-new/#section-serializations">RDF serialization</a> of the input file. Can be determined by file extension.</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-rdftofile.png" alt="RDF to File">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">RDF to File<i class="material-icons right">more_vert</i></span>
+			  <p>Converts RDF data to an RDF file.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">RDF to File<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to convert RDF data (RDF data unit) to an RDF file (Files Data Unit).
+			  </p>
+				<dl>
+					<dt>Output file name</dt>
+					<dd>File name under which the file will be visible in the pipeline, including extension.</dd>
+					<dt>Output format</dt>
+					<dd><a href="https://www.w3.org/TR/rdf11-new/#section-serializations">RDF serialization</a> of the output file.</dd>
+					<dt>URI of the output graph</dt>
+					<dd>URI of the only named graph that will be created from the input triples. Valid only for the RDF Quad formats.</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>	  
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-packzip.png" alt="Create zip archive">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Create zip archive<i class="material-icons right">more_vert</i></span>
+			  <p>Zips input files into an archive.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Create zip archive<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to zip input RDF files (Files Data Unit) to an output zip archive.
+			  </p>
+				<dl>
+					<dt>Output zip file name</dt>
+					<dd>File name under which the file will be visible in the pipeline, including extension.</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>	  
+	  
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-unpackzip.png" alt="Decompress zip archive">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Decompress zip archive<i class="material-icons right">more_vert</i></span>
+			  <p>Unzips a zip archive.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Decompress zip archive<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to unzip input zip files.
+			  </p>
+				<dl>
+					<dt>Unpack each zip into separated directory</dt>
+					<dd>When checked, a directory will be created for each input zip file. Otherwise, all files will be decompressed into a single directory</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>	  
+	  
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-unpack.png" alt="Unpack">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Unpack<i class="material-icons right">more_vert</i></span>
+			  <p>Unpacks a zip or bzip2 archive.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Unpack<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to unpack input zip or bzip2 files.
+			  </p>
+				<dl>
+					<dt>Unpack each file into separated directory</dt>
+					<dd>When checked, a directory will be created for each input file. Otherwise, all files will be decompressed into a single directory</dd>
+					<dt>Format</dt>
+					<dd>Input archive format. Can be zip, bzip2 or auto, which means the format will be determined by the file extension</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>	  
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-filesfilter.png" alt="Files filter">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Files filter<i class="material-icons right">more_vert</i></span>
+			  <p>Filters input files by file name.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Files filter<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to filter files by file name and <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html">Java regular expressions</a>.
+				You can <a href="http://regexr.com/">test your regular expressions here</a>.
+			  </p>
+				<dl>
+					<dt>File name filter pattern</dt>
+					<dd>Regular expression to filter file names by</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>	  
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-exceltocsv.png" alt="Excel to CSV">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Excel to CSV<i class="material-icons right">more_vert</i></span>
+			  <p>Transforms Excel files to CSV files.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Excel to CSV<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to transform Excel files to CSV files.
+			  </p>
+				<dl>
+					<dt>Output file name</dt>
+					<dd>File name under which the output CSV file will be visible in the pipeline, including extension</dd>
+					<dt>Sheet filter</dt>
+					<dd>Excel sheet name to process. If empty, all sheets are processed</dd>
+					<dt>Row start</dt>
+					<dd>Number of the first row to be transformed</dd>
+					<dt>Row end</dt>
+					<dd>Number of the last row to be transformed</dd>
+					<dt>Column start</dt>
+					<dd>Number of the first column to be transformed</dd>
+					<dt>Column end</dt>
+					<dd>Number of the last column to be transformed</dd>
+					<dt>Has header</dt>
+					<dd>TODO</dd>
+					<dt>Advanced numeric parse</dt>
+					<dd>TODO</dd>
+					<dt>Skip empty rows</dt>
+					<dd>TODO</dd>
+					<dt>Include sheet name</dt>
+					<dd>TODO</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>	  
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-xslt.png" alt="XSLT transformer">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">XSLT transformer<i class="material-icons right">more_vert</i></span>
+			  <p>Transforms XML files using XSLT transformations.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">XSLT transformer<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to transform <a href="https://www.w3.org/TR/xml/">XML</a> files using <a href="https://www.w3.org/TR/xslt20/">XSLT</a>.
+			  </p>
+				<dl>
+					<dt>New file extension</dt>
+					<dd>XSLT allows to create arbitrary text files from XML. Expecially for RDF files it is important that the new file has a correct extension according to its format</dd>
+					<dt>XSLT Template</dt>
+					<dd>the XSLT template used to transform the input XML files</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+
+	  <div class="col s12 m6 l4">
+		  <div class="card small grey lighten-2">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/x-virtuoso.png" alt="Virtuoso loader">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Virtuoso loader<i class="material-icons right">more_vert</i></span>
+			  <p>Instructs Virtuoso to load a file.
+			</div>
+			<div class="card-reveal grey lighten-2">
+			  <span class="card-title grey-text text-darken-4">Virtuoso loader<i class="material-icons right">close</i></span>
+			  <p>
+				Special purpose DPU, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">Openlink Virtuoso</a> triplestore to load a file from the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
+			  </p>
+				<dl>
+					<dt>Host address</dt>
+					<dd>JDBC database connection string to connect to the Virtuoso iSQL port (typically <code>1111</code>)</dd>
+					<dt>Name of file to load</dt>
+					<dd>File name of the file to load</dd>
+					<dt>Target graph</dt>
+					<dd>Target RDF graph for input triple files and default graph in quad files</dd>
+					<dt>Directory with files to upload</dt>
+					<dd>Directory on the remote file system (local to Virtuoso) where the files to be loaded are located</dd>
+					<dt>Clear destination graph</dt>
+					<dd>When checked, executes SPARQL CLEAR GRAPH on the target graph before loading</dd>
+					<dt>Clear load list</dt>
+					<dd>When checked, deletes the db.dba.load_list table in Virtuoso</dd>
+					<dt>User name</dt>
+					<dd>User name to Virtuoso</dd>
+					<dt>Password</dt>
+					<dd>Password to Virtuoso. Note that this is plain text and in no way secured</dd>
+					<dt>Interval of status update</dt>
+					<dd>Interval in which the DPU polls Virtuoso for the status of the load</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+	  
+	  </div>
+<!--	<div class="row">
+		<div class="section s12">
+			<h3 class="header center orange-text">Advanced DPUs configuration</h3>
+			<p class="light center">
+			In this section, we will describe the configuration options for each DPU in detail.
+			</p>
 		</div>
-		-->
-	</div>
+		<div class="col s11">
+			<div class="section scrollspy" id="httpget">
+			  <h4 class="header center orange-text">HttpGet</h4>
+				<p class="light center">
+				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
+				There are three basic types of DPUs.
+				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
+				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
+				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
+				</p>
+			</div>
+			<div class="section scrollspy" id="sparqlEndpoint">
+			  <h4 class="header center orange-text">HttpGet</h4>
+				<p class="light center">
+				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
+				There are three basic types of DPUs.
+				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
+				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
+				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
+				</p>
+			</div>
+			<div class="section scrollspy" id="rdftofiles">
+			  <h4 class="header center orange-text">HttpGet</h4>
+				<p class="light center">
+				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
+				There are three basic types of DPUs.
+				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
+				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
+				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
+				</p>
+			</div>
+			<div class="section scrollspy" id="filestordf">
+			  <h4 class="header center orange-text">HttpGet</h4>
+				<p class="light center">
+				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
+				There are three basic types of DPUs.
+				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
+				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
+				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
+				</p>
+			</div>
+		</div>
+		<div class="col s1">
+		  <div class="toc-wrapper">
+			  <ul class="section table-of-contents">
+				<li><a href="#httpget">httpget</a></li>
+				<li><a href="#sparqlEndpoint">sparqlEndpoint</a></li>
+			  </ul>
+			  Loaders
+			  <ul class="section table-of-contents">
+				<li><a href="#rdftofiles">rdftofiles</a></li>
+				<li><a href="#sparqlEndpoint">sparqlEndpoint</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>-->
   </div>

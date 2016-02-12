@@ -33,3 +33,7 @@ ul.side-nav li.logo {
 #    margin-top: 32px;
 #    margin-bottom: 80px;
 }
+
+dt {
+	font-weight: bold ;
+}
