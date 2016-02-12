@@ -98,6 +98,8 @@ storage.pipelines.directory =
 domain.uri = http://localhost:8080
 
 # Apache Jena Fuseki is used for debugging RDF data.
+# Currently, this is disabled due to some issues, but will be back.
+#
 # The path must contain the file fuseki-server.jar. 
 # Whenever new Fuseki instances is created
 # a copy of this directory is created.
@@ -108,4 +110,15 @@ domain.uri = http://localhost:8080
 #   fuseki.war
 # Windows ex: C:\\Tools\\apache-jena-fuseki
 # Linux ex: /opt/apache-jena-fuseki
+# CURRENTLY CAN BE LEFT EMPTY
 external.fuseki.path = 
+
+# Temp directory used to instantiate external service like Fuseki.
+# Windows ex: C:\\Tools\\lp\\etl\\services
+# Linux ex: /data/lp/etl/services
+# CURRENTLY CAN BE LEFT EMPTY
+external.working =
+
+# Define range of ports, that are used to create external services like Fuseki.
+external.port.start = 3300
+external.port.end = 3400
