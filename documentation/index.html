@@ -3,24 +3,96 @@ layout: default
 title: Documentation
 ---
 
-  <div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-      <h2 class="header center orange-text">Documentation</h2>
-    </div>
-  </div>
-
-
   <div class="container">
-    <div class="section">
-        <div class="col s1 m1">
-          <div class="icon-block">
-            <h2 class="center light-blue-text"><i class="material-icons">warning</i></h2>
-            <h5 class="center">User documentation coming soon</h5>
-
-            <p class="light center">We realize that it is not easy to start using ETL as a user without a documentation. At the moment, we are, however, focusing on implementation of exciting features and a brand new look. We try to be intuitive, so we encourage you to try our ETL even without a proper user documentation and screencast. Check out <a href="../installation">Installation</a>.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
+	<div class="row">
+		<div class="col s12 m12 l12">
+			<div class="section">
+			  <h2 class="header center orange-text">Overview</h2>
+				<p class="center caption">
+					Once you have LinkedPipes ETL installed and running, it is time to explore.
+					Of course, there is not much to see in an empty instance, but let us go through the basics.
+					The image below is what we call a Pipeline.
+					It is a defined data transformation process which consists of interconnected <a href="../dpus/">Data Processing Units (DPUs)</a>.
+					Each DPU has a name, green input ports and yellow output ports.
+					The ports represent Data Units, which can contain either RDF data or regular files, according to their type.
+					Ports are connected by edges, which indicate the flow of data.
+					Only ports representing Data Units of the same type can be connected.
+				  <img src="../assets/pipeline.png" alt="ETL Pipeline" class="responsive-img"/>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12 m12 l6">
+			<div class="section">
+			  <h3 class="header center orange-text">Pipelines</h3>
+			  <div class="icon-block">
+				<p class="center">
+					Pipelines, defined data transformation processes consisting of interconnected <a href="../dpus/">Data Processing Units (DPUs)</a>, are one of the key concepts in LinkedPipes ETL. 
+					<img src="../assets/pipelines.png" alt="Pipelines list" class="responsive-img"/>
+					So far, you can name them, display them, edit them and run them. 
+					Once you run a Pipeline, you create its Execution.
+				</p>
+			  </div>
+			</div>
+		</div>
+		<div class="col s12 m12 l6">
+			<div class="section">
+			  <h3 class="header center orange-text">Executions</h3>
+			  <div class="icon-block">
+				<p class="center">
+					An Execution is one run of a Pipeline. 
+					It can either succeed or fail.
+					On the Executions page, you can see the currently running executions with their progress as well as finished executions.
+					<img src="../assets/executions.png" alt="Executions list" class="responsive-img"/>
+					You can see the start and end time of an Execution as and the amount of disk space it takes up.
+					You can free that disk space by using the trash icon.
+					You can also re-run the execution or edit its Pipeline, which is useful for debugging.
+					
+				</p>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12 m12 l12">
+			<div class="section">
+			  <h2 class="header center orange-text">Execution detail</h2>
+				<p class="center caption">
+					Once an Execution is finished, you may want to inspect it in more detail.
+					You can do that by inspecting messages from the execution and by going through the actual data that is passed among DPUs.
+				</p>
+			</div>
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col s12 m12 l6">
+			<div class="section">
+			  <h3 class="header center orange-text">Messages</h3>
+			  <div class="icon-block">
+				<p class="center">
+					In Messages, you can see a list of messages indicating, how the Execution went.
+					Each DPU in a Pipeline can send a message when something goes wrong, to simply show its execution progress or to say that it is done.
+					<img src="../assets/messages.png" alt="Execution messages" class="responsive-img"/>
+					When something goes wrong, you can see a detailed error report in the message detail.
+				</p>
+			  </div>
+			</div>
+		</div>
+		<div class="col s12 m12 l6">
+			<div class="section">
+			  <h3 class="header center orange-text">Debug</h3>
+			  <div class="icon-block">
+				<p class="center">
+					In Debug view, you can see a list of data units attached to executed DPUs.
+					Typically, one DPU will have one input and one output data unit, but this is not a rule.
+					That is why the individual data units are named to reflect their expected content.
+				    <img src="../assets/debug.png" alt="Debug view" class="responsive-img"/>
+					You can open a data unit and see the files inside via FTP.
+					Soon, we will add the option to directly query RDF data units using SPARQL.					
+				</p>
+			  </div>
+			</div>
+		</div>
+	</div>	
   </div>
