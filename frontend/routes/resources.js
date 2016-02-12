@@ -108,12 +108,6 @@ gApiRouter.get('/pipelines/:id', function (request, response) {
         }});
 });
 
-gApiRouter.get('/pipelines/:id/configuration', function (request, response) {
-    var definition = gPipelines.getDefinition(request.params.id);
-    response.status(202).setHeader('content-type', 'application/json');
-    response.send(definition['configurations']);
-});
-
 gApiRouter.delete('/pipelines/:id', function (request, response) {
     gPipelines.delete(request.params.id);
     response.status(200);
