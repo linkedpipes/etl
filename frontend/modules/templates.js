@@ -144,7 +144,7 @@ gModule.getDefinition = function (name) {
     return gModule.data[name].definition;
 };
 
-gModule.getConfiguration = function (name) {
+gModule.getConfigurationString = function (name) {
     if (!gModule.data[name]) {
         return;
     }
