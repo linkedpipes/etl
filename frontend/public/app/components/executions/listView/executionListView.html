@@ -35,26 +35,63 @@
                             </span>
                         </div>
                     </div>
-                    <md-button ng-click='onPipeline(item)' class="md-icon-button md-secondary" aria-label="Edit">
+                    <md-button ng-click='onPipeline(item)' class="md-icon-button md-secondary" aria-label="Edit" hide-xs>
                         <md-icon md-svg-icon="edit" class="lp-icon"></md-icon>
                     </md-button>
-                    <md-button ng-click='onExecute(item)' class="md-icon-button md-secondary" aria-label="Execute">
+                    <md-button ng-click='onExecute(item)' class="md-icon-button md-secondary" aria-label="Execute" hide-xs>
                         <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon>
                     </md-button>
-                    <md-button ng-click='onDelete(item)' class="md-icon-button md-secondary" aria-label="Delete" ng-disabled="item.running">
+                    <md-button ng-click='onDelete(item)' class="md-icon-button md-secondary" aria-label="Delete" ng-disabled="item.running" hide-xs>
                         <md-icon md-svg-icon="delete" class="lp-icon"></md-icon>
                     </md-button>
-                    <md-menu class="md-secondary" md-position-mode="target-right target" >
+                    <md-menu class="md-secondary" md-position-mode="target-right target" hide-xs>
                         <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
                             <md-icon md-svg-icon="more_vert" class="lp-icon"></md-icon>
                         </md-button>
                         <md-menu-content>
                             <md-menu-item>
-                                <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank">See logs</md-button>
+                                <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank">
+                                    <md-icon md-svg-icon="visibility"></md-icon> See logs
+                                </md-button>
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank"
-                                           download="{{item.label}}_{{item.start|date:'yyyy-MM-dd_HH-mm-ss'}}.log" >Download logs</md-button>
+                                           download="{{item.label}}_{{item.start|date:'yyyy-MM-dd_HH-mm-ss'}}.log" >
+                                    <md-icon md-svg-icon="file_download"></md-icon> Download logs
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-menu class="md-secondary" md-position-mode="target-right target" hide-gt-xs>
+                        <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                            <md-icon md-svg-icon="more_vert" class="lp-icon"></md-icon>
+                        </md-button>
+                        <md-menu-content>
+                            <md-menu-item>
+                                <md-button ng-click='onPipeline(item)'>
+                                    <md-icon md-svg-icon="edit"></md-icon> Edit
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click='onExecute(item)' >
+                                    <md-icon md-svg-icon="play_circle_outline"></md-icon> Execute
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click='onDelete(item)' ng-hide="item.running">
+                                    <md-icon md-svg-icon="delete"></md-icon> Delete
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank">
+                                    <md-icon md-svg-icon="visibility"></md-icon> See logs
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank"
+                                           download="{{item.label}}_{{item.start|date:'yyyy-MM-dd_HH-mm-ss'}}.log">
+                                    <md-icon md-svg-icon="file_download"></md-icon> Download logs
+                                </md-button>
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
