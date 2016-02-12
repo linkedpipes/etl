@@ -73,7 +73,7 @@ var insertPipeline = function (id, definition) {
     };
 };
 
-initialize = function () {
+(function initialize() {
     console.time('pipelines.initialize');
     // Secure existance.
     var storageDirectory = gConfiguration.storage.pipelines;
@@ -87,9 +87,8 @@ initialize = function () {
         insertPipeline(id);
     }
     console.timeEnd('pipelines.initialize');
-};
+})();
 
-initialize();
 
 /**
  *

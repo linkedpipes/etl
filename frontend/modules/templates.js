@@ -120,7 +120,7 @@ var addComponent = function (name, path) {
     gModule.data[name] = dataItem;
 };
 
-initialize = function () {
+(function initialize() {
     console.time('templates.initialize');
     var componentDirectory = gConfiguration.storage.components;
     var files = gFs.readdirSync(componentDirectory);
@@ -129,9 +129,7 @@ initialize = function () {
         addComponent(directory, path);
     });
     console.timeEnd('templates.initialize');
-};
-
-initialize();
+})();
 
 gModule.getList = function () {
     return this.list;
