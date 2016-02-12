@@ -10,7 +10,7 @@ var gPipelines = require('./../modules/pipelines');
 var gRequest = require('request'); // https://github.com/request/request
 var gConfiguration = require('./../modules/configuration');
 
-var gApiRouter = gExpress();
+var gApiRouter = gExpress.Router();
 module.exports = gApiRouter;
 
 var gMonitorUri = gConfiguration.executor.monitor.url;

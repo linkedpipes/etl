@@ -10,7 +10,7 @@ var gUnpacker = require('./../modules/unpacker');
 var gStream = require('stream');
 var gConfiguration = require('./../modules/configuration');
 
-var gApiRouter = gExpress();
+var gApiRouter = gExpress.Router();
 module.exports = gApiRouter;
 
 var gMonitorUri = gConfiguration.executor.monitor.url;
