@@ -108,7 +108,7 @@ define([], function () {
             rdf.setString(dialect, prefix.csvw + 'quoteChar', $scope.dialog.quote);
             rdf.setString(dialect, prefix.csvw + 'encoding', $scope.dialog.encoding);
             rdf.setString(dialect, prefix.csvw + 'header', $scope.dialog.header);
-            rdf.setString(dialect, prefix.csvw + 'trim', $scope.dialog.trim);
+            rdf.setBoolean(dialect, prefix.csvw + 'trim', $scope.dialog.trim);
             rdf.setInteger(dialect, prefix.csvw + 'skipRows', $scope.dialog.skipRows);
 
             var schema = rdf.secureObject(table, prefix.csvw + 'tableSchema', 'Schema');
