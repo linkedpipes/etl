@@ -37,7 +37,7 @@ class ColumnFactory {
             // Determine column type - there is no spacial identification so we decide based
             // on parametrs.
             final ResourceTemplate aboutUrl;
-            if (column.getAboutUrl() == null) {
+            if (column.getAboutUrl() == null || column.getAboutUrl().isEmpty()) {
                 aboutUrl = defaultAboutUrl;
             } else {
                 aboutUrl = new ResourceTemplate(column.getAboutUrl());

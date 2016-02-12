@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
@@ -22,7 +22,7 @@ public class Tabular implements SequentialExecution {
     public FilesDataUnit inputFilesDataUnit;
 
     @DataProcessingUnit.OutputPort(id = "OutputRdf")
-    public WritableGraphListDataUnit outputRdfDataUnit;
+    public WritableSingleGraphDataUnit outputRdfDataUnit;
 
     @Configuration
     public TabularConfiguration configuration;

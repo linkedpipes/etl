@@ -1,8 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit.SesameDataUnitException;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
+import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +22,15 @@ class BufferedOutput implements StatementConsumer {
 
     private final static ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
-    private final WritableGraphListDataUnit dataUnit;
+    private final WritableSingleGraphDataUnit dataUnit;
 
-    private IRI graph;
+    private final IRI graph;
 
     private final List<Statement> buffer = new ArrayList<>(BUFFER_SIZE);
 
-    public BufferedOutput(WritableGraphListDataUnit dataUnit) {
+    public BufferedOutput(WritableSingleGraphDataUnit dataUnit) {
         this.dataUnit = dataUnit;
+        graph = dataUnit.getGraph();
     }
 
     @Override
@@ -46,13 +45,8 @@ class BufferedOutput implements StatementConsumer {
         }
     }
 
-    @Override
     public void onFileStart() throws NonRecoverableException {
-        try {
-            graph = dataUnit.createGraph();
-        } catch (SesameDataUnitException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't add graph!");
-        }
+        // No operation here.
     }
 
     @Override

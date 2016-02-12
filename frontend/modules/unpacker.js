@@ -405,6 +405,6 @@ gModule.unpack = function (uri, callback) {
 
 
         // Return JSON representaio.
-        callback(true, JSON.stringify(data.pipeline, null, 2));
+        callback(true, data.pipeline);
     }).execute();
 };

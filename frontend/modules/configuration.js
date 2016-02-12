@@ -2,6 +2,8 @@
 // Contains server configuration.
 //
 
+'use strict';
+
 var gFs = require('fs');
 var gPropertiesReader = require('properties-reader');
 

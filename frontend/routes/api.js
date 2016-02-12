@@ -10,7 +10,7 @@ var gUnpacker = require('./../modules/unpacker');
 var gStream = require('stream');
 var gConfiguration = require('./../modules/configuration');
 
-var gApiRouter = gExpress();
+var gApiRouter = gExpress.Router();
 module.exports = gApiRouter;
 
 var gMonitorUri = gConfiguration.executor.monitor.url;
@@ -23,11 +23,10 @@ gApiRouter.get('/unpack', function (request, response) {
     response.status(200).setHeader('content-type', 'text/trig');
     gUnpacker.unpack(request.query.uri, function (sucess, result) {
         if (sucess === false) {
-            response.status(503).setHeader('content-type', 'application/json');
-            response.send(result);
+            response.status(503).json(result);
         } else {
             response.status(200).setHeader('content-type', 'application/json');
-            response.send(result);
+            response.json(result);
         }
     });
 });
@@ -36,14 +35,13 @@ gApiRouter.post('/execute', function (request, response) {
     var postUri = gMonitorUri + 'executions';
     gUnpacker.unpack( request.query.uri, function (sucess, result) {
         if (sucess === false) {
-            response.status(503).setHeader('content-type', 'application/json');
-            response.send(result);
+            response.status(503).json(result);
             return;
         }
         var formData = {
             extension: 'jsonld',
             file: {
-                value: result,
+                value: JSON.stringify(result),
                 options: {
                     contentType: 'application/octet-stream',
                     filename: 'file.jsonld'
@@ -52,7 +50,7 @@ gApiRouter.post('/execute', function (request, response) {
         };
         // Do post on executor service.
         gRequest.post({url: postUri, formData: formData}).on('error', function (error) {
-            response.status(500).send({
+            response.status(500).json({
                'exception' : {
                    'errorMessage': JSON.stringify(error),
                    'systemMessage': 'Executor-monitor is offline!',

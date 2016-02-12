@@ -47,7 +47,9 @@ define([], function () {
                 .icon('close_small', 'libraries/google.design/ic_close_24px.svg')
                 .icon('copy', 'libraries/google.design/ic_content_copy_24px.svg')
                 .icon('timeline', 'libraries/google.design/ic_timeline_24px.svg')
-                .icon('more_vert', 'libraries/google.design/ic_more_vert_24px.svg');
+                .icon('more_vert', 'libraries/google.design/ic_more_vert_24px.svg')
+                .icon('visibility', 'libraries/google.design/ic_visibility_24px.svg')
+                .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg');
     }
     // Inject dependency.
     config.$inject = ['$routeProvider', '$mdIconProvider'];

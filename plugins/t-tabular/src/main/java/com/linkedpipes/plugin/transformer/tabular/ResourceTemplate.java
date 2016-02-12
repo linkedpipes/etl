@@ -24,7 +24,7 @@ public class ResourceTemplate {
     private int lastRowNumber;
 
     public ResourceTemplate(String templateAsString) {
-        if (templateAsString == null) {
+        if (templateAsString == null || templateAsString.isEmpty()) {
             template = null;
         } else {
             this.template = new StringTemplate(templateAsString);

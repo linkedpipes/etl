@@ -10,7 +10,7 @@ var gPipelines = require('./../modules/pipelines');
 var gRequest = require('request'); // https://github.com/request/request
 var gConfiguration = require('./../modules/configuration');
 
-var gApiRouter = gExpress();
+var gApiRouter = gExpress.Router();
 module.exports = gApiRouter;
 
 var gMonitorUri = gConfiguration.executor.monitor.url;
@@ -27,16 +27,14 @@ var wrapContent = function (content) {
 //
 
 gApiRouter.get('/components', function (request, response) {
-    var responseString = JSON.stringify(wrapContent(gTemplates.getList()), null, 2);
-    response.status(200).setHeader('content-type', 'application/json');
-    response.send(responseString);
+    var value = wrapContent(gTemplates.getList());
+    response.json(value);
 });
 
 gApiRouter.get('/components/:name', function (request, response) {
     var value = gTemplates.getDefinition(request.params.name);
     if (value) {
-        response.status(200).setHeader('content-type', 'application/json');
-        response.send(JSON.stringify(value, null, 2));
+        response.json(value);
     } else {
         response.status(404).send('');
     }
@@ -45,7 +43,7 @@ gApiRouter.get('/components/:name', function (request, response) {
 gApiRouter.get('/components/:name/:type', function (request, response) {
     var type = request.params.type;
     if (type === 'configuration') {
-        var value = gTemplates.getConfiguration(request.params.name);
+        var value = gTemplates.getConfigurationString(request.params.name);
         if (value) {
             response.status(200).setHeader('content-type', 'application/json');
             response.send(value);
@@ -55,7 +53,7 @@ gApiRouter.get('/components/:name/:type', function (request, response) {
     } else if (type === 'dialog.js') {
         var value = gTemplates.getDialogJs(request.params.name);
         if (value) {
-            response.status(200).setHeader('content-type', 'application/json');
+            response.status(200).setHeader('content-type', 'text/javascript');
             response.send(value);
         } else {
             response.status(404).send('');
@@ -63,14 +61,13 @@ gApiRouter.get('/components/:name/:type', function (request, response) {
     } else if (type === 'dialog.html') {
         var value = gTemplates.getDialogHtml(request.params.name);
         if (value) {
-            response.status(200).setHeader('content-type', 'application/json');
+            response.status(200).setHeader('content-type', 'text/html');
             response.send(value);
         } else {
             response.status(404).send('');
         }
     } else {
-        response.status(400).setHeader('content-type', 'application/json');
-        response.send({
+        response.status(400).json({
             'exception': {
                 'errorMessage': '',
                 'systemMessage': 'Type: "' + type + '".',
@@ -85,9 +82,8 @@ gApiRouter.get('/components/:name/:type', function (request, response) {
 //
 
 gApiRouter.get('/pipelines', function (request, response) {
-    var responseString = JSON.stringify(wrapContent(gPipelines.getList()), null, 2);
-    response.status(202).setHeader('content-type', 'application/json');
-    response.send(responseString);
+    var value = wrapContent(gPipelines.getList());
+    response.json(value);
 });
 
 gApiRouter.get('/pipelines/:id', function (request, response) {
@@ -96,22 +92,15 @@ gApiRouter.get('/pipelines/:id', function (request, response) {
     if (content) {
         response.status(202).setHeader('content-type', 'application/json');
         content.pipe(response);
-        return;
+    } else {
+        response.status(500).json({
+            'exception': {
+                'errorMessage': '',
+                'systemMessage': '',
+                'userMessage': 'Pipeline "' + id + '" does not exists.',
+                'errorCode': 'ERROR'
+            }});
     }
-    response.status(500).setHeader('content-type', 'application/json');
-    response.send({
-        'exception': {
-            'errorMessage': '',
-            'systemMessage': '',
-            'userMessage': 'Pipeline "' + id + '" does not exists.',
-            'errorCode': 'ERROR'
-        }});
-});
-
-gApiRouter.get('/pipelines/:id/configuration', function (request, response) {
-    var definition = gPipelines.getDefinition(request.params.id);
-    response.status(202).setHeader('content-type', 'application/json');
-    response.send(definition['configurations']);
 });
 
 gApiRouter.delete('/pipelines/:id', function (request, response) {
@@ -122,18 +111,16 @@ gApiRouter.delete('/pipelines/:id', function (request, response) {
 
 gApiRouter.post('/pipelines', function (request, response) {
     var record = gPipelines.create();
-    response.status(202).setHeader('content-type', 'application/json');
-    response.send(record);
+    response.json(record);
 });
 
 gApiRouter.post('/pipelines/:id', function (request, response) {
     var record = gPipelines.create(request.params.id);
     if (record) {
-        response.status(202).setHeader('content-type', 'application/json');
-        response.send(record);
+        response.json(record);
     } else {
         response.status(500).setHeader('content-type', 'application/json');
-        response.send({
+        response.json({
             'exception': {
                 'errorMessage': '',
                 'systemMessage': '',
@@ -160,8 +147,7 @@ gApiRouter.put('/pipelines/:id', function (request, response) {
 
 var pipeGet = function (uri, response) {
     gRequest.get(uri).on('error', function (error) {
-        response.status(503).setHeader('content-type', 'application/json');
-        response.send({
+        response.status(503).json({
             'exception': {
                 'errorMessage': '',
                 'systemMessage': 'Executor-monitor is offline.',
@@ -280,12 +266,10 @@ gApiRouter.get('/executions/:id/debug', function (request, response) {
                 'executionId': debugInfo['executionId'],
                 'dataUnits': dataUnits
             };
-            response.status(200).setHeader('content-type', 'application/json');
-            response.send(JSON.stringify({
+            response.json({
                 'metadata': '',
                 'payload': output
-            }, null, 2));
-
+            });
         });
     });
 });

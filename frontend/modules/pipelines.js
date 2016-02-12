@@ -2,6 +2,8 @@
 // Manage pipeline storage - should be standalone component.
 //
 
+'use strict';
+
 var gFs = require('fs');
 var gStream = require('stream');
 var gUuid = require('node-uuid');
@@ -73,7 +75,7 @@ var insertPipeline = function (id, definition) {
     };
 };
 
-initialize = function () {
+(function initialize() {
     console.time('pipelines.initialize');
     // Secure existance.
     var storageDirectory = gConfiguration.storage.pipelines;
@@ -87,9 +89,8 @@ initialize = function () {
         insertPipeline(id);
     }
     console.timeEnd('pipelines.initialize');
-};
+})();
 
-initialize();
 
 /**
  *
@@ -219,6 +220,15 @@ var updateResourceUri = function (content, id) {
             if (resource['http://linkedpipes.com/ontology/configurationGraph']) {
                 objects.push(resource['http://linkedpipes.com/ontology/configurationGraph']);
             }
+            if (resource['http://linkedpipes.com/ontology/template']) {
+                // Update URI - for now in a simple way by string replace
+                var componentUri = resource['http://linkedpipes.com/ontology/template']['@id'];
+                var componentId = componentUri.substring(componentUri.lastIndexOf("/") + 1);
+                var newComponentUri = gConfiguration.storage.domain + '/resources/components/' + componentId;
+                newComponentUri = newComponentUri.replace("[^:]//", "/");
+                resource['http://linkedpipes.com/ontology/template']['@id'] = newComponentUri;
+
+            }
         } else if (type.indexOf('http://linkedpipes.com/ontology/Connection') !== -1 ||
                 type.indexOf('http://linkedpipes.com/ontology/RunAfter') !== -1) {
             objects.push(resource);
@@ -260,7 +270,6 @@ var updateResourceUri = function (content, id) {
             object['@id'] = targetDomain + object['@id'].substring(sourceDomainLength);
         }
     });
-
 };
 
 /**

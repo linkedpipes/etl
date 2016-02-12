@@ -2,6 +2,8 @@
 // Manages templates - shoudl be standalone component.
 //
 
+'use strict';
+
 var gFs = require('fs');
 var gConfiguration = require('./configuration');
 var gPath = require('path');
@@ -120,7 +122,7 @@ var addComponent = function (name, path) {
     gModule.data[name] = dataItem;
 };
 
-initialize = function () {
+(function initialize() {
     console.time('templates.initialize');
     var componentDirectory = gConfiguration.storage.components;
     var files = gFs.readdirSync(componentDirectory);
@@ -129,9 +131,7 @@ initialize = function () {
         addComponent(directory, path);
     });
     console.timeEnd('templates.initialize');
-};
-
-initialize();
+})();
 
 gModule.getList = function () {
     return this.list;
@@ -144,7 +144,7 @@ gModule.getDefinition = function (name) {
     return gModule.data[name].definition;
 };
 
-gModule.getConfiguration = function (name) {
+gModule.getConfigurationString = function (name) {
     if (!gModule.data[name]) {
         return;
     }
