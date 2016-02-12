@@ -220,6 +220,15 @@ var updateResourceUri = function (content, id) {
             if (resource['http://linkedpipes.com/ontology/configurationGraph']) {
                 objects.push(resource['http://linkedpipes.com/ontology/configurationGraph']);
             }
+            if (resource['http://linkedpipes.com/ontology/template']) {
+                // Update URI - for now in a simple way by string replace
+                var componentUri = resource['http://linkedpipes.com/ontology/template']['@id'];
+                var componentId = componentUri.substring(componentUri.lastIndexOf("/") + 1);
+                var newComponentUri = gConfiguration.storage.domain + '/resources/components/' + componentId;
+                newComponentUri = newComponentUri.replace("[^:]//", "/");
+                resource['http://linkedpipes.com/ontology/template']['@id'] = newComponentUri;
+
+            }
         } else if (type.indexOf('http://linkedpipes.com/ontology/Connection') !== -1 ||
                 type.indexOf('http://linkedpipes.com/ontology/RunAfter') !== -1) {
             objects.push(resource);
@@ -261,7 +270,6 @@ var updateResourceUri = function (content, id) {
             object['@id'] = targetDomain + object['@id'].substring(sourceDomainLength);
         }
     });
-
 };
 
 /**
