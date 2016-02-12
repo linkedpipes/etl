@@ -14,7 +14,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://etl.linkedpipes.com" # the base hostname & protocol for your site
 #twitter_username: jekyllrb
 #github_username:  linkedpipes
-highlighter: pygments
+#highlighter: pygments
 
 # Build settings
 markdown: kramdown
