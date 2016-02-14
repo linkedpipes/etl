@@ -46,7 +46,7 @@ title: DPUs
 		  </div>	
 	  </div>
 	
-	  <div class="col s12 m6 l4">
+	  <div id="e-sparql" class="col s12 m6 l4">
 		  <div class="card small red lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/e-sparql.png" alt="SPARQL endpoint">
@@ -59,19 +59,19 @@ title: DPUs
 			<div class="card-reveal red lighten-4">
 			  <span class="card-title grey-text text-darken-4">SPARQL endpoint<i class="material-icons right">close</i></span>
 			  <p>
-				Extractor, allows the user to extract RDF triples from a SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#construct">Construct query</a>.
+				Extractor, allows the user to extract RDF triples from a SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#construct">CONSTRUCT query</a>.
 			  </p>
 				<dl>
 					<dt>Endpoint</dt>
 					<dd>URL of the SPARQL endpoint to be queried</dd>
-					<dt>SPARQL Construct query</dt>
+					<dt>SPARQL CONSTRUCT query</dt>
 					<dd>Query for extraction of triples from the endpoint</dd>
 				</dl>
 			</div>
 		  </div>	
 	  </div>
 
-	  <div class="col s12 m6 l4">
+	  <div id="e-textholder" class="col s12 m6 l4">
 		  <div class="card small red lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/e-textholder.png" alt="Text holder">
@@ -95,7 +95,7 @@ title: DPUs
 		  </div>	
 	  </div>
 
-	  <div class="col s12 m6 l4">
+	  <div id="l-filestoscp" class="col s12 m6 l4">
 		  <div class="card small green lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/l-filestoscp.png" alt="Files to SCP">
@@ -127,7 +127,7 @@ title: DPUs
 		  </div>	
 	  </div>
 	  
-	  <div class="col s12 m6 l4">
+	  <div id="t-filestordf" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-filestordf.png" alt="Files to RDF">
@@ -151,7 +151,7 @@ title: DPUs
 		  </div>	
 	  </div>
 
-	  <div class="col s12 m6 l4">
+	  <div id="t-rdftofile" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-rdftofile.png" alt="RDF to File">
@@ -177,7 +177,7 @@ title: DPUs
 		  </div>	
 	  </div>	  
 
-	  <div class="col s12 m6 l4">
+	  <div id="t-packzip" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-packzip.png" alt="Create zip archive">
@@ -199,7 +199,7 @@ title: DPUs
 		  </div>	
 	  </div>	  
 	  
-	  <div class="col s12 m6 l4">
+	  <div id="t-unpackzip" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-unpackzip.png" alt="Decompress zip archive">
@@ -221,7 +221,7 @@ title: DPUs
 		  </div>	
 	  </div>	  
 	  
-	  <div class="col s12 m6 l4">
+	  <div id="t-unpack" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-unpack.png" alt="Unpack">
@@ -245,7 +245,7 @@ title: DPUs
 		  </div>	
 	  </div>	  
 
-	  <div class="col s12 m6 l4">
+	  <div id="t-filesfilter" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-filesfilter.png" alt="Files filter">
@@ -268,7 +268,7 @@ title: DPUs
 		  </div>	
 	  </div>	  
 
-	  <div class="col s12 m6 l4">
+	  <div id="t-exceltocsv" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-exceltocsv.png" alt="Excel to CSV">
@@ -295,20 +295,20 @@ title: DPUs
 					<dd>Number of the first column to be transformed</dd>
 					<dt>Column end</dt>
 					<dd>Number of the last column to be transformed</dd>
-					<dt>Has header</dt>
-					<dd>TODO</dd>
-					<dt>Advanced numeric parse</dt>
-					<dd>TODO</dd>
+					<dt>Virtual columns have header</dt>
+					<dd>TODO - do not use now</dd>
+					<dt>Try to determine cell type (date, integer)</dt>
+					<dd>Excel stores dates and integers as double values. When checked, the transformer tries to parse these as dates and integers</dd>
 					<dt>Skip empty rows</dt>
-					<dd>TODO</dd>
-					<dt>Include sheet name</dt>
-					<dd>TODO</dd>
+					<dd>When checked, empty rows are not included in the output CSV. Otherwise, they are full of NULL values</dd>
+					<dt>Include sheet name as additional column</dt>
+					<dd>When checked, a <code>sheet_name</code> column is added, with source Excel sheet name as a value</dd>
 				</dl>
 			</div>
 		  </div>	
 	  </div>	  
 
-	  <div class="col s12 m6 l4">
+	  <div id="t-xslt" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/t-xslt.png" alt="XSLT transformer">
@@ -332,7 +332,7 @@ title: DPUs
 		  </div>	
 	  </div>
 
-	  <div class="col s12 m6 l4">
+	  <div id="x-virtuoso" class="col s12 m6 l4">
 		  <div class="card small grey lighten-2">
 			<div class="card-image waves-effect waves-block waves-light">
 			  <img class="activator" src="../assets/dpus/x-virtuoso.png" alt="Virtuoso loader">
@@ -369,6 +369,149 @@ title: DPUs
 			</div>
 		  </div>	
 	  </div>
+	  
+	  <div id="t-sparqlconstruct" class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-sparqlconstruct.png" alt="SPARQL construct">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">SPARQL construct<i class="material-icons right">more_vert</i></span>
+			  <p>Transforms RDF data using a SPARQL CONSTRUCT query.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">SPARQL construct<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to transform RDF data using a <a href="https://www.w3.org/TR/sparql11-query/#construct">CONSTRUCT query</a>.
+				This means that based on the input data, output data will be generated using this query.
+			  </p>
+				<dl>
+					<dt>SPARQL CONSTRUCT query</dt>
+					<dd>Query for transformation of triples</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+	  
+	  <div id="t-sparqlselect" class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-sparqlselect.png" alt="SPARQL select">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">SPARQL select<i class="material-icons right">more_vert</i></span>
+			  <p>Transforms RDF data into a CSV file using a SPARQL SELECT query.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">SPARQL select<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to transform RDF data to a CSV file using a <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT query</a>.
+			  </p>
+				<dl>
+					<dt>SPARQL SELECT query</dt>
+					<dd>Query for transformation of triples</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+
+	  <div id="t-sparqlupdate" class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-sparqlupdate.png" alt="SPARQL update">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">SPARQL update<i class="material-icons right">more_vert</i></span>
+			  <p>Transforms RDF data into using SPARQL UPDATE queries.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">SPARQL update<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer, allows the user to transform RDF data using <a href="https://www.w3.org/TR/sparql11-update/">SPARQL UPDATE queries</a>.
+				This means that the input data will be changed - added to and/or deleted from.
+			  </p>
+				<dl>
+					<dt>SPARQL Update query</dt>
+					<dd>Query for transformation of triples</dd>
+				</dl>
+			</div>
+		  </div>	
+	  </div>
+
+	  <div id="t-graphmerger" class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-graphmerger.png" alt="Graph merger">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Graph merger<i class="material-icons right">more_vert</i></span>
+			  <p>Transforms Data Unit containing multiple graphs to a Data Unit containing single graph.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Graph merger<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer. There are two types of RDF Data Units in LinkedPipes ETL right now.
+				There is a data unit, that can contain multiple RDF named graphs, which is currently produced only by the <a href="#t-filestordf">Files to RDF</a>, which may transform files containing RDF quads.
+				When the user then wants to work with such data using DPUs that only support triples, Graph merger is needed to do the conversion.
+			  </p>
+			</div>
+		  </div>	
+	  </div>
+
+	  <div id="t-tabular" class="col s12 m6 l4">
+		  <div class="card small indigo lighten-4">
+			<div class="card-image waves-effect waves-block waves-light">
+			  <img class="activator" src="../assets/dpus/t-tabular.png" alt="Tabular">
+			</div>
+			<div class="card-content">
+			  <span class="card-title activator grey-text text-darken-4">Tabular<i class="material-icons right">more_vert</i></span>
+			  <p>Transforms CSV files to RDF triples.
+			</div>
+			<div class="card-reveal indigo lighten-4">
+			  <span class="card-title grey-text text-darken-4">Tabular<i class="material-icons right">close</i></span>
+			  <p>
+				Transformer. Used to transform CSV files to RDF data according to the <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a> W3C Recommendation.
+				The first set of parameters is there simply do deal with CSV files incompliant with <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a>, which specifiec a comma as a delimiter, the double-quote as a quote character and UTF-8 as the encoding.
+			  </p>
+				<dl>
+					<dt>Delimiter</dt>
+					<dd>Character separating columns in a row</dd>
+					<dt>Quote</dt>
+					<dd>Character used as quote in case the column value contains the column separator</dd>
+					<dt>Encoding</dt>
+					<dd>Encoding of the CSV file</dd>
+				</dl>
+				<p>The second group of parameters deals with the transformation itself.
+				</p>
+				<dl>
+					<dt>Table has header</dt>
+					<dd>Character separating columns in a row</dd>
+					<dt>Trim</dt>
+					<dd>Character used as quote in case the column value contains the column separator</dd>
+					<dt>Default resource IRI template</dt>
+					<dd>An <a href="https://tools.ietf.org/html/rfc6570#section-2">RFC 6570</a> IRI template. E.g. <code>http://ex.org/{COLUMN_WITH_ID}</code></dd>
+					<dt>Rows skip</dt>
+					<dd>Number of rows to be skipped during transformation</dd>
+					<dt>Rows limit</dt>
+					<dd>Number of rows to be processed during transformation</dd>
+					<dt>Output metadata</dt>
+					<dd>When checked, entities for rows and the table are generated. Otherwise, only raw row data is generated</dd>
+					<dt>Generate full mapping</dt>
+					<dd>When checked, uses the default mapping specified by the Recommendation. Otherwise, lets the user specify the mapping manually</dd>
+					<dt>Use IRI base</dt>
+					<dd>When checked, lets the user specify the IRI base for IRIs of rows and properties used to attach column value to the row entity. Otherwise, the IRIs are generated according to the Recommendation, which includes a file name with full path, which is random in LinkedPipes ETL and makes it hard to process the resulting data</dd>
+					<dt>IRI base</dt>
+					<dd>The IRI base for row and property IRIs</dd>
+				</dl>
+			<p>
+			The advanced row mapping will be documented later. 
+			Basically, it allows the user to directly specify output literal data type, language tag or specify that the output value is an IRI.
+			In addition, it allows to specify a custom predicate IRI based on column name.
+			</p>
+			</div>
+		  </div>	
+	  </div>
+
 	  
 	  </div>
 <!--	<div class="row">
