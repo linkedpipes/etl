@@ -10,7 +10,7 @@
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label for="quoteChar">Quote:</label>
+                    <label for="quoteChar">Quote character:</label>
                     <input type="text" class="form-control input-sm" id="quoteChar" placeholder="\""
                            ng-model="dialog.quote">
                 </div>
@@ -28,7 +28,7 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label for="aboutUrl">Default resource URI template:</label>
+                    <label for="aboutUrl">Default resource IRI template:</label>
                     <input type="text" class="form-control input-sm" id="aboutUrl" placeholder="{row-with-id}"
                            ng-model="dialog.aboutUrl">
                 </div>
@@ -50,9 +50,9 @@
         </div>
         <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.normalOutput"> Output metadata</label>
         <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.fullMapping"> Generate full mapping</label>
-        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.useBaseUri"> Use URI base</label>
+        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.useBaseUri"> Use IRI base</label>
         <div class="form-group" ng-show="dialog.useBaseUri">
-            <label for="rowLimit">URI base:</label>
+            <label for="rowLimit">IRI base:</label>
             <input type="text" class="form-control input-sm" id="rowLimit" ng-model="dialog.baseUri">
         </div>
     </form>
