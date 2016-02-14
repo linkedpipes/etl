@@ -29,9 +29,11 @@
 
 ul.side-nav li.logo {
     text-align: left;
-	font-size: 16pt;
-#    margin-top: 32px;
-#    margin-bottom: 80px;
+    font-size: 16pt;
+}
+nav ul.side-nav a:hover {
+	background-color: rgba(0,0,0,0);
+
 }
 
 dt {
