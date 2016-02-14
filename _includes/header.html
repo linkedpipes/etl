@@ -3,21 +3,27 @@
 		<div class="nav-wrapper container">
 			<a id="logo-container" href="{{ site.url }}" class="brand-logo">LinkedPipes ETL</a>
 			<ul class="right hide-on-med-and-down">
-			{% for my_page in site.pages %}
+			{% assign pages = site.pages | sort: 'order' %}
+			{% for my_page in pages %}
 			  {% if my_page.title %}
-			  <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+				  {% if page.url == my_page.url %}
+				  <li class="active"><a title="{{ my_page.title }}" href="{{ my_page.url | prepend: site.baseurl }}"><i class="material-icons">{{ my_page.materialicon }}</i></a></li>
+				  {% else %}
+				  <li ><a title="{{ my_page.title }}" href="{{ my_page.url | prepend: site.baseurl }}"><i class="material-icons">{{ my_page.materialicon }}</i></a></li>
+				  {% endif %}
 			  {% endif %}
 			{% endfor %}
-			<li><a href="http://linkedpipes.com">LinkedPipes</a></li>
+			<li><a href="http://linkedpipes.com" title="LinkedPipes"><i class="material-icons left">keyboard_arrow_up</i></a></li>
 			</ul>
 			<ul id="slide-out" class="side-nav">
 				<li class="logo light-blue lighten-1">LinkedPipes ETL</li>
-				{% for my_page in site.pages %}
+  			{% assign pages = site.pages | sort: 'order' %}
+				{% for my_page in pages %}
 				  {% if my_page.title %}
-				  <li><a href="{{ my_page.url | prepend: site.baseurl }}" class="waves-effect waves-orange">{{ my_page.title }}</a></li>
+				  <li><a href="{{ my_page.url | prepend: site.baseurl }}" class="waves-effect waves-orange"><i class="material-icons left">{{ my_page.materialicon }}</i>{{ my_page.title }}</a></li>
 				  {% endif %}
 				{% endfor %}
-			<li><a class="waves-effect waves-orange" href="http://linkedpipes.com">LinkedPipes</a></li>
+			<li><a class="waves-effect waves-orange" href="http://linkedpipes.com"><i class="material-icons left">keyboard_arrow_up</i>LinkedPipes</a></li>
 			</ul>
 			<a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>			
 		</div>
