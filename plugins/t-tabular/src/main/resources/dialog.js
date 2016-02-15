@@ -7,7 +7,7 @@ define([], function () {
             'encoding': '',
             'header': true,
             'trim': true,
-            'aboutUrl': 'aboutUrl',
+            'aboutUrl': '',
             'normalOutput': false,
             'fullMapping': false,
             'rowLimit': -1,
