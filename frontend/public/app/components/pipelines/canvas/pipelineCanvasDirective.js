@@ -233,10 +233,10 @@ define([
      *
      * @returns {joint.dia.Paper}
      */
-    var Paper = function (graph) {
+    var Paper = function (graph, element) {
         return new joint.dia.Paper({
             async: true,
-            el: $('#canvas'),
+            el: element,
             width: '100%',
             height: '100%',
             model: graph,
@@ -341,7 +341,7 @@ define([
         return {
             restrict: 'E',
             scope: {api: '='},
-            template: '<div id="canvas"></div>',
+            template: '',
             link: function ($scope, element, attrs) {
 
                 $scope.api = $.extend({}, API, $scope.api);
@@ -374,14 +374,14 @@ define([
                     }
                 };
 
-                $scope.paper = new Paper($scope.graph);
+                $scope.paper = new Paper($scope.graph, element);
 
                 // Add scrollable view to canvas.
                 var scrollableView = new ScrollableView({
                     paper: $scope.paper,
                     scroll: $scope.status.scroll
                 });
-                scrollableView.$el.css({width: '100%', height: '100%'}).appendTo('#canvas');
+                scrollableView.$el.css({width: '100%', height: '100%'}).appendTo(element);
 
                 // Disable right click context menu.
                 $scope.paper.el.oncontextmenu = function (event) {
