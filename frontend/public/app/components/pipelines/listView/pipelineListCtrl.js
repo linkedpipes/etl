@@ -1,5 +1,6 @@
 define([], function () {
-    function controler($scope, $location, $http, $timeout, refreshService, repositoryService, statusService) {
+    function controler($scope, $location, $http, $timeout, refreshService, repositoryService,
+            statusService) {
 
         var listDecorator = function (item) {
             item.waitForDelete = false;
@@ -47,6 +48,10 @@ define([], function () {
 
         $scope.onUpload = function () {
             $location.path('/pipelines/upload').search({});
+        };
+
+        $scope.openMenu = function ($mdOpenMenu, ev) {
+            $mdOpenMenu(ev);
         };
 
         var initialize = function () {
