@@ -6,13 +6,13 @@ package com.linkedpipes.commons.entities.executor;
  */
 public enum ExecutionStatusCode {
 
-    QUEUED(100),
-    INITIALIZING(200),
-    INITIALIZATION_FAILED(300),
-    RUNNING(400),
-    FINISHED(500),
-    FAILED(600),
-    FAILED_ON_THROWABLE(700);
+    QUEUED(120),
+    INITIALIZING(140),
+    INITIALIZATION_FAILED(519),
+    RUNNING(160),
+    FINISHED(200),
+    FAILED(511),
+    FAILED_ON_THROWABLE(512);
 
     private final int code;
 

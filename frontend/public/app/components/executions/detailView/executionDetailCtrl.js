@@ -25,32 +25,6 @@ define([
         typeDecorators['http://linkedpipes.com/ontology/events/InitializationFailed'] =
                 typeDecorators['http://linkedpipes.com/ontology/events/ExecutionFailed'];
 
-        var codeToStatus = {
-            '100': {
-                'label': 'Queued'
-            },
-            '200': {
-                'label': 'Initializing'
-            },
-            '300': {
-                'label': 'Failed'
-            },
-            '400': {
-                'label': 'Running'
-            },
-            '500': {
-                'label': 'Finished'
-            },
-            '600': {
-                'label': 'Failed'
-            },
-            '700': {
-                'label': 'Failed'
-            }
-
-        };
-
-
         var updateMessage = function (message) {
             // Store created time to be more acessible.
             message['created'] = message['http://linkedpipes.com/ontology/events/created'];
@@ -124,8 +98,6 @@ define([
                     // Cancel refresh as execution is completed.
                     refreshService.reset();
                 }
-                //
-                $scope.execution.status = codeToStatus[$scope.execution.statusCode];
                 //
                 if (next) {
                     next();

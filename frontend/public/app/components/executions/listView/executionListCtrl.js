@@ -15,7 +15,7 @@ define([
             item.waitForDelete = false;
             //
             switch (item.statusCode) {
-                case 100: // QUEUED
+                case 120: // QUEUED
                     item.icon = {
                         'name': 'hourglass',
                         'style': {
@@ -24,8 +24,8 @@ define([
                     };
                     item.view = 'QUEUED';
                     break;
-                case 200: // INITIALIZING
-                case 400: // RUNNING
+                case 140: // INITIALIZING
+                case 160: // RUNNING
                     item.icon = {
                         'name': 'run',
                         'style': {
@@ -34,7 +34,7 @@ define([
                     };
                     item.view = 'RUNNNING';
                     break;
-                case 500: // FINISHED
+                case 200: // FINISHED
                     item.icon = {
                         'name': 'done',
                         'style': {
@@ -43,9 +43,9 @@ define([
                     };
                     item.view = 'FINISHED';
                     break;
-                case 300: // INITIALIZATION_FAILED
-                case 600: // FAILED
-                case 700: // FAILED_ON_THROWABLE
+                case 510: // INITIALIZATION_FAILED
+                case 511: // FAILED
+                case 512: // FAILED_ON_THROWABLE
                     item.icon = {
                         'name': 'error',
                         'style': {
@@ -54,8 +54,8 @@ define([
                     };
                     item.view = 'FAILED';
                     break;
-                default:
-                    alert('Unknown status detected! Please report this.');
+                default: // UNKNOWN
+                    item.view = '';
                     break;
             }
         };
