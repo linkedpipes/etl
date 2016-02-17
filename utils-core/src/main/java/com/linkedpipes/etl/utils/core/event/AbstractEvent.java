@@ -1,4 +1,4 @@
-package com.linkedpipes.utils.core.event.boundary;
+package com.linkedpipes.etl.utils.core.event;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.text.DateFormat;
@@ -15,7 +15,7 @@ import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 public abstract class AbstractEvent implements Event {
 
     /**
-     * Message uri.
+     * Message URI.
      */
     protected String uri;
 
