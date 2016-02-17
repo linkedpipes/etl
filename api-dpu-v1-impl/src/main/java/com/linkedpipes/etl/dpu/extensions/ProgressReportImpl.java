@@ -163,25 +163,12 @@ public class ProgressReportImpl implements ProgressReport, ManageableExtension {
     }
 
     @Override
-    public void startTotalUnknown(int reportStepSuggestion) {
-        current = 0;
-        total = null;
-        if (configuration.reportStep == null) {
-            reportStep = reportStepSuggestion;
-        } else {
-            reportStep = reportStepSuggestion;
-        }
-        reportNext = reportStep;
-        context.sendEvent(new ReportProgress(0, null, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_START));
-    }
-
-    @Override
     public void start(int entriesToProcess) {
         current = 0;
         total = entriesToProcess;
         reportStep = (int) (total * configuration.reportPercentage);
         reportNext = reportStep;
-        context.sendEvent(new ReportProgress(0, total, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_START));
+        context.sendMessage(new ReportProgress(0, total, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_START));
     }
 
     @Override
@@ -194,13 +181,13 @@ public class ProgressReportImpl implements ProgressReport, ManageableExtension {
         ++current;
         if (current >= reportNext) {
             reportNext += reportStep;
-            context.sendEvent(new ReportProgress(current, total, componentUri, null));
+            context.sendMessage(new ReportProgress(current, total, componentUri, null));
         }
     }
 
     @Override
     public void done() {
-        context.sendEvent(new ReportProgress(null, null, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_DONE));
+        context.sendMessage(new ReportProgress(null, null, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_DONE));
     }
 
     @Override

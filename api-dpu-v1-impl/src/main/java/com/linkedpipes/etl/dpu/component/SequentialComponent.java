@@ -24,11 +24,12 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.Component.ComponentFailed;
 import com.linkedpipes.etl.executor.api.v1.component.Component.InitializationFailed;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
-import com.linkedpipes.etl.executor.api.v1.context.CancelAwareContext;
 import com.linkedpipes.etl.executor.api.v1.component.Headers;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import java.util.LinkedList;
 import java.util.List;
+import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
+
 
 /**
  *
@@ -112,7 +113,7 @@ final class SequentialComponent implements Component {
         }
     }
 
-    protected void bindExtensions(CancelAwareContext context) throws InitializationFailed {
+    protected void bindExtensions(ExecutionContext context) throws InitializationFailed {
         for (Field field : dpu.getClass().getFields()) {
             if (field.getAnnotation(DataProcessingUnit.Extension.class) == null) {
                 // No annotation.
@@ -232,15 +233,15 @@ final class SequentialComponent implements Component {
     }
 
     @Override
-    public void initialize(Map<String, DataUnit> dataUnits, CancelAwareContext context) throws InitializationFailed {
+    public void initialize(Map<String, DataUnit> dataUnits, ExecutionContext executionContext) throws InitializationFailed {
         // Bind data units to the component.
         bindPorts(dataUnits);
-        bindExtensions(context);
+        bindExtensions(executionContext);
         loadConfigurations(getConfigurationDataUnit(dataUnits));
     }
 
     @Override
-    public void execute(CancelAwareContext context) throws ComponentFailed {
+    public void execute(ExecutionContext context) throws ComponentFailed {
         try {
             for (ManageableExtension extension : extensions) {
                 extension.preExecution();
