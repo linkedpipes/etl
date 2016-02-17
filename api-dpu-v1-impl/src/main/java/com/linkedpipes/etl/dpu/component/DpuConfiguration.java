@@ -3,29 +3,40 @@ package com.linkedpipes.etl.dpu.component;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.io.File;
 
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Describes informations stored in RDF that are used for execution of this DPU.
  *
  * @author Škoda Petr
  */
 final class DpuConfiguration implements EntityLoader.Loadable {
 
+    /**
+     * Represent a resource that holds the configuration.
+     */
     public static class ConfigurationHolder implements EntityLoader.Loadable {
 
-        private final String uri;
-
+        /**
+         * Order in which the configuration should be loaded. The value determines priority of
+         * configuration entity loading.
+         */
         private int order;
 
+        /**
+         * URI of the configuration resource.
+         */
         private String configurationUri = null;
 
+        /**
+         * Graph with the configuration.
+         */
         private String configurationGraph = null;
 
-        public ConfigurationHolder(String uri) {
-            this.uri = uri;
+        public ConfigurationHolder() {
         }
 
         @Override
@@ -36,7 +47,7 @@ final class DpuConfiguration implements EntityLoader.Loadable {
                         order = Integer.parseInt(value);
                     } catch (NumberFormatException ex) {
                         throw new EntityLoader.LoadingFailed(
-                                LINKEDPIPES.CONFIGURATION.HAS_ORDER + " must be a integer!", ex);
+                                LINKEDPIPES.CONFIGURATION.HAS_ORDER + " must be an integer!", ex);
                     }
                     return null;
                 case LINKEDPIPES.CONFIGURATION.HAS_RESOURCE:
@@ -55,10 +66,6 @@ final class DpuConfiguration implements EntityLoader.Loadable {
 
         }
 
-        public String getUri() {
-            return uri;
-        }
-
         public int getOrder() {
             return order;
         }
@@ -73,8 +80,14 @@ final class DpuConfiguration implements EntityLoader.Loadable {
 
     }
 
+    /**
+     * URI of DPU resource.
+     */
     private final String resourceUri;
 
+    /**
+     * DPU working directory.
+     */
     private String workingDirectory;
 
     private final List<ConfigurationHolder> configurations = new LinkedList<>();
@@ -102,7 +115,7 @@ final class DpuConfiguration implements EntityLoader.Loadable {
                 workingDirectory = value;
                 return null;
             case LINKEDPIPES.HAS_CONFIGURATION:
-                final ConfigurationHolder holder = new ConfigurationHolder(value);
+                final ConfigurationHolder holder = new ConfigurationHolder();
                 configurations.add(holder);
                 return holder;
             default:
@@ -113,10 +126,10 @@ final class DpuConfiguration implements EntityLoader.Loadable {
     @Override
     public void validate() throws EntityLoader.LoadingFailed {
         if (workingDirectory == null) {
-            throw new EntityLoader.LoadingFailed("Missing working directory! (uri: '" + resourceUri + "')");
+            throw new EntityLoader.LoadingFailed("Missing working directory! (uri: '" + resourceUri + "')", resourceUri);
         }
         // Sort configurations based on order in decreasing order - so we
-        // load the configuraito with highest order first.
+        // load the configuration with highest order first.
         Collections.sort(configurations, (ConfigurationHolder left, ConfigurationHolder right) -> {
             if (left.order < right.order) {
                 return 1;

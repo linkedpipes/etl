@@ -15,7 +15,7 @@ import org.osgi.framework.wiring.BundleWiring;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 
 /**
  *
@@ -74,7 +74,7 @@ public class DpuComponentFactory implements ComponentFactory {
                 try {
                     clazz = bundle.loadClass(className);
                 } catch (ClassNotFoundException ex) {
-                    throw new ComponentFactory.InvalidBundle("Can't create class instance: " + className, ex);
+                    throw new ComponentFactory.InvalidBundle("Can't create class instance: {}", className, ex);
                 }
                 // Scan interfaces.
                 for (Type item : clazz.getGenericInterfaces()) {
@@ -95,8 +95,7 @@ public class DpuComponentFactory implements ComponentFactory {
             return null;
         } else if (mainClasses.size() > 1) {
             // Multiple classes - invalid bundle.
-            throw new InvalidBundle("Invalid number of components detected:"
-                    + Integer.toString(mainClasses.size()));
+            throw new InvalidBundle("Invalid number of components detected: {}", mainClasses.size());
         }
         return new BundleInformation(mainClasses.get(0), packages);
     }
