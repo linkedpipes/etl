@@ -5,7 +5,7 @@ package com.linkedpipes.etl.executor.api.v1.context;
  *
  * @author Škoda Petr
  */
-public interface ExecutionContext {
+public interface ExecutionContext extends Context {
 
     /**
      *
