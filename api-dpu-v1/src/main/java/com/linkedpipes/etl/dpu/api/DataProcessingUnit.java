@@ -1,13 +1,16 @@
 package com.linkedpipes.etl.dpu.api;
 
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedString;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Arrays;
 
 /**
+ * This class provide basic definition that should by new components.
  *
  * @author Petr Škoda
  */
@@ -28,22 +31,15 @@ public interface DataProcessingUnit {
 
     }
 
+    /**
+     * Base class for exception and failure reporting.
+     *
+     * The reference of arguments in message should by done by '{}' string.
+     */
     public class ExecutionFailed extends NonRecoverableException {
 
-        final Object[] args;
-
         public ExecutionFailed(String message, Object... args) {
-            super(message);
-            this.args = args;
-        }
-
-        public ExecutionFailed(Throwable cause, String message, Object... args) {
-            super(message, cause);
-            this.args = args;
-        }
-
-        public Object[] getArgs() {
-            return args;
+            super(Arrays.asList(new LocalizedString(message, "en")), args);
         }
 
     }
@@ -51,7 +47,7 @@ public interface DataProcessingUnit {
     public class ExecutionCancelled extends ExecutionFailed {
 
         public ExecutionCancelled() {
-            super("execution.cancel");
+            super("Execution cancelled.");
         }
 
     }
