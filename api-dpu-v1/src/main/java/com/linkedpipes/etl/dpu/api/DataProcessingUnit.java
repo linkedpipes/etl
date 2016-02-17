@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.dpu.api;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedString;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.lang.annotation.ElementType;

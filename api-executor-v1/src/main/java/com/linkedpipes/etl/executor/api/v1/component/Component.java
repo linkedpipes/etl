@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
+import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import java.util.Arrays;
 
 /**
  * Base interface for an executable component.
@@ -12,26 +14,18 @@ import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
  */
 public interface Component {
 
-    public class InitializationFailed extends Exception {
+    public class InitializationFailed extends NonRecoverableException {
 
-        public InitializationFailed(String message) {
-            super(message);
-        }
-
-        public InitializationFailed(String message, Throwable cause) {
-            super(message, cause);
+        public InitializationFailed(String messages, Object... args) {
+            super(Arrays.asList(new LocalizedString(messages, "en")), args);
         }
 
     }
 
-    public static class ComponentFailed extends Exception {
+    public static class ComponentFailed extends NonRecoverableException {
 
-        public ComponentFailed(String message) {
-            super(message);
-        }
-
-        public ComponentFailed(String message, Throwable cause) {
-            super(message, cause);
+        public ComponentFailed(String messages, Object... args) {
+            super(Arrays.asList(new LocalizedString(messages, "en")), args);
         }
 
     }
