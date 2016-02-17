@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.exception;
 
+import java.util.List;
+
 /**
  * This exception should terminate the component execution.
  *
@@ -10,10 +12,15 @@ package com.linkedpipes.etl.executor.api.v1.exception;
  */
 public class NonRecoverableException extends Exception {
 
-    private final Object[] args;
+    /**
+     * For each language a message with placeholders for arguments.
+     */
+    protected final List<LocalizedString> messages;
 
-    public NonRecoverableException(String message, Object... args) {
-        super(message);
+    protected final Object[] args;
+
+    public NonRecoverableException(List<LocalizedString> messages, Object... args) {
+        this.messages = messages;
         this.args = args;
     }
 
