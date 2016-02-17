@@ -1,10 +1,11 @@
 package com.linkedpipes.etl.executor.api.v1.context;
 
 /**
+ * Given to the component upon execution.
  *
  * @author Škoda Petr
  */
-public interface CancelAwareContext extends Context {
+public interface ExecutionContext {
 
     /**
      *

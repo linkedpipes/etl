@@ -1,7 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.event;
 
 /**
- *
+ * Used  to report current status of a component.
+ * 
  * @author Škoda Petr
  */
 public interface ComponentProgress extends Event {

@@ -20,6 +20,7 @@
             <artifactId>org.osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- LinkedPipes. -->
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-commons</artifactId>

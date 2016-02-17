@@ -22,7 +22,7 @@ public interface SparqlSelect {
     }
 
     /**
-     * Evaluate given SPARQL select query.
+     * Evaluate given SPARQL select query and return result in uniform string representation.
      *
      * @param query
      * @return

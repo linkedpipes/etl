@@ -28,14 +28,14 @@ public interface ComponentFactory {
 
     /**
      *
-     * @param definition
-     * @param resoureUri
-     * @param graph
+     * @param definition Access to the SPARQL-like interface of the pipeline definition.
+     * @param resoureIri Component IRI.
+     * @param graph Name of graph with definition.
      * @param context
      * @return Null if this factory can not be used to create ComponentInstance from given bundle.
      * @throws com.linkedpipes.etl.executor.api.v1.component.ComponentFactory.InvalidBundle
      */
-    public Component createComponent(SparqlSelect definition, String resoureUri, String graph, BundleContext context)
+    public Component createComponent(SparqlSelect definition, String resoureIri, String graph, BundleContext context)
             throws InvalidBundle;
 
 }

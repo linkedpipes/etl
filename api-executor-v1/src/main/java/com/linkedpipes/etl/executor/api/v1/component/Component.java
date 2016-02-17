@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.executor.api.v1.component;
 
-import com.linkedpipes.etl.executor.api.v1.context.CancelAwareContext;
 import java.util.Map;
 
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
 
 /**
  * Base interface for an executable component.
@@ -43,7 +43,7 @@ public interface Component {
      * @param context
      * @throws com.linkedpipes.etl.executor.api.v1.component.Component.InitializationFailed
      */
-    public void initialize(Map<String, DataUnit> dataUnits, CancelAwareContext context) throws InitializationFailed;
+    public void initialize(Map<String, DataUnit> dataUnits, ExecutionContext context) throws InitializationFailed;
 
     /**
      * Execute task with given content.
@@ -51,7 +51,7 @@ public interface Component {
      * @param context
      * @throws com.linkedpipes.etl.executor.api.v1.component.Component.ComponentFailed
      */
-    public void execute(CancelAwareContext context) throws ComponentFailed;
+    public void execute(ExecutionContext context) throws ComponentFailed;
 
     /**
      *
