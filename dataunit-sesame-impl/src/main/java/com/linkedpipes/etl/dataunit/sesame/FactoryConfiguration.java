@@ -3,7 +3,7 @@ package com.linkedpipes.etl.dataunit.sesame;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.io.File;
 
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 
 /**
  *

@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 import java.io.File;
 
 /**
