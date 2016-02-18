@@ -5,7 +5,7 @@ import com.linkedpipes.etl.dataunit.system.files.SystemFilesDataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 import org.osgi.service.component.annotations.Component;
 
 /**

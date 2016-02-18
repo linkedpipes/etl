@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 
 /**
  * Describe common configuration of sesame data unit.
@@ -24,17 +24,14 @@ public final class FilesDataUnitConfiguration implements EntityLoader.Loadable {
 
     private String workingDirectory;
 
-    private String debugDirectory;
-
     public FilesDataUnitConfiguration(String resourceUri) {
         this.resourceUri = resourceUri;
     }
 
-    public FilesDataUnitConfiguration(String resourceUri, String binding, String workingDirectory, String debugDirectory) {
+    public FilesDataUnitConfiguration(String resourceUri, String binding, String workingDirectory) {
         this.resourceUri = resourceUri;
         this.binding = binding;
         this.workingDirectory = workingDirectory;
-        this.debugDirectory = debugDirectory;
     }
 
     public String getResourceUri() {
@@ -61,14 +58,6 @@ public final class FilesDataUnitConfiguration implements EntityLoader.Loadable {
         }
     }
 
-    public File getDebugDirectory() {
-        if (debugDirectory == null) {
-            return null;
-        } else {
-            return new File(java.net.URI.create(debugDirectory));
-        }
-    }
-
     @Override
     public EntityLoader.Loadable load(String predicate, String value) throws EntityLoader.LoadingFailed {
         switch (predicate) {
@@ -83,9 +72,6 @@ public final class FilesDataUnitConfiguration implements EntityLoader.Loadable {
                 return null;
             case LINKEDPIPES.HAS_WORKING_DIRECTORY:
                 workingDirectory = value;
-                return null;
-            case LINKEDPIPES.HAS_DEBUG_DIRECTORY:
-                debugDirectory = value;
                 return null;
             default:
                 return null;
