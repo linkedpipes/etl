@@ -15,8 +15,6 @@ define([
             portsData = template['_ports']['portsData'];
         } else {
             // Inlcude labels only if there is more than one data unit.
-            var input_labels = template['inputs'] > 1;
-            var output_labels = template['outputs'] > 1;
             if (template['inputs']) {
                 template['inputs'].forEach(function (port) {
                     portsData[port['binding']] = {
@@ -24,8 +22,7 @@ define([
                         'label': port['label'],
                         'dataType': port['type']
                     };
-                    // Add port with given label.
-                    inPorts.push(input_labels ? port['binding'] : '');
+                    inPorts.push(port['binding']);
                 });
             }
             if (template['outputs']) {
@@ -35,8 +32,7 @@ define([
                         'label': port['label'],
                         'dataType': port['type']
                     };
-                    // Add port with given label.
-                    outPorts.push(output_labels ? port['binding'] : '');
+                    outPorts.push(port['binding']);
                 });
             }
             // Store template.
@@ -52,7 +48,7 @@ define([
             color = template.color;
         }
         // Create view.
-        var cell = new joint.shapes.devs.Model({
+        var cell = new ComponenModel({
             position: {
                 x: component['http://linkedpipes.com/ontology/x'],
                 y: component['http://linkedpipes.com/ontology/y']
@@ -89,6 +85,33 @@ define([
         }
         cell.attr('rect', {fill: color});
     };
+
+    // Custom component model to allow better customizaiton of component look.
+    var ComponenModel = joint.shapes.devs.Model.extend({
+        getPortAttrs: function (portName, index, total, selector, type) {
+
+            // Hyde labels if there is only one port.
+            var useLabel = this.attributes.portsData > 1;
+            var port = this.attributes.portsData[portName];
+
+            var portClass = 'port' + index;
+            var portSelector = selector + '>.' + portClass;
+            var portLabelSelector = portSelector + '>.port-label';
+            var portBodySelector = portSelector + '>.port-body';
+
+            var attrs = {};
+            attrs[portLabelSelector] = {text: useLabel ? port['label'] : ''};
+            attrs[portBodySelector] = {port: {id: portName || _.uniqueId(type), type: type}};
+            attrs[portSelector] = {ref: '.body', 'ref-y': (index + 0.5) * (1 / total)};
+
+            if (selector === '.outPorts') {
+                attrs[portSelector]['ref-dx'] = 0;
+            }
+
+            return attrs;
+        }
+    });
+
 
     /**
      * Add scrolling capability to the canvas.
