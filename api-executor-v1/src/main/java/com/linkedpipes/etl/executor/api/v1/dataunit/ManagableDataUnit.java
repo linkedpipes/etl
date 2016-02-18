@@ -1,6 +1,10 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.LocalizedString;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,14 +14,10 @@ import java.util.Map;
  */
 public interface ManagableDataUnit extends DataUnit {
 
-    public static class DataUnitException extends Exception {
+    public static class DataUnitException extends LocalizedException {
 
-        public DataUnitException(String message) {
-            super(message);
-        }
-
-        public DataUnitException(String message, Throwable cause) {
-            super(message, cause);
+        public DataUnitException(String messages, Object... args) {
+            super(Arrays.asList(new LocalizedString(messages, "en")), args);
         }
 
     }
@@ -55,10 +55,16 @@ public interface ManagableDataUnit extends DataUnit {
      * The reason for separation of this functionality aside of {@link #close()} is to provide better
      * exception handling and reporting.
      *
+     * It's consider save to just link working directories of data units as they are not deleted if debug is used.
+     *
+     * The optionally returned additional directories must be working directories assigned by the core. Utilization
+     * of any other directory is forbidden.
+     *
      * @param directory Directory where to store debug dump.
+     * @return Can optionally return additional directories that contains debug data.
      * @throws com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit.DataUnitException
      */
-    public void dumpContent(File directory) throws DataUnitException;
+    public List<File> dumpContent(File directory) throws DataUnitException;
 
     /**
      * Close given data unit. After this call no other method is called.

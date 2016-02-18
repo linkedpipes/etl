@@ -2,6 +2,8 @@ package com.linkedpipes.etl.executor.api.v1.plugin;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.context.Context;
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
+import java.util.Arrays;
 
 /**
  * Specialized listener designed to enable components monitor a pipeline execution.
@@ -10,14 +12,10 @@ import com.linkedpipes.etl.executor.api.v1.context.Context;
  */
 public interface ExecutionListener {
 
-    public static class InitializationFailure extends Exception {
+    public static class InitializationFailure extends LocalizedException {
 
-        public InitializationFailure(String message) {
-            super(message);
-        }
-
-        public InitializationFailure(String message, Throwable cause) {
-            super(message, cause);
+        public InitializationFailure(String messages, Object... args) {
+            super(Arrays.asList(new LocalizedString(messages, "en")), args);
         }
 
     }

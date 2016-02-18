@@ -1,6 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+import java.util.Arrays;
 
 /**
  *
@@ -8,14 +10,10 @@ import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
  */
 public interface DataUnitFactory {
 
-    public class CreationFailed extends Exception {
+    public class CreationFailed extends LocalizedException {
 
-        public CreationFailed(String message) {
-            super(message);
-        }
-
-        public CreationFailed(String message, Throwable cause) {
-            super(message, cause);
+        public CreationFailed(String message, Object... args) {
+            super(Arrays.asList(new LocalizedString(message, "en")), args);
         }
 
     }
