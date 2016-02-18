@@ -1,7 +1,7 @@
 package com.linkedpipes.executor.execution.entity.event;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.utils.core.event.boundary.AbstractEvent;
+import com.linkedpipes.etl.utils.core.event.AbstractEvent;
 
 /**
  * Used to stop the execution before executing next component.

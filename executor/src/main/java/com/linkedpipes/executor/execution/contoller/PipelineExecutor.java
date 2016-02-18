@@ -50,7 +50,7 @@ import com.linkedpipes.executor.module.boundary.ModuleFacade;
 import com.linkedpipes.executor.rdf.boundary.DefinitionStorage;
 import com.linkedpipes.executor.rdf.boundary.MessageStorage;
 import com.linkedpipes.executor.rdf.boundary.RdfOperationFailed;
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -94,8 +94,6 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
     private static final Logger LOG = LoggerFactory.getLogger(PipelineExecutor.class);
 
     private final ModuleFacade moduleFacade;
-
-    private final Configuration configuration;
 
     /**
      * Methods stored here are called after the execution ends. This is used to dynamically add methods that shall be
@@ -143,7 +141,6 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
 
     public PipelineExecutor(ModuleFacade moduleFacade, Configuration configuration, String executionId) {
         this.moduleFacade = moduleFacade;
-        this.configuration = configuration;
         // TODO Replace wtih property from configuration?
         this.executionUri = configuration.getExecutionPrefix() + executionId;
         this.executionId = executionId;
@@ -304,12 +301,17 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
         final Map<String, ManagableDataUnit> dataUnitInstances = loadDataUnits();
         afterExecution.push(() -> {
             for (ManagableDataUnit dataUnit : dataUnitInstances.values()) {
+                dataUnit.save(resourceManager.getWorkingDir("save-"));
+            }
+
+            for (ManagableDataUnit dataUnit : dataUnitInstances.values()) {
                 try {
-                    dataUnit.dumpContent();
+                    dataUnit.dumpContent(resourceManager.getWorkingDir("dump-"));
                 } catch (Exception ex) {
                     LOG.error("Can't dump content of data unit.", ex);
                 }
             }
+
             for (ManagableDataUnit dataUnit : dataUnitInstances.values()) {
                 try {
                     dataUnit.close();
