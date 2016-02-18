@@ -6,6 +6,7 @@ import java.io.File;
 import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 
 /**
+ * Configuration class used by the RDF repository.
  *
  * @author Škoda Petr
  */
@@ -13,7 +14,7 @@ final class FactoryConfiguration implements EntityLoader.Loadable {
 
     private String workingDirectory;
 
-    public FactoryConfiguration() {
+    FactoryConfiguration() {
     }
 
     public File getWorkingDirectory() {

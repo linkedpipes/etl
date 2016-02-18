@@ -9,20 +9,12 @@ import com.linkedpipes.etl.executor.api.v1.plugin.ExecutionListener;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.utils.core.entity.EntityLoader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.repository.util.Repositories;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
 import org.openrdf.sail.nativerdf.NativeStore;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -37,6 +29,9 @@ public class SesamePlugin implements DataUnitFactory, ExecutionListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(SesamePlugin.class);
 
+    /**
+     * Select used to get resource IRI of the configuration class.
+     */
     private final static String QUERY_SELECT_CONFIGURATION_RESOURCE = ""
             + "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
             + "prefix lp: <http://linkedpipes.com/ontology/>\n"
@@ -48,38 +43,41 @@ public class SesamePlugin implements DataUnitFactory, ExecutionListener {
     private boolean initialized = false;
 
     /**
-     * Configuration is loaded for every execution.
+     * Configuration for the sesame repository. This configuration is loaded for every execution.
      */
     private FactoryConfiguration configuration = null;
 
+    /**
+     * Repository for RDF data used by the execution.
+     */
     private Repository sharedRepository = null;
 
     public SesamePlugin() {
     }
 
     @Override
-    public ManagableDataUnit create(SparqlSelect definition, String resourceUri, String graph) throws CreationFailed {
+    public ManagableDataUnit create(SparqlSelect definition, String resourceIri, String graph) throws CreationFailed {
         if (!initialized) {
             return null;
         }
         // Load configurattion.
-        final RdfDataUnitConfiguration dataUnitConfiguration = new RdfDataUnitConfiguration(resourceUri);
+        final RdfDataUnitConfiguration dataUnitConfiguration = new RdfDataUnitConfiguration(resourceIri);
         try {
-            EntityLoader.load(definition, resourceUri, graph, dataUnitConfiguration);
+            EntityLoader.load(definition, resourceIri, graph, dataUnitConfiguration);
         } catch (EntityLoader.LoadingFailed ex) {
-            throw new CreationFailed(String.format("Can't load configuration for: %s", resourceUri), ex);
+            throw new CreationFailed("Can't load configuration for: {}", resourceIri, ex);
         }
         // Create data unit.
         for (String type : dataUnitConfiguration.getTypes()) {
             switch (type) {
                 case "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph":
                     return SesameRdfDataUnitFactory.createSingleGraph(
-                            ValueFactoryImpl.getInstance().createIRI(resourceUri),
+                            ValueFactoryImpl.getInstance().createIRI(resourceIri),
                             sharedRepository,
                             dataUnitConfiguration);
                 case "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/GraphList":
                     return SesameRdfDataUnitFactory.createGraphList(
-                            ValueFactoryImpl.getInstance().createIRI(resourceUri),
+                            ValueFactoryImpl.getInstance().createIRI(resourceIri),
                             sharedRepository,
                             dataUnitConfiguration);
                 default:
@@ -90,7 +88,7 @@ public class SesamePlugin implements DataUnitFactory, ExecutionListener {
     }
 
     @Override
-    public void onExecutionBegin(SparqlSelect definition, String resoureUri, String graph, Context context)
+    public void onExecutionBegin(SparqlSelect definition, String resoureIri, String graph, Context context)
             throws ExecutionListener.InitializationFailure {
         // Select configuraiton resource.
         final List<Map<String, String>> resourceList;
@@ -105,16 +103,15 @@ public class SesamePlugin implements DataUnitFactory, ExecutionListener {
             return;
         } else if (resourceList.size() != 1) {
             // Everything else than just one result is a problem, as we do not known what to load.
-            throw new ExecutionListener.InitializationFailure(String.format("Invalid number of results: %d",
-                    resourceList.size()));
+            throw new ExecutionListener.InitializationFailure("Invalid number of results: {}", resourceList.size());
         }
         // Load configuration - defensive style (load and then set).
         final FactoryConfiguration newConfiguration = new FactoryConfiguration();
         try {
             EntityLoader.load(definition, resourceList.get(0).get("s"), graph, newConfiguration);
         } catch (EntityLoader.LoadingFailed ex) {
-            throw new ExecutionListener.InitializationFailure(
-                    String.format("Can't load configuration for: %s", resourceList.get(0).get("s")), ex);
+            throw new ExecutionListener.InitializationFailure("Can't load configuration for: {}",
+                    resourceList.get(0).get("s"), ex);
         }
         configuration = newConfiguration;
         // Create shared repository.
@@ -130,24 +127,6 @@ public class SesamePlugin implements DataUnitFactory, ExecutionListener {
 
     @Override
     public void onExecutionEnd() {
-        if (configuration == null) {
-            return;
-        }
-        // Dump the content of the repository.
-        final File dumpFile = new File(configuration.getWorkingDirectory(), "dump.trig");
-        try {
-            Repositories.consume(sharedRepository, (connection) -> {
-                try (FileOutputStream stream = new FileOutputStream(dumpFile)) {
-                    RDFWriter writer = Rio.createWriter(RDFFormat.TRIG, stream);
-                    // Write content of whole repository.
-                    connection.export(writer);
-                } catch (IOException | RepositoryException | RDFHandlerException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-        } catch (Exception ex) {
-            LOG.error("Can't dump content of data unit.", ex);
-        }
         // Destroy shared repository.
         if (sharedRepository != null) {
             try {
@@ -155,6 +134,7 @@ public class SesamePlugin implements DataUnitFactory, ExecutionListener {
             } catch (RepositoryException ex) {
                 LOG.error("Can't close repository.", ex);
             }
+            sharedRepository = null;
         }
         initialized = false;
     }
