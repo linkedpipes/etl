@@ -14,6 +14,9 @@ define([
             outPorts = template['_ports']['outPorts'];
             portsData = template['_ports']['portsData'];
         } else {
+            // Inlcude labels only if there is more than one data unit.
+            var input_labels = template['inputs'] > 1;
+            var output_labels = template['outputs'] > 1;
             if (template['inputs']) {
                 template['inputs'].forEach(function (port) {
                     portsData[port['binding']] = {
@@ -21,7 +24,8 @@ define([
                         'label': port['label'],
                         'dataType': port['type']
                     };
-                    inPorts.push(port['binding']);
+                    // Add port with given label.
+                    inPorts.push(input_labels ? port['binding'] : '');
                 });
             }
             if (template['outputs']) {
@@ -31,7 +35,8 @@ define([
                         'label': port['label'],
                         'dataType': port['type']
                     };
-                    outPorts.push(port['binding']);
+                    // Add port with given label.
+                    outPorts.push(output_labels ? port['binding'] : '');
                 });
             }
             // Store template.
