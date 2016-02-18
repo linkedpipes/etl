@@ -21,7 +21,7 @@ public class LocalizedException extends Exception {
 
         private final String value;
 
-        public LocalizedString(String language, String value) {
+        public LocalizedString(String value, String language) {
             this.language = language;
             this.value = value;
         }
@@ -44,6 +44,14 @@ public class LocalizedException extends Exception {
     protected final Object[] args;
 
     public LocalizedException(List<LocalizedString> messages, Object... args) {
+        // For now use first message.
+        super(messages.get(0).value);
+        //
+        if (args.length > 0) {
+            if (args[args.length - 1] instanceof Exception) {
+                this.initCause((Exception)args[args.length - 1]);
+            }
+        }
         this.messages = messages;
         this.args = args;
     }
