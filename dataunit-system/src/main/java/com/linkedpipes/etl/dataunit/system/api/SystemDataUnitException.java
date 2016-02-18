@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.dataunit.system.api;
 
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import java.util.Arrays;
 
 /**
  *
@@ -8,12 +9,8 @@ import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
  */
 public class SystemDataUnitException extends NonRecoverableException {
 
-    public SystemDataUnitException(String message) {
-        super(message);
-    }
-
-    public SystemDataUnitException(String message, Throwable cause) {
-        super(message, cause);
+    public SystemDataUnitException(String messages, Object... args) {
+        super(Arrays.asList(new LocalizedString(messages, "en")), args);
     }
 
 }

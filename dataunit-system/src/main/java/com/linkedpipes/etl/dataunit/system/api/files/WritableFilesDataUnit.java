@@ -24,4 +24,11 @@ public interface WritableFilesDataUnit extends FilesDataUnit {
      */
     public File getRootDirectory();
 
+    /**
+     *
+     * @return Undefined value.
+     */
+    @Override
+    public long size();
+
 }

@@ -36,4 +36,10 @@ public interface FilesDataUnit extends Iterable<FilesDataUnit.Entry> {
      */
     public Collection<File> getReadRootDirectories();
 
+    /**
+     *
+     * @return Number of stored files.
+     */
+    public long size();
+
 }
