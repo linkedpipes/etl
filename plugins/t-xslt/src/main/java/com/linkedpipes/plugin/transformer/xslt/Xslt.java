@@ -49,7 +49,7 @@ public final class Xslt implements SequentialExecution {
         try {
             executable = compiler.compile(new StreamSource(new StringReader(configuration.getXsltTemplate())));
         } catch (SaxonApiException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't compile template.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't compile template.", ex);
         }
 
         for (FilesDataUnit.Entry entry : inputFiles) {
@@ -68,7 +68,7 @@ public final class Xslt implements SequentialExecution {
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
-                throw new DataProcessingUnit.ExecutionFailed(ex, "Can't transform file.");
+                throw new DataProcessingUnit.ExecutionFailed("Can't transform file.", ex);
             } finally {
                 // Clear document cache.
                 try {

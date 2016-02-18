@@ -40,7 +40,7 @@ public class Tabular implements SequentialExecution {
             try {
                 parser.parse(entry, mapper, context);
             } catch (IOException ex) {
-                throw new NonRecoverableException("Can't process file: " + entry.getFileName(), ex);
+                throw new DataProcessingUnit.ExecutionFailed("Can't process file: " + entry.getFileName(), ex);
             }
             mapper.onTableEnd();
             output.onFileEnd();

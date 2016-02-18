@@ -48,7 +48,7 @@ public final class SparqlSelect implements SequentialExecution {
                 final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, configuration.getQuery());
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw new DataProcessingUnit.ExecutionFailed(ex, "Exception.");
+                throw new DataProcessingUnit.ExecutionFailed("Exception.", ex);
             }
         });
     }

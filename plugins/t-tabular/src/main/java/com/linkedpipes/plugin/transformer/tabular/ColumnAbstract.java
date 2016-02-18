@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.util.List;
 import org.openrdf.model.Resource;
@@ -17,7 +18,7 @@ abstract class ColumnAbstract {
     /**
      * Used to report missing required value.
      */
-    public static class MissingColumnValue extends NonRecoverableException {
+    public static class MissingColumnValue extends DataProcessingUnit.ExecutionFailed {
 
         public MissingColumnValue(String name, int rowNumber) {
             super("Missing value for required column: '" + name + "' on row " + Integer.toString(rowNumber));

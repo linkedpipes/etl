@@ -45,7 +45,7 @@ class Parser {
         try {
             workbook = WorkbookFactory.create(entry.getPath());
         } catch (IOException | InvalidFormatException ex) {
-            throw new NonRecoverableException("Can't open workbook file.", ex);
+            throw new DataProcessingUnit.ExecutionFailed("Can't open workbook file.", ex);
         }
         for (int index = 0; index < workbook.getNumberOfSheets(); ++index) {
             final Sheet sheet = workbook.getSheetAt(index);
@@ -53,7 +53,7 @@ class Parser {
             try {
                 match = sheet.getSheetName().matches(configuration.getSheetFilter());
             } catch (PatternSyntaxException ex) {
-                throw new NonRecoverableException("Invalid regular expression for sheet filter.", ex);
+                throw new DataProcessingUnit.ExecutionFailed("Invalid regular expression for sheet filter.", ex);
             }
             if (match) {
                 // Create output file name.
@@ -66,7 +66,7 @@ class Parser {
                 try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile))) {
                     processSheet(sheet, outputStream, context);
                 } catch (IOException ex) {
-                    throw new NonRecoverableException("Can't write output to file.", ex);
+                    throw new DataProcessingUnit.ExecutionFailed("Can't write output to file.", ex);
                 }
             }
         }

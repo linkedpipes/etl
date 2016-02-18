@@ -80,7 +80,7 @@ public final class FilesToRdf implements SequentialExecution {
             try (final InputStream fileStream = new FileInputStream(file.getPath())) {
                 rdfParser.parse(fileStream, "http://localhost/base/");
             } catch (IOException | RDFHandlerException | RDFParseException ex) {
-                throw new DataProcessingUnit.ExecutionFailed(ex, "Can't parse file: {0}", file.getFileName());
+                throw new DataProcessingUnit.ExecutionFailed("Can't parse file: {}", file.getFileName(), ex);
             }
             if (context.canceled()) {
                 throw new DataProcessingUnit.ExecutionCancelled();

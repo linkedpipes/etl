@@ -45,7 +45,7 @@ public final class PackZip implements SequentialExecution {
                 progressReport.entryProcessed();
             }
         } catch (IOException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't create archive.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't create archive.", ex);
         }
         progressReport.done();
     }
@@ -71,7 +71,7 @@ public final class PackZip implements SequentialExecution {
                 zos.write(buffer, 0, len);
             }
         } catch (Exception ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "");
+            throw new DataProcessingUnit.ExecutionFailed("", ex);
         }
     }
 

@@ -27,7 +27,7 @@ public final class TextHolder implements SequentialExecution {
         try {
             Files.write(outputFile.toPath(), configuration.getContent().getBytes(Charset.forName("UTF-8")));
         } catch (IOException ex) {
-            throw new NonRecoverableException("Can't write content to file.", ex);
+            throw new DataProcessingUnit.ExecutionFailed("Can't write content to file.", ex);
         }
     }
 
