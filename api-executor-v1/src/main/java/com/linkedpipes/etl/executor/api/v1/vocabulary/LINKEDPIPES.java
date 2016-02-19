@@ -38,6 +38,10 @@ public final class LINKEDPIPES {
 
     public static final String HAS_CONFIGURATION = PREFIX_ONTOLOGY + "configuration";
 
+    public static final String HAS_PATH = PREFIX_ONTOLOGY + "path";
+
+    public static final String HAS_SOURCE = PREFIX_ONTOLOGY + "dataSource";
+
     public static class CONFIGURATION {
 
         private static final String PREFIX_ONTOLOGY = LINKEDPIPES.PREFIX_ONTOLOGY + "configuration/";

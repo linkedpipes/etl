@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader.Loadable;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader.LoadingFailed;
 
 /**
  * Represent a java version of stored definition.
@@ -13,6 +15,38 @@ import com.linkedpipes.etl.utils.core.entity.EntityLoader;
  * @author Škoda Petr
  */
 public class PipelineConfiguration implements EntityLoader.Loadable {
+
+    /**
+     * Represent a data source, that can be loaded into a data unit.
+     */
+    public static class DataSource implements EntityLoader.Loadable {
+
+        /**
+         * Path to data source save directory.
+         */
+        private String path;
+
+        public String getPath() {
+            return path;
+        }
+
+        @Override
+        public Loadable load(String predicate, String value) throws LoadingFailed {
+            switch (predicate) {
+                case LINKEDPIPES.HAS_PATH:
+                    this.path = value;
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public void validate() throws LoadingFailed {
+            // No operation here.
+        }
+
+    }
 
     /**
      * Contains basic information required by core about data unit.
@@ -29,7 +63,17 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
          */
         private final String executionId;
 
+        /**
+         * Resource URI.
+         */
         private final String uri;
+
+        /**
+         * If set, referenced content should be used as a content for this data unit.
+         */
+        private DataSource source = null;
+
+        private String uriFragment;
 
         public DataUnit(String executionId, String uri) {
             this.executionId = executionId;
@@ -48,11 +92,25 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
             return uri;
         }
 
+        public DataSource getSource() {
+            return source;
+        }
+
+        public String getUriFragment() {
+            return uriFragment;
+        }
+
         @Override
         public EntityLoader.Loadable load(String predicate, String value) throws EntityLoader.LoadingFailed {
             switch (predicate) {
                 case LINKEDPIPES.HAS_BINDING:
                     name = value;
+                    return null;
+                case LINKEDPIPES.HAS_SOURCE:
+                    source = new DataSource();
+                    return source;
+                case LINKEDPIPES.HAS_URI_FRAGMENT:
+                    uriFragment = value;
                     return null;
                 default:
                     return null;
@@ -78,12 +136,24 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
          */
         private final String executionId;
 
+        /**
+         * Primary label.
+         */
         private String label;
 
+        /**
+         * Resource URI.
+         */
         private final String uri;
 
+        /**
+         * Informations from ports, ie. dataunits.
+         */
         private final List<DataUnit> dataUnits = new ArrayList<>(3);
 
+        /**
+         * Execution order.
+         */
         private Integer executionOrder;
 
         public Component(String uri, String executionId) {
@@ -148,12 +218,13 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
 
     }
 
+    /**
+     * Pipeline URI.
+     */
     private final String uri;
 
-    private String label;
-
     /**
-     * List of components subjects.
+     * List of components to execute.
      */
     private final List<Component> components = new LinkedList<>();
 
@@ -165,10 +236,6 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
         return uri;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
     public List<Component> getComponents() {
         return components;
     }
@@ -176,9 +243,6 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
     @Override
     public EntityLoader.Loadable load(String predicate, String value) throws EntityLoader.LoadingFailed {
         switch (predicate) {
-            case "http://www.w3.org/2004/02/skos/core#prefLabel":
-                    label = value;
-                    return null;
             case LINKEDPIPES.HAS_COMPONENT:
                 final Component newComponent = new Component(value, Integer.toString(components.size()));
                 components.add(newComponent);

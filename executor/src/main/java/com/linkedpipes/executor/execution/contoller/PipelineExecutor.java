@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import com.linkedpipes.commons.entities.executor.DebugStructure;
+import com.linkedpipes.commons.entities.executor.DebugStructure.DataUnit;
 import com.linkedpipes.executor.Configuration;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.plugin.ExecutionListener;
@@ -44,7 +46,6 @@ import com.linkedpipes.executor.execution.entity.event.ExecutionCancelled;
 import com.linkedpipes.executor.execution.entity.event.ExecutionEndImpl;
 import com.linkedpipes.executor.execution.entity.event.ExecutionFailed;
 import com.linkedpipes.executor.execution.entity.event.StopExecution;
-import com.linkedpipes.executor.execution.util.DebugStructureFactory;
 import com.linkedpipes.executor.logging.boundary.MdcValue;
 import com.linkedpipes.executor.module.boundary.ModuleFacade;
 import com.linkedpipes.executor.rdf.boundary.DefinitionStorage;
@@ -139,6 +140,11 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
 
     private final StatusKeeper statusKeeper;
 
+    /**
+     * Debug structure used to write debug data at the end of execution.
+     */
+    private final DebugStructure debugStructure = new DebugStructure();
+
     public PipelineExecutor(ModuleFacade moduleFacade, Configuration configuration, String executionId) {
         this.moduleFacade = moduleFacade;
         // TODO Replace wtih property from configuration?
@@ -179,8 +185,6 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
             LOG.error("Execution for Throwable!", ex);
             statusKeeper.throwable(ex);
         }
-        LOG.info("Saving debug data.");
-        DebugStructureFactory.createDebugOutput(executionId, definitionStorage, messageStorage, resourceManager);
         LOG.info("Executing actions after execution");
         // Execute after-executors ~ clean up.
         while (!afterExecution.isEmpty()) {
@@ -190,6 +194,16 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
                 LOG.error("After execution function failed!", ex);
             }
         }
+        //
+        LOG.info("Saving debug data.");
+        final ObjectMapper json = new ObjectMapper();
+        final File statusFile = resourceManager.getDebugFile();
+        try {
+            json.writerWithDefaultPrettyPrinter().writeValue(statusFile, debugStructure);
+        } catch (IOException ex) {
+            LOG.error("Can't write debug file!", ex);
+        }
+        //
         statusKeeper.pipelineEnd();
         LOG.info("Execution completed.");
         // Logging.
@@ -301,18 +315,40 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
         final Map<String, ManagableDataUnit> dataUnitInstances = loadDataUnits();
         afterExecution.push(() -> {
             for (ManagableDataUnit dataUnit : dataUnitInstances.values()) {
-                dataUnit.save(resourceManager.getWorkingDir("save-"));
-            }
-
-            for (ManagableDataUnit dataUnit : dataUnitInstances.values()) {
+                DebugStructure.DataUnit dataUnitInfo = null;
+                for (DataUnit item : debugStructure.getDataUnits()) {
+                    if (item.getIri().equals(dataUnit.getResourceUri())) {
+                        dataUnitInfo = item;
+                        break;
+                    }
+                }
+                if (dataUnitInfo == null) {
+                    // Missing data unit info.
+                    LOG.error("Missing data unit info!");
+                    dataUnitInfo = new DebugStructure.DataUnit();
+                    dataUnitInfo.setIri(dataUnit.getResourceUri());
+                    debugStructure.getDataUnits().add(dataUnitInfo);
+                }
+                //
                 try {
-                    dataUnit.dumpContent(resourceManager.getWorkingDir("dump-"));
+                    final File saveFile = resourceManager.getWorkingDir("save-");
+                    dataUnit.save(saveFile);
+                    dataUnitInfo.setSaveDirectory(saveFile.getPath());
+                } catch (Exception ex) {
+                    LOG.error("Can't save data unit.", ex);
+                }
+                //
+                try {
+                    final File debugFile = resourceManager.getWorkingDir("debug-");
+                    final List<File> debugFiles = dataUnit.dumpContent(debugFile);
+                    dataUnitInfo.getDebugDirectories().add(debugFile.getPath());
+                    for (File file : debugFiles) {
+                        dataUnitInfo.getDebugDirectories().add(file.getPath());
+                    }
                 } catch (Exception ex) {
                     LOG.error("Can't dump content of data unit.", ex);
                 }
-            }
-
-            for (ManagableDataUnit dataUnit : dataUnitInstances.values()) {
+                //
                 try {
                     dataUnit.close();
                 } catch (Exception ex) {
@@ -427,6 +463,13 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
         final Map<String, ManagableDataUnit> result = new HashMap<>(pipeline.getComponents().size() * 3);
         for (PipelineConfiguration.Component component : pipeline.getComponents()) {
             for (PipelineConfiguration.DataUnit dataUnit : component.getDataUnits()) {
+                // TODO: Temporary solution. Such information does hot nave to be stored.
+                final DebugStructure.DataUnit dataUnitInfo = new DataUnit();
+                dataUnitInfo.setIri(dataUnit.getUri());
+                dataUnitInfo.setUriFragment(dataUnit.getUriFragment());
+                dataUnitInfo.setComponentUri(component.getUri());
+                debugStructure.getDataUnits().add(dataUnitInfo);
+                //
                 try {
                     result.put(dataUnit.getUri(),
                             moduleFacade.getDataUnit(definitionStorage, dataUnit.getUri()));
