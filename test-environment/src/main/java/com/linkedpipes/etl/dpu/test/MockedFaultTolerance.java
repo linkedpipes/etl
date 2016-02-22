@@ -14,7 +14,7 @@ final class MockedFaultTolerance implements FaultTolerance {
         try {
             procedure.action();
         } catch (Exception ex) {
-            throw new ExecutionFailed(ex, "Action failed.");
+            throw new ExecutionFailed("Action failed.", ex);
         }
     }
 
@@ -23,7 +23,7 @@ final class MockedFaultTolerance implements FaultTolerance {
         try {
             return function.action();
         } catch (Exception ex) {
-            throw new ExecutionFailed(ex, "Action failed.");
+            throw new ExecutionFailed("Action failed.", ex);
         }
     }
 

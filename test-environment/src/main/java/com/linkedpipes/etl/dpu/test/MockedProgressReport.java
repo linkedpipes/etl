@@ -14,11 +14,6 @@ final class MockedProgressReport implements ProgressReport {
     private static final Logger LOG = LoggerFactory.getLogger(MockedProgressReport.class);
 
     @Override
-    public void startTotalUnknown(int reportStepSuggestion) {
-        LOG.info("Progress: start with unknown total size");
-    }
-
-    @Override
     public void start(int entriesToProcess) {
         LOG.info("Progress: start on {} entries", entriesToProcess);
     }

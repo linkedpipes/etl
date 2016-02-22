@@ -85,8 +85,7 @@ public class TestEnvironment implements AutoCloseable {
         final FilesDataUnitConfiguration configuration = new FilesDataUnitConfiguration(
                 dataUnitIri.stringValue(),
                 binding,
-                workingDirectory.toURI().toString(),
-                null);
+                workingDirectory.toURI().toString());
         final WritableFilesDataUnit dataUnit = SystemFilesDataUnitFactory.create(configuration);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
@@ -101,7 +100,7 @@ public class TestEnvironment implements AutoCloseable {
     public WritableSingleGraphDataUnit bindSingleGraphDataUnit(String binding) {
         final IRI dataUnitIri = getUri("dataUnit");
         final RdfDataUnitConfiguration configuration = new RdfDataUnitConfiguration(
-                dataUnitIri.stringValue(), binding, null);
+                dataUnitIri.stringValue(), binding);
         final WritableSingleGraphDataUnit dataUnit = SesameRdfDataUnitFactory.createSingleGraph(
                 dataUnitIri,
                 sesameRepository,
@@ -119,7 +118,7 @@ public class TestEnvironment implements AutoCloseable {
     public WritableGraphListDataUnit bindGraphListDataUnit(String binding) {
         final IRI dataUnitIri = getUri("dataUnit");
         final RdfDataUnitConfiguration configuration = new RdfDataUnitConfiguration(
-                dataUnitIri.stringValue(), binding, null);
+                dataUnitIri.stringValue(), binding);
         final WritableGraphListDataUnit dataUnit = SesameRdfDataUnitFactory.createGraphList(
                 dataUnitIri,
                 sesameRepository,
