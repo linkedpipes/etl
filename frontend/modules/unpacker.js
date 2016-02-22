@@ -192,21 +192,23 @@ var expandComponent = function (pipeline, component, template) {
 /**
  *
  * @param String uri
+ * @param Object configuration
  * @param Function callback Called(sucess, object) in case of sucess object is a TRIG in case of failure an error message.
  */
-gModule.unpack = function (uri, callback) {
+gModule.unpack = function (uri, configuration, callback) {
 
     var sequenceExecution = new SequenceExecution();
 
     sequenceExecution.data = {
         'pipeline': {},
         'metadata': {},
-        'templates': {}
+        'templates': {},
+        'execution': {} // Store execution realated data.
     };
 
     sequenceExecution.add(function (data, next, executor) {
-        // Get definition and parse it.
-        // This in fact require name resolution and fail without network connection!!
+        // Get pipeline definition and all used definitions.
+        // This require name resolution and fail without network connection!!
         gRequest(uri, function (error, response, body) {
             // TODO Expand prefixes here!
             data.pipeline = JSON.parse(body);
@@ -234,12 +236,15 @@ gModule.unpack = function (uri, callback) {
     }).add(function (data, next) {
         // Here we need to add sources to components based on the connections, for this we need
         // to build list of components's with their ports.
+
+        // ports[PORT_IRI]
         var ports = {};
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Port') > -1) {
                 ports[resource['@id']] = resource;
             }
         });
+        // portsByOwnerAndBinding[COMPONENT_IRI][BINDING]
         var portsByOwnerAndBinding = {};
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
@@ -254,7 +259,8 @@ gModule.unpack = function (uri, callback) {
                 portsByOwnerAndBinding[resource['@id']] = resourcePorts;
             }
         });
-        // Add sources.
+        // Add sources - ie. for each data unit determine it's sources. The source list
+        // are build based on the connections in pipeline.
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
                 var source = resource['http://linkedpipes.com/ontology/sourceComponent']['@id'];
@@ -267,10 +273,18 @@ gModule.unpack = function (uri, callback) {
                 targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
             }
         });
+
         next();
     }).add(function (data, next) {
         // Here we need to construct the 'http://linkedpipes.com/ontology/executionOrder' for all instances.
         // neighboursList can contains some instances multiple times !
+        //
+        // As the execution order is not used if component is not connected with the pipeline resource,
+        // we can assigne executionOrder to component that would notbe executed - in fact it's
+        // desired to assign the value anyway so wa have full information in pipeline and
+        // we got the same execution order no mather what (full run, debug from, debug to .. ).
+
+        // neighboursList[COMPONENT] = [REQUIRED, REQUIRED, ... ]
         var neighboursList = {};
         var components = {};
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
@@ -280,7 +294,6 @@ gModule.unpack = function (uri, callback) {
             }
             ;
         });
-
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1 ||
                     resource['@type'].indexOf('http://linkedpipes.com/ontology/RunAfter') > -1) {
@@ -292,7 +305,30 @@ gModule.unpack = function (uri, callback) {
                 }
             }
         });
-        //
+        // In case of debug-to we need to construct list of components to execute.
+        if (configuration && configuration.execution && configuration.execution.to) {
+            var toExecute = [configuration.execution.to]; // List of components to execute.
+            // Add transitive dependencies.
+            var toAdd = neighboursList[configuration.execution.to].slice(0);
+            while (toAdd.length > 0) {
+                var toAddNew = [];
+                // Add all from toAdd to the toExecute.
+                toExecute = toExecute.concat(toAdd);
+                // Scan for dependencies of toAdd and add them to toAddNew.
+                for (var index in toAdd) {
+                    neighboursList[toAdd[index]].forEach(function (item) {
+                        if (toExecute.indexOf(item) === -1) {
+                            toAddNew.push(item);
+                        }
+                    });
+                }
+                //
+                toAdd = toAddNew;
+            }
+            data.execution.components = toExecute;
+        }
+        // Construct executionOrder, this consumes and destroy neighboursList.
+        // We look for component without a dependency, then we remove those and repeat.
         var executionOrder = 0;
         while (true) {
             var removed = [];
@@ -350,17 +386,31 @@ gModule.unpack = function (uri, callback) {
             }
         });
 
-        // References from pipeline to tempaltes.
+        // References from pipeline to tempaltes - this determines which DPU will get executed and which will not.
+        // First step is to find the pipeline resource URI.
         var pipelineResource = {};
-        var componentsReferences = [];
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
-            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
-                componentsReferences.push({'@id': resource['@id']});
-            } else if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') > -1) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') > -1) {
                 pipelineResource = resource;
             }
         });
+
+        // If list of components to execut is given then use given list, else scan for all components.
+        var componentsReferences = [];
+        if (data.execution.components) {
+            // We need to execute only some components.
+            for (var index in data.execution.components) {
+                componentsReferences.push({'@id': data.execution.components[index]});
+            }
+        } else {
+            data.metadata.definition.graph['@graph'].forEach(function (resource) {
+                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
+                    componentsReferences.push({'@id': resource['@id']});
+                }
+            });
+        }
         pipelineResource['http://linkedpipes.com/ontology/component'] = componentsReferences;
+
 
         // Add some hard coded objects (hopefully just for now).
 

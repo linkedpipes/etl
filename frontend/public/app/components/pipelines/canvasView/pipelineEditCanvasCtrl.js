@@ -333,6 +333,31 @@ define([
             $scope.data.idToModel[id] = component;
         };
 
+        $scope.onDebugToComponent = function () {
+            var component = $scope.data.idToModel[$scope.status.selected];
+            if (!component) {
+                console.log('No component selected!');
+                return;
+            }
+            storePipeline($scope.data.uri, true, function () {
+                //
+                var requestData = {
+                    'execution': {
+                        'to': component['@id']
+                    }
+                };
+                //
+                $http.post('/api/v1/execute?uri=' + $scope.data.uri, requestData).then(function (response) {
+                     $location.path('/executions').search({});
+                }, function (response) {
+                    statusService.postFailed({
+                        'title': "Can't start the execution.",
+                        'response': response
+                    });
+                });
+            });
+        };
+
         $scope.onPrerequisityComponent = function () {
             $scope.status.prerequisity.active = true;
             $scope.status.prerequisity.source = $scope.status.selected;
@@ -360,7 +385,7 @@ define([
                 // On confirmation update.
                 updateLabel();
                 $scope.status.dialogOpened = false;
-            }, function() {
+            }, function () {
                 $scope.status.dialogOpened = false;
             });
         };

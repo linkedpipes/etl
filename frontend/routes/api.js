@@ -33,7 +33,7 @@ gApiRouter.get('/unpack', function (request, response) {
 
 gApiRouter.post('/execute', function (request, response) {
     var postUri = gMonitorUri + 'executions';
-    gUnpacker.unpack( request.query.uri, function (sucess, result) {
+    gUnpacker.unpack( request.query.uri, request.body, function (sucess, result) {
         if (sucess === false) {
             response.status(503).json(result);
             return;
