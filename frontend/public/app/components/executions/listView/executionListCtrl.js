@@ -43,7 +43,7 @@ define([
                     };
                     item.view = 'FINISHED';
                     break;
-                case 510: // INITIALIZATION_FAILED
+                case 513: // INITIALIZATION_FAILED
                 case 511: // FAILED
                 case 512: // FAILED_ON_THROWABLE
                     item.icon = {

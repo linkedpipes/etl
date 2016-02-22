@@ -8,7 +8,7 @@ public enum ExecutionStatusCode {
 
     QUEUED(120),
     INITIALIZING(140),
-    INITIALIZATION_FAILED(519),
+    INITIALIZATION_FAILED(513),
     RUNNING(160),
     FINISHED(200),
     FAILED(511),
