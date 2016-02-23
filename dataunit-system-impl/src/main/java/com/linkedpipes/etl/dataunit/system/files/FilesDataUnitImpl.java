@@ -80,7 +80,7 @@ final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     }
 
     private void merge(FilesDataUnitImpl source) throws DataUnitException {
-        readRootDirectories.add(source.rootDirectory);
+        readRootDirectories.addAll(source.readRootDirectories);
     }
 
     @Override
