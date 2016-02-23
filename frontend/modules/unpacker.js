@@ -8,9 +8,9 @@ var gHttp = require('http');
 var gTemplates = require('./../modules/templates');
 var gPipelines = require('./../modules/pipelines');
 var gRequest = require('request'); // https://github.com/request/request
+var gConfiguration = require('./../modules/configuration');
 
 var gModule = {};
-
 module.exports = gModule;
 
 // Enable sequence call of given functions.
@@ -190,6 +190,14 @@ var expandComponent = function (pipeline, component, template) {
 };
 
 /**
+ * Possible configurations:
+ *
+ * configuration
+ *   .execution
+ *     .to - URI of component to execute, use for debug-to
+ *   .mapping []
+ *     .uri - URI of execution.
+ *     .componets - Contains component to component mapping.
  *
  * @param String uri
  * @param Object configuration
@@ -203,7 +211,10 @@ gModule.unpack = function (uri, configuration, callback) {
         'pipeline': {},
         'metadata': {},
         'templates': {},
-        'execution': {} // Store execution realated data.
+        'execution': {// Store execution realated data.
+            'components': {} // A mimicked set of component to execute.
+        },
+        'executions': {} // List of mentioned executions.
     };
 
     sequenceExecution.add(function (data, next, executor) {
@@ -233,6 +244,20 @@ gModule.unpack = function (uri, configuration, callback) {
             }
         });
         next();
+    }).add(function (data, next, executor) {
+        // If we have some references to other executions in data.execution.mapping we download
+        // their debug data.
+        if (configuration.mapping) {
+            configuration.mapping.forEach(function (reference) {
+                var uri = gConfiguration.executor.monitor.url + 'executions/' + reference['id'] + '/debug';
+                getAndNext(executor, uri, function (error, response, body) {
+                    // TODO Add error handling here!
+                    data.executions[reference['id']] = JSON.parse(body);
+                });
+            });
+        }
+        //
+        next();
     }).add(function (data, next) {
         // Here we need to add sources to components based on the connections, for this we need
         // to build list of components's with their ports.
@@ -244,6 +269,7 @@ gModule.unpack = function (uri, configuration, callback) {
                 ports[resource['@id']] = resource;
             }
         });
+
         // portsByOwnerAndBinding[COMPONENT_IRI][BINDING]
         var portsByOwnerAndBinding = {};
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
@@ -259,6 +285,7 @@ gModule.unpack = function (uri, configuration, callback) {
                 portsByOwnerAndBinding[resource['@id']] = resourcePorts;
             }
         });
+
         // Add sources - ie. for each data unit determine it's sources. The source list
         // are build based on the connections in pipeline.
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
@@ -273,7 +300,56 @@ gModule.unpack = function (uri, configuration, callback) {
                 targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
             }
         });
+        next();
+    }).add(function (data, next) {
+        // For some data units, we need to load resources from directory. This is used
+        // when we use debug-from. So what we do here, is that we replace the source property
+        // with the source object.
 
+        if (!configuration.mapping) {
+            next();
+            return;
+        }
+
+        var portSources = {};
+        configuration.mapping.forEach(function (mapping) {
+            var executionDebug = data['executions'][mapping['id']];
+            for (var sourceUri in mapping['components']) {
+                var targetUri = mapping['components'][sourceUri];
+                // Now we check for data units of this component that we could use.
+                for (var index in executionDebug['dataUnits']) {
+                    var dataUnitTarget = executionDebug['dataUnits'][index];
+                    if (dataUnitTarget['componentUri'] === targetUri) {
+                        // This data unit is used by this DPU - we save the source path.
+                        portSources[dataUnitTarget['iri']] = dataUnitTarget['saveDirectory'];
+                    }
+                }
+
+            }
+        });
+
+        var ports = [];
+        data.metadata.definition.graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Port') > -1) {
+                ports.push(resource);
+            }
+        });
+
+        ports.forEach(function (resource) {
+            if (portSources[resource['@id']]) {
+                // Delete source as a depdency on other data units.
+                delete resource['http://linkedpipes.com/ontology/source'];
+                // Create source object.
+                var sourceObject = {
+                    '@id': resource['@id'] + '/source',
+                    '@type': ['http://linkedpipes.com/ontology/PortSource'],
+                    'http://linkedpipes.com/ontology/path': portSources[resource['@id']]
+                };
+                resource['http://linkedpipes.com/ontology/dataSource'] = {'@id': sourceObject['@id']};
+                data.metadata.definition.graph['@graph'].push(sourceObject);
+            }
+        }
+        );
         next();
     }).add(function (data, next) {
         // Here we need to construct the 'http://linkedpipes.com/ontology/executionOrder' for all instances.
@@ -292,7 +368,6 @@ gModule.unpack = function (uri, configuration, callback) {
                 neighboursList[resource['@id']] = [];
                 components[resource['@id']] = resource;
             }
-            ;
         });
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1 ||
@@ -305,7 +380,8 @@ gModule.unpack = function (uri, configuration, callback) {
                 }
             }
         });
-        // In case of debug-to we need to construct list of components to execute.
+        // Construct list of component to execute, in case of debug-to we need to restrict this list
+        // to only some components.
         if (configuration && configuration.execution && configuration.execution.to) {
             var toExecute = [configuration.execution.to]; // List of components to execute.
             // Add transitive dependencies.
@@ -325,10 +401,20 @@ gModule.unpack = function (uri, configuration, callback) {
                 //
                 toAdd = toAddNew;
             }
-            data.execution.components = toExecute;
+            //
+            data.execution.components = {};
+            for (var index in toExecute) {
+                data.execution.components[toExecute[index]] = true;
+            }
+        } else {
+            // Set all components for execution.
+            data.execution.components = {};
+            for (var key in components) {
+                data.execution.components[key] = true;
+            }
         }
         // Construct executionOrder, this consumes and destroy neighboursList.
-        // We look for component without a dependency, then we remove those and repeat.
+        // We look for component without a dependency, then we remove them and repeat the process.
         var executionOrder = 0;
         while (true) {
             var removed = [];
@@ -371,11 +457,9 @@ gModule.unpack = function (uri, configuration, callback) {
             }
         }
         next();
-    }).add(function (data) {
-        // Add other required classes and properties.
-
-        // URI fragments for data units - this value is appended to the execution URI
-        // and used to access debug data.
+    }).add(function (data, next) {
+        // For debug we need a URI fragment for each data unit - this values is used
+        // to determine the DataUnit ID.
         var portCounter = 1;
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Port') > -1) {
@@ -385,9 +469,9 @@ gModule.unpack = function (uri, configuration, callback) {
                 resource['http://linkedpipes.com/ontology/uriFragment'] = uriFragment;
             }
         });
-
-        // References from pipeline to tempaltes - this determines which DPU will get executed and which will not.
-        // First step is to find the pipeline resource URI.
+        next();
+    }).add(function (data, next) {
+        // Add references from pipeline to all components and also set component execution type.
         var pipelineResource = {};
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') > -1) {
@@ -395,25 +479,51 @@ gModule.unpack = function (uri, configuration, callback) {
             }
         });
 
-        // If list of components to execut is given then use given list, else scan for all components.
+        // If list of components to execute is given then use given list, else scan for all components.
+        var components = {};
         var componentsReferences = [];
-        if (data.execution.components) {
-            // We need to execute only some components.
-            for (var index in data.execution.components) {
-                componentsReferences.push({'@id': data.execution.components[index]});
+        data.metadata.definition.graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
+                // Store for later use.
+                components[resource['@id']] = resource;
+                // Add reference from pipeline.
+                componentsReferences.push({'@id': resource['@id']});
             }
-        } else {
-            data.metadata.definition.graph['@graph'].forEach(function (resource) {
-                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
-                    componentsReferences.push({'@id': resource['@id']});
-                }
-            });
-        }
+        });
         pipelineResource['http://linkedpipes.com/ontology/component'] = componentsReferences;
 
+        // Create list of mapped components.
+        var mappedComponents = {};
+        configuration.mapping.forEach(function (mapping) {
+            for (var key in mapping['components']) {
+                mappedComponents[key] = true;
+            }
+        });
 
+        // Set component execution types.
+        //
+        // data.execution.components
+        for (var componentUri in components) {
+            var component = components[componentUri];
+            if (!data.execution.components[componentUri]) {
+                // Do not execute.
+                component['http://linkedpipes.com/ontology/executionType'] =
+                        'http://linkedpipes.com/resources/execution/type/skip';
+            } else {
+                if (mappedComponents[componentUri]) {
+                    // Mapped component.
+                    component['http://linkedpipes.com/ontology/executionType'] =
+                        'http://linkedpipes.com/resources/execution/type/mapped';
+                } else {
+                    // Execute.
+                    component['http://linkedpipes.com/ontology/executionType'] =
+                        'http://linkedpipes.com/resources/execution/type/execute';
+                }
+            }
+        }
+        next();
+    }).add(function (data) {
         // Add some hard coded objects (hopefully just for now).
-
         data.metadata.definition.graph['@graph'].push({
             '@id': 'http://linkedpipes.com/resources/requirement/workingDirectory',
             '@type': [
@@ -441,6 +551,12 @@ gModule.unpack = function (uri, configuration, callback) {
             'http://linkedpipes.com/ontology/requirement': {'@id': 'http://linkedpipes.com/resources/requirement/workingDirectory'}
         });
 
+        var pipelineResource = {};
+        data.metadata.definition.graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') > -1) {
+                pipelineResource = resource;
+            }
+        });
         pipelineResource['http://linkedpipes.com/ontology/repository'] = {'@id': 'http://localhost/repository/sesame'};
 
         // Add debug directory to all Ports.
@@ -452,7 +568,6 @@ gModule.unpack = function (uri, configuration, callback) {
                 resource['http://linkedpipes.com/ontology/requirement'].push({'@id': 'http://linkedpipes.com/resources/requirement/debug'});
             }
         });
-
 
         // Return JSON representaio.
         callback(true, data.pipeline);

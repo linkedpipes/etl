@@ -21,7 +21,7 @@ var gMonitorUri = gConfiguration.executor.monitor.url;
 
 gApiRouter.get('/unpack', function (request, response) {
     response.status(200).setHeader('content-type', 'text/trig');
-    gUnpacker.unpack(request.query.uri, function (sucess, result) {
+    gUnpacker.unpack(request.query.uri, {}, function (sucess, result) {
         if (sucess === false) {
             response.status(503).json(result);
         } else {
