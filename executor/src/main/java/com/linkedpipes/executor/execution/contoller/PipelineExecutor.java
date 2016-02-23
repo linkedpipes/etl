@@ -52,6 +52,7 @@ import com.linkedpipes.executor.rdf.boundary.DefinitionStorage;
 import com.linkedpipes.executor.rdf.boundary.MessageStorage;
 import com.linkedpipes.executor.rdf.boundary.RdfOperationFailed;
 import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.executor.execution.entity.PipelineConfiguration.Component.ExecutionType;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -310,7 +311,7 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
                         plugin.getClass().getSimpleName());
             }
         }
-        // Prepare componenets and data units instances.
+        // Prepare components and data units instances.
         final Map<String, Component> componentInstances = loadComponents();
         final Map<String, ManagableDataUnit> dataUnitInstances = loadDataUnits();
         afterExecution.push(() -> {
@@ -360,6 +361,11 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
         // Used to check if the execution has been cancelled.
         boolean cancelRequestProcessed = false;
         for (PipelineConfiguration.Component component : pipeline.getComponents()) {
+            //
+            if (component.getExecutionType() == ExecutionType.SKIP) {
+                continue;
+            }
+            //
             final Component componentInstance = componentInstances.get(component.getUri());
             // Check for cancel or stop.
             if (cancelExecution) {

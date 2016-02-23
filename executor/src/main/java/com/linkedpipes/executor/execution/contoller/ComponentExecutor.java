@@ -17,6 +17,7 @@ import com.linkedpipes.executor.execution.entity.event.ExecutionFailed;
 import com.linkedpipes.executor.logging.boundary.MdcValue;
 import com.linkedpipes.executor.rdf.boundary.DefinitionStorage;
 import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
+import com.linkedpipes.executor.execution.entity.PipelineConfiguration.Component.ExecutionType;
 import java.io.File;
 
 /**
@@ -58,7 +59,7 @@ class ComponentExecutor implements Runnable {
      */
     private boolean terminationFlag = false;
 
-    public ComponentExecutor(ExecutionContext context, DefinitionStorage definitionDataUnit,
+    ComponentExecutor(ExecutionContext context, DefinitionStorage definitionDataUnit,
             Component componentInstance, PipelineConfiguration.Component component,
             Map<String, ManagableDataUnit> dataUnitInstances) {
         this.context = context;
@@ -73,7 +74,7 @@ class ComponentExecutor implements Runnable {
         // Gather data units that will be acessible for the component.
         final Map<String, DataUnit> usedDataUnitInstances = new HashMap<>(component.getDataUnits().size() + 1);
         usedDataUnitInstances.put(definitionDataUnit.getResourceUri(), definitionDataUnit);
-        // Prepare data units.
+        // Prepare data units for the component.
         for (PipelineConfiguration.DataUnit dataUnit : component.getDataUnits()) {
             final ManagableDataUnit managableDataUnitInstace = dataUnitInstances.get(dataUnit.getUri());
             try {
@@ -82,10 +83,10 @@ class ComponentExecutor implements Runnable {
                 // all dependencies initialized.
                 if (dataUnit.getSource() == null) {
                     // Load from other data units.
-                    LOG.debug("Loading data unit: {}", dataUnit.getName());
+                    LOG.debug("Initializing data unit: {} : {}", dataUnit.getName(), dataUnit.getUri());
                     managableDataUnitInstace.initialize(dataUnitInstances);
                 } else {
-                    LOG.debug("Loading data unit: {} from path: {}", dataUnit.getName(), dataUnit.getSource().getPath());
+                    LOG.debug("Initializing data unit: {} : {}", dataUnit.getName(), dataUnit.getUri());
                     managableDataUnitInstace.initialize(new File(dataUnit.getSource().getPath()));
                 }
             } catch (ManagableDataUnit.DataUnitException ex) {
@@ -99,7 +100,13 @@ class ComponentExecutor implements Runnable {
             }
             usedDataUnitInstances.put(managableDataUnitInstace.getResourceUri(), managableDataUnitInstace);
         }
-        // Prepare componenet.
+        //
+        if (component.getExecutionType() == ExecutionType.MAPPED) {
+            LOG.info("Execution skipped as the component is marked as 'mapped'.");
+            terminationFlag = true;
+            return;
+        }
+        // Prepare component.
         LOG.info("Preparing component ...");
         try {
             // DPU gets only some data units.

@@ -131,6 +131,23 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
      */
     public static class Component implements EntityLoader.Loadable {
 
+        public static enum ExecutionType {
+            /**
+             * Execute component.
+             */
+            EXECUTE,
+            /**
+             * Skip the execution and loading of data unit, in
+             * fact this behave as if there was no component mentioned.
+             */
+            SKIP,
+            /**
+             * Component is mapped, so it's not executed
+             * only the data units are loaded.
+             */
+            MAPPED
+        };
+
         /**
          * Unique name in scope of pipeline execution.
          */
@@ -155,6 +172,8 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
          * Execution order.
          */
         private Integer executionOrder;
+
+        private ExecutionType executionType;
 
         public Component(String uri, String executionId) {
             this.uri = uri;
@@ -185,6 +204,10 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
             }
         }
 
+        public ExecutionType getExecutionType() {
+            return executionType;
+        }
+
         @Override
         public EntityLoader.Loadable load(String predicate, String value) throws EntityLoader.LoadingFailed {
             switch (predicate) {
@@ -203,6 +226,21 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
                             = new DataUnit(executionId + "-" + Integer.toString(dataUnits.size()), value);
                     dataUnits.add(newDataUnit);
                     return newDataUnit;
+                case LINKEDPIPES.HAS_EXECUTION_TYPE:
+                    switch (value) {
+                        case "http://linkedpipes.com/resources/execution/type/execute":
+                            executionType = ExecutionType.EXECUTE;
+                            break;
+                        case "http://linkedpipes.com/resources/execution/type/mapped":
+                            executionType = ExecutionType.MAPPED;
+                            break;
+                        case "http://linkedpipes.com/resources/execution/type/skip":
+                            executionType = ExecutionType.SKIP;
+                            break;
+                        default:
+                            throw new LoadingFailed("Invalid value of executionType: {}", value);
+                    }
+                    return null;
                 default:
                     return null;
 
@@ -212,7 +250,10 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
         @Override
         public void validate() throws EntityLoader.LoadingFailed {
             if (executionOrder == null) {
-                throw new EntityLoader.LoadingFailed("Execution order must be set! (uri: '" + uri + "' )");
+                throw new EntityLoader.LoadingFailed("Execution order must be set. (component: {})", uri);
+            }
+            if (executionType == null) {
+                throw new LoadingFailed("Execution type must be set. (component: {})", uri);
             }
         }
 
