@@ -1,5 +1,5 @@
 define([], function () {
-    function config($routeProvider, $mdIconProvider) {
+    function config($routeProvider, $mdIconProvider, $mdThemingProvider) {
         $routeProvider
                 .when('/executions', {
                     templateUrl: 'app/components/executions/listView/executionListView.html',
@@ -49,11 +49,15 @@ define([], function () {
                 .icon('timeline', 'libraries/google.design/ic_timeline_24px.svg')
                 .icon('more_vert', 'libraries/google.design/ic_more_vert_24px.svg')
                 .icon('visibility', 'libraries/google.design/ic_visibility_24px.svg')
-                .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg')
-                .icon('keyboard_tab', 'libraries/google.design/ic_keyboard_tab_24px.svg');
+                .icon('keyboard_tab', 'libraries/google.design/ic_keyboard_tab_24px.svg')
+                .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg');
+
+        $mdThemingProvider.theme('default')
+                .primaryPalette('blue')
+                .accentPalette('orange');
 
     }
     // Inject dependency.
-    config.$inject = ['$routeProvider', '$mdIconProvider'];
+    config.$inject = ['$routeProvider', '$mdIconProvider', '$mdThemingProvider'];
     return config;
 });
