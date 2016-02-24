@@ -12,7 +12,7 @@ define([
             templatesRepository, statusService) {
 
         $scope.data = {
-            'uri': $routeParams.uri,
+            'uri': $routeParams.pipeline,
             'model': {},
             'definition': {},
             /**
@@ -268,9 +268,7 @@ define([
          * @return Unique componnet id, that is not presented in $scope.data.idToModel.
          */
         var uuid = function () {
-
             // credit: http://stackoverflow.com/posts/2117523/revisions
-
             var result = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 var r = Math.random() * 16 | 0;
                 var v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -348,7 +346,7 @@ define([
                 };
                 //
                 $http.post('/api/v1/execute?uri=' + $scope.data.uri, requestData).then(function (response) {
-                     $location.path('/executions').search({});
+                    $location.path('/executions').search({});
                 }, function (response) {
                     statusService.postFailed({
                         'title': "Can't start the execution.",
@@ -431,7 +429,7 @@ define([
                         'title': 'Pipeline has been successfully copied.'
                     });
                     //
-                    $location.path('/pipelines/edit/canvas').search({'uri': newPipelineUri});
+                    $location.path('/pipelines/edit/canvas').search({'pipeline': newPipelineUri});
                 });
             }, function (response) {
                 statusService.postFailed({
