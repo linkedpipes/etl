@@ -50,6 +50,7 @@ define([], function () {
                 .icon('more_vert', 'libraries/google.design/ic_more_vert_24px.svg')
                 .icon('visibility', 'libraries/google.design/ic_visibility_24px.svg')
                 .icon('keyboard_tab', 'libraries/google.design/ic_keyboard_tab_24px.svg')
+                .icon('autorenew', 'libraries/google.design/ic_autorenew_24px.svg')
                 .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg');
 
         $mdThemingProvider.theme('default')
