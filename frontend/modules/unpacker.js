@@ -515,11 +515,11 @@ gModule.unpack = function (uri, configuration, callback) {
                 if (mappedComponents[componentUri]) {
                     // Mapped component.
                     component['http://linkedpipes.com/ontology/executionType'] =
-                        'http://linkedpipes.com/resources/execution/type/mapped';
+                            'http://linkedpipes.com/resources/execution/type/mapped';
                 } else {
                     // Execute.
                     component['http://linkedpipes.com/ontology/executionType'] =
-                        'http://linkedpipes.com/resources/execution/type/execute';
+                            'http://linkedpipes.com/resources/execution/type/execute';
                 }
             }
         }
