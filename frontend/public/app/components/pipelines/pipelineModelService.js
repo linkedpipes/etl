@@ -193,22 +193,6 @@ define([], function () {
             return newComponent;
         };
 
-        // pipelineModel.setComponentUriFromId(scope.pipeline, newComponent, newView.id);
-
-        /**
-         *
-         * @param model
-         * @returns New connectino model.
-         */
-        service.createConnection = function (model) {
-            var connection = {
-                '@id': '',
-                '@type': ['http://linkedpipes.com/ontology/Connection']
-            };
-            service.getDefinitionGraph(model)['@graph'].push(connection);
-            return connection;
-        };
-
         /**
          *
          * @param model
