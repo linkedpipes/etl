@@ -217,7 +217,7 @@ define([
             setMappingVisual(mapping);
             // Propagation.
             var connections = pipelineModel.getConnections($scope.data.model);
-            connections.forEach(function(connection) {
+            connections.forEach(function (connection) {
                 if (connection['http://linkedpipes.com/ontology/sourceComponent']['@id'] === uri) {
                     disableMappingOnChange(connection['http://linkedpipes.com/ontology/targetComponent']['@id']);
                 }
@@ -242,7 +242,7 @@ define([
             setMappingVisual(mapping);
             // Propagation.
             var connections = pipelineModel.getConnections($scope.data.model);
-            connections.forEach(function(connection) {
+            connections.forEach(function (connection) {
                 if (connection['http://linkedpipes.com/ontology/sourceComponent']['@id'] === uri) {
                     disableComponentMapping(connection['http://linkedpipes.com/ontology/targetComponent']['@id']);
                 }
@@ -269,9 +269,9 @@ define([
             setMappingVisual(mapping);
             // Propagation.
             var connections = pipelineModel.getConnections($scope.data.model);
-            connections.forEach(function(connection) {
+            connections.forEach(function (connection) {
                 if (connection['http://linkedpipes.com/ontology/targetComponent']['@id'] === uri) {
-                   enableComponentMapping(connection['http://linkedpipes.com/ontology/sourceComponent']['@id']);
+                    enableComponentMapping(connection['http://linkedpipes.com/ontology/sourceComponent']['@id']);
                 }
             });
         };
@@ -463,15 +463,26 @@ define([
                 case 'SKIPPED':
                     break;
                 case 'FINISHED':
+                    if (mapping.enabled) {
+                        $scope.canvasApi.updateComponentVisual(mapping['viewId'],
+                                {'stroke': {'color': '#388E3C', 'width': 5}});
+                    } else {
+                        $scope.canvasApi.updateComponentVisual(mapping['viewId'],
+                                {'stroke': {'color': 'gray', 'width': 3}});
+                    }
+                    break;
                 case 'MAPPED':
                     if (mapping.enabled) {
-                        $scope.canvasApi.updateComponentVisual(mapping['viewId'], {'stroke': {'color': 'green', 'width': 3}});
+                        $scope.canvasApi.updateComponentVisual(mapping['viewId'],
+                                {'stroke': {'color': '#00796B', 'width': 5}});
                     } else {
-                        $scope.canvasApi.updateComponentVisual(mapping['viewId'], {'stroke': {'color': 'gray', 'width': 3}});
+                        $scope.canvasApi.updateComponentVisual(mapping['viewId'],
+                                {'stroke': {'color': 'gray', 'width': 3}});
                     }
                     break;
                 case 'FAILED':
-                    $scope.canvasApi.updateComponentVisual(mapping['viewId'], {'stroke': {'color': 'red', 'width': 3}});
+                    $scope.canvasApi.updateComponentVisual(mapping['viewId'],
+                            {'stroke': {'color': 'red', 'width': 5}});
                 default:
                     console.log('Unknwon status:', mapping['status']);
                     return;
@@ -598,7 +609,7 @@ define([
             }
             if (mapping.enabled) {
                 disableComponentMapping(component['@id']);
-            } else  {
+            } else {
                 enableComponentMapping(component['@id']);
             }
         };
