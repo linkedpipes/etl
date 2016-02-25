@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import org.openrdf.IsolationLevels;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
@@ -141,7 +142,7 @@ final class GraphListDataUnitImpl extends SesameDataUnitImpl implements Managabl
 
                     @Override
                     protected void addStatement(Resource subj, IRI pred, Value obj, Resource ctxt) throws OpenRDFException {
-                        if (graphs.containsKey(ctxt)) {
+                        if (!graphs.containsKey(ctxt)) {
                             final IRI graphUri = createGraphIRI();
                             graphs.put(ctxt, graphUri);
                         }
@@ -149,11 +150,14 @@ final class GraphListDataUnitImpl extends SesameDataUnitImpl implements Managabl
                     }
 
                 });
+                LOG.debug("initialize: loading ... {}", dataFile.getPath());
+                connection.begin(IsolationLevels.NONE);
                 try (final InputStream fileStream = new FileInputStream(dataFile.getPath())) {
                     rdfParser.parse(fileStream, "http://localhost/base");
                 } catch (IOException ex) {
                     throw new NonRecoverableException(Arrays.asList(new LocalizedString("Can't read file.", "en")), ex);
                 }
+                LOG.debug("initialize: commiting ...");
                 connection.commit();
             });
         } catch (RepositoryActionFailed ex) {
@@ -167,6 +171,7 @@ final class GraphListDataUnitImpl extends SesameDataUnitImpl implements Managabl
         } catch (SesameDataUnitException ex) {
             throw new DataUnitException("Can't add loaded graphs.", ex);
         }
+        LOG.debug("initialize: done");
     }
 
     @Override

@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.openrdf.IsolationLevels;
 import org.openrdf.query.Binding;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQuery;
@@ -74,7 +75,6 @@ class SingleGraphDataUnitImpl extends SesameDataUnitImpl implements ManagableSin
 
     @Override
     public void initialize(File directory) throws DataUnitException {
-        LOG.debug("initialize: {}", directory);
         final File dataFile = new File(directory, "data.ttl");
         final RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE);
         //
@@ -83,18 +83,20 @@ class SingleGraphDataUnitImpl extends SesameDataUnitImpl implements ManagableSin
                 final RDFInserter inserter = new RDFInserter(connection);
                 inserter.enforceContext(graph);
                 rdfParser.setRDFHandler(inserter);
-                LOG.debug("initialize: loading ...");
+                LOG.debug("initialize: loading ... {}", dataFile.getPath());
+                connection.begin(IsolationLevels.NONE);
                 try (final InputStream fileStream = new FileInputStream(dataFile.getPath())) {
                     rdfParser.parse(fileStream, "http://localhost/base");
                 } catch (IOException ex) {
                     throw new NonRecoverableException(Arrays.asList(new LocalizedString("Can't read file.", "en")), ex);
                 }
+                LOG.debug("initialize: commiting ...");
                 connection.commit();
             });
         } catch (RepositoryActionFailed ex) {
             throw new DataUnitException("Can't load data file.", ex);
         }
-        LOG.debug("initialize : done", directory);
+        LOG.debug("initialize: done");
     }
 
     @Override
