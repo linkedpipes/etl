@@ -494,11 +494,13 @@ gModule.unpack = function (uri, configuration, callback) {
 
         // Create list of mapped components.
         var mappedComponents = {};
-        configuration.mapping.forEach(function (mapping) {
-            for (var key in mapping['components']) {
-                mappedComponents[key] = true;
-            }
-        });
+        if (configuration.mapping) {
+            configuration.mapping.forEach(function (mapping) {
+                for (var key in mapping['components']) {
+                    mappedComponents[key] = true;
+                }
+            });
+        }
 
         // Set component execution types.
         //
