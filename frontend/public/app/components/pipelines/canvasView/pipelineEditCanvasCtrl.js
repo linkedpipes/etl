@@ -442,10 +442,12 @@ define([
                     }
                 }
                 //
-                requestData.mapping.push({
-                    'id': data.execution.id,
-                    'components': components
-                });
+                if (data.execution.id !== null) {
+                    requestData.mapping.push({
+                        'id': data.execution.id,
+                        'components': components
+                    });
+                }
             }
             return requestData;
         };
