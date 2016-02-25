@@ -49,7 +49,7 @@ public class RdfToFileConfiguration {
     }
 
     public RDFFormat getFileFormat() throws DataProcessingUnit.ExecutionFailed {
-        return Rio.getParserFormatForFileName(fileName).orElseThrow(() -> {
+        return Rio.getParserFormatForMIMEType(fileType).orElseThrow(() -> {
             return new DataProcessingUnit.ExecutionFailed("Invalid output file type: {1}", fileType);
         });
     }
