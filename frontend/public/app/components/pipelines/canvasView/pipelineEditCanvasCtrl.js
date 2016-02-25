@@ -7,7 +7,8 @@ define([
     'app/components/templates/templatesRepository',
     'app/components/pipelines/configurationDialog/configurationDialogCtrl',
     'app/components/templates/selectDialog/selectTemplateDialogCtrl'
-], function ($, angular, pipelineDetailDialog, pipelineCanvasDirective, pipelineServiceModule, templatesRepositoryModule, configurationDialogCtrlModule, selectTemplateDialogModule) {
+], function ($, angular, pipelineDetailDialog, pipelineCanvasDirective, pipelineServiceModule, templatesRepositoryModule
+        , configurationDialogCtrlModule, selectTemplateDialogModule) {
     function controller($scope, $http, $location, $routeParams, $timeout, $mdDialog, $mdMedia, pipelineModel,
             templatesRepository, statusService) {
 
@@ -20,9 +21,13 @@ define([
              */
             'label': '',
             /**
-             * Drectory that can be used to convert id to model.
+             * Drectory that can be used to convert ID to model.
              */
-            'idToModel': {}
+            'idToModel': {},
+            /**
+             * Dictionary used to convert URI to ID.
+             */
+            'uriToId': {}
         };
 
         $scope.status = {
@@ -34,11 +39,19 @@ define([
                 'active': false,
                 'source': ''
             },
-            'dialogOpened': false
+            'dialogOpened': false,
+            'mappingVisible': false
+        };
+
+        var data = {
+            'execution': {
+                'id': null,
+                'mapping': {}
+            }
         };
 
         //
-        // Conneciton on canvas API.
+        // Connection on canvas API.
         //
 
         $scope.canvasApi = {};
@@ -123,7 +136,15 @@ define([
 
         $scope.canvasApi.onDelete = function (id) {
             var model = $scope.data.idToModel[id];
+            // Remove mapping (if presented), for this we need the model.
+            disableMappingOnChange(id, false);
+            if (data.execution.mapping && data.execution.mapping[model['@id']]) {
+                delete data.execution.mapping[model['@id']];
+            }
+            // Remove references from maps.
             delete $scope.data.idToModel[id];
+            delete $scope.data.uriToId[model['@id']];
+            // Remove from pipeline definition.
             pipelineModel.removeResource($scope.data.model, model['@id'], false);
         };
 
@@ -136,12 +157,29 @@ define([
 
         $scope.canvasApi.onUpdateSelection = function (id) {
             if (id) {
+                var component = $scope.data.idToModel[id];
+                if (!component) {
+                    console.log('No component selected!');
+                    return;
+                }
                 var boundingBox = $scope.canvasApi.getScreenBoundingBox(id);
-                //
+                // Move the menu to the right position.
                 $scope.canvasApi.onMoveSelected(id, boundingBox.x, boundingBox.y);
                 //
-                var bottomLine = $('#componentMenu.bottomLine');
-                bottomLine.css('top', boundingBox.height);
+                var menu = $('#componentMenu');
+                menu.find('bottomLine').css('top', boundingBox.height);
+                // Check for debugging.
+                if (data.execution.mapping[component['@id']]) {
+                    var mapping = data.execution.mapping[component['@id']];
+                    // available, enabled, changed
+                    if (mapping.available && !mapping.changed) {
+                        $scope.status.mappingVisible = true;
+                    } else {
+                        $scope.status.mappingVisible = false;
+                    }
+                } else {
+                    $scope.status.mappingVisible = false;
+                }
                 //
                 $scope.status.menuVisible = true;
                 $scope.status.selected = id;
@@ -163,13 +201,88 @@ define([
         };
 
         /**
+         * Disable mapping and set mapping as unavailbale.
+         */
+        var disableMappingOnChange = function (uri) {
+            var mapping = data.execution.mapping[uri];
+            if (!mapping) {
+                return;
+            }
+            // Hyde button for the user.
+            $scope.status.mappingVisible = false;
+            //
+            mapping.changed = true;
+            mapping.enabled = false;
+            // Update visuals.
+            setMappingVisual(mapping);
+            // Propagation.
+            var connections = pipelineModel.getConnections($scope.data.model);
+            connections.forEach(function(connection) {
+                if (connection['http://linkedpipes.com/ontology/sourceComponent']['@id'] === uri) {
+                    disableMappingOnChange(connection['http://linkedpipes.com/ontology/targetComponent']['@id']);
+                }
+            });
+        };
+
+        /**
+         * Dissable mapping for the component.
+         */
+        var disableComponentMapping = function (uri) {
+            var mapping = data.execution.mapping[uri];
+            if (!mapping) {
+                return;
+            }
+            if (!mapping.enabled) {
+                // Already disabled.
+                return;
+            }
+            //
+            mapping.enabled = false;
+            // Update visuals.
+            setMappingVisual(mapping);
+            // Propagation.
+            var connections = pipelineModel.getConnections($scope.data.model);
+            connections.forEach(function(connection) {
+                if (connection['http://linkedpipes.com/ontology/sourceComponent']['@id'] === uri) {
+                    disableComponentMapping(connection['http://linkedpipes.com/ontology/targetComponent']['@id']);
+                }
+            });
+        };
+
+        /**
+         * If suitable enable component mapping.
+         */
+        var enableComponentMapping = function (uri) {
+            var mapping = data.execution.mapping[uri];
+            if (!mapping) {
+                return;
+            }
+            if (mapping.enabled) {
+                // Already enabled.
+                return;
+            }
+            //
+            if (!mapping.changed) {
+                mapping.enabled = true;
+            }
+            // Update visuals.
+            setMappingVisual(mapping);
+            // Propagation.
+            var connections = pipelineModel.getConnections($scope.data.model);
+            connections.forEach(function(connection) {
+                if (connection['http://linkedpipes.com/ontology/targetComponent']['@id'] === uri) {
+                   enableComponentMapping(connection['http://linkedpipes.com/ontology/sourceComponent']['@id']);
+                }
+            });
+        };
+
+        /**
          * Load pipeline in data.model into the canvas.
          */
         var pipelineToCanvas = function () {
             $scope.status.noApply = true;
             $scope.canvasApi.loadStart();
-            var uriToId = {}; // Used as local cache to quickly resolve references.
-
+            var uriToId = {};
             pipelineModel.getComponents($scope.data.model).forEach(function (component) {
                 var templateUri = pipelineModel.getComponentTemplateUri(component);
                 var template = templatesRepository.getTemplate(templateUri);
@@ -197,6 +310,8 @@ define([
             });
             $scope.canvasApi.loadEnd();
             $scope.status.noApply = false;
+            //
+            $scope.data.uriToId = uriToId;
         };
 
         /**
@@ -220,7 +335,7 @@ define([
             });
         };
 
-        var loadPipeline = function () {
+        var loadPipeline = function (onSucess) {
             $http.get($scope.data.uri).then(function (response) {
                 $scope.data.model = pipelineModel.modelFromJsonLd(response.data);
                 $scope.data.definition = pipelineModel.getPipelineDefinition($scope.data.model);
@@ -228,6 +343,10 @@ define([
                 updateLabel();
                 // Load pipelne.
                 pipelineToCanvas();
+                //
+                if (onSucess) {
+                    onSucess();
+                }
             }, function (response) {
                 statusService.getFailed({
                     'title': "Can't load the pipeline.",
@@ -282,6 +401,121 @@ define([
             }
         };
 
+        var executePipeline = function (configuration, onSucess) {
+            $http.post('/api/v1/execute?uri=' + $scope.data.uri, configuration).then(function (response) {
+                if (onSucess) {
+                    onSucess();
+                }
+            }, function (response) {
+                statusService.postFailed({
+                    'title': "Can't start the execution.",
+                    'response': response
+                });
+            });
+        };
+
+        /**
+         * Create a configuration object for executePipeline function.
+         */
+        var createExecuteConfiguration = function (parametr) {
+            var requestData = {
+                'execution': {},
+                'mapping': []
+            };
+            // Run-to arguments.
+            if (parametr['to']) {
+                requestData.execution.to = parametr['to'];
+            }
+            // Run-from arguments.
+            if (data.execution.mapping) {
+                var components = {};
+                // Add components.
+                for (var uri in data.execution.mapping) {
+                    var item = data.execution.mapping[uri];
+                    // We can't map component we are debugging to.
+                    if (parametr['to'] === uri) {
+                        continue;
+                    }
+                    // Make sure we should (and can) use mapping and if so use it.
+                    if (item.available && item.enabled && !item.changed) {
+                        components[uri] = item['target'];
+                    }
+                }
+                //
+                requestData.mapping.push({
+                    'id': data.execution.id,
+                    'components': components
+                });
+            }
+            return requestData;
+        };
+
+        /**
+         * Set visual appeareace for component with given id with given status.
+         */
+        var setMappingVisual = function (mapping) {
+            // available, enabled, changed
+            switch (mapping['status']) {
+                case 'QUEUED':
+                case 'RUNNING':
+                case 'SKIPPED':
+                    break;
+                case 'FINISHED':
+                case 'MAPPED':
+                    if (mapping.enabled) {
+                        $scope.canvasApi.updateComponentVisual(mapping['viewId'], {'stroke': {'color': 'green', 'width': 3}});
+                    } else {
+                        $scope.canvasApi.updateComponentVisual(mapping['viewId'], {'stroke': {'color': 'gray', 'width': 3}});
+                    }
+                    break;
+                case 'FAILED':
+                    $scope.canvasApi.updateComponentVisual(mapping['viewId'], {'stroke': {'color': 'red', 'width': 3}});
+                default:
+                    console.log('Unknwon status:', mapping['status']);
+                    return;
+            }
+        };
+
+        /**
+         * Load and display information from execution, should be used only if pipeline was filly loaded.
+         */
+        var loadExecution = function () {
+            if (!$routeParams.execution) {
+                return;
+            }
+            $http.get($routeParams.execution).then(function (response) {
+                var execution = response.data.payload;
+                //
+                data.execution = {
+                    'id': execution['id'],
+                    'instance': execution,
+                    'mapping': {}
+                };
+                //
+                for (var uri in execution.components) {
+                    var component = execution.components[uri];
+                    if ($scope.data.uriToId[uri]) {
+                        //
+                        var mapping = {
+                            'viewId': $scope.data.uriToId[uri],
+                            'target': uri,
+                            'status': component['status'],
+                            'available': component['status'] === 'FINISHED' || component['status'] === 'MAPPED',
+                            'enabled': true,
+                            'changed': false
+                        };
+                        setMappingVisual(mapping);
+                        data.execution.mapping[uri] = mapping;
+                    }
+                }
+            }, function (response) {
+                statusService.putFailed({
+                    'title': "Can't load execution.",
+                    'response': response
+                });
+            });
+        };
+
         $scope.onEditComponent = function (id) {
             if (!id) {
                 id = $scope.status.selected;
@@ -305,6 +539,9 @@ define([
                         data: $scope.data
                     }
                 }).then(function () {
+                    // Invalidate mapping if presented as we want to disable mapping,
+                    // if a component has changed.
+                    disableMappingOnChange(component['@id']);
                     // Update component.
                     $scope.canvasApi.updateComponent(id, component, template);
                     $scope.status.dialogOpened = false;
@@ -337,23 +574,31 @@ define([
                 console.log('No component selected!');
                 return;
             }
+            //
             storePipeline($scope.data.uri, true, function () {
-                //
-                var requestData = {
-                    'execution': {
-                        'to': component['@id']
-                    }
-                };
-                //
-                $http.post('/api/v1/execute?uri=' + $scope.data.uri, requestData).then(function (response) {
+                executePipeline(createExecuteConfiguration({'to': component['@id']}), function () {
                     $location.path('/executions').search({});
-                }, function (response) {
-                    statusService.postFailed({
-                        'title': "Can't start the execution.",
-                        'response': response
-                    });
                 });
             });
+        };
+
+        $scope.onMappingComponent = function () {
+            var id = $scope.status.selected;
+            var component = $scope.data.idToModel[id];
+            if (!component && data.execution.mapping[component['@id']]) {
+                console.log('No component selected!');
+                return;
+            }
+            //
+            var mapping = data.execution.mapping[component['@id']];
+            if (!mapping.available) {
+                return;
+            }
+            if (mapping.enabled) {
+                disableComponentMapping(component['@id']);
+            } else  {
+                enableComponentMapping(component['@id']);
+            }
         };
 
         $scope.onPrerequisityComponent = function () {
@@ -400,13 +645,8 @@ define([
 
         $scope.onExecute = function () {
             storePipeline($scope.data.uri, true, function () {
-                $http.post('/api/v1/execute?uri=' + $scope.data.uri).then(function (response) {
+                executePipeline(createExecuteConfiguration({}), function () {
                     $location.path('/executions').search({});
-                }, function (response) {
-                    statusService.postFailed({
-                        'title': "Can't start the execution.",
-                        'response': response
-                    });
                 });
             });
         };
@@ -416,7 +656,7 @@ define([
         };
 
         $scope.onReload = function () {
-            loadPipeline();
+            loadPipeline(loadExecution);
         };
 
         $scope.onCopy = function () {
@@ -462,7 +702,7 @@ define([
 
         var initialize = function () {
             templatesRepository.load(function () {
-                loadPipeline();
+                loadPipeline(loadExecution);
             }, function (response) {
                 statusService.deleteFailed({
                     'title': "Can't load components.",

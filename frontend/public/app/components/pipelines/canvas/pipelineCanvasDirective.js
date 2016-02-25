@@ -329,6 +329,10 @@ define([
          */
         'updateComponent': function (id, component, template) {},
         /**
+         * Used to update visuals on the component that are not set in the pipeline.
+         */
+        'updateComponentVisual': function (id, parameters) {},
+        /**
          * Remove component of given id. onDelete is called on the component and all attached connections.
          */
         'deleteComponent': function (id) {},
@@ -533,6 +537,21 @@ define([
                         }
                         //
                         updateComponentCell(cell, component, template);
+                    };
+
+                    $scope.api.updateComponentVisual = function (id, parameters) {
+                        var cell = $scope.graph.getCell(id);
+                        if (!cell) {
+                            console.log('Missing cell for id:', id);
+                            return;
+                        }
+                        //
+                        if (parameters.stroke) {
+                            cell.attr('rect', {
+                                'stroke': parameters.stroke.color,
+                                'stroke-width': parameters.stroke.width
+                            });
+                        }
                     };
 
                     $scope.api.deleteComponent = function (id) {
