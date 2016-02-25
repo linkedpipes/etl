@@ -28,6 +28,8 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Store all triples in a single graph.
@@ -37,6 +39,8 @@ import org.openrdf.rio.Rio;
 class SingleGraphDataUnitImpl extends SesameDataUnitImpl implements ManagableSingleGraphDataUnit {
 
     private final static String QUERY_COPY = "INSERT {?s ?p ?o} WHERE {?s ?p ?o}";
+
+    private static final Logger LOG = LoggerFactory.getLogger(SingleGraphDataUnitImpl.class);
 
     /**
      * Current data graph.
@@ -70,6 +74,7 @@ class SingleGraphDataUnitImpl extends SesameDataUnitImpl implements ManagableSin
 
     @Override
     public void initialize(File directory) throws DataUnitException {
+        LOG.debug("initialize: {}", directory);
         final File dataFile = new File(directory, "data.ttl");
         final RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE);
         //
@@ -78,6 +83,7 @@ class SingleGraphDataUnitImpl extends SesameDataUnitImpl implements ManagableSin
                 final RDFInserter inserter = new RDFInserter(connection);
                 inserter.enforceContext(graph);
                 rdfParser.setRDFHandler(inserter);
+                LOG.debug("initialize: loading ...");
                 try (final InputStream fileStream = new FileInputStream(dataFile.getPath())) {
                     rdfParser.parse(fileStream, "http://localhost/base");
                 } catch (IOException ex) {
@@ -88,6 +94,7 @@ class SingleGraphDataUnitImpl extends SesameDataUnitImpl implements ManagableSin
         } catch (RepositoryActionFailed ex) {
             throw new DataUnitException("Can't load data file.", ex);
         }
+        LOG.debug("initialize : done", directory);
     }
 
     @Override
