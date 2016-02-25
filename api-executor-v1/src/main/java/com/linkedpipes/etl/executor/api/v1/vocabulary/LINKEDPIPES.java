@@ -77,6 +77,8 @@ public final class LINKEDPIPES {
 
         public static final String COMPONENT_END = PREFIX_ONTOLOGY + "ComponentEnd";
 
+        public static final String COMPONENT_FAILED = PREFIX_ONTOLOGY + "ComponentFailed";
+
         public static final String INITIALIZATION_FAILED = PREFIX_ONTOLOGY + "InitializationFailed";
 
         public static final String HAS_CREATED = PREFIX_ONTOLOGY + "created";

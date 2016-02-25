@@ -358,6 +358,15 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
             }
         });
         messageStorage.publish(new ExecutionBeginImpl(pipeline));
+        // Set initial states to components, so it does not look like some DPUs shall be executed while
+        // they should not be.
+        for (PipelineConfiguration.Component component : pipeline.getComponents()) {
+            if (component.getExecutionType() == ExecutionType.SKIP) {
+                statusKeeper.componentSkipped(component.getUri());
+            } else if (component.getExecutionType() == ExecutionType.MAPPED) {
+                statusKeeper.componentMapped(component.getUri());
+            }
+        }
         // Used to check if the execution has been cancelled.
         boolean cancelRequestProcessed = false;
         for (PipelineConfiguration.Component component : pipeline.getComponents()) {

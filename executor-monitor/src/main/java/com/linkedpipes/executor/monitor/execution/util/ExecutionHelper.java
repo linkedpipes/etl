@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.linkedpipes.commons.entities.executor.ExecutionStatus;
+import com.linkedpipes.commons.entities.executor.ExecutionStatus.Component.StatusCode;
 import com.linkedpipes.commons.entities.executor.Labels;
 import com.linkedpipes.commons.entities.executor.monitor.ExecutionBasic;
 import com.linkedpipes.commons.entities.executor.ExecutionStatusCode;
@@ -32,9 +33,11 @@ public final class ExecutionHelper {
      * @param record
      * @param language
      * @param baseUri Execution URI prefix.
+     * @param includeExecution
      * @return
      */
-    public static ExecutionBasic createExecution(ExecutionMetadata record, String language, String baseUri) {
+    public static ExecutionBasic createExecution(ExecutionMetadata record, String language, String baseUri,
+            boolean includeExecution) {
         final String executionUri = baseUri + record.getId();
         if (record.getStatus() == Status.QUEUED) {
             // Create artificial information as the pipeline is not yet running.
@@ -80,11 +83,13 @@ public final class ExecutionHelper {
         execution.setStatusCode(status.getPipelineStatus().getCode());
         execution.setRunning(status.isRunning());
         execution.setExecutionDirectorySize(status.getExecutionDirectorySize());
-
+        if (includeExecution) {
+            execution.setComponents(status.getComponents());
+        }
         if (execution.isRunning()) {
             // For running include information about current state, look for curent component.
             for (Map.Entry<String, ExecutionStatus.Component> component : status.getComponents().entrySet()) {
-                if (component.getValue().getStatus() == ExecutionStatusCode.RUNNING) {
+                if (component.getValue().getStatus() == StatusCode.RUNNING) {
                     execution.setCurrentComponentLabel(getLabel(labels, component.getKey(), language));
                     execution.setCurrentComponentProgress(component.getValue().getProgress());
                     break;

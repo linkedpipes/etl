@@ -12,7 +12,7 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.executor.execution.entity.PipelineConfiguration;
 import com.linkedpipes.executor.execution.entity.event.ComponentBeginImpl;
-import com.linkedpipes.executor.execution.entity.event.ComponentEndImpl;
+import com.linkedpipes.executor.execution.entity.event.ComponentFinishedImpl;
 import com.linkedpipes.executor.execution.entity.event.ExecutionFailed;
 import com.linkedpipes.executor.logging.boundary.MdcValue;
 import com.linkedpipes.executor.rdf.boundary.DefinitionStorage;
@@ -134,7 +134,7 @@ class ComponentExecutor implements Runnable {
         }
         LOG.info("Executing component ... done");
         MDC.remove(MdcValue.COMPONENT_FLAG);
-        context.sendMessage(new ComponentEndImpl(component));
+        context.sendMessage(new ComponentFinishedImpl(component));
         terminationFlag = true;
     }
 

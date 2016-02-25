@@ -62,7 +62,7 @@ public class ExecutionFacade {
         if (execution == null) {
             return null;
         } else {
-            return ExecutionHelper.createExecution(execution, language, configuration.getExecutionPrefix());
+            return ExecutionHelper.createExecution(execution, language, configuration.getExecutionPrefix(), true);
         }
     }
 
@@ -110,7 +110,7 @@ public class ExecutionFacade {
         final List<ExecutionBasic> executions = new ArrayList<>(directories.size());
         for (ExecutionMetadata item : directories) {
             final ExecutionBasic newExecution = ExecutionHelper.createExecution(item, language,
-                    configuration.getExecutionPrefix());
+                    configuration.getExecutionPrefix(), false);
             if (newExecution != null) {
                 executions.add(newExecution);
             }
@@ -137,7 +137,7 @@ public class ExecutionFacade {
         final List<ExecutionBasic> executions = new ArrayList<>(directories.size());
         for (ExecutionMetadata item : directories) {
             final ExecutionBasic newExecution = ExecutionHelper.createExecution(item, language,
-                    configuration.getExecutionPrefix());
+                    configuration.getExecutionPrefix(), false);
             if (newExecution != null) {
                 executions.add(newExecution);
             }
@@ -160,7 +160,7 @@ public class ExecutionFacade {
         }
         // TODO We can list some list of running executions instead or easy running check.
         final ExecutionBasic basic = ExecutionHelper.createExecution(execution, "en",
-                configuration.getExecutionPrefix());
+                configuration.getExecutionPrefix(), false);
         if (basic.isRunning()) {
             // Redirect query to the executor.
             final RestTemplate restTemplate = new RestTemplate();
