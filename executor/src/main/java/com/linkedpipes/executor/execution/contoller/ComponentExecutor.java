@@ -18,6 +18,7 @@ import com.linkedpipes.executor.logging.boundary.MdcValue;
 import com.linkedpipes.executor.rdf.boundary.DefinitionStorage;
 import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
 import com.linkedpipes.executor.execution.entity.PipelineConfiguration.Component.ExecutionType;
+import com.linkedpipes.executor.execution.entity.event.ComponentFailedImpl;
 import java.io.File;
 
 /**
@@ -93,7 +94,7 @@ class ComponentExecutor implements Runnable {
                 context.sendMessage(ExecutionFailed.executionFailed("Can't prepare data units!", ex));
                 terminationFlag = true;
                 return;
-            }catch (Throwable t) {
+            } catch (Throwable t) {
                 context.sendMessage(ExecutionFailed.executionFailed("Can't initialize component!", t));
                 terminationFlag = true;
                 return;
@@ -127,14 +128,17 @@ class ComponentExecutor implements Runnable {
         MDC.put(MdcValue.COMPONENT_FLAG, null);
         try {
             componentInstance.execute(context);
+            context.sendMessage(new ComponentFinishedImpl(component));
         } catch (com.linkedpipes.etl.executor.api.v1.component.Component.ComponentFailed ex) {
+            context.sendMessage(new ComponentFailedImpl(component));
             context.sendMessage(ExecutionFailed.executionFailed("Component execution failed!", ex));
         } catch (Throwable ex) {
+            context.sendMessage(new ComponentFailedImpl(component));
             context.sendMessage(ExecutionFailed.executionFailed("Component execution failed on Throwable!", ex));
         }
         LOG.info("Executing component ... done");
         MDC.remove(MdcValue.COMPONENT_FLAG);
-        context.sendMessage(new ComponentFinishedImpl(component));
+
         terminationFlag = true;
     }
 
