@@ -10,7 +10,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [Java 8]
 - [Git]
 - [Maven]
-- [Node.js]
+- [Node.js] & npm
 
 ## Installation
 So far, you need to compile LP-ETL on your own:
@@ -52,6 +52,7 @@ There are data processing units (DPUs) in the plugins directory. Detailed descri
 
 ## Known issues
  * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
+ * On Linux systems, the .sh scripts are not executable after ```mvn install```. This can be solved easily by setting the proper mode, ```chmod +x *.sh```. https://github.com/linkedpipes/etl/issues/12
 
 ## Update script
 Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse if you wish. The script sets path to Java 8, kills running components (yeah, it is dirty), the repo is cloned in ```/opt/etl``` and we store the console logs in ```/data/lp/```
