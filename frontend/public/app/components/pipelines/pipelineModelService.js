@@ -126,7 +126,9 @@ define([], function () {
          * @returns Component with URI, or nothing if no such component exists.
          */
         service.getResource = function (model, uri) {
-            for (var item in service.getDefinitionGraph(model)['@graph']) {
+            var graph = service.getDefinitionGraph(model)['@graph'];
+            for (var index in graph) {
+                var item = graph[index];
                 if (item['@id'] === uri) {
                     return item;
                 }
