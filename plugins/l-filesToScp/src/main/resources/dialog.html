@@ -1,32 +1,33 @@
 <div class="container-flow">
     <div class="row">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Host address</label>
+            <input ng-model="dialog.host" required placeholder="myserver.example.com">
+        </md-input-container>
 
-        <div class="form-group">
-            <label class="control-label" for="host">Host address:</label>
-            <input type="text" class="form-control" id="host" ng-model="dialog.host"/>
-        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Port number</label>
+            <input ng-model="dialog.port" type="number" required placeholder="22" min="1" max="65535" >
+        </md-input-container>
 
-        <div class="form-group">
-            <label class="control-label" for="port">Port:</label>
-            <input type="number" class="form-control" id="port" ng-model="dialog.port"/>
-        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>User name</label>
+            <input ng-model="dialog.userName" required placeholder="john">
+        </md-input-container>
 
-        <div class="form-group">
-            <label class="control-label" for="directory">Target directory:</label>
-            <input type="text" class="form-control" id="directory" ng-model="dialog.directory"/>
-        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Password</label>
+            <input type="password" ng-model="dialog.password" required>
+        </md-input-container>
 
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-checked="dialog.createDirectory"> Create the target directory
-        </label>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Target directory</label>
+            <input ng-model="dialog.directory" required placeholder="/data/upload">
+        </md-input-container>
 
-        <div class="form-group">
-            <label class="control-label" for="userName">User name:</label>
-            <input type="text" class="form-control" id="userName" ng-model="dialog.userName"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="password">Password:</label>
-            <input type="text" class="form-control" id="password" ng-model="dialog.password"/>
-        </div>
+        <md-input-container>
+          <md-switch ng-model="dialog.createDirectory">{{dialog.createDirectory ? "Creating target directory" : "Not creating target directory"}}</md-switch>
+        </md-input-container>
+		
     </div>
 </div>
