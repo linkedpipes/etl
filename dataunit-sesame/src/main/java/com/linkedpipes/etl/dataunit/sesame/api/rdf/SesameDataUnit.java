@@ -1,7 +1,9 @@
 package com.linkedpipes.etl.dataunit.sesame.api.rdf;
 
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.LocalizedString;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.executor.api.v1.exception.RecoverableException;
+import java.util.Arrays;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -14,24 +16,16 @@ public interface SesameDataUnit {
 
     public class SesameDataUnitException extends NonRecoverableException {
 
-        public SesameDataUnitException(String message) {
-            super(message);
-        }
-
-        public SesameDataUnitException(String message, Throwable cause) {
-            super(message, cause);
+        public SesameDataUnitException(String messages, Object... args) {
+            super(Arrays.asList(new LocalizedString(messages, "en")), args);
         }
 
     }
 
     public class RepositoryActionFailed extends SesameDataUnitException {
 
-        public RepositoryActionFailed(String message) {
-            super(message);
-        }
-
-        public RepositoryActionFailed(String message, Throwable cause) {
-            super(message, cause);
+        public RepositoryActionFailed(String messages, Object... args) {
+            super(messages, args);
         }
 
     }

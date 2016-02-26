@@ -49,7 +49,7 @@ public final class HttpGet implements SequentialExecution {
             LOG.warn("'Trust all certs' policy used -> security risk!");
             setTrustAllCerts();
         } catch (Exception ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't set trust all certificates.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't set trust all certificates.", ex);
         }
         progressReport.start(1);
         LOG.info("Downloading: {} -> {}", configuration.getUri(), configuration.getFileName());
@@ -58,7 +58,7 @@ public final class HttpGet implements SequentialExecution {
         try {
             source = new URL(configuration.getUri());
         } catch (MalformedURLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Invalid URI: {0}.", configuration.getUri());
+            throw new DataProcessingUnit.ExecutionFailed("Invalid URI: {}.", configuration.getUri(), ex);
         }
         // Prepare target destination.
         final File destination = output.createFile(configuration.getFileName());

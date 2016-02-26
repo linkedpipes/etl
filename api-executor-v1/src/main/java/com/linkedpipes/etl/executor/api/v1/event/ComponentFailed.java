@@ -2,9 +2,9 @@ package com.linkedpipes.etl.executor.api.v1.event;
 
 /**
  *
- * @author Škoda Petr
+ * @author Petr Škoda
  */
-public interface ComponentEnd extends Event {
+public interface ComponentFailed extends Event {
 
     public String getComponentUri();
 

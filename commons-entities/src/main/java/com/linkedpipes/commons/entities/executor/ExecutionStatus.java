@@ -15,11 +15,38 @@ public final class ExecutionStatus {
 
     public static final class Component {
 
+        public static enum StatusCode {
+            /**
+             * Queued for execution. Used as a default value.
+             */
+            QUEUED,
+            /**
+             * Component is running.
+             */
+            RUNNING,
+            /**
+             * Component completed.
+             */
+            FINISHED,
+            /**
+             * Execution failed.
+             */
+            FAILED,
+            /**
+             * Component was not executed as it was mapped.
+             */
+            MAPPED,
+            /**
+             * Execution of this component was skipped.
+             */
+            SKIPPED
+        };
+
         private String uri;
 
         private Progress progress;
 
-        private ExecutionStatusCode status;
+        private StatusCode status;
 
         private Date start;
 
@@ -31,7 +58,7 @@ public final class ExecutionStatus {
 
         public Component(String uri) {
             this.uri = uri;
-            this.status = ExecutionStatusCode.QUEUED;
+            this.status = StatusCode.QUEUED;
         }
 
         public String getUri() {
@@ -50,11 +77,11 @@ public final class ExecutionStatus {
             this.progress = progress;
         }
 
-        public ExecutionStatusCode getStatus() {
+        public StatusCode getStatus() {
             return status;
         }
 
-        public void setStatus(ExecutionStatusCode status) {
+        public void setStatus(StatusCode status) {
             this.status = status;
         }
 

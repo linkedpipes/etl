@@ -24,11 +24,11 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.Component.ComponentFailed;
 import com.linkedpipes.etl.executor.api.v1.component.Component.InitializationFailed;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
-import com.linkedpipes.etl.executor.api.v1.context.CancelAwareContext;
 import com.linkedpipes.etl.executor.api.v1.component.Headers;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import java.util.LinkedList;
 import java.util.List;
+import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
 
 /**
  *
@@ -38,12 +38,24 @@ final class SequentialComponent implements Component {
 
     private static final Logger LOG = LoggerFactory.getLogger(SequentialComponent.class);
 
+    /**
+     * Instance of a DPU code to execute.
+     */
     private final SequentialExecution dpu;
 
+    /**
+     * Bundle information about the DPU.
+     */
     private final BundleInformation info;
 
+    /**
+     * RDF configuration about this DPU.
+     */
     private final DpuConfiguration configuration;
 
+    /**
+     * Reference to the definition class.
+     */
     private final SparqlSelect definition;
 
     /**
@@ -65,6 +77,12 @@ final class SequentialComponent implements Component {
         this.definitionGraph = graph;
     }
 
+    /**
+     * Bind given data units to the port of the {@link #dpu}.
+     *
+     * @param dataunits
+     * @throws com.linkedpipes.etl.executor.api.v1.component.Component.InitializationFailed
+     */
     protected void bindPorts(Map<String, DataUnit> dataunits) throws InitializationFailed {
         for (Field field : dpu.getClass().getFields()) {
             final DataProcessingUnit.InputPort input = field.getAnnotation(DataProcessingUnit.InputPort.class);
@@ -94,25 +112,23 @@ final class SequentialComponent implements Component {
                     LOG.info("\tFound: {}", item.getBinding());
                 }
                 // If it's not optional then fail for missing data unit.
-                throw new InitializationFailed(String.format("Missing data unit: %s", id));
+                throw new InitializationFailed("Missing data unit: {}", id);
+            }
+        } else if (field.getType().isAssignableFrom(dataUnit.getClass())) {
+            try {
+                field.set(dpu, dataUnit);
+            } catch (IllegalAccessException | IllegalArgumentException ex) {
+                throw new InitializationFailed("Can't set data unit: {}", id, ex);
             }
         } else {
-            if (field.getType().isAssignableFrom(dataUnit.getClass())) {
-                try {
-                    field.set(dpu, dataUnit);
-                } catch (IllegalAccessException | IllegalArgumentException ex) {
-                    throw new InitializationFailed(String.format("Can't set data unit: %s", id), ex);
-                }
-            } else {
-                // Type miss match!
-                LOG.error("Not assignable data units ({}): {} -> {}", id, dataUnit.getClass().getSimpleName(),
-                        field.getType().getSimpleName());
-                throw new InitializationFailed(String.format("Type miss match for: %s", id));
-            }
+            // Type miss match!
+            LOG.error("Not assignable data units ({}): {} -> {}", id, dataUnit.getClass().getSimpleName(),
+                    field.getType().getSimpleName());
+            throw new InitializationFailed("Type miss match for: {}", id);
         }
     }
 
-    protected void bindExtensions(CancelAwareContext context) throws InitializationFailed {
+    protected void bindExtensions(ExecutionContext context) throws InitializationFailed {
         for (Field field : dpu.getClass().getFields()) {
             if (field.getAnnotation(DataProcessingUnit.Extension.class) == null) {
                 // No annotation.
@@ -167,8 +183,7 @@ final class SequentialComponent implements Component {
         try {
             fieldValue = field.getType().newInstance();
         } catch (IllegalAccessException | InstantiationException ex) {
-            throw new InitializationFailed(String.format("Can't create configuration class for field: %s",
-                    field.getName()), ex);
+            throw new InitializationFailed("Can't create configuration class for field: {}", field.getName(), ex);
         }
         // Load configurations based on definitions.
         for (DpuConfiguration.ConfigurationHolder configurationHolder : configuration.getConfigurations()) {
@@ -198,8 +213,7 @@ final class SequentialComponent implements Component {
         try {
             field.set(dpu, fieldValue);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
-            throw new InitializationFailed(String.format("Can't set configuration object for field: %s",
-                    field.getName()), ex);
+            throw new InitializationFailed("Can't set configuration object for field: {}", field.getName(), ex);
         }
     }
 
@@ -216,13 +230,13 @@ final class SequentialComponent implements Component {
                 // Try conversion to SparqlSelect.
                 final SparqlSelect sparqlSelect;
                 if (item instanceof SparqlSelect) {
-                    sparqlSelect = (SparqlSelect)item;
+                    sparqlSelect = (SparqlSelect) item;
                 } else {
                     sparqlSelect = null;
                 }
                 if (sparqlSelect != null) {
-                    LOG.warn("Can not wrap configuration data unit (" + item.getResourceUri()
-                            + ") as a configuration source.");
+                    LOG.warn("Can not wrap configuration data unit ({}) as a configuration source.",
+                            item.getResourceUri());
                 }
                 return sparqlSelect;
             }
@@ -232,15 +246,15 @@ final class SequentialComponent implements Component {
     }
 
     @Override
-    public void initialize(Map<String, DataUnit> dataUnits, CancelAwareContext context) throws InitializationFailed {
+    public void initialize(Map<String, DataUnit> dataUnits, ExecutionContext executionContext) throws InitializationFailed {
         // Bind data units to the component.
         bindPorts(dataUnits);
-        bindExtensions(context);
+        bindExtensions(executionContext);
         loadConfigurations(getConfigurationDataUnit(dataUnits));
     }
 
     @Override
-    public void execute(CancelAwareContext context) throws ComponentFailed {
+    public void execute(ExecutionContext context) throws ComponentFailed {
         try {
             for (ManageableExtension extension : extensions) {
                 extension.preExecution();

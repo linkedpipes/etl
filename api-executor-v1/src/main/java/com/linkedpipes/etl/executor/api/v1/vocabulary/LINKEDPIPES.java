@@ -30,6 +30,8 @@ public final class LINKEDPIPES {
 
     public static final String HAS_PORT = PREFIX_ONTOLOGY + "port";
 
+    public static final String HAS_EXECUTION_TYPE = PREFIX_ONTOLOGY + "executionType";
+
     public static final String HAS_PORT_SOURCE = PREFIX_ONTOLOGY + "source";
 
     public static final String HAS_BINDING = PREFIX_ONTOLOGY + "binding";
@@ -37,6 +39,12 @@ public final class LINKEDPIPES {
     public static final String HAS_JAR_URI = PREFIX_ONTOLOGY + "jarUri";
 
     public static final String HAS_CONFIGURATION = PREFIX_ONTOLOGY + "configuration";
+
+    public static final String HAS_LOAD_PATH = PREFIX_ONTOLOGY + "loadPath";
+
+    public static final String HAS_DEBUG_PATH = PREFIX_ONTOLOGY + "debugPath";
+
+    public static final String HAS_SOURCE = PREFIX_ONTOLOGY + "dataSource";
 
     public static class CONFIGURATION {
 
@@ -70,6 +78,8 @@ public final class LINKEDPIPES {
         public static final String COMPONENT_BEGIN = PREFIX_ONTOLOGY + "ComponentBegin";
 
         public static final String COMPONENT_END = PREFIX_ONTOLOGY + "ComponentEnd";
+
+        public static final String COMPONENT_FAILED = PREFIX_ONTOLOGY + "ComponentFailed";
 
         public static final String INITIALIZATION_FAILED = PREFIX_ONTOLOGY + "InitializationFailed";
 

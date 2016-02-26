@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.dpu.extensions;
 
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.executor.api.v1.component.Component.InitializationFailed;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
@@ -16,10 +15,8 @@ public class FaultToleranceImpl implements FaultTolerance, ManageableExtension {
     public void call(Procedure procedure) throws DataProcessingUnit.ExecutionFailed {
         try {
             procedure.action();
-        } catch (NonRecoverableException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Operation failed!");
         } catch (Exception ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Operation failed!");
+            throw new DataProcessingUnit.ExecutionFailed("User operation failed.", ex);
         }
     }
 
@@ -27,10 +24,8 @@ public class FaultToleranceImpl implements FaultTolerance, ManageableExtension {
     public <T> T call(Function<T> function) throws DataProcessingUnit.ExecutionFailed {
         try {
             return function.action();
-        } catch (NonRecoverableException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Operation failed!");
         } catch (Exception ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Operation failed!");
+            throw new DataProcessingUnit.ExecutionFailed("User operation failed.", ex);
         }
     }
 

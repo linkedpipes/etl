@@ -4,8 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
-import java.io.File;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 
 /**
  * Describe common configuration of sesame data unit.
@@ -14,48 +13,49 @@ import java.io.File;
  */
 public final class RdfDataUnitConfiguration implements EntityLoader.Loadable {
 
-    private final String resourceUri;
+    /**
+     * Data unit IRI.
+     */
+    private final String resourceIri;
 
+    /**
+     * Binding name to component property.
+     */
     private String binding;
 
-    private final Collection<String> sourceDataUnitUris = new LinkedList<>();
+    /**
+     * IRIs of source data unit.
+     */
+    private final Collection<String> sourceDataUnitIris = new LinkedList<>();
 
+    /**
+     * List of types.
+     */
     private final Collection<String> types = new LinkedList<>();
 
-    private String debugDirectory;
-
     public RdfDataUnitConfiguration(String resourceUri) {
-        this.resourceUri = resourceUri;
+        this.resourceIri = resourceUri;
     }
 
-    public RdfDataUnitConfiguration(String resourceUri, String binding, String debugDirectory) {
-        this.resourceUri = resourceUri;
+    public RdfDataUnitConfiguration(String resourceIri, String binding) {
+        this.resourceIri = resourceIri;
         this.binding = binding;
-        this.debugDirectory = debugDirectory;
     }
 
-    public String getResourceUri() {
-        return resourceUri;
+    public String getResourceIri() {
+        return resourceIri;
     }
 
     public String getBinding() {
         return binding;
     }
 
-    public Collection<String> getSourceDataUnitUris() {
-        return sourceDataUnitUris;
+    public Collection<String> getSourceDataUnitIris() {
+        return sourceDataUnitIris;
     }
 
     public Collection<String> getTypes() {
         return types;
-    }
-
-    public File getDebugDirectory() {
-        if (debugDirectory == null) {
-            return null;
-        } else {
-            return new File(java.net.URI.create(debugDirectory));
-        }
     }
 
     @Override
@@ -68,10 +68,7 @@ public final class RdfDataUnitConfiguration implements EntityLoader.Loadable {
                 types.add(value);
                 return null;
             case LINKEDPIPES.HAS_PORT_SOURCE:
-                sourceDataUnitUris.add(value);
-                return null;
-            case LINKEDPIPES.HAS_DEBUG_DIRECTORY:
-                debugDirectory = value;
+                sourceDataUnitIris.add(value);
                 return null;
             default:
                 return null;

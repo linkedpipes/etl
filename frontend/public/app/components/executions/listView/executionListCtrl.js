@@ -75,7 +75,7 @@ define([
         };
 
         $scope.onPipeline = function (execution) {
-            $location.path('/pipelines/edit/canvas').search({'uri': execution.pipelineUri});
+            $location.path('/pipelines/edit/canvas').search({'pipeline': execution.pipelineUri, 'execution': execution.uri});
         };
 
         $scope.onExecute = function (execution) {

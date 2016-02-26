@@ -9,14 +9,17 @@ import org.openrdf.repository.Repository;
  */
 public final class SesameRdfDataUnitFactory {
 
-    public static ManagableSingleGraphDataUnit createSingleGraph(IRI uri, Repository repository,
-            RdfDataUnitConfiguration configuration) {
-        return new SingleGraphDataUnitImpl(uri, repository, configuration);
+    public SesameRdfDataUnitFactory() {
     }
 
-    public static ManagableGraphListDataUnit createGraphList(IRI uri, Repository repository,
+    public static ManagableSingleGraphDataUnit createSingleGraph(IRI iri, Repository repository,
             RdfDataUnitConfiguration configuration) {
-        return new GraphListDataUnitImpl(uri, repository, configuration);
+        return new SingleGraphDataUnitImpl(iri, repository, configuration);
+    }
+
+    public static ManagableGraphListDataUnit createGraphList(IRI iri, Repository repository,
+            RdfDataUnitConfiguration configuration) {
+        return new GraphListDataUnitImpl(iri, repository, configuration);
     }
 
 }

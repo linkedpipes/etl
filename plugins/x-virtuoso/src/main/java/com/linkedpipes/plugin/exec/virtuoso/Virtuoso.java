@@ -59,7 +59,7 @@ public final class Virtuoso implements SequentialExecution {
         try {
             virtuosoRepository.initialize();
         } catch (RepositoryException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't connect to Virtuoso repository.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't connect to Virtuoso repository.", ex);
         }
         cleanUp.addAction(() -> {
             try {
@@ -96,7 +96,7 @@ public final class Virtuoso implements SequentialExecution {
             final ResultSet resultSetLdDir = statementLdDir.executeQuery();
             resultSetLdDir.close();
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't execute ld_dir query.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't execute ld_dir query.", ex);
         }
         // Check number of files to load.
         final int filesToLoad;
@@ -107,7 +107,7 @@ public final class Virtuoso implements SequentialExecution {
                 filesToLoad = resultSetProcessing.getInt(1);
             }
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't query load_list table.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't query load_list table.", ex);
         } finally {
             // Here we can close the connection.
             try {
@@ -179,7 +179,7 @@ public final class Virtuoso implements SequentialExecution {
             return DriverManager.getConnection(configuration.getVirtuosoUrl(), configuration.getUsername(),
                     configuration.getPassword());
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't create sql connection.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't create sql connection.", ex);
         }
     }
 
@@ -193,7 +193,7 @@ public final class Virtuoso implements SequentialExecution {
                 resultSetRun.close();
             }
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't start loading.");
+            throw new DataProcessingUnit.ExecutionFailed("Can't start loading.", ex);
         } finally {
             try {
                 if (loaderConnection != null) {

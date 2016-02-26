@@ -10,16 +10,18 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.api.v1.event.ComponentBegin;
-import com.linkedpipes.etl.executor.api.v1.event.ComponentEnd;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentProgress;
 import com.linkedpipes.commons.entities.executor.ExecutionStatus;
+import com.linkedpipes.commons.entities.executor.ExecutionStatus.Component.StatusCode;
 import com.linkedpipes.commons.entities.rest.Progress;
 import com.linkedpipes.commons.entities.executor.ExecutionStatusCode;
+import com.linkedpipes.etl.executor.api.v1.event.ComponentBegin;
+import com.linkedpipes.etl.executor.api.v1.event.ComponentFailed;
 import com.linkedpipes.executor.execution.entity.PipelineConfiguration;
 import com.linkedpipes.executor.execution.entity.event.ExecutionFailed;
 import com.linkedpipes.executor.rdf.boundary.MessageStorage;
 import org.apache.commons.io.FileUtils;
+import com.linkedpipes.etl.executor.api.v1.event.ComponentFinished;
 
 /**
  *
@@ -64,16 +66,21 @@ public class StatusKeeper implements MessageStorage.MessageListener {
     public void onMesssage(Event message) {
         if (message instanceof ComponentBegin) {
             final String uri = ((ComponentBegin) message).getComponentUri();
-            status.getComponents().get(uri).setStatus(ExecutionStatusCode.RUNNING);
+            status.getComponents().get(uri).setStatus(ExecutionStatus.Component.StatusCode.RUNNING);
             status.getComponents().get(uri).setStart(new Date());
         } else if (message instanceof ComponentProgress) {
             final ComponentProgress progress = (ComponentProgress) message;
             final String uri = progress.getComponentUri();
             status.getComponents().get(uri).setProgress(
                     new Progress(progress.getCurrent(), progress.getTotal(), new Date()));
-        } else if (message instanceof ComponentEnd) {
-            final String uri = ((ComponentEnd) message).getComponentUri();
-            status.getComponents().get(uri).setStatus(ExecutionStatusCode.FINISHED);
+        } else if (message instanceof ComponentFinished) {
+            final String uri = ((ComponentFinished) message).getComponentUri();
+            status.getComponents().get(uri).setStatus(ExecutionStatus.Component.StatusCode.FINISHED);
+            // Update pipeline progress.
+            status.getProgress().setCurrent(status.getProgress().getCurrent() + 1);
+        } else if (message instanceof ComponentFailed) {
+            final String uri = ((ComponentFailed) message).getComponentUri();
+            status.getComponents().get(uri).setStatus(ExecutionStatus.Component.StatusCode.FAILED);
             // Update pipeline progress.
             status.getProgress().setCurrent(status.getProgress().getCurrent() + 1);
         } else if (message instanceof ExecutionFailed) {
@@ -113,6 +120,26 @@ public class StatusKeeper implements MessageStorage.MessageListener {
         // Save to disk.
         persist();
     }
+
+    public void componentSkipped(String uri) {
+        status.getComponents().get(uri).setStatus(StatusCode.SKIPPED);
+    };
+
+    public void componentMapped(String uri) {
+        status.getComponents().get(uri).setStatus(StatusCode.MAPPED);
+    };
+
+    public void componentStarts(String uri) {
+        status.getComponents().get(uri).setStatus(StatusCode.RUNNING);
+    };
+
+    public void componentFailed(String uri) {
+        status.getComponents().get(uri).setStatus(StatusCode.FAILED);
+    };
+
+    public void componentEnds(String uri) {
+        status.getComponents().get(uri).setStatus(StatusCode.FINISHED);
+    };
 
     public void throwable(Throwable exception) {
         status.setTerminationException(exception.getMessage());

@@ -41,7 +41,6 @@ public final class Unpack implements SequentialExecution {
 
     @Override
     public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
-        progressReport.startTotalUnknown(10);
         LOG.info("Used extension option: {}", configuration.getFormat());
         for (FilesDataUnit.Entry entry : input) {
             if (context.canceled()) {
@@ -79,7 +78,7 @@ public final class Unpack implements SequentialExecution {
                             inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Extraction failed: " + inputEntry.getFileName());
+            throw new DataProcessingUnit.ExecutionFailed("Extraction failed: {}", inputEntry.getFileName(), ex);
         }
     }
 

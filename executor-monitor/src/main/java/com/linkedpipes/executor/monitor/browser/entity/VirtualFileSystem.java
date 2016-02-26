@@ -1,14 +1,12 @@
 package com.linkedpipes.executor.monitor.browser.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.Files;
 import com.linkedpipes.commons.entities.executor.DebugStructure;
+import com.linkedpipes.commons.entities.executor.DebugStructure.DataUnit;
 import com.linkedpipes.executor.monitor.Configuration;
 import com.linkedpipes.executor.monitor.execution.boundary.ExecutionFacade;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -320,10 +318,9 @@ public class VirtualFileSystem {
             // Construct the execution record;
             execution = new ExecutionDirectory();
             execution.debugData = debugData;
-            for (String entry : debugData.getDataUnits().keySet()) {
-                execution.dataUnits.put(entry, null);
+            for (DataUnit entry : debugData.getDataUnits()) {
+                execution.dataUnits.put(entry.getUriFragment(), null);
             }
-
             executions.put(name, execution);
         }
         return execution;
@@ -342,8 +339,13 @@ public class VirtualFileSystem {
         }
         DataUnitDirectory dataUnit = execution.dataUnits.get(name);
         if (dataUnit == null) {
-            // Load record.
-            final DebugStructure.DataUnit dataUnitDebug = execution.debugData.getDataUnits().get(name);
+            DebugStructure.DataUnit dataUnitDebug = null;
+            for (DataUnit item : execution.debugData.getDataUnits()) {
+                if (item.getUriFragment().equals(name)) {
+                    dataUnitDebug = item;
+                    break;
+                }
+            }
             if (dataUnitDebug == null) {
                 // Invalid name.
                 LOG.error("Missing data ({}) unit in list, while it was previously created from this list.",
@@ -352,14 +354,8 @@ public class VirtualFileSystem {
             }
             dataUnit = new DataUnitDirectory();
             // Load debug file.
-            final File infoFile = new File(new File(URI.create(dataUnitDebug.getDebugDirectory())), "info.dat");
-            try {
-                for (String line : Files.readLines(infoFile, Charset.forName("UTF-8"))) {
-                    dataUnit.directories.add(line + "/");
-                }
-            } catch (IOException ex) {
-                LOG.error("Can't read info.dat file.", ex);
-                return null;
+            for (String item : dataUnitDebug.getDebugDirectories()) {
+                dataUnit.directories.add(item + "/");
             }
             execution.dataUnits.put(name, dataUnit);
         }

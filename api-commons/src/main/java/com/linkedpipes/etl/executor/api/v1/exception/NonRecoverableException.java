@@ -1,25 +1,16 @@
 package com.linkedpipes.etl.executor.api.v1.exception;
 
+import java.util.List;
+
 /**
  * This exception should terminate the component execution.
  *
  * @author Petr Škoda
  */
-public class NonRecoverableException extends Exception {
+public class NonRecoverableException extends LocalizedException {
 
-    public NonRecoverableException() {
-    }
-
-    public NonRecoverableException(String message) {
-        super(message);
-    }
-
-    public NonRecoverableException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NonRecoverableException(Throwable cause) {
-        super(cause);
+    public NonRecoverableException(List<LocalizedString> messages, Object... args) {
+        super(messages, args);
     }
 
 }

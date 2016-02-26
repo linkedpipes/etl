@@ -66,6 +66,12 @@
             <md-button class="md-fab md-mini" style="position:absolute;left:-30px;top:55px;" aria-label="Prerequisity" ng-click="onPrerequisityComponent()">
                 <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
             </md-button>
+            <md-button class="md-fab md-mini" style="position:absolute;left:20px;top:55px;" aria-label="Debug to" ng-click="onDebugToComponent()">
+                <md-icon md-menu-origin md-svg-src="keyboard_tab"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-mini" style="position:absolute;left:70px;top:55px;" aria-label="Change mapping" ng-click="onMappingComponent()" ng-show="status.mappingVisible">
+                <md-icon md-menu-origin md-svg-src="autorenew"></md-icon>
+            </md-button>
         </span>
     </div>
 

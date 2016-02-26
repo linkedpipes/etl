@@ -21,12 +21,12 @@ define([], function () {
         var showError = function(message) {
             // TODO Add better logging and response utilization.
             console.log('error.response', message.response);
-
+            
             // Based on message format select message text.
             var messageText;
             if (message.response) {
                 var responseData = message.response.data;
-                if (responseData.exception) {
+                if (responseData && responseData.exception) {
                     messageText = responseData.exception.userMessage;
                 } else {
                     messageText = message.response.statusText;

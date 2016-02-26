@@ -5,7 +5,7 @@ package com.linkedpipes.etl.executor.api.v1.component;
  *
  * @author Škoda Petr
  */
-public class Headers {
+public final class Headers {
 
     private Headers() {
     }

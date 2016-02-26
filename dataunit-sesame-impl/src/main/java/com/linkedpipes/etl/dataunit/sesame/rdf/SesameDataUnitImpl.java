@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.openrdf.repository.Repository;
 
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import java.io.File;
 
 /**
  *
@@ -33,17 +32,11 @@ abstract class SesameDataUnitImpl implements SesameDataUnit, ManagableDataUnit {
      */
     protected final Collection<String> sources;
 
-    /**
-     * If not null then into this directory debug data should be saved in {@link #close()} method.
-     */
-    protected final File debugDirectory;
-
     protected SesameDataUnitImpl(Repository repository, RdfDataUnitConfiguration configuration) {
         this.id = configuration.getBinding();
-        this.resourceUri = configuration.getResourceUri();
+        this.resourceUri = configuration.getResourceIri();
         this.repository = repository;
-        this.sources = configuration.getSourceDataUnitUris();
-        this.debugDirectory = configuration.getDebugDirectory();
+        this.sources = configuration.getSourceDataUnitIris();
     }
 
     @Override

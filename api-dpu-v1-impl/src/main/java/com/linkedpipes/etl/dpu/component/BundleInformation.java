@@ -1,10 +1,9 @@
 package com.linkedpipes.etl.dpu.component;
 
 import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
+ * Holds information about a single bundle.
  *
  * @author Škoda Petr
  */
@@ -20,16 +19,9 @@ final class BundleInformation {
      */
     private final List<String> packages;
 
-    /**
-     * Map of detected property files, stored under language key.
-     */
-    private final Map<String, ResourceBundle> localizationFiles;
-
-    public BundleInformation(
-            Class<?> componentClasse, List<String> packages, Map<String, ResourceBundle> propertyFiles) {
+    public BundleInformation(Class<?> componentClasse, List<String> packages) {
         this.componentClasse = componentClasse;
         this.packages = packages;
-        this.localizationFiles = propertyFiles;
     }
 
     public Class<?> getComponentClasse() {
@@ -38,10 +30,6 @@ final class BundleInformation {
 
     public List<String> getPackages() {
         return packages;
-    }
-
-    public Map<String, ResourceBundle> getLocalizationFiles() {
-        return localizationFiles;
     }
 
 }

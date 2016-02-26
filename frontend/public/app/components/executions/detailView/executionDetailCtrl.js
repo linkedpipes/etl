@@ -144,20 +144,20 @@ define([
                 data['dataUnits'].forEach(function (dataUnit) {
                     // Check for RDF data unit.
                     var fusekiVisible = false;
-                    dataUnit['types'].forEach(function (item) {
-                        if (item === 'http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/GraphList' ||
-                                item === 'http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph') {
-                            fusekiVisible = true;
-                        }
-                    });
                     //
                     var record = {
                         'component': dataUnit['component'],
-                        'binding': dataUnit['binding'],
                         'browseUri': dataUnit['browseUri'],
                         'fusekiVisible': fusekiVisible,
                         'uriFragment': dataUnit['uriFragment']
                     };
+                    //
+                    var labels = $scope.labels[dataUnit['uri']];
+                    if (labels) {
+                        record['label'] = labels.labels[''];
+                    } else {
+                        record['label'] = '';
+                    }
                     $scope.debug.push(record);
                 });
                 //

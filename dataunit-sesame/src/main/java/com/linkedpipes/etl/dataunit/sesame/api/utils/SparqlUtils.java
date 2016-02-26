@@ -19,6 +19,9 @@ import org.openrdf.repository.util.Repositories;
  */
 public final class SparqlUtils {
 
+    private SparqlUtils() {
+    }
+
     /**
      * Execute given SPARQL select query and return the result.
      *

@@ -10,7 +10,7 @@ import com.linkedpipes.executor.execution.entity.PipelineConfiguration;
 import com.linkedpipes.executor.rdf.boundary.DefinitionStorage;
 import com.linkedpipes.executor.rdf.boundary.RdfOperationFailed;
 import com.linkedpipes.executor.rdf.boundary.WritableRdfJava;
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
+import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 
 /**
  * Process requirement in pipeline definition and handle them.
@@ -132,7 +132,7 @@ public final class RequirementProcessor {
         } catch (EntityLoader.LoadingFailed ex) {
             throw new InvalidRequirement("Requirement: " + requirementUri, ex);
         }
-        final File workingDir = resourceManager.getWorkingDir();
+        final File workingDir = resourceManager.getWorkingDir("temp-");
         final WritableRdfJava writable = definitionDataUnit.asWritableRdfJava();
         writable.begin();
         writable.addUri(source, tempDirectory.targetProperty, workingDir.toURI().toString());

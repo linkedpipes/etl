@@ -10,50 +10,13 @@ import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.context.Context;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentProgress;
-import com.linkedpipes.utils.core.entity.boundary.EntityLoader;
-import com.linkedpipes.utils.core.event.boundary.AbstractEvent;
+import com.linkedpipes.etl.utils.core.event.AbstractEvent;
 
 /**
  *
  * @author Škoda Petr
  */
 public class ProgressReportImpl implements ProgressReport, ManageableExtension {
-
-    private static class Configuration implements EntityLoader.Loadable {
-
-        private float reportPercentage = 0.1f;
-
-        /**
-         * Is used it the total number of entries is unknown.
-         *
-         * TODO: Load from configuration
-         */
-        private Integer reportStep = null;
-
-        @Override
-        public EntityLoader.Loadable load(String predicate, String value) throws EntityLoader.LoadingFailed {
-            switch (predicate) {
-                case LINKEDPIPES.EVENTS.PROGRESS.HAS_STEP_REPORT_SIZE:
-                    try {
-                        reportPercentage = Float.parseFloat(value);
-                    } catch (NumberFormatException ex) {
-                        throw new EntityLoader.LoadingFailed("Inbvalid float value:" + value, ex);
-                    }
-                    return null;
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public void validate() throws EntityLoader.LoadingFailed {
-            if (reportPercentage <= 0 || reportPercentage >= 1) {
-                throw new EntityLoader.LoadingFailed(String.format("Invalid report step size: %f",
-                        reportPercentage));
-            }
-        }
-
-    }
 
     private static class ReportProgress extends AbstractEvent implements ComponentProgress {
 
@@ -152,8 +115,6 @@ public class ProgressReportImpl implements ProgressReport, ManageableExtension {
 
     private int reportNext;
 
-    private final Configuration configuration = new Configuration();
-
     private String componentUri;
 
     private final Context context;
@@ -163,25 +124,12 @@ public class ProgressReportImpl implements ProgressReport, ManageableExtension {
     }
 
     @Override
-    public void startTotalUnknown(int reportStepSuggestion) {
-        current = 0;
-        total = null;
-        if (configuration.reportStep == null) {
-            reportStep = reportStepSuggestion;
-        } else {
-            reportStep = reportStepSuggestion;
-        }
-        reportNext = reportStep;
-        context.sendEvent(new ReportProgress(0, null, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_START));
-    }
-
-    @Override
     public void start(int entriesToProcess) {
         current = 0;
         total = entriesToProcess;
-        reportStep = (int) (total * configuration.reportPercentage);
+        reportStep = (int) (total * 0.05f);
         reportNext = reportStep;
-        context.sendEvent(new ReportProgress(0, total, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_START));
+        context.sendMessage(new ReportProgress(0, total, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_START));
     }
 
     @Override
@@ -194,13 +142,13 @@ public class ProgressReportImpl implements ProgressReport, ManageableExtension {
         ++current;
         if (current >= reportNext) {
             reportNext += reportStep;
-            context.sendEvent(new ReportProgress(current, total, componentUri, null));
+            context.sendMessage(new ReportProgress(current, total, componentUri, null));
         }
     }
 
     @Override
     public void done() {
-        context.sendEvent(new ReportProgress(null, null, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_DONE));
+        context.sendMessage(new ReportProgress(null, null, componentUri, LINKEDPIPES.EVENTS.PROGRESS.EVENT_DONE));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
+import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit.Context;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionCancelled;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
@@ -77,7 +78,7 @@ class Parser {
             try {
                 mapper.onHeader(header);
             } catch (InvalidTemplate | MissingNameInHeader ex) {
-                throw new NonRecoverableException("Can initalize on header row.", ex);
+                throw new DataProcessingUnit.ExecutionFailed("Can initalize on header row.", ex);
             }
             if (row == null) {
                 LOG.info("No data found in file: {}", entry.getFileName());

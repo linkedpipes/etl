@@ -17,7 +17,7 @@ define([], function () {
         });
 
         $scope.onPipeline = function (pipeline) {
-            $location.path('/pipelines/edit/canvas').search({'uri': pipeline.uri});
+            $location.path('/pipelines/edit/canvas').search({'pipeline': pipeline.uri});
         };
 
         $scope.onExecute = function (pipeline) {
@@ -35,7 +35,7 @@ define([], function () {
             // Create pipeline.
             var id = $scope.id = 'created-' + (new Date()).getTime();
             $http.post('/resources/pipelines/' + id).then(function (response) {
-                $location.path('/pipelines/edit/canvas').search({'uri': response.data.uri});
+                $location.path('/pipelines/edit/canvas').search({'pipeline': response.data.uri});
             }, function (response) {
                 statusService.postFailed({
                     'title': "Can't create the pipeline.",

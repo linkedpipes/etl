@@ -1,9 +1,7 @@
 package com.linkedpipes.commons.entities.executor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Describes structure of data in the debug directory.
@@ -15,51 +13,56 @@ public class DebugStructure {
     public static class DataUnit {
 
         /**
-         * List of types.
+         * Data unit instance IRI.
          */
-        private List<String> types = new ArrayList<>(4);
+        private String iri;
 
         /**
-         * Path to directory with debug data.
+         * List of debug directory paths. Joined content of those directories
+         * is considered to be the content of data unit debug directory.
          */
-        private String debugDirectory;
+        private List<String> debugDirectories = new ArrayList<>(2);
 
         /**
-         * Binding.
+         * Path to directory where the content of data unit is saved.
          */
-        private String binding;
+        private String saveDirectory;
 
         /**
-         * URI of owning component in scope of the execution execution.
+         * Shall be removed, used only to help Frontend.
          */
         private String componentUri;
 
+        /**
+         * Shall be removed, used only to help Frontend.
+         */
+        private String uriFragment;
+
         public DataUnit() {
-
         }
 
-        public List<String> getTypes() {
-            return types;
+        public String getIri() {
+            return iri;
         }
 
-        public void setTypes(List<String> types) {
-            this.types = types;
+        public void setIri(String iri) {
+            this.iri = iri;
         }
 
-        public String getDebugDirectory() {
-            return debugDirectory;
+        public List<String> getDebugDirectories() {
+            return debugDirectories;
         }
 
-        public void setDebugDirectory(String debugDirectory) {
-            this.debugDirectory = debugDirectory;
+        public void setDebugDirectories(List<String> debugDirectories) {
+            this.debugDirectories = debugDirectories;
         }
 
-        public String getBinding() {
-            return binding;
+        public String getSaveDirectory() {
+            return saveDirectory;
         }
 
-        public void setBinding(String binding) {
-            this.binding = binding;
+        public void setSaveDirectory(String saveDirectory) {
+            this.saveDirectory = saveDirectory;
         }
 
         public String getComponentUri() {
@@ -70,35 +73,30 @@ public class DebugStructure {
             this.componentUri = componentUri;
         }
 
+        public String getUriFragment() {
+            return uriFragment;
+        }
+
+        public void setUriFragment(String uriFragment) {
+            this.uriFragment = uriFragment;
+        }
+
     }
 
     /**
-     * List of data units with debugging data. The key refers to data unit name ie. uriFragment (part of URI).
+     * List of data units with debugging data.
      */
-    private Map<String, DataUnit> dataUnits = new HashMap<>();
-
-    /**
-     * Id of an execution ie part of execution URI.
-     */
-    private String executionId;
+    private List<DataUnit> dataUnits = new ArrayList<>();
 
     public DebugStructure() {
     }
 
-    public Map<String, DataUnit> getDataUnits() {
+    public List<DataUnit> getDataUnits() {
         return dataUnits;
     }
 
-    public void setDataUnits(Map<String, DataUnit> dataUnits) {
+    public void setDataUnits(List<DataUnit> dataUnits) {
         this.dataUnits = dataUnits;
-    }
-
-    public String getExecutionId() {
-        return executionId;
-    }
-
-    public void setExecutionId(String executionId) {
-        this.executionId = executionId;
     }
 
 }

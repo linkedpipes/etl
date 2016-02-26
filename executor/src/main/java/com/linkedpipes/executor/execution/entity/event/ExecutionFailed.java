@@ -2,9 +2,11 @@ package com.linkedpipes.executor.execution.entity.event;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.utils.core.event.boundary.AbstractEvent;
+import com.linkedpipes.etl.utils.core.event.AbstractEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Used to report execution failure - {@link StopExecution} message is automatically emitted after this message by core.
@@ -12,6 +14,8 @@ import java.io.StringWriter;
  * @author Škoda Petr
  */
 public class ExecutionFailed extends AbstractEvent {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutionFailed.class);
 
     public String reason;
 
@@ -37,7 +41,11 @@ public class ExecutionFailed extends AbstractEvent {
         while (rootCause.getCause() != null) {
             rootCause = rootCause.getCause();
         }
-        writer.addString(uri, LINKEDPIPES.EVENTS.HAS_ROOT_EXCEPTION_MESSAGE, rootCause.getMessage(), "en");
+        if (rootCause.getMessage() != null) {
+            writer.addString(uri, LINKEDPIPES.EVENTS.HAS_ROOT_EXCEPTION_MESSAGE, rootCause.getMessage(), "en");
+        } else {
+            LOG.error("Missing message for ExecutionFailed.", cause);
+        }
     }
 
     public static AbstractEvent executionFailed(String reason) {

@@ -223,6 +223,8 @@ gApiRouter.get('/executions/:id/debug', function (request, response) {
         gRequest(uriLabels, function (error, res, body) {
             // TODO: Error handling
 
+            var executionId = request.params.id;
+
             var labels;
             if (body) {
                 labels = JSON.parse(body)['resources'];
@@ -233,15 +235,13 @@ gApiRouter.get('/executions/:id/debug', function (request, response) {
             }
             // Convert body to output object.
             var dataUnits = [];
-            for (var uriFragment in debugInfo['dataUnits']) {
-                var dataUnit = debugInfo['dataUnits'][uriFragment];
+            for (var index in debugInfo['dataUnits']) {
+                var dataUnit = debugInfo['dataUnits'][index];
                 var newDataUnit = {
-                    'binding': dataUnit['binding'],
-                    'uriFragment': uriFragment,
+                    'uriFragment': dataUnit['uriFragment'],
                     'componentUri': dataUnit['componentUri'],
-                    'types': [],
-                    'browseUri': gConfiguration.executor.ftp.uri + '/' +
-                            debugInfo['executionId'] + '/' + uriFragment
+                    'uri': dataUnit['iri'],
+                    'browseUri': gConfiguration.executor.ftp.uri + '/' + executionId + '/' + dataUnit['uriFragment']
                 };
                 // Update labels.
                 if (dataUnit['componentUri'] in labels) {
@@ -253,17 +253,9 @@ gApiRouter.get('/executions/:id/debug', function (request, response) {
                 }
                 //
                 dataUnits.push(newDataUnit);
-                dataUnit['types'].forEach(function (type) {
-                    if (type !== 'http://linkedpipes.com/ontology/Port' &&
-                            type !== 'http://linkedpipes.com/ontology/Input' &&
-                            type !== 'http://linkedpipes.com/ontology/Output') {
-                        newDataUnit['types'].push(type);
-                    }
-                });
             }
 
             var output = {
-                'executionId': debugInfo['executionId'],
                 'dataUnits': dataUnits
             };
             response.json({

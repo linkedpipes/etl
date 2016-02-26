@@ -37,6 +37,10 @@
             <version>0.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <!-- OSGI. -->
         <dependency>
             <groupId>org.osgi</groupId>

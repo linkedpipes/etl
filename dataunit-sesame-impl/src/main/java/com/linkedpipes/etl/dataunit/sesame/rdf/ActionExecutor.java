@@ -13,8 +13,6 @@ import org.openrdf.repository.RepositoryConnection;
 /**
  * Should make handling common connection logic easier.
  *
- * TODO We should add possibility for fault tolerance here.
- *
  * @author Škoda Petr
  */
 final class ActionExecutor {

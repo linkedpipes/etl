@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.dataunit.system.files;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,13 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -23,6 +21,9 @@ import java.io.IOException;
  */
 final class FilesDataUnitImpl implements ManagableFilesDataUnit {
 
+    /**
+     * Implementation of files data unit entry.
+     */
     static class Entry implements FilesDataUnit.Entry {
 
         private final File file;
@@ -46,28 +47,32 @@ final class FilesDataUnitImpl implements ManagableFilesDataUnit {
 
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(FilesDataUnitImpl.class);
-
     private final String id;
 
     private final String resourceUri;
 
     private boolean initialized = false;
 
+    /**
+     * Write directory, is also part of {@link #readRootDirectories}.
+     */
     private final File rootDirectory;
 
-    private final List<File> readRootDirectories = new LinkedList<>();
+    /**
+     * Directories with content of this data unit.
+     */
+    private List<File> readRootDirectories = new LinkedList<>();
 
+    /**
+     * List of source data units IRI.
+     */
     private final Collection<String> sources;
 
-    private final File debugDirectory;
-
-    public FilesDataUnitImpl(FilesDataUnitConfiguration configuration) {
+    FilesDataUnitImpl(FilesDataUnitConfiguration configuration) {
         this.id = configuration.getBinding();
         this.resourceUri = configuration.getResourceUri();
         this.rootDirectory = configuration.getWorkingDirectory();
         this.sources = configuration.getSourceDataUnitUris();
-        this.debugDirectory = configuration.getDebugDirectory();
         // Add root to 'read' directories.
         if (rootDirectory != null) {
             this.readRootDirectories.add(rootDirectory);
@@ -75,12 +80,23 @@ final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     }
 
     private void merge(FilesDataUnitImpl source) throws DataUnitException {
-        readRootDirectories.add(source.rootDirectory);
+        readRootDirectories.addAll(source.readRootDirectories);
+    }
+
+    @Override
+    public void initialize(File directory) throws DataUnitException {
+        final ObjectMapper mapper = new ObjectMapper();
+        final File inputFile = new File(directory, "data.json");
+        final JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, File.class);
+        try {
+            readRootDirectories = mapper.readValue(inputFile, type);
+        } catch (IOException ex) {
+            throw new DataUnitException("Can't load directory list.", ex);
+        }
     }
 
     @Override
     public void initialize(Map<String, ManagableDataUnit> dataUnits) throws DataUnitException {
-        LOG.info("initialize");
         initialized = true;
         // Iterate over sources and add their content.
         for (String sourceUri : sources) {
@@ -98,25 +114,20 @@ final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     }
 
     @Override
-    public void dumpContent() throws DataUnitException {
-        if (this.debugDirectory == null) {
-            return;
-        }
-        // Create a file with reference to all sources.
-        final File infoFile = new File(this.debugDirectory, "info.dat");
-        boolean first = true;
-        try (FileWriter fileWriter = new FileWriter(infoFile)) {
-            for (File directory : readRootDirectories) {
-                if (first) {
-                    first = false;
-                } else {
-                    fileWriter.append("\n");
-                }
-                fileWriter.append(directory.getPath());
-            }
+    public void save(File directory) throws DataUnitException {
+        final ObjectMapper mapper = new ObjectMapper();
+        final File outputFile = new File(directory, "data.json");
+        // Load read directories.
+        try {
+            mapper.writeValue(outputFile, readRootDirectories);
         } catch (IOException ex) {
-            throw new DataUnitException("Can't write debug data.", ex);
+            throw new DataUnitException("Can't save directory list.", ex);
         }
+    }
+
+    @Override
+    public List<File> dumpContent(File directory) throws DataUnitException {
+        return readRootDirectories;
     }
 
     @Override
@@ -166,6 +177,16 @@ final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     @Override
     public Collection<File> getReadRootDirectories() {
         return Collections.unmodifiableCollection(readRootDirectories);
+    }
+
+    @Override
+    public long size() {
+        // TODO We should use better approach here!
+        long size = 0;
+        for (com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry item : this) {
+            ++size;
+        }
+        return size;
     }
 
 }

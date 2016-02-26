@@ -126,8 +126,10 @@ define([], function () {
          * @returns Component with URI, or nothing if no such component exists.
          */
         service.getResource = function (model, uri) {
-            for (var item in service.getDefinitionGraph(model)['@graph']) {
-                if (item['@id'] === uri) {
+            var graph = service.getDefinitionGraph(model)['@graph'];
+            for (var index in graph) {
+                var item = graph[index];
+                if (item && item['@id'] === uri) {
                     return item;
                 }
             }
@@ -191,22 +193,6 @@ define([], function () {
                 model['graphs'][newConfigUri] = jQuery.extend(true, {}, model['graphs'][configUri]);
             }
             return newComponent;
-        };
-
-        // pipelineModel.setComponentUriFromId(scope.pipeline, newComponent, newView.id);
-
-        /**
-         *
-         * @param model
-         * @returns New connectino model.
-         */
-        service.createConnection = function (model) {
-            var connection = {
-                '@id': '',
-                '@type': ['http://linkedpipes.com/ontology/Connection']
-            };
-            service.getDefinitionGraph(model)['@graph'].push(connection);
-            return connection;
         };
 
         /**

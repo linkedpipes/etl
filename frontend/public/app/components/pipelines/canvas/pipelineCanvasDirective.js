@@ -147,8 +147,10 @@ define([
             this.paper.setOrigin(this.positionX, this.positionY);
             this._clientX = event.clientX;
             this._clientY = event.clientY;
-            //
-            this.options.scroll.moved = true;
+            // Sometimes this event is called even if there is no change in position.
+            if (x !== 0 || y !== 0) {
+                this.options.scroll.moved = true;
+            }
         },
         stopPanning: function (event) {
             $(document.body).off('.panning');
@@ -317,6 +319,13 @@ define([
          */
         'onDelete': function (id) {},
         /**
+         * Called when the target of a connection end is dropped on a blank paper.
+         *
+         * The first parametr is the ID of a connection object, same as in onDelete. The second and third
+         * parameters are the position of unattached pipeline end.
+         */
+        'onConnectionToEmpty': function (id, x, y) {},
+        /**
          * Called when position of selected component changed, is called as the position is changing.
          */
         'onMoveSelected': function (id, x, y) {},
@@ -328,6 +337,10 @@ define([
          * Update component view.
          */
         'updateComponent': function (id, component, template) {},
+        /**
+         * Used to update visuals on the component that are not set in the pipeline.
+         */
+        'updateComponentVisual': function (id, parameters) {},
         /**
          * Remove component of given id. onDelete is called on the component and all attached connections.
          */
@@ -452,7 +465,17 @@ define([
                     if ($scope.status.loading) {
                         return;
                     }
-                    $scope.api.onDelete(model.id);
+                    //
+                    if (model instanceof joint.dia.Link) {
+                        if (model.attributes.target.x) {
+                            $scope.api.onConnectionToEmpty(model.id,
+                                    model.attributes.target.x, model.attributes.target.y);
+                        } else {
+                            $scope.api.onDelete(model.id, model);
+                        }
+                    } else {
+                        $scope.api.onDelete(model.id, model);
+                    }
                 });
 
                 $scope.paper.on('cell:pointerdown', function (view, event) {
@@ -533,6 +556,21 @@ define([
                         }
                         //
                         updateComponentCell(cell, component, template);
+                    };
+
+                    $scope.api.updateComponentVisual = function (id, parameters) {
+                        var cell = $scope.graph.getCell(id);
+                        if (!cell) {
+                            console.log('Missing cell for id:', id);
+                            return;
+                        }
+                        //
+                        if (parameters.stroke) {
+                            cell.attr('rect', {
+                                'stroke': parameters.stroke.color,
+                                'stroke-width': parameters.stroke.width
+                            });
+                        }
                     };
 
                     $scope.api.deleteComponent = function (id) {

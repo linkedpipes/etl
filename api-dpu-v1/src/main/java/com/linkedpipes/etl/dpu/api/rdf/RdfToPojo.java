@@ -28,7 +28,7 @@ public class RdfToPojo {
     }
 
     /**
-     * Used to bind multiple classes to the same property. Should be used together with {@link Property} annotation.
+     * Used to bind multiple classes to the same property. Must be used together with {@link Property} annotation.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)

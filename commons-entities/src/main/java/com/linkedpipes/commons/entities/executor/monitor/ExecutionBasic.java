@@ -1,8 +1,11 @@
 package com.linkedpipes.commons.entities.executor.monitor;
 
+import com.linkedpipes.commons.entities.executor.ExecutionStatus.Component;
 import java.util.Date;
 
 import com.linkedpipes.commons.entities.rest.Progress;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -50,6 +53,11 @@ public class ExecutionBasic {
     private boolean running;
 
     private Long executionDirectorySize;
+
+    /**
+     * Progress on a component level.
+     */
+    private Map<String, Component> components = new HashMap<>();
 
     public ExecutionBasic() {
     }
@@ -156,6 +164,14 @@ public class ExecutionBasic {
 
     public void setExecutionDirectorySize(Long executionDirectorySize) {
         this.executionDirectorySize = executionDirectorySize;
+    }
+
+    public Map<String, Component> getComponents() {
+        return components;
+    }
+
+    public void setComponents(Map<String, Component> components) {
+        this.components = components;
     }
 
 }

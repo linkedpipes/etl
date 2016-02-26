@@ -1,14 +1,14 @@
 package com.linkedpipes.executor.execution.contoller;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.api.v1.context.CancelAwareContext;
 import com.linkedpipes.executor.rdf.boundary.MessageStorage;
+import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
 
 /**
  *
  * @author Škoda Petr
  */
-final class CancelAwareContextImpl implements CancelAwareContext {
+final class CancelAwareContextImpl implements ExecutionContext {
 
     private final MessageStorage messageStorage;
 
@@ -24,7 +24,7 @@ final class CancelAwareContextImpl implements CancelAwareContext {
     }
 
     @Override
-    public void sendEvent(Event message) {
+    public void sendMessage(Event message) {
         messageStorage.publish(message);
     }
 

@@ -89,7 +89,7 @@ public final class LoaderScp implements SequentialExecution {
                 sendDirectoryContent(remoteOut, remoteIn, rootDirectory);
             }
         } catch (IOException | JSchException | RecoverableException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Can't upload data!");
+            throw new DataProcessingUnit.ExecutionFailed("Can't upload data!", ex);
         } finally {
             if (channel.isConnected()) {
                 channel.disconnect();
@@ -237,7 +237,7 @@ public final class LoaderScp implements SequentialExecution {
                 break;
             case 1:
                 // TODO This is non-fatal error we can recover!
-                throw new RecoverableException("Error: " + readResponseLine(stream));
+                throw new DataProcessingUnit.ExecutionFailed("Error: {}", readResponseLine(stream));
             case 2:
                 throw new DataProcessingUnit.ExecutionFailed("Fatal error: {}", readResponseLine(stream));
             default:

@@ -21,7 +21,7 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
 
     private File currentDictionary;
 
-    public DirectoryIterator(Iterator<File> directoryIterator) {
+    DirectoryIterator(Iterator<File> directoryIterator) {
         this.directoryIterator = directoryIterator;
         this.currentDictionary = directoryIterator.next();
         this.fileIterator = FileUtils.iterateFiles(currentDictionary, null, true);

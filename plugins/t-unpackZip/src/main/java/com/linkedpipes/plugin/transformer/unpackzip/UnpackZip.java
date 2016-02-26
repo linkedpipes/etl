@@ -30,7 +30,6 @@ public final class UnpackZip implements SequentialExecution {
 
     @Override
     public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
-        progressReport.startTotalUnknown(10);
         for (FilesDataUnit.Entry entry : input) {
             if (context.canceled()) {
                 throw new DataProcessingUnit.ExecutionCancelled();
@@ -61,11 +60,11 @@ public final class UnpackZip implements SequentialExecution {
         try {
             final ZipFile zip = new ZipFile(zipFile);
             if (zip.isEncrypted()) {
-                throw new DataProcessingUnit.ExecutionFailed("File is encrypted: " + zipFile.getName());
+                throw new DataProcessingUnit.ExecutionFailed("File is encrypted: {}", zipFile.getName());
             }
             zip.extractAll(targetDirectory.toString());
         } catch (ZipException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(ex, "Extraction failed: " + zipFile.getName());
+            throw new DataProcessingUnit.ExecutionFailed("Extraction failed: {}", zipFile.getName(), ex);
         }
     }
 

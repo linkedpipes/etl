@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.rdf;
 
 /**
- * Used to convert message into RDF statements.
+ * Used to convert events into RDF statements.
  *
  * @author Škoda Petr
  */

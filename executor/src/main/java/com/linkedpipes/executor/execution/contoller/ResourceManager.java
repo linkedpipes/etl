@@ -111,10 +111,24 @@ public final class ResourceManager {
     }
 
     public File getWorkingDir() {
-        return getWorkingDir(Integer.toString(++workingDirectoryCounter));
+        return getWorkingDirNamed(Integer.toString(++workingDirectoryCounter));
     }
 
+    /**
+     *
+     * @param name Directory name prefix.
+     * @return
+     */
     public File getWorkingDir(String name) {
+        return getWorkingDirNamed(name + Integer.toString(++workingDirectoryCounter));
+    }
+
+    /**
+     *
+     * @param name Given name is used as a file path.
+     * @return
+     */
+    private File getWorkingDirNamed(String name) {
         final File output = new File(workingDir, name);
         output.mkdirs();
         return output;

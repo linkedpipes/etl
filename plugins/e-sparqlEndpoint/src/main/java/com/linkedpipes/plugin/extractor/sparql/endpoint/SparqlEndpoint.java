@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * @author Škoda Petr
  */
 public final class SparqlEndpoint implements SequentialExecution {
@@ -40,7 +40,7 @@ public final class SparqlEndpoint implements SequentialExecution {
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
-            throw new NonRecoverableException("Can't connnect to endpoint.", ex);
+            throw new DataProcessingUnit.ExecutionFailed("Can't connnect to endpoint.", ex);
         }
         //
         try {

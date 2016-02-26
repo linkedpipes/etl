@@ -218,6 +218,7 @@
                     <verbose>true</verbose>
                     <!-- Number of token to search for cpd - copy and paste decetro. -->
                     <minimumTokens>100</minimumTokens>
+                    <failOnViolation>false</failOnViolation>
                     <rulesets>
                         <ruleset>/rulesets/java/basic.xml</ruleset>
                         <ruleset>/rulesets/java/braces.xml</ruleset>

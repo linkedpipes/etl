@@ -62,7 +62,7 @@ public final class RdfToFile implements SequentialExecution {
                 // Export.
                 connection.export(writer, inputRdf.getGraph());
             } catch (IOException ex) {
-                throw new ExecutionFailed(ex, "Can't write data.");
+                throw new ExecutionFailed("Can't write data.", ex);
             }
         });
         progressReport.done();

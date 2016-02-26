@@ -40,7 +40,7 @@ public class FilesFilter implements SequentialExecution {
                 try {
                     Files.copy(entry.getPath().toPath(), outputFile.toPath());
                 } catch (IOException ex) {
-                    throw new NonRecoverableException("Can't copy file:" + entry.getFileName(), ex);
+                    throw new DataProcessingUnit.ExecutionFailed("Can't copy file: {}", entry.getFileName(), ex);
                 }
             }
         }
