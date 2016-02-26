@@ -57,8 +57,8 @@ define([
         $scope.canvasApi = {};
 
         $scope.canvasApi.onClick = function (id) {
+            // Check if we should add prerequisity connection.
             if ($scope.status.prerequisity.active) {
-                // Add prerequisity connection.
                 $scope.status.prerequisity.active = false;
                 // This will cause call of onNewConnection that adds the connection to the model.
                 $scope.canvasApi.addConnection($scope.status.prerequisity.source, null, id, null, [], 'control');
@@ -74,29 +74,9 @@ define([
                 $scope.status.prerequisity.active = false;
                 return;
             }
-            // Open dialog for new component.
-            $scope.status.dialogOpened = true;
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            $mdDialog.show({
-                controller: 'components.templates.select.dialog',
-                templateUrl: 'app/components/templates/selectDialog/selectTemplateDialogView.html',
-                parent: angular.element(document.body),
-                hasBackdrop: false,
-                clickOutsideToClose: true,
-                fullscreen: useFullScreen
-            }).then(function (template) {
-                // Insert new component.
-                var component = pipelineModel.createComponent($scope.data.model, template);
-                pipelineModel.setComponentPosition(component, x, y);
-                var id = $scope.canvasApi.addComponent(component, template);
-                pipelineModel.setComponentUriFromId($scope.data.model, component, id);
-                $scope.data.idToModel[id] = component;
-                //
-                $scope.status.dialogOpened = false;
-            }, function () {
-                $scope.status.dialogOpened = false;
+            selectComponent({}, function (template) {
+                insertComponent(template, x, y);
             });
-
         };
 
         $scope.canvasApi.onDoubleClick = function (id) {
@@ -136,7 +116,7 @@ define([
 
         $scope.canvasApi.onDelete = function (id) {
             var model = $scope.data.idToModel[id];
-            // Remove mapping (if presented), for this we need the model.
+            // Remove component mapping if is presented.
             disableMappingOnChange(id, false);
             if (data.execution.mapping && data.execution.mapping[model['@id']]) {
                 delete data.execution.mapping[model['@id']];
@@ -146,6 +126,32 @@ define([
             delete $scope.data.uriToId[model['@id']];
             // Remove from pipeline definition.
             pipelineModel.removeResource($scope.data.model, model['@id'], false);
+        };
+
+        $scope.canvasApi.onConnectionToEmpty = function (id, x, y) {
+            // Get information about the object.
+            var connection = $scope.data.idToModel[id];
+            // Remvoe it.
+            $scope.canvasApi.onDelete(id);
+            // Prepare filter.
+            var sourceBinding = connection['http://linkedpipes.com/ontology/sourceBinding'];
+            var sourceUri = connection['http://linkedpipes.com/ontology/sourceComponent']['@id'];
+            var sourceComponent = pipelineModel.getResource($scope.data.model, sourceUri);
+            var templateUri = pipelineModel.getComponentTemplateUri(sourceComponent);
+            var filter = {
+                'source': {
+                    'binding': sourceBinding,
+                    'templateUri': templateUri
+                }
+            };
+            selectComponent(filter, function (template) {
+                // Insert component and add connection.
+                var source = $scope.data.uriToId[sourceUri];
+                var sourcePort = sourceBinding;
+                var target = insertComponent(template, x, y);
+                var targetPort = template['portBinding'];
+                $scope.canvasApi.addConnection(source, sourcePort, target, targetPort, [], 'link');
+            });
         };
 
         $scope.canvasApi.onMoveSelected = function (id, x, y) {
@@ -191,6 +197,49 @@ define([
             if (!$scope.status.noApply) {
                 $scope.$apply();
             }
+        };
+
+        var selectComponent = function (filter, onSucess) {
+            // Open dialog for new component.
+            $scope.status.dialogOpened = true;
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: 'components.templates.select.dialog',
+                templateUrl: 'app/components/templates/selectDialog/selectTemplateDialogView.html',
+                parent: angular.element(document.body),
+                hasBackdrop: false,
+                clickOutsideToClose: true,
+                fullscreen: useFullScreen,
+                locals: {
+                    'filter': filter
+                }
+            }).then(function (result) {
+                if (onSucess) {
+                    onSucess(result);
+                }
+                //
+                $scope.status.dialogOpened = false;
+            }, function () {
+                $scope.status.dialogOpened = false;
+            });
+        };
+
+        /**
+         *
+         * @param {type} template
+         * @param {type} x
+         * @param {type} y
+         * @return Component model ID in the, key to idToModel.
+         */
+        var insertComponent = function (template, x, y) {
+            var component = pipelineModel.createComponent($scope.data.model, template['component']);
+            pipelineModel.setComponentPosition(component, x, y);
+            var id = $scope.canvasApi.addComponent(component, template['component']);
+            pipelineModel.setComponentUriFromId($scope.data.model, component, id);
+            //
+            $scope.data.idToModel[id] = component;
+            $scope.data.uriToId[component['@id']] = id;
+            return id;
         };
 
         var updateLabel = function () {
