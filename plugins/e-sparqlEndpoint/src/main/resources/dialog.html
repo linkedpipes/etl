@@ -1,13 +1,13 @@
 <div class="container-flow">
     <div class="row">
-        <div class="form-group">
-            <label class="control-label" for="fileName">Endpoint:</label>
-            <input class="form-control input-sm" id="fileName" type="text" ng-model="dialog.endpoint"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="query">SPARQL CONSTRUCT query:</label>
-            <textarea type="text" id="query" class="form-control" ng-model="dialog.query"
-                      style="width:100%; height: 300px; resize:vertical;"/>
-        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Endpoint URL</label>
+            <input type="url" ng-model="dialog.endpoint" required placeholder="http://example.com/sparql">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>SPARQL CONSTRUCT query</label>
+            <textarea id="query" ng-model="dialog.query" required placeholder="CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 100" md-select-on-focus>
+        </md-input-container>
+        
     </div>
 </div>
