@@ -82,13 +82,13 @@ class ComponentExecutor implements Runnable {
                 // We trust ManagableDataUnit and provide it with all data units. As there should be no
                 // dependecy between single Componenet data units, so every data unit should have
                 // all dependencies initialized.
-                if (dataUnit.getSource() == null) {
+                if (dataUnit.getSourceData() == null) {
                     // Load from other data units.
                     LOG.debug("Initializing data unit: {} : {}", dataUnit.getName(), dataUnit.getUri());
                     managableDataUnitInstace.initialize(dataUnitInstances);
                 } else {
                     LOG.debug("Initializing data unit: {} : {}", dataUnit.getName(), dataUnit.getUri());
-                    managableDataUnitInstace.initialize(new File(dataUnit.getSource().getPath()));
+                    managableDataUnitInstace.initialize(new File(dataUnit.getSourceData().getLoadPath()));
                 }
             } catch (ManagableDataUnit.DataUnitException ex) {
                 context.sendMessage(ExecutionFailed.executionFailed("Can't prepare data units!", ex));

@@ -323,31 +323,33 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
                         break;
                     }
                 }
-                if (dataUnitInfo == null) {
-                    // Missing data unit info.
-                    LOG.error("Missing data unit info!");
-                    dataUnitInfo = new DebugStructure.DataUnit();
-                    dataUnitInfo.setIri(dataUnit.getResourceUri());
-                    debugStructure.getDataUnits().add(dataUnitInfo);
-                }
-                //
+                // Save data.
+                final File saveFile = resourceManager.getWorkingDir("save-");
                 try {
-                    final File saveFile = resourceManager.getWorkingDir("save-");
                     dataUnit.save(saveFile);
-                    dataUnitInfo.setSaveDirectory(saveFile.getPath());
                 } catch (Exception ex) {
                     LOG.error("Can't save data unit.", ex);
                 }
-                //
-                try {
-                    final File debugFile = resourceManager.getWorkingDir("debug-");
-                    final List<File> debugFiles = dataUnit.dumpContent(debugFile);
-                    dataUnitInfo.getDebugDirectories().add(debugFile.getPath());
-                    for (File file : debugFiles) {
-                        dataUnitInfo.getDebugDirectories().add(file.getPath());
+
+                if (dataUnitInfo == null) {
+                    // Missing data unit info.
+                    LOG.info("Missing data unit info for: {} data saved to: {}", dataUnit.getResourceUri(), saveFile);
+                } else {
+                    PipelineConfiguration.Component component = pipeline.getComponent(dataUnitInfo.getComponentUri());
+                    if (component != null && component.getExecutionType() != ExecutionType.SKIP) {
+                        dataUnitInfo.setSaveDirectory(saveFile.getPath());
+                        //
+                        try {
+                            final File debugFile = resourceManager.getWorkingDir("debug-");
+                            final List<File> debugFiles = dataUnit.dumpContent(debugFile);
+                            dataUnitInfo.getDebugDirectories().add(debugFile.getPath());
+                            for (File file : debugFiles) {
+                                dataUnitInfo.getDebugDirectories().add(file.getPath());
+                            }
+                        } catch (Exception ex) {
+                            LOG.error("Can't dump content of data unit.", ex);
+                        }
                     }
-                } catch (Exception ex) {
-                    LOG.error("Can't dump content of data unit.", ex);
                 }
                 //
                 try {
@@ -478,12 +480,16 @@ public final class PipelineExecutor implements MessageStorage.MessageListener {
         final Map<String, ManagableDataUnit> result = new HashMap<>(pipeline.getComponents().size() * 3);
         for (PipelineConfiguration.Component component : pipeline.getComponents()) {
             for (PipelineConfiguration.DataUnit dataUnit : component.getDataUnits()) {
-                // TODO: Temporary solution. Such information does hot nave to be stored.
-                final DebugStructure.DataUnit dataUnitInfo = new DataUnit();
-                dataUnitInfo.setIri(dataUnit.getUri());
-                dataUnitInfo.setUriFragment(dataUnit.getUriFragment());
-                dataUnitInfo.setComponentUri(component.getUri());
-                debugStructure.getDataUnits().add(dataUnitInfo);
+                // Store information about data units that will be executed.
+                if (component.getExecutionType() == ExecutionType.EXECUTE
+                        || pipeline.isDataUnitUsed(dataUnit.getUri())) {
+                    final DebugStructure.DataUnit dataUnitInfo = new DataUnit();
+                    // TODO: Temporary solution. Such information does hot nave to be stored.
+                    dataUnitInfo.setIri(dataUnit.getUri());
+                    dataUnitInfo.setUriFragment(dataUnit.getUriFragment());
+                    dataUnitInfo.setComponentUri(component.getUri());
+                    debugStructure.getDataUnits().add(dataUnitInfo);
+                }
                 //
                 try {
                     result.put(dataUnit.getUri(),

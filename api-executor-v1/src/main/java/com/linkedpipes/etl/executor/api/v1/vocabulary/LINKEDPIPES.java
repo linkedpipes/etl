@@ -40,7 +40,9 @@ public final class LINKEDPIPES {
 
     public static final String HAS_CONFIGURATION = PREFIX_ONTOLOGY + "configuration";
 
-    public static final String HAS_PATH = PREFIX_ONTOLOGY + "path";
+    public static final String HAS_LOAD_PATH = PREFIX_ONTOLOGY + "loadPath";
+
+    public static final String HAS_DEBUG_PATH = PREFIX_ONTOLOGY + "debugPath";
 
     public static final String HAS_SOURCE = PREFIX_ONTOLOGY + "dataSource";
 

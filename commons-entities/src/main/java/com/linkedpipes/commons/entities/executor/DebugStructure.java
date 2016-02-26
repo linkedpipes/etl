@@ -19,7 +19,7 @@ public class DebugStructure {
 
         /**
          * List of debug directory paths. Joined content of those directories
-         * is considered to be the content of data unit  debug directory.
+         * is considered to be the content of data unit debug directory.
          */
         private List<String> debugDirectories = new ArrayList<>(2);
 

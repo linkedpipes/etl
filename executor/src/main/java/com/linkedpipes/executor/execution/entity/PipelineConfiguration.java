@@ -8,6 +8,7 @@ import java.util.List;
 import com.linkedpipes.etl.utils.core.entity.EntityLoader;
 import com.linkedpipes.etl.utils.core.entity.EntityLoader.Loadable;
 import com.linkedpipes.etl.utils.core.entity.EntityLoader.LoadingFailed;
+import com.linkedpipes.executor.execution.entity.PipelineConfiguration.Component.ExecutionType;
 
 /**
  * Represent a java version of stored definition.
@@ -17,24 +18,26 @@ import com.linkedpipes.etl.utils.core.entity.EntityLoader.LoadingFailed;
 public class PipelineConfiguration implements EntityLoader.Loadable {
 
     /**
-     * Represent a data source, that can be loaded into a data unit.
+     * Represent a data sourceData, that can be loaded into a data unit.
      */
     public static class DataSource implements EntityLoader.Loadable {
 
         /**
-         * Path to data source save directory.
+         * Path to data sourceData save directory.
          */
-        private String path;
+        private String loadPath;
 
-        public String getPath() {
-            return path;
+        public String getLoadPath() {
+            return loadPath;
         }
 
         @Override
         public Loadable load(String predicate, String value) throws LoadingFailed {
             switch (predicate) {
-                case LINKEDPIPES.HAS_PATH:
-                    this.path = value;
+                case LINKEDPIPES.HAS_LOAD_PATH:
+                    this.loadPath = value;
+                    return null;
+                case LINKEDPIPES.HAS_DEBUG_PATH:
                     return null;
                 default:
                     return null;
@@ -52,6 +55,8 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
      * Contains basic information required by core about data unit.
      */
     public static class DataUnit implements EntityLoader.Loadable {
+
+        private List<String> types  = new ArrayList<>(3);
 
         /**
          * Id used by component to identify this data unit.
@@ -71,11 +76,24 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
         /**
          * If set, referenced content should be used as a content for this data unit.
          */
-        private DataSource source = null;
+        private DataSource sourceData = null;
 
+        /**
+         * List of source data units IRIs.
+         */
+        private List<String> sourceDataUnits = new ArrayList<>(1);
+
+        /**
+         * URI fragment used to create a debug IRI for the data unit.
+         */
         private String uriFragment;
 
-        public DataUnit(String executionId, String uri) {
+        /**
+         * Owner component.
+         */
+        private Component component;
+
+        public DataUnit(Component component, String executionId, String uri) {
             this.executionId = executionId;
             this.uri = uri;
         }
@@ -92,23 +110,45 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
             return uri;
         }
 
-        public DataSource getSource() {
-            return source;
+        public DataSource getSourceData() {
+            return sourceData;
+        }
+
+        public List<String> getSourceDataUnits() {
+            return sourceDataUnits;
         }
 
         public String getUriFragment() {
             return uriFragment;
         }
 
+        public Component getComponent() {
+            return component;
+        }
+
+        public boolean isInput() {
+            return types.contains("http://linkedpipes.com/ontology/Input");
+        }
+
+        public boolean isOutput() {
+            return types.contains("http://linkedpipes.com/ontology/Output");
+        }
+
         @Override
         public EntityLoader.Loadable load(String predicate, String value) throws EntityLoader.LoadingFailed {
             switch (predicate) {
+                case "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
+                    types.add(value);
+                    return null;
                 case LINKEDPIPES.HAS_BINDING:
                     name = value;
                     return null;
                 case LINKEDPIPES.HAS_SOURCE:
-                    source = new DataSource();
-                    return source;
+                    sourceData = new DataSource();
+                    return sourceData;
+                case LINKEDPIPES.HAS_PORT_SOURCE:
+                    sourceDataUnits.add(value);
+                    return null;
                 case LINKEDPIPES.HAS_URI_FRAGMENT:
                     uriFragment = value;
                     return null;
@@ -222,8 +262,8 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
                     }
                     return null;
                 case LINKEDPIPES.HAS_PORT:
-                    final DataUnit newDataUnit
-                            = new DataUnit(executionId + "-" + Integer.toString(dataUnits.size()), value);
+                    final String iri = executionId + "-" + Integer.toString(dataUnits.size());
+                    final DataUnit newDataUnit = new DataUnit(this, iri, value);
                     dataUnits.add(newDataUnit);
                     return newDataUnit;
                 case LINKEDPIPES.HAS_EXECUTION_TYPE:
@@ -279,6 +319,34 @@ public class PipelineConfiguration implements EntityLoader.Loadable {
 
     public List<Component> getComponents() {
         return components;
+    }
+
+    public Component getComponent(String iri) {
+        for (Component component : components) {
+            if (component.getUri().equals(iri)) {
+                return component;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param iri
+     * @return True if data unit is used during the execution.
+     */
+    public boolean isDataUnitUsed(String iri) {
+        // Component must be used by executing component or be sourceData for such component.
+        for (Component component : components) {
+            if (component.getExecutionType() == ExecutionType.EXECUTE) {
+                for (DataUnit dataUnit : component.getDataUnits()) {
+                    if (dataUnit.uri.equals(iri) || dataUnit.getSourceDataUnits().contains(iri)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override

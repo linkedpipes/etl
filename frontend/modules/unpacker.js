@@ -321,7 +321,10 @@ gModule.unpack = function (uri, configuration, callback) {
                     var dataUnitTarget = executionDebug['dataUnits'][index];
                     if (dataUnitTarget['componentUri'] === targetUri) {
                         // This data unit is used by this DPU - we save the source path.
-                        portSources[dataUnitTarget['iri']] = dataUnitTarget['saveDirectory'];
+                        portSources[dataUnitTarget['iri']] = {
+                            'load' : dataUnitTarget['saveDirectory'],
+                            'debug': dataUnitTarget['debugDirectories']
+                        };
                     }
                 }
 
@@ -343,7 +346,8 @@ gModule.unpack = function (uri, configuration, callback) {
                 var sourceObject = {
                     '@id': resource['@id'] + '/source',
                     '@type': ['http://linkedpipes.com/ontology/PortSource'],
-                    'http://linkedpipes.com/ontology/path': portSources[resource['@id']]
+                    'http://linkedpipes.com/ontology/loadPath': portSources[resource['@id']]['load'],
+                    'http://linkedpipes.com/ontology/debugPath': portSources[resource['@id']]['debug']
                 };
                 resource['http://linkedpipes.com/ontology/dataSource'] = {'@id': sourceObject['@id']};
                 data.metadata.definition.graph['@graph'].push(sourceObject);
