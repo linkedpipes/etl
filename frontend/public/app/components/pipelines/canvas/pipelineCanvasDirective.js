@@ -147,8 +147,10 @@ define([
             this.paper.setOrigin(this.positionX, this.positionY);
             this._clientX = event.clientX;
             this._clientY = event.clientY;
-            //
-            this.options.scroll.moved = true;
+            // Sometimes this event is called even if there is no change in position.
+            if (x !== 0 || y !== 0) {
+                this.options.scroll.moved = true;
+            }
         },
         stopPanning: function (event) {
             $(document.body).off('.panning');
