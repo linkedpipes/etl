@@ -129,7 +129,7 @@ define([], function () {
             var graph = service.getDefinitionGraph(model)['@graph'];
             for (var index in graph) {
                 var item = graph[index];
-                if (item['@id'] === uri) {
+                if (item && item['@id'] === uri) {
                     return item;
                 }
             }
