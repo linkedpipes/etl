@@ -1,12 +1,12 @@
 <div class="container-flow">
     <div class="row">
-        <div class="form-group">
-            <label class="control-label" for="fileName">File URI:</label>
-            <input type="text" class="form-control" id="fileName" ng-model="dialog.uri"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="fileName">File name:</label>
-            <input type="text" class="form-control" id="fileName" ng-model="dialog.fileName"/>
-        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>File URL</label>
+            <input type="url" ng-model="dialog.uri" required placeholder="http://example.com/my.file">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>File name</label>
+            <input ng-model="dialog.fileName"  placeholder="my.file">
+        </md-input-container>
     </div>
 </div>
