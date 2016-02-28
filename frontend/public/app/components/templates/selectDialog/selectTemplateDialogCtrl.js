@@ -1,6 +1,16 @@
 define([], function () {
     function controler($scope, $mdDialog, templatesRepository, filter) {
 
+        // {label: search.label}
+        $scope.filterItems = function (item) {
+            if (!$scope.search || $scope.search === '') {
+                return true;
+            }
+            var searchString = $scope.search.toLowerCase();
+            console.log(item);
+            return item.component.filterString.indexOf(searchString) !== -1;
+        };
+
         $scope.onSelect = function (item) {
             $mdDialog.hide(item);
         };
@@ -9,18 +19,20 @@ define([], function () {
             $mdDialog.cancel();
         };
 
-        var addAllTemplates = function() {
+        var addAllTemplates = function () {
             var data = [];
             templatesRepository.getTemplates().forEach(function (template) {
                 data.push({
-                    'label' : template['label'],
-                    'component' : template
+                    'label': template['label'],
+                    'component': template
                 });
             });
             $scope.data = data;
         };
 
         (function initialize() {
+            $scope.search = '';
+            //
             if (filter.source) {
                 //
                 var sourceTemplate = templatesRepository.getTemplate(filter.source.templateUri);
@@ -47,9 +59,9 @@ define([], function () {
                     var port = template.inputs[0];
                     if (port['type']['0'] === sourcePort['type']['0']) {
                         data.push({
-                            'label' : template['label'],
-                            'component' : template,
-                            'portBinding' : port['binding']
+                            'label': template['label'],
+                            'component': template,
+                            'portBinding': port['binding']
                         });
                     }
                 });

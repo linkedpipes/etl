@@ -17,13 +17,13 @@
                     <div layout-gt-xs="row">
                         <md-input-container>
                             <label>Filter by name</label>
-                            <input ng-model="search.label" md-autofocus/>
+                            <input ng-model="search" md-autofocus/>
                         </md-input-container>
                     </div>
                 </form>
 
                 <md-list>
-                    <md-list-item class="md-1-line" ng-repeat="item in data| filter: {label: search.label}"
+                    <md-list-item class="md-1-line" ng-repeat="item in data| filter:filterItems"
                                   ng-click="onSelect(item)">
                         <div class="md-list-item-text" layout="column">
                             <p>{{item.label}}</p>

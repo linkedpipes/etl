@@ -21,6 +21,13 @@ define([], function () {
                 // break synchronization - also we only add new templates.
                 response.data['payload'].forEach(function (item) {
                     if (!templates.map[item['id']]) {
+                        // Construct filtering string - the value is used as a filter
+                        // for searching DPUs.
+                        item['filterString'] = item.label.toLowerCase();
+                        item['keyword'].forEach(function(word) {
+                            item['filterString'] += ',' + word.toLowerCase();
+                        });
+                        //
                         templates.map[item['id']] = item;
                         templates.list.push(item);
                     }

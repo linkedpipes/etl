@@ -27,7 +27,8 @@ var addComponent = function (name, path) {
     };
     var listItem = {
         'inputs': [],
-        'outputs': []
+        'outputs': [],
+        'keyword': []
     };
     var pathDefinition;
     gFs.readdirSync(path).forEach(function (file) {
@@ -86,6 +87,10 @@ var addComponent = function (name, path) {
             listItem['configurationUri'] = configurationUri;
             if (resource['http://linkedpipes.com/ontology/port']) {
                 ports = [].concat(resource['http://linkedpipes.com/ontology/port']);
+            }
+            // Keyword list.
+            if (resource['http://linkedpipes.com/ontology/keyword']) {
+                listItem['keyword'] = resource['http://linkedpipes.com/ontology/keyword'];
             }
         }
         if (types.indexOf('http://linkedpipes.com/ontology/Port') > -1) {
