@@ -8,6 +8,9 @@
             "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
             "http://linkedpipes.com/ontology/port": [
                 {"@id": "http://localhost:8080/resources/components/e-datasetMetadata/1.0.0/output"}
+            ],
+            "http://linkedpipes.com/ontology/keyword": [
+                "metadata", "dataset"
             ]
         },
         {

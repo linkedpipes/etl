@@ -9,6 +9,9 @@
             "http://linkedpipes.com/ontology/port": [
                 {"@id": "http://localhost:8080/resources/components/t-sparqlSelect/1.0.0/input"},
                 {"@id": "http://localhost:8080/resources/components/t-sparqlSelect/1.0.0/output"}
+            ],
+            "http://linkedpipes.com/ontology/keyword": [
+                "SPARQL", "select"
             ]
         },
         {
