@@ -24,13 +24,13 @@
                                 <md-progress-linear md-mode="determinate" value="{{item.pipelineProgress.value}}"></md-progress-linear>
                             </span>
                             <span ng-switch-when="FINISHED" hide-xs>
-                                <span>{{item.start| date:'yyyy-MM-dd HH:mm:ss'}}</span> -
-                                <span>{{item.end| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                <span>{{item.start| date:'yyyy-MM-dd HH:mm:ss'}}</span>,
+                                <span>{{item.duration}}</span>
                                 <br/>Size: <span>{{item.executionDirectorySize / 1048576| number : 2 }} mB</span>
                             </span>
                             <span ng-switch-when="FAILED" hide-xs>
-                                <span>{{item.start| date:'yyyy-MM-dd HH:mm:ss'}}</span> -
-                                <span>{{item.end| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                <span>{{item.start| date:'yyyy-MM-dd HH:mm:ss'}}</span>,
+                                <span>{{item.duration}}</span>
                                 <br/>Size: <span>{{item.executionDirectorySize / 1048576| number : 2 }} mB</span>
                             </span>
                         </div>
