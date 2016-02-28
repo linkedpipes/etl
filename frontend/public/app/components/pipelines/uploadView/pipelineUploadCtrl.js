@@ -45,7 +45,7 @@ define([], function () {
             file.upload.then(function (response) {
                 console.log(response);
                 $timeout(function () {
-                    $location.path('/pipelines/edit/canvas').search({'uri': uri});
+                    $location.path('/pipelines/edit/canvas').search({'pipeline': uri});
                 });
             }, function (response) {
                 statusService.postFailed({
