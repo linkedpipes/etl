@@ -1,61 +1,42 @@
 <div>
-    <form role="form">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label for="delimiterChar">Delimeter:</label>
-                    <input type="text" class="form-control input-sm" id="delimiterChar" placeholder=","
-                           ng-model="dialog.delimeter">
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label for="quoteChar">Quote character:</label>
-                    <input type="text" class="form-control input-sm" id="quoteChar" placeholder="\""
-                           ng-model="dialog.quote">
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label for="encoding">Encoding:</label>
-                    <input type="text" class="form-control input-sm" id="encoding" placeholder="UTF-8"
-                           ng-model="dialog.encoding">
-                </div>
-            </div>
-        </div>
-        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.header"> Table has header</label>
-        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.trim"> Trim</label>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="aboutUrl">Default resource IRI template:</label>
-                    <input type="text" class="form-control input-sm" id="aboutUrl" placeholder="{row-with-id}"
-                           ng-model="dialog.aboutUrl">
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="rowLimit">Rows skip:</label>
-                    <input type="number" class="form-control input-sm" id="rowLimit" ng-model="dialog.skipRows"
-                           style="width:7em">
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="rowLimit">Rows limit:</label>
-                    <input type="number" class="form-control input-sm" id="rowLimit" ng-model="dialog.rowLimit"
-                           style="width:7em">
-                </div>
-            </div>
-        </div>
-        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.normalOutput"> Output metadata</label>
-        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.fullMapping"> Generate full mapping</label>
-        <label class="checkbox-inline"><input type="checkbox" ng-model="dialog.useBaseUri"> Use IRI base</label>
-        <div class="form-group" ng-show="dialog.useBaseUri">
-            <label for="rowLimit">IRI base:</label>
-            <input type="text" class="form-control input-sm" id="rowLimit" ng-model="dialog.baseUri">
-        </div>
-    </form>
+	<div layout="row">
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>Delimeter</label>
+			<input ng-model="dialog.delimeter" required placeholder=",">
+		</md-input-container>
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>Quote</label>
+			<input ng-model="dialog.quote" required placeholder="&quot;">
+		</md-input-container>
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>Encoding</label>
+			<input ng-model="dialog.encoding" required placeholder="UTF-8">
+		</md-input-container>
+	</div>
+	<md-switch ng-model="dialog.header">{{dialog.header ? "Table has header row" : "Table does not have header row"}}</md-switch>
+	<md-switch ng-model="dialog.trim">{{dialog.trim ? "Trim whitespaces from cells" : "Keeping whitespaces"}}</md-switch>
+	<md-input-container class="md-block" flex-gt-sm>
+		<label>Default resource IRI template</label>
+		<input ng-model="dialog.aboutUrl" placeholder="http://ex.org/{COLUMN_WITH_ID}">
+	</md-input-container>
+	<div layout="row">
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>Rows skipped</label>
+			<input type="number" ng-model="dialog.skipRows" placeholder="0" min="0">
+		</md-input-container>
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>Rows limit</label>
+			<input type="number" ng-model="dialog.rowLimit" placeholder="-1" min="-1">
+		</md-input-container>
+	</div>
+	<md-switch ng-model="dialog.normalOutput">{{dialog.normalOutput ? "Table and row entities" : "Data only"}}</md-switch>
+	<md-switch ng-model="dialog.useBaseUri">{{dialog.useBaseUri ? "Specified row and property IRI base" : "Default row and property IRIs"}}</md-switch>
+	<md-input-container class="md-block" flex-gt-sm ng-show="dialog.useBaseUri">
+		<label>Row and property IRI base</label>
+		<input type="uri" ng-model="dialog.baseUri" placeholder="http://ex.org/resource/tabular/">
+	</md-input-container>
+	<md-switch ng-model="dialog.fullMapping">{{dialog.fullMapping ? "Using CSV on the Web mapping" : "Using custom mapping"}}</md-switch>
+
     <div class="row" ng-hide="dialog.fullMapping">
         <div class="table-responsive">
             <form class="form-inline">

@@ -1,12 +1,12 @@
 <div class="container-flow">
-    <div class="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
 			<label>Output file name</label>
 			<input ng-model="dialog.fileName" required placeholder="my.ttl">
 		</md-input-container>
         <md-input-container class="md-block" flex-gt-sm>
             <label>Format</label>
-            <md-select ng-model="dialog.fileType">
+            <md-select required ng-model="dialog.fileType">
 				<md-option value="application/rdf+xml">RDF/XML</md-option>
 				<md-option value="application/n-triples">N-Triples</md-option>
 				<md-option value="text/turtle">Turtle</md-option>
@@ -20,9 +20,9 @@
 				<md-option value="application/xhtml+xml">RDFa</md-option>
             </md-select>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>URI of output graph (for quads)</label>
-            <input type="url" ng-model="dialog.graphUri" placeholder="http://example.com/resource/graph">
-        </md-input-container>
-    </div>
+	</div>
+	<md-input-container class="md-block" flex-gt-sm>
+		<label>URI of output graph (for quads)</label>
+		<input type="url" ng-model="dialog.graphUri" placeholder="http://example.com/resource/graph">
+	</md-input-container>
 </div>

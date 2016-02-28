@@ -1,5 +1,5 @@
 <div class="container-flow">
-	<div class="row">
+	<div layout-gt-sm="row">
 		<md-input-container class="md-block" flex-gt-sm>
 			<label>Output file name</label>
 			<input ng-model="dialog.fileName" required placeholder="my.csv">
@@ -8,6 +8,8 @@
 			<label>Sheet filter</label>
 			<input ng-model="dialog.sheetFilter" placeholder="[0-9]+">
 		</md-input-container>
+	</div>
+	<div layout-gt-sm="row">
 		<md-input-container class="md-block" flex-gt-sm>
 			<label>Row start</label>
 			<input type="number" ng-model="dialog.rowStart" placeholder="1" min="1">
@@ -24,6 +26,7 @@
 			<label>Column end</label>
 			<input type="number" ng-model="dialog.columnEnd" placeholder="42" min="1">
 		</md-input-container>
+	</div>
 		<md-switch ng-model="dialog.header">{{dialog.header ? "Virtual columns have header" : "Virtual columns do not have header"}}</md-switch>
 		<md-switch ng-model="dialog.numericParse">{{dialog.numericParse ? "Determine number cell type" : "Number cell type always number"}}</md-switch>
 		<md-switch ng-model="dialog.skipEmptyRows">{{dialog.skipEmptyRows ? "Skipping empty rows" : "Not skipping empty rows"}}</md-switch>
