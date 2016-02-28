@@ -1,8 +1,5 @@
 <div class="container-flow">
-    <div class="row">
-        <div class="form-group">
-            <label class="control-label" for="usePrefix">Unpack each zip into separated directory:</label>
-            <input type="checkbox" id="usePrefix" ng-model="dialog.usePrefix">
-        </div>
-    </div>
+	<md-input-container>
+	  <md-switch ng-model="dialog.usePrefix">{{dialog.usePrefix ? "Unpacking each file to separate directory" : "Unpacking all files to the same directory"}}</md-switch>
+	</md-input-container>
 </div>

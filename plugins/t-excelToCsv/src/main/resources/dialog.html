@@ -24,17 +24,9 @@
 			<label>Column end</label>
 			<input type="number" ng-model="dialog.columnEnd" placeholder="42" min="1">
 		</md-input-container>
-        <md-input-container>
-          <md-switch ng-model="dialog.header">{{dialog.header ? "Virtual columns have header" : "Virtual columns do not have header"}}</md-switch>
-        </md-input-container>
-        <md-input-container>
-          <md-switch ng-model="dialog.numericParse">{{dialog.numericParse ? "Determine number cell type" : "Number cell type always number"}}</md-switch>
-        </md-input-container>
-        <md-input-container>
-          <md-switch ng-model="dialog.skipEmptyRows">{{dialog.skipEmptyRows ? "Skipping empty rows" : "Not skipping empty rows"}}</md-switch>
-        </md-input-container>
-        <md-input-container>
-          <md-switch ng-model="dialog.includeSheetName">{{dialog.includeSheetName ? "Including sheet name as additional column" : "Not including sheet name"}}</md-switch>
-        </md-input-container>
+		<md-switch ng-model="dialog.header">{{dialog.header ? "Virtual columns have header" : "Virtual columns do not have header"}}</md-switch>
+		<md-switch ng-model="dialog.numericParse">{{dialog.numericParse ? "Determine number cell type" : "Number cell type always number"}}</md-switch>
+		<md-switch ng-model="dialog.skipEmptyRows">{{dialog.skipEmptyRows ? "Skipping empty rows" : "Not skipping empty rows"}}</md-switch>
+		<md-switch ng-model="dialog.includeSheetName">{{dialog.includeSheetName ? "Including sheet name as additional column" : "Not including sheet name"}}</md-switch>
 	</div>
 </div>

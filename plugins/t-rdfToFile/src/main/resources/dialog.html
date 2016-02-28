@@ -1,27 +1,28 @@
 <div class="container-flow">
     <div class="row">
-        <div class="form-group">
-            <label class="control-label" for="fileName">Output file name (with extension):</label>
-            <input type="text" class="form-control" id="fileName" ng-model="dialog.fileName"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="fileType">Output format:</label>
-            <select id="fileType" ng-model="dialog.fileType">
-                <option value="application/rdf+xml">RDF/XML</option>
-                <option value="application/n-triples">N-Triples</option>
-                <option value="text/turtle">Turtle</option>
-                <option value="text/n3">N3</option>
-                <option value="application/trix">TriX</option>
-                <option value="application/trig">TriG</option>
-                <option value="application/n-quads">N-Quads</option>
-                <option value="application/ld+json">JSON-LD</option>
-                <option value="application/rdf+json">RDF/JSON</option>
-                <option value="application/xhtml+xml">RDFa</option>
-            </select><br>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="graphUri">URI of output graph (used only if format support quads):</label>
-            <input type="text" class="form-control" id="graphUri" ng-model="dialog.graphUri"/>
-        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+			<label>Output file name</label>
+			<input ng-model="dialog.fileName" required placeholder="my.ttl">
+		</md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Format</label>
+            <md-select ng-model="dialog.fileType">
+				<md-option value="application/rdf+xml">RDF/XML</md-option>
+				<md-option value="application/n-triples">N-Triples</md-option>
+				<md-option value="text/turtle">Turtle</md-option>
+				<md-option value="text/rdf+n3">N3</md-option>
+				<md-option value="application/trix">TriX</md-option>
+				<md-option value="application/trig">TriG</md-option>
+				<md-option value="application/x-binary-rdf">BinaryRDF</md-option>
+				<md-option value="application/n-quads">N-Quads</md-option>
+				<md-option value="application/ld+json">JSON-LD</md-option>
+				<md-option value="application/rdf+json">RDF/JSON</md-option>
+				<md-option value="application/xhtml+xml">RDFa</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>URI of output graph (for quads)</label>
+            <input type="url" ng-model="dialog.graphUri" placeholder="http://example.com/resource/graph">
+        </md-input-container>
     </div>
 </div>
