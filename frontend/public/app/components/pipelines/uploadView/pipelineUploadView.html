@@ -1,16 +1,17 @@
-<div class="container">
-    <md-content>
-        <p>File name:{{file.name}}</p>
-        <div ng-hide="uploading">
-            <md-input-container>
-                <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised">Select File</md-button>
-            </md-input-container>
-            </br>
-            <md-button ng-click="onUpload()" class="md-raised md-primary" ng-disabled="!fileReady">Upload</md-button>
-        </div>
-        <div ng-show="uploading">
-            <p>Uploading ...</p>
-            <md-progress-linear md-mode="determinate" value="{{progress}}"></md-progress-linear>
-        </div>
-    </md-content>
+<div layout="row" layout-align="space-around">
+    <div class="md-padding" style="max-width: 66em;width: 100%;">
+        <md-content layout="column">
+            <div class="md-padding">
+                <p>Selected file: {{file.name}}</p>
+            </div>
+            <div ng-show="uploading">
+                <p>Uploading ...</p>
+                <md-progress-linear md-mode="determinate" value="{{progress}}"></md-progress-linear>
+            </div>
+            <div>
+                <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised" ng-disable="uploading">Select File</md-button>
+                <md-button ng-click="onUpload()" class="md-raised md-primary" ng-disabled="!fileReady">Upload</md-button>
+            </div>
+        </md-content>
+    </div>
 </div>
