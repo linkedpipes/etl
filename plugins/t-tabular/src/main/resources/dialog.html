@@ -38,7 +38,7 @@
 	<md-switch ng-model="dialog.fullMapping">{{dialog.fullMapping ? "Using CSV on the Web mapping" : "Using custom mapping"}}</md-switch>
 
     <md-content ng-hide="dialog.fullMapping">
-        <section style="background: #f7f7f7; margin: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.columns">
+        <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.columns">
 			<md-input-container class="md-block" flex-gt-sm>
 				<label>Column</label>
 				<input ng-model="item.name" placeholder="column1">
@@ -75,8 +75,9 @@
 				<input type="url" ng-model="item.valueUrl" placeholder="http://ex.org/resource">
 			</md-input-container>
 			<button hide-gt-sm ng-click="onDelete($index)" class="md-raised md-warn md-button md-ink-ripple">Remove column</button>
-			<button hide-xs hide-sm ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+			<button hide show-gt-sm ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
 		</section>
-		<button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+		<button hide-gt-sm ng-click="onAdd()" class="md-raised md-primary md-button md-ink-ripple">Add column</button>
+		<button hide show-gt-sm ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
     </md-content>
 </div>
