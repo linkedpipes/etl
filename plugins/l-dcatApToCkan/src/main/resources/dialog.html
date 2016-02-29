@@ -1,40 +1,34 @@
 <div class="container-flow">
-    <div class="row">
-        <div class="form-group">
-            <label class="control-label" for="apiUrl">API URI:</label>
-            <input type="text" class="form-control" id="apiUrl" ng-model="dialog.apiUrl"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="apiKey">API KEY:</label>
-            <input type="text" class="form-control" id="apiKey" ng-model="dialog.apiKey"/>
-        </div>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="dialog.loadToCKAN"> Load to CKAN
-        </label>
-        <div class="form-group">
-            <label class="control-label" for="datasetID">Dataset ID:</label>
-            <input type="text" class="form-control" id="datasetID" ng-model="dialog.datasetID"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="filename">Output filename</label>
-            <input type="text" class="form-control" id="filename" ng-model="dialog.filename"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="orgID">Owner CKAN organization ID:</label>
-            <input type="text" class="form-control" id="orgID" ng-model="dialog.orgID"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="loadLanguage">Load language (cs|en):</label>
-            <input type="text" class="form-control" id="loadLanguage" ng-model="dialog.loadLanguage"/>
-        </div>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="dialog.generateVirtuoso"> Generate Turtle example resources (Virtuoso specific)
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="dialog.generateExampleResource"> Generate example resources (as HTML CKAN resources)
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="dialog.overwrite"> Overwrite target CKAN record (instead of merge)
-        </label>
-    </div>
+	<div layout-gt-sm="row">
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>CKAN Action API URL</label>
+			<input type="url" ng-model="dialog.apiUrl" required placeholder="http://localhost/api/3/action">
+		</md-input-container>
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>CKAN API Key</label>
+			<input ng-model="dialog.apiKey" required placeholder="00000000-0000-0000-0000-000000000000">
+		</md-input-container>
+	</div>
+	<div layout-gt-sm="row">
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>CKAN dataset ID</label>
+			<input ng-model="dialog.datasetID" required placeholder="my-dataset">
+		</md-input-container>
+		<md-input-container class="md-block" flex-gt-sm>
+			<label>Dataset owner organization ID</label>
+			<input ng-model="dialog.orgID" placeholder="00000000-0000-0000-0000-000000000000">
+		</md-input-container>
+	</div>
+	<md-input-container class="md-block" flex-gt-sm>
+		<label>Load language (cs|en)</label>
+		<input ng-model="dialog.loadLanguage" required placeholder="en">
+	</md-input-container>
+	<md-switch ng-model="dialog.generateVirtuoso">{{dialog.generateVirtuoso ? "Turtle example resources (for Virtuoso)" : "No Turtle example resources (for Virtuoso)"}}</md-switch>
+	<md-switch ng-model="dialog.generateExampleResource">{{dialog.generateExampleResource ? "Example resources" : "No example resources"}}</md-switch>
+	<md-switch ng-model="dialog.overwrite">{{dialog.overwrite ? "Overwriting target CKAN record" : "Merging with target CKAN record"}}</md-switch>
+	<md-switch ng-model="dialog.loadToCKAN">{{dialog.loadToCKAN ? "Loading to CKAN" : "Only creating JSON file"}}</md-switch>
+	<md-input-container class="md-block" flex-gt-sm>
+		<label>Output JSON filename</label>
+		<input ng-model="dialog.filename" required placeholder="package_show.json">
+	</md-input-container>
 </div>

@@ -1,13 +1,12 @@
 <div class="container-flow">
     <div class="row">
-        <div class="form-group">
-            <label class="control-label" for="fileName">New file extension:</label>
-            <input type="text" class="form-control" id="fileName" ng-model="dialog.extension"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="xslt">XSLT Template:</label>
-            <textarea type="text" id="xslt" class="form-control" ng-model="dialog.xslt"
-                      style="width:100%; height: 300px; resize:vertical;"/>
-        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Transformed file extension</label>
+            <input ng-model="dialog.extension" placeholder="xml">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>XSLT Template</label>
+            <textarea id="xslt" ng-model="dialog.xslt" required placeholder="&lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;" md-select-on-focus>
+        </md-input-container>
     </div>
 </div>

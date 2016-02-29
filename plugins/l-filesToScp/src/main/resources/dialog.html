@@ -1,5 +1,5 @@
 <div class="container-flow">
-    <div class="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Host address</label>
             <input ng-model="dialog.host" required placeholder="myserver.example.com">
@@ -9,7 +9,8 @@
             <label>Port number</label>
             <input ng-model="dialog.port" type="number" required placeholder="22" min="1" max="65535" >
         </md-input-container>
-
+	</div>
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>User name</label>
             <input ng-model="dialog.userName" required placeholder="john">
@@ -19,15 +20,12 @@
             <label>Password</label>
             <input type="password" ng-model="dialog.password" required>
         </md-input-container>
-
+	</div>
         <md-input-container class="md-block" flex-gt-sm>
             <label>Target directory</label>
             <input ng-model="dialog.directory" required placeholder="/data/upload">
         </md-input-container>
 
-        <md-input-container>
-          <md-switch ng-model="dialog.createDirectory">{{dialog.createDirectory ? "Creating target directory" : "Not creating target directory"}}</md-switch>
-        </md-input-container>
+        <md-switch ng-model="dialog.createDirectory">{{dialog.createDirectory ? "Creating target directory" : "Not creating target directory"}}</md-switch>
 		
-    </div>
 </div>
