@@ -52,6 +52,8 @@ define([], function () {
                 .icon('keyboard_tab', 'libraries/google.design/ic_keyboard_tab_24px.svg')
                 .icon('autorenew', 'libraries/google.design/ic_autorenew_24px.svg')
                 .icon('clear', 'libraries/google.design/ic_clear_48px.svg')
+                .icon('transform', 'libraries/google.design/ic_transform_24px.svg')
+                .icon('call_split', 'libraries/google.design/ic_call_split_24px.svg')
                 .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg');
 
         $mdThemingProvider.theme('default')

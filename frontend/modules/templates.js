@@ -28,7 +28,8 @@ var addComponent = function (name, path) {
     var listItem = {
         'inputs': [],
         'outputs': [],
-        'keyword': []
+        'keyword': [],
+        'type' : ''
     };
     var pathDefinition;
     gFs.readdirSync(path).forEach(function (file) {
@@ -84,6 +85,9 @@ var addComponent = function (name, path) {
             listItem['id'] = constructUri(name);
             listItem['label'] = resource['http://www.w3.org/2004/02/skos/core#prefLabel'];
             listItem['color'] = resource['http://linkedpipes.com/ontology/color'];
+            if (resource['http://linkedpipes.com/ontology/componentType']) {
+                listItem['type'] = resource['http://linkedpipes.com/ontology/componentType']['@id'];
+            }
             listItem['configurationUri'] = configurationUri;
             if (resource['http://linkedpipes.com/ontology/port']) {
                 ports = [].concat(resource['http://linkedpipes.com/ontology/port']);

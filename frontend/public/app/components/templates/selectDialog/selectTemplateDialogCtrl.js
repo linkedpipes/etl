@@ -7,7 +7,6 @@ define([], function () {
                 return true;
             }
             var searchString = $scope.search.toLowerCase();
-            console.log(item);
             return item.component.filterString.indexOf(searchString) !== -1;
         };
 
@@ -19,12 +18,30 @@ define([], function () {
             $mdDialog.cancel();
         };
 
+        /**
+         * For given component return name name of the icon.
+         */
+        var returnIconName = function (component) {
+            if (component.type === 'http://etl.linkedpipes.com/ontology/component/type/Extractor') {
+                return 'file_download';
+            } else if (component.type === 'http://etl.linkedpipes.com/ontology/component/type/Transformer') {
+                return 'transform';
+            } else if (component.type === 'http://etl.linkedpipes.com/ontology/component/type/Loader') {
+                return 'file_upload';
+            } else if (component.type === 'http://etl.linkedpipes.com/ontology/component/type/Executor') {
+                return 'call_split';
+            } else {
+                return '';
+            }
+        };
+
         var addAllTemplates = function () {
             var data = [];
-            templatesRepository.getTemplates().forEach(function (template) {
+            templatesRepository.getTemplates().forEach(function (component) {
                 data.push({
-                    'label': template['label'],
-                    'component': template
+                    'label': component['label'],
+                    'icon': returnIconName(component),
+                    'component': component
                 });
             });
             $scope.data = data;
@@ -50,17 +67,19 @@ define([], function () {
                 }
                 // Add only those that pass the filter.
                 var data = [];
-                templatesRepository.getTemplates().forEach(function (template) {
+                templatesRepository.getTemplates().forEach(function (component) {
                     // For now we require one port only!
-                    if (template.inputs.length !== 1) {
+                    if (component.inputs.length !== 1) {
                         return;
                     }
                     // Check for binding.
-                    var port = template.inputs[0];
+                    var port = component.inputs[0];
                     if (port['type']['0'] === sourcePort['type']['0']) {
+                        //
                         data.push({
-                            'label': template['label'],
-                            'component': template,
+                            'label': component['label'],
+                            'icon': returnIconName(component),
+                            'component': component,
                             'portBinding': port['binding']
                         });
                     }
