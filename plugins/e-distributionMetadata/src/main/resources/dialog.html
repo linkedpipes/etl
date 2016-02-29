@@ -74,7 +74,6 @@
             <label class="control-label" for="desc_en">Description in English:</label>
             <input type="text" class="form-control" id="desc_en" ng-model="dialog.desc_en" ng-disabled="dialog.descriptionFromDataset"/>
         </div>
-
         <div class="checkbox">
             <label> <input type="checkbox" id="issuedFromDataset" ng-model="dialog.issuedFromDataset"> Use issued date from dataset</label>
         </div> <!-- > dfIssued -->
@@ -82,7 +81,6 @@
             <label class="control-label" for="issued">Issued:</label>
             <input type="date" class="form-control" id="issued" ng-model="dialog.issued" ng-disabled="dialog.issuedFromDataset || dialog.issuedFromDataset"/>
         </div>
-
         <div class="checkbox">
             <label> <input type="checkbox" id="issuedFromDataset" ng-model="dialog.useNow" ng-disabled="dialog.issuedFromDataset"> Use current date as modified</label>
         </div> <!-- > dfModified -->

@@ -1,9 +1,9 @@
 <div class="container-flow">
-	<md-input-container class="md-block" flex-gt-sm>
-		<label>Virtuoso JDBC connection string</label>
-		<input ng-model="dialog.host" required placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/">
-	</md-input-container>
-	<div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Virtuoso JDBC connection string</label>
+        <input ng-model="dialog.host" required placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/">
+    </md-input-container>
+    <div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Virtuoso user name</label>
             <input ng-model="dialog.userName" required placeholder="dba">
@@ -12,26 +12,25 @@
             <label>Virtuoso password</label>
             <input type="password" ng-model="dialog.password" required placeholder="dba">
         </md-input-container>
-	</div>
-	<div layout-gt-sm="row">
+    </div>
+    <div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Remote directory with source files</label>
             <input ng-model="dialog.loadDirectory" required placeholder="/data/upload">
         </md-input-container>
-
         <md-input-container class="md-block" flex-gt-sm>
             <label>Filename to load</label>
             <input ng-model="dialog.fileName" required placeholder="my.ttl">
         </md-input-container>
-	</div>
-	<md-input-container class="md-block" flex-gt-sm>
-		<label>Target graph IRI</label>
-		<input type="uri" ng-model="dialog.targetGraph" placeholder="http://example.org/resource/graph">
-	</md-input-container>
-	<md-switch ng-model="dialog.clearGraph">{{dialog.clearGraph ? "Clearing target graph before loading" : "Merging with target graph"}}</md-switch>
-	<md-switch ng-model="dialog.clearLoadList">{{dialog.clearLoadList ? "Clearing Virtuoso load list" : "Not clearing Virtuoso load list"}}</md-switch>
-	<md-input-container class="md-block" flex-gt-sm>
-		<label>Status update interval in seconds</label>
-		<input type="number" required ng-model="dialog.statusUpdate" placeholder="5" step="1" min="1" max="60">
-	</md-input-container>
+    </div>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Target graph IRI</label>
+        <input type="uri" ng-model="dialog.targetGraph" placeholder="http://example.org/resource/graph">
+    </md-input-container>
+    <md-switch ng-model="dialog.clearGraph">{{dialog.clearGraph ? "Clearing target graph before loading" : "Merging with target graph"}}</md-switch>
+    <md-switch ng-model="dialog.clearLoadList">{{dialog.clearLoadList ? "Clearing Virtuoso load list" : "Not clearing Virtuoso load list"}}</md-switch>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Status update interval in seconds</label>
+        <input type="number" required ng-model="dialog.statusUpdate" placeholder="5" step="1" min="1" max="60">
+    </md-input-container>
 </div>
