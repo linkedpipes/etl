@@ -1,9 +1,53 @@
+<!--
+    'datasetURI': '',
+     NOT USED 'distributionURI': '',
+     NOT USED 'useDatasetURIfromInput': true,
+    'language_orig': '',
+    'title_cs': '',
+    'title_en': '',
+    'desc_cs': '',
+    'desc_en': '',
+                'authors': [],
+    'publisherURI': '',
+    'publisherName': '',
+                'license': '',
+                'sources': [],
+                'languages': [],
+                'keywords_orig': [],
+                'keywords_en': [],
+                'themes': [],
+    'contactPoint': '',
+    'contactPointName': '',
+    'periodicity': '',
+    'useNow': true,
+    'useNowTemporalEnd': false,
+    'useTemporal': true,
+    'modified': '',
+    'issued': '',
+    'identifier': '',
+    'landingPage': '',
+    'temporalEnd': '',
+    'temporalStart': '',
+    'spatial': '',
+    'schema': ''
+
+        licenses.add("https://creativecommons.org/licenses/by/4.0/");
+        licenses.add("https://creativecommons.org/licenses/by-sa/4.0/");
+        licenses.add("http://opendatacommons.org/licenses/pddl/1.0/");
+
+        publishers.add("http://opendata.cz");
+
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/cs");
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/en");
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/sk");
+        languages.add("http://id.loc.gov/vocabulary/iso639-1/it");
+-->
 <div>
     <md-input-container class="md-block" flex-gt-sm>
-        <label>Dataset IRI</label>
+		<label>Dataset IRI</label>
         <input type="uri" ng-model="dialog.datasetURI" required placeholder="http://example.org/resource/dataset/my">
-    </md-input-container>
-    <div layout-gt-sm="row">
+	</md-input-container>
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Dataset title original language</label>
             <input ng-model="dialog.title_cs" placeholder="Můj dataset">
@@ -13,7 +57,7 @@
             <input ng-model="dialog.title_en" placeholder="My dataset">
         </md-input-container>
     </div>
-    <div layout-gt-sm="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Description in original language</label>
             <input ng-model="dialog.desc_cs" placeholder="Popis mého datasetu">
@@ -23,7 +67,7 @@
             <input ng-model="dialog.desc_en" placeholder="Description of my dataset">
         </md-input-container>
     </div>
-    <div layout-gt-sm="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Original language tag</label>
             <input ng-model="dialog.language_orig" placeholder="cs">
@@ -33,17 +77,18 @@
             <input ng-model="dialog.identifier" placeholder="ID1">
         </md-input-container>
     </div>
-    <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useNow">Generate modified date as Now</md-switch>
-        <md-datepicker ng-hide="dialog.useNow" ng-model="dialog.modified" md-placeholder="Modified"></md-datepicker>
+	<div layout-gt-sm="row">
+        <md-switch ng-model="dialog.useNow" flex-gt-sm>Generate modified date as Now</md-switch>
+        <md-datepicker ng-hide="dialog.useNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>    
     </div>
-    <div layout-gt-sm="row">
-        <md-datepicker ng-model="dialog.issued" md-placeholder="Issued"></md-datepicker>
+	<div layout-gt-sm="row">
+        <md-datepicker ng-model="dialog.issued" md-placeholder="Issued" flex-gt-sm></md-datepicker>    
     </div>
+
     <!-- Keywords in original language -->
     <!-- Keywords in English -->
     <!-- Languages -->
-    <div layout-gt-sm="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Keywords in original language (comma separated)</label>
             <input ng-model="dialog.keywords_orig" placeholder="data, veverky">
@@ -53,13 +98,13 @@
             <input ng-model="dialog.keywords_en" placeholder="data, squirrels">
         </md-input-container>
     </div>
-    <div layout-gt-sm="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Languages IRIs (comma separated)</label>
             <input ng-model="dialog.languages" placeholder="http://publications.europa.eu/resource/authority/language/ENG">
         </md-input-container>
     </div>
-    <div layout-gt-sm="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Contact point name</label>
             <input ng-model="dialog.contactPointName" placeholder="John Doe">
@@ -69,7 +114,7 @@
             <input type="email" ng-model="dialog.contactPoint" placeholder="john@doe.ex">
         </md-input-container>
     </div>
-    <div layout-gt-sm="row">
+	<div layout-gt-sm="row">
         <md-input-container class="md-block" flex-gt-sm>
             <label>Publisher name</label>
             <input ng-model="dialog.publisherName" placeholder="Publisher Organization">
@@ -79,12 +124,12 @@
             <input type="uri" ng-model="dialog.publisherURI" placeholder="http://example.org/resource/publisher">
         </md-input-container>
     </div>
-    <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useTemporal">Use temporal coverage</md-switch>
-        <md-datepicker ng-show="dialog.useTemporal" ng-model="dialog.temporalStart" md-placeholder="Start"></md-datepicker>
-        <md-datepicker ng-show="dialog.useTemporal" ng-model="dialog.temporalEnd" md-placeholder="End"></md-datepicker>
+	<div layout-gt-sm="row">
+        <md-switch ng-model="dialog.useTemporal" flex-gt-sm>Use temporal coverage</md-switch>
+        <md-datepicker ng-disabled="!dialog.useTemporal" ng-model="dialog.temporalStart" md-placeholder="Start" flex-gt-sm></md-datepicker>    
+        <md-datepicker ng-disabled="!dialog.useTemporal || dialog.useNowTemporalEnd" ng-model="dialog.temporalEnd" md-placeholder="End" flex-gt-sm></md-datepicker>
     </div>
-    <div layout-gt-sm="row">
+	<div layout-gt-sm="row">
         <md-switch ng-show="dialog.useTemporal" ng-model="dialog.useNowTemporalEnd">Temporal coverage end is Now</md-switch>
     </div>
     <md-input-container class="md-block" flex-gt-sm>
@@ -107,6 +152,7 @@
     <!-- Sources -->
     <!-- Themes -->
     <!-- Selected authors -->
+
     <md-input-container class="md-block" flex-gt-sm>
         <label>Licenses IRIs (comma separated)</label>
         <input ng-model="dialog.license" placeholder="http://publications.europa.eu/resource/authority/language/ENG">
