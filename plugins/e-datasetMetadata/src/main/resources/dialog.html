@@ -44,7 +44,7 @@
 -->
 <div>
     <md-input-container class="md-block" flex-gt-sm>
-		<label>Dataset IRI</label>
+	    <label>Dataset IRI</label>
         <input type="uri" ng-model="dialog.datasetURI" required placeholder="http://example.org/resource/dataset/my">
 	</md-input-container>
 	<div layout-gt-sm="row">
@@ -125,12 +125,12 @@
         </md-input-container>
     </div>
 	<div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useTemporal" flex-gt-sm>Use temporal coverage</md-switch>
-        <md-datepicker ng-disabled="!dialog.useTemporal" ng-model="dialog.temporalStart" md-placeholder="Start" flex-gt-sm></md-datepicker>    
-        <md-datepicker ng-disabled="!dialog.useTemporal || dialog.useNowTemporalEnd" ng-model="dialog.temporalEnd" md-placeholder="End" flex-gt-sm></md-datepicker>
+        <md-switch ng-model="dialog.useTemporal" flex-gt-sm>Temporal coverage</md-switch>
+        <md-switch ng-show="dialog.useTemporal" ng-model="dialog.useNowTemporalEnd">End is Now</md-switch>
     </div>
 	<div layout-gt-sm="row">
-        <md-switch ng-show="dialog.useTemporal" ng-model="dialog.useNowTemporalEnd">Temporal coverage end is Now</md-switch>
+        <md-datepicker ng-disabled="!dialog.useTemporal" ng-model="dialog.temporalStart" md-placeholder="Start" flex-gt-sm></md-datepicker>    
+        <md-datepicker ng-disabled="!dialog.useTemporal || dialog.useNowTemporalEnd" ng-model="dialog.temporalEnd" md-placeholder="End" flex-gt-sm></md-datepicker>
     </div>
     <md-input-container class="md-block" flex-gt-sm>
         <label>Periodicity</label>
