@@ -78,8 +78,8 @@
         </md-input-container>
     </div>
 	<div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useNow" flex-gt-sm>Generate modified date as Now</md-switch>
-        <md-datepicker ng-hide="dialog.useNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>    
+        <md-switch ng-model="dialog.useNow" flex-gt-sm>Modified is Now</md-switch>
+        <md-datepicker ng-disabled="dialog.useNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>    
     </div>
 	<div layout-gt-sm="row">
         <md-datepicker ng-model="dialog.issued" md-placeholder="Issued" flex-gt-sm></md-datepicker>    
@@ -126,7 +126,7 @@
     </div>
 	<div layout-gt-sm="row">
         <md-switch ng-model="dialog.useTemporal" flex-gt-sm>Temporal coverage</md-switch>
-        <md-switch ng-show="dialog.useTemporal" ng-model="dialog.useNowTemporalEnd">End is Now</md-switch>
+        <md-switch ng-disabled="!dialog.useTemporal" ng-model="dialog.useNowTemporalEnd">End is Now</md-switch>
     </div>
 	<div layout-gt-sm="row">
         <md-datepicker ng-disabled="!dialog.useTemporal" ng-model="dialog.temporalStart" md-placeholder="Start" flex-gt-sm></md-datepicker>    
