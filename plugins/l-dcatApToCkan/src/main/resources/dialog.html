@@ -23,10 +23,10 @@
         <label>Load language (cs|en)</label>
         <input ng-model="dialog.loadLanguage" required placeholder="en">
     </md-input-container>
-    <md-switch ng-model="dialog.generateVirtuoso">{{dialog.generateVirtuoso ? "Turtle example resources (for Virtuoso)" : "No Turtle example resources (for Virtuoso)"}}</md-switch>
-    <md-switch ng-model="dialog.generateExampleResource">{{dialog.generateExampleResource ? "Example resources" : "No example resources"}}</md-switch>
-    <md-switch ng-model="dialog.overwrite">{{dialog.overwrite ? "Overwriting target CKAN record" : "Merging with target CKAN record"}}</md-switch>
-    <md-switch ng-model="dialog.loadToCKAN">{{dialog.loadToCKAN ? "Loading to CKAN" : "Only creating JSON file"}}</md-switch>
+    <md-switch ng-model="dialog.generateVirtuoso">Turtle example resources (for Virtuoso)</md-switch>
+    <md-switch ng-model="dialog.generateExampleResource">Example resources</md-switch>
+    <md-switch ng-model="dialog.overwrite">Overwrite target CKAN record</md-switch>
+    <md-switch ng-model="dialog.loadToCKAN">Load to CKAN</md-switch>
     <md-input-container class="md-block" flex-gt-sm>
         <label>Output JSON filename</label>
         <input ng-model="dialog.filename" required placeholder="package_show.json">
