@@ -6,16 +6,17 @@
 
 var gFs = require('fs');
 var gConfiguration = require('./configuration');
-var gPath = require('path');
 
 var gModule = {
     'list': [],
-    'data': {}
+    'data': {},
+    // For each pipeline IRI contains dictionary of followup.
+    'pipelines': {}
 };
 
 module.exports = gModule;
 
-var constructUri = function(name) {
+var constructUri = function (name) {
     return gConfiguration.storage.domain + '/resources/components/' + name;
 };
 
@@ -29,7 +30,8 @@ var addComponent = function (name, path) {
         'inputs': [],
         'outputs': [],
         'keyword': [],
-        'type' : ''
+        'followup': {},
+        'type': ''
     };
     var pathDefinition;
     gFs.readdirSync(path).forEach(function (file) {
@@ -55,8 +57,8 @@ var addComponent = function (name, path) {
     // Create dialog record.
     if (dataItem['dialog']) {
         listItem['dialog'] = {
-            'js' : gConfiguration.storage.domain + '/resources/components/' + name + '/dialog.js',
-            'html' : gConfiguration.storage.domain + '/resources/components/' + name + '/dialog.html'
+            'js': gConfiguration.storage.domain + '/resources/components/' + name + '/dialog.js',
+            'html': gConfiguration.storage.domain + '/resources/components/' + name + '/dialog.html'
         };
     }
 
@@ -131,16 +133,122 @@ var addComponent = function (name, path) {
     gModule.data[name] = dataItem;
 };
 
+var updatePipeline = function (pipelineObject, pipelineUri) {
+    for (var graphIndex in pipelineObject['@graph']) {
+        var graph = pipelineObject['@graph'][graphIndex];
+        if (graph['@id'] !== pipelineUri) {
+            continue;
+        }
+        // Parse definition graph.
+        var components = {};
+        var connection =[];
+        graph['@graph'].forEach(function (resource) {
+            if (!resource['@id']) {
+                return;
+            }
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1) {
+                components[resource['@id']] = resource['http://linkedpipes.com/ontology/template']['@id'];
+            } else if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') !== -1) {
+                connection.push({
+                    'source': resource['http://linkedpipes.com/ontology/sourceComponent']['@id'],
+                    'target': resource['http://linkedpipes.com/ontology/targetComponent']['@id']
+                });
+            }
+        });
+        // Create pipeline record.
+        var pipelineRecord = {};
+        for (var index in connection) {
+            var source = connection[index]['source'];
+            var target = connection[index]['target'];
+            //
+            var sourceUri = components[source];
+            var targetUri = components[target];
+            //
+            if (!pipelineRecord[sourceUri]) {
+                pipelineRecord[sourceUri] = {};
+            }
+            if (!pipelineRecord[sourceUri][targetUri]) {
+                pipelineRecord[sourceUri][targetUri] = 1;
+            } else {
+                pipelineRecord[sourceUri][targetUri] += 1;
+            }
+        }
+        //
+        gModule.pipelines[pipelineUri] = pipelineRecord;
+    }
+};
+
+/**
+ * From gModule.pipelines rebuild gModule.followup.
+ */
+var rebuilFollowUp = function () {
+    var followup = {};
+    for (var key in gModule.pipelines) {
+        var pipeline = gModule.pipelines[key];
+        for (var sourceUri in pipeline) {
+            if (followup[sourceUri]) {
+                // Merge followup list of two components.
+                for (var targetKey in pipeline[sourceUri]) {
+                    if (!followup[sourceUri][targetKey]) {
+                        followup[sourceUri][targetKey] = 0;
+                    }
+                    followup[sourceUri][targetKey] += pipeline[sourceUri][targetKey];
+                }
+            } else {
+                if (pipeline[sourceUri]) {
+                    followup[sourceUri] = pipeline[sourceUri];
+                } else {
+                    followup[sourceUri] = {};
+                }
+            }
+        }
+    }
+    //
+    gModule.list.forEach(function(item) {
+        item['followup'] = followup[item['id']];
+    });
+};
+
 (function initialize() {
     console.time('templates.initialize');
     var componentDirectory = gConfiguration.storage.components;
-    var files = gFs.readdirSync(componentDirectory);
-    files.forEach(function (directory) {
+    // We use sych call here as we want this to be processed before
+    // the code will continue.
+    var componentFiles = gFs.readdirSync(componentDirectory);
+    componentFiles.forEach(function (directory) {
         var path = componentDirectory + '/' + directory + '/';
         addComponent(directory, path);
     });
+    // Scan pipelines.
+    var pipelineDirectory = gConfiguration.storage.pipelines;
+    var pipelineFiles = gFs.readdirSync(pipelineDirectory);
+    pipelineFiles.forEach(function (fileName) {
+        var path = pipelineDirectory + '/' + fileName;
+        var pipeline = JSON.parse(gFs.readFileSync(path));
+        var pipelineIri =
+                gConfiguration.storage.domain +
+                '/resources/pipelines/' +
+                fileName.substring(0, fileName.indexOf('.json'));
+        updatePipeline(pipeline, pipelineIri);
+    });
+    // Build follow up index.
+    rebuilFollowUp();
     console.timeEnd('templates.initialize');
 })();
+
+/**
+ * Update definition based on chanegs in a pipeline.
+ */
+gModule.onPipelineUpdate = function(pipelineObject, pipelineIri) {
+    updatePipeline(pipelineObject, pipelineIri);
+    rebuilFollowUp();
+};
+
+gModule.onPipelineDelete = function(pipelineIri) {
+    delete gModule.pipelines[pipelineIri];
+    rebuilFollowUp();
+};
+
 
 gModule.getList = function () {
     return this.list;

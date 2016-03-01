@@ -41,7 +41,8 @@ define([], function () {
                 data.push({
                     'label': component['label'],
                     'icon': returnIconName(component),
-                    'component': component
+                    'component': component,
+                    'order': 0
                 });
             });
             $scope.data = data;
@@ -72,6 +73,10 @@ define([], function () {
                     if (component.inputs.length !== 1) {
                         return;
                     }
+                    var order = 0;
+                    if (sourceTemplate.followup[component['id']]) {
+                        order = sourceTemplate.followup[component['id']];
+                    }
                     // Check for binding.
                     var port = component.inputs[0];
                     if (port['type']['0'] === sourcePort['type']['0']) {
@@ -80,7 +85,8 @@ define([], function () {
                             'label': component['label'],
                             'icon': returnIconName(component),
                             'component': component,
-                            'portBinding': port['binding']
+                            'portBinding': port['binding'],
+                            'order': order
                         });
                     }
                 });
