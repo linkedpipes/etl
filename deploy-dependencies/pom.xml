@@ -261,6 +261,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-graphStoreProtocol</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-graphStoreProtocol/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-datasetMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-datasetMetadata/</outputDirectory>
@@ -405,6 +411,12 @@
                                         <mkdir dir="${deploy.directory}/components/l-filesToScp/"/>
                                         <copy todir="${deploy.directory}/components/l-filesToScp/">
                                             <fileset dir="${plugins.directory}/l-filesToScp/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-graphStoreProtocol/"/>
+                                        <copy todir="${deploy.directory}/components/l-graphStoreProtocol/">
+                                            <fileset dir="${plugins.directory}/l-graphStoreProtocol/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

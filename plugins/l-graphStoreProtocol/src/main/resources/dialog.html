@@ -1,0 +1,45 @@
+<div class="container-flow">
+    <div class="row">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Endpoint select:</label>
+            <input type="url" ng-model="dialog.endpointSelect" required
+                   placeholder="http://localhost:8890/sparql">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Endpoint select:</label>
+            <input type="url" ng-model="dialog.endpointUpdate" required
+                   placeholder="http://localhost:8890/sparql">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Endpoint select:</label>
+            <input type="url" ng-model="dialog.endpointCRUD" required
+                   placeholder="http://localhost:8890/sparql-graph-crud">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Endpoint select:</label>
+            <input type="url" ng-model="dialog.targetGraphURI" required
+                   placeholder="http://localhost/resource/upload">
+        </md-input-container>
+    </div>
+    <div class="row">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Format</label>
+            <md-select ng-model="dialog.repositoryType">
+                <md-option value="Virtuoso">Virtuoso</md-option>
+                <md-option value="Fuseki">Fuseki</md-option>
+                <md-option value="FusekiTrig">FusekiTrig</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <md-switch ng-model="dialog.useAuthentification">Use authentification</md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.useAuthentification">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>User name</label>
+            <input ng-model="dialog.userName" required placeholder="dba">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Password</label>
+            <input type="password" ng-model="dialog.password" required>
+        </md-input-container>
+    </div>
+</div>

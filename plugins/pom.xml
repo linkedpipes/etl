@@ -30,6 +30,7 @@
         <module>e-sparqlEndpoint</module>
         <module>e-textHolder</module>
         <module>l-dcatApToCkan</module>
+        <module>l-graphStoreProtocol</module>
     </modules>
 
 </project>
