@@ -5,10 +5,14 @@
             "@type": "http://linkedpipes.com/ontology/Component",
             "http://www.w3.org/2004/02/skos/core#prefLabel": "Files to RDF",
             "http://linkedpipes.com/ontology/color": "#CED8F6",
+            "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Transformer"},
             "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
             "http://linkedpipes.com/ontology/port": [
                 {"@id": "http://localhost:8080/resources/components/t-filesToRdf/1.0.0/input"},
                 {"@id": "http://localhost:8080/resources/components/t-filesToRdf/1.0.0/output"}
+            ],
+            "http://linkedpipes.com/ontology/keyword": [
+                "RDF/XML", "N-Triples", "Turtle", "N3", "TriX", "TriG", "N-Quads", "JSON-LD", "RDF/JSON", "RDFa"
             ]
         },
         {

@@ -3,12 +3,16 @@
         {
             "@id": "http://linkedpipes.com/resources/components/t-unpack/1.0.0",
             "@type": "http://linkedpipes.com/ontology/Component",
-            "http://www.w3.org/2004/02/skos/core#prefLabel": "Unpacker",
+            "http://www.w3.org/2004/02/skos/core#prefLabel": "Decompress archive",
             "http://linkedpipes.com/ontology/color": "#CED8F6",
+            "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Transformer"},
             "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
             "http://linkedpipes.com/ontology/port": [
                 {"@id": "http://localhost:8080/resources/components/t-unpack/1.0.0/output"},
                 {"@id": "http://localhost:8080/resources/components/t-unpack/1.0.0/input"}
+            ],
+            "http://linkedpipes.com/ontology/keyword": [
+                "unpack", "zip", "unzip", "decompress", "bzip2", "bz2"
             ]
         },
         {

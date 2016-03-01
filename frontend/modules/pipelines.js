@@ -5,9 +5,9 @@
 'use strict';
 
 var gFs = require('fs');
-var gStream = require('stream');
 var gUuid = require('node-uuid');
 var gConfiguration = require('./configuration');
+var gTemplates = require('./../modules/templates');
 
 var gModule = {
     'list': [],
@@ -147,6 +147,10 @@ gModule.delete = function (id) {
     delete this.map[id];
     // Delete file from disk.
     gFs.unlinkSync(record.definitionFile);
+    // Update preferences.
+    var pipelineIri = gConfiguration.storage.domain +
+            '/resources/pipelines/' + id;
+    gTemplates.onPipelineDelete(pipelineIri);
 };
 
 /**
@@ -281,6 +285,7 @@ var updateResourceUri = function (content, id) {
  * @return False if pipeline of given ID does not exists.
  */
 gModule.update = function (id, content, updateUri) {
+    console.time('pipelines.update');
     // This can be also use for create!
     var fileName = gConfiguration.storage.pipelines + '/' + id + '.json';
     if (!gModule.map[id]) {
@@ -299,5 +304,10 @@ gModule.update = function (id, content, updateUri) {
             break;
         }
     }
+    // Update preferences.
+    var pipelineIri = gConfiguration.storage.domain +
+            '/resources/pipelines/' + id;
+    gTemplates.onPipelineUpdate(content, pipelineIri);
+    console.timeEnd('pipelines.update');
     return true;
 };

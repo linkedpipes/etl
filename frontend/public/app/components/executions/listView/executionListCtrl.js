@@ -58,6 +58,18 @@ define([
                     item.view = '';
                     break;
             }
+            // Compute duration.
+            if (item.end) {
+                var duration = (item.end - item.start) / 1000;
+                var durationSeconds = Math.ceil((duration) % 60);
+                var durationMinutes = Math.floor((duration / (60)) % 60);
+                var durationHours = Math.floor(duration / (60 * 60));
+                item.duration = (durationHours < 10 ? '0' + durationHours : durationHours) +
+                        ':' + (durationMinutes < 10 ? '0' + durationMinutes : durationMinutes) +
+                        ':' + (durationSeconds < 10 ? '0' + durationSeconds : durationSeconds);
+            } else {
+                item.duration = '';
+            }
         };
 
         var listOnDelete = function (item) {
