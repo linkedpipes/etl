@@ -205,7 +205,9 @@ var rebuilFollowUp = function () {
     }
     //
     gModule.list.forEach(function(item) {
-        item['followup'] = followup[item['id']];
+        if (followup[item['id']]) {
+            item['followup'] = followup[item['id']];
+        }
     });
 };
 
