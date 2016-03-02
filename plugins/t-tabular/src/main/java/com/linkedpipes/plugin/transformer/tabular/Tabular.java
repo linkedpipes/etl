@@ -35,6 +35,7 @@ public class Tabular implements SequentialExecution {
         // TODO We could use some table group URI from user?
         mapper.initialize(null);
         for (Entry entry : inputFilesDataUnit) {
+            LOG.info("Processing file: {}", entry.getPath());
             output.onFileStart();
             mapper.onTableStart("file://" + entry.getFileName(), null);
             try {

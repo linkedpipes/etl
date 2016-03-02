@@ -41,7 +41,7 @@ class ColumnTyped extends ColumnAbstract {
             return Collections.EMPTY_LIST;
         }
         final Value o;
-        if (language == null) {
+        if (language == null || language.isEmpty()) {
             o = VALUE_FACTORY.createLiteral(valueAsString, type);
         } else {
             o = VALUE_FACTORY.createLiteral(valueAsString, language);
