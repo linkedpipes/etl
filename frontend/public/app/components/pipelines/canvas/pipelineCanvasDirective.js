@@ -84,7 +84,7 @@ define([
             width = Math.max(width, line.length * 10);
         });
         // Some adjustment of size.
-        if (width <= 100) {
+        if (width <= 150) {
             width += 20;
         } else if (width >= 200) {
             width -= 20;
