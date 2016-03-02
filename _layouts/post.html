@@ -1,0 +1,15 @@
+---
+layout: default
+---
+
+<article class="container">
+    <header>
+        <h2 class="header center orange-text">{{ page.title }}</h2>
+        <h6 class="blue-text center"><i class="material-icons">alarm</i><time datetime="{{page.date|date:"%F"}}">{{page.date|date:"%b %d, %Y"}}</time></h6>
+    </header>
+
+    <div class="entry container">
+        {{ content }}
+    </div>
+
+</article>

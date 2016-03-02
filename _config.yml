@@ -18,6 +18,10 @@ url: "http://etl.linkedpipes.com" # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown
-
+excerpt_separator: <!--more-->
 sass:
     sass_dir: _sass
+gems:
+  - jekyll-mentions
+  - jekyll-feed
+  - jekyll-sitemap

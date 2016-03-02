@@ -2,21 +2,21 @@
 layout: default
 title: Documentation
 materialicon: description
-order: 2
+order: 3
 ---
 
   <div class="container">
-	<div class="row ">
+	<div class="row " id="overview">
 		<div class="col s12 m12 l12">
 			<div class="section">
-			  <h2 class="header center orange-text">Overview</h2>
+			  <h3 class="header center orange-text">Overview</h3>
 				<p class="center">
 					Once you have LinkedPipes ETL installed and running, it is time to explore.
 					Of course, there is not much to see in an empty instance, but let us go through the basics.
 					The image below is what we call a Pipeline.
-					It is a defined data transformation process which consists of interconnected <a href="../dpus/">Data Processing Units (DPUs)</a>.
-					You can add a DPU to a pipeline by clicking in an empty space and selecting the desired DPU from the list.
-					Each DPU has a name, green input ports and yellow output ports.
+					It is a defined data transformation process which consists of interconnected <a href="../components/">components</a>.
+					You can add a component to a pipeline by clicking in an empty space and selecting the desired component from the list, or by dragging and edge to an empty space.
+					Each component has a name, green input ports and yellow output ports.
 					The ports represent Data Units, which can contain either RDF data or regular files, according to their type.
 					Ports are connected by edges, which indicate the flow of data.
 					Only ports representing Data Units of the same type can be connected.
@@ -28,10 +28,10 @@ order: 2
 	<div class="row">
 		<div class="col s12 m12 l6">
 			<div class="section ">
-			  <h3 class="header center orange-text">Pipelines</h3>
+			  <h4 class="header center orange-text">Pipelines</h4>
 			  <div class="icon-block">
 				<p class="center">
-					Pipelines, defined data transformation processes consisting of interconnected <a href="../dpus/">Data Processing Units (DPUs)</a>, are one of the key concepts in LinkedPipes ETL. 
+					Pipelines, defined data transformation processes consisting of interconnected <a href="../components/">compoenents</a>, are one of the key concepts in LinkedPipes ETL. 
 					<img src="../assets/pipelines.png" alt="Pipelines list" class="responsive-img"/>
 					So far, you can name them, display them, edit them and run them. 
 					Once you run a Pipeline, you create its Execution.
@@ -41,7 +41,7 @@ order: 2
 		</div>
 		<div class="col s12 m12 l6">
 			<div class="section">
-			  <h3 class="header center orange-text">Executions</h3>
+			  <h4 class="header center orange-text">Executions</h4>
 			  <div class="icon-block">
 				<p class="center">
 					An Execution is one run of a Pipeline. 
@@ -57,13 +57,197 @@ order: 2
 			</div>
 		</div>
 	</div>
+
+	<div class="row" id="workflow">
+		<div class="col s12 m12 l12">
+			<div class="section">
+			  <h3 class="header center orange-text">Pipeline development workflow</h3>
+              <p class="center">
+                We have imporved the way a pipeline can be designed, which will save you time and frustration with our component list.
+            </p>
+			</div>
+		</div>
+	</div>
+    
+    <div class="row">
+        <h4 class="center orange-text">Component compatibility</h4>
+        <div class="col s12 m7 l6">
+            <p class="center"><img src="/assets/snippets/dragedge.png" alt="Drag edge" class="responsive-img"/></p>
+        </div>
+        <div class="col s12 m5 l6">
+            <p class="center">
+                The first component is placed the usual way, just click anywhere on the pipeline and a component list will show up.
+                From the second component on, it gets interesting.
+                Place the next component by dragging and edge from an existing one.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+    <p class="center">
+    The list of components you see is limited only to those actually compatible with the output of the current component.
+    For <a href="/components/#e-httpget">HTTP Get</a>, you get only those componentss that can consume files, for components that produce RDF, only those able to consume RDF are offered.
+    </p>
+    </div>
+    <div class="row ">
+        <h4 class="center orange-text">Component tags</h4>
+        <div class="col s12 m5 l6">
+            <p class="center">
+                In addition, we tagged the components so that you can find them not only by their name, which sometimes you would have to guess, but also by what they do and by the formats they process.
+                Let's say you want to unzip a file.
+                For that, we have the <a href="../components/#t-unpack">Decompress archive</a> component.
+                However, it may be hard to find under that name.
+                Now, you can find it by typing <code>zip</code>.
+            </p>
+        </div>
+        <div class="col s12 m7 l6">
+            <p class="center"><img src="/assets/snippets/filter-zip.png" alt="Filter by zip" class="responsive-img"/></p>
+        </div>
+    </div>
+    <div class="row ">
+        <h4 class="center orange-text">Recommended by your usage</h4>
+        <div class="col s12">
+            <p class="center">
+                As you create more and more pipelines, you will notice that the ordering of the offered components adjusts to your typical pipeline shape.
+                This is because we now recommend the components ordered by their probability of appearance, based on the other pipelines in the LP-ETL instance.
+                For example, when you process lots of tabular data, your typical pipeline will begin with an <a href="/components/#e-httpget">HTTP get</a> followed by the <a href="/components/#t-tabular">Tabular</a> component.
+                If that is the case, then the Tabular component will be typically listed first, when you drag an edge from the HTTP get component.
+            </p>
+        </div>
+    </div>
+
+	<div class="row" id="debug">
+		<div class="col s12 m12 l12">
+			<div class="section">
+			  <h3 class="header center orange-text">Debugging support</h3>
+              <p class="center">
+                We have a graphical overview of how the execution went.
+                When a pipeline fails, you can simply fix what was wrong and resume from the point of failure.
+                And when you are developing your query and need to rerun it over an over again until it is perfect, you can do that too.
+            </p>
+			</div>
+		</div>
+	</div>	
+
+    <div class="row">
+        <h4 class="center orange-text">Resume failed pipeline execution</h4>
+        <div class="col s12 m6">
+           <p class="center"><img src="/assets/snippets/execution-list.png" alt="Execution list" class="responsive-img"/></p>
+        </div>
+        <div class="col s12 m6">
+            <p class="center">
+                When your execution fails, you can see that in the execution list.
+                When you click on <i class="material-icons">loop</i>, the graphical execution overview is opened and you can see the state of your components.
+                Now you need to fix the component that failed and click on &quot;save and execute&quot; to resume the execution of the pipeline.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <h4 class="center orange-text">Graphical execution overview</h4>
+        <img src="/assets/snippets/ctia-fail2.png" alt="Pipeline failed in the middle" class="responsive-img"/>
+    </div>
+
+    <div class="row">
+        <h4 class="center orange-text">Component state type</h4>
+        
+        <div id="failed" class="col s12 m6 l3">
+           <div class="card small red white-text text-darken-4 hoverable">
+            <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="/assets/snippets/failed-component.png" alt="Failed component">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator">Failed<i class="material-icons right">more_vert</i></span>
+            </div>
+            <div class="card-reveal red">
+              <span class="card-title">Failed component<i class="material-icons right">close</i></span>
+              <p>
+                The component with red border is the failed one.
+                It needs to be fixed in order for the pipeline to continue.
+              </p>
+            </div>        
+          </div>	
+      </div>
+
+      <div id="old" class="col s12 m6 l3">
+          <div class="card small teal hoverable white-text text-darken-4">
+            <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="/assets/snippets/old-component.png" alt="Old component">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator">Old<i class="material-icons right">more_vert</i></span>
+            </div>
+            <div class="card-reveal teal">
+              <span class="card-title">Old component<i class="material-icons right">close</i></span>
+              <p>
+                Components with teal border have ran in previous executions, not the current one.
+                These components will not run when the pipeline is resumed.
+              </p>
+            </div>        
+          </div>	
+      </div>
+
+      <div id="fresh" class="col s12 m6 l3">
+          <div class="card small green white-text text-darken-4 hoverable">
+            <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="/assets/snippets/fresh-component.png" alt="Fresh component">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator">Fresh<i class="material-icons right">more_vert</i></span>
+            </div>
+            <div class="card-reveal green">
+              <span class="card-title">Fresh component<i class="material-icons right">close</i></span>
+              <p>
+                Components with green border have ran in the current execution.
+                These components will not run when the pipeline is resumed.
+              </p>
+            </div>        
+          </div>	
+      </div>
+      
+      <div id="invalidated" class="col s12 m6 l3">
+          <div class="card small grey white-text text-darken-4 hoverable">
+            <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="/assets/snippets/invalidated-component.png" alt="Fresh component">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator"><i class="material-icons right">more_vert</i></span>
+              <span class="card-title activator">Invalidated</span>
+            </div>
+            <div class="card-reveal grey">
+              <span class="card-title">Invalidated component<i class="material-icons right">close</i></span>
+              <p>
+                Components with grey border are invalidated by a change in the pipeline.
+                This can be caused by a change in configuration or connection of a component preceding the invalidated component in the execution.
+                A component can also be invalidated manually by the <i class="material-icons">loop</i> control.
+                These components will run again when the pipeline is resumed.
+              </p>
+            </div>        
+          </div>	
+      </div>
+    </div>
+
+    <div class="row">
+        <h4 class="center orange-text">Component debug controls</h4>
+        <div class="col s12 m5">
+           <p class="center"><img src="/assets/snippets/component-controls.png" alt="Component debug controls" class="responsive-img"/></p>
+        </div>
+        <div class="col s12 m7">
+            <p class="center">
+                When a component is clicked in the pipeline, its controls show up.
+                The <i class="material-icons">loop</i> control invalidates the old and fresh components and all components following it in the execution order.
+                The <i class="material-icons">keyboard_tab</i> control runs the pipeline up to that component and then stops. 
+                This is useful for debugging queries and configurations of a single component.
+            </p>
+        </div>
+    </div>	
+    
 	<div class="row">
 		<div class="col s12 m12 l12">
 			<div class="section">
-			  <h2 class="header center orange-text">Execution detail</h2>
+			  <h3 class="header center orange-text">Execution detail</h3>
 				<p class="center caption">
 					Once an Execution is finished, you may want to inspect it in more detail.
-					You can do that by inspecting messages from the execution and by going through the actual data that is passed among DPUs.
+					You can do that by inspecting messages from the execution and by going through the actual data that is passed among components.
 				</p>
 			</div>
 		</div>
@@ -71,11 +255,11 @@ order: 2
 	<div class="row">
 		<div class="col s12 m12 l6">
 			<div class="section">
-			  <h3 class="header center orange-text">Messages</h3>
+			  <h4 class="header center orange-text">Messages</h4>
 			  <div class="icon-block">
 				<p class="center">
 					In Messages, you can see a list of messages indicating, how the Execution went.
-					Each DPU in a Pipeline can send a message when something goes wrong, to simply show its execution progress or to say that it is done.
+					Each component in a Pipeline can send a message when something goes wrong, to simply show its execution progress or to say that it is done.
 					<img src="../assets/messages.png" alt="Execution messages" class="responsive-img"/>
 					When something goes wrong, you can see a detailed error report in the message detail.
 				</p>
@@ -84,11 +268,11 @@ order: 2
 		</div>
 		<div class="col s12 m12 l6">
 			<div class="section">
-			  <h3 class="header center orange-text">Debug</h3>
+			  <h4 class="header center orange-text">Debug</h4>
 			  <div class="icon-block">
 				<p class="center">
-					In Debug view, you can see a list of data units attached to executed DPUs.
-					Typically, one DPU will have one input and one output data unit, but this is not a rule.
+					In Debug view, you can see a list of data units attached to executed components.
+					Typically, one component will have one input and one output data unit, but this is not a rule.
 					That is why the individual data units are named to reflect their expected content.
 				    <img src="../assets/debug.png" alt="Debug view" class="responsive-img"/>
 					You can open a data unit and see the files inside via FTP.
@@ -97,5 +281,5 @@ order: 2
 			  </div>
 			</div>
 		</div>
-	</div>	
+	</div>    
   </div>

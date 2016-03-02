@@ -1,0 +1,54 @@
+---
+layout: default
+title: Tips & Tricks
+materialicon: lightbulb_outline
+order: 1
+---
+
+  <div class="container">
+	<div class="row ">
+		<div class="col s12">
+			<div class="section">
+			  <h2 class="header center orange-text">Tips &amp; Tricks</h2>
+			</div>
+		</div>
+	</div>
+	
+    <div class="row">
+        {% for post in site.posts limit:3 %}
+        <div class="col s12 m6 l4">
+			<div class="section">
+			  <div class="icon-block">
+                <h2 class="center blue-text"><i class="material-icons">{{ post.icon }}</i></h2>
+                <h5 class="center orange-text">{{ post.title }}</h5>
+                <h6 class="center">{{ post.date | date: "%Y-%m-%d" }}</h6>
+                <p class="center">
+					{{ post.excerpt | remove: '<p class="center">' | remove: '</p>' }}
+				</p>
+                {% if post.detail %}
+                <p class="center"><a href="{{ post.url }}" class="btn waves-effect waves-light orange"><i class="material-icons left">ondemand_video</i>See more</a></p>
+                {% endif %}
+			  </div>
+			</div>
+		</div>
+        {% endfor %}
+     </div>
+    
+    <!--<div class="row">
+        <h3 class="orange-text center">Older tips &amp; tricks</h3>
+        {% for post in site.posts offset:3 %}
+        <div class="col s12">
+			<div class="section">
+                <h5 class="blue-text"><i class="material-icons left">{{ post.icon }}</i>{{ post.title }}</h5>
+                <h6 class="orange-text">{{ post.date | date: "%Y-%m-%d" }}</h6>
+                <p class="">
+                    {{ post.excerpt | remove: '<p class="center">' | remove: '</p>' }}
+                </p>
+                {% if post.detail %}
+                <p><a href="{{ post.url }}" class="btn waves-effect waves-light orange"><i class="material-icons left">ondemand_video</i>See more</a></p>
+                {% endif %}                
+			</div>
+		</div>
+        {% endfor %}       
+	</div>-->
+  </div>

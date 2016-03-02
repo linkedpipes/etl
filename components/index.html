@@ -1,20 +1,21 @@
 ---
 layout: default
-title: DPUs
+title: Components
 materialicon: extension
-order: 1
+order: 2
 ---
 
   <div class="container">
 	<div class="row">
 		<div class="col s12">
 			<div class="section">
-			  <h2 class="header center orange-text">DPUs</h2>
-			  <h5 class="header center ">Data Processing Units</h5>
+			  <h3 class="header center orange-text">Components</h3>
 			  <div class="icon-block">
 				<p class="light center">
-				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
-				There are three basic types of DPUs.
+				A key building block of a Pipeline is a Component. 
+                There is a library of components ready and here we go through their configuration.
+                Of course, everyone can add their own component, the best way to do that is to copy&amp;paste one of ours and change it.
+				There are three basic types of components.
 				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
 				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
 				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
@@ -22,12 +23,57 @@ order: 1
 			  </div>
 			</div>
 		</div>
-	    <h3 class="header center orange-text">List of available DPUs</h3>
-	    <p class="light center">First, we provide a quick overview of the available DPUs. Red are extractors, blue are transformers and green are loaders. Grey are special purpose DPUs.</p>
-	  <div class="col s12 m6 l4">
+    </div>
+
+	<div class="row">
+		<div class="col s12 m12 l12">
+			<div class="section">
+			  <h4 class="header center orange-text">Component types</h4>
+              <p class="center">
+                The icons next to the components in the component list represent their type.
+                Currently, we have four types of components.
+            </p>
+			</div>
+		</div>
+	</div>	
+    
+    <div class="row">
+        <div class="col s12 m6 l6">
+            <p class="center"><img src="/assets/snippets/insert.png" alt="Component list" class="responsive-img"/></p>
+        </div>
+        <div class="col s12 m6 l6">
+            <ul class="collection">
+                <li class="collection-item avatar">
+                  <img src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_file_download_black_24px.svg" alt="Extractor" class="circle">
+                  <span class="title">Extractors</span>
+                  <p>Bring data from the outside into the pipeline</p>
+                </li>
+                <li class="collection-item avatar">
+                  <img src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_transform_black_24px.svg" alt="Transformer" class="circle">
+                  <span class="title">Transformers</span>
+                  <p>Take data from the pipeline, change it and pass it on</p>
+                </li>
+                <li class="collection-item avatar">
+                  <img src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_file_upload_black_24px.svg" alt="Loader" class="circle">
+                  <span class="title">Loaders</span>
+                  <p>Take data from the pipeline and load it to an external place</p>
+                </li>
+                <li class="collection-item avatar">
+                  <img src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_call_split_black_24px.svg" alt="Special" class="circle">
+                  <span class="title">Special</span>
+                  <p>They do something else, e.g. execute a remote command</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+	    <h4 class="header center orange-text">List of available components</h4>
+	    <p class="light center">First, we provide a quick overview of the available components. Red are extractors, blue are transformers and green are loaders. Grey are special purpose components.</p>
+	  <div class="col s12 m6 l4" id="e-httpget">
 		  <div class="card small red lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/e-httpget.png" alt="HTTP get">
+			  <img class="activator" src="../assets/components/e-httpget.png" alt="HTTP get">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">HTTP get<i class="material-icons right">more_vert</i></span>
@@ -51,7 +97,7 @@ order: 1
 	  <div id="e-sparql" class="col s12 m6 l4">
 		  <div class="card small red lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/e-sparql.png" alt="SPARQL endpoint">
+			  <img class="activator" src="../assets/components/e-sparql.png" alt="SPARQL endpoint">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">SPARQL endpoint<i class="material-icons right">more_vert</i></span>
@@ -76,7 +122,7 @@ order: 1
 	  <div id="e-textholder" class="col s12 m6 l4">
 		  <div class="card small red lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/e-textholder.png" alt="Text holder">
+			  <img class="activator" src="../assets/components/e-textholder.png" alt="Text holder">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Text holder<i class="material-icons right">more_vert</i></span>
@@ -100,7 +146,7 @@ order: 1
 	  <div id="l-filestoscp" class="col s12 m6 l4">
 		  <div class="card small green lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/l-filestoscp.png" alt="Files to SCP">
+			  <img class="activator" src="../assets/components/l-filestoscp.png" alt="Files to SCP">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Files to SCP<i class="material-icons right">more_vert</i></span>
@@ -132,7 +178,7 @@ order: 1
 	  <div id="t-filestordf" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-filestordf.png" alt="Files to RDF">
+			  <img class="activator" src="../assets/components/t-filestordf.png" alt="Files to RDF">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Files to RDF<i class="material-icons right">more_vert</i></span>
@@ -156,7 +202,7 @@ order: 1
 	  <div id="t-rdftofile" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-rdftofile.png" alt="RDF to File">
+			  <img class="activator" src="../assets/components/t-rdftofile.png" alt="RDF to File">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">RDF to File<i class="material-icons right">more_vert</i></span>
@@ -182,7 +228,7 @@ order: 1
 	  <div id="t-packzip" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-packzip.png" alt="Create zip archive">
+			  <img class="activator" src="../assets/components/t-packzip.png" alt="Create zip archive">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Create zip archive<i class="material-icons right">more_vert</i></span>
@@ -204,7 +250,7 @@ order: 1
 	  <div id="t-unpackzip" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-unpackzip.png" alt="Decompress zip archive">
+			  <img class="activator" src="../assets/components/t-unpackzip.png" alt="Decompress zip archive">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Decompress zip archive<i class="material-icons right">more_vert</i></span>
@@ -226,7 +272,7 @@ order: 1
 	  <div id="t-unpack" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-unpack.png" alt="Unpack">
+			  <img class="activator" src="../assets/components/t-unpack.png" alt="Unpack">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Unpack<i class="material-icons right">more_vert</i></span>
@@ -250,7 +296,7 @@ order: 1
 	  <div id="t-filesfilter" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-filesfilter.png" alt="Files filter">
+			  <img class="activator" src="../assets/components/t-filesfilter.png" alt="Files filter">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Files filter<i class="material-icons right">more_vert</i></span>
@@ -273,7 +319,7 @@ order: 1
 	  <div id="t-exceltocsv" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-exceltocsv.png" alt="Excel to CSV">
+			  <img class="activator" src="../assets/components/t-exceltocsv.png" alt="Excel to CSV">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Excel to CSV<i class="material-icons right">more_vert</i></span>
@@ -313,7 +359,7 @@ order: 1
 	  <div id="t-xslt" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-xslt.png" alt="XSLT transformer">
+			  <img class="activator" src="../assets/components/t-xslt.png" alt="XSLT transformer">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">XSLT transformer<i class="material-icons right">more_vert</i></span>
@@ -337,7 +383,7 @@ order: 1
 	  <div id="x-virtuoso" class="col s12 m6 l4">
 		  <div class="card small grey lighten-2 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/x-virtuoso.png" alt="Virtuoso loader">
+			  <img class="activator" src="../assets/components/x-virtuoso.png" alt="Virtuoso loader">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Virtuoso loader<i class="material-icons right">more_vert</i></span>
@@ -346,7 +392,7 @@ order: 1
 			<div class="card-reveal grey lighten-2">
 			  <span class="card-title grey-text text-darken-4">Virtuoso loader<i class="material-icons right">close</i></span>
 			  <p>
-				Special purpose DPU, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">Openlink Virtuoso</a> triplestore to load a file from the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
+				Special purpose component, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">Openlink Virtuoso</a> triplestore to load a file from the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
 			  </p>
 				<dl>
 					<dt>Host address</dt>
@@ -366,7 +412,7 @@ order: 1
 					<dt>Password</dt>
 					<dd>Password to Virtuoso. Note that this is plain text and in no way secured</dd>
 					<dt>Interval of status update</dt>
-					<dd>Interval in which the DPU polls Virtuoso for the status of the load</dd>
+					<dd>Interval in which the component polls Virtuoso for the status of the load</dd>
 				</dl>
 			</div>
 		  </div>	
@@ -375,7 +421,7 @@ order: 1
 	  <div id="t-sparqlconstruct" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-sparqlconstruct.png" alt="SPARQL construct">
+			  <img class="activator" src="../assets/components/t-sparqlconstruct.png" alt="SPARQL construct">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">SPARQL construct<i class="material-icons right">more_vert</i></span>
@@ -398,7 +444,7 @@ order: 1
 	  <div id="t-sparqlselect" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-sparqlselect.png" alt="SPARQL select">
+			  <img class="activator" src="../assets/components/t-sparqlselect.png" alt="SPARQL select">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">SPARQL select<i class="material-icons right">more_vert</i></span>
@@ -420,7 +466,7 @@ order: 1
 	  <div id="t-sparqlupdate" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-sparqlupdate.png" alt="SPARQL update">
+			  <img class="activator" src="../assets/components/t-sparqlupdate.png" alt="SPARQL update">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">SPARQL update<i class="material-icons right">more_vert</i></span>
@@ -443,7 +489,7 @@ order: 1
 	  <div id="t-graphmerger" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-graphmerger.png" alt="Graph merger">
+			  <img class="activator" src="../assets/components/t-graphmerger.png" alt="Graph merger">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Graph merger<i class="material-icons right">more_vert</i></span>
@@ -454,7 +500,7 @@ order: 1
 			  <p>
 				Transformer. There are two types of RDF Data Units in LinkedPipes ETL right now.
 				There is a data unit, that can contain multiple RDF named graphs, which is currently produced only by the <a href="#t-filestordf">Files to RDF</a>, which may transform files containing RDF quads.
-				When the user then wants to work with such data using DPUs that only support triples, Graph merger is needed to do the conversion.
+				When the user then wants to work with such data using components that only support triples, Graph merger is needed to do the conversion.
 			  </p>
 			</div>
 		  </div>	
@@ -463,7 +509,7 @@ order: 1
 	  <div id="t-tabular" class="col s12 m6 l4">
 		  <div class="card small indigo lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">
-			  <img class="activator" src="../assets/dpus/t-tabular.png" alt="Tabular">
+			  <img class="activator" src="../assets/components/t-tabular.png" alt="Tabular">
 			</div>
 			<div class="card-content">
 			  <span class="card-title activator grey-text text-darken-4">Tabular<i class="material-icons right">more_vert</i></span>
@@ -513,70 +559,5 @@ order: 1
 			</div>
 		  </div>	
 	  </div>
-
-	  
 	  </div>
-<!--	<div class="row">
-		<div class="section s12">
-			<h3 class="header center orange-text">Advanced DPUs configuration</h3>
-			<p class="light center">
-			In this section, we will describe the configuration options for each DPU in detail.
-			</p>
-		</div>
-		<div class="col s11">
-			<div class="section scrollspy" id="httpget">
-			  <h4 class="header center orange-text">HttpGet</h4>
-				<p class="light center">
-				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
-				There are three basic types of DPUs.
-				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
-				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
-				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
-				</p>
-			</div>
-			<div class="section scrollspy" id="sparqlEndpoint">
-			  <h4 class="header center orange-text">HttpGet</h4>
-				<p class="light center">
-				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
-				There are three basic types of DPUs.
-				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
-				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
-				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
-				</p>
-			</div>
-			<div class="section scrollspy" id="rdftofiles">
-			  <h4 class="header center orange-text">HttpGet</h4>
-				<p class="light center">
-				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
-				There are three basic types of DPUs.
-				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
-				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
-				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
-				</p>
-			</div>
-			<div class="section scrollspy" id="filestordf">
-			  <h4 class="header center orange-text">HttpGet</h4>
-				<p class="light center">
-				A key building block of a Pipeline is a DPU. There is a library of DPUs ready and here we go through their configuration.
-				There are three basic types of DPUs.
-				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
-				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
-				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
-				</p>
-			</div>
-		</div>
-		<div class="col s1">
-		  <div class="toc-wrapper">
-			  <ul class="section table-of-contents">
-				<li><a href="#httpget">httpget</a></li>
-				<li><a href="#sparqlEndpoint">sparqlEndpoint</a></li>
-			  </ul>
-			  Loaders
-			  <ul class="section table-of-contents">
-				<li><a href="#rdftofiles">rdftofiles</a></li>
-				<li><a href="#sparqlEndpoint">sparqlEndpoint</a></li>
-			  </ul>
-			</div>
-		</div>
-	</div>-->
   </div>
