@@ -48,7 +48,7 @@ public final class FilesToRdf implements SequentialExecution {
         // Prepare parsers and inserters.
         final StatementInserter rdfInserter = new StatementInserter(configuration.getCommitSize(), context, outputRdf);
         final RDFFormat defaultFormat;
-        if (configuration.getMimeType() == null) {
+        if (configuration.getMimeType() == null || configuration.getMimeType().isEmpty()) {
             defaultFormat = null;
         } else {
             final Optional<RDFFormat> optionalFormat = Rio.getParserFormatForMIMEType(configuration.getMimeType());
