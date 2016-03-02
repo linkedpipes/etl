@@ -7,6 +7,7 @@ define(['app/components/configuration/configurationHolderDirective'], function (
         var loadGeneral = function () {
             $scope.general = {
                 'label': component['http://www.w3.org/2004/02/skos/core#prefLabel'],
+                'description': component['http://purl.org/dc/terms/description'],
                 'color': component['http://linkedpipes.com/ontology/color']
             };
             if ($scope.general.color) {
@@ -22,6 +23,7 @@ define(['app/components/configuration/configurationHolderDirective'], function (
          */
         var saveGeneral = function () {
             component['http://www.w3.org/2004/02/skos/core#prefLabel'] = $scope.general.label;
+            component['http://purl.org/dc/terms/description'] = $scope.general.description;
             if ($scope.general.templateColor) {
                 delete component['http://linkedpipes.com/ontology/color'];
             } else {

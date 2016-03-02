@@ -57,27 +57,45 @@ define([
             outPorts: outPorts,
             portsData: portsData,
             attrs: {
-                '.label': {
-                    text: component['http://www.w3.org/2004/02/skos/core#prefLabel'],
-                    'ref-x': .5,
-                    'ref-y': .3
-                },
                 'rect': {fill: color},
                 '.inPorts circle': {fill: '#CCFFCC', magnet: 'passive', type: 'input'},
                 '.outPorts circle': {fill: '#FFFFCC', type: 'output'}
             }
         });
-        // Resize based on the content. TO ensure mininaml height we use as least one port.
-        var maxPorts = Math.max(inPorts.length, outPorts.length, 1);
-        cell.resize(component['http://www.w3.org/2004/02/skos/core#prefLabel'].length * 10 + 30, maxPorts * 25 + 20);
+        //
+        updateComponentCell(cell, component, template);
         return cell;
     };
 
     var updateComponentCell = function (cell, component, template) {
-        // Label.
+        // Construct label.
         var label = component['http://www.w3.org/2004/02/skos/core#prefLabel'];
-        cell.attr('.label', {text: label, 'ref-x': .5, 'ref-y': .3});
-        cell.resize(label.length * 10 + 30, cell.attributes.size.height);
+        if (component['http://purl.org/dc/terms/description']) {
+            label += '\n';
+            label += component['http://purl.org/dc/terms/description'];
+        }
+        // Calculate size.
+        var portCount = Math.max(cell.attributes.inPorts.length,
+                cell.attributes.outPorts.length, 1);
+        var labelSplit = label.split('\n');
+        var height = Math.max(portCount * 25 + 10, labelSplit.length * 23);
+        var width = 0;
+        labelSplit.forEach(function (line) {
+            width = Math.max(width, line.length * 10);
+        });
+        // Some adjustment of size.
+        if (width <= 100) {
+            width += 20;
+        } else if (width >= 200) {
+            width -= 20;
+        }
+        // Set properties.
+        cell.attr('.label', {
+            'text': label,
+            'y-alignment': 'top',
+            'x-alignment': 'left'
+        });
+        cell.resize(width, height);
         // Color.
         var color = component['http://linkedpipes.com/ontology/color'];
         if (!color) {

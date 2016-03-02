@@ -23,20 +23,20 @@
                     <md-tab label="General">
                         <md-content class="md-padding">
                             <form name="generalForm">
-                                <div layout-gt-xs="row">
-                                    <md-input-container  class="md-block" flex>
-                                        <label>Component label</label>
-                                        <input ng-model="general.label">
-                                    </md-input-container>
-                                </div>
-                                <div layout-gt-xs="column">
-                                    <md-input-container>
-                                        <md-switch ng-model="general.templateColor">Use template color</md-switch>
-                                    </md-input-container>
-                                    <span ng-hide="general.templateColor">
+                                <md-input-container  class="md-block" flex>
+                                    <label>Component label</label>
+                                    <input ng-model="general.label">
+                                </md-input-container>
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <label>Description</label>
+                                    <textarea ng-model="general.description"/>
+                                </md-input-container>
+                                <div layou="columnt">
+                                    <md-switch ng-model="general.templateColor">Use template color</md-switch>
+                                    <div ng-hide="general.templateColor">
                                         <!-- We can use: https://github.com/brianpkelley/md-color-picker -->
                                         Component color: <input type="color" ng-model="general.color" style="width:5em;"/>
-                                    </span>
+                                    </div>
                                 </div>
                             </form>
                         </md-content>
