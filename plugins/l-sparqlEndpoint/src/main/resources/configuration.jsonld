@@ -1,0 +1,8 @@
+{
+    "@graph": [
+        {
+            "@id": "http://localhost/resources/configuration",
+            "@type" : ["http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#Configuration"]
+        }
+    ]
+}

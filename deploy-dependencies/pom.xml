@@ -267,6 +267,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-sparqlEndpoint</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-sparqlEndpoint/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-datasetMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-datasetMetadata/</outputDirectory>
@@ -417,6 +423,12 @@
                                         <mkdir dir="${deploy.directory}/components/l-graphStoreProtocol/"/>
                                         <copy todir="${deploy.directory}/components/l-graphStoreProtocol/">
                                             <fileset dir="${plugins.directory}/l-graphStoreProtocol/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-sparqlEndpoint/"/>
+                                        <copy todir="${deploy.directory}/components/l-sparqlEndpoint/">
+                                            <fileset dir="${plugins.directory}/l-sparqlEndpoint/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
