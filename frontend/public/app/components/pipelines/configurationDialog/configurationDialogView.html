@@ -1,6 +1,5 @@
 <md-dialog aria-label="Pipeline label"  ng-cloak flex="50">
     <form>
-
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h4>Component detail</h4>
@@ -10,12 +9,9 @@
                 </md-button>
             </div>
         </md-toolbar>
-
         <md-dialog-content>
             <div class="md-dialog-content">
-
                 <md-tabs md-dynamic-height md-border-bottom>
-
                     <md-tab label="Configuration">
                         <md-content class="md-padding">
                             <configuration-holder uri="dialogs.reference.js"
@@ -24,12 +20,11 @@
                             </configuration-holder>
                         </md-content>
                     </md-tab>
-
                     <md-tab label="General">
                         <md-content class="md-padding">
                             <form name="generalForm">
                                 <div layout-gt-xs="row">
-                                    <md-input-container  class="md-block">
+                                    <md-input-container  class="md-block" flex>
                                         <label>Component label</label>
                                         <input ng-model="general.label">
                                     </md-input-container>
@@ -47,11 +42,8 @@
                         </md-content>
                     </md-tab>
                 </md-tabs>
-
-
             </div>
         </md-dialog-content>
-
         <md-dialog-actions layout="row">
             <md-button ng-click="onCancel()">
                 CANCEL
@@ -61,7 +53,6 @@
                 OK
             </md-button>
         </md-dialog-actions>
-
     </form>
 </md-dialog>
 
