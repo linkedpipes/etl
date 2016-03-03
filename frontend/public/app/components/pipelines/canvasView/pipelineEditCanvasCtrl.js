@@ -154,11 +154,15 @@ define([
             });
         };
 
-        $scope.canvasApi.onMoveSelected = function (id, x, y) {
+        $scope.canvasApi.onMoveSelected = function (id, x, y, width, height) {
             var canvasPosition = $('#canvas').position();
             var menu = $('#componentMenu');
             menu.css('left', x + canvasPosition.left);
             menu.css('top', y + canvasPosition.top);
+            if (width && height) {
+                var bottomMenu = menu.find('.bottomLine');
+                bottomMenu.css('top', (height - 45) + 'px');
+            }
         };
 
         $scope.canvasApi.onUpdateSelection = function (id) {
@@ -169,8 +173,10 @@ define([
                     return;
                 }
                 var boundingBox = $scope.canvasApi.getScreenBoundingBox(id);
-                // Move the menu to the right position.
-                $scope.canvasApi.onMoveSelected(id, boundingBox.x, boundingBox.y);
+                // Move the menu to the right position and also
+                // initialize size.
+                $scope.canvasApi.onMoveSelected(id, boundingBox.x, boundingBox.y,
+                        boundingBox.width, boundingBox.height);
                 //
                 var menu = $('#componentMenu');
                 menu.find('bottomLine').css('top', boundingBox.height);
@@ -242,6 +248,9 @@ define([
             return id;
         };
 
+        /**
+         * Load pipeline name from definition.
+         */
         var updateLabel = function () {
             $scope.data.label = $scope.data.definition['http://www.w3.org/2004/02/skos/core#prefLabel'];
             if (!$scope.data.label || $scope.data.label === '') {
@@ -606,6 +615,11 @@ define([
                     disableMappingOnChange(component['@id']);
                     // Update component.
                     $scope.canvasApi.updateComponent(id, component, template);
+                    // Update size and position of the selection menu.
+                    var boundingBox = $scope.canvasApi.getScreenBoundingBox(id);
+                    $scope.canvasApi.onMoveSelected(id, boundingBox.x, boundingBox.y,
+                            boundingBox.width, boundingBox.height);
+                    //
                     $scope.status.dialogOpened = false;
                 }, function () {
                     $scope.status.dialogOpened = false;
