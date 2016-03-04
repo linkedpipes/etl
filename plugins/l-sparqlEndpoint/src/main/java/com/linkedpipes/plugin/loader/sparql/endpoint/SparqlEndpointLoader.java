@@ -8,6 +8,12 @@ import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -33,33 +39,36 @@ public class SparqlEndpointLoader implements SequentialExecution {
     @DataProcessingUnit.Extension
     public FaultTolerance faultTolerance;
 
+    @DataProcessingUnit.Extension
     public AfterExecution afterExecution;
 
     @Override
     public void execute(Context context) throws NonRecoverableException {
-        Repository remoteRepository;
         // Create repository.
         final SPARQLRepository sparqlRepository = new SPARQLRepository(
                 configuration.getEndpoint());
-        if (configuration.isUseAuthentification()) {
-            sparqlRepository.setUsernameAndPassword(configuration.getUsername(),
-                    configuration.getPassword());
-        }
-        remoteRepository = sparqlRepository;
+        // No action here.
+        sparqlRepository.initialize();
+        //
+        afterExecution.addAction(() -> {
+            sparqlRepository.shutDown();
+        });
         //
         faultTolerance.call(() -> {
-            remoteRepository.initialize();
+            try (final CloseableHttpClient httpclient = getHttpClient()) {
+                sparqlRepository.setHttpClient(httpclient);
+                if (configuration.isClearDestinationGraph()) {
+                    clearGraph(sparqlRepository,
+                            configuration.getTargetGraphName());
+                }
+            }
         });
-        afterExecution.addAction(() -> {
-            remoteRepository.shutDown();
+        faultTolerance.call(() -> {
+            try (final CloseableHttpClient httpclient = getHttpClient()) {
+                sparqlRepository.setHttpClient(httpclient);
+                loadData(sparqlRepository);
+            }
         });
-        //
-        if (configuration.isClearDestinationGraph()) {
-            faultTolerance.call(() -> {
-                clearGraph(remoteRepository, configuration.getTargetGraphName());
-            });
-        }
-        loadData(remoteRepository);
     }
 
     private void loadData(Repository repository) {
@@ -90,6 +99,19 @@ public class SparqlEndpointLoader implements SequentialExecution {
                     "CLEAR GRAPH <" + graph + ">");
             update.execute();
         }
+    }
+
+    private CloseableHttpClient getHttpClient() {
+        final CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        if (configuration.isUseAuthentification()) {
+            credsProvider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            configuration.getUserName(),
+                            configuration.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(credsProvider).build();
     }
 
 }

@@ -28,8 +28,8 @@ define([], function () {
         $scope.getConfiguration = function () {
             var resource = rdf.secureByType('Configuration');
             rdf.setString(resource, 'endpoint', $scope.dialog.endpoint);
-            rdf.setBoolean(resource, 'targetGraphURI', $scope.dialog.targetGraphURI);
-            rdf.setString(resource, 'clearGraph', $scope.dialog.clearGraph);
+            rdf.setString(resource, 'targetGraphURI', $scope.dialog.targetGraphURI);
+            rdf.setBoolean(resource, 'clearGraph', $scope.dialog.clearGraph);
             rdf.setInteger(resource, 'commitSize', $scope.dialog.commitSize);
             rdf.setBoolean(resource, 'useAuthentification', $scope.dialog.useAuthentification);
             rdf.setString(resource, 'userName', $scope.dialog.userName);

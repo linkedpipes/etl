@@ -16,16 +16,16 @@ public class SparqlEndpointLoaderConfiguration {
     private boolean useAuthentification = true;
 
     @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_USERNAME)
-    private String username = "dba";
+    private String userName;
 
     @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_PASSWORD)
-    private String password = "dba";
+    private String password;
 
     @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_CLEAR_GRAPH)
     private boolean clearDestinationGraph = false;
 
     @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_TAGET_GRAPH)
-    private String targetGraphName = "";
+    private String targetGraphName;
 
     @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 100000;
@@ -49,12 +49,12 @@ public class SparqlEndpointLoaderConfiguration {
         this.useAuthentification = useAuthentification;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
