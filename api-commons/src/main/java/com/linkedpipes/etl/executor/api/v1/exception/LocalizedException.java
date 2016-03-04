@@ -1,6 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.exception;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Exception with support for localization.
@@ -11,6 +13,8 @@ import java.util.List;
  * @author Petr Škoda
  */
 public class LocalizedException extends Exception {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LocalizedException.class);
 
     /**
      * Used to store a string in a given language.
@@ -47,6 +51,9 @@ public class LocalizedException extends Exception {
         // For now use first message.
         super(messages.get(0).value);
         //
+        LOG.error("LocalizedException");
+        LOG.info(messages.get(0).value, args);
+        // Initialize exception.
         if (args.length > 0) {
             if (args[args.length - 1] instanceof Exception) {
                 this.initCause((Exception)args[args.length - 1]);
