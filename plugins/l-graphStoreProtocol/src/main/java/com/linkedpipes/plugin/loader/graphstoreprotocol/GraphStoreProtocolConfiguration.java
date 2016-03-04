@@ -10,31 +10,19 @@ import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
 public class GraphStoreProtocolConfiguration {
 
     public static enum RepositoryType {
-        Virtuoso,
-        Fuseki,
-        /**
-         * Experimental for Fuseki 2.+ TRIG.
-         */
-        FusekiTrig
+        VIRTUOSO,
+        FUSEKI,
+        BLAZEGRAPH
     }
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_SELECT)
-    private String endpointSelect;
-
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_UPDATE)
-    private String endpointUpdate;
-
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_CRUD)
-    private String endpointCRUD;
-
     @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_GRAPH)
-    private String targetGraphURI;
+    private String targetGraph;
 
     @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_TYPE)
-    private RepositoryType repositoryType = RepositoryType.Fuseki;
+    private RepositoryType repository = RepositoryType.FUSEKI;
 
     @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_AUTH)
-    private boolean useAuthentification = true;
+    private boolean useAuthentification = false;
 
     @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_USER)
     private String userName = "";
@@ -42,48 +30,35 @@ public class GraphStoreProtocolConfiguration {
     @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_PASSWORD)
     private String password = "";
 
+    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_CHECK_SIZE)
+    private boolean checkSize = false;
+
+    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_SELECT)
+    private String endpointSelect;
+
+    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_CRUD)
+    private String endpoint;
+
+    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_REPLACE)
+    private boolean replace = false;
+
     public GraphStoreProtocolConfiguration() {
-
     }
 
-    public String getEndpointSelect() {
-        return endpointSelect;
+    public String getTargetGraph() {
+        return targetGraph;
     }
 
-    public void setEndpointSelect(String endpointSelect) {
-        this.endpointSelect = endpointSelect;
+    public void setTargetGraph(String targetGraph) {
+        this.targetGraph = targetGraph;
     }
 
-    public String getEndpointUpdate() {
-        return endpointUpdate;
+    public RepositoryType getRepository() {
+        return repository;
     }
 
-    public void setEndpointUpdate(String endpointUpdate) {
-        this.endpointUpdate = endpointUpdate;
-    }
-
-    public String getEndpointCRUD() {
-        return endpointCRUD;
-    }
-
-    public void setEndpointCRUD(String endpointCRUD) {
-        this.endpointCRUD = endpointCRUD;
-    }
-
-    public String getTargetGraphURI() {
-        return targetGraphURI;
-    }
-
-    public void setTargetGraphURI(String targetGraphURI) {
-        this.targetGraphURI = targetGraphURI;
-    }
-
-    public RepositoryType getRepositoryType() {
-        return repositoryType;
-    }
-
-    public void setRepositoryType(RepositoryType repositoryType) {
-        this.repositoryType = repositoryType;
+    public void setRepository(RepositoryType repository) {
+        this.repository = repository;
     }
 
     public boolean isUseAuthentification() {
@@ -109,4 +84,37 @@ public class GraphStoreProtocolConfiguration {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public boolean isCheckSize() {
+        return checkSize;
+    }
+
+    public void setCheckSize(boolean checkSize) {
+        this.checkSize = checkSize;
+    }
+
+    public String getEndpointSelect() {
+        return endpointSelect;
+    }
+
+    public void setEndpointSelect(String endpointSelect) {
+        this.endpointSelect = endpointSelect;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    public boolean isReplace() {
+        return replace;
+    }
+
+    public void setReplace(boolean replace) {
+        this.replace = replace;
+    }
+
 }

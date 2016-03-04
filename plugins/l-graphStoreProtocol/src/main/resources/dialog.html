@@ -1,41 +1,40 @@
 <div class="container-flow">
     <div class="row">
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Endpoint select:</label>
-            <input type="url" ng-model="dialog.endpointSelect" required
-                   placeholder="http://localhost:8890/sparql">
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Endpoint update:</label>
-            <input type="url" ng-model="dialog.endpointUpdate" required
-                   placeholder="http://localhost:8890/sparql">
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Endpoint CRUD:</label>
-            <input type="url" ng-model="dialog.endpointCRUD" required
-                   placeholder="http://localhost:8890/sparql-graph-crud">
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Target graph URI:</label>
-            <input type="url" ng-model="dialog.targetGraphURI" required
-                   placeholder="http://localhost/resource/upload">
+            <label>Repository</label>
+            <md-select ng-model="dialog.repository">
+                <md-option value="VIRTUOSO">Virtuoso</md-option>
+                <md-option value="FUSEKI">Fuseki</md-option>
+                <md-option value="BLAZEGRAPH">Blazegraph</md-option>
+            </md-select>
         </md-input-container>
     </div>
     <div class="row">
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Format</label>
-            <md-select ng-model="dialog.repositoryType">
-                <md-option value="Virtuoso">Virtuoso</md-option>
-                <md-option value="Fuseki">Fuseki</md-option>
-                <md-option value="FusekiTrig">FusekiTrig</md-option>
-            </md-select>
+            <label>Endpoint CRUD:</label>
+            <input type="url" ng-model="dialog.endpoint" required
+                   placeholder="http://localhost:8890/sparql-graph-crud">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Target graph URI:</label>
+            <input type="url" ng-model="dialog.graph" required
+                   placeholder="http://localhost/resource/upload">
+        </md-input-container>
+        <md-switch ng-model="dialog.replace">Delete old data</md-switch>
+    </div>
+    <md-switch ng-model="dialog.checkSize">Log graph size</md-switch>
+    <div class="row" ng-show="dialog.checkSize">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Endpoint select:</label>
+            <input type="url" ng-model="dialog.endpointSelect" required
+                   placeholder="http://localhost:8890/sparql">
         </md-input-container>
     </div>
-    <md-switch ng-model="dialog.useAuthentification">Use authentification</md-switch>
-    <div layout-gt-sm="row" ng-show="dialog.useAuthentification">
+    <md-switch ng-model="dialog.authentification">Use authentication</md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.authentification">
         <md-input-container class="md-block" flex-gt-sm>
             <label>User name</label>
-            <input ng-model="dialog.userName" required placeholder="dba">
+            <input ng-model="dialog.user" required placeholder="dba">
         </md-input-container>
         <md-input-container class="md-block" flex-gt-sm>
             <label>Password</label>
