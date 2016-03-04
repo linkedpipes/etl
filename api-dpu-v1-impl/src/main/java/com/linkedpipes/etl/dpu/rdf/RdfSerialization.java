@@ -56,7 +56,8 @@ public final class RdfSerialization {
 
         PRIMITIVE,
         COLLECTION,
-        COMPLEX
+        COMPLEX,
+        ENUM
     }
 
     static class FieldDescription {
@@ -279,6 +280,9 @@ public final class RdfSerialization {
                         value = loadIntoNewObject(fieldDescription.types, valueAsString, graph, source,
                                 descriptionCache);
                         break;
+                    case ENUM:
+                        value = loadEnumType(fieldDescription.property.getPropertyType(), valueAsString);
+                        break;
                     default:
                         LOG.warn("Invalid type '{}' for field '{}'", fieldDescription.type,
                                 fieldDescription.field.getName());
@@ -297,6 +301,11 @@ public final class RdfSerialization {
                 }
             }
         }
+    }
+
+    static Object loadEnumType(Class<?> clazz, String valueAsString) throws CanNotDeserializeObject {
+        Class<? extends Enum> clazzEnum = (Class<? extends Enum>)clazz;
+        return Enum.valueOf(clazzEnum, valueAsString);
     }
 
     static Object loadPrimitiveType(Class<?> clazz, String valueAsString) throws CanNotDeserializeObject {
@@ -523,8 +532,10 @@ public final class RdfSerialization {
                 }
             } else if (fieldClass.isPrimitive() || WRAP_TYPES.contains(fieldClass)) {
                 fieldDescription.type = FieldType.PRIMITIVE;
-            } else if (fieldClass.isArray() || fieldClass.isEnum()) {
-                throw new CanNotDeserializeObject("Given type is not supported: " + clazz.getSimpleName());
+            } else if (fieldClass.isEnum()) {
+                fieldDescription.type = FieldType.ENUM;
+            } else if (fieldClass.isArray()) {
+                throw new CanNotDeserializeObject("Array type is not supported: " + clazz.getName());
             } else {
                 fieldDescription.type = FieldType.COMPLEX;
                 if (fieldDescription.types == null) {
