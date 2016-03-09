@@ -64,7 +64,7 @@ kill `ps ax | grep /executor.jar | grep -v grep | awk '{print $1}'`
 echo Killing Executor-monitor
 kill `ps ax | grep /executor-monitor.jar | grep -v grep | awk '{print $1}'`
 echo Killing Executor-view
-kill `ps ax | grep node | grep -v grep | awk '{print $1}'
+kill `ps ax | grep node | grep -v grep | awk '{print $1}'`
 cd /opt/etl
 echo Git Pull
 git pull
