@@ -284,79 +284,6 @@
           ]
         },
         {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/01a28361-4e97-414b-95b3-e21cac73fcc2",
-          "@type": [
-            "http://linkedpipes.com/ontology/Component"
-          ],
-          "http://www.w3.org/2004/02/skos/core#prefLabel": "DCAT-AP to CKAN",
-          "http://linkedpipes.com/ontology/template": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/components/l-dcatApToCkan"
-          },
-          "http://linkedpipes.com/ontology/x": 400,
-          "http://linkedpipes.com/ontology/y": 560,
-          "http://linkedpipes.com/ontology/configurationGraph": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/01a28361-4e97-414b-95b3-e21cac73fcc2/configuration"
-          }
-        },
-        {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/d0e12177-3fad-4592-8ed9-b59f3219e88d",
-          "@type": [
-            "http://linkedpipes.com/ontology/Connection"
-          ],
-          "http://linkedpipes.com/ontology/sourceComponent": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/a455952b-449e-44f6-ae5e-84422a7153b7"
-          },
-          "http://linkedpipes.com/ontology/sourceBinding": "Metadata",
-          "http://linkedpipes.com/ontology/targetComponent": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/01a28361-4e97-414b-95b3-e21cac73fcc2"
-          },
-          "http://linkedpipes.com/ontology/targetBinding": "Metadata",
-          "http://linkedpipes.com/ontology/vertex": [
-            {
-              "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/d0e12177-3fad-4592-8ed9-b59f3219e88d/vertex/1"
-            },
-            {
-              "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/d0e12177-3fad-4592-8ed9-b59f3219e88d/vertex/2"
-            }
-          ]
-        },
-        {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/ed5f13c6-75cf-42e5-9a83-4830a28dc637",
-          "@type": [
-            "http://linkedpipes.com/ontology/Connection"
-          ],
-          "http://linkedpipes.com/ontology/sourceComponent": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/6e56ae58-7750-4d92-bb82-c19813875829"
-          },
-          "http://linkedpipes.com/ontology/sourceBinding": "Metadata",
-          "http://linkedpipes.com/ontology/targetComponent": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/01a28361-4e97-414b-95b3-e21cac73fcc2"
-          },
-          "http://linkedpipes.com/ontology/targetBinding": "Metadata",
-          "http://linkedpipes.com/ontology/vertex": [
-            {
-              "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/ed5f13c6-75cf-42e5-9a83-4830a28dc637/vertex/1"
-            },
-            {
-              "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/ed5f13c6-75cf-42e5-9a83-4830a28dc637/vertex/2"
-            }
-          ]
-        },
-        {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/97a3dd84-a908-4beb-b0fa-e68b79813c0c",
-          "@type": [
-            "http://linkedpipes.com/ontology/Connection"
-          ],
-          "http://linkedpipes.com/ontology/sourceComponent": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/50210f5d-67d4-483c-b939-5d14e0efa4b4"
-          },
-          "http://linkedpipes.com/ontology/sourceBinding": "OutputRdf",
-          "http://linkedpipes.com/ontology/targetComponent": {
-            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/components/01a28361-4e97-414b-95b3-e21cac73fcc2"
-          },
-          "http://linkedpipes.com/ontology/targetBinding": "Metadata"
-        },
-        {
           "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/b19a98f4-489d-4fc7-9f0b-d9d8a33a4726",
           "@type": [
             "http://linkedpipes.com/ontology/Connection"
@@ -474,34 +401,6 @@
           "http://linkedpipes.com/ontology/x": 40,
           "http://linkedpipes.com/ontology/y": 300,
           "http://linkedpipes.com/ontology/order": 4
-        },
-        {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/d0e12177-3fad-4592-8ed9-b59f3219e88d/vertex/1",
-          "@type": "http://linkedpipes.com/ontology/Vertex",
-          "http://linkedpipes.com/ontology/x": 1120,
-          "http://linkedpipes.com/ontology/y": 520,
-          "http://linkedpipes.com/ontology/order": 1
-        },
-        {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/d0e12177-3fad-4592-8ed9-b59f3219e88d/vertex/2",
-          "@type": "http://linkedpipes.com/ontology/Vertex",
-          "http://linkedpipes.com/ontology/x": 280,
-          "http://linkedpipes.com/ontology/y": 520,
-          "http://linkedpipes.com/ontology/order": 2
-        },
-        {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/ed5f13c6-75cf-42e5-9a83-4830a28dc637/vertex/1",
-          "@type": "http://linkedpipes.com/ontology/Vertex",
-          "http://linkedpipes.com/ontology/x": 1180,
-          "http://linkedpipes.com/ontology/y": 540,
-          "http://linkedpipes.com/ontology/order": 1
-        },
-        {
-          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748/connection/ed5f13c6-75cf-42e5-9a83-4830a28dc637/vertex/2",
-          "@type": "http://linkedpipes.com/ontology/Vertex",
-          "http://linkedpipes.com/ontology/x": 340,
-          "http://linkedpipes.com/ontology/y": 540,
-          "http://linkedpipes.com/ontology/order": 2
         }
       ],
       "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1457530524748"
