@@ -60,23 +60,29 @@
     <div id="componentMenu" style="position:absolute;overflow:visible;width:0px;" ng-show="status.menuVisible && !status.moving">
         <span class="topLine" style="position:relative;top:-60px;">
             <md-button class="md-fab md-mini" style="position:absolute;left:-30px;" aria-label="Edit" ng-click="onEditComponent()">
+                <md-tooltip md-direction="top">Edit</md-tooltip>
                 <md-icon md-menu-origin md-svg-src="edit"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini" style="position:absolute;left:20px;" aria-label="Delete" ng-click="onDeleteComponent()">
+                <md-tooltip md-direction="top">Delete</md-tooltip>
                 <md-icon md-menu-origin md-svg-src="delete"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini" style="position:absolute;left:70px;" aria-label="Copy" ng-click="onCopyComponent()">
+                <md-tooltip md-direction="top">Copy</md-tooltip>
                 <md-icon md-menu-origin md-svg-src="copy"></md-icon>
             </md-button>
         </span>
         <span class="bottomLine" style="position:relative;">
-            <md-button class="md-fab md-mini" style="position:absolute;left:-30px;top:55px;" aria-label="Prerequisity" ng-click="onPrerequisityComponent()">
+            <md-button class="md-fab md-mini" style="position:absolute;left:-30px;top:55px;" aria-label="Prerequisity" ng-click="onPrerequisiteComponent()">
+                <md-tooltip md-direction="bottom">Add prerequisite</md-tooltip>
                 <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini" style="position:absolute;left:20px;top:55px;" aria-label="Debug to" ng-click="onDebugToComponent()">
+                <md-tooltip md-direction="bottom">Debug to this component</md-tooltip>
                 <md-icon md-menu-origin md-svg-src="keyboard_tab"></md-icon>
             </md-button>
             <md-button class="md-fab md-mini" style="position:absolute;left:70px;top:55px;" aria-label="Change mapping" ng-click="onMappingComponent()" ng-show="status.mappingVisible">
+                <md-tooltip md-direction="bottom">Enable/disable mapping</md-tooltip>
                 <md-icon md-menu-origin md-svg-src="autorenew"></md-icon>
             </md-button>
         </span>
