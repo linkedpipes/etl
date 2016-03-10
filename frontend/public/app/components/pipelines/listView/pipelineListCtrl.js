@@ -54,6 +54,23 @@ define([], function () {
             $mdOpenMenu(ev);
         };
 
+        $scope.onCopy = function (pipeline) {
+            var id = 'created-' + (new Date()).getTime();
+            var url = '/resources/pipelines/' + id + '?pipeline=' + pipeline.url;
+            $http.post(url).then(function (response) {
+                statusService.success({
+                    'title': 'Pipeline has been successfully copied.'
+                });
+                // Force update.
+                repositoryService.update($scope.repository);
+            }, function (response) {
+                statusService.postFailed({
+                    'title': "Can't copy pipeline.",
+                    'response': response
+                });
+            });
+        };
+
         var initialize = function () {
             repositoryService.get($scope.repository, function () {
             }, function (response) {
