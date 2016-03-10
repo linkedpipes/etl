@@ -2,6 +2,7 @@ define([], function () {
     function controler($scope, $mdDialog, data) {
 
         $scope.detail = {
+            'uri': data.definition['@id'],
             'label' : data.definition['http://www.w3.org/2004/02/skos/core#prefLabel']
         };
 
