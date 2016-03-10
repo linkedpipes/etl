@@ -23,8 +23,7 @@
                 "http://linkedpipes.com/ontology/Port",
                 "http://linkedpipes.com/ontology/Input"
             ],
-            "http://linkedpipes.com/ontology/binding": "InputRdf",
-            "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
+            "http://linkedpipes.com/ontology/binding": "InputRdf"
         },
         {
             "@id": "http://localhost:8080/resources/components/t-sparqlSelect/1.0.0/output",
@@ -34,7 +33,8 @@
                 "http://linkedpipes.com/ontology/Port",
                 "http://linkedpipes.com/ontology/Output"
             ],
-            "http://linkedpipes.com/ontology/binding": "OutputFiles"
+            "http://linkedpipes.com/ontology/binding": "OutputFiles",
+            "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
         }
     ]
 }
