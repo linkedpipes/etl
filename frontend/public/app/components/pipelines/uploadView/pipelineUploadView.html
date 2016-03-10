@@ -1,16 +1,36 @@
 <div layout="row" layout-align="space-around">
     <div class="md-padding" style="max-width: 66em;width: 100%;">
-        <md-content layout="column">
-            <div class="md-padding">
-                <p>Selected file: {{file.name}}</p>
+        <md-content layout="column" class="layout-padding">
+            <div style="padding-left: 30px">
+                <md-radio-group ng-model="type" >
+                    <md-radio-button value="file"> Upload file </md-radio-button>
+                    <md-radio-button value="url"> From URL </md-radio-button>
+                </md-radio-group>
             </div>
-            <div ng-show="uploading">
-                <p>Uploading ...</p>
-                <md-progress-linear md-mode="determinate" value="{{progress}}"></md-progress-linear>
+            <div ng-show="type === 'file'" style="height:10em">
+                <div class="md-padding">
+                    <p>Selected file: {{file.name}}</p>
+                </div>
+                <div ng-show="uploading">
+                    <p>Uploading ...</p>
+                    <md-progress-linear md-mode="determinate" value="{{progress}}"></md-progress-linear>
+                </div>
+                <div>
+                    <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised" ng-disable="uploading">
+                        Select File
+                    </md-button>
+                </div>
+            </div>
+            <div ng-show="type === 'url'" style="height:10em">
+                <md-input-container class="md-block" flex>
+                    <label>Pipeline URL</label>
+                    <input ng-model="url" required >
+                </md-input-container>
             </div>
             <div>
-                <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised" ng-disable="uploading">Select File</md-button>
-                <md-button ng-click="onUpload()" class="md-raised md-primary" ng-disabled="!fileReady">Upload</md-button>
+                <md-button ng-click="onUpload()" class="md-raised md-primary" ng-disabled="(type === 'file' && !fileReady) || (type === 'url' && !url)">
+                    Upload
+                </md-button>
             </div>
         </md-content>
     </div>

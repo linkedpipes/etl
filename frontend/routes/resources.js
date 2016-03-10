@@ -90,7 +90,7 @@ gApiRouter.get('/pipelines/:id', function (request, response) {
     var id = request.params.id;
     var content = gPipelines.getDefinitionStream(id);
     if (content) {
-        response.status(202).setHeader('content-type', 'application/json');
+        response.status(200).setHeader('content-type', 'application/json');
         content.pipe(response);
     } else {
         response.status(500).json({
@@ -115,18 +115,37 @@ gApiRouter.post('/pipelines', function (request, response) {
 });
 
 gApiRouter.post('/pipelines/:id', function (request, response) {
-    var record = gPipelines.create(request.params.id);
-    if (record) {
-        response.json(record);
+    if (request.query.pipeline) {
+        // Import existing pipeline.
+        gPipelines.import(request.params.id, request.query.pipeline, function (record) {
+            if (record) {
+                response.json(record);
+            } else {
+                response.status(500).setHeader('content-type', 'application/json');
+                response.json({
+                    'exception': {
+                        'errorMessage': '',
+                        'systemMessage': '',
+                        'userMessage': 'Import failed.',
+                        'errorCode': 'INVALID_INPUT'
+                    }});
+            }
+        });
     } else {
-        response.status(500).setHeader('content-type', 'application/json');
-        response.json({
-            'exception': {
-                'errorMessage': '',
-                'systemMessage': '',
-                'userMessage': 'Given id is already used.',
-                'errorCode': 'INVALID_INPUT'
-            }});
+        // Create a new empty pipeline.
+        var record = gPipelines.create(request.params.id);
+        if (record) {
+            response.json(record);
+        } else {
+            response.status(500).setHeader('content-type', 'application/json');
+            response.json({
+                'exception': {
+                    'errorMessage': '',
+                    'systemMessage': '',
+                    'userMessage': 'Given id is already used.',
+                    'errorCode': 'INVALID_INPUT'
+                }});
+        }
     }
 });
 

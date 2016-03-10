@@ -8,6 +8,7 @@ var gFs = require('fs');
 var gUuid = require('node-uuid');
 var gConfiguration = require('./configuration');
 var gTemplates = require('./../modules/templates');
+var gRequest = require('request'); // https://github.com/request/request
 
 var gModule = {
     'list': [],
@@ -172,7 +173,6 @@ gModule.create = function (id) {
     // Write the pipeline definition.
     var fileName = gConfiguration.storage.pipelines + '/' + id + '.json';
     var uri = gConfiguration.storage.domain + '/resources/pipelines/' + id;
-
     var newPipeline = {
         '@graph': [
             {
@@ -195,6 +195,59 @@ gModule.create = function (id) {
         'id': id,
         'uri': uri
     };
+};
+
+/**
+ * Import existing pipeline.
+ *
+ * TODO Add more security checks.
+ *
+ * @param id
+ * @param pipeline URI of pipeline to import.
+ * @param callback to call with result as a parameter.
+ */
+gModule.import = function (id, pipeline, callback) {
+    if (id) {
+        if (gModule.map[id]) {
+            // ID colission.
+            return;
+        }
+    } else {
+        // ID not provided.
+        id = gUuid.v1();
+    }
+    //
+    var fileName = gConfiguration.storage.pipelines + '/' + id + '.json';
+    var uri = gConfiguration.storage.domain + '/resources/pipelines/' + id;
+    // Download pipeline.
+    gRequest(pipeline, function (error, response, body) {
+        if (!error && response.statusCode >= 200 && response.statusCode < 300) {
+            var pipelneObject = JSON.parse(body);
+            try {
+                updateResourceUri(pipelneObject, id);
+            } catch (Exception) {
+                callback();
+                return;
+            }
+            gFs.writeFile(fileName, JSON.stringify(pipelneObject, null, 2), function (error) {
+                if (error) {
+                    console.log(error);
+                    callback();
+                    return;
+                }
+                // Sucess.
+                insertPipeline(id, pipelneObject);
+                callback({
+                    'id': id,
+                    'uri': uri
+                });
+            });
+        } else {
+            console.log('import pipeline:', pipeline);
+            console.log(error);
+            console.log(body);
+        }
+    });
 };
 
 /**
