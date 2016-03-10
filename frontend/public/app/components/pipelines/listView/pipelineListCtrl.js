@@ -1,6 +1,6 @@
 define([], function () {
-    function controler($scope, $location, $http, $timeout, refreshService, repositoryService,
-            statusService) {
+    function controler($scope, $location, $http, $timeout, $mdDialog,
+            refreshService, repositoryService, statusService) {
 
         var listDecorator = function (item) {
             item.waitForDelete = false;
@@ -56,17 +56,38 @@ define([], function () {
 
         $scope.onCopy = function (pipeline) {
             var id = 'created-' + (new Date()).getTime();
-            var url = '/resources/pipelines/' + id + '?pipeline=' + pipeline.url;
+            var url = '/resources/pipelines/' + id + '?pipeline=' + pipeline.uri;
             $http.post(url).then(function (response) {
                 statusService.success({
                     'title': 'Pipeline has been successfully copied.'
                 });
                 // Force update.
-                repositoryService.update($scope.repository);
+                repositoryService.get($scope.repository);
             }, function (response) {
                 statusService.postFailed({
                     'title': "Can't copy pipeline.",
                     'response': response
+                });
+            });
+        };
+
+        $scope.onDelete = function (pipeline, event) {
+            var confirm = $mdDialog.confirm()
+                    .title('Would you like to delete pipeline "' + pipeline.label + '"?')
+                    .ariaLabel('Delete pipeline.')
+                    .targetEvent(event)
+                    .ok('Delete pipeline')
+                    .cancel('Cancel');
+            $mdDialog.show(confirm).then(function () {
+                // Delete pipeline.
+                $http({method: 'DELETE', url: pipeline.uri}).then(function (response) {
+                    // Force update.
+                    repositoryService.get($scope.repository);
+                }, function (response) {
+                    statusService.deleteFailed({
+                        'title': "Can't delete the pipeline.",
+                        'response': response
+                    });
                 });
             });
         };
@@ -87,8 +108,9 @@ define([], function () {
         $timeout(initialize, 0);
     }
     //
-    controler.$inject = ['$scope', '$location', '$http', '$timeout', 'service.refresh',
-        'services.repository', 'services.status'];
+    controler.$inject = ['$scope', '$location', '$http', '$timeout',
+        '$mdDialog', 'service.refresh', 'services.repository',
+        'services.status'];
     //
     function init(app) {
         app.controller('components.pipelines.list', controler);

@@ -33,6 +33,11 @@
                                     <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy
                                 </md-button>
                             </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="onDelete(item, $event)">
+                                    <md-icon md-menu-origin md-svg-icon="delete" class="lp-icon"></md-icon> Delete
+                                </md-button>
+                            </md-menu-item>
                         </md-menu-content>
                     </md-menu>
                     <md-menu class="md-secondary" md-position-mode="target-right target" hide-gt-xs>
@@ -54,6 +59,11 @@
                             <md-menu-item>
                                 <md-button ng-click="onCopy(item)">
                                     <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="onDelete(item, $event)">
+                                    <md-icon md-menu-origin md-svg-icon="delete" class="lp-icon"></md-icon> Delete
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>
