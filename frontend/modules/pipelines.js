@@ -246,6 +246,7 @@ gModule.import = function (id, pipeline, callback) {
             console.log('import pipeline:', pipeline);
             console.log(error);
             console.log(body);
+            callback();
         }
     });
 };
