@@ -35,7 +35,7 @@ define([
             'moving': false,
             'selected': '',
             'noApply': false,
-            'prerequisity': {
+            'prerequisite': {
                 'active': false,
                 'source': ''
             },
@@ -57,11 +57,11 @@ define([
         $scope.canvasApi = {};
 
         $scope.canvasApi.onClick = function (id) {
-            // Check if we should add prerequisity connection.
-            if ($scope.status.prerequisity.active) {
-                $scope.status.prerequisity.active = false;
+            // Check if we should add prerequisite connection.
+            if ($scope.status.prerequisite.active) {
+                $scope.status.prerequisite.active = false;
                 // This will cause call of onNewConnection that adds the connection to the model.
-                $scope.canvasApi.addConnection($scope.status.prerequisity.source, null, id, null, [], 'control');
+                $scope.canvasApi.addConnection($scope.status.prerequisite.source, null, id, null, [], 'control');
             }
         };
 
@@ -70,8 +70,8 @@ define([
             if ($scope.status.dialogOpened) {
                 return;
             }
-            if ($scope.status.prerequisity.active) {
-                $scope.status.prerequisity.active = false;
+            if ($scope.status.prerequisite.active) {
+                $scope.status.prerequisite.active = false;
                 return;
             }
             selectComponent({}, function (template) {
@@ -677,9 +677,9 @@ define([
             }
         };
 
-        $scope.onPrerequisityComponent = function () {
-            $scope.status.prerequisity.active = true;
-            $scope.status.prerequisity.source = $scope.status.selected;
+        $scope.onPrerequisiteComponent = function () {
+            $scope.status.prerequisite.active = true;
+            $scope.status.prerequisite.source = $scope.status.selected;
         };
 
         /**
@@ -774,6 +774,10 @@ define([
                     });
                 });
             });
+        };
+
+        $scope.onOpenMenu = function ($mdOpenMenu, event) {
+            $mdOpenMenu(event);
         };
 
         var initialize = function () {

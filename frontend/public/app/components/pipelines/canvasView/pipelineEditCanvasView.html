@@ -1,10 +1,32 @@
 <div flex layout="column">
     <md-content style="width:100%;" layout="row" layout-align="space-around center">
-        <md-button ng-click="onDetail($event)" style="width: 95%" aria-label="Edit detail">
-            <div style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align: left;height: 2.5em;">
+        <div flex layout-padding style="padding-top: 4px;padding-bottom: 4px">
+            <div style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align: left;">
                 {{data.label}}
             </div>
-        </md-button>
+        </div>
+        <md-menu style="padding-top: 4px;padding-bottom: 4px">
+            <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="onOpenMenu($mdOpenMenu, $event)">
+                <md-icon md-menu-origin md-svg-icon="more_vert"></md-icon>
+            </md-button>
+            <md-menu-content width="3">
+                <md-menu-item>
+                    <md-button ng-click="onDetail($event)" aria-label="Edit detail">
+                        <md-icon md-menu-origin md-svg-src="settings" class="lp-icon"></md-icon> Rename pipeline
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onCopy()">
+                        <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy and Open
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onDelete($event)">
+                        <md-icon md-menu-origin md-svg-icon="delete" class="lp-icon"></md-icon> Delete
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
     </md-content>
 
     <md-content id="canvas" >
@@ -13,40 +35,25 @@
 
     <md-content hide show-gt-sm layout="row" layout-align="space-around center">
         <md-button ng-click="onSave()">
-            Save
+            <md-icon md-menu-origin md-svg-src="edit"></md-icon> Save
         </md-button>
-        <md-button ng-click="onSaveAndClose()">
-            Save and Close
+        <md-button ng-click="onExecute()" class="md-primary">
+            <md-icon md-menu-origin md-svg-src="play_circle_outline"></md-icon> Execute
         </md-button>
-        <md-button ng-click="onExecute()">
-            Save and Execute
-        </md-button>
-        <md-button ng-click="onCopy()">
-            Copy and Open
-        </md-button>
-        <md-button ng-click="onClose()">
-            Close
-        </md-button>
-        <md-button ng-click="" ng-href="{{data.uri}}" target="_blank" download="{{data.label}}.jsonld">
-            Download
-        </md-button>
-        <md-button ng-click="onReload()">
-            Reload
-        </md-button>
-        <md-button ng-click="onDelete($event)">
-            Delete
+        <md-button ng-click="onClose()" class="md-warn">
+            <md-icon md-menu-origin md-svg-src="close"></md-icon> Close
         </md-button>
     </md-content>
 
     <md-content hide-gt-sm layout="row" layout-align="space-around center">
-        <md-button ng-click="onSave()" aria-label="Save and Close">
-            <md-icon md-menu-origin md-svg-icon="done" style="color:black;"></md-icon>
+        <md-button ng-click="onSave()">
+            <md-icon md-menu-origin md-svg-src="edit"></md-icon>
         </md-button>
-        <md-button ng-click="onExecute()" aria-label="Save and Execute">
-            <md-icon md-menu-origin md-svg-icon="play_circle_outline" style="color:black;"></md-icon>
+        <md-button ng-click="onExecute()" class="md-primary">
+            <md-icon md-menu-origin md-svg-src="play_circle_outline"></md-icon>
         </md-button>
-        <md-button ng-click="onDelete()" aria-label="Delete">
-            <md-icon md-menu-origin md-svg-icon="delete" style="color:black;"></md-icon>
+        <md-button ng-click="onClose()" class="md-warn">
+            <md-icon md-menu-origin md-svg-src="close"></md-icon>
         </md-button>
     </md-content>
 

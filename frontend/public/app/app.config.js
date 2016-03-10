@@ -44,7 +44,7 @@ define([], function () {
                 .icon('hourglass', 'libraries/google.design/ic_hourglass_empty_48px.svg')
                 .icon('info', 'libraries/google.design/ic_info_outline_48px.svg')
                 .icon('help', 'libraries/google.design/ic_help_outline_48px.svg')
-                .icon('close_small', 'libraries/google.design/ic_close_24px.svg')
+                .icon('close', 'libraries/google.design/ic_close_24px.svg')
                 .icon('copy', 'libraries/google.design/ic_content_copy_24px.svg')
                 .icon('timeline', 'libraries/google.design/ic_timeline_24px.svg')
                 .icon('more_vert', 'libraries/google.design/ic_more_vert_24px.svg')
@@ -54,6 +54,8 @@ define([], function () {
                 .icon('clear', 'libraries/google.design/ic_clear_48px.svg')
                 .icon('transform', 'libraries/google.design/ic_transform_24px.svg')
                 .icon('call_split', 'libraries/google.design/ic_call_split_24px.svg')
+                .icon('save', 'libraries/google.design/ic_save_24px.svg')
+                .icon('settings', 'libraries/google.design/ic_settings_24px.svg')
                 .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg');
 
         $mdThemingProvider.theme('default')
