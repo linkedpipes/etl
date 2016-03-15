@@ -46,13 +46,13 @@
     </md-content>
 
     <md-content hide-gt-sm layout="row" layout-align="space-around center">
-        <md-button ng-click="onSave()">
+        <md-button ng-click="onSave()" aria-label="Save">
             <md-icon md-menu-origin md-svg-src="edit"></md-icon>
         </md-button>
-        <md-button ng-click="onExecute()" class="md-primary">
+        <md-button ng-click="onExecute()" class="md-primary" aria-label="Execute">
             <md-icon md-menu-origin md-svg-src="play_circle_outline"></md-icon>
         </md-button>
-        <md-button ng-click="onClose()" class="md-warn">
+        <md-button ng-click="onClose()" class="md-warn" aria-label="Close">
             <md-icon md-menu-origin md-svg-src="close"></md-icon>
         </md-button>
     </md-content>
