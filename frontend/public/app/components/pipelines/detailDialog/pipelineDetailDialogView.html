@@ -11,18 +11,16 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <form name="pipelineForm">
-                    <div layout-gt-xs="column">
-                        <md-input-container class="md-block" flex>
-                            <label>URL</label>
-                            <input ng-model="detail.uri" ng-readonly='true'>
-                        </md-input-container>
-                        <md-input-container class="md-block" flex>
-                            <label>Label</label>
-                            <input ng-model="detail.label" md-autofocus>
-                        </md-input-container>
-                    </div>
-                </form>
+                <div layout="column">
+                    <md-input-container class="md-block" flex>
+                        <label>URL</label>
+                        <input ng-model="detail.uri" ng-readonly='true'>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex>
+                        <label>Label</label>
+                        <input ng-model="detail.label" md-autofocus>
+                    </md-input-container>
+                </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
