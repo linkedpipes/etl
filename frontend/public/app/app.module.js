@@ -9,6 +9,7 @@ define([
     'app/services/refreshService',
     'app/services/repositoryService',
     'app/services/statusService',
+    'app/components/inputs/localizedTextInput/localizedTextInput',
     'angular',
     'angular-route',
     'angular-resource',
@@ -27,6 +28,7 @@ define([
         refreshService,
         repositoryService,
         statusService,
+        localizedTextInputInit,
         angular
         ) {
     var app = angular.module('angularApp', [
@@ -43,6 +45,7 @@ define([
     refreshService(app);
     repositoryService(app);
     statusService(app);
+    localizedTextInputInit(app);
     //
     pipelineListCtrlInit(app);
     pipelineEditCanvasCtrlInit(app);
