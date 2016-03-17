@@ -8,12 +8,15 @@ define([], function () {
         return {
             require: 'ngModel',
             scope: {
-                'label': '@label'
+                'topLabel': '@labelTop',
+                'itemLabel': '@labelItem'
             },
             replace: true,
             restrict: 'E',
             templateUrl: 'app/components/inputs/localizedTextInput/localizedTextInput.html',
             link: function ($scope, element, attrs, ngModel) {
+
+                $scope.required = attrs.required;
 
                 if (!ngModel) {
                     console.log('ngModel is not set!');
@@ -31,7 +34,6 @@ define([], function () {
                  * Propagate changed from outside.
                  */
                 ngModel.$render = function () {
-                    console.log('render');
                     if ($.isArray(ngModel.$modelValue)) {
                         $scope.data = ngModel.$modelValue;
                     } else {
@@ -42,8 +44,8 @@ define([], function () {
                     }
                 };
 
-                $scope.onAdd = function () {
-                    $scope.data.push({
+                $scope.onAdd = function (index) {
+                    $scope.data.splice(index + 1, 0, {
                         '@language': '',
                         '@value': ''
                     });
