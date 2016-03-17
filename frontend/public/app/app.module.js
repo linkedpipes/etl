@@ -10,6 +10,7 @@ define([
     'app/services/repositoryService',
     'app/services/statusService',
     'app/components/inputs/localizedTextInput/localizedTextInput',
+    'app/components/inputs/iriList/iriList',
     'angular',
     'angular-route',
     'angular-resource',
@@ -29,6 +30,7 @@ define([
         repositoryService,
         statusService,
         localizedTextInputInit,
+        iriListInit,
         angular
         ) {
     var app = angular.module('angularApp', [
@@ -46,6 +48,7 @@ define([
     repositoryService(app);
     statusService(app);
     localizedTextInputInit(app);
+    iriListInit(app);
     //
     pipelineListCtrlInit(app);
     pipelineEditCanvasCtrlInit(app);
