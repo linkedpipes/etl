@@ -1,0 +1,113 @@
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Mandatory">
+        <md-subheader class="md-primary">IRI</md-subheader>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Dataset IRI</label>
+            <input type="uri" ng-model="dialog.datasetIRI" required placeholder="http://example.org/resource/dataset/my">
+        </md-input-container>
+        <md-subheader class="md-primary">Title and description</md-subheader>
+        <div class="row">
+            <lp-localized-text-input class="md-block" required label-top="Dataset titles" label-item="Dataset title" ng-model="dialog.titles" flex-gt-sm></lp-localized-text-input>
+        </div>
+        <div class="row">
+            <lp-localized-text-input class="md-block" required label-top="Dataset descriptions" label-item="Dataset description" ng-model="dialog.descriptions" flex-gt-sm></lp-localized-text-input>
+        </div>
+    </md-tab>
+    <md-tab label="Recommended">
+        <md-subheader class="md-primary">Keywords</md-subheader>
+        <lp-localized-text-input class="md-block" label-item="Keyword" ng-model="dialog.keywords" flex-gt-sm></lp-localized-text-input>
+        
+        <md-subheader class="md-primary">Publisher</md-subheader>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Publisher IRI</label>
+            <input type="uri" ng-model="dialog.publisherIRI" placeholder="http://example.org/resource/publisher">
+        </md-input-container>
+        <lp-localized-text-input class="md-block" label-top="Publisher names" label-item="Publisher name" ng-model="dialog.publisherNames" flex-gt-sm></lp-localized-text-input>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Publisher type</label>
+            <md-select ng-model="dialog.publisherTypeIRI">
+              <md-option ng-repeat="publishertype in publishertypes" value="{{publishertype.IRI}}">
+                {{publishertype.label}}
+              </md-option>
+            </md-select>
+        </md-input-container>
+        <md-subheader class="md-primary">Themes</md-subheader>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Dataset EU Theme</label>
+            <md-select ng-model="dialog.euThemeIRI">
+              <md-option ng-repeat="euTheme in euThemes" value="{{euTheme['@id']}}">
+                <span ng-repeat="label in euTheme['skos:prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+              </md-option>
+            </md-select>
+        </md-input-container>
+        <lp-iri-list label-top="Other theme IRIs" label-item="Theme IRI" ng-model="dialog.otherThemeIRIs"></lp-iri-list>
+    </md-tab>
+    <md-tab label="Optional">
+        <md-chips ng-model="selectedLanguages" md-transform-chip="transformChip($chip)" md-autocomplete-snap md-require-match="false">
+            <md-autocomplete placeholder="Search for language" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in langSearch(searchText)" md-item-text="item.value">
+                <span md-highlight-text="searchText">{{item.value}}</span>
+            </md-autocomplete>
+            <md-chip-template>
+                <span>
+                  <strong>{{$chip.value}}</strong>
+                </span>
+            </md-chip-template>
+        </md-chips>
+
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Update frequency</label>
+            <md-select ng-model="dialog.accrualPeriodicityIRI">
+              <md-option ng-repeat="frequency in frequencies" value="{{frequency['@id']}}">
+                <span ng-repeat="label in frequency['skos:prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+              </md-option>
+            </md-select>
+        </md-input-container>
+        <div layout-gt-sm="row">
+            <md-datepicker ng-model="dialog.issued" md-placeholder="Release date" flex-gt-sm></md-datepicker>    
+            <md-datepicker ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>    
+        </div>
+        <lp-iri-list label-top="Spatial coverage IRIs" label-item="Spatial coverage IRI" ng-model="dialog.sourceIRIs"></lp-iri-list>
+        <div layout-gt-sm="row">
+            <md-datepicker ng-model="dialog.temporalStart" md-placeholder="Temp. cov. start" flex-gt-sm></md-datepicker>    
+            <md-datepicker ng-model="dialog.temporalEnd" md-placeholder="Temp. cov. end" flex-gt-sm></md-datepicker>    
+        </div>
+        
+        <lp-iri-list label-top="Documentation IRIs" label-item="Documentation IRI" ng-model="dialog.documentationIRIs"></lp-iri-list>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Access rights</label>
+            <md-select ng-model="dialog.accessRightsIRI">
+              <md-option selected value="http://publications.europa.eu/resource/authority/access-rights/public">
+                Open data
+              </md-option>
+              <md-option value="http://publications.europa.eu/resource/authority/access-rights/restricted">
+                Restricted
+              </md-option>
+              <md-option value="http://publications.europa.eu/resource/authority/access-rights/non-public">
+                Non-public
+              </md-option>
+            </md-select>
+        </md-input-container>
+        <!--
+        <div class="md-block">Identifiers</div>
+        <div class="md-block">Provenance</div>
+        <div class="md-block">Dataset type</div>-->
+    </md-tab>
+    <md-tab label="Relations">
+        <lp-iri-list label-top="Sample distribution IRIs" label-item="Sample distribution IRI" ng-model="dialog.sampleIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Landing page IRIs" label-item="Landing page IRI" ng-model="dialog.landingPageIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Related resource IRIs" label-item="Related resource IRI" ng-model="dialog.relatedIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Conforms to IRIs" label-item="Conforms to IRI" ng-model="dialog.confromsToIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Source dataset IRIs" label-item="Source dataset IRI" ng-model="dialog.sourceIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Has version Dataset IRIs" label-item="Has version dataset IRI" ng-model="dialog.hasVersionIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Is version of Dataset IRIs" label-item="Is version of IRI" ng-model="dialog.isVersionOfIRIs"></lp-iri-list>
+    </md-tab>
+    <md-tab label="Versions">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Version number</label>
+            <input ng-model="dialog.version" placeholder="1.0">
+        </md-input-container>
+        <div class="row">
+            <lp-localized-text-input class="md-block" label-top="Version notes" label-item="Version notes" ng-model="dialog.versionNotes" flex-gt-sm></lp-localized-text-input>
+        </div>    
+    </md-tab>
+</md-tabs>
