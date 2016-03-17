@@ -14,8 +14,17 @@
         </div>
     </md-tab>
     <md-tab label="Recommended">
-        <md-subheader class="md-primary">Keywords</md-subheader>
+        <md-subheader class="md-primary">Keywords and Themes</md-subheader>
         <lp-localized-text-input class="md-block" label-item="Keyword" ng-model="dialog.keywords" flex-gt-sm></lp-localized-text-input>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Dataset EU Theme</label>
+            <md-select ng-model="dialog.euThemeIRI">
+              <md-option ng-repeat="euTheme in euThemes" value="{{euTheme['@id']}}">
+                <span ng-repeat="label in euTheme['skos:prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+              </md-option>
+            </md-select>
+        </md-input-container>
+        <lp-iri-list label-top="Other theme IRIs" label-item="Theme IRI" ng-model="dialog.otherThemeIRIs"></lp-iri-list>
         
         <md-subheader class="md-primary">Publisher</md-subheader>
         <md-input-container class="md-block" flex-gt-sm>
@@ -31,16 +40,6 @@
               </md-option>
             </md-select>
         </md-input-container>
-        <md-subheader class="md-primary">Themes</md-subheader>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Dataset EU Theme</label>
-            <md-select ng-model="dialog.euThemeIRI">
-              <md-option ng-repeat="euTheme in euThemes" value="{{euTheme['@id']}}">
-                <span ng-repeat="label in euTheme['skos:prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
-              </md-option>
-            </md-select>
-        </md-input-container>
-        <lp-iri-list label-top="Other theme IRIs" label-item="Theme IRI" ng-model="dialog.otherThemeIRIs"></lp-iri-list>
     </md-tab>
     <md-tab label="Optional">
         <md-chips ng-model="selectedLanguages" md-transform-chip="transformChip($chip)" md-autocomplete-snap md-require-match="false">
