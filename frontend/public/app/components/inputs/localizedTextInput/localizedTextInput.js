@@ -16,8 +16,6 @@ define([], function () {
             templateUrl: 'app/components/inputs/localizedTextInput/localizedTextInput.html',
             link: function ($scope, element, attrs, ngModel) {
 
-                $scope.required = attrs.required;
-
                 if (!ngModel) {
                     console.log('ngModel is not set!');
                     return;

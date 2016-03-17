@@ -19,15 +19,15 @@
         </md-button>
 
         <md-input-container class="md-block" style="width:4em;margin-top:0px;">
-            <label>lang.</label>
+            <label>Lang.</label>
             <input ng-model="item['@language']" aria-label="Language"
-                   ng-change="onChange()" ng-required="required">
+                   ng-change="onChange()">
         </md-input-container>
 
         <md-input-container class="md-block" style="width:100%;margin-top:0px;">
-            <label>{{label}}</label>
+            <label>{{itemLabel}}</label>
             <input ng-model="item['@value']" aria-label="{{label}}"
-                   ng-change="onChange()" ng-required="required">
+                   ng-change="onChange()">
         </md-input-container>
     </div>
 
