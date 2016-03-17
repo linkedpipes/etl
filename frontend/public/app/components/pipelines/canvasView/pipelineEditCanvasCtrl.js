@@ -254,7 +254,7 @@ define([
         var updateLabel = function () {
             $scope.data.label = $scope.data.definition['http://www.w3.org/2004/02/skos/core#prefLabel'];
             if (!$scope.data.label || $scope.data.label === '') {
-                $scope.data.label = 'Click here to enter pipeline name.';
+                $scope.data.label = $scope.data.definition['@id'];
             }
         };
 
