@@ -165,7 +165,7 @@ class Parser {
         if (value == null) {
             return "";
         } else {
-            return value.replaceAll("\"", "\\\"");
+            return value.replaceAll("\"", "\"\"");
         }
     }
 
