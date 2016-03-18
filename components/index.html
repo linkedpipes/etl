@@ -11,14 +11,15 @@ order: 2
 			<div class="section">
 			  <h3 class="header center orange-text">Components</h3>
 			  <div class="icon-block">
-				<p class="light center">
-				A key building block of a Pipeline is a Component. 
+				<p class="flow-text">
+				A key building block of a <a href="../documentation/#workflow">pipeline</a> is a component. 
                 There is a library of components ready and here we go through their configuration.
                 Of course, everyone can add their own component, the best way to do that is to copy&amp;paste one of ours and change it.
-				There are three basic types of components.
+				There are four basic types of components.
 				Extractors bring data from outside to the ETL pipeline, e.g. by downloading a file from the Web.
 				Transformers perform transformation of data already in the pipeline and the result is kept in the pipeline.
 				Loaders take data produced by the pipeline and place it outside, e.g. upload it to a web server or database.
+                Special purpose components may do something else, e.g. run an external process.
 				</p>
 			  </div>
 			</div>
@@ -29,7 +30,7 @@ order: 2
 		<div class="col s12 m12 l12">
 			<div class="section">
 			  <h4 class="header center orange-text">Component types</h4>
-              <p class="center">
+              <p class="flow-text">
                 The icons next to the components in the component list represent their type.
                 Currently, we have four types of components.
             </p>
@@ -69,7 +70,6 @@ order: 2
 
     <div class="row">
 	    <h4 class="header center orange-text">List of available components</h4>
-	    <p class="light center">First, we provide a quick overview of the available components. Red are extractors, blue are transformers and green are loaders. Grey are special purpose components.</p>
 	  <div class="col s12 m6 l4" id="e-httpget">
 		  <div class="card small red lighten-4 hoverable">
 			<div class="card-image waves-effect waves-block waves-light">

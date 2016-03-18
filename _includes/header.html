@@ -1,31 +1,44 @@
-<header class="site-header">
-	<nav class="blue" role="navigation">
-		<div class="nav-wrapper container">
-			<a id="logo-container" href="{{ site.url }}" class="brand-logo">LinkedPipes ETL</a>
-			<ul class="right hide-on-med-and-down">
-			{% assign pages = site.pages | sort: 'order' %}
-			{% for my_page in pages %}
-			  {% if my_page.title %}
-				  {% if page.url == my_page.url %}
-				  <li class="active"><a title="{{ my_page.title }}" href="{{ my_page.url | prepend: site.baseurl }}"><i class="material-icons">{{ my_page.materialicon }}</i></a></li>
-				  {% else %}
-				  <li ><a title="{{ my_page.title }}" href="{{ my_page.url | prepend: site.baseurl }}"><i class="material-icons">{{ my_page.materialicon }}</i></a></li>
-				  {% endif %}
-			  {% endif %}
-			{% endfor %}
-			<li><a href="http://linkedpipes.com" title="LinkedPipes"><i class="material-icons">keyboard_arrow_up</i></a></li>
-			</ul>
-			<ul id="slide-out" class="side-nav">
-				<li class="logo blue">LinkedPipes ETL</li>
-  			{% assign pages = site.pages | sort: 'order' %}
-				{% for my_page in pages %}
-				  {% if my_page.title %}
-				  <li><a href="{{ my_page.url | prepend: site.baseurl }}" class="waves-effect waves-orange"><i class="material-icons left">{{ my_page.materialicon }}</i>{{ my_page.title }}</a></li>
-				  {% endif %}
-				{% endfor %}
-			<li><a class="waves-effect waves-orange" href="http://linkedpipes.com"><i class="material-icons left">keyboard_arrow_up</i>LinkedPipes</a></li>
-			</ul>
-			<a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>			
-		</div>
-	</nav>
+<header class="site-header" >
+    <nav class="blue" role="navigation">
+        {% if page.layout == 'post' %}
+        <div class="nav-wrapper container hide-on-large-only">
+            <a href="http://linkedpipes.com" class="breadcrumb">LP</a>
+            <a href="{{ site.url }}" class="breadcrumb">ETL</a>
+            <a href="/tips/" class="breadcrumb">Tips &amp; Tricks</a>
+        </div>
+        <div class="nav-wrapper container hide-on-med-and-down">
+            <a href="http://linkedpipes.com" class="breadcrumb">LinkedPipes</a>
+            <a href="{{ site.url }}" class="breadcrumb">ETL</a>
+            <a href="/tips/" class="breadcrumb">Tips &amp; Tricks</a>
+            <span class="breadcrumb">{{ page.title }}</span>
+        </div>
+        {% else %}
+        <div class="nav-wrapper container hide-on-large-only">
+            <a href="http://linkedpipes.com" class="breadcrumb">LP</a>
+            {% for my_page in site.pages %}
+                {% if page.url == my_page.url %}
+                    {% if my_page.homepage %}
+                        <a class="breadcrumb">ETL</a>
+                    {% else %}
+                        <a href="{{ site.url }}" class="breadcrumb">ETL</a>
+                        <span class="breadcrumb">{{ my_page.title }}</span>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="nav-wrapper container hide-on-med-and-down">
+            <a href="http://linkedpipes.com" class="breadcrumb">LinkedPipes</a>
+            {% for my_page in site.pages %}
+                {% if page.url == my_page.url %}
+                    {% if my_page.homepage %}
+                        <a class="breadcrumb">ETL</a>
+                    {% else %}
+                        <a href="{{ site.url }}" class="breadcrumb">ETL</a>
+                        <span class="breadcrumb">{{ my_page.title }}</span>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </nav>
 </header>

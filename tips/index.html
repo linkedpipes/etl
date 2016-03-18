@@ -22,8 +22,8 @@ order: 1
                 <h2 class="center blue-text"><i class="material-icons">{{ post.icon }}</i></h2>
                 <h5 class="center orange-text">{{ post.title }}</h5>
                 <h6 class="center">{{ post.date | date: "%Y-%m-%d" }}</h6>
-                <p class="center">
-					{{ post.excerpt | remove: '<p class="center">' | remove: '</p>' }}
+                <p class="flow-text">
+					{{ post.excerpt | remove: '<p>' | remove: '<p class="flow-text">' | remove: '</p>' }}
 				</p>
                 {% if post.detail %}
                 <p class="center"><a href="{{ post.url }}" class="btn waves-effect waves-light orange"><i class="material-icons left">ondemand_video</i>See more</a></p>
@@ -39,10 +39,10 @@ order: 1
         {% for post in site.posts offset:3 %}
         <div class="col s12">
 			<div class="section">
-                <h5 class="blue-text"><i class="material-icons left">{{ post.icon }}</i>{{ post.title }}</h5>
-                <h6 class="orange-text">{{ post.date | date: "%Y-%m-%d" }}</h6>
-                <p class="">
-                    {{ post.excerpt | remove: '<p class="center">' | remove: '</p>' }}
+                <h5 class="blue-text"><i class="material-icons left">{{ post.icon }}</i><span class="orange-text">{{ post.title }}</span></h5>
+                <h6 class="">{{ post.date | date: "%Y-%m-%d" }}</h6>
+                <p class="flow-text">
+                    {{ post.excerpt | remove: '<p>' | remove: '<p class="flow-text">' | remove: '</p>' }}
                 </p>
                 {% if post.detail %}
                 <p><a href="{{ post.url }}" class="btn waves-effect waves-light orange"><i class="material-icons left">ondemand_video</i>See more</a></p>

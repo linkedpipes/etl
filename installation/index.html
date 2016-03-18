@@ -12,7 +12,7 @@ order: 4
       <div class="row">
         <div class="col s12 m12 l12">
           <div class="icon-block">
-			<p class="center-align">So far, we only support building from source. Binaries will be supplied once we reach our first release. Therefore, you need <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java 8</a>, <a href="https://git-scm.com/">Git</a>, <a href="https://maven.apache.org/">Maven</a> and <a href="https://nodejs.org">Node.js</a>.</p>
+			<p class="flow-text">So far, we only support building from source. Binaries will be supplied once we reach our first release. Therefore, you need <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java 8</a>, <a href="https://git-scm.com/">Git</a>, <a href="https://maven.apache.org/">Maven</a> and <a href="https://nodejs.org">Node.js</a>.</p>
           </div>
         </div>
 	</div>
@@ -27,36 +27,37 @@ order: 4
 
       <!--   Icon Section   -->
       <div class="row">
-        <div class="col s12 m6 l3">
+        <div class="col s12 m6">
           <div class="icon-block">
             <h2 class="center blue-text"><i class="material-icons">filter_1</i></h2>
 			<h5 class="center">Clone from GitHub</h5>
-			<p class="light center-align">First, <a href="https://github.com/linkedpipes/etl">clone the project from GitHub</a>. You can do that from command line using <code>git clone https://github.com/linkedpipes/etl</code> or you can use <a href="https://tortoisegit.org/">TortoiseGit</a>.</p>
+			<p class="flow-text">First, <a href="https://github.com/linkedpipes/etl">clone the project from GitHub</a>. You can do that from command line using <code>git clone https://github.com/linkedpipes/etl</code> or you can use <a href="https://tortoisegit.org/">TortoiseGit</a>.</p>
           </div>
         </div>
 
-        <div class="col s12 m6 l3">
+        <div class="col s12 m6">
           <div class="icon-block">
             <h2 class="center blue-text"><i class="material-icons">filter_2</i></h2>
             <h5 class="center">Build using Maven</h5>
-            <p class="light center-align">Once the project is cloned, build it using Maven's <code>mvn install</code> command.</p>
+            <p class="flow-text">Once the project is cloned, build it using Maven's <code>mvn install</code> command.</p>
           </div>
         </div>
-
-        <div class="col s12 m6 l3">
+      </div>
+      <div class="row">
+        <div class="col s12 m6">
           <div class="icon-block">
             <h2 class="center blue-text"><i class="material-icons">filter_3</i></h2>
             <h5 class="center">Configure using text editor</h5>
 
-            <p class="light center-align">Copy the <a href="https://github.com/linkedpipes/etl/blob/master/configuration.properties.sample"><code>configuration.properties.sample</code></a> file to <code>deploy/configuration.properties</code> and edit it in your favorite text editor, setting the paths to working directories, etc.</p>
+            <p class="flow-text">Copy the <a href="https://github.com/linkedpipes/etl/blob/master/configuration.properties.sample"><code>configuration.properties.sample</code></a> file to <code>deploy/configuration.properties</code> and edit it in your favorite text editor, setting the paths to working directories, etc.</p>
           </div>
         </div>
-        <div class="col s12 m6 l3">
+        <div class="col s12 m6">
           <div class="icon-block">
             <h2 class="center blue-text"><i class="material-icons">filter_4</i></h2>
             <h5 class="center">Run our 3 components</h5>
 
-            <p class="light center-align">Once configured, you are ready to go. Currently, the ETL project consists of three components, which are ran individually from the deploy folder. Either run them in three separate console windows, or in shell or <a href="https://www.cygwin.com/">Cygwin</a> on the background, e.g. <code>./executor.sh &amp;</code>, <code>./executor-monitor.sh &amp;</code> and <code>./frontend.sh &amp;</code>. The frontend should now run on <code>http://localhost:8080</code> or the port used in the configuration.</p>
+            <p class="flow-text">Once configured, you are ready to go. Currently, the ETL project consists of three components, which are ran individually from the deploy folder. Either run them in three separate console windows, or in shell or <a href="https://www.cygwin.com/">Cygwin</a> on the background, e.g. <code>./executor.sh &amp;</code>, <code>./executor-monitor.sh &amp;</code> and <code>./frontend.sh &amp;</code>. The frontend should now run on <code>http://localhost:8080</code> or the port used in the configuration.</p>
           </div>
         </div>
       </div>
