@@ -39,3 +39,9 @@ nav ul.side-nav a:hover {
 dt {
 	font-weight: bold ;
 }
+.table-of-contents a.active {
+    border-left-color: #ff9800;
+}
+.table-of-contents a:hover {
+    border-left-color: #ff9800;
+}
