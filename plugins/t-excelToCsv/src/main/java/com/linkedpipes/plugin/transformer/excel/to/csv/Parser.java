@@ -113,6 +113,8 @@ class Parser {
             }
             //
             final Row row = sheet.getRow(rowIndex);
+            // rowValues can contains null that are sanitized in the
+            // sanitizeValue before usege.
             final List<String> rowValues = new ArrayList<>(emptyRow);
             // Check for empty row.
             if (row == null) {
@@ -147,15 +149,24 @@ class Parser {
                 }
                 first = false;
                 outputStream.print("\"");
-                outputStream.print(escapeValue(item));
+                outputStream.print(sanitizeValue(item));
                 outputStream.print("\"");
             }
             outputStream.print("\n");
         }
     }
 
-    private String escapeValue(String value) {
-        return value.replaceAll("\"", "\\\"");
+    /**
+     * Escape value and convert it to string. Replace null with an empty string.
+     * @param value
+     * @return
+     */
+    private String sanitizeValue(String value) {
+        if (value == null) {
+            return "";
+        } else {
+            return value.replaceAll("\"", "\\\"");
+        }
     }
 
     /**
