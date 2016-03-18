@@ -81,25 +81,25 @@ public class ExcelToCsvConfiguration {
      * Number of rows to skip.
      */
     @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW_START)
-    private int rowsSkip = 0;
+    private int rowsStart = 0;
 
     /**
      * Number of initial columns to skip.
      */
     @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN_START)
-    private int columnsSkip = 0;
+    private int columnsStart = 0;
 
     /**
      * Number of rows to read at max.
      */
     @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW_END)
-    private int rowsCount = -1;
+    private int rowsEnd = -1;
 
     /**
      * Should be set, it -1 then the number of rows is determined by the header size.
      */
     @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN_END)
-    private int columnsCount = -1;
+    private int columnsEnd = -1;
 
     /**
      * List of virtual columns, column has value of given cell.
@@ -150,36 +150,36 @@ public class ExcelToCsvConfiguration {
         this.sheetFilter = sheetFilter;
     }
 
-    public int getRowsSkip() {
-        return rowsSkip;
+    public int getRowsStart() {
+        return rowsStart;
     }
 
-    public void setRowsSkip(int rowsSkip) {
-        this.rowsSkip = rowsSkip;
+    public void setRowsStart(int rowsStart) {
+        this.rowsStart = rowsStart;
     }
 
-    public int getColumnsSkip() {
-        return columnsSkip;
+    public int getColumnsStart() {
+        return columnsStart;
     }
 
-    public void setColumnsSkip(int columnsSkip) {
-        this.columnsSkip = columnsSkip;
+    public void setColumnsStart(int columnsStart) {
+        this.columnsStart = columnsStart;
     }
 
-    public int getRowsCount() {
-        return rowsCount;
+    public int getRowsEnd() {
+        return rowsEnd;
     }
 
-    public void setRowsCount(int rowsCount) {
-        this.rowsCount = rowsCount;
+    public void setRowsEnd(int rowsEnd) {
+        this.rowsEnd = rowsEnd;
     }
 
-    public int getColumnsCount() {
-        return columnsCount;
+    public int getColumnsEnd() {
+        return columnsEnd;
     }
 
-    public void setColumnsCount(int columnsCount) {
-        this.columnsCount = columnsCount;
+    public void setColumnsEnd(int columnsEnd) {
+        this.columnsEnd = columnsEnd;
     }
 
     public List<VirtualColumn> getVirtualColumns() {
