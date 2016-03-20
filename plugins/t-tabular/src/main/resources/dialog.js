@@ -41,12 +41,15 @@ define([], function () {
                 record['datatype'] = '';
                 record['lang'] = '';
             } else if (record['type'] === 'url') {
+                record['supressOutput'] = false;
                 record['datatype'] = '';
                 record['lang'] = '';
             } else if (record['type'] === 'string') {
+                record['supressOutput'] = false;
                 record['valueUrl'] = '';
                 record['datatype'] = 'http://www.w3.org/2001/XMLSchema#string';
             } else { //typed - unset valueUrl as it's used for detection.
+                record['supressOutput'] = false;
                 record['valueUrl'] = '';
                 record['lang'] = '';
             }
