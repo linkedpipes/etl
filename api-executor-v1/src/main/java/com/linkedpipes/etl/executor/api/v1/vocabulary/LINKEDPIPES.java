@@ -32,6 +32,8 @@ public final class LINKEDPIPES {
 
     public static final String HAS_EXECUTION_TYPE = PREFIX_ONTOLOGY + "executionType";
 
+    public static final String HAS_EXECUTION = PREFIX_ONTOLOGY + "execution";
+
     public static final String HAS_PORT_SOURCE = PREFIX_ONTOLOGY + "source";
 
     public static final String HAS_BINDING = PREFIX_ONTOLOGY + "binding";
