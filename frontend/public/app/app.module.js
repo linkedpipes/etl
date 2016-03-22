@@ -9,6 +9,7 @@ define([
     'app/services/refreshService',
     'app/services/repositoryService',
     'app/services/statusService',
+    'app/services/jsonldService',
     'app/components/inputs/localizedTextInput/localizedTextInput',
     'app/components/inputs/iriList/iriList',
     'angular',
@@ -29,6 +30,7 @@ define([
         refreshService,
         repositoryService,
         statusService,
+        jsonldService,
         localizedTextInputInit,
         iriListInit,
         angular
@@ -47,6 +49,7 @@ define([
     refreshService(app);
     repositoryService(app);
     statusService(app);
+    jsonldService(app);
     localizedTextInputInit(app);
     iriListInit(app);
     //
