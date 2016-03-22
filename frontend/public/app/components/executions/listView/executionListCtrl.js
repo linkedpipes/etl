@@ -1,108 +1,179 @@
 define([
 ], function () {
-    function controler($scope, $location, $timeout, $http, refreshService, repositoryService, statusService) {
+    function controler($scope, $location, $timeout, $http, refreshService,
+             statusService, jsonldService) {
 
-        var listDecorator = function (item) {
-            if (item.pipelineProgress !== null) {
-                item.pipelineProgress.value = 100 *
-                        (item.pipelineProgress.current / item.pipelineProgress.total);
-                if (item.currentComponentProgress !== null) {
-                    item.currentComponentProgress.value = 100 *
-                            (item.currentComponentProgress.current / item.currentComponentProgress.total);
+        var template = {
+            'iri': {
+                '$resource': ''
+            },
+            'start': {
+                '$property': 'http://etl.linkedpipes.com/ontology/execution/start'
+            },
+            'end': {
+                '$property': 'http://etl.linkedpipes.com/ontology/execution/end'
+            },
+            'status': {
+                '$property': 'http://etl.linkedpipes.com/ontology/status'
+            },
+            'status-monitor': {
+                '$property': 'http://etl.linkedpipes.com/ontology/statusMonitor'
+            },
+            'size': {
+                '$property': 'http://etl.linkedpipes.com/ontology/execution/size'
+            },
+            'progress': {
+                'current': {
+                    '$property': 'http://etl.linkedpipes.com/ontology/execution/componentFinished'
+                },
+                'total': {
+                    '$property': 'http://etl.linkedpipes.com/ontology/execution/componentCount'
+                }
+            },
+            'pipeline': {
+                'iri': {
+                    '$property': 'http://etl.linkedpipes.com/ontology/pipeline'
+                },
+                '_pipeline': {
+                    '$property': 'http://etl.linkedpipes.com/ontology/pipeline',
+                    '$oneToOne': {
+                        'labels': {
+                            '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel',
+                            '$type': 'string'
+                        }
+                    }
                 }
             }
+        };
+
+        var decorator = function (execution) {
+            // Convert times.
+            execution.startTime = Date.parse(execution.start);
+            if (execution.end) {
+                execution.endTime = Date.parse(execution.end);
+            }
+            // Get label.
+            if (execution.pipeline.labels) {
+                if (execution.pipeline.labels['en']) {
+                    execution.label = execution.pipeline.labels['en'];
+                } else if (execution.pipeline.labels['']) {
+                    execution.label = execution.pipeline.labels[''];
+                } else {
+                    // TODO Use any other.
+                }
+            } else {
+                execution.label = execution.id;
+            }
+            // Compute duration.
+            if (execution.endTime) {
+                var duration = (execution.endTime - execution.startTime) / 1000;
+                var seconds = Math.ceil((duration) % 60);
+                var minutes = Math.floor((duration / (60)) % 60);
+                var hours = Math.floor(duration / (60 * 60));
+                execution.duration = (hours < 10 ? '0' + hours : hours) +
+                        ':' + (minutes < 10 ? '0' + minutes : minutes) +
+                        ':' + (seconds < 10 ? '0' + seconds : seconds);
+            } else {
+                execution.duration = '';
+            }
             //
-            item.waitForDelete = false;
-            //
-            switch (item.statusCode) {
-                case 120: // QUEUED
-                    item.icon = {
+            if (execution.progress) {
+                execution.progress.value = 100 *
+                        (execution.progress.current / execution.progress.total);
+            }
+            // Determine detail and incon type.
+            switch (execution.status) {
+                case 'http://etl.linkedpipes.com/resources/status/queued':
+                    execution.canDelete = true;
+                    execution.icon = {
                         'name': 'hourglass',
                         'style': {
                             'color': 'black'
                         }
                     };
-                    item.view = 'QUEUED';
+                    execution.detailType = 'NONE';
                     break;
-                case 140: // INITIALIZING
-                case 160: // RUNNING
-                    item.icon = {
+                case 'http://etl.linkedpipes.com/resources/status/initializing':
+                case 'http://etl.linkedpipes.com/resources/status/running':
+                    execution.canDelete = false;
+                    execution.icon = {
                         'name': 'run',
                         'style': {
                             'color': 'blue'
                         }
                     };
-                    item.view = 'RUNNNING';
+                    execution.detailType = 'PROGRESS';
                     break;
-                case 200: // FINISHED
-                    item.icon = {
+                case 'http://etl.linkedpipes.com/resources/status/finished':
+                    execution.canDelete = true;
+                    execution.icon = {
                         'name': 'done',
                         'style': {
                             'color': 'green'
                         }
                     };
-                    item.view = 'FINISHED';
+                    execution.detailType = 'FULL';
                     break;
-                case 513: // INITIALIZATION_FAILED
-                case 511: // FAILED
-                case 512: // FAILED_ON_THROWABLE
-                    item.icon = {
+                case 'http://etl.linkedpipes.com/resources/status/failed':
+                    execution.canDelete = true;
+                    execution.icon = {
                         'name': 'error',
                         'style': {
                             'color': 'red'
                         }
                     };
-                    item.view = 'FAILED';
+                    execution.detailType = 'FULL';
                     break;
-                default: // UNKNOWN
-                    item.view = '';
+                default:
+                    execution.detailType = 'NONE';
                     break;
-            }
-            // Compute duration.
-            if (item.end) {
-                var duration = (item.end - item.start) / 1000;
-                var durationSeconds = Math.ceil((duration) % 60);
-                var durationMinutes = Math.floor((duration / (60)) % 60);
-                var durationHours = Math.floor(duration / (60 * 60));
-                item.duration = (durationHours < 10 ? '0' + durationHours : durationHours) +
-                        ':' + (durationMinutes < 10 ? '0' + durationMinutes : durationMinutes) +
-                        ':' + (durationSeconds < 10 ? '0' + durationSeconds : durationSeconds);
-            } else {
-                item.duration = '';
             }
         };
 
-        var listOnDelete = function (item) {
-            item.waitForDelete = true;
-        };
-
-        $scope.repository = repositoryService.createRepository({
-            'uri': '/resources/executions',
-            'updateOperation': listDecorator,
-            'deleteOperation': listOnDelete
+        $scope.repository = jsonldService.createRepository({
+            'template': template,
+            'query': {
+                'data': {
+                    'property': '@type',
+                    'operation': 'in',
+                    'value': 'http://etl.linkedpipes.com/ontology/Execution'
+                },
+                'deleted': {
+                    'property': '@type',
+                    'operation': 'in',
+                    'value': 'http://etl.linkedpipes.com/ontology/Deleted'
+                }
+            },
+            'decorator': decorator,
+            'url': '/resources/executions'
         });
 
         $scope.onExecution = function (execution) {
-            $location.path('/executions/detail').search({'uri': execution.uri});
-        };
-
-        $scope.onPipeline = function (execution) {
-            $location.path('/pipelines/edit/canvas').search({'pipeline': execution.pipelineUri, 'execution': execution.uri});
-        };
-
-        $scope.onExecute = function (execution) {
-            $http.post('/api/v1/execute?uri=' + execution.pipelineUri).then(function (response) {
-                repositoryService.update($scope.repository);
-            }, function (response) {
-                statusService.postFailed({
-                    'title': "Can't start the execution.",
-                    'response': response
-                });
+            $location.path('/executions/detail').search({
+                'execution': execution.iri
             });
         };
 
+        $scope.onPipeline = function (execution) {
+            $location.path('/pipelines/edit/canvas').search({
+                'pipeline': execution.pipeline.iri,
+                'execution': execution.iri});
+        };
+
+        $scope.onExecute = function (execution) {
+            $http.post('/api/v1/execute?uri=' + execution.pipeline.iri)
+                    .then(function () {
+                        jsonldService.update($scope.repository);
+                    }, function (response) {
+                        statusService.postFailed({
+                            'title': "Can't start the execution.",
+                            'response': response
+                        });
+                    });
+        };
+
         $scope.onDelete = function (execution) {
-            repositoryService.delete($scope.repository, execution.id);
+            jsonldService.delete($scope.repository, execution);
         };
 
         $scope.openMenu = function ($mdOpenMenu, ev) {
@@ -110,22 +181,25 @@ define([
         };
 
         var initialize = function () {
-            repositoryService.get($scope.repository, function () {
-            }, function (response) {
-                statusService.getFailed({
-                    'title': "Can't load data.",
-                    'response': response
-                });
-            });
+            jsonldService.load($scope.repository, function () { },
+                    function (response) {
+                        statusService.getFailed({
+                            'title': "Can't load data.",
+                            'response': response
+                        });
+                    });
+
             refreshService.set(function () {
-                repositoryService.update($scope.repository);
+                jsonldService.update($scope.repository);
             });
         };
 
         $timeout(initialize, 0);
     }
     //
-    controler.$inject = ['$scope', '$location', '$timeout', '$http', 'service.refresh', 'services.repository', 'services.status'];
+    controler.$inject = ['$scope', '$location', '$timeout', '$http',
+        'service.refresh', 'services.status',
+        'services.jsonld'];
     //
     function init(app) {
         // refreshService
