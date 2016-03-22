@@ -18,29 +18,11 @@
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>commons-code</artifactId>
-            <version>0.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
             <artifactId>api-executor-v1</artifactId>
             <version>0.0.0</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>utils-core</artifactId>
-            <version>0.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>commons-entities</artifactId>
-            <version>0.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Spring. -->
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -54,7 +36,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
-        <!-- OSGI. -->
+        <!-- OSGI -->
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
@@ -66,7 +48,7 @@
             <version>5.0.1</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Logging. -->
+        <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -80,10 +62,10 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>1.7.12</version>
+            <version>1.7.18</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Sesame as our choice for core RDF. -->
+        <!-- Sesame as our choice for core RDF -->
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-model</artifactId>
@@ -151,16 +133,6 @@
         <dependency> <!-- Support for application/xml. -->
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-        </dependency>
-        <!-- HTTP related, particulary: Multipart file upload. -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-        </dependency>
-        <!-- Also used for multipart file. -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
         </dependency>
     </dependencies>
 
