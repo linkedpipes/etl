@@ -1,8 +1,7 @@
-package com.linkedpipes.executor.monitor.web.boundary;
+package com.linkedpipes.etl.executor.monitor.web;
 
-import com.linkedpipes.executor.monitor.Configuration;
-import com.linkedpipes.executor.monitor.browser.entity.VirtualFileSystem;
-import com.linkedpipes.executor.monitor.browser.entity.VirtualFileSystemView;
+import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.debug.ftp.VirtualFileSystem;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
@@ -47,7 +46,8 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
         final ListenerFactory factory = new ListenerFactory();
         factory.setPort(configuration.getFtpServerPort());
 
-        final ConnectionConfigFactory connectionConfigFactory = new ConnectionConfigFactory();
+        final ConnectionConfigFactory connectionConfigFactory
+                = new ConnectionConfigFactory();
         connectionConfigFactory.setAnonymousLoginEnabled(true);
 
         final BaseUser anonymous = new BaseUser();
@@ -55,7 +55,8 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
         anonymous.setPassword("");
         anonymous.setHomeDirectory("");
 
-        final UserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
+        final UserManagerFactory userManagerFactory
+                = new PropertiesUserManagerFactory();
         final UserManager userManager = userManagerFactory.createUserManager();
         try {
             userManager.save(anonymous);
@@ -67,11 +68,12 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
 
         final FtpServerFactory serverFactory = new FtpServerFactory();
         serverFactory.addListener("default", factory.createListener());
-        serverFactory.setConnectionConfig(connectionConfigFactory.createConnectionConfig());
+        serverFactory.setConnectionConfig(
+                connectionConfigFactory.createConnectionConfig());
         serverFactory.setUserManager(userManager);
 
         serverFactory.setFileSystem((User user) -> {
-            return new VirtualFileSystemView(virtualFileSystem);
+            return virtualFileSystem.getView();
         });
 
         this.server = serverFactory.createServer();

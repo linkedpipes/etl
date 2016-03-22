@@ -1,4 +1,4 @@
-package com.linkedpipes.executor.monitor.browser.entity;
+package com.linkedpipes.etl.executor.monitor.debug.ftp;
 
 import java.io.File;
 import java.util.Arrays;
@@ -12,10 +12,10 @@ import org.apache.ftpserver.ftplet.FtpFile;
  *
  * @author Petr Škoda
  */
-public class ReadonlyFtpFile extends NativeFtpFile {
+class ReadonlyFtpFile extends NativeFtpFile {
 
-    public ReadonlyFtpFile(String fileName, File file) {
-        super(fileName, file, null);
+    ReadonlyFtpFile(String ftpPath, File file) {
+        super(ftpPath, file, null);
     }
 
     @Override

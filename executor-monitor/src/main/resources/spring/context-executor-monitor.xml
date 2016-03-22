@@ -7,15 +7,16 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
-    <context:component-scan  base-package="com.linkedpipes.executor.monitor" >
-        <context:exclude-filter type="regex" expression="web"/>
+    <context:component-scan  base-package="com.linkedpipes.etl.executor.monitor" >
+        <context:exclude-filter type="regex" expression="com.linkedpipes.etl.executor.monitor.web.*"/>
     </context:component-scan>
 
     <!-- Web server initialization and holder. -->
-    <bean class="com.linkedpipes.executor.monitor.web.boundary.WebServer" />
-	
+    <bean class="com.linkedpipes.etl.executor.monitor.web.WebServer" />
+    <bean class="com.linkedpipes.etl.executor.monitor.web.FtpServer" />
+
     <task:annotation-driven executor="asynchExecutor" />
     <task:executor id="asynchExecutor" pool-size="2" />
-    <task:scheduler id="scheduler" pool-size="2" />
+    <!--<task:scheduler id="scheduler" pool-size="2" />-->
 
 </beans>

@@ -1,4 +1,4 @@
-package com.linkedpipes.executor.monitor;
+package com.linkedpipes.etl.executor.monitor;
 
 import com.linkedpipes.commons.code.configuration.boundary.AbstractConfiguration;
 import java.io.File;

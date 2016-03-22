@@ -1,33 +1,30 @@
-package com.linkedpipes.executor.monitor.browser.entity;
+package com.linkedpipes.etl.executor.monitor.debug.ftp;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import org.apache.ftpserver.ftplet.FtpFile;
 
 /**
  *
  * @author Petr Škoda
  */
-public class AbstractFtpDirectory implements FtpFile {
-
+abstract class AbstractFtpDirectory implements FtpFile {
 
     /**
      * Full ftp path to the directory.
      */
-    private final String fileName;
+    protected final String ftpPath;
 
-    protected AbstractFtpDirectory(String fileName) {
-        this.fileName = fileName;
+    protected AbstractFtpDirectory(String ftpPath) {
+        this.ftpPath = ftpPath;
     }
 
     @Override
     public String getAbsolutePath() {
         // Strip the last '/' if necessary.
-        String fullName = fileName;
+        String fullName = ftpPath;
         int fileLength = fullName.length();
         if (fileLength != 1 && fullName.charAt(fileLength - 1) == '/') {
             fullName = fullName.substring(0, fileLength - 1);
@@ -38,12 +35,12 @@ public class AbstractFtpDirectory implements FtpFile {
     @Override
     public String getName() {
         // Root - the short name will be '/'.
-        if (fileName.equals("/")) {
+        if (ftpPath.equals("/")) {
             return "/";
         }
         // Strip the last '/'.
-        String shortName = fileName;
-        int filelen = fileName.length();
+        String shortName = ftpPath;
+        int filelen = ftpPath.length();
         if (shortName.charAt(filelen - 1) == '/') {
             shortName = shortName.substring(0, filelen - 1);
         }
@@ -135,11 +132,6 @@ public class AbstractFtpDirectory implements FtpFile {
     @Override
     public boolean move(FtpFile ff) {
         return false;
-    }
-
-    @Override
-    public List<FtpFile> listFiles() {
-        return Collections.EMPTY_LIST;
     }
 
     @Override
