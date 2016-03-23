@@ -70,7 +70,7 @@ public final class Xslt implements SequentialExecution {
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing: {}", entry.getFileName());
             final File inputFile = entry.getPath();
-            final File outputFile = outputFiles.createFile(replaceExtension(
+            final File outputFile = outputFiles.createFile(addExtension(
                     entry.getFileName(),
                     configuration.getNewExtension()));
 
@@ -80,10 +80,11 @@ public final class Xslt implements SequentialExecution {
             // Prepare transformer.
             final XsltTransformer transformer = executable.load();
             if (parametersRdf != null) {
+                LOG.debug("Reading parameters.");
                 parametersRdf.execute((connection) -> {
+                    final String strQuery = createQuery(entry.getFileName());
                     final TupleQuery query = connection.prepareTupleQuery(
-                            QueryLanguage.SPARQL,
-                            createQuery(entry.getFileName()));
+                            QueryLanguage.SPARQL, strQuery);
                     final SimpleDataset dataset = new SimpleDataset();
                     dataset.addDefaultGraph(parametersRdf.getGraph());
                     query.setDataset(dataset);
@@ -103,6 +104,7 @@ public final class Xslt implements SequentialExecution {
                 });
             }
             // Transform
+            LOG.debug("Transforming ...");
             final Serializer output = new Serializer(outputFile);
             try {
                 transformer.setSource(new StreamSource(inputFile));
@@ -141,15 +143,11 @@ public final class Xslt implements SequentialExecution {
      * @param extension
      * @return
      */
-    private static String replaceExtension(String fileName, String extension) {
+    private static String addExtension(String fileName, String extension) {
         if (extension == null) {
             return fileName;
-        }
-        final int dotIndex = fileName.lastIndexOf(".");
-        if (dotIndex == -1) {
-            return fileName + "." + extension;
         } else {
-            return fileName.substring(0, dotIndex + 1) + extension;
+            return fileName + "." + extension;
         }
     }
 
