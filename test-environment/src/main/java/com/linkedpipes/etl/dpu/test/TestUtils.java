@@ -106,16 +106,6 @@ public class TestUtils {
     }
 
     /**
-     * Add content of given directory to the given data unit.
-     *
-     * @param dataUnit
-     * @param directory
-     */
-    public static void addDirectory(WritableFilesDataUnit dataUnit, File directory) {
-
-    }
-
-    /**
      * Print content of given data unit to the standard output.
      *
      * @param dataUnit
