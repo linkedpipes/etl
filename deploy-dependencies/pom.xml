@@ -364,9 +364,9 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>t-fileDecode</artifactId>
+                                            <artifactId>t-filesBase64Decode</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-fileDecode/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/components/t-filesBase64Decode/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -529,9 +529,9 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-fileDecode/"/>
-                                        <copy todir="${deploy.directory}/components/t-fileDecode/">
-                                            <fileset dir="${plugins.directory}/t-fileDecode/target/classes">
+                                        <mkdir dir="${deploy.directory}/components/t-filesBase64Decode/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesBase64Decode/">
+                                            <fileset dir="${plugins.directory}/t-filesBase64Decode/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

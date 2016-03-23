@@ -8,10 +8,10 @@
         <relativePath>../../pom-dpu/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
-    <artifactId>t-fileDecode</artifactId>
+    <artifactId>t-filesBase64Decode</artifactId>
     <version>0.0.0</version>
     <packaging>bundle</packaging>
-    <name>plugin t-fileDecode</name>
+    <name>plugin t-filesBase64Decode</name>
 
     <dependencies>
         <dependency>
