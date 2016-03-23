@@ -90,11 +90,15 @@ public final class Xslt implements SequentialExecution {
                     final TupleQueryResult result = query.evaluate();
                     while (result.hasNext()) {
                         final BindingSet binding = result.next();
-                        transformer.setParameter(
-                                new QName(binding.getValue("name")
-                                        .stringValue()),
-                                new XdmAtomicValue(binding.getValue("value")
-                                        .stringValue()));
+                        final String name
+                                = binding.getValue("name").stringValue();
+                        final String value
+                                = binding.getValue("value").stringValue();
+                        //
+                        LOG.debug("Parameter: {} = {}", name, value);
+                        //
+                        transformer.setParameter(new QName(name),
+                                new XdmAtomicValue(value));
                     }
                 });
             }
