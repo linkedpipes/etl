@@ -32,6 +32,7 @@
         <module>l-dcatApToCkan</module>
         <module>l-graphStoreProtocol</module>
         <module>l-sparqlEndpoint</module>
+        <module>t-fileDecode</module>
     </modules>
 
 </project>
