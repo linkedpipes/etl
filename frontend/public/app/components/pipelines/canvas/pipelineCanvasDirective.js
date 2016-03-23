@@ -91,11 +91,22 @@ define([
             width -= 20;
         }
         // Set properties.
-        cell.attr('.label', {
-            'text': label,
-            'y-alignment': 'top',
-            'x-alignment': 'left'
-        });
+        if (component['http://purl.org/dc/terms/description']) {
+            cell.attr('.label', {
+                'text': label,
+                'ref-y': '20%',
+                'y-alignment': 'bottom',
+                'x-alignment': 'left'
+            });
+        } else {
+            // If there is no description then center the label to the middle.
+            cell.attr('.label', {
+                'text': label,
+                'ref-y': '50%',
+                'y-alignment': 'middle',
+                'x-alignment': 'left'
+            });
+        }
         cell.resize(width, height);
         // Color.
         var color = component['http://linkedpipes.com/ontology/color'];
