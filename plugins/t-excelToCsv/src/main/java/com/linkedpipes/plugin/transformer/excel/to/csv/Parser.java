@@ -75,10 +75,10 @@ class Parser {
     private void processSheet(Sheet sheet, PrintStream outputStream, DataProcessingUnit.Context context)
             throws NonRecoverableException {
         final int rowEnd;
-        if (configuration.getRowsCount() == -1) {
+        if (configuration.getRowsEnd() == -1) {
             rowEnd = sheet.getLastRowNum();
         } else {
-            rowEnd = Math.min(configuration.getRowsCount(), sheet.getLastRowNum());
+            rowEnd = Math.min(configuration.getRowsEnd(), sheet.getLastRowNum());
         }
         // Read virtual columns;
         final List<String> virtualColumns = new ArrayList<>(configuration.getVirtualColumns().size());
@@ -93,13 +93,17 @@ class Parser {
         }
         // Determine number of columns.
         final int columnCount;
-        final int columnStart = configuration.getColumnsSkip();
-        if (configuration.getColumnsCount() == -1) {
-            final Row row = sheet.getRow(configuration.getRowsSkip());
+        final int columnStart = configuration.getColumnsStart();
+        if (configuration.getColumnsEnd() == -1) {
+            final Row row = sheet.getRow(configuration.getRowsStart());
             columnCount = row.getLastCellNum() - columnStart;
         } else {
-            columnCount = configuration.getColumnsCount();
+            columnCount = configuration.getColumnsEnd() - columnStart + 1;
         }
+        // We need to add +1 as we read less then this numner
+        // and we want the last column to be also included - as it's
+        // in the same way for columns.
+        final int columnToRead = columnStart + columnCount;
         // Create row template.
         final List<String> emptyRow = new ArrayList<>(columnCount + virtualColumns.size());
         for (int i = 0; i < columnCount; i++) {
@@ -107,12 +111,14 @@ class Parser {
         }
         // Parse rows and columns.
         boolean firstRow = true;
-        for (int rowIndex = configuration.getRowsSkip(); rowIndex <= rowEnd; ++rowIndex) {
+        for (int rowIndex = configuration.getRowsStart(); rowIndex <= rowEnd; ++rowIndex) {
             if (context.canceled()) {
                 throw new ExecutionCancelled();
             }
             //
             final Row row = sheet.getRow(rowIndex);
+            // rowValues can contains null that are sanitized in the
+            // sanitizeValue before usege.
             final List<String> rowValues = new ArrayList<>(emptyRow);
             // Check for empty row.
             if (row == null) {
@@ -120,8 +126,8 @@ class Parser {
                     continue;
                 }
             } else {
-                // Determine last column presented in row.
-                final int columnEnd = columnStart + Math.min(columnCount, row.getLastCellNum());
+                // Determine last column presented in row,
+                final int columnEnd = Math.min(columnToRead, row.getLastCellNum());
                 // If columnEnd < columnStart, then no columns will be read.
                 // That's ok as we have values from the default emptyRow.
                 int index = 0;
@@ -147,15 +153,25 @@ class Parser {
                 }
                 first = false;
                 outputStream.print("\"");
-                outputStream.print(escapeValue(item));
+                outputStream.print(sanitizeValue(item));
                 outputStream.print("\"");
             }
             outputStream.print("\n");
         }
     }
 
-    private String escapeValue(String value) {
-        return value.replaceAll("\"", "\\\"");
+    /**
+     * Escape value and convert it to string. Replace null with an empty string.
+     *
+     * @param value
+     * @return
+     */
+    private String sanitizeValue(String value) {
+        if (value == null) {
+            return "";
+        } else {
+            return value.replaceAll("\"", "\"\"");
+        }
     }
 
     /**
