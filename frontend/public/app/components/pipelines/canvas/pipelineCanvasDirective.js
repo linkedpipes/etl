@@ -55,6 +55,7 @@ define([
             },
             inPorts: inPorts,
             outPorts: outPorts,
+            useLabels: Math.max(inPorts.length, outPorts.length) > 1,
             portsData: portsData,
             attrs: {
                 'rect': {fill: color},
@@ -108,8 +109,6 @@ define([
     var ComponenModel = joint.shapes.devs.Model.extend({
         getPortAttrs: function (portName, index, total, selector, type) {
 
-            // Hyde labels if there is only one port.
-            var useLabel = this.attributes.portsData > 1;
             var port = this.attributes.portsData[portName];
 
             var portClass = 'port' + index;
@@ -118,7 +117,7 @@ define([
             var portBodySelector = portSelector + '>.port-body';
 
             var attrs = {};
-            attrs[portLabelSelector] = {text: useLabel ? port['label'] : ''};
+            attrs[portLabelSelector] = {text: this.attributes.useLabels ? port['label'] : ''};
             attrs[portBodySelector] = {port: {id: portName || _.uniqueId(type), type: type}};
             attrs[portSelector] = {ref: '.body', 'ref-y': (index + 0.5) * (1 / total)};
 
