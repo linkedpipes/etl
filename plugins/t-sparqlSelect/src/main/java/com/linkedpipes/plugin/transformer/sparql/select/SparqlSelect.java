@@ -28,7 +28,7 @@ public final class SparqlSelect implements SequentialExecution {
     @DataProcessingUnit.InputPort(id = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @DataProcessingUnit.InputPort(id = "OutputFiles")
+    @DataProcessingUnit.OutputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @DataProcessingUnit.Configuration
