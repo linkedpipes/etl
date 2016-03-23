@@ -60,15 +60,18 @@ public final class Xslt implements SequentialExecution {
         final XsltCompiler compiler = processor.newXsltCompiler();
         final XsltExecutable executable;
         try {
-            executable = compiler.compile(new StreamSource(new StringReader(configuration.getXsltTemplate())));
+            executable = compiler.compile(new StreamSource(
+                    new StringReader(configuration.getXsltTemplate())));
         } catch (SaxonApiException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't compile template.", ex);
+            throw new DataProcessingUnit.ExecutionFailed(
+                    "Can't compile template.", ex);
         }
 
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing: {}", entry.getFileName());
             final File inputFile = entry.getPath();
-            final File outputFile = outputFiles.createFile(replaceExtension(entry.getFileName(),
+            final File outputFile = outputFiles.createFile(replaceExtension(
+                    entry.getFileName(),
                     configuration.getNewExtension()));
 
             if (context.canceled()) {
@@ -102,7 +105,8 @@ public final class Xslt implements SequentialExecution {
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
-                throw new DataProcessingUnit.ExecutionFailed("Can't transform file.", ex);
+                throw new DataProcessingUnit.ExecutionFailed(
+                        "Can't transform file.", ex);
             } finally {
                 // Clear document cache.
                 try {
