@@ -76,22 +76,25 @@ public final class Xslt implements SequentialExecution {
             }
             // Prepare transformer.
             final XsltTransformer transformer = executable.load();
-            parametersRdf.execute((connection) -> {
-                final TupleQuery query = connection.prepareTupleQuery(
-                        QueryLanguage.SPARQL, createQuery(entry.getFileName()));
-                final SimpleDataset dataset = new SimpleDataset();
-                dataset.addDefaultGraph(parametersRdf.getGraph());
-                query.setDataset(dataset);
-                final TupleQueryResult result = query.evaluate();
-                while (result.hasNext()) {
-                    final BindingSet binding = result.next();
-                    transformer.setParameter(
-                            new QName(
-                                    binding.getValue("name").stringValue()),
-                            new XdmAtomicValue(
-                                    binding.getValue("value").stringValue()));
-                }
-            });
+            if (parametersRdf != null) {
+                parametersRdf.execute((connection) -> {
+                    final TupleQuery query = connection.prepareTupleQuery(
+                            QueryLanguage.SPARQL,
+                            createQuery(entry.getFileName()));
+                    final SimpleDataset dataset = new SimpleDataset();
+                    dataset.addDefaultGraph(parametersRdf.getGraph());
+                    query.setDataset(dataset);
+                    final TupleQueryResult result = query.evaluate();
+                    while (result.hasNext()) {
+                        final BindingSet binding = result.next();
+                        transformer.setParameter(
+                                new QName(binding.getValue("name")
+                                        .stringValue()),
+                                new XdmAtomicValue(binding.getValue("value")
+                                        .stringValue()));
+                    }
+                });
+            }
             // Transform
             final Serializer output = new Serializer(outputFile);
             try {
