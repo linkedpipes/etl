@@ -3,7 +3,6 @@ package com.linkedpipes.etl.dpu.test;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.repository.Repository;
@@ -102,7 +102,7 @@ public class TestUtils {
      * @throws java.io.IOException
      */
     public static File getTempDirectory() throws IOException {
-        return File.createTempFile("dpu-", null);
+        return Files.createTempDirectory("lp-test-dpu-").toFile();
     }
 
     /**
