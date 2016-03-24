@@ -401,7 +401,11 @@ define([
         /**
          * Return list of ID of all connections.
          */
-        'getConnections': function () {}
+        'getConnections': function () {},
+        /**
+         * Set position of the view left top corner.
+         */
+        'setScreen': function(x, y) {}
     };
 
     /**
@@ -447,11 +451,11 @@ define([
                 $scope.paper = new Paper($scope.graph, element);
 
                 // Add scrollable view to canvas.
-                var scrollableView = new ScrollableView({
+                $scope.scrollableView = new ScrollableView({
                     paper: $scope.paper,
                     scroll: $scope.status.scroll
                 });
-                scrollableView.$el.css({width: '100%', height: '100%'}).appendTo(element);
+                $scope.scrollableView.$el.css({width: '100%', height: '100%'}).appendTo(element);
 
                 // Disable right click context menu.
                 $scope.paper.el.oncontextmenu = function (event) {
@@ -546,7 +550,7 @@ define([
                     }
                     // Start panning.
                     $scope.status.scroll.moved = false;
-                    scrollableView.startPanning(event);
+                    $scope.scrollableView.startPanning(event);
                 });
 
                 // We need to use pointerup here not pointerclick as
@@ -689,6 +693,13 @@ define([
                             result.push(model.id);
                         });
                         return result;
+                    };
+
+                    $scope.api.setScreen = function(x, y) {
+                        $scope.paper.setOrigin(x, y);
+                        //
+                        $scope.scrollableView.positionX = x;
+                        $scope.scrollableView.positionY = y;
                     };
 
                 }]
