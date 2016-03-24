@@ -122,7 +122,7 @@ public class ExecutorMonitorServlet {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ExecutionBasicList getDefinitionsSimple(
-            @RequestParam(value = "limit", required = false, defaultValue = "30") int limit,
+            @RequestParam(value = "limit", required = false, defaultValue = "1000") int limit,
             @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
             @RequestParam(value = "lang", required = false, defaultValue = "en") String language,
             @RequestParam(value = "changedSince", required = false) Long changedSince) {
