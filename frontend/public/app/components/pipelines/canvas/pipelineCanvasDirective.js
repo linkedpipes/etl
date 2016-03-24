@@ -20,7 +20,8 @@ define([
                     portsData[port['binding']] = {
                         'id': port['binding'],
                         'label': port['label'],
-                        'dataType': port['type']
+                        'dataType': port['type'],
+                        'useLabel': template['inputs'].length > 1
                     };
                     inPorts.push(port['binding']);
                 });
@@ -30,7 +31,8 @@ define([
                     portsData[port['binding']] = {
                         'id': port['binding'],
                         'label': port['label'],
-                        'dataType': port['type']
+                        'dataType': port['type'],
+                        'useLabel': template['outputs'].length > 1
                     };
                     outPorts.push(port['binding']);
                 });
@@ -55,7 +57,6 @@ define([
             },
             inPorts: inPorts,
             outPorts: outPorts,
-            useLabels: Math.max(inPorts.length, outPorts.length) > 1,
             portsData: portsData,
             attrs: {
                 'rect': {fill: color},
@@ -128,7 +129,7 @@ define([
             var portBodySelector = portSelector + '>.port-body';
 
             var attrs = {};
-            attrs[portLabelSelector] = {text: this.attributes.useLabels ? port['label'] : ''};
+            attrs[portLabelSelector] = {text: port['useLabel'] ? port['label'] : ''};
             attrs[portBodySelector] = {port: {id: portName || _.uniqueId(type), type: type}};
             attrs[portSelector] = {ref: '.body', 'ref-y': (index + 0.5) * (1 / total)};
 
