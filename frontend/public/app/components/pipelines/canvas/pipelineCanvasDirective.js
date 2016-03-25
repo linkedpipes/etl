@@ -20,7 +20,8 @@ define([
                     portsData[port['binding']] = {
                         'id': port['binding'],
                         'label': port['label'],
-                        'dataType': port['type']
+                        'dataType': port['type'],
+                        'useLabel': template['inputs'].length > 1
                     };
                     inPorts.push(port['binding']);
                 });
@@ -30,7 +31,8 @@ define([
                     portsData[port['binding']] = {
                         'id': port['binding'],
                         'label': port['label'],
-                        'dataType': port['type']
+                        'dataType': port['type'],
+                        'useLabel': template['outputs'].length > 1
                     };
                     outPorts.push(port['binding']);
                 });
@@ -90,11 +92,22 @@ define([
             width -= 20;
         }
         // Set properties.
-        cell.attr('.label', {
-            'text': label,
-            'y-alignment': 'top',
-            'x-alignment': 'left'
-        });
+        if (component['http://purl.org/dc/terms/description']) {
+            cell.attr('.label', {
+                'text': label,
+                'ref-y': '20%',
+                'y-alignment': 'bottom',
+                'x-alignment': 'left'
+            });
+        } else {
+            // If there is no description then center the label to the middle.
+            cell.attr('.label', {
+                'text': label,
+                'ref-y': '50%',
+                'y-alignment': 'middle',
+                'x-alignment': 'left'
+            });
+        }
         cell.resize(width, height);
         // Color.
         var color = component['http://linkedpipes.com/ontology/color'];
@@ -108,8 +121,6 @@ define([
     var ComponenModel = joint.shapes.devs.Model.extend({
         getPortAttrs: function (portName, index, total, selector, type) {
 
-            // Hyde labels if there is only one port.
-            var useLabel = this.attributes.portsData > 1;
             var port = this.attributes.portsData[portName];
 
             var portClass = 'port' + index;
@@ -118,7 +129,7 @@ define([
             var portBodySelector = portSelector + '>.port-body';
 
             var attrs = {};
-            attrs[portLabelSelector] = {text: useLabel ? port['label'] : ''};
+            attrs[portLabelSelector] = {text: port['useLabel'] ? port['label'] : ''};
             attrs[portBodySelector] = {port: {id: portName || _.uniqueId(type), type: type}};
             attrs[portSelector] = {ref: '.body', 'ref-y': (index + 0.5) * (1 / total)};
 
@@ -390,7 +401,11 @@ define([
         /**
          * Return list of ID of all connections.
          */
-        'getConnections': function () {}
+        'getConnections': function () {},
+        /**
+         * Set position of the view left top corner.
+         */
+        'setScreen': function(x, y) {}
     };
 
     /**
@@ -436,11 +451,11 @@ define([
                 $scope.paper = new Paper($scope.graph, element);
 
                 // Add scrollable view to canvas.
-                var scrollableView = new ScrollableView({
+                $scope.scrollableView = new ScrollableView({
                     paper: $scope.paper,
                     scroll: $scope.status.scroll
                 });
-                scrollableView.$el.css({width: '100%', height: '100%'}).appendTo(element);
+                $scope.scrollableView.$el.css({width: '100%', height: '100%'}).appendTo(element);
 
                 // Disable right click context menu.
                 $scope.paper.el.oncontextmenu = function (event) {
@@ -535,7 +550,7 @@ define([
                     }
                     // Start panning.
                     $scope.status.scroll.moved = false;
-                    scrollableView.startPanning(event);
+                    $scope.scrollableView.startPanning(event);
                 });
 
                 // We need to use pointerup here not pointerclick as
@@ -678,6 +693,13 @@ define([
                             result.push(model.id);
                         });
                         return result;
+                    };
+
+                    $scope.api.setScreen = function(x, y) {
+                        $scope.paper.setOrigin(x, y);
+                        //
+                        $scope.scrollableView.positionX = x;
+                        $scope.scrollableView.positionY = y;
                     };
 
                 }]

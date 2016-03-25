@@ -364,6 +364,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesBase64Decode</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesBase64Decode/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-unpack</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-unpack/</outputDirectory>
@@ -520,6 +526,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-excelToCsv/"/>
                                         <copy todir="${deploy.directory}/components/t-excelToCsv/">
                                             <fileset dir="${plugins.directory}/t-excelToCsv/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesBase64Decode/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesBase64Decode/">
+                                            <fileset dir="${plugins.directory}/t-filesBase64Decode/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

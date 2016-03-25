@@ -341,12 +341,26 @@ define([
             $scope.status.noApply = true;
             $scope.canvasApi.loadStart();
             var uriToId = {};
+            // We also need to deterine the left top corner.
+            var leftTopX = null;
+            var leftTopY = null;
+            //
             pipelineModel.getComponents($scope.data.model).forEach(function (component) {
                 var templateUri = pipelineModel.getComponentTemplateUri(component);
                 var template = templatesRepository.getTemplate(templateUri);
                 //
                 var id = $scope.canvasApi.addComponent(component, template);
                 $scope.data.idToModel[id] = component;
+                // Store position.
+                if (leftTopX === null) {
+                    leftTopX = component['http://linkedpipes.com/ontology/x'];
+                    leftTopY = component['http://linkedpipes.com/ontology/y'];
+                } else {
+                    leftTopX = Math.min(leftTopX,
+                            component['http://linkedpipes.com/ontology/x']);
+                    leftTopY = Math.min(leftTopY,
+                            component['http://linkedpipes.com/ontology/y']);
+                }
                 //
                 uriToId[component['@id']] = id;
             });
@@ -368,6 +382,10 @@ define([
             });
             $scope.canvasApi.loadEnd();
             $scope.status.noApply = false;
+            // We need to move the screen in posite direction
+            // to get to the position. Also substract something to get
+            // the component inside the view.
+            $scope.canvasApi.setScreen(- (leftTopX - 50), -(leftTopY - 50));
             //
             $scope.data.uriToId = uriToId;
         };

@@ -54,6 +54,11 @@ define(['app/components/configuration/configurationHolderDirective'], function (
                 'api': {},
                 'loaded': false
             };
+            // Dialog is an obligatory dialog component.
+            if (!template['dialog']) {
+                return;
+            }
+            //
             $scope.dialogs.reference = {
                 'js': template['dialog']['js'],
                 'html': template['dialog']['html']

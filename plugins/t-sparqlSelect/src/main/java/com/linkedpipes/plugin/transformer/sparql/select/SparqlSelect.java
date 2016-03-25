@@ -9,9 +9,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
+import org.openrdf.query.impl.SimpleDataset;
 import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public final class SparqlSelect implements SequentialExecution {
     @DataProcessingUnit.InputPort(id = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @DataProcessingUnit.InputPort(id = "OutputFiles")
+    @DataProcessingUnit.OutputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @DataProcessingUnit.Configuration
@@ -37,7 +38,7 @@ public final class SparqlSelect implements SequentialExecution {
     @Override
     public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
         // For each graph.
-        final URI inputGraph = inputRdf.getGraph();
+        final IRI inputGraph = inputRdf.getGraph();
         final File outputFile = outputFiles.createFile(configuration.getFileName());
         LOG.info("{} -> {}", inputGraph, outputFile);
         final SPARQLResultsCSVWriterFactory writerFactory = new SPARQLResultsCSVWriterFactory();
@@ -46,6 +47,9 @@ public final class SparqlSelect implements SequentialExecution {
             try (final OutputStream outputStream = new FileOutputStream(outputFile)) {
                 final TupleQueryResultWriter resultWriter = writerFactory.getWriter(outputStream);
                 final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, configuration.getQuery());
+                final SimpleDataset dataset = new SimpleDataset();
+                dataset.addDefaultGraph(inputGraph);
+                query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
                 throw new DataProcessingUnit.ExecutionFailed("Exception.", ex);

@@ -8,10 +8,10 @@
         <relativePath>../../pom-dpu/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
-    <artifactId>t-xslt</artifactId>
+    <artifactId>t-filesBase64Decode</artifactId>
     <version>0.0.0</version>
     <packaging>bundle</packaging>
-    <name>plugin t-xslt</name>
+    <name>plugin t-filesBase64Decode</name>
 
     <dependencies>
         <dependency>
@@ -27,26 +27,8 @@
             <artifactId>dataunit-system</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-sesame</artifactId>
-        </dependency>
-        <!-- OpenRDF. -->
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-api</artifactId>
-        </dependency>
-        <!-- XSLT dependencies. -->
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
-            <version>9.6.0-7</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>xml-resolver</groupId>
-            <artifactId>xml-resolver</artifactId>
-            <version>1.2</version>
-            <scope>compile</scope>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
     </dependencies>
 
