@@ -5,6 +5,7 @@ import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit.Context;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionCancelled;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;

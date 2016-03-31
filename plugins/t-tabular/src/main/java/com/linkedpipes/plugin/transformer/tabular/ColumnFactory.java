@@ -10,12 +10,16 @@ import java.util.List;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.XMLSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Petr Škoda
  */
 class ColumnFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ColumnFactory.class);
 
     private ColumnFactory() {
     }
@@ -79,11 +83,13 @@ class ColumnFactory {
      * @param header Data header.
      * @return
      */
-    public static List<ColumnAbstract> createColumList(TabularConfiguration configuration, List<String> header) {
+    public static List<ColumnAbstract> createColumList(TabularConfiguration configuration, List<String> header) throws DataProcessingUnit.ExecutionFailed {
         final List<ColumnAbstract> result = new ArrayList<>(header.size());
         final TabularConfiguration.Schema schema = configuration.getTableSchema();
 
         final ResourceTemplate aboutUrl = new ResourceTemplate(schema.getAboutUrl());
+
+        // MissingNameInHeader
 
         for (String name : header) {
             // Determine column type - there is no spacial identification so we decide based on parametrs.
@@ -92,6 +98,10 @@ class ColumnFactory {
                 baseUri = configuration.getBaseUri();
             } else {
                 baseUri = "{" + StringTemplate.TABLE_RESOURCE_REF + "}#";
+            }
+            if (name == null) {
+                LOG.info("Header: {}", header);
+                throw new DataProcessingUnit.ExecutionFailed("Header must not contains null values.");
             }
             final UrlTemplate predicate = new UrlTemplate(baseUri + encodeString(name));
             // Column with typed value.
