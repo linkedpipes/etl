@@ -1,11 +1,12 @@
 /**
- * A simple service that can be used to manipulate RDF data.
- *
- * This service can be used by the configuration dialogs.
- *
+ * A simple service that can be used to manipulate RDF data from the
+ * configuration dialogs.
  */
 define([], function () {
-    function factoryFunction() {
+    function factoryFunction(jsonldService) {
+
+        var jsonld = jsonldService.jsonld();
+
         return {
             /**
              *
@@ -13,6 +14,7 @@ define([], function () {
              * @return RDF service on given data.
              */
             'create': function (prefix) {
+
                 var service = {
                     'prefix': prefix,
                     'graph': {}
@@ -29,9 +31,10 @@ define([], function () {
                 };
 
                 /**
+                 * Read references (IRI) stored in given value.
                  *
                  * @param value Object with '@id' or array of such objects.
-                 * @return URIs of referenced objects.
+                 * @return Array of IRIs.
                  */
                 var readReferences = function (value) {
                     if (typeof value === 'undefined') {
@@ -45,7 +48,7 @@ define([], function () {
                         return result;
                     } else if (value instanceof Object) {
                         if (typeof value['@id'] === 'undefined') {
-                            console.log('@id property is missing for: ', value);
+                            console.log('"@id" property is missing for: ', value);
                             return [];
                         } else {
                             return [value['@id']];
@@ -73,9 +76,7 @@ define([], function () {
                 };
 
                 /**
-                 *
-                 * @param array Array of object.
-                 * @return A single object.
+                 * Given an array return a single value.
                  */
                 service.filterSingle = function (array) {
                     if (array.length === 0) {
@@ -96,7 +97,7 @@ define([], function () {
                 service.findByType = function (type) {
                     type = prefix + type;
                     var resources = [];
-                    service.graph['@graph'].forEach(function (resource) {
+                    service.graph.forEach(function (resource) {
                         if (resource['@type'].indexOf(type) !== -1) {
                             resources.push(resource);
                         }
@@ -111,7 +112,7 @@ define([], function () {
                  */
                 service.findByUri = function (uri) {
                     var resources = [];
-                    service.graph['@graph'].forEach(function (resource) {
+                    service.graph.forEach(function (resource) {
                         if (resource['@id'] && resource['@id'].indexOf(uri) !== -1) {
                             resources.push(resource);
                         }
@@ -125,7 +126,7 @@ define([], function () {
                  * @param uri
                  */
                 service.deleteByUri = function (uri) {
-                    var graph = service.graph['@graph'];
+                    var graph = service.graph;
                     for (var index in graph) {
                         if (graph[index]['@id'] && graph[index]['@id'] === uri) {
                             graph.splice(index, 1);
@@ -135,7 +136,7 @@ define([], function () {
                 };
 
                 /**
-                 * Create a new object and add it to current graph.
+                 * Create a new resource (object) and add it to current graph.
                  *
                  * @param type Given prefix is appllied.
                  * @return Newly created object.
@@ -147,15 +148,16 @@ define([], function () {
                             service.prefix + type
                         ]
                     };
-                    service.graph['@graph'].push(newResource);
+                    service.graph.push(newResource);
                     return newResource;
                 };
 
                 /**
-                 * Get object of given type, if object doeas not exist it's created.
+                 * Get resource of given type, if resource does not exist, then
+                 * it is created.
                  *
-                 * @param type
-                 * @return
+                 * @param type Required type.
+                 * @return Resource object.
                  */
                 service.secureByType = function (type) {
                     var resources = service.filterSingle(service.findByType(type));
@@ -167,11 +169,12 @@ define([], function () {
                 };
 
                 /**
-                 * Search for object and return it, if it does not exists than it's created.
+                 * Search for resource referenced by given resource and return
+                 * it, if the resource does not exists than it's created.
                  *
-                 * @param resource
-                 * @param property
-                 * @param type
+                 * @param resource The owner resource.
+                 * @param property Property.
+                 * @param type Target resource type.
                  * @return
                  */
                 service.secureObject = function (resource, property, type) {
@@ -186,21 +189,24 @@ define([], function () {
                 };
 
                 /**
-                 * If more then one object is referenced, one object is picked at random.
+                 * Find and return resource object referenced by given resource
+                 * by given property.
                  *
                  * @param resource
                  * @param property
-                 * @return An instance of object referenced from the given property.
+                 * @return Resource object.
                  */
                 service.getObject = function (resource, property) {
                     return service.filterSingle(service.getObjects(resource, property));
                 };
 
                 /**
+                 * Find and return all resources referenced from given
+                 * resource by given property.
                  *
                  * @param resource
                  * @param property
-                 * @return Instances of object referenced from the given property.
+                 * @return Array of resource objects.
                  */
                 service.getObjects = function (resource, property) {
                     property = service.prefix + property;
@@ -218,10 +224,10 @@ define([], function () {
                 };
 
                 /**
-                 * Set objects to given property, original references are lost, referenced objects are
-                 * not deleted.
+                 * Set objects to given property, original references are lost,
+                 * referenced objects are not deleted.
                  *
-                 * In general it's bettern to use updateObjects method.
+                 * Use updateObjects method if some object ware removed.
                  *
                  * @param resource
                  * @param property
@@ -239,9 +245,11 @@ define([], function () {
                 };
 
                 /**
-                 * Given list of object, update references for objects. Any removed object is deleted.
+                 * Given list of object, update references for objects.
+                 * Any removed object is deleted.
                  *
-                 * The instances of objects that does not change (based on '@id') are not changed.
+                 * The instances of objects that does not change
+                 * (based on '@id') are not changed.
                  *
                  * @param resource
                  * @param property
@@ -257,7 +265,8 @@ define([], function () {
                     objects.forEach(function (item) {
                         if (!item['@id']) {
                             console.log('Blank nodes are not suported!');
-                            item['@id'] = 'http://localhost/resources/temp/blank/' + generateRandomString(7);
+                            item['@id'] = 'http://localhost/resources/temp/blank/' +
+                                    generateRandomString(7);
                         }
                         newList.push(item['@id']);
                         newMap[item['@id']] = item;
@@ -271,7 +280,7 @@ define([], function () {
                     if (addNew) {
                         var toAdd = $(oldList).not(newList).get();
                         for (var index in toAdd) {
-                            service.graph['@graph'].push(newMap[toAdd[index]]);
+                            service.graph.push(newMap[toAdd[index]]);
                         }
                     }
                     // Update references.
@@ -286,11 +295,7 @@ define([], function () {
                  */
                 service.getString = function (resource, property) {
                     property = service.prefix + property;
-                    if (typeof resource[property] === 'undefined') {
-                        return '';
-                    } else {
-                        return resource[property];
-                    }
+                    return jsonld.getString(resource, property);
                 };
 
                 /**
@@ -310,8 +315,8 @@ define([], function () {
                 };
 
                 service.getInteger = function (resource, property) {
-                    // Information about type is stored in context.
-                    return service.getString(resource, property);
+                    property = service.prefix + property;
+                    return jsonld.getInteger(resource, property);
                 };
 
                 service.setInteger = function (resource, property, value) {
@@ -348,11 +353,13 @@ define([], function () {
 
                 service.getBoolean = function (resource, property) {
                     property = service.prefix + property;
-                    if (typeof resource[property] === 'undefined') {
-                        // We can not return reasonable default value here, so we return nothing.
+                    var value = jsonld.getString(resource, property);
+                    if (typeof value === 'undefined') {
+                        // We can not return reasonable default value here,
+                        //  so we return nothing.
                         return;
                     } else {
-                        return resource[property];
+                        return value;
                     }
                 };
 
@@ -394,7 +401,7 @@ define([], function () {
     }
     //
     function init(app) {
-        app.factory('services.rdf.0.0.0', factoryFunction);
+        app.factory('services.rdf.0.0.0', ['services.jsonld', factoryFunction]);
     }
     return init;
 });

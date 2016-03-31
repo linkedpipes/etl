@@ -1,58 +1,226 @@
 define([], function () {
-    function factoryFunction() {
 
-        var service = {};
+    function factoryFunction(jsonldService) {
 
-        /**
-         *
-         * @param json JSON-LD pipeline object.
-         * @returns Pipeline model.
-         */
-        service.modelFromJsonLd = function (json) {
-            var model = {
-                'data': json,
-                'graphs': {}
-            };
-            // Search graphs.
-            json['@graph'].forEach(function (graph) {
-                model.graphs[graph['@id']] = graph;
-                // Search for pipeline definition.
-                if (!model.definition) {
-                    graph['@graph'].forEach(function (resource) {
-                        if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
-                            model.definition = {
-                                'uri': graph['@id'],
-                                'graph': graph
-                            };
-                        }
-                    });
-                }
-            });
-            return model;
+        var service = {
+            'component': {},
+            'connection': {}
+        };
+
+        var jsonld = jsonldService.jsonld();
+
+        service.component.getIri = function (component) {
+            return component['@id'];
+        };
+
+        service.component.getLabel = function (component) {
+            return jsonld.getString(component,
+                    'http://www.w3.org/2004/02/skos/core#prefLabel');
+        };
+
+        service.component.getDescription = function (component) {
+            return jsonld.getString(component,
+                    'http://purl.org/dc/terms/description');
+        };
+
+        service.component.getX = function (component) {
+            return jsonld.getInteger(component,
+                    'http://linkedpipes.com/ontology/x');
+        };
+
+        service.component.getY = function (component) {
+            return jsonld.getInteger(component,
+                    'http://linkedpipes.com/ontology/y');
+        };
+
+        service.component.getColor = function (component) {
+            return jsonld.getString(component,
+                    'http://linkedpipes.com/ontology/color');
+        };
+
+        service.component.getTemplateIri = function (component) {
+            return jsonld.getReference(component,
+                    'http://linkedpipes.com/ontology/template');
+        };
+
+        service.component.setPosition = function (component, x, y) {
+            component['http://linkedpipes.com/ontology/x'] = x;
+            component['http://linkedpipes.com/ontology/y'] = y;
         };
 
         /**
          *
          * @param model Pipeline model.
-         * @returns JSON-LD pipeline object.
+         * @param component
+         * @param id ID used to create an URI.
          */
-        service.modelToJsonLd = function (model) {
-            var output = {
-                '@graph': []
+        service.component.setIriFromId = function (model, component, id) {
+            component['@id'] = model.definition.uri + '/components/' + id;
+        };
+
+        service.connection.getSource = function (connection) {
+            return jsonld.getReference(connection,
+                    'http://linkedpipes.com/ontology/sourceComponent');
+        };
+
+        service.connection.getSourceBinding = function (connection) {
+            return jsonld.getString(connection,
+                    'http://linkedpipes.com/ontology/sourceBinding');
+        };
+
+        service.connection.getTarget = function (connection) {
+            return jsonld.getReference(connection,
+                    'http://linkedpipes.com/ontology/targetComponent');
+        };
+
+        service.connection.getTargetBinding = function (connection) {
+            return jsonld.getString(connection,
+                    'http://linkedpipes.com/ontology/targetBinding');
+        };
+
+        /**
+         *
+         * @param model
+         * @returns New connectino model.
+         */
+        service.connection.createConnection = function (model) {
+            var connection = {
+                '@id': '',
+                '@type': ['http://linkedpipes.com/ontology/Connection']
             };
-            for (var uri in model.graphs) {
-                var graph = model.graphs[uri];
-                // Some graphs may not have a context specified.
-                var newGraph = {
-                    '@graph': graph['@graph'],
-                    '@id': uri
-                };
-                if (graph['@context']) {
-                    newGraph['@context'] = graph['@context'];
-                }
-                output['@graph'].push(newGraph);
+            service.getDefinitionGraph(model).push(connection);
+            return connection;
+        };
+
+        /**
+         *
+         * @param model
+         * @returns New connectino model.
+         */
+        service.connection.createRunAfter = function (model) {
+            var connection = {
+                '@id': '',
+                '@type': ['http://linkedpipes.com/ontology/RunAfter']
+            };
+            service.getDefinitionGraph(model).push(connection);
+            return connection;
+        };
+
+        service.connection.createVertex = function (x, y) {
+            return {
+                '@id': '',
+                '@type': 'http://linkedpipes.com/ontology/Vertex',
+                'http://linkedpipes.com/ontology/x': x,
+                'http://linkedpipes.com/ontology/y': y,
+                'http://linkedpipes.com/ontology/order': ''
+            };
+        };
+
+        /**
+         *
+         * @param model Pipeline model.
+         * @param connection
+         * @param id ID used to create an URI.
+         */
+        service.connection.setIriFromId = function (model, component, id) {
+            component['@id'] = model.definition.uri + '/connection/' + id;
+        };
+
+        service.connection.setSource = function (connection, component, binding) {
+            connection['http://linkedpipes.com/ontology/sourceComponent'] = {
+                '@id': component['@id']
+            };
+            if (binding) {
+                connection['http://linkedpipes.com/ontology/sourceBinding']
+                        = binding;
             }
-            return output;
+        };
+
+        service.connection.setTarget = function (connection, component, binding) {
+            connection['http://linkedpipes.com/ontology/targetComponent'] =
+                    {'@id': component['@id']};
+            if (binding) {
+                connection['http://linkedpipes.com/ontology/targetBinding']
+                        = binding;
+            }
+        };
+
+        /**
+         * This function does not return the vertices objects but their
+         * representation that can be used by view.
+         *
+         * @param model
+         * @param connection Connection object.
+         * @returns Ordered list of verticies {x, y, order}.
+         */
+        service.connection.getVerticesView = function (model, connection) {
+            var verticiesIri = jsonld.getReferenceAll(connection,
+                    'http://linkedpipes.com/ontology/vertex');
+            if (!verticiesIri || verticiesIri.length === 0) {
+                return [];
+            }
+            var result = [];
+            // TODO Use caching and map here!
+            var allVerticies = service.findByType(
+                    service.getDefinitionGraph(model),
+                    'http://linkedpipes.com/ontology/Vertex');
+            verticiesIri.forEach(function (iri) {
+                // Search for vertext object.
+                for (var index in allVerticies) {
+                    var vertex = allVerticies[index];
+                    if (vertex['@id'] === iri) {
+                        result.push({
+                            'x': jsonld.getInteger(vertex,
+                                    'http://linkedpipes.com/ontology/x'),
+                            'y': jsonld.getInteger(vertex,
+                                    'http://linkedpipes.com/ontology/y'),
+                            'order': jsonld.getInteger(vertex,
+                                    'http://linkedpipes.com/ontology/order')
+                        });
+                    }
+                }
+            });
+            result.sort(function (left, right) {
+                return left['order'] - right['order'];
+            });
+            return result;
+        };
+
+        /**
+         *
+         * @param model
+         * @param connection Connection object.
+         * @param vertices Ordered list of vertices.
+         */
+        service.connection.setVertices = function (model, connection, vertices) {
+            // Remove old.
+            var verticiesIri = jsonld.getReferenceAll(connection,
+                    'http://linkedpipes.com/ontology/vertex');
+            verticiesIri.forEach(function (iri) {
+                service.delete(model, iri);
+            });
+            // Add new.
+            if (!vertices || vertices.length === 0) {
+                return;
+            }
+            connection['http://linkedpipes.com/ontology/vertex'] = [];
+            var order = 1;
+            var definition = service.getDefinitionGraph(model);
+            vertices.forEach(function (vertex) {
+                vertex['@id'] = connection['@id'] + '/vertex/' + order;
+                vertex['http://linkedpipes.com/ontology/order'] = order;
+                connection['http://linkedpipes.com/ontology/vertex'].push({
+                    '@id': vertex['@id']
+                });
+                definition.push(vertex);
+                order += 1;
+            });
+        };
+
+        service.getLabel = function (model) {
+            var pipeline = service.getPipeline(model);
+            return jsonld.getString(pipeline,
+                    'http://www.w3.org/2004/02/skos/core#prefLabel');
         };
 
         /**
@@ -66,89 +234,106 @@ define([], function () {
 
         /**
          *
-         * @param model
-         * @returns Object with pipeline definition.
+         * @param graph The content of JSON-LD graph object.
+         * @param type Required resource's graph-type.
+         * @returns List of objects with given type.
          */
-        service.getPipelineDefinition = function (model) {
-            return service.findByType(service.getDefinitionGraph(model), 'http://linkedpipes.com/ontology/Pipeline')[0];
-        };
-
-        service.getComponents = function (model) {
-            return service.findByType(service.getDefinitionGraph(model), 'http://linkedpipes.com/ontology/Component');
-        };
-
-        service.getConnections = function (model) {
-            return service.findByType(service.getDefinitionGraph(model), 'http://linkedpipes.com/ontology/Connection');
-        };
-
-        service.getRunAfter = function (model) {
-            return service.findByType(service.getDefinitionGraph(model), 'http://linkedpipes.com/ontology/RunAfter');
-        };
-        /**
-         * This function does not return the vertices objects but their representation that can be used by view.
-         *
-         * @param model
-         * @param connection Connection object.
-         * @returns Ordered list of objects {x, y, order} that represent vertices.
-         */
-        service.getVertices = function (model, connection) {
-            var verticiesUri = connection['http://linkedpipes.com/ontology/vertex'];
-            if (!verticiesUri || verticiesUri.length === 0) {
-                return [];
-            }
-            var result = [];
-
-            // TODO Use caching and map here!
-            var allVerticies = service.findByType(service.getDefinitionGraph(model), 'http://linkedpipes.com/ontology/Vertex');
-            verticiesUri.forEach(function (vertexReference) {
-                // Search for vertext object.
-                for (var index in allVerticies) {
-                    var item = allVerticies[index];
-                    if (item['@id'] === vertexReference['@id']) {
-                        result.push({
-                            'x': item['http://linkedpipes.com/ontology/x'],
-                            'y': item['http://linkedpipes.com/ontology/y'],
-                            'order': item['http://linkedpipes.com/ontology/order']
-                        });
-                    }
+        service.findByType = function (graph, type) {
+            var resources = [];
+            graph.forEach(function (resource) {
+                if (resource['@type'].indexOf(type) !== -1) {
+                    resources.push(resource);
                 }
             });
-            result.sort(function (left, right) {
-                return left['order'] - right['order'];
-            });
-            return result;
+            return resources;
         };
 
         /**
          *
          * @param model Pipeline model object.
-         * @param uri
+         * @param iri
          * @returns Component with URI, or nothing if no such component exists.
          */
-        service.getResource = function (model, uri) {
-            var graph = service.getDefinitionGraph(model)['@graph'];
+        service.getResource = function (model, iri) {
+            var graph = service.getDefinitionGraph(model);
             for (var index in graph) {
                 var item = graph[index];
-                if (item && item['@id'] === uri) {
+                if (item && item['@id'] === iri) {
                     return item;
                 }
             }
         };
 
         /**
+         * Place null on the place of resource with given URI. Call
+         * reorganize function to remove the null values.
+         * If given resource is a connection then also remove all its verticies.
          *
-         * @param graph The JSON-LD graph object.
-         * @param type
-         * @returns List of objects with given type.
+         * @param model
+         * @param iri Resource URI.
          */
-        service.findByType = function (graph, type) {
-            var resources = [];
-            graph['@graph'].forEach(function (resource) {
-                if (resource['@type'].indexOf(type) !== -1) {
-                    resources.push(resource);
+        service.delete = function (model, iri) {
+            var graph = service.getDefinitionGraph(model);
+            for (var index in graph) {
+                var resource = graph[index];
+                if (resource === null) {
+                    // Empty record.
+                    continue;
                 }
-            });
-            return resources;
+                if (resource['@id'] !== iri) {
+                    continue;
+                }
+                // Check if given object is a connection and if so,
+                // remove all it's verticies.
+                if (resource['@type'].indexOf(
+                        'http://linkedpipes.com/ontology/Connection') !== -1) {
+                    service.connection.setVertices(model, graph[index], []);
+                }
+                graph[index] = null;
+                break;
+            }
+        };
+
+        /**
+         * Perform reorganizatoin, ie. remove 'null' elements from definition
+         * graph.
+         *
+         * @param model Pipeline model.
+         */
+        service.reorganize = function (model) {
+            // TODO Be more effective here - shift all nulls to end and
+            // then update at once.
+            var collection = service.getDefinitionGraph(model);
+            for (var index = collection.length; index > 0; index--) {
+                if (collection[index] === null) {
+                    collection.splice(index, 1);
+                }
+            }
+        };
+
+        /**
+         *
+         * @param model
+         * @returns Object with pipeline definition.
+         */
+        service.getPipeline = function (model) {
+            return service.findByType(service.getDefinitionGraph(model),
+                    'http://linkedpipes.com/ontology/Pipeline')[0];
+        };
+
+        service.getComponents = function (model) {
+            return service.findByType(service.getDefinitionGraph(model),
+                    'http://linkedpipes.com/ontology/Component');
+        };
+
+        service.getConnections = function (model) {
+            return service.findByType(service.getDefinitionGraph(model),
+                    'http://linkedpipes.com/ontology/Connection');
+        };
+
+        service.getRunAfter = function (model) {
+            return service.findByType(service.getDefinitionGraph(model),
+                    'http://linkedpipes.com/ontology/RunAfter');
         };
 
         /**
@@ -162,9 +347,11 @@ define([], function () {
                 '@id': '',
                 '@type': ['http://linkedpipes.com/ontology/Component'],
                 'http://www.w3.org/2004/02/skos/core#prefLabel': template.label,
-                'http://linkedpipes.com/ontology/template': {'@id': template.id}
+                'http://linkedpipes.com/ontology/template': {
+                    '@id': template.id
+                }
             };
-            service.getDefinitionGraph(model)['@graph'].push(component);
+            service.getDefinitionGraph(model).push(component);
             return component;
         };
 
@@ -178,146 +365,91 @@ define([], function () {
          */
         service.cloneComponent = function (model, component, id) {
             var newComponent = jQuery.extend(true, {}, component);
-            service.getDefinitionGraph(model)['@graph'].push(newComponent);
+            service.getDefinitionGraph(model).push(newComponent);
             // Move component.
-            newComponent["http://linkedpipes.com/ontology/y"] += 100;
-            // Set new URI.
-            service.setComponentUriFromId(model, newComponent, id);
+            service.component.setPosition(newComponent,
+                    service.component.getX(component),
+                    service.component.getY(component) + 100);
+            service.component.setIriFromId(model, newComponent, id);
             // Copy configuration if it exists.
-            if (component['http://linkedpipes.com/ontology/configurationGraph']) {
-                var configUri = component['http://linkedpipes.com/ontology/configurationGraph']['@id'];
+            var configIri = jsonld.getReference(component,
+                    'http://linkedpipes.com/ontology/configurationGraph');
+            if (configIri) {
                 var newConfigUri = newComponent['@id'] + '/configuration';
                 newComponent['http://linkedpipes.com/ontology/configurationGraph'] = {
                     '@id': newConfigUri
                 };
-                model['graphs'][newConfigUri] = jQuery.extend(true, {}, model['graphs'][configUri]);
+                model['graphs'][newConfigUri]
+                        = jQuery.extend(true, {}, model['graphs'][configIri]);
             }
             return newComponent;
         };
 
         /**
          *
-         * @param model
-         * @returns New connectino model.
+         * @param data JSON-LD pipeline object.
+         * @returns Pipeline model.
          */
-        service.createConnection = function (model) {
-            var connection = {
-                '@id': '',
-                '@type': ['http://linkedpipes.com/ontology/Connection']
+        service.fromJsonLd = function (data) {
+
+            var model = {
+                /**
+                 * Conteins the whole pipeline graph.
+                 */
+                'data': data,
+                /**
+                 * Store references of all graphs.
+                 */
+                'graphs': {}
             };
-            service.getDefinitionGraph(model)['@graph'].push(connection);
-            return connection;
-        };
 
-        /**
-         *
-         * @param model
-         * @returns New connectino model.
-         */
-        service.createRunAfter = function (model) {
-            var connection = {
-                '@id': '',
-                '@type': ['http://linkedpipes.com/ontology/RunAfter']
+            jsonld.iterateGraphs(data, function (graph, graph_iri) {
+                model.graphs[graph_iri] = graph;
+            });
+
+            // Search for pipeline definition.
+            var pipeline = jsonld.query(data, {
+                'property': '@type',
+                'operation': 'in',
+                'value': 'http://linkedpipes.com/ontology/Pipeline'
+            }, false);
+
+            // Store the definition graph.
+            model.definition = {
+                'graph': model.graphs[pipeline.graphIri],
+                'iri': pipeline.graphIri
             };
-            service.getDefinitionGraph(model)['@graph'].push(connection);
-            return connection;
+            return model;
         };
 
         /**
-         * Place null on the place of resource with given URI.
          *
-         * If given resource is a connection then also remove all its verticies.
-         *
-         * @param model
-         * @param uri Resource URI.
-         * @param reorganize If true then reorganization is done after removal.
+         * @param model Pipeline model.
+         * @returns JSON-LD pipeline object.
          */
-        service.removeResource = function (model, uri, reorganize) {
-            var collection = service.getDefinitionGraph(model)['@graph'];
-            for (var index in collection) {
-                if (collection[index] !== null && collection[index]['@id'] === uri) {
-                    // Check if given object is a connection and if so, remove all it's verticies.
-                    if (collection[index]['@type'].indexOf('http://linkedpipes.com/ontology/Connection') !== -1) {
-                        service.removeVertices(model, collection[index]);
-                    }
-                    collection[index] = null;
-                    break;
+        service.toJsonLd = function (model) {
+            //
+            service.reorganize(model);
+            //
+            var output = {
+                '@graph': []
+            };
+            for (var iri in model.graphs) {
+                var graph = model.graphs[iri];
+                // Some graphs may not have a context specified.
+                var newGraph = {
+                    '@graph': graph,
+                    '@id': iri
+                };
+                if (graph['@context']) {
+                    newGraph['@context'] = graph['@context'];
                 }
+                output['@graph'].push(newGraph);
             }
-            if (reorganize) {
-                service.reorganize(model);
-            }
+            return output;
         };
 
-        /**
-         * Perform reorganizatoin, ie. remove 'null' elements from definition graph.
-         *
-         * @param model Pipeline model.
-         */
-        service.reorganize = function (model) {
-            // TODO Be more effective here - shift all nulls to end and then update at once.
-            var collection = service.getDefinitionGraph(model)['@graph'];
-            for (var index = collection.length; index > 0; index--) {
-                if (collection[index] === null) {
-                    collection.splice(index, 1);
-                }
-            }
-        };
-
-        /**
-         *
-         * @param model Pipeline model.
-         * @param component
-         * @param id ID used to create an URI.
-         */
-        service.setComponentUriFromId = function (model, component, id) {
-            service.setComponentUri(model, component, model.definition.uri + '/components/' + id);
-        };
-
-        /**
-         *
-         * @param model Pipeline model.
-         * @param connection
-         * @param id ID used to create an URI.
-         */
-        service.setConnectionUriFromId = function (model, component, id) {
-            service.setComponentUri(model, component, model.definition.uri + '/connection/' + id);
-        };
-
-        /**
-         *
-         * @param model Pipeline model.
-         * @param component
-         * @param uri New URI.
-         */
-        service.setComponentUri = function (model, component, uri) {
-            component['@id'] = uri;
-        };
-
-        /**
-         *
-         * @param component Component.
-         * @param x Position x.
-         * @param y Position y.
-         */
-        service.setComponentPosition = function (component, x, y) {
-            component['http://linkedpipes.com/ontology/x'] = x;
-            component['http://linkedpipes.com/ontology/y'] = y;
-        };
-
-        service.setConnectionSource = function (connection, component, binding) {
-            connection['http://linkedpipes.com/ontology/sourceComponent'] = {'@id': component['@id']};
-            if (binding) {
-                connection['http://linkedpipes.com/ontology/sourceBinding'] = binding;
-            }
-        };
-
-        service.setConnectionTarget = function (connection, component, binding) {
-            connection['http://linkedpipes.com/ontology/targetComponent'] = {'@id': component['@id']};
-            if (binding) {
-                connection['http://linkedpipes.com/ontology/targetBinding'] = binding;
-            }
-        };
+        // ------------------------------------------------------------------ //
 
         service.getComponentLabel = function (component) {
             return component['http://www.w3.org/2004/02/skos/core#prefLabel'];
@@ -361,68 +493,12 @@ define([], function () {
             model['graphs'][uri] = graph;
         };
 
-        service.getComponentTemplateUri = function (component) {
-            return component['http://linkedpipes.com/ontology/template']['@id'];
-        };
-
-        service.removeVertices = function (model, connection) {
-            var verticiesUri = connection['http://linkedpipes.com/ontology/vertex'];
-            if (!verticiesUri || verticiesUri.length === 0) {
-                return [];
-            }
-            verticiesUri.forEach(function (item) {
-                service.removeResource(model, item['@id']);
-            });
-        };
-
-        /**
-         *
-         * @param model
-         * @param connection Connection object.
-         * @param vertices Ordered list of vertices.
-         */
-        service.setVertices = function (model, connection, vertices) {
-            service.removeVertices(model, connection);
-            if (!vertices || vertices.length === 0) {
-                return;
-            }
-            connection['http://linkedpipes.com/ontology/vertex'] = [];
-            var order = 1;
-            var definition = service.getDefinitionGraph(model)['@graph'];
-            vertices.forEach(function (vertex) {
-                vertex['@id'] = connection['@id'] + '/vertex/' + order;
-                vertex['http://linkedpipes.com/ontology/order'] = order;
-                connection['http://linkedpipes.com/ontology/vertex'].push({'@id': vertex['@id']});
-                definition.push(vertex);
-                order += 1;
-            });
-        };
-
-        /**
-         *
-         * @param x
-         * @param y
-         * @returns New vertex object.
-         */
-        service.createVertex = function (x, y) {
-            return {
-                '@id': '',
-                '@type': 'http://linkedpipes.com/ontology/Vertex',
-                'http://linkedpipes.com/ontology/x': x,
-                'http://linkedpipes.com/ontology/y': y,
-                'http://linkedpipes.com/ontology/order': ''
-            };
-        };
-
-
         return service;
     }
-    /**
-     *
-     * @param app Angular modeule.
-     */
-    function register(app) {
-        app.factory('components.pipelines.services.model', factoryFunction);
-    }
-    return register;
+
+    return function register(app) {
+        app.factory('components.pipelines.services.model',
+                ['services.jsonld', factoryFunction]);
+    };
+
 });

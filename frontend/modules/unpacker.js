@@ -58,23 +58,27 @@ var getAndNext = function (executor, uri, callback, args) {
     });
 };
 
-var prepareMetadata = function (pipeline) {
+var prepareMetadata = function (data) {
     var metadata = {};
-
-    pipeline['@graph'].forEach(function (graph) {
-        // Search for pipeline definition.
-        if (!metadata.definition) {
-            graph['@graph'].forEach(function (resource) {
-                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
-                    metadata.definition = {
-                        'uri': graph['@id'],
-                        'graph': graph
-                    };
-                }
-            });
-        }
-    });
-
+    var graphList;
+    if (data['@graph']) {
+        graphList = data['@graph'];
+    } else {
+        graphList = data;
+    }
+    //
+    for (var graphIndex in graphList) {
+        var graph = graphList[graphIndex];
+        graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
+                metadata.definition = {
+                    'uri': graph['@id'],
+                    'graph': graph
+                };
+                return;
+            }
+        });
+    }
     return metadata;
 };
 
@@ -189,6 +193,72 @@ var expandComponent = function (pipeline, component, template) {
     }
 };
 
+var getReference = function (object, property) {
+    if (!object[property]) {
+        return;
+    }
+    var value = object[property];
+    if (value['@id']) {
+        return value['@id'];
+    } else if (value[0]['@id']) {
+        return value[0]['@id'];
+    } else {
+        return value['@id'];
+    }
+};
+
+var getIri = function (object) {
+    if (!object['@id']) {
+        return;
+    }
+    var value = object['@id'];
+    if (value['@id']) {
+        return value['@id'];
+    } else if (value[0]['@id']) {
+        return value[0]['@id'];
+    } else {
+        return value['@id'];
+    }
+};
+
+var getString = function (object, property) {
+
+    if (!object[property]) {
+        return;
+    }
+    var value = object[property];
+
+    /**
+     * Return object with @lang and @value.
+     */
+    var getString = function (value, result) {
+        if (typeof value['@value'] === 'undefined') {
+            return value;
+        } else if (typeof value['@lang'] === 'undefined') {
+            return value['@value'];
+        } else {
+            // Return first value in given language.
+            return value['@value'];
+        }
+    };
+
+    if (Array.isArray(value)) {
+        if (value.length === 0) {
+            // Skip as empty array does not contains any data.
+            return;
+        } else if (value.length === 1) {
+            return getString(value[0]);
+        } else {
+            for (var itemIndex in value) {
+                return getString(value[itemIndex]);
+            }
+        }
+    } else {
+        return getString(value);
+    }
+};
+
+
 /**
  * Possible configurations:
  *
@@ -228,7 +298,8 @@ gModule.unpack = function (uri, configuration, callback) {
             // Download templates and their configurations.
             data.metadata.definition.graph['@graph'].forEach(function (resource) {
                 if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
-                    downloadTemplate(executor, data, resource['http://linkedpipes.com/ontology/template']['@id']);
+                    downloadTemplate(executor, data,
+                            getReference(resource, 'http://linkedpipes.com/ontology/template'));
                 }
             });
             next();
@@ -239,8 +310,9 @@ gModule.unpack = function (uri, configuration, callback) {
         var pipeline = data.metadata.definition;
         pipeline.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
+                var template_iri = getReference(resource, 'http://linkedpipes.com/ontology/template');
                 expandComponent(pipeline.graph, resource,
-                        data.templates[resource['http://linkedpipes.com/ontology/template']['@id']]);
+                        data.templates[template_iri]);
             }
         });
         next();
@@ -290,10 +362,12 @@ gModule.unpack = function (uri, configuration, callback) {
         // are build based on the connections in pipeline.
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
-                var source = resource['http://linkedpipes.com/ontology/sourceComponent']['@id'];
-                var target = resource['http://linkedpipes.com/ontology/targetComponent']['@id'];
-                var sourcePort = portsByOwnerAndBinding[source][resource['http://linkedpipes.com/ontology/sourceBinding']];
-                var targetPort = portsByOwnerAndBinding[target][resource['http://linkedpipes.com/ontology/targetBinding']];
+                var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
+                var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
+                var sourcePort = portsByOwnerAndBinding[source][
+                    getString(resource, 'http://linkedpipes.com/ontology/sourceBinding')];
+                var targetPort = portsByOwnerAndBinding[target][
+                    getString(resource, 'http://linkedpipes.com/ontology/targetBinding')];
                 if (!targetPort['http://linkedpipes.com/ontology/source']) {
                     targetPort['http://linkedpipes.com/ontology/source'] = [];
                 }
@@ -322,7 +396,7 @@ gModule.unpack = function (uri, configuration, callback) {
                     if (dataUnitTarget['componentUri'] === targetUri) {
                         // This data unit is used by this DPU - we save the source path.
                         portSources[dataUnitTarget['iri']] = {
-                            'load' : dataUnitTarget['saveDirectory'],
+                            'load': dataUnitTarget['saveDirectory'],
                             'debug': dataUnitTarget['debugDirectories']
                         };
                     }
@@ -376,8 +450,8 @@ gModule.unpack = function (uri, configuration, callback) {
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1 ||
                     resource['@type'].indexOf('http://linkedpipes.com/ontology/RunAfter') > -1) {
-                var source = resource['http://linkedpipes.com/ontology/sourceComponent']['@id'];
-                var target = resource['http://linkedpipes.com/ontology/targetComponent']['@id'];
+                var source = getReference(resource,'http://linkedpipes.com/ontology/sourceComponent');
+                var target = getReference(resource,'http://linkedpipes.com/ontology/targetComponent');
                 // Check for duplicity.
                 if (neighboursList[target].indexOf(source) === -1) {
                     neighboursList[target].push(source);

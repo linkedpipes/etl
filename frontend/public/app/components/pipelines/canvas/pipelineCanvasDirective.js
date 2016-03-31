@@ -4,11 +4,15 @@ define([
     'backbone'
 ], function ($, joint, Backbone) {
 
-    var createComponentCell = function (component, template) {
+    /**
+     * Create and return port specification. The information is cached in the
+     * given template object.
+     */
+    var createPorts = function (component, template) {
         var inPorts = [];
         var outPorts = [];
         var portsData = {};
-        // Create ports in not presented in cache.
+
         if (template['_ports']) {
             inPorts = template['_ports']['inPorts'];
             outPorts = template['_ports']['outPorts'];
@@ -44,37 +48,55 @@ define([
                 'portsData': portsData
             };
         }
-        // Read color.
-        var color = component['http://linkedpipes.com/ontology/color'];
-        if (!color) {
-            color = template.color;
-        }
+
+        return {
+            'inPorts': inPorts,
+            'outPorts': outPorts,
+            'portsData': portsData
+        };
+    };
+
+    /**
+     * Create component view model instance.
+     */
+    var createComponentCell = function (component, template, componentService) {
+        // Create ports in not presented in cache.
+        var ports = createPorts(component, template);
         // Create view.
         var cell = new ComponenModel({
             position: {
-                x: component['http://linkedpipes.com/ontology/x'],
-                y: component['http://linkedpipes.com/ontology/y']
+                'x': componentService.getX(component),
+                'y': componentService.getY(component)
             },
-            inPorts: inPorts,
-            outPorts: outPorts,
-            portsData: portsData,
+            inPorts: ports['inPorts'],
+            outPorts: ports['outPorts'],
+            portsData: ports['portsData'],
             attrs: {
-                'rect': {fill: color},
-                '.inPorts circle': {fill: '#CCFFCC', magnet: 'passive', type: 'input'},
-                '.outPorts circle': {fill: '#FFFFCC', type: 'output'}
+                '.inPorts circle': {
+                    'fill': '#CCFFCC',
+                    'magnet': 'passive',
+                    'type': 'input'},
+                '.outPorts circle': {
+                    'fill': '#FFFFCC',
+                    'type': 'output'}
             }
         });
         //
-        updateComponentCell(cell, component, template);
+        updateComponentCell(cell, component, template, componentService);
         return cell;
     };
 
-    var updateComponentCell = function (cell, component, template) {
+    /**
+     * Update component view model (cell).
+     */
+    var updateComponentCell = function (cell, component, template,
+            componentService) {
         // Construct label.
-        var label = component['http://www.w3.org/2004/02/skos/core#prefLabel'];
-        if (component['http://purl.org/dc/terms/description']) {
+        var label = componentService.getLabel(component);
+        var description = componentService.getDescription(component);
+        if (description) {
             label += '\n';
-            label += component['http://purl.org/dc/terms/description'];
+            label += description;
         }
         // Calculate size.
         var portCount = Math.max(cell.attributes.inPorts.length,
@@ -92,7 +114,7 @@ define([
             width -= 20;
         }
         // Set properties.
-        if (component['http://purl.org/dc/terms/description']) {
+        if (description) {
             cell.attr('.label', {
                 'text': label,
                 'ref-y': '20%',
@@ -110,14 +132,20 @@ define([
         }
         cell.resize(width, height);
         // Color.
-        var color = component['http://linkedpipes.com/ontology/color'];
+        // Read color.
+        var color = componentService.getColor(component);
         if (!color) {
             color = template.color;
         }
         cell.attr('rect', {fill: color});
     };
 
-    // Custom component model to allow better customizaiton of component look.
+    /**
+     * Custom component model to allow better customizaiton of component look.
+     *
+     * Port can have useLabel property that determines if the label
+     * is visible or not.
+     */
     var ComponenModel = joint.shapes.devs.Model.extend({
         getPortAttrs: function (portName, index, total, selector, type) {
 
@@ -129,9 +157,18 @@ define([
             var portBodySelector = portSelector + '>.port-body';
 
             var attrs = {};
-            attrs[portLabelSelector] = {text: port['useLabel'] ? port['label'] : ''};
-            attrs[portBodySelector] = {port: {id: portName || _.uniqueId(type), type: type}};
-            attrs[portSelector] = {ref: '.body', 'ref-y': (index + 0.5) * (1 / total)};
+            attrs[portLabelSelector] = {
+                'text': port['useLabel'] ? port['label'] : ''
+            };
+            attrs[portBodySelector] = {
+                'port': {
+                    'id': portName || _.uniqueId(type),
+                    'type': type
+                }
+            };
+            attrs[portSelector] = {
+                'ref': '.body', 'ref-y': (index + 0.5) * (1 / total)
+            };
 
             if (selector === '.outPorts') {
                 attrs[portSelector]['ref-dx'] = 0;
@@ -141,11 +178,8 @@ define([
         }
     });
 
-
     /**
      * Add scrolling capability to the canvas.
-     *
-     * @type type
      */
     var ScrollableView = Backbone.View.extend({
         options: {paper: void 0, scroll: void 0},
@@ -176,7 +210,8 @@ define([
             this.paper.setOrigin(this.positionX, this.positionY);
             this._clientX = event.clientX;
             this._clientY = event.clientY;
-            // Sometimes this event is called even if there is no change in position.
+            // Sometimes this event is called even if there is no change
+            // in position.
             if (x !== 0 || y !== 0) {
                 this.options.scroll.moved = true;
             }
@@ -187,9 +222,7 @@ define([
     });
 
     /**
-     * Created to represent selection of a component.
-     *
-     * @type type
+     * Represent selection of a component as a bounding box.
      */
     var ComponentSelector = Backbone.View.extend({
         className: 'component-selection',
@@ -214,7 +247,8 @@ define([
             this.listenTo(this.options.graph, 'all', this.update);
             // Listeners for removing the item
             this.listenTo(this.options.cell, 'remove', this.remove);
-            this.listenTo(this.options.paper, 'component-select:clean', this.remove);
+            this.listenTo(this.options.paper, 'component-select:clean',
+                    this.remove);
             // React to zoom or movement.
             this.listenTo(this.options.paper, 'scale translate', this.update);
             // Add current model (component) to selection.
@@ -226,7 +260,8 @@ define([
             boundingBox.x += canvasPosition.e;
             boundingBox.y += canvasPosition.f;
             //
-            this.options.api.onMoveSelected(this.options.cell.id, boundingBox.x, boundingBox.y);
+            this.options.api.onMoveSelected(this.options.cell.id,
+                    boundingBox.x, boundingBox.y);
             //
             boundingBox.x += -6;
             boundingBox.y += -10;
@@ -239,25 +274,28 @@ define([
                 height: boundingBox.height
             });
         }, remove: function (event) {
-            // Remove item and this selection box.
-            this.status.selection.splice(this.status.selection.indexOf(this.options.cellView.model), 1);
+            // Remove item from the selection list.
+            this.status.selection.splice(this.status.selection.indexOf(
+                    this.options.cellView.model), 1);
+            // Delete this selection bounding box.
             Backbone.View.prototype.remove.apply(this, arguments);
             this.options.api.onUpdateSelection();
         }}
     );
 
     /**
-     * Function used to determine connections.
+     * Function used to validate connections upon creation.
      *
      * @param cellViewS Source view.
      * @param magnetS Source magnet.
      * @param cellViewT Target view.
      * @param magnetT Target magnet.
-     * @param {type} end
+     * @param end
      * @param linkView Link view.
      * @returns True if connection can be created.
      */
-    var validateConnection = function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+    var validateConnection = function (cellViewS, magnetS, cellViewT, magnetT,
+            end, linkView) {
         // Return false for run after edges.
         if (linkView.model.attributes.edgeType === 'run_after') {
             return false;
@@ -266,7 +304,8 @@ define([
         if (!magnetS || magnetS.getAttribute('type') === 'input') {
             return false;
         }
-        // Prevent linking from output ports to input ports within one element and loops.
+        // Prevent linking from output ports to input ports within one element
+        // and loops.
         if (cellViewS === cellViewT) {
             return false;
         }
@@ -274,9 +313,12 @@ define([
         if (!magnetT || magnetT.getAttribute('type') !== 'input') {
             return false;
         }
-        // Check for type - this can be slow, we may wan't to use hashing, or some other method?
-        var typesS = cellViewS.model.attributes.portsData[magnetS.getAttribute('port')]['dataType'];
-        var typesT = cellViewT.model.attributes.portsData[magnetT.getAttribute('port')]['dataType'];
+        // Check for type - this can be slow, we may wan't to use hashing,
+        // or some other method?
+        var typesS = cellViewS.model.attributes.portsData[
+                magnetS.getAttribute('port')]['dataType'];
+        var typesT = cellViewT.model.attributes.portsData[
+                magnetT.getAttribute('port')]['dataType'];
         for (var i = 0; i < typesS.length; ++i) {
             for (var j = 0; j < typesT.length; ++j) {
                 if (typesS[i] === typesT[j]) {
@@ -288,31 +330,41 @@ define([
     };
 
     /**
-     * Canvas (Paper) definition.
-     *
-     * @returns {joint.dia.Paper}
+     * Definition of a custom canvas (Paper).
      */
     var Paper = function (graph, element) {
         return new joint.dia.Paper({
-            async: true,
-            el: element,
-            width: '100%',
-            height: '100%',
-            model: graph,
-            gridSize: 20, // Density of grid we cam move around.
-            linkPinning: false, // Do not let user drop link on blank paper.
-            snapLinks: {radius: 50}, // Snap link to closes target, it's more user friendly.
+            'async': true,
+            'el': element,
+            'width': '100%',
+            'height': '100%',
+            'model': graph,
+            /**
+             * Density of grid we cam move around.
+             */
+            'gridSize': 20,
+            /**
+             * Do not let user drop link on blank paper.
+             */
+            'linkPinning': false,
+            /**
+             * Snap link to closes target, it's more user friendly.
+             */
+            'snapLinks': {'radius': 50},
             // Use to connect ports.
-            defaultLink: new joint.dia.Link({attrs: {'.marker-target': {d: 'M 10 0 L 0 5 L 10 10 z'}}}),
-            validateConnection: validateConnection,
-            markAvailable: true // Enable possible target/port highlights, utilize validateMagnet.
+            'defaultLink': new joint.dia.Link({
+                'attrs': {'.marker-target': {d: 'M 10 0 L 0 5 L 10 10 z'}}}),
+            'validateConnection': validateConnection,
+            /**
+             * Enable target/port highlights, utilize validateConnection
+             * funciton.
+             */
+            'markAvailable': true
         });
     };
 
     /**
-     * Empty defintion of used API.
-     *
-     * @type type
+     * Empty defintion of exposed API.
      */
     var API = {
         /**
@@ -361,11 +413,11 @@ define([
         /**
          * Create a new component view for given component and view. ID is optional.
          */
-        'addComponent': function (component, template) {},
+        'addComponent': function (component, template, componentService) {},
         /**
          * Update component view.
          */
-        'updateComponent': function (id, component, template) {},
+        'updateComponent': function (id, component, template, componentService) {},
         /**
          * Used to update visuals on the component that are not set in the pipeline.
          */
@@ -405,7 +457,7 @@ define([
         /**
          * Set position of the view left top corner.
          */
-        'setScreen': function(x, y) {}
+        'setScreen': function (x, y) {}
     };
 
     /**
@@ -414,7 +466,7 @@ define([
     function directiveCanvas() {
         return {
             restrict: 'E',
-            scope: {api: '='},
+            scope: {'api': '='},
             template: '',
             link: function ($scope, element, attrs) {
 
@@ -424,7 +476,8 @@ define([
 
                 $scope.status = {
                     /**
-                     * If true we are loading a pipeline. Reaction on events is thus disabled.
+                     * If true we are loading a pipeline.
+                     * Reaction on events is thus disabled.
                      */
                     'loading': false,
                     /**
@@ -439,9 +492,10 @@ define([
                         'targetModel': null
                     },
                     /**
-                     * In case of button down on empty space we can initialize scroll, or we can
-                     * fire onEmptySpaceClick. This structure is used to store infomarion about empty space click
-                     * and detect which possiblity to choose.
+                     * In case of button down on empty space we can
+                     * initialize scroll, or we can fire onEmptySpaceClick.
+                     * This structure is used to store infomarion about
+                     * empty space click and detect which possiblity to choose.
                      */
                     'scroll': {
                         'moved': false
@@ -452,10 +506,11 @@ define([
 
                 // Add scrollable view to canvas.
                 $scope.scrollableView = new ScrollableView({
-                    paper: $scope.paper,
-                    scroll: $scope.status.scroll
+                    'paper': $scope.paper,
+                    'scroll': $scope.status.scroll
                 });
-                $scope.scrollableView.$el.css({width: '100%', height: '100%'}).appendTo(element);
+                $scope.scrollableView.$el.css({
+                    'width': '100%', 'height': '100%'}).appendTo(element);
 
                 // Disable right click context menu.
                 $scope.paper.el.oncontextmenu = function (event) {
@@ -467,29 +522,35 @@ define([
                 //
 
                 $scope.graph.on('change:position', function (model) {
-                    $scope.api.onPositionChange(model.id, model.attributes.position.x, model.attributes.position.y);
+                    $scope.api.onPositionChange(model.id,
+                            model.attributes.position.x,
+                            model.attributes.position.y);
                 });
 
                 $scope.graph.on('change:source', function (model) {
                     var source = model.attributes.source;
-                    onConnectionChange(model.id, source.id, source.port, null, null);
+                    onConnectionChange(model.id, source.id, source.port,
+                            null, null);
                 });
 
                 $scope.graph.on('change:target', function (model) {
                     var target = model.attributes.target;
-                    $scope.api.onConnectionChange(model.id, null, null, target.id, target.port);
+                    $scope.api.onConnectionChange(model.id, null, null,
+                            target.id, target.port);
                 });
 
                 $scope.graph.on('add', function (model) {
                     if ($scope.status.loading) {
                         return;
                     }
-                    // Components are added only via our interface, however connections
-                    // can be added by user, so we need to check and notify here.
+                    // Components are added only via our interface (API),
+                    // however connections can be added by user, so we
+                    // need to check and notify here.
                     if (model instanceof joint.dia.Link) {
                         var source = model.attributes.source;
                         var target = model.attributes.target;
-                        $scope.api.onNewConnection(model.attributes.type, model.id, source.id, source.port,
+                        $scope.api.onNewConnection(model.attributes.type,
+                                model.id, source.id, source.port,
                                 target.id, target.port);
                     }
                 });
@@ -502,7 +563,8 @@ define([
                     if (model instanceof joint.dia.Link) {
                         if (model.attributes.target.x) {
                             $scope.api.onConnectionToEmpty(model.id,
-                                    model.attributes.target.x, model.attributes.target.y);
+                                    model.attributes.target.x,
+                                    model.attributes.target.y);
                         } else {
                             $scope.api.onDelete(model.id, model);
                         }
@@ -511,12 +573,12 @@ define([
                     }
                 });
 
-                $scope.paper.on('cell:pointerdown', function (view, event) {
+                $scope.paper.on('cell:pointerdown', function (view) {
                     $scope.api.onClick(view.model.id);
                 });
 
                 // pointerclick - does not highlight after component movement.
-                $scope.paper.on('cell:pointerup', function (view, event) {
+                $scope.paper.on('cell:pointerup', function (view) {
                     if (view.model.getBBox) {
                         new ComponentSelector({
                             cellView: view,
@@ -529,16 +591,17 @@ define([
                 });
 
                 // pointerclick - cause opening after selection.
-                $scope.paper.on('cell:pointerdblclick ', function (view, event) {
+                $scope.paper.on('cell:pointerdblclick ', function (view) {
                     // Can be used only on selected object.
                     if ($.inArray(view.model, $scope.status.selection) !== -1) {
                         $scope.api.onDoubleClick(view.model.id);
                     }
                 });
 
-                // The blank:pointerup is fired if clicked anywhere on the page. The
-                // s fired only if cliked on the blank canvas. So in order to make it works propertly,
-                // we need to check that bwfore blank:pointerup we got blank:pointerdown.
+                // The blank:pointerup is fired if clicked anywhere on the page.
+                // But we want to react only if fired on the canvas.
+                // So in order to make it works propertly, we need to check
+                // that bwfore blank:pointerup we got blank:pointerdown.
                 var blank_pointerdown = false;
 
                 // pointerdown - scroll.
@@ -575,23 +638,28 @@ define([
             },
             controller: ['$scope', function ($scope) {
 
-                    $scope.api.addComponent = function (component, template) {
-                        var cell = createComponentCell(component, template);
+                    $scope.api.addComponent = function (component, template,
+                            componentService) {
+                        var cell = createComponentCell(component, template,
+                                componentService);
                         $scope.graph.addCell(cell);
                         return cell.id;
                     };
 
-                    $scope.api.updateComponent = function (id, component, template) {
+                    $scope.api.updateComponent = function (id, component,
+                            template, componentService) {
                         var cell = $scope.graph.getCell(id);
                         if (!cell) {
                             console.log('Missing cell for id:', id);
                             return;
                         }
                         //
-                        updateComponentCell(cell, component, template);
+                        updateComponentCell(cell, component, template,
+                                componentService);
                     };
 
-                    $scope.api.updateComponentVisual = function (id, parameters) {
+                    $scope.api.updateComponentVisual = function (id,
+                            parameters) {
                         var cell = $scope.graph.getCell(id);
                         if (!cell) {
                             console.log('Missing cell for id:', id);
@@ -616,7 +684,8 @@ define([
                         cell.remove();
                     };
 
-                    $scope.api.addConnection = function (source, sourcePort, target, targetPort, vertices, type) {
+                    $scope.api.addConnection = function (source, sourcePort,
+                            target, targetPort, vertices, type) {
                         var cell;
                         if (type === 'link') {
                             cell = new joint.dia.Link({
@@ -647,7 +716,7 @@ define([
                                 vertices: vertices
                             });
                         } else {
-                            console.log('Unknown conneciton type:', type);
+                            console.log('Unknown connection type:', type);
                         }
                         $scope.graph.addCell(cell);
                         return cell.id;
@@ -666,7 +735,6 @@ define([
                     $scope.api.loadStart = function () {
                         $scope.status.loading = true;
                         $scope.graph.clear();
-                        // TODO We could store cells here and at the loadEnd.
                     };
 
                     $scope.api.loadEnd = function () {
@@ -695,7 +763,7 @@ define([
                         return result;
                     };
 
-                    $scope.api.setScreen = function(x, y) {
+                    $scope.api.setScreen = function (x, y) {
                         $scope.paper.setOrigin(x, y);
                         //
                         $scope.scrollableView.positionX = x;
@@ -705,10 +773,9 @@ define([
                 }]
         };
     }
-    //
-    function register(app) {
+
+    return function register(app) {
         app.directive('pipelineCanvas', [directiveCanvas]);
-    }
-    //
-    return register;
+    };
+
 });
