@@ -161,13 +161,14 @@ class ExecutionChecker {
                             statement.getObject(),
                             graph));
                 } else if (statement.getPredicate().stringValue().equals("http://etl.linkedpipes.com/ontology/lastChange")) {
-                    lastChange = ((Literal)statement.getObject()).calendarValue().toGregorianCalendar().getTime();
+                    lastChange = ((Literal) statement.getObject()).calendarValue().toGregorianCalendar().getTime();
                 }
             }
         }
 
         // Check.
-        if (lastChange != null && lastChange.before(execution.getLastChange())) {
+        if (lastChange != null && execution.getLastChange() != null
+                && lastChange.before(execution.getLastChange())) {
             // We have newer data already loaded.
             return;
         }
@@ -245,8 +246,7 @@ class ExecutionChecker {
                 execution.setStatus(Execution.StatusType.FINISHED);
             }
         } else // We are updating the status.
-        {
-            if (endEvent == null) {
+         if (endEvent == null) {
                 // Here we can only change from queued to running.
                 if (execution.getStatus() == Execution.StatusType.QUEUED) {
                     execution.setStatus(Execution.StatusType.RUNNING);
@@ -254,7 +254,6 @@ class ExecutionChecker {
             } else {
                 execution.setStatus(Execution.StatusType.FINISHED);
             }
-        }
 
         if (execution.getStatus() == Execution.StatusType.RUNNING) {
             execution.setExecutionStatementsFull(executionStatements);

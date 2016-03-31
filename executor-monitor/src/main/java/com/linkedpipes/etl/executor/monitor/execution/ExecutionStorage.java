@@ -65,6 +65,7 @@ class ExecutionStorage {
                 // we do not know if their executors are running or not.
                 if (execution.getStatus() == Execution.StatusType.RUNNING) {
                     execution.setStatus(Execution.StatusType.DANGLING);
+                    ExecutionChecker.updateGenerated(execution);
                 }
                 execution.setLastCheck(updateTime);
                 executions.add(execution);
