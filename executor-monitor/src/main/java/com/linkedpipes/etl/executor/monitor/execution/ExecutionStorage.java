@@ -127,7 +127,7 @@ class ExecutionStorage {
         newExecution.setDirectory(directory);
         // Load data.
         try {
-            ExecutionChecker.checkExecution(newExecution);
+            ExecutionChecker.updateFromDirectory(newExecution);
         } catch (ExecutionMismatch ex) {
             throw new OperationFailed("", ex);
         }
@@ -149,24 +149,21 @@ class ExecutionStorage {
         if (execution == null) {
             return;
         }
-        execution.setStatus(Execution.StatusType.DELETED);
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.MINUTE, 10);
         execution.setTimeToLive(calendar.getTime());
         // Update content.
-        try {
-            ExecutionChecker.checkExecution(execution);
-        } catch (ExecutionMismatch | OperationFailed ex) {
-            LOG.warn("Exception ignored.", ex);
-        }
+        ExecutionChecker.setToDeleted(execution);
+        // Clear statements about the pipeline as a tombstone
+        // does not need them.
         execution.setPipelineStatements(Collections.EMPTY_LIST);
         // Queued for delete.
         executionToDelete.add(execution);
     }
 
     /**
-     * Check of the execution status.
+     * Check of the execution status from a directory.
      *
      * @param execution
      */
@@ -178,7 +175,7 @@ class ExecutionStorage {
                 break;
             default:
                 try {
-                    ExecutionChecker.checkExecution(execution);
+                    ExecutionChecker.updateFromDirectory(execution);
                 } catch (OperationFailed | ExecutionMismatch ex) {
                     LOG.warn("Can't update execution.", ex);
                 }
@@ -186,7 +183,7 @@ class ExecutionStorage {
     }
 
     /**
-     * Perform checkExecution of given execution from the stream.
+     * Perform updateFromDirectory of given execution from the stream.
      *
      * @param execution Execution data in JSONLD.
      * @param stream
@@ -249,7 +246,7 @@ class ExecutionStorage {
                 + directory.getName());
         //
         execution.setDirectory(directory);
-        ExecutionChecker.checkExecution(execution);
+        ExecutionChecker.updateFromDirectory(execution);
         try {
             ExecutionChecker.loadPipeline(execution);
         } catch (ExecutionChecker.MissingFile | IOException ex) {
@@ -259,14 +256,22 @@ class ExecutionStorage {
     }
 
     /**
-     * Call to checkExecution non-finished execution from a directory.
+     * Call to updateFromDirectory non-finished execution from a directory.
      */
     @Scheduled(fixedDelay = 15000, initialDelay = 200)
     protected void checkDirectory() {
         final Date now = new Date();
-        //
+        // Update only such execution that were not updated in last
+        // 10 seconds. As the execution could have been updated
+        // from a REST service and we do not want to update it twice.
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.SECOND, -10);
+        final Date requiredLastUpdate = calendar.getTime();
         for (Execution execution : executions) {
-            ExecutionStorage.this.checkExecution(execution);
+            if (requiredLastUpdate.after(execution.getLastCheck())) {
+                checkExecution(execution);
+            }
         }
         // Delete tombstones.
         final Collection<Execution> toDelete = new ArrayList<>(2);

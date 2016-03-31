@@ -170,21 +170,21 @@ public class ExecutorFacade {
             executor.setAlive(true);
         } catch (Exception ex) {
             if (executor.isAlive()) {
-                // Prit error only if we lost the connection.
+                // Print error only if we lost the connection for the
+                // first time.
                 LOG.error("Can't connect to: {}", executor.getAddress(), ex);
             }
             executor.setAlive(false);
             // Set execution to unresponsive state.
             if (executor.getExecution() != null) {
-                executionFacade.detachExecutor(executor.getExecution());
-                executor.setExecution(null);
+                executionFacade.unresponsiveExecutor(executor.getExecution());
             }
             return;
         }
-        // Process response.
+        // Check if there was any response.
         final String body = response.getBody();
         if (body == null) {
-            // No execution here, detach any possibly attached execution.
+            // Is not executing -> detach any possibly attached execution.
             if (executor.getExecution() != null) {
                 executionFacade.detachExecutor(executor.getExecution());
                 executor.setExecution(null);
@@ -192,7 +192,7 @@ public class ExecutorFacade {
             executor.setLastCheck(new Date());
             return;
         }
-        //
+        // Parse the response.
         final InputStream stream = new ByteArrayInputStream(
                 body.getBytes(StandardCharsets.UTF_8));
         try {
@@ -204,7 +204,7 @@ public class ExecutorFacade {
                 executionFacade.update(executor.getExecution(), stream);
             }
             executor.setLastCheck(new Date());
-        } catch (ExecutionFacade.UnknownExecution ex) {
+        } catch (ExecutionFacade.UnknownExecution | ExecutionFacade.ExecutionMismatch ex) {
             // The execution in the stream is uknown. Detach the execution
             // and wait for other refresh.
             if (executor.getExecution() != null) {
@@ -212,15 +212,7 @@ public class ExecutorFacade {
                 executor.setExecution(null);
             }
             //
-            LOG.warn("Unknown execution detected.", ex);
-        } catch (ExecutionFacade.ExecutionMismatch ex) {
-            // Unset current execution and discovert he new one in next refresh.
-            if (executor.getExecution() != null) {
-                executionFacade.detachExecutor(executor.getExecution());
-                executor.setExecution(null);
-            }
-            //
-            LOG.warn("Execution mismatch.", ex);
+            LOG.warn("Executor change the execution.", ex);
         } catch (ExecutionFacade.OperationFailed ex) {
             // Unset execution, it will be discoverd in the next check.
             if (executor.getExecution() != null) {

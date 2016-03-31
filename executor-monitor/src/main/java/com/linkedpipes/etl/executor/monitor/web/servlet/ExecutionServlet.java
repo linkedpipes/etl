@@ -73,6 +73,9 @@ public class ExecutionServlet {
                 for (Statement statement : execution.getExecutionStatements()) {
                     writer.handleStatement(statement);
                 }
+                for (Statement statement : execution.getExecutionStatementsGenerated()) {
+                    writer.handleStatement(statement);
+                }
                 for (Statement statement : execution.getPipelineStatements()) {
                     writer.handleStatement(statement);
                 }

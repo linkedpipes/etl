@@ -8,12 +8,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
@@ -61,12 +61,8 @@ class ExecutionChecker {
      *
      * @param execution
      */
-    public static void checkExecution(Execution execution)
+    public static void updateFromDirectory(Execution execution)
             throws OperationFailed, ExecutionMismatch {
-        if (execution.getStatus() == Execution.StatusType.DELETED) {
-            loadDeleted(execution);
-            return;
-        }
         //
         final File definitionFile
                 = new File(execution.getDirectory(), "execution.jsonld");
@@ -124,6 +120,8 @@ class ExecutionChecker {
                     + " expected:" + execution.getIri());
         }
 
+        Date lastChange = null;
+
         final IRI executionResource = valueFactory.createIRI(execution.getIri());
         final IRI graph = createGraph(valueFactory, execution.getIri());
 
@@ -148,6 +146,8 @@ class ExecutionChecker {
                         break;
                 }
             } else if (statement.getSubject().equals(executionResource)) {
+                // For the pipeline itself we store the status and
+                // reference to the pipeline object.
                 if (statement.getPredicate().stringValue().equals("http://etl.linkedpipes.com/ontology/pipeline")) {
                     output.add(valueFactory.createStatement(
                             statement.getSubject(),
@@ -160,8 +160,16 @@ class ExecutionChecker {
                             statement.getPredicate(),
                             statement.getObject(),
                             graph));
+                } else if (statement.getPredicate().stringValue().equals("http://etl.linkedpipes.com/ontology/lastChange")) {
+                    lastChange = ((Literal)statement.getObject()).calendarValue().toGregorianCalendar().getTime();
                 }
             }
+        }
+
+        // Check.
+        if (lastChange != null && lastChange.before(execution.getLastChange())) {
+            // We have newer data already loaded.
+            return;
         }
 
         // Search for events.
@@ -248,11 +256,17 @@ class ExecutionChecker {
             }
         }
 
+        if (execution.getStatus() == Execution.StatusType.RUNNING) {
+            execution.setExecutionStatementsFull(executionStatements);
+        } else {
+            execution.setExecutionStatementsFull(null);
+        }
+
         // For now set change time to every reload.
         execution.setLastChange(checkStart);
         execution.setLastCheck(checkStart);
 
-        output.addAll(createSpecific(execution, valueFactory, graph));
+        updateGenerated(execution);
         execution.setExecutionStatements(output);
     }
 
@@ -262,11 +276,13 @@ class ExecutionChecker {
      *
      * @param execution
      */
-    private static void loadDeleted(Execution execution) {
+    public static void setToDeleted(Execution execution) {
         final Date checkStart = new Date();
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final IRI graph = createGraph(valueFactory, execution.getIri());
         final List<Statement> output = new ArrayList<>(1);
+
+        execution.setStatus(Execution.StatusType.DELETED);
 
         output.add(valueFactory.createStatement(
                 valueFactory.createIRI(execution.getIri()),
@@ -316,7 +332,7 @@ class ExecutionChecker {
                 valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/queued"),
                 graph));
 
-        output.addAll(createSpecific(execution, valueFactory, graph));
+        updateGenerated(execution);
 
         // For now set change time to every reload.
         execution.setLastChange(checkStart);
@@ -413,8 +429,7 @@ class ExecutionChecker {
      * @return
      * @throws IOException
      */
-    private static List<Statement> loadFile(File file)
-            throws IOException {
+    private static List<Statement> loadFile(File file) throws IOException {
         try (InputStream input = new FileInputStream(file)) {
             return loadStream(input);
         }
@@ -456,8 +471,9 @@ class ExecutionChecker {
         return valueFactory.createIRI(execution + "/list");
     }
 
-    private static Collection<Statement> createSpecific(
-            Execution execution, ValueFactory valueFactory, IRI graph) {
+    public static void updateGenerated(Execution execution) {
+        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        final IRI graph = createGraph(valueFactory, execution.getIri());
         final List<Statement> output = new ArrayList<>(1);
 
         final IRI status;
@@ -486,7 +502,7 @@ class ExecutionChecker {
                 valueFactory.createIRI("http://etl.linkedpipes.com/ontology/statusMonitor"),
                 status, graph));
 
-        return output;
+        execution.setExecutionStatementsGenerated(output);
     }
 
 }

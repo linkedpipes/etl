@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
+import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
@@ -124,9 +125,24 @@ public class ExecutionFacade {
         if (execution == null) {
             throw new UnknownExecution();
         }
-        final File executionFile
-                = new File(execution.getDirectory(), "execution.jsonld");
-        streamFile(executionFile, RDFFormat.JSONLD, format, stream);
+
+        final List<Statement> statements
+                = execution.getExecutionStatementsFull();
+        if (statements == null) {
+            // Stream content from a file.
+            final File executionFile
+                    = new File(execution.getDirectory(), "execution.jsonld");
+            streamFile(executionFile, RDFFormat.JSONLD, format, stream);
+        } else {
+            // Serialize from the memory.
+            final RDFWriter writer = Rio.createWriter(format, stream);
+            writer.startRDF();
+            for (Statement statement : statements) {
+                writer.handleStatement(statement);
+            }
+            writer.endRDF();
+        }
+
     }
 
     /**
@@ -209,6 +225,7 @@ public class ExecutionFacade {
     public void attachExecutor(Execution execution) {
         if (execution.getStatus() != Execution.StatusType.FINISHED) {
             execution.setStatus(Execution.StatusType.RUNNING);
+            ExecutionChecker.updateGenerated(execution);
         }
     }
 
@@ -220,13 +237,14 @@ public class ExecutionFacade {
     public void unresponsiveExecutor(Execution execution) {
         if (execution.getStatus() != Execution.StatusType.FINISHED) {
             execution.setStatus(Execution.StatusType.UNRESPONSIVE);
+            ExecutionChecker.updateGenerated(execution);
         }
     }
 
     /**
      * Must be called when an executor is detached from the execution. Ie.
-     * we have strong evidence that there is no executor that is executing
-     * given execution.
+     * if in state UNRESPONSIVE (or without executor) and all known
+     * executors are executing other pipelines.
      *
      * @param execution
      */
@@ -234,6 +252,7 @@ public class ExecutionFacade {
         storage.checkExecution(execution);
         if (execution.getStatus() != Execution.StatusType.FINISHED) {
             execution.setStatus(Execution.StatusType.DANGLING);
+            ExecutionChecker.updateGenerated(execution);
         }
     }
 

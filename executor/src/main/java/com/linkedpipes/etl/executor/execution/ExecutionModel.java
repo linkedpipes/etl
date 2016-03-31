@@ -259,6 +259,11 @@ public final class ExecutionModel implements EventManager.EventListener {
 
     private ExecutionStatus status;
 
+    /**
+     * Store time of last change in this class.
+     */
+    private Date lastChange = new Date();
+
     public ExecutionModel(PipelineModel pipeline, String iri,
             ResourceManager resources) {
         this.pipeline = pipeline.getIri();
@@ -361,7 +366,7 @@ public final class ExecutionModel implements EventManager.EventListener {
             final ComponentProgress e = (ComponentProgress) event;
             final Component component = getComponent(e.getComponentUri());
             if (component == null) {
-                LOG.warn("Ignored mesasge ({}) with unknown component.",
+                LOG.warn("Ignored event ({}) with unknown component.",
                         event.getResource());
             } else {
                 component.progress = e.getCurrent();
@@ -371,7 +376,7 @@ public final class ExecutionModel implements EventManager.EventListener {
             final ComponentBegin e = (ComponentBegin) event;
             final Component component = getComponent(e.getComponentUri());
             if (component == null) {
-                LOG.warn("Ignored mesasge ({}) with unknown component.",
+                LOG.warn("Ignored event ({}) with unknown component.",
                         event.getResource());
             } else {
                 component.status = ExecutionStatus.RUNNING;
@@ -380,7 +385,7 @@ public final class ExecutionModel implements EventManager.EventListener {
             final ComponentFailed e = (ComponentFailed) event;
             final Component component = getComponent(e.getComponentUri());
             if (component == null) {
-                LOG.warn("Ignored mesasge ({}) with unknown component.",
+                LOG.warn("Ignored event ({}) with unknown component.",
                         event.getResource());
             } else {
                 component.status = ExecutionStatus.FAILED;
@@ -389,7 +394,7 @@ public final class ExecutionModel implements EventManager.EventListener {
             final ComponentFinished e = (ComponentFinished) event;
             final Component component = getComponent(e.getComponentUri());
             if (component == null) {
-                LOG.warn("Ignored mesasge ({}) with unknown component.",
+                LOG.warn("Ignored event ({}) with unknown component.",
                         event.getResource());
             } else {
                 component.status = ExecutionStatus.FINISHED;
@@ -401,6 +406,8 @@ public final class ExecutionModel implements EventManager.EventListener {
         } else if (event instanceof ExecutionFailed) {
             status = ExecutionStatus.FAILED;
         }
+        //
+        lastChange = new Date();
     }
 
     /**
@@ -444,6 +451,8 @@ public final class ExecutionModel implements EventManager.EventListener {
                 return 0;
             }
         });
+        //
+        lastChange = new Date();
     }
 
     /**
@@ -468,6 +477,9 @@ public final class ExecutionModel implements EventManager.EventListener {
         handler.handleStatement(vf.createStatement(executionResource,
                 vf.createIRI("http://etl.linkedpipes.com/ontology/status"),
                 vf.createIRI(status.getIri()), graph));
+        handler.handleStatement(vf.createStatement(executionResource,
+                vf.createIRI("http://etl.linkedpipes.com/ontology/lastChange"),
+                vf.createLiteral(lastChange), graph));
         // Save components.
         for (Component component : components) {
             final IRI componentResource = vf.createIRI(component.iri);
