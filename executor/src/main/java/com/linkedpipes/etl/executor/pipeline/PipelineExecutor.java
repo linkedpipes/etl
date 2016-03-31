@@ -149,10 +149,11 @@ public class PipelineExecutor implements EventManager.EventListener {
             afterExecution();
             return;
         }
-        // Periodic save.
-        execution.save();
         //
         for (ExecutionModel.Component component : execution.getComponents()) {
+            // Periodic save.
+            execution.save();
+            //
             final ComponentExecutor executor = ComponentExecutor.create(
                     modules, dataUnits, events, pipeline,
                     execution, component.getIri(),
@@ -173,8 +174,6 @@ public class PipelineExecutor implements EventManager.EventListener {
             if (stopExecution) {
                 break;
             }
-            // Periodic save.
-            execution.save();
         }
         afterExecution();
     }
