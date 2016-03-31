@@ -402,7 +402,9 @@ public final class ExecutionModel implements EventManager.EventListener {
         } else if (event instanceof ExecutionBegin) {
             status = ExecutionStatus.RUNNING;
         } else if (event instanceof ExecutionFinished) {
-            status = ExecutionStatus.FINISHED;
+            if (status != ExecutionStatus.FAILED) {
+                status = ExecutionStatus.FINISHED;
+            }
         } else if (event instanceof ExecutionFailed) {
             status = ExecutionStatus.FAILED;
         }

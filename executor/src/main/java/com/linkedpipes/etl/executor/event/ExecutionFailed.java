@@ -36,19 +36,21 @@ public class ExecutionFailed extends AbstractEvent {
         //
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw);
-        cause.printStackTrace(pw);
-        writer.addString(iri, LINKEDPIPES.EVENTS.HAS_EXCEPTION, sw.toString(),
-                "en");
-        //
-        Throwable rootCause = cause;
-        while (rootCause.getCause() != null) {
-            rootCause = rootCause.getCause();
-        }
-        if (rootCause.getMessage() != null) {
-            writer.addString(iri, LINKEDPIPES.EVENTS.HAS_ROOT_EXCEPTION_MESSAGE,
-                    rootCause.getMessage(), "en");
-        } else {
-            LOG.error("Missing message for ExecutionFailed.", cause);
+        if (cause != null) {
+            cause.printStackTrace(pw);
+            writer.addString(iri, LINKEDPIPES.EVENTS.HAS_EXCEPTION, sw.toString(),
+                    "en");
+            //
+            Throwable rootCause = cause;
+            while (rootCause.getCause() != null) {
+                rootCause = rootCause.getCause();
+            }
+            if (rootCause.getMessage() != null) {
+                writer.addString(iri, LINKEDPIPES.EVENTS.HAS_ROOT_EXCEPTION_MESSAGE,
+                        rootCause.getMessage(), "en");
+            } else {
+                LOG.error("Missing message for ExecutionFailed.", cause);
+            }
         }
     }
 
