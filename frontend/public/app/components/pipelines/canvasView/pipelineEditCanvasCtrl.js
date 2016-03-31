@@ -472,14 +472,14 @@ define([
             });
         };
 
-        var storePipeline = function (uri, unchecked, onSucess) {
+        var storePipeline = function (iri, unchecked, onSucess) {
             //
             canvasToPipeline();
             //
             var jsonld = pipelineModel.toJsonLd($scope.data.model);
             $http({
                 'method': 'PUT',
-                'url': uri,
+                'url': iri,
                 'params': {'unchecked': unchecked},
                 'headers': {'Content-Type': 'application/json'},
                 'data': jsonld
@@ -801,7 +801,7 @@ define([
         $scope.onCopy = function () {
             var id = 'created-' + (new Date()).getTime();
             $http.post('/resources/pipelines/' + id).then(function (response) {
-                var newPipelineUri = response.data.iri;
+                var newPipelineUri = response.data.uri;
                 // Save pipeline under new IRI.
                 storePipeline(newPipelineUri, false, function () {
                     statusService.success({
