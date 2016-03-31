@@ -150,6 +150,19 @@ define([
                         }
                     };
                     break;
+                case 'http://etl.linkedpipes.com/resources/status/running':
+                    // In some cases the pipeline can be finished or failed,
+                    // while it's in fact still running. We use
+                    // monitor-status to solve this.
+                    execution.canDelete = false;
+                    execution.icon = {
+                        'name': 'run',
+                        'style': {
+                            'color': 'blue'
+                        }
+                    };
+                    execution.detailType = 'PROGRESS';
+                    break;
                 default:
                     break;
             };
