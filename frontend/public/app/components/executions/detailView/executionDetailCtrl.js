@@ -18,47 +18,42 @@ define([
         };
 
         $scope.data = {
-            'components': []
+            'components': [],
+            'componentsMap': {},
+            'pipeline' : {}
         };
 
-        var decorator = function (component) {
-            // Prepare paths in data units.
-            var exec = $routeParams.execution;
-            var ftpPath = infoService.get().path.ftp + '/' +
-                    exec.substring(exec.lastIndexOf('executions/') + 11) + '/';
-            component.dataUnits.forEach(function (dataUnit) {
-                dataUnit.ftp = ftpPath + dataUnit.debug;
-            });
-            // Convert times.
-            component.startTime = Date.parse(component.start);
-            if (component.end) {
-                component.endTime = Date.parse(component.end);
+        /**
+         * Update changing properties in target from source.
+         */
+        var updateComponent = function (target, source) {
+            target.startTime = Date.parse(source.start);
+            if (source.end) {
+                target.endTime = Date.parse(source.end);
             }
-            // Get label.
-            component.label = component.iri;
             // Compute duration.
-            if (component.endTime) {
-                var duration = (component.endTime - component.startTime) / 1000;
+            if (source.endTime) {
+                var duration = (source.endTime - source.startTime) / 1000;
                 var seconds = Math.ceil((duration) % 60);
                 var minutes = Math.floor((duration / (60)) % 60);
                 var hours = Math.floor(duration / (60 * 60));
-                component.duration = (hours < 10 ? '0' + hours : hours) +
+                target.duration = (hours < 10 ? '0' + hours : hours) +
                         ':' + (minutes < 10 ? '0' + minutes : minutes) +
                         ':' + (seconds < 10 ? '0' + seconds : seconds);
             } else {
-                component.duration = '';
+                target.duration = '';
             }
             //
-//            if (component.progress) {
-//                component.progress.value = 100 *
-//                        (component.progress.current / component.progress.total);
-//            }
+            if (typeof (source.current) !== undefined) {
+                target.progress = 100 * (source.current / source.total);
+            }
+            //
             // Determine detail and icon type.
-            switch (component.status) {
+            switch (source.status) {
                 case 'http://etl.linkedpipes.com/resources/status/initializing':
                 case 'http://etl.linkedpipes.com/resources/status/running':
-                    component.detailType = 'RUNNING';
-                    component.icon = {
+                    target.detailType = 'RUNNING';
+                    target.icon = {
                         'name': 'run',
                         'style': {
                             'color': 'blue'
@@ -66,8 +61,8 @@ define([
                     };
                     break;
                 case 'http://etl.linkedpipes.com/resources/status/finished':
-                    component.detailType = 'FINISHED';
-                    component.icon = {
+                    target.detailType = 'FINISHED';
+                    target.icon = {
                         'name': 'done',
                         'style': {
                             'color': 'green'
@@ -75,8 +70,8 @@ define([
                     };
                     break;
                 case 'http://etl.linkedpipes.com/resources/status/failed':
-                    component.detailType = 'FAILED';
-                    component.icon = {
+                    target.detailType = 'FAILED';
+                    target.icon = {
                         'name': 'error',
                         'style': {
                             'color': 'red'
@@ -84,21 +79,39 @@ define([
                     };
                     break;
                 default:
-                    component.detailType = 'NONE';
+                    target.detailType = 'NONE';
                     break;
             }
         };
 
+        /**
+         * Compute aditional properties for given component.
+         */
+        var decorateComponent = function (component) {
+            // Prepare paths in data units.
+            var exec = $routeParams.execution;
+            var ftpPath = infoService.get().path.ftp + '/' +
+                    exec.substring(exec.lastIndexOf('executions/') + 11) + '/';
+            component.dataUnits.forEach(function (dataUnit) {
+                dataUnit.ftp = ftpPath + dataUnit.debug;
+            });
+            // Get label.
+            component.label = component.iri;
+            //
+            updateComponent(component, component);
+        };
+
+        /**
+         * Load pipeline info and execute onSuccess callback when
+         * the pipeline is loaded. If called multiple times other
+         * calls are ignored.
+         */
         var loadPipeline = function (iri, onSuccess) {
             if (status.pipelineLoading) {
                 return;
             }
             $http.get(iri).then(function (response) {
-
-                console.time('Loading pipeline');
-
                 var labels = {};
-
                 jsonld.iterateObjects(response.data, function (resource, graph) {
                     var types;
                     if (jQuery.isArray(resource['@type'])) {
@@ -115,9 +128,6 @@ define([
                         }
                     }
                 });
-
-                console.timeEnd('Loading pipeline');
-
                 $scope.data.pipeline = {
                     'labels': labels
                 };
@@ -129,13 +139,14 @@ define([
             });
         };
 
+        /**
+         * Bind labels from the $scope.data.pipeline to the
+         * $scope.data.components.
+         */
         var bindLabels = function () {
             if (status.labelsLoading || !status.pipelineLoaded) {
                 return;
             }
-
-            console.time('Loading labels');
-
             $scope.data.components.forEach(function (component) {
                 component.labels = $scope.data.pipeline.labels[component.iri];
                 if (component.labels) {
@@ -152,155 +163,194 @@ define([
                     }
                 }
             });
-
-            console.timeEnd('Loading labels');
-
             status.labelsLoading = false;
         };
 
-        var loadExecution = function () {
+        var parseData = function (executionJsonld) {
+            console.time('Parse data');
 
-            $http.get($routeParams.execution).then(function (response) {
-                var data = {};
-                var components = {};
-                var dataUnits = {};
+            var pipeline = {};
+            var components = {};
+            var dataUnits = {};
 
-                console.time('Loading execution');
-
-                jsonld.iterateObjects(response.data, function (resource, graph) {
-                    var types;
-                    if (jQuery.isArray(resource['@type'])) {
-                        types = resource['@type'];
-                    } else {
-                        types = [resource['@type']];
-                    }
-                    for (var index in types) {
-                        switch (types[index]) {
-                            case 'http://etl.linkedpipes.com/ontology/Execution':
-                                data.status = jsonld.getReference(resource,
-                                        'http://etl.linkedpipes.com/ontology/status');
-                                data.pipeline = jsonld.getReference(resource,
-                                        'http://etl.linkedpipes.com/ontology/pipeline');
-                                if (!$scope.data.pipeline) {
-                                    loadPipeline(resource['@id'] + '/pipeline', bindLabels);
-                                }
-                                break;
-                            case 'http://linkedpipes.com/ontology/events/ExecutionBegin':
-                                data.start = jsonld.getString(resource,
-                                        'http://linkedpipes.com/ontology/events/created');
-                                break;
-                            case 'http://linkedpipes.com/ontology/events/ComponentBegin':
-                                var iri = jsonld.getReference(resource,
-                                        'http://linkedpipes.com/ontology/component');
-                                if (!components[iri]) {
-                                    components[iri] = {
-                                        'iri': iri
-                                    };
-                                }
-                                var component = components[iri];
-                                //
-                                component.start = jsonld.getString(resource,
-                                        'http://linkedpipes.com/ontology/events/created');
-                                component.order = jsonld.getInteger(resource,
-                                        'http://linkedpipes.com/ontology/order');
-                                break;
-                            case 'http://linkedpipes.com/ontology/events/ComponentEnd':
-                                var iri = jsonld.getReference(resource,
-                                        'http://linkedpipes.com/ontology/component');
-                                if (!components[iri]) {
-                                    components[iri] = {
-                                        'iri': iri
-                                    };
-                                }
-                                var component = components[iri];
-                                //
-                                component.end = jsonld.getString(resource,
-                                        'http://linkedpipes.com/ontology/events/created');
-                                break;
-                            case 'http://linkedpipes.com/ontology/events/ComponentFailed':
-                                var iri = jsonld.getReference(resource,
-                                        'http://linkedpipes.com/ontology/component');
-                                if (!components[iri]) {
-                                    components[iri] = {
-                                        'iri': iri
-                                    };
-                                }
-                                var component = components[iri];
-                                //
-                                component.exception = jsonld.getString(resource,
-                                        'http://linkedpipes.com/ontology/events/rootException');
-                                component.end = jsonld.getString(resource,
-                                        'http://linkedpipes.com/ontology/events/created');
-                                break;
-                            case 'http://linkedpipes.com/ontology/events/ExecutionEnd':
-                                data.end = jsonld.getString(resource,
-                                        'http://linkedpipes.com/ontology/events/created');
-                                break;
-                            case 'http://linkedpipes.com/ontology/Component':
-                                var iri = resource['@id'];
-                                if (!components[iri]) {
-                                    components[iri] = {
-                                        'iri': iri
-                                    };
-                                }
-                                var component = components[iri];
-                                //
-                                component.status = jsonld.getReference(resource,
-                                        'http://etl.linkedpipes.com/ontology/status');
-                                component.dataUnits = jsonld.getReferenceAll(
-                                        resource, 'http://etl.linkedpipes.com/ontology/dataUnit');
-                                break;
-                            case 'http://etl.linkedpipes.com/ontology/DataUnit':
-                                var dataunit = {
-                                    'iri': resource['@id'],
-                                    'binding': jsonld.getString(resource,
-                                            'http://etl.linkedpipes.com/ontology/binding'),
-                                    'debug': jsonld.getString(resource,
-                                            'http://etl.linkedpipes.com/ontology/debug')
+            jsonld.iterateObjects(executionJsonld, function (resource, graph) {
+                var types;
+                if (jQuery.isArray(resource['@type'])) {
+                    types = resource['@type'];
+                } else {
+                    types = [resource['@type']];
+                }
+                for (var index in types) {
+                    switch (types[index]) {
+                        case 'http://etl.linkedpipes.com/ontology/Execution':
+                            pipeline.status = jsonld.getReference(resource,
+                                    'http://etl.linkedpipes.com/ontology/status');
+                            pipeline.pipeline = jsonld.getReference(resource,
+                                    'http://etl.linkedpipes.com/ontology/pipeline');
+                            if (!$scope.data.pipeline) {
+                                loadPipeline(resource['@id'] + '/pipeline', bindLabels);
+                            }
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ExecutionBegin':
+                            pipeline.start = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ComponentBegin':
+                            var iri = jsonld.getReference(resource,
+                                    'http://linkedpipes.com/ontology/component');
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
                                 };
-                                // 005 - > ftp://localhost:2221/e4a9640d-f032-40ef-b7ab-14bc28e55f7c/005/
-                                dataUnits[dataunit.iri] = dataunit;
-                                break;
-                        }
+                            }
+                            var component = components[iri];
+                            //
+                            component.start = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            component.order = jsonld.getInteger(resource,
+                                    'http://linkedpipes.com/ontology/order');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ComponentEnd':
+                            var iri = jsonld.getReference(resource,
+                                    'http://linkedpipes.com/ontology/component');
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
+                                };
+                            }
+                            var component = components[iri];
+                            //
+                            component.end = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ComponentFailed':
+                            var iri = jsonld.getReference(resource,
+                                    'http://linkedpipes.com/ontology/component');
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
+                                };
+                            }
+                            var component = components[iri];
+                            //
+                            component.exception = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/rootException');
+                            component.end = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ExecutionEnd':
+                            pipeline.end = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/Component':
+                            var iri = resource['@id'];
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
+                                };
+                            }
+                            var component = components[iri];
+                            //
+                            component.status = jsonld.getReference(resource,
+                                    'http://etl.linkedpipes.com/ontology/status');
+                            component.dataUnits = jsonld.getReferenceAll(
+                                    resource, 'http://etl.linkedpipes.com/ontology/dataUnit');
+                            break;
+                        case 'http://etl.linkedpipes.com/ontology/DataUnit':
+                            var dataunit = {
+                                'iri': resource['@id'],
+                                'binding': jsonld.getString(resource,
+                                        'http://etl.linkedpipes.com/ontology/binding'),
+                                'debug': jsonld.getString(resource,
+                                        'http://etl.linkedpipes.com/ontology/debug')
+                            };
+                            // 005 - > ftp://localhost:2221/e4a9640d-f032-40ef-b7ab-14bc28e55f7c/005/
+                            dataUnits[dataunit.iri] = dataunit;
+                            break;
                     }
-                });
+                }
+            });
 
+            for (var iri in components) {
+                var component = components[iri];
+                // Filter components.
+                if (component.status === 'http://etl.linkedpipes.com/resources/status/queued') {
+                    continue;
+                }
+                // Bind data units.
+                for (var index in component.dataUnits) {
+                    component.dataUnits[index] =
+                            dataUnits[component.dataUnits[index]];
+                }
+            }
+
+            console.timeEnd('Parse data');
+            return {
+                'components' : components,
+                'pipeline': pipeline
+            };
+        };
+
+        var loadExecution = function () {
+            $http.get($routeParams.execution).then(function (response) {
+                var data = parseData(response.data);
+                var componentsMap = {};
                 var componentsArray = [];
-                for (var iri in components) {
-                    var component = components[iri];
-                    // Filter components.
+                for (var iri in data.components) {
+                    var component = data.components[iri];
                     if (component.status === 'http://etl.linkedpipes.com/resources/status/queued') {
                         continue;
                     }
-                    // Bind data units.
-                    for (var index in component.dataUnits) {
-                        component.dataUnits[index] =
-                                dataUnits[component.dataUnits[index]];
-                    }
-                    // Call decorator.
-                    decorator(component);
-                    // Store into an array.
+                    decorateComponent(component);
                     componentsArray.push(component);
+                    componentsMap[iri] = component;
                 }
-
-                console.timeEnd('Loading execution');
-
                 // Set data.
                 $scope.data.components = componentsArray;
+                $scope.data.componentsMap = componentsMap;
                 $scope.status.loaded = true;
-
-                console.log('pipeline   : ', data);
-                console.log('components : ', $scope.data.components);
-
-                // InitializationFailed
-                // ExecutionCancelled
-                // ComponentFailed
-
+                $scope.data.pipeline = data.pipeline;
+                //
                 bindLabels();
             });
         };
 
-        infoService.wait(loadExecution);
+        var updateExecution = function () {
+            if ($scope.data.pipeline.status === 'http://etl.linkedpipes.com/resources/status/finished') {
+                console.log('Updating.. skipped');
+                return;
+            }
+            console.log('Updating..');
+            $http.get($routeParams.execution).then(function (response) {
+                var data = parseData(response.data);
+                for (var iri in data.components) {
+                    var component = data.components[iri];
+                    if (component.status === 'http://etl.linkedpipes.com/resources/status/queued') {
+                        continue;
+                    }
+                    if (!$scope.data.componentsMap[iri]) {
+                        // New component.
+                        decorateComponent(component);
+                        $scope.data.components.push(component);
+                        $scope.data.componentsMap[iri] = component;
+                    } else {
+                        // Update existing.
+                        updateComponent($scope.data.componentsMap[iri],
+                                component);
+                    }
+                }
+                $scope.data.pipeline = data.pipeline;
+            });
+        };
+
+        var initialize = function () {
+            infoService.wait(loadExecution);
+            refreshService.set(function () {
+                updateExecution();
+            });
+        };
+
+        initialize();
 
     }
 
