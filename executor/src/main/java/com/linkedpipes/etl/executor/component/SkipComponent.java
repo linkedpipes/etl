@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.component;
 
 /**
  * Execute component with "SKIP" execution type.
- * 
+ *
  * @author Petr Škoda
  */
 class SkipComponent implements ComponentExecutor {
@@ -12,12 +12,17 @@ class SkipComponent implements ComponentExecutor {
 
     @Override
     public void execute() {
-        // No aciton here.
+        // No action here.
     }
 
     @Override
     public void cancel() {
-        // No aciton here.
+        // No action here.
+    }
+
+    @Override
+    public boolean unexpectedTermination() {
+        return false;
     }
 
 }

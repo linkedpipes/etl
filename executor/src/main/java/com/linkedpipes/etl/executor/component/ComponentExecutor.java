@@ -23,6 +23,14 @@ public interface ComponentExecutor {
     public void cancel();
 
     /**
+     * If true then the pipeline execution should fail as the executor
+     * thread fail to end properly.
+     *
+     * @return True in case of unexpected termination.
+     */
+    public boolean unexpectedTermination();
+
+    /**
      *
      * @param module
      * @param dataunit

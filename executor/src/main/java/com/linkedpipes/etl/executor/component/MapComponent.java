@@ -56,4 +56,9 @@ class MapComponent implements ComponentExecutor {
         cancel = true;
     }
 
+    @Override
+    public boolean unexpectedTermination() {
+        return false;
+    }
+
 }

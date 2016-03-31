@@ -69,7 +69,8 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
      *
      * @return False in case of a normal thread termination.
      */
-    public boolean isUnexpectedTermination() {
+    @Override
+    public boolean unexpectedTermination() {
         return unexpectedTermination;
     }
 
@@ -92,6 +93,11 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
         if (unexpectedTermination) {
             eventManager.publish(EventFactory.executionFailed(
                     "Unexpected termination of component execution thread."));
+        }
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException ex) {
+
         }
         LOG.info("Execution ends for: {}", this.componentDefinition.getIri());
     }

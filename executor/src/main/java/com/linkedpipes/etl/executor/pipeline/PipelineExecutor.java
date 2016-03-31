@@ -164,6 +164,11 @@ public class PipelineExecutor implements EventManager.EventListener {
                 componentExecutor = executor;
                 executor.execute();
                 componentExecutor = null;
+                if (executor.unexpectedTermination()) {
+                    events.publish(EventFactory.executionFailed(
+                            "Unexpected component thread termination detected."
+                    ));
+                }
             }
             if (stopExecution) {
                 break;
