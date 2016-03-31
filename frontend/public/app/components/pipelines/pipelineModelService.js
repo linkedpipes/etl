@@ -55,7 +55,7 @@ define([], function () {
          * @param id ID used to create an URI.
          */
         service.component.setIriFromId = function (model, component, id) {
-            component['@id'] = model.definition.uri + '/components/' + id;
+            component['@id'] = model.definition.iri + '/components/' + id;
         };
 
         service.connection.getSource = function (connection) {
@@ -123,7 +123,7 @@ define([], function () {
          * @param id ID used to create an URI.
          */
         service.connection.setIriFromId = function (model, component, id) {
-            component['@id'] = model.definition.uri + '/connection/' + id;
+            component['@id'] = model.definition.iri + '/connection/' + id;
         };
 
         service.connection.setSource = function (connection, component, binding) {
@@ -379,8 +379,12 @@ define([], function () {
                 newComponent['http://linkedpipes.com/ontology/configurationGraph'] = {
                     '@id': newConfigUri
                 };
-                model['graphs'][newConfigUri]
-                        = jQuery.extend(true, {}, model['graphs'][configIri]);
+                var configGraph = [];
+                model['graphs'][configIri].forEach(function (item) {
+                    configGraph.push(jQuery.extend(true, {}, item));
+                });
+                model['graphs'][newConfigUri] = configGraph;
+                console.log('graph', model['graphs']);
             }
             return newComponent;
         };

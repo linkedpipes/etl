@@ -48,7 +48,7 @@ define(['app/components/configuration/configurationHolderDirective'], function (
             } else {
                 $scope.configuration = {
                     'uri': component['@id'] + '/configuration',
-                    'value': template['configuration']
+                    'value': template['configuration']['@graph']
                 };
             }
         };

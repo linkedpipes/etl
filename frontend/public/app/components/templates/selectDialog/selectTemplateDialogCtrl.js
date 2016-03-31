@@ -53,7 +53,7 @@ define([], function () {
             //
             if (filter.source) {
                 //
-                var sourceTemplate = templatesRepository.getTemplate(filter.source.templateUri);
+                var sourceTemplate = templatesRepository.getTemplate(filter.source.templateIri);
                 var sourcePort;
                 for (var index in sourceTemplate.outputs) {
                     if (sourceTemplate.outputs[index]['binding'] === filter.source.binding) {
