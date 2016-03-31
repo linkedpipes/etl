@@ -52,6 +52,8 @@ class ExecutionServlet {
 
     private PipelineExecutor executor = null;
 
+    private final Object lock = new Object();
+
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -85,17 +87,21 @@ class ExecutionServlet {
      * @return False if there is running pipeline.
      */
     public boolean execute(File executionDirectory, String iri) {
-        if (executor != null) {
-            // Already executing.
-            return false;
+        synchronized (lock) {
+            if (executor != null) {
+                // Already executing.
+                return false;
+            }
+            final PipelineExecutor newExecutor
+                    = new PipelineExecutor(executionDirectory, modules);
+            newExecutor.initialize(iri);
+            executor = newExecutor;
+            taskExecutor.execute(() -> {
+                executor.execute();
+                // Detach execution object once execution is finished.
+                executor = null;
+            });
         }
-        executor = new PipelineExecutor(executionDirectory, modules);
-        executor.initialize(iri);
-        taskExecutor.execute(() -> {
-            executor.execute();
-            // Detach execution object once execution is finished.
-            executor = null;
-        });
         return true;
     }
 
