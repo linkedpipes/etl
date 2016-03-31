@@ -1,7 +1,4 @@
-/**
- *
- */
-define([], function () {
+define(['jquery'], function (jQuery) {
 
     /**
      * Evaluate given filter on given resource.
@@ -193,69 +190,200 @@ define([], function () {
         return result;
     };
 
+    // ---------------------------------------------------------------------- //
+
+    var jsonldService = {};
+
     /**
-     * Load and return metadata object.
+     * Iterate graphs. Call callback as callback(graph, graph_iri). If callback
+     * return true then stop the iteration and return graph's id.
+     * In other case return nothing.
      */
-    var parseMetadata = function (jsonld) {
-        var json = jsonld.toJson({
-            'property': '@type',
-            'operation': 'in',
-            'value': 'http://etl.linkedpipes.com/ontology/Metadata'
-        }, {
-            'serverTime': {
-                '$property': 'http://etl.linkedpipes.com/ontology/serverTime'
+    jsonldService.iterateGraphs = function (data, callback) {
+        var graphList;
+        if (data['@graph']) {
+            if (data['@id']) {
+                // There is a graph directly in the data root.
+                graphList = [data];
+            } else {
+                graphList = data['@graph'];
             }
-        });
-        return json[0];
+        } else {
+            graphList = data;
+        }
+        //
+        for (var graphIndex in graphList) {
+            var graph = graphList[graphIndex];
+            if (graph['@graph'] && graph['@id']) {
+                if (callback(graph['@graph'], graph['@id'])) {
+                    return graph['@id'];
+                }
+            } else {
+                console.log('Invalid graph detected: ', graph);
+            }
+        }
     };
 
     /**
-     * Data must be array of graphs.
+     * Itarate over all objects, if callback(resource, graph_iri) return true
+     * then stop the iteration and return object with graph name
+     * and resource IRI.
      */
-    function JsonldObject(data) {
-        this.data = data;
-        // Store current data, use for chaining.
-        this.current = {};
+    jsonldService.iterateObjects = function (data, callback) {
+        var result;
+        this.iterateGraphs(data, function (graph, iri) {
+            for (var object_index in graph) {
+                if (callback(graph[object_index], iri)) {
+                    result = {
+                        'resource': graph[object_index],
+                        'graph': iri
+                    };
+                    return true;
+                }
+            }
+        });
+        return result;
+    };
 
-        /**
-         * Evaluate query and use result objects to construct JSON
-         * based on given tempalte. For each query result object
-         * create a separated JSON, ie. return array of JSON objects.
-         */
-        this.toJson = function (query, template) {
-            var objects = [];
-            this.iterateObjects(function (object, graph) {
-                if (evaluteFilter(object, query)) {
-                    objects.push({
-                        'value': object,
-                        'graph': graph
-                    });
+    /**
+     * Evaluate given query and return the result {resource_object, graph_iri}.
+     */
+    jsonldService.query = function (data, queryObject) {
+        var result;
+        this.iterateObjects(data, function (object, graphIri) {
+            if (evaluteFilter(object, queryObject)) {
+                result = {
+                    'resource': object,
+                    'graphIri': graphIri
+                };
+                return true;
+            }
+        });
+        return result;
+    };
+
+    jsonldService.queryAll = function (data, queryObject) {
+        var result = [];
+        this.iterateObjects(data, function (object, graphIri) {
+            if (evaluteFilter(object, queryObject)) {
+                result.push({
+                    'resource': object,
+                    'graphIri': graphIri
+                });
+            }
+        });
+        return result;
+    };
+
+    /**
+     * Return IRI of the reference. Ie. IRI of object stored under given
+     * predicate. Return nothing if there are no data.
+     */
+    jsonldService.getReference = function (object, property) {
+        if (!object[property]) {
+            return;
+        }
+        var value = object[property];
+        if (value['@id']) {
+            return value['@id'];
+        } else if (value[0]['@id']) {
+            return value[0]['@id'];
+        } else {
+            return value['@id'];
+        }
+    };
+
+    /**
+     * Return array of references IRI. Ie. IRI of object stored under given
+     * predicate. Return empty array if there are no references or
+     * the property is missing.
+     */
+    jsonldService.getReferenceAll = function (object, property) {
+        if (!object[property]) {
+            return [];
+        }
+        var value = object[property];
+        if (jQuery.isArray(value)) {
+            var result = [];
+            value.forEach(function (item) {
+                if (item['@id']) {
+                    result.push(item['@id']);
+                } else {
+                    result.push(item);
                 }
             });
-            var json = [];
-            for (var object_index in objects) {
-                var object = objects[object_index];
-                json.push(evaluateTemplate(this.data,
-                        object['graph'], object['value'], template));
-            }
-            return json;
-        };
+            return result;
+        } else {
+            return [this.getReference(object, property)];
+        }
+        return [];
+    };
 
-        /**
-         * Itarate over all nobjects, if callback return false
-         * then stop the iteration.
-         */
-        this.iterateObjects = function (callback) {
-            for (var graphIndex in this.data) {
-                var graph = this.data[graphIndex];
-                for (var object_index in graph['@graph']) {
-                    callback(graph['@graph'][object_index], graph['@id']);
-                }
+    jsonldService.getString = function (object, property) {
+        var value = object[property];
+        if (!value) {
+            return;
+        }
+        if (jQuery.isArray(value)) {
+            value = value[0];
+            if (!value) {
+                return;
             }
-        };
-    }
+            //
+            if (value['@value']) {
+                return value['@value'];
+            } else {
+                return value;
+            }
+        } else {
+            if (value['@value']) {
+                return value['@value'];
+            } else {
+                return value;
+            }
+        }
+    };
 
-    function JsonldRepository(settings) {
+    jsonldService.getInteger = function (object, property) {
+        if (!object[property]) {
+            return;
+        }
+        var value = object[property];
+        if (jQuery.isArray(value)) {
+            value = value[0];
+        }
+        if (value['@value']) {
+            return parseInt(value['@value']);
+        } else {
+            return parseInt(value);
+        }
+    };
+
+    // ---------------------------------------------------------------------- //
+
+    var toJson = function (data, query, template) {
+        var objects = [];
+        jsonldService.iterateObjects(data, function (object, graph) {
+            if (evaluteFilter(object, query)) {
+                objects.push({
+                    'value': object,
+                    'graph': graph
+                });
+            }
+        });
+        var json = [];
+        for (var object_index in objects) {
+            var object = objects[object_index];
+            json.push(evaluateTemplate(data,
+                    object['graph'], object['value'], template));
+        }
+        return json;
+    };
+
+    /**
+     * Class that cen be used to load, update and delete jsonld object.
+     */
+    function JsonldRepository(settings, $http) {
         this.data = [];
         this.template = settings['template'];
         this.query = settings['query'];
@@ -264,143 +392,163 @@ define([], function () {
         this.url = settings['url'];
         this.decorator = settings['decorator'];
         this.lastCheck = '';
+        var repository = this;
+
+        /**
+         * Load and return metadata object.
+         */
+        var parseMetadata = function (data) {
+            var json = toJson(data, {
+                'property': '@type',
+                'operation': 'in',
+                'value': 'http://etl.linkedpipes.com/ontology/Metadata'
+            }, {
+                'serverTime': {
+                    '$property': 'http://etl.linkedpipes.com/ontology/serverTime'
+                }
+            });
+            return json[0];
+        };
+
+        this.load = function (onSuccess, onError) {
+            if (this.loading) {
+                return;
+            }
+            //
+            this.loading = true;
+
+            //
+            $http.get('/resources/executions').then(function (response) {
+                console.time('Loading data');
+                var json = toJson(response.data, repository.query.data,
+                        repository.template);
+                // Decorate items.
+                json.forEach(repository.decorator);
+                // Store all data.
+                repository.data = json;
+                //
+                var metadata = parseMetadata(response.data);
+                repository.lastCheck = metadata.serverTime;
+                //
+                console.timeEnd('Loading data');
+                if (onSuccess) {
+                    onSuccess();
+                }
+                //
+                repository.loaded = true;
+                repository.loading = false;
+            }, function (response) {
+                if (onError) {
+                    onError(response);
+                }
+                //
+                repository.loading = false;
+            });
+        };
+
+        this.update = function (onSuccess, onError) {
+            /**
+             * Update content of the this.
+             */
+            if (!repository.loaded) {
+                // We need to load before updating.
+                repository.load(onSuccess, onError);
+                return;
+            }
+            //
+            if (repository.loading) {
+                return;
+            }
+            //
+            repository.loading = true;
+            //
+            $http.get('/resources/executions', {
+                params: {'changedSince': repository.lastCheck}}
+            ).then(function (response) {
+                // Delete executions, based on tombstones.
+                var deleted = toJson(response.data, repository.query.deleted, {
+                    'iri': {'$resource': ''}
+                });
+                deleted.forEach(function (execution) {
+                    for (var i = repository.data.length - 1; i >= 0; --i) {
+                        if (repository.data[i].iri === execution.iri) {
+                            repository.data.splice(i, 1);
+                        }
+                    }
+                });
+                // Update and add new executions.
+                var json = toJson(response.data, repository.query.data,
+                        repository.template);
+                // Decorate items.
+                json.forEach(function (item) {
+                    repository.decorator(item);
+                    console.log(item);
+                    //
+                    var isNew = true;
+                    for (var i = 0; i < repository.data.length; i++) {
+                        if (repository.data[i].iri === item.iri) {
+                            // Replace original value.
+                            repository.data[i] = item;
+                            isNew = false;
+                            break;
+                        }
+                    }
+                    if (isNew) {
+                        repository.data.push(item);
+                    }
+                });
+                //
+                var metadata = parseMetadata(response.data);
+                this.lastCheck = metadata.serverTime;
+                //
+                console.timeEnd('Updating data');
+                if (onSuccess) {
+                    onSuccess();
+                }
+                //
+                repository.loaded = true;
+                repository.loading = false;
+            }, function (response) {
+                if (onError) {
+                    onError(response);
+                }
+                //
+                this.loading = false;
+            });
+        };
+
+        this.delete = function (object, onSuccess, onError) {
+            $http({method: 'DELETE', url: object.iri}).then(function () {
+                if (onSuccess) {
+                    onSuccess();
+                }
+            }, function (response) {
+                if (onError) {
+                    onError(response);
+                }
+            });
+        };
+
     }
 
-    //
     function factoryFunction($http) {
         return {
-            'createJsonld' : function(data) {
-                return new JsonldObject(data);
+            'toJson': function (data, query, template) {
+                return toJson(data, query, template);
             },
             'createRepository': function (settings) {
-                return new JsonldRepository(settings);
+                return new JsonldRepository(settings, $http);
             },
-            'load': function (repository, onSuccess, onError) {
-                if (repository.loading) {
-                    return;
-                }
-                //
-                repository.loading = true;
-                //
-                $http.get('/resources/executions').then(function (response) {
-                    console.time('Loading data');
-                    var jsonld = new JsonldObject(response.data);
-                    var json = jsonld.toJson(repository.query.data,
-                            repository.template);
-                    // Decorate items.
-                    json.forEach(repository.decorator);
-                    // Store all data.
-                    repository.data = json;
-                    //
-                    var metadata = parseMetadata(jsonld);
-                    repository.lastCheck = metadata.serverTime;
-                    //
-                    console.timeEnd('Loading data');
-                    if (onSuccess) {
-                        onSuccess();
-                    }
-                    //
-                    repository.loaded = true;
-                    repository.loading = false;
-                }, function (response) {
-                    if (onError) {
-                        onError(response);
-                    }
-                    //
-                    repository.loading = false;
-                });
-            },
-            'update': function (repository, onSuccess, onError) {
-                /**
-                 * Update content of the repository.
-                 */
-                if (!repository.loaded) {
-                    // We need to load before updating.
-                    this.load(repository, onSuccess, onError);
-                    return;
-                }
-                //
-                if (repository.loading) {
-                    return;
-                }
-                //
-                repository.loading = true;
-                //
-                $http.get('/resources/executions', {
-                    params: {'changedSince': repository.lastCheck}}
-                ).then(function (response) {
-                    console.time('Updating data');
-                    var jsonld = new JsonldObject(response.data);
-                    // Delete executions, based on tombstones.
-                    var deleted = jsonld.toJson(repository.query.deleted, {
-                        'iri': {'$resource': ''}
-                    });
-                    deleted.forEach(function (execution) {
-                        for (var i = repository.data.length - 1; i >= 0; --i) {
-                            if (repository.data[i].iri === execution.iri) {
-                                repository.data.splice(i, 1);
-                            }
-                        }
-                    });
-                    // Update and add new executions.
-                    var json = jsonld.toJson(repository.query.data,
-                            repository.template);
-                    // Decorate items.
-                    json.forEach(function (item) {
-                        repository.decorator(item);
-                        //
-                        var isNew = true;
-                        for (var i = 0; i < repository.data.length; i++) {
-                            if (repository.data[i].iri === item.iri) {
-                                // Replace original value.
-                                repository.data[i] = item;
-                                isNew = false;
-                                break;
-                            }
-                        }
-                        if (isNew) {
-                            repository.data.push(item);
-                        }
-                    });
-                    //
-                    var metadata = parseMetadata(jsonld);
-                    repository.lastCheck = metadata.serverTime;
-                    //
-                    console.timeEnd('Updating data');
-                    if (onSuccess) {
-                        onSuccess();
-                    }
-                    //
-                    repository.loaded = true;
-                    repository.loading = false;
-                }, function (response) {
-                    if (onError) {
-                        onError(response);
-                    }
-                    //
-                    repository.loading = false;
-                });
-            },
-            'delete': function (repository, object, onSuccess, onError) {
-                $http({method: 'DELETE', url: object.iri})
-                        .then(function () {
-                            if (onSuccess) {
-                                onSuccess();
-                            }
-                        }, function (response) {
-                            if (onError) {
-                                onError(response);
-                            }
-                        });
+            'jsonld': function () {
+                return jsonldService;
             }
-
         };
     }
-    //
+
     factoryFunction.$inject = [];
-    //
-    function init(app) {
+
+    return function init(app) {
         app.factory('services.jsonld', ['$http', factoryFunction]);
-    }
-    return init;
+    };
+
 });

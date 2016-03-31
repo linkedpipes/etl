@@ -19,6 +19,14 @@ var gMonitorUri = gConfiguration.executor.monitor.url;
 // Components as templates.
 //
 
+gApiRouter.get('/info', function (request, response) {
+    response.status(200).json({
+        'path' : {
+            'ftp' : gConfiguration.executor.ftp.uri
+        }
+    });
+});
+
 gApiRouter.get('/unpack', function (request, response) {
     response.status(200).setHeader('content-type', 'text/trig');
     gUnpacker.unpack(request.query.uri, {}, function (sucess, result) {
@@ -39,7 +47,7 @@ gApiRouter.post('/execute', function (request, response) {
             return;
         }
         var formData = {
-            extension: 'jsonld',
+            format: 'application/ld+json',
             file: {
                 value: JSON.stringify(result),
                 options: {
