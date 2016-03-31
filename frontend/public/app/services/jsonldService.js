@@ -482,7 +482,6 @@ define(['jquery'], function (jQuery) {
                 // Decorate items.
                 json.forEach(function (item) {
                     repository.decorator(item);
-                    console.log(item);
                     //
                     var isNew = true;
                     for (var i = 0; i < repository.data.length; i++) {
