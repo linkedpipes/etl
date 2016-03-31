@@ -63,7 +63,7 @@ class Parser {
                 final File outputFile = outputFiles.createFile(outputFileName);
                 LOG.info("Parsing sheet: '{}' number of rows: {} into file: {}",
                         sheet.getSheetName(), sheet.getLastRowNum(), outputFile);
-                try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile))) {
+                try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile), false, "UTF-8")) {
                     processSheet(sheet, outputStream, context);
                 } catch (IOException ex) {
                     throw new DataProcessingUnit.ExecutionFailed("Can't write output to file.", ex);
