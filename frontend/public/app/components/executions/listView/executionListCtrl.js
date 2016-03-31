@@ -47,6 +47,9 @@ define([
         };
 
         var decorator = function (execution) {
+            //
+            execution.id = execution.iri.substring(
+                    execution.iri.lastIndexOf('executions/') + 11);
             // Convert times.
             execution.startTime = Date.parse(execution.start);
             if (execution.end) {
@@ -81,7 +84,7 @@ define([
                 execution.progress.value = 100 *
                         (execution.progress.current / execution.progress.total);
             }
-            // Determine detail and incon type.
+            // Determine detail and icon type.
             switch (execution.status) {
                 case 'http://etl.linkedpipes.com/resources/status/queued':
                     execution.canDelete = true;
@@ -163,7 +166,7 @@ define([
         $scope.onExecute = function (execution) {
             $http.post('/api/v1/execute?uri=' + execution.pipeline.iri)
                     .then(function () {
-                        jsonldService.update($scope.repository);
+                        $scope.repository.update();
                     }, function (response) {
                         statusService.postFailed({
                             'title': "Can't start the execution.",
@@ -173,7 +176,7 @@ define([
         };
 
         $scope.onDelete = function (execution) {
-            jsonldService.delete($scope.repository, execution);
+            $scope.repository.delete(execution);
         };
 
         $scope.openMenu = function ($mdOpenMenu, ev) {
@@ -181,7 +184,7 @@ define([
         };
 
         var initialize = function () {
-            jsonldService.load($scope.repository, function () { },
+            $scope.repository.load(function () { },
                     function (response) {
                         statusService.getFailed({
                             'title': "Can't load data.",
@@ -190,7 +193,7 @@ define([
                     });
 
             refreshService.set(function () {
-                jsonldService.update($scope.repository);
+                $scope.repository.update();
             });
         };
 

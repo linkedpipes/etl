@@ -23,7 +23,7 @@
                                 <span hide-xs>
                                     <span>{{item.startTime| date:'yyyy-MM-dd HH:mm:ss'}}</span> - ...</br>
                                 </span>
-                                <md-progress-linear md-mode="determinate" value="{{item.progress}}"></md-progress-linear>
+                                <md-progress-linear md-mode="determinate" value="{{item.progress.value}}"></md-progress-linear>
                             </span>
                             <span ng-switch-when="FULL" hide-xs>
                                 <span>{{item.startTime| date:'yyyy-MM-dd HH:mm:ss'}}</span>,
