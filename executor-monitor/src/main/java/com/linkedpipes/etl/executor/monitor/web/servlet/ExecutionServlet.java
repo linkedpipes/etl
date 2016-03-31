@@ -4,6 +4,7 @@ import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorFacade;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,6 +21,7 @@ import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,8 +52,7 @@ public class ExecutionServlet {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
     public void getExecutions(
-            @RequestParam(value = "changedSince", required = false)
-                    Long changedSince,
+            @RequestParam(value = "changedSince", required = false) Long changedSince,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         //
@@ -116,6 +117,20 @@ public class ExecutionServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    @RequestMapping(value = "/{id}/logs", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public FileSystemResource getExecutionLogs(@PathVariable String id,
+            HttpServletResponse response) {
+        final File file = executionFacade.getExecutionLogFile(
+                executionFacade.getExecution(id));
+        if (file == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+        return new FileSystemResource(file);
+    }
 
     @RequestMapping(value = "/{id}/pipeline", method = RequestMethod.GET)
     @ResponseBody

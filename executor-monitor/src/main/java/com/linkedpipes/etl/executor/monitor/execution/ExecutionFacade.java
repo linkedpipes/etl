@@ -102,6 +102,15 @@ public class ExecutionFacade {
     }
 
     /**
+     *
+     * @param execution
+     * @return Path to the execution log file.
+     */
+    public File getExecutionLogFile(Execution execution) {
+        return new File(execution.getDirectory(), "log/execution.log");
+    }
+
+    /**
      * Write statements about given execution into given stream.
      *
      * @param execution
