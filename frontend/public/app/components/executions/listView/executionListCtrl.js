@@ -131,6 +131,28 @@ define([
                     execution.detailType = 'NONE';
                     break;
             }
+            // The status above can be override by the status-monitor.
+            switch (execution['status-monitor']) {
+                case 'http://etl.linkedpipes.com/resources/status/unresponsive':
+                    execution.icon = {
+                        'name': 'run',
+                        'style': {
+                            'color': 'orange'
+                        }
+                    };
+                    break;
+                case 'http://etl.linkedpipes.com/resources/status/dangling':
+                    execution.canDelete = true;
+                    execution.icon = {
+                        'name': 'run',
+                        'style': {
+                            'color': 'red'
+                        }
+                    };
+                    break;
+                default:
+                    break;
+            };
         };
 
         $scope.repository = jsonldService.createRepository({
