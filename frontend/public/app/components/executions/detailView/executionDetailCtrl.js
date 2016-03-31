@@ -20,7 +20,7 @@ define([
         $scope.data = {
             'components': [],
             'componentsMap': {},
-            'pipeline' : {}
+            'pipeline' : null
         };
 
         /**
@@ -32,8 +32,8 @@ define([
                 target.endTime = Date.parse(source.end);
             }
             // Compute duration.
-            if (source.endTime) {
-                var duration = (source.endTime - source.startTime) / 1000;
+            if (target.endTime) {
+                var duration = (target.endTime - target.startTime) / 1000;
                 var seconds = Math.ceil((duration) % 60);
                 var minutes = Math.floor((duration / (60)) % 60);
                 var hours = Math.floor(duration / (60 * 60));
@@ -109,6 +109,8 @@ define([
         var loadPipeline = function (iri, onSuccess) {
             if (status.pipelineLoading) {
                 return;
+            } else {
+                status.pipelineLoading = true;
             }
             $http.get(iri).then(function (response) {
                 var labels = {};
@@ -187,7 +189,7 @@ define([
                                     'http://etl.linkedpipes.com/ontology/status');
                             pipeline.pipeline = jsonld.getReference(resource,
                                     'http://etl.linkedpipes.com/ontology/pipeline');
-                            if (!$scope.data.pipeline) {
+                            if ($scope.data.pipeline ===null) {
                                 loadPipeline(resource['@id'] + '/pipeline', bindLabels);
                             }
                             break;
@@ -316,11 +318,10 @@ define([
         };
 
         var updateExecution = function () {
-            if ($scope.data.pipeline.status === 'http://etl.linkedpipes.com/resources/status/finished') {
-                console.log('Updating.. skipped');
+            if ($scope.data.pipeline.status === 'http://etl.linkedpipes.com/resources/status/finished'
+                    || 'http://etl.linkedpipes.com/resources/status/failed') {
                 return;
             }
-            console.log('Updating..');
             $http.get($routeParams.execution).then(function (response) {
                 var data = parseData(response.data);
                 for (var iri in data.components) {
