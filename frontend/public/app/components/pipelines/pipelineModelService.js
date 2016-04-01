@@ -384,7 +384,6 @@ define([], function () {
                     configGraph.push(jQuery.extend(true, {}, item));
                 });
                 model['graphs'][newConfigUri] = configGraph;
-                console.log('graph', model['graphs']);
             }
             return newComponent;
         };

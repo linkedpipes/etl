@@ -1,8 +1,3 @@
-requirejs.onResourceLoad = function (context, map, depArray) {
-    console.log('onResourceLoad name:', map.name, 'uri:', 'dependensies:', depArray, 'defined:',
-            typeof (requirejs.s.contexts._.defined[map.name]) !== 'undefined');
-};
-
 requirejs.config({
     baseUrl: '',
     paths: {
