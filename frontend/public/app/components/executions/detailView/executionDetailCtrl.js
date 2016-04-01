@@ -122,7 +122,7 @@ define([
                 status.pipelineLoading = true;
             }
             $http.get(iri).then(function (response) {
-                var labels = {};
+                var components = {};
                 jsonld.iterateObjects(response.data, function (resource, graph) {
                     var types;
                     if (jQuery.isArray(resource['@type'])) {
@@ -133,21 +133,37 @@ define([
                     for (var index in types) {
                         switch (types[index]) {
                             case 'http://linkedpipes.com/ontology/Component':
-                                labels[resource['@id']] = jsonld.getString(resource,
+                                var component = {};
+                                component['label'] = jsonld.getString(resource,
                                         'http://www.w3.org/2004/02/skos/core#prefLabel');
+                                component['description'] = jsonld.getString(resource,
+                                        'http://purl.org/dc/terms/description');
+                                components[resource['@id']] = component;
                                 break;
                         }
                     }
                 });
-                $scope.data.pipeline = {
-                    'labels': labels
-                };
+                $scope.data.pipeline = components;
                 status.pipelineLoading = false;
                 status.pipelineLoaded = true;
                 if (onSuccess) {
                     onSuccess();
                 }
             });
+        };
+
+        var selectString = function (value) {
+            if (jQuery.isPlainObject(value)) {
+                if (value['en']) {
+                    return value['en'];
+                } else if (value['']) {
+                    return value[''];
+                } else {
+                    // TODO Use any other.
+                }
+            } else {
+                return value;
+            }
         };
 
         /**
@@ -159,18 +175,16 @@ define([
                 return;
             }
             $scope.data.components.forEach(function (component) {
-                component.labels = $scope.data.pipeline.labels[component.iri];
-                if (component.labels) {
-                    if (jQuery.isPlainObject(component.labels)) {
-                        if (component.labels['en']) {
-                            component.label = component.labels['en'];
-                        } else if (component.labels['']) {
-                            component.label = component.labels[''];
-                        } else {
-                            // TODO Use any other.
-                        }
+                var componentInfo = $scope.data.pipeline[component.iri];
+                component.label = selectString(componentInfo['label']);
+                component.description = selectString(componentInfo['description']);
+
+                if (typeof(component.description) !== 'undefined') {
+                    if (component.description.length > 120) {
+                        component.description = ' - ' +
+                                component.description.substring(0, 116) + ' ...';
                     } else {
-                        component.label = component.labels;
+                        component.description = ' - ' + component.description;
                     }
                 }
             });

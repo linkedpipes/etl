@@ -12,8 +12,9 @@
                         <md-icon md-svg-icon="{{component.icon.name}}" class="lp-icon-avatar md-avatar" ng-style="component.icon.style"></md-icon>
                     </div>
                     <div class="md-list-item-text">
-                        <div style="margin-top: 10px">
-                            <div class="lp-font-list-label">{{component.label}}</div>
+                        <div style="margin-top: 10px" class="lp-font-list-label">
+                            <span>{{component.label}}</span>
+                            <span class="lp-font-list-content">{{component.description}}</span>
                         </div>
                         <div ng-switch on="component.detailType" class="lp-font-list-content">
                             <span ng-switch-when="RUNNING">
