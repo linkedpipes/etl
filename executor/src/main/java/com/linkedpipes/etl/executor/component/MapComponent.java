@@ -9,6 +9,8 @@ import com.linkedpipes.etl.executor.execution.ExecutionModel;
 import com.linkedpipes.etl.executor.execution.ExecutionModel.Component;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Execute component with "MAP" execution type.
@@ -16,6 +18,9 @@ import java.util.Map.Entry;
  * @author Petr Škoda
  */
 class MapComponent implements ComponentExecutor {
+
+    private static final Logger LOG
+            = LoggerFactory.getLogger(MapComponent.class);
 
     private final EventManager events;
 
@@ -34,6 +39,7 @@ class MapComponent implements ComponentExecutor {
 
     @Override
     public void execute() {
+        LOG.info("Mappping starts for: {}", this.componentExecution.getIri());
         // Get data units belonging to this comonent that are also used
         // by other components.
         final Map<String, ManagableDataUnit> dataUnits =
@@ -49,6 +55,7 @@ class MapComponent implements ComponentExecutor {
                 break;
             }
         }
+        LOG.info("Mapping ends for: {}", this.componentExecution.getIri());
     }
 
     @Override

@@ -59,7 +59,7 @@ public interface ComponentExecutor {
             case MAP:
                 return new MapComponent(events, dataunit, executionComponent);
             case SKIP:
-                return new SkipComponent();
+                return new SkipComponent(executionComponent);
             default:
                 return null;
         }
