@@ -1,5 +1,6 @@
 define([
     'jquery',
+    'file-saver',
     'angular',
     'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
     'app/components/pipelines/canvas/pipelineCanvasDirective',
@@ -7,7 +8,7 @@ define([
     'app/components/templates/templatesRepository',
     'app/components/pipelines/configurationDialog/configurationDialogCtrl',
     'app/components/templates/selectDialog/selectTemplateDialogCtrl'
-], function ($, angular, pipelineDetailDialog, pipelineCanvasDirective
+], function ($, saveAs, angular, pipelineDetailDialog, pipelineCanvasDirective
         , pipelineServiceModule, templatesRepositoryModule
         , configurationDialogCtrlModule, selectTemplateDialogModule) {
 
@@ -853,6 +854,16 @@ define([
 
         $scope.onOpenMenu = function ($mdOpenMenu, event) {
             $mdOpenMenu(event);
+        };
+
+        $scope.onDownload = function () {
+            //
+            canvasToPipeline();
+            //
+            var jsonld = pipelineModel.toJsonLd($scope.data.model);
+            saveAs(new Blob([JSON.stringify(jsonld, null, 2)],
+                    {type: 'text/json'}),
+                    $scope.data.label + '.jsonld');
         };
 
         var initialize = function () {

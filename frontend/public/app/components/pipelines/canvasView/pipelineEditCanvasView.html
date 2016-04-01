@@ -16,13 +16,18 @@
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
+                    <md-button ng-click="onDownload()" aria-label="Download">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
                     <md-button ng-click="onCopy()">
                         <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy and Open
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
                     <md-button ng-click="onDelete($event)">
-                        <md-icon md-menu-origin md-svg-icon="delete" class="lp-icon"></md-icon> Delete
+                        <md-icon md-menu-origin md-svg-icon="delete_forever" class="lp-icon"></md-icon> Delete
                     </md-button>
                 </md-menu-item>
             </md-menu-content>
