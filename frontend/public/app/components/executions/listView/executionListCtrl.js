@@ -135,7 +135,7 @@ define([
             switch (execution['status-monitor']) {
                 case 'http://etl.linkedpipes.com/resources/status/unresponsive':
                     execution.icon = {
-                        'name': 'run',
+                        'name': 'help_outline',
                         'style': {
                             'color': 'orange'
                         }
@@ -144,7 +144,7 @@ define([
                 case 'http://etl.linkedpipes.com/resources/status/dangling':
                     execution.canDelete = true;
                     execution.icon = {
-                        'name': 'run',
+                        'name': 'help_outline',
                         'style': {
                             'color': 'red'
                         }

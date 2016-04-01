@@ -56,6 +56,8 @@ define([], function () {
                 .icon('call_split', 'libraries/google.design/ic_call_split_24px.svg')
                 .icon('save', 'libraries/google.design/ic_save_24px.svg')
                 .icon('settings', 'libraries/google.design/ic_settings_24px.svg')
+                .icon('help_outline', 'libraries/google.design/ic_help_outline_24px.svg')
+                .icon('delete_forever', 'libraries/google.design/ic_delete_forever_24px.svg')
                 .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg');
 
         $mdThemingProvider.theme('default')

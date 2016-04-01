@@ -39,7 +39,7 @@
                         <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon>
                     </md-button>
                     <md-button ng-click='onDelete(item)' class="md-icon-button md-secondary" aria-label="Delete" ng-disabled="!item.canDelete" hide-xs>
-                        <md-icon md-svg-icon="delete" class="lp-icon"></md-icon>
+                        <md-icon md-svg-icon="delete_forever" class="lp-icon"></md-icon>
                     </md-button>
                     <md-menu class="md-secondary" md-position-mode="target-right target" hide-xs>
                         <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
@@ -76,7 +76,7 @@
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click='onDelete(item)' ng-hide="!item.canDelete">
-                                    <md-icon md-svg-icon="delete"></md-icon> Delete
+                                    <md-icon md-svg-icon="delete_forever"></md-icon> Delete
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
