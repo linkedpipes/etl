@@ -23,7 +23,9 @@ requirejs.config({
         // JoinJS and dependencies.
         'jointjs': 'app/components/pipelines/canvas/libraries/jointjs/0.9.7/joint',
         'lodash': '/app/components/pipelines/canvas/libraries/lodash/3.10.1/lodash.min',
-        'backbone': '/app/components/pipelines/canvas/libraries/backbone/1.2.3/backbone'
+        'backbone': '/app/components/pipelines/canvas/libraries/backbone/1.2.3/backbone',
+        // Library for client side download
+        'file-saver': 'libraries/filesaver/FileSaver'
     },
     map: {
         'backbone': {
