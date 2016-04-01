@@ -83,8 +83,7 @@ public class ExecutionFacade {
         final Collection<Execution> executions = storage.getExecutions();
         final ArrayList<Execution> result = new ArrayList<>(4);
         for (Execution execution : executions) {
-            if (execution.getLastChange() != null
-                    && changedSince.before(execution.getLastChange())) {
+            if (execution.changedAfter(changedSince)) {
                 result.add(execution);
             }
         }
@@ -129,7 +128,6 @@ public class ExecutionFacade {
         if (execution == null) {
             throw new UnknownExecution();
         }
-
         final List<Statement> statements
                 = execution.getExecutionStatementsFull();
         if (statements == null) {

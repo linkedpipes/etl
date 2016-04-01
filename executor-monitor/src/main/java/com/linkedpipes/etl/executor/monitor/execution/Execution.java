@@ -99,6 +99,8 @@ public class Execution {
      */
     private StatusType status;
 
+    private Date statusChange;
+
     /**
      * Store informations about execution debug data.
      */
@@ -189,6 +191,9 @@ public class Execution {
     }
 
     void setStatus(StatusType status) {
+        if (this.status != status) {
+            this.statusChange = new Date();
+        }
         this.status = status;
     }
 
@@ -198,6 +203,20 @@ public class Execution {
 
     void setDebugData(DebugData debugData) {
         this.debugData = debugData;
+    }
+
+    /**
+     * True if there were some changes to this execution after given time.
+     *
+     * @param date
+     * @return
+     */
+    boolean changedAfter(Date date) {
+        if (status == StatusType.DANGLING || status == StatusType.UNRESPONSIVE) {
+            return statusChange != null && date.before(statusChange);
+        } else {
+            return lastChange != null && date.before(lastChange);
+        }
     }
 
 }
