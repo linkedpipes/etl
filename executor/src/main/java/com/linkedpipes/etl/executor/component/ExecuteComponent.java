@@ -94,11 +94,6 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
             eventManager.publish(EventFactory.executionFailed(
                     "Unexpected termination of component execution thread."));
         }
-        try {
-            Thread.sleep(7000);
-        } catch (InterruptedException ex) {
-
-        }
         LOG.info("Execution ends for: {}", this.componentDefinition.getIri());
     }
 
