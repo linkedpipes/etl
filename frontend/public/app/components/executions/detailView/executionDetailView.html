@@ -31,12 +31,13 @@
                                 </div>
                             </span>
                             <span ng-switch-when="MAPPED">
-                                
+
                             </span>
                         </div>
-                        <div layout="row">
+                        <div layout="row" style="margin-bottom: 10px">
                             <md-button ng-repeat="dataUnit in component.dataUnits"
-                                       ng-href="{{dataUnit.ftp}}" target="_blank">
+                                       ng-href="{{dataUnit.ftp}}" target="_blank"
+                                       class="md-raised">
                                 <md-icon md-svg-icon="save"></md-icon>
                                 <span>{{dataUnit.binding}}</span>
                             </md-button>
