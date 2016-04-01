@@ -194,6 +194,11 @@ gApiRouter.delete('/executions/:id', function (request, response) {
     gRequest.del(uri).pipe(response);
 });
 
+gApiRouter.get('/executions/:id/pipeline', function (request, response) {
+    var uri = gMonitorUri + 'executions/' + request.params.id + '/pipeline';
+    pipeGet(uri, response);
+});
+
 gApiRouter.get('/executions/:id/messages', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/messages';
     pipeGet(uri, response);
