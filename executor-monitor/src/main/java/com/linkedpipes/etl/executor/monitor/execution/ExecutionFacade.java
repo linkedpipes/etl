@@ -31,6 +31,10 @@ public class ExecutionFacade {
      */
     public static class OperationFailed extends Exception {
 
+        public OperationFailed(String message) {
+            super(message);
+        }
+
         public OperationFailed(String message, Throwable cause) {
             super(message, cause);
         }

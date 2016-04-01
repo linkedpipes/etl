@@ -90,7 +90,9 @@ public class DataUnitManager {
             ExecutionModel.Component component) {
         final Map<String, ManagableDataUnit> result = new HashMap<>();
         for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
-            result.put(dataUnit.getIri(), dataUnits.get(dataUnit.getIri()));
+            if (dataUnit.isUsedForExecution()) {
+                result.put(dataUnit.getIri(), dataUnits.get(dataUnit.getIri()));
+            }
         }
         return result;
     }
@@ -102,7 +104,7 @@ public class DataUnitManager {
             throw new CantInitializeDataUnit("Unknown IRI.");
         }
         if (dataUnit.isMapped()) {
-            LOG.debug("Loading data unit: {} : {}",
+            LOG.info("Loading data unit: {} : {}",
                     dataUnit.getBinding(), dataUnit.getIri());
             try {
                 instance.initialize(dataUnit.getLoadPath());
@@ -113,7 +115,7 @@ public class DataUnitManager {
         } else {
             // We trust ManagableDataUnit and provide it with all
             // data units.
-            LOG.debug("Initializing data unit: {} : {}",
+            LOG.info("Initializing data unit: {} : {}",
                     dataUnit.getBinding(), dataUnit.getIri());
             try {
                 instance.initialize(dataUnits);

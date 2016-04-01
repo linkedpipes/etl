@@ -27,7 +27,7 @@ define([
                     '$property': 'http://etl.linkedpipes.com/ontology/execution/componentFinished'
                 },
                 'total': {
-                    '$property': 'http://etl.linkedpipes.com/ontology/execution/componentCount'
+                    '$property': 'http://etl.linkedpipes.com/ontology/execution/componentToExecute'
                 }
             },
             'pipeline': {

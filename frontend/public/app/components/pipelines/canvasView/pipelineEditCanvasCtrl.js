@@ -12,7 +12,10 @@ define([
         , configurationDialogCtrlModule, selectTemplateDialogModule) {
 
     function controller($scope, $http, $location, $routeParams, $timeout,
-            $mdDialog, $mdMedia, pipelineModel, templates, statusService) {
+            $mdDialog, $mdMedia, pipelineModel, templates, statusService,
+            jsonldService) {
+
+        var jsonld = jsonldService.jsonld();
 
         var pplFacade = pipelineModel;
         var conFacade = pipelineModel.connection;
@@ -536,14 +539,13 @@ define([
          * Create a configuration object for executePipeline function.
          */
         var createExecuteConfiguration = function (parametr) {
-            var requestData = {
-                'execution': {},
-                'mapping': []
-            };
+            var config = {};
+
             // Run-to arguments.
             if (parametr['to']) {
-                requestData.execution.to = parametr['to'];
+                config['execute_to'] = parametr['to'];
             }
+
             // Run-from arguments.
             if (data.execution.mapping) {
                 var components = {};
@@ -562,13 +564,13 @@ define([
                 }
                 //
                 if (data.execution.id !== null) {
-                    requestData.mapping.push({
-                        'id': data.execution.id,
+                    config['mapping'] = {
+                        'execution': data.execution.iri,
                         'components': components
-                    });
+                    };
                 }
             }
-            return requestData;
+            return config;
         };
 
         /**
@@ -576,11 +578,11 @@ define([
          */
         var setMappingVisual = function (mapping) {
             switch (mapping['status']) {
-                case 'QUEUED':
-                case 'RUNNING':
-                case 'SKIPPED':
+                case 'http://etl.linkedpipes.com/resources/status/queued':
+                case 'http://etl.linkedpipes.com/resources/status/initializing':
+                case 'http://etl.linkedpipes.com/resources/status/running':
                     break;
-                case 'FINISHED':
+                case 'http://etl.linkedpipes.com/resources/status/finished':
                     if (mapping.enabled) {
                         $scope.canvasApi.updateComponentVisual(mapping['viewId'],
                                 {'stroke': {'color': '#388E3C', 'width': 5}});
@@ -589,7 +591,7 @@ define([
                                 {'stroke': {'color': 'gray', 'width': 3}});
                     }
                     break;
-                case 'MAPPED':
+                case 'http://etl.linkedpipes.com/resources/status/mapped':
                     if (mapping.enabled) {
                         $scope.canvasApi.updateComponentVisual(mapping['viewId'],
                                 {'stroke': {'color': '#00796B', 'width': 5}});
@@ -598,7 +600,7 @@ define([
                                 {'stroke': {'color': 'gray', 'width': 3}});
                     }
                     break;
-                case 'FAILED':
+                case 'http://etl.linkedpipes.com/resources/status/failed':
                     $scope.canvasApi.updateComponentVisual(mapping['viewId'],
                             {'stroke': {'color': 'red', 'width': 5}});
                     break;
@@ -616,30 +618,37 @@ define([
                 return;
             }
             $http.get($routeParams.execution).then(function (response) {
-                var execution = response.data.payload;
                 //
                 data.execution = {
-                    'id': execution['id'],
-                    'instance': execution,
+                    'iri': $routeParams.execution,
                     'mapping': {}
                 };
                 //
-                for (var uri in execution.components) {
-                    var component = execution.components[uri];
-                    if ($scope.data.iriToId[uri]) {
-                        //
-                        var mapping = {
-                            'viewId': $scope.data.iriToId[uri],
-                            'target': uri,
-                            'status': component['status'],
-                            'available': component['status'] === 'FINISHED' || component['status'] === 'MAPPED',
-                            'enabled': true,
-                            'changed': false
-                        };
-                        setMappingVisual(mapping);
-                        data.execution.mapping[uri] = mapping;
+                jsonld.iterateObjects(response.data, function (resource, graph) {
+                    if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') === -1) {
+                        return;
                     }
-                }
+                    var iri = resource['@id'];
+                    var view = $scope.data.iriToId[iri];
+                    if (typeof (view) === 'undefined') {
+                        return;
+                    }
+                    var status = jsonld.getReference(resource,
+                            'http://etl.linkedpipes.com/ontology/status');
+                    var available = status === 'http://etl.linkedpipes.com/resources/status/finished' ||
+                            status === 'http://etl.linkedpipes.com/resources/status/mapped';
+                    var mapping = {
+                        'viewId': view,
+                        'target': iri,
+                        'status': status,
+                        'available': available,
+                        'enabled': true,
+                        'changed': false
+                    };
+                    //
+                    setMappingVisual(mapping);
+                    data.execution.mapping[iri] = mapping;
+                });
             }, function (response) {
                 statusService.putFailed({
                     'title': "Can't load execution.",
@@ -676,7 +685,7 @@ define([
                     disableMappingOnChange(component['@id']);
                     // Update component.
                     $scope.canvasApi.updateComponent(id, component, template,
-                        comFacade);
+                            comFacade);
                     // Update size and position of the selection menu.
                     var boundingBox = $scope.canvasApi.getScreenBoundingBox(id);
                     $scope.canvasApi.onMoveSelected(id,
@@ -864,7 +873,8 @@ define([
     controller.$inject = ['$scope', '$http', '$location', '$routeParams',
         '$timeout', '$mdDialog', '$mdMedia',
         'components.pipelines.services.model',
-        'components.templates.services.repository', 'services.status'];
+        'components.templates.services.repository', 'services.status',
+        'services.jsonld'];
 
     return function init(app) {
         pipelineDetailDialog(app);

@@ -8,12 +8,21 @@ import java.io.File;
  */
 public final class ResourceManager {
 
+    /**
+     * Root directory of other executions.
+     */
     private final File root;
+
+    /**
+     * Root directory of the execution.
+     */
+    private final File executionRoot;
 
     private Integer counter = 0;
 
-    public ResourceManager(File root) {
+    public ResourceManager(File root, File executionRoot) {
         this.root = root;
+        this.executionRoot = executionRoot;
     }
 
     /**
@@ -22,41 +31,43 @@ public final class ResourceManager {
      * @return
      */
     public File getDefinitionFile() {
-        return new File(root, "definition" + File.separator
+        return new File(executionRoot, "definition" + File.separator
                 + "definition.jsonld");
     }
 
-    public File resolveExecutionPath(String execution, String parh) {
-        throw new UnsupportedOperationException();
+    public File resolveExecutionPath(String execution, String path) {
+        final String executionId = execution.substring(
+                execution.indexOf("executions/") + 11);
+        return new File(root, executionId + "/" + path);
     }
 
     public File getWorkingDirectory(String name) {
         counter += 1;
-        final File working = new File(root, "working/" + name + "-" + counter);
+        final File working = new File(executionRoot, "working/" + name + "-" + counter);
         working.mkdirs();
         return working;
     }
 
     public File getExecutionLogFile() {
-        final File file = new File(root, "log/execution.log");
+        final File file = new File(executionRoot, "log/execution.log");
         file.getParentFile().mkdir();
         return file;
     }
 
     public File getPipelineFile() {
-        final File file = new File(root, "pipeline.jsonld");
+        final File file = new File(executionRoot, "pipeline.jsonld");
         file.getParentFile().mkdir();
         return file;
     }
 
     public File getExecutionFile() {
-        final File file = new File(root, "execution.jsonld");
+        final File file = new File(executionRoot, "execution.jsonld");
         file.getParentFile().mkdir();
         return file;
     }
 
     public String relativize(File path) {
-        return root.toPath().relativize(path.toPath()).toString();
+        return executionRoot.toPath().relativize(path.toPath()).toString();
     }
 
 }

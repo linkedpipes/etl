@@ -39,6 +39,11 @@ public class PipelineModel implements EntityLoader.Loadable {
     public static class DataSource implements EntityLoader.Loadable {
 
         /**
+         * Debug suffix.
+         */
+        private String debug;
+
+        /**
          * Path to load data from.
          */
         private String loadPath;
@@ -54,6 +59,10 @@ public class PipelineModel implements EntityLoader.Loadable {
         private String execution;
 
         public DataSource() {
+        }
+
+        public String getDebug() {
+            return debug;
         }
 
         public String getLoadPath() {
@@ -72,6 +81,9 @@ public class PipelineModel implements EntityLoader.Loadable {
         public EntityLoader.Loadable load(String predicate, Value object)
                 throws EntityLoader.LoadingFailed {
             switch (predicate) {
+                case LINKEDPIPES.HAS_DEBUG:
+                    this.debug = object.stringValue();
+                    break;
                 case LINKEDPIPES.HAS_LOAD_PATH:
                     this.loadPath = object.stringValue();
                     break;

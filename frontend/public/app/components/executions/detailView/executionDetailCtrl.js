@@ -20,7 +20,7 @@ define([
         $scope.data = {
             'components': [],
             'componentsMap': {},
-            'pipeline' : null
+            'pipeline': null
         };
 
         /**
@@ -50,6 +50,15 @@ define([
             //
             // Determine detail and icon type.
             switch (source.status) {
+                case 'http://etl.linkedpipes.com/resources/status/mapped':
+                    target.detailType = 'MAPPED';
+                    target.icon = {
+                        'name': 'done',
+                        'style': {
+                            'color': 'blue'
+                        }
+                    };
+                    break;
                 case 'http://etl.linkedpipes.com/resources/status/initializing':
                 case 'http://etl.linkedpipes.com/resources/status/running':
                     target.detailType = 'RUNNING';
@@ -189,7 +198,7 @@ define([
                                     'http://etl.linkedpipes.com/ontology/status');
                             pipeline.pipeline = jsonld.getReference(resource,
                                     'http://etl.linkedpipes.com/ontology/pipeline');
-                            if ($scope.data.pipeline ===null) {
+                            if ($scope.data.pipeline === null) {
                                 loadPipeline(resource['@id'] + '/pipeline', bindLabels);
                             }
                             break;
@@ -209,8 +218,6 @@ define([
                             //
                             component.start = jsonld.getString(resource,
                                     'http://linkedpipes.com/ontology/events/created');
-                            component.order = jsonld.getInteger(resource,
-                                    'http://linkedpipes.com/ontology/order');
                             break;
                         case 'http://linkedpipes.com/ontology/events/ComponentEnd':
                             var iri = jsonld.getReference(resource,
@@ -255,6 +262,8 @@ define([
                             //
                             component.status = jsonld.getReference(resource,
                                     'http://etl.linkedpipes.com/ontology/status');
+                            component.order = jsonld.getInteger(resource,
+                                    'http://linkedpipes.com/ontology/executionOrder');
                             component.dataUnits = jsonld.getReferenceAll(
                                     resource, 'http://etl.linkedpipes.com/ontology/dataUnit');
                             break;
@@ -288,7 +297,7 @@ define([
 
             console.timeEnd('Parse data');
             return {
-                'components' : components,
+                'components': components,
                 'pipeline': pipeline
             };
         };

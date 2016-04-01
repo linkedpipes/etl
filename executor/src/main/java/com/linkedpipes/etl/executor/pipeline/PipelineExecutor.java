@@ -67,8 +67,11 @@ public class PipelineExecutor implements EventManager.EventListener {
      */
     private boolean stopExecution = false;
 
-    public PipelineExecutor(File executionDirectory, ModuleFacade modules) {
-        this.resources = new ResourceManager(executionDirectory);
+    public PipelineExecutor(File executionDirectory,
+            ModuleFacade modules) {
+        // TODO This is a fake, we should determine the path somehow else.
+        this.resources = new ResourceManager(executionDirectory.getParentFile(),
+                executionDirectory);
         this.pipeline = new PipelineDefinition(
                 this.resources.getWorkingDirectory("definition"));
         this.loggerFacade.setSystemAppender(resources.getExecutionLogFile());

@@ -133,8 +133,8 @@ class ExecutionStorage {
             throw new OperationFailed("", ex);
         }
         try {
-            ExecutionChecker.loadPipeline(newExecution);
-        } catch (ExecutionChecker.MissingFile | IOException ex) {
+            PipelineLoader.loadPipeline(newExecution);
+        } catch (OperationFailed | IOException ex) {
             throw new OperationFailed("Can't load pipeline.", ex);
         }
         executions.add(newExecution);
@@ -249,8 +249,8 @@ class ExecutionStorage {
         execution.setDirectory(directory);
         ExecutionChecker.updateFromDirectory(execution);
         try {
-            ExecutionChecker.loadPipeline(execution);
-        } catch (ExecutionChecker.MissingFile | IOException ex) {
+            PipelineLoader.loadPipeline(execution);
+        } catch (OperationFailed | IOException ex) {
             throw new OperationFailed("Can't load pipeline.", ex);
         }
         return execution;
