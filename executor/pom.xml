@@ -147,7 +147,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.linkedpipes.executor.Executor</mainClass>
+                            <mainClass>com.linkedpipes.etl.executor.Executor</mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
