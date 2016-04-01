@@ -24,12 +24,12 @@
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
-            <md-button ng-click="onCancel()">
-                CANCEL
-            </md-button>
             <span flex></span>
-            <md-button ng-click="onSave()">
-                OK
+            <md-button ng-click="onCancel()" class="md-primary">
+                DISCARD CHANGES
+            </md-button>
+            <md-button ng-click="onSave()" class="md-primary">
+                SAVE CHANGES
             </md-button>
         </md-dialog-actions>
     </form>
