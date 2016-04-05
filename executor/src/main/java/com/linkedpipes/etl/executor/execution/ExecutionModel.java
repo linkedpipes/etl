@@ -272,7 +272,7 @@ public final class ExecutionModel implements EventManager.EventListener {
      */
     private final IRI graph;
 
-    private final List<Event> events = new ArrayList<>(32);
+    private final List<Event> events = new ArrayList<>(64);
 
     /**
      * List of components, sorted in execution order.
@@ -586,8 +586,10 @@ public final class ExecutionModel implements EventManager.EventListener {
                 }
             }
         }
-        // Save events.
-        for (Event event : events) {
+        // Save events - we need to iterate using index as the list may change
+        // during time.
+        for (int i = 0; i < events.size(); i++) {
+            final Event event  = events.get(i);
             handler.handleStatement(vf.createStatement(executionResource,
                     vf.createIRI("http://etl.linkdpipes.com/ontology/event"),
                     vf.createIRI(event.iri),
