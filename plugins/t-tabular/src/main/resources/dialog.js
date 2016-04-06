@@ -65,6 +65,7 @@ define([], function () {
             $scope.dialog.rowLimit = rdf.getInteger(table, prefix.tabular + 'rowLimit');
             $scope.dialog.useBaseUri = rdf.getBoolean(table, prefix.tabular + 'useBaseUri');
             $scope.dialog.baseUri = rdf.getString(table, prefix.tabular + 'baseUri');
+            $scope.dialog.generateNullHeaderNames = rdf.getBoolean(table, prefix.tabular + 'generateNullHeaderNames');
 
             var dialect = rdf.secureObject(table, prefix.csvw + 'dialect', 'Dialect');
             $scope.dialog.delimeter = rdf.getString(dialect, prefix.csvw + 'delimeter');
@@ -105,6 +106,8 @@ define([], function () {
             rdf.setInteger(table, prefix.tabular + 'rowLimit', $scope.dialog.rowLimit);
             rdf.setBoolean(table, prefix.tabular + 'useBaseUri', $scope.dialog.useBaseUri);
             rdf.setString(table, prefix.tabular + 'baseUri', $scope.dialog.baseUri);
+            rdf.setBoolean(table, prefix.tabular + 'generateNullHeaderNames', $scope.dialog.generateNullHeaderNames);
+
 
             var dialect = rdf.secureObject(table, prefix.csvw + 'dialect', 'Dialect');
             rdf.setString(dialect, prefix.csvw + 'delimeter', $scope.dialog.delimeter);

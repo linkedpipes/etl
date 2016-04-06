@@ -90,9 +90,11 @@ class ColumnFactory {
         final ResourceTemplate aboutUrl = new ResourceTemplate(schema.getAboutUrl());
 
         // MissingNameInHeader
-
+        int counter = 0;
         for (String name : header) {
-            // Determine column type - there is no spacial identification so we decide based on parametrs.
+            counter += 1;
+            // Determine column type - there is no spacial identification
+            // so we decide based on parametrs.
             final String baseUri;
             if (configuration.isUseBaseUri()) {
                 baseUri = configuration.getBaseUri();
@@ -100,8 +102,13 @@ class ColumnFactory {
                 baseUri = "{" + StringTemplate.TABLE_RESOURCE_REF + "}#";
             }
             if (name == null) {
-                LOG.info("Header: {}", header);
-                throw new DataProcessingUnit.ExecutionFailed("Header must not contains null values.");
+                if (configuration.isGenerateNullHeaderName()) {
+                    name = "generated_name_" + Integer.toString(counter);
+                } else {
+                    LOG.info("Header: {}", header);
+                    throw new DataProcessingUnit.ExecutionFailed(
+                            "Header must not contains null values.");
+                }
             }
             final UrlTemplate predicate = new UrlTemplate(baseUri + encodeString(name));
             // Column with typed value.

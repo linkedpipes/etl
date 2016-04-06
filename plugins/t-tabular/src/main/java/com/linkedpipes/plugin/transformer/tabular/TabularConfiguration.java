@@ -409,6 +409,9 @@ public class TabularConfiguration {
     @RdfToPojo.Property(uri = TabularVocabulary.HAS_BASE_URI)
     private String baseUri;
 
+    @RdfToPojo.Property(uri = TabularVocabulary.HAS_GENERETE_NULL_HEADER)
+    private boolean generateNullHeaderName = false;
+
     public TabularConfiguration() {
     }
 
@@ -466,6 +469,14 @@ public class TabularConfiguration {
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+    }
+
+    public boolean isGenerateNullHeaderName() {
+        return generateNullHeaderName;
+    }
+
+    public void setGenerateNullHeaderName(boolean generateNullHeaderName) {
+        this.generateNullHeaderName = generateNullHeaderName;
     }
 
 }
