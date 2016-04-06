@@ -1,5 +1,6 @@
 define([
     'jquery',
+    'file-saver',
     'angular',
     'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
     'app/components/pipelines/canvas/pipelineCanvasDirective',
@@ -7,7 +8,7 @@ define([
     'app/components/templates/templatesRepository',
     'app/components/pipelines/configurationDialog/configurationDialogCtrl',
     'app/components/templates/selectDialog/selectTemplateDialogCtrl'
-], function ($, angular, pipelineDetailDialog, pipelineCanvasDirective
+], function ($, saveAs, angular, pipelineDetailDialog, pipelineCanvasDirective
         , pipelineServiceModule, templatesRepositoryModule
         , configurationDialogCtrlModule, selectTemplateDialogModule) {
 
@@ -401,10 +402,18 @@ define([
             connections.forEach(function (connection) {
                 var vertices = conFacade.getVerticesView(
                         $scope.data.model, connection);
+                var source = iriToId[conFacade.getSource(connection)];
+                var target = iriToId[conFacade.getTarget(connection)];
+                // Ignore invalid connections.
+                if (typeof (source) === 'undefined' ||
+                        typeof ('target') === 'undefined') {
+                    console.warn('Ignored invalid connection.', connection);
+                    return;
+                }
                 var id = $scope.canvasApi.addConnection(
-                        iriToId[conFacade.getSource(connection)],
+                        source,
                         conFacade.getSourceBinding(connection),
-                        iriToId[conFacade.getTarget(connection)],
+                        target,
                         conFacade.getTargetBinding(connection),
                         vertices, 'link');
                 $scope.data.idToModel[id] = connection;
@@ -855,12 +864,17 @@ define([
             $mdOpenMenu(event);
         };
 
+        $scope.onDownload = function () {
+            var jsonld = pipelineModel.toJsonLd($scope.data.model);
+            saveAs(new Blob([JSON.stringify(jsonld, null, 2)],
+                    {type: 'text/json'}),
+                    $scope.data.label + '.jsonld');
+        };
+
         $scope.onExport = function ($event) {
-            //
             canvasToPipeline();
             //
             var jsonld = pipelineModel.toJsonLd($scope.data.model);
-
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $scope.status.dialogOpened = true;
             $mdDialog.show({

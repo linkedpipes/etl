@@ -11,25 +11,9 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <div ng-show="waiting">
-                    <div>{{waiting_text}}</div>
-                    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-                </div>
-                <div ng-hide="waiting">
-                    <md-switch ng-model="options.removePrivateConfiguration">
-                        Remove private fields from the configuration
-                    </md-switch>
-                </div>
+                <div>{{waiting_text}}</div>
+                <md-progress-linear md-mode="indeterminate"></md-progress-linear>
             </div>
         </md-dialog-content>
-        <md-dialog-actions layout="row">
-            <span flex></span>
-            <md-button ng-click="onClose()" class="md-primary">
-                CLOSE
-            </md-button>
-            <md-button ng-click="onExport()" class="md-primary" ng-hide="waiting">
-                EXPORT PIPELINE
-            </md-button>
-        </md-dialog-actions>
     </form>
 </md-dialog>

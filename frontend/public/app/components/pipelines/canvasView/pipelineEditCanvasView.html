@@ -16,8 +16,13 @@
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
-                    <md-button ng-click="onExport($event)" aria-label="Download">
-                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Export
+                    <md-button ng-click="onDownload()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onExport($event)">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download without credentials
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>

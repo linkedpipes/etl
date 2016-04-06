@@ -6,7 +6,7 @@ define(['file-saver'], function (saveAs) {
     function controler($scope, $http, $mdDialog, data, jsonldService) {
 
         // Enable user to
-        $scope.waiting = false;
+        $scope.cancelled = false;
 
         $scope.label = data.label;
 
@@ -17,7 +17,7 @@ define(['file-saver'], function (saveAs) {
         var jsonld = jsonldService.jsonld();
 
         var onFailure = function (response) {
-
+            $scope.cancelled = true;
         };
 
         /**
@@ -26,6 +26,7 @@ define(['file-saver'], function (saveAs) {
         var loadPipeline = function (onSucess) {
             if (typeof (data.pipeline) !== 'undefined') {
                 onSucess();
+                return;
             }
             // Load pipeline.
             $scope.waiting_text = 'Loading pipeline ...';
@@ -156,24 +157,29 @@ define(['file-saver'], function (saveAs) {
         };
 
         $scope.onClose = function () {
-            // TODO Cancel loading ..
+            $scope.cancelled = true;
             $mdDialog.cancel();
-        };
-
-        $scope.onExport = function () {
-            prepareForExport(data.pipeline);
-            saveAs(new Blob([JSON.stringify(data.pipeline, null, 2)],
-                    {type: 'text/json'}),
-                    data.label + '.jsonld');
-            $mdDialog.hide();
         };
 
         (function load() {
             $scope.waiting = true;
             loadPipeline(function () {
+                if ($scope.cancelled) {
+                    return;
+                }
                 parsePipeline(function () {
+                    if ($scope.cancelled) {
+                        return;
+                    }
                     loadTemplates(function () {
-                        $scope.waiting = false;
+                        prepareForExport(data.pipeline);
+                        if ($scope.cancelled) {
+                            return;
+                        }
+                        saveAs(new Blob([JSON.stringify(data.pipeline, null, 2)],
+                                {type: 'text/json'}),
+                                data.label + '.jsonld');
+                        $mdDialog.hide();
                     });
                 });
             });
