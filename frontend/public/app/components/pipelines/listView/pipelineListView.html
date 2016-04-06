@@ -23,9 +23,8 @@
                         </md-button>
                         <md-menu-content>
                             <md-menu-item>
-                                <md-button ng-click="" ng-href="./resources/pipelines/{{item.id}}"
-                                           target="_blank" download="{{item.label}}.jsonld" aria-label="Download">
-                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
+                                <md-button ng-click="onExport(item, $event)" aria-label="Export">
+                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Export
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
@@ -51,9 +50,8 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="" ng-href="./resources/pipelines/{{item.id}}"
-                                           target="_blank" download="{{item.label}}.jsonld" aria-label="Download">
-                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
+                                <md-button ng-click="onExport(item, $event)" aria-label="Export">
+                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Export
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>

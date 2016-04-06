@@ -1,6 +1,6 @@
 define([], function () {
-    function controler($scope, $location, $http, $timeout, $mdDialog,
-            refreshService, repositoryService, statusService) {
+    function controler($scope, $location, $http, $timeout, $mdDialog, $mdMedia,
+            refreshService, repositoryService, statusService, exportDialog) {
 
         var listDecorator = function (item) {
             item.waitForDelete = false;
@@ -28,6 +28,24 @@ define([], function () {
                     'title': "Can't start the execution.",
                     'response': response
                 });
+            });
+        };
+
+        $scope.onExport = function (pipeline, $event) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                'controller': 'components.pipelines.export.dialog',
+                'templateUrl': 'app/components/pipelines/exportDialog/pipelineExportDialogView.html',
+                'parent': angular.element(document.body),
+                'targetEvent': $event,
+                'clickOutsideToClose': false,
+                'fullscreen': useFullScreen,
+                'locals': {
+                    'data': {
+                        'iri': pipeline.uri,
+                        'label': pipeline.label
+                    }
+                }
             });
         };
 
@@ -109,7 +127,7 @@ define([], function () {
     }
     //
     controler.$inject = ['$scope', '$location', '$http', '$timeout',
-        '$mdDialog', 'service.refresh', 'services.repository',
+        '$mdDialog', '$mdMedia', 'service.refresh', 'services.repository',
         'services.status'];
     //
     function init(app) {

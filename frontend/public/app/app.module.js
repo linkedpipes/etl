@@ -3,6 +3,7 @@ define([
     'app/components/pipelines/listView/pipelineListCtrl',
     'app/components/pipelines/canvasView/pipelineEditCanvasCtrl',
     'app/components/pipelines/uploadView/pipelineUploadCtrl',
+    'app/components/pipelines/exportDialog/pipelineExportDialogCtrl',
     'app/components/executions/listView/executionListCtrl',
     'app/components/executions/detailView/executionDetailCtrl',
     'app/services/rdfService',
@@ -25,6 +26,7 @@ define([
         pipelineListCtrlInit,
         pipelineEditCanvasCtrlInit,
         pipelineUploadCtrlInit,
+        pipelineExportDialogCtrlInit,
         executionListCtrlInit,
         executionDetailCtrlInit,
         rdfService,
@@ -59,6 +61,7 @@ define([
     pipelineListCtrlInit(app);
     pipelineEditCanvasCtrlInit(app);
     pipelineUploadCtrlInit(app);
+    pipelineExportDialogCtrlInit(app);
     executionListCtrlInit(app);
     executionDetailCtrlInit(app);
     //

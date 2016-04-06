@@ -1,6 +1,5 @@
 define([
     'jquery',
-    'file-saver',
     'angular',
     'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
     'app/components/pipelines/canvas/pipelineCanvasDirective',
@@ -8,7 +7,7 @@ define([
     'app/components/templates/templatesRepository',
     'app/components/pipelines/configurationDialog/configurationDialogCtrl',
     'app/components/templates/selectDialog/selectTemplateDialogCtrl'
-], function ($, saveAs, angular, pipelineDetailDialog, pipelineCanvasDirective
+], function ($, angular, pipelineDetailDialog, pipelineCanvasDirective
         , pipelineServiceModule, templatesRepositoryModule
         , configurationDialogCtrlModule, selectTemplateDialogModule) {
 
@@ -856,14 +855,33 @@ define([
             $mdOpenMenu(event);
         };
 
-        $scope.onDownload = function () {
+        $scope.onExport = function ($event) {
             //
             canvasToPipeline();
             //
             var jsonld = pipelineModel.toJsonLd($scope.data.model);
-            saveAs(new Blob([JSON.stringify(jsonld, null, 2)],
-                    {type: 'text/json'}),
-                    $scope.data.label + '.jsonld');
+
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $scope.status.dialogOpened = true;
+            $mdDialog.show({
+                'controller': 'components.pipelines.export.dialog',
+                'templateUrl': 'app/components/pipelines/exportDialog/pipelineExportDialogView.html',
+                'parent': angular.element(document.body),
+                'targetEvent': $event,
+                'clickOutsideToClose': false,
+                'fullscreen': useFullScreen,
+                'locals': {
+                    'data': {
+                        'iri': $scope.data.iri,
+                        'label': $scope.data.label,
+                        'pipeline': jsonld
+                    }
+                }
+            }).then(function (result) {
+                $scope.status.dialogOpened = false;
+            }, function () {
+                $scope.status.dialogOpened = false;
+            });
         };
 
         var initialize = function () {
