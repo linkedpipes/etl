@@ -279,7 +279,7 @@ gModule.import = function (id, pipeline, callback) {
  */
 var updateResourceUri = function (content, id) {
 
-    var getValue = function(resource, property) {
+    var getValue = function (resource, property) {
         var value = resource[property];
         if (Array.isArray(value)) {
             return value[0];
