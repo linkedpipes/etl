@@ -198,15 +198,23 @@ define(['jquery'], function (jQuery) {
      * Iterate graphs. Call callback as callback(graph, graph_iri). If callback
      * return true then stop the iteration and return graph's id.
      * In other case return nothing.
+     *
+     * TODO: Check if we need to return something.
      */
     jsonldService.iterateGraphs = function (data, callback) {
         var graphList;
         if (data['@graph']) {
             if (data['@id']) {
-                // There is a graph directly in the data root.
+                // { '@graph' : [ ? ], '@id' : ? }
                 graphList = [data];
             } else {
-                graphList = data['@graph'];
+                if (data['@graph'][0] && data['@graph'][0]['@graph']) {
+                    // { '@graph' : [ { '@graph' : ? , '@id: ? } ] }
+                    graphList = data['@graph'];
+                } else {
+                    // { '@graph' : [ ? ] }
+                    graphList = [data];
+                }
             }
         } else {
             graphList = data;
@@ -214,12 +222,12 @@ define(['jquery'], function (jQuery) {
         //
         for (var graphIndex in graphList) {
             var graph = graphList[graphIndex];
-            if (graph['@graph'] && graph['@id']) {
+            if (graph['@graph']) {
                 if (callback(graph['@graph'], graph['@id'])) {
                     return graph['@id'];
                 }
             } else {
-                console.log('Invalid graph detected: ', graph);
+                console.log('Invalid graph detected: ', graph, 'in', data);
             }
         }
     };
