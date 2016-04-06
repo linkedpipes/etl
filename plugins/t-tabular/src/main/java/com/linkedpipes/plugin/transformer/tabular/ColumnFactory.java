@@ -104,6 +104,7 @@ class ColumnFactory {
             if (name == null) {
                 if (configuration.isGenerateNullHeaderName()) {
                     name = "generated_name_" + Integer.toString(counter);
+                    header.set(counter - 1, name);
                 } else {
                     LOG.info("Header: {}", header);
                     throw new DataProcessingUnit.ExecutionFailed(
