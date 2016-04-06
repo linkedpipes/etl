@@ -12,6 +12,9 @@
             ],
             "http://linkedpipes.com/ontology/keyword": [
                 "scp"
+            ],
+            "http://linkedpipes.com/ontology/configurationDescription": [
+                {"@id": "http://localhost:8080/resources/components/l-filesToScp/1.0.0/configurationDescription"}
             ]
         },
         {
@@ -24,6 +27,18 @@
             ],
             "http://linkedpipes.com/ontology/binding": "FilesInput",
             "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
+        },
+        {
+            "@id": "http://localhost:8080/resources/components/l-filesToScp/1.0.0/configurationDescription",
+            "@type": [
+                "http://linkedpipes.com/ontology/ConfigurationDescription"
+            ],
+            "http://linkedpipes.com/ontology/privateProperties" : [
+                {"@id": "http://plugins.linkedpipes.com/ontology/l-filesToScp#userName"},
+                {"@id": "http://plugins.linkedpipes.com/ontology/l-filesToScp#password"},
+                {"@id": "http://plugins.linkedpipes.com/ontology/l-filesToScp#host"},
+                {"@id": "http://plugins.linkedpipes.com/ontology/l-filesToScp#port"}
+            ]
         }
     ]
 }
