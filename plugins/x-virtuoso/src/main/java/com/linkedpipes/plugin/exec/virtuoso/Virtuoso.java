@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.exec.virtuoso;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.sql.Connection;
@@ -46,9 +45,6 @@ public final class Virtuoso implements SequentialExecution {
     public VirtuosoConfiguration configuration;
 
     @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
-
-    @DataProcessingUnit.Extension
     public AfterExecution cleanUp;
 
     @Override
@@ -70,21 +66,19 @@ public final class Virtuoso implements SequentialExecution {
         });
         // Delete data if set.
         if (configuration.isClearDestinationGraph()) {
-            faultTolerance.call(() -> {
-                RepositoryConnection repositoryConnection = virtuosoRepository.getConnection();
+            RepositoryConnection repositoryConnection = virtuosoRepository.getConnection();
+            try {
+                final Update update = repositoryConnection.prepareUpdate(
+                        QueryLanguage.SPARQL,
+                        getClearQuery(configuration.getTargetGraph()));
+                update.execute();
+            } finally {
                 try {
-                    final Update update = repositoryConnection.prepareUpdate(
-                            QueryLanguage.SPARQL,
-                            getClearQuery(configuration.getTargetGraph()));
-                    update.execute();
-                } finally {
-                    try {
-                        repositoryConnection.close();
-                    } catch (RepositoryException ex) {
-                        LOG.warn("Can't close connection.", ex);
-                    }
+                    repositoryConnection.close();
+                } catch (RepositoryException ex) {
+                    LOG.warn("Can't close connection.", ex);
                 }
-            });
+            }
         }
         final Connection connectionForInit = getSqlConnection();
         // Insert data to load table.

@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.extractor.httpget;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
@@ -40,9 +39,6 @@ public final class HttpGet implements SequentialExecution {
     public HttpGetConfiguration configuration;
 
     @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
-
-    @DataProcessingUnit.Extension
     public ProgressReport progressReport;
 
     @Override
@@ -66,25 +62,33 @@ public final class HttpGet implements SequentialExecution {
         // Prepare target destination.
         final File destination = output.createFile(configuration.getFileName());
         // Download file.
-        faultTolerance.call(() -> {
-            HttpURLConnection connection
-                    = (HttpURLConnection) source.openConnection();
-            if (configuration.isForceFollowRedirect()) {
-                // Check for redirect. We can hawe multiple redirects
-                // so follow untill there is no one.
-                HttpURLConnection oldConnection;
+        HttpURLConnection connection;
+        try {
+            connection = (HttpURLConnection) source.openConnection();
+        } catch (IOException ex) {
+            throw new ExecutionFailed("Can't open connection.", ex);
+        }
+        if (configuration.isForceFollowRedirect()) {
+            // Check for redirect. We can hawe multiple redirects
+            // so follow untill there is no one.
+            HttpURLConnection oldConnection;
+            try {
                 do {
                     oldConnection = connection;
                     connection = followRedirect(oldConnection);
-                } while(connection != oldConnection);
+                } while (connection != oldConnection);
+            } catch (IOException ex) {
+                throw new ExecutionFailed("Can't resolve redirect.", ex);
             }
-            // Copy content.
-            try (InputStream inputStream = connection.getInputStream()) {
-                FileUtils.copyInputStreamToFile(inputStream, destination);
-            } finally {
-                connection.disconnect();
-            }
-        });
+        }
+        // Copy content.
+        try (InputStream inputStream = connection.getInputStream()) {
+            FileUtils.copyInputStreamToFile(inputStream, destination);
+        } catch (IOException ex) {
+            throw new ExecutionFailed("Can't copy file.", ex);
+        } finally {
+            connection.disconnect();
+        }
         progressReport.entryProcessed();
         // Wait before next download - chck for cancel before and after.
         if (context.canceled()) {
@@ -149,7 +153,7 @@ public final class HttpGet implements SequentialExecution {
                 final URL source = new URL(location);
                 LOG.debug("Follow redirect: {}", location);
                 final HttpURLConnection newConnection
-                    = (HttpURLConnection) source.openConnection();
+                        = (HttpURLConnection) source.openConnection();
                 return newConnection;
             }
         } else {

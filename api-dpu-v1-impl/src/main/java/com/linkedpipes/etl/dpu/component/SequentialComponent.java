@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.dpu.extensions.ProgressReportImpl;
-import com.linkedpipes.etl.dpu.extensions.FaultToleranceImpl;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -17,7 +16,6 @@ import com.linkedpipes.etl.dpu.extensions.ManageableExtension;
 import com.linkedpipes.etl.dpu.rdf.RdfSerialization;
 import com.linkedpipes.etl.dpu.rdf.RdfSerialization.CanNotDeserializeObject;
 import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import com.linkedpipes.etl.dpu.extensions.AfterExecutionImpl;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -136,9 +134,7 @@ final class SequentialComponent implements Component {
             }
             // Create extension instance.
             final ManageableExtension extension;
-            if (field.getType() == FaultTolerance.class) {
-                extension = new FaultToleranceImpl();
-            } else if (field.getType() == ProgressReport.class) {
+            if (field.getType() == ProgressReport.class) {
                 extension = new ProgressReportImpl(context);
             } else if (field.getType() == AfterExecution.class) {
                 extension = new AfterExecutionImpl();

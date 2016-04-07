@@ -12,7 +12,6 @@ import com.linkedpipes.etl.dpu.api.DataProcessingUnit.InputPort;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit.OutputPort;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -136,9 +135,7 @@ public class TestEnvironment implements AutoCloseable {
         for (Field field : dpu.getClass().getFields()) {
             if (field.getAnnotation(DataProcessingUnit.Extension.class) != null) {
                 // Based on type set extension.
-                if (field.getType() == FaultTolerance.class) {
-                    field.set(dpu, new MockedFaultTolerance());
-                } else if (field.getType() == ProgressReport.class) {
+                if (field.getType() == ProgressReport.class) {
                     field.set(dpu, new MockedProgressReport());
                 } else if (field.getType() == AfterExecution.class) {
                     field.set(dpu, afterExecution);

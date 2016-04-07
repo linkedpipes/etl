@@ -4,8 +4,8 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.auth.AuthScope;
@@ -37,9 +37,6 @@ public class SparqlEndpointLoader implements SequentialExecution {
     public SparqlEndpointLoaderConfiguration configuration;
 
     @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
-
-    @DataProcessingUnit.Extension
     public AfterExecution afterExecution;
 
     @Override
@@ -54,21 +51,21 @@ public class SparqlEndpointLoader implements SequentialExecution {
             sparqlRepository.shutDown();
         });
         //
-        faultTolerance.call(() -> {
-            try (final CloseableHttpClient httpclient = getHttpClient()) {
-                sparqlRepository.setHttpClient(httpclient);
-                if (configuration.isClearDestinationGraph()) {
-                    clearGraph(sparqlRepository,
-                            configuration.getTargetGraphName());
-                }
+        try (final CloseableHttpClient httpclient = getHttpClient()) {
+            sparqlRepository.setHttpClient(httpclient);
+            if (configuration.isClearDestinationGraph()) {
+                clearGraph(sparqlRepository,
+                        configuration.getTargetGraphName());
             }
-        });
-        faultTolerance.call(() -> {
-            try (final CloseableHttpClient httpclient = getHttpClient()) {
-                sparqlRepository.setHttpClient(httpclient);
-                loadData(sparqlRepository);
-            }
-        });
+        } catch (IOException ex) {
+            throw new ExecutionFailed("Can't clear data.", ex);
+        }
+        try (final CloseableHttpClient httpclient = getHttpClient()) {
+            sparqlRepository.setHttpClient(httpclient);
+            loadData(sparqlRepository);
+        } catch (IOException ex) {
+            throw new ExecutionFailed("Can't load data.", ex);
+        }
     }
 
     private void loadData(Repository repository) {

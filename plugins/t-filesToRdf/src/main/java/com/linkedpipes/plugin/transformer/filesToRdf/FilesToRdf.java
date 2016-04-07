@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.FileInputStream;
@@ -36,9 +35,6 @@ public final class FilesToRdf implements SequentialExecution {
 
     @DataProcessingUnit.Configuration
     public FilesToRdfConfiguration configuration;
-
-    @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
 
     @DataProcessingUnit.Extension
     public ProgressReport progressReport;

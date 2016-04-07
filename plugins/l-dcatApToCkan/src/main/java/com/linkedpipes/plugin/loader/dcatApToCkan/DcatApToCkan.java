@@ -42,7 +42,6 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.query.TupleQueryResult;
@@ -64,9 +63,6 @@ public final class DcatApToCkan implements SequentialExecution {
 
     @DataProcessingUnit.Configuration
     public DcatApToCkanConfiguration configuration;
-
-    @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
 
     @DataProcessingUnit.Extension
     public ProgressReport progressReport;

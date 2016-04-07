@@ -4,13 +4,13 @@ import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
 import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Optional;
 import org.apache.http.HttpEntity;
+import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -52,9 +52,6 @@ public class GraphStoreProtocol implements SequentialExecution {
     @DataProcessingUnit.Configuration
     public GraphStoreProtocolConfiguration configuration;
 
-    @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
-
     @Override
     public void execute(Context context) throws ExecutionFailed {
         //
@@ -66,9 +63,11 @@ public class GraphStoreProtocol implements SequentialExecution {
         Long beforeSize = null;
         Long afterSize = null;
         if (configuration.isCheckSize()) {
-            beforeSize = faultTolerance.call(() -> {
-                return getGraphSize();
-            });
+            try {
+                beforeSize = getGraphSize();
+            } catch(IOException ex) {
+                throw new ExecutionFailed("Can't get graph size.", ex);
+            }
         }
         for (final Entry entry : inputFiles) {
             //
@@ -111,9 +110,11 @@ public class GraphStoreProtocol implements SequentialExecution {
                     throw new ExecutionFailed("Unknown repository type!");
             }
             if (configuration.isCheckSize()) {
-                afterSize = faultTolerance.call(() -> {
-                    return getGraphSize();
-                });
+                try {
+                afterSize = getGraphSize();
+            } catch(IOException ex) {
+                throw new ExecutionFailed("Can't get graph size.", ex);
+            }
             }
         }
     }
@@ -229,26 +230,25 @@ public class GraphStoreProtocol implements SequentialExecution {
     }
 
     private void executeHttp(HttpEntityEnclosingRequestBase httpMethod) throws ExecutionFailed {
-        faultTolerance.call(() -> {
-            //
-            try (final CloseableHttpClient httpclient = getHttpClient()) {
-                try (final CloseableHttpResponse response = httpclient.execute(httpMethod)) {
-                    try {
-                        LOG.debug("Response:\n {} ", EntityUtils.toString(response.getEntity()));
-                    } catch (java.net.SocketException ex) {
-                        LOG.error("Can't read response.", ex);
-                    }
-                    LOG.info("Response code: {} phrase: {}",
-                            response.getStatusLine().getStatusCode(),
+        try (final CloseableHttpClient httpclient = getHttpClient()) {
+            try (final CloseableHttpResponse response = httpclient.execute(httpMethod)) {
+                try {
+                    LOG.debug("Response:\n {} ", EntityUtils.toString(response.getEntity()));
+                } catch (java.net.SocketException ex) {
+                    LOG.error("Can't read response.", ex);
+                }
+                LOG.info("Response code: {} phrase: {}",
+                        response.getStatusLine().getStatusCode(),
+                        response.getStatusLine().getReasonPhrase());
+                final int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode < 200 && statusCode >= 300) {
+                    throw new ExecutionFailed("Can't upload data, reason: {}",
                             response.getStatusLine().getReasonPhrase());
-                    final int statusCode = response.getStatusLine().getStatusCode();
-                    if (statusCode < 200 && statusCode >= 300) {
-                        throw new ExecutionFailed("Can't upload data, reason: {}",
-                                response.getStatusLine().getReasonPhrase());
-                    }
                 }
             }
-        });
+        } catch (IOException | ParseException ex) {
+            throw new ExecutionFailed("Can't execute request.", ex);
+        }
     }
 
     /**
