@@ -1,5 +1,7 @@
 # LinkedPipes ETL
 
+> Upgrade note: When upgrading from master prior to 2016-04-07 to master after 2016-04-07, you need to delete your old execution data (e.g. in /data/lp/etl/working/data)
+
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - REST API based set of components for easy integration
 - Library of Data Processing Units (DPUs) to get you started faster
