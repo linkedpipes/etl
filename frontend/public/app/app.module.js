@@ -3,12 +3,17 @@ define([
     'app/components/pipelines/listView/pipelineListCtrl',
     'app/components/pipelines/canvasView/pipelineEditCanvasCtrl',
     'app/components/pipelines/uploadView/pipelineUploadCtrl',
+    'app/components/pipelines/exportDialog/pipelineExportDialogCtrl',
     'app/components/executions/listView/executionListCtrl',
     'app/components/executions/detailView/executionDetailCtrl',
     'app/services/rdfService',
     'app/services/refreshService',
     'app/services/repositoryService',
     'app/services/statusService',
+    'app/services/jsonldService',
+    'app/services/infoService',
+    'app/components/inputs/localizedTextInput/localizedTextInput',
+    'app/components/inputs/iriList/iriList',
     'angular',
     'angular-route',
     'angular-resource',
@@ -21,12 +26,17 @@ define([
         pipelineListCtrlInit,
         pipelineEditCanvasCtrlInit,
         pipelineUploadCtrlInit,
+        pipelineExportDialogCtrlInit,
         executionListCtrlInit,
         executionDetailCtrlInit,
         rdfService,
         refreshService,
         repositoryService,
         statusService,
+        jsonldService,
+        infoService,
+        localizedTextInputInit,
+        iriListInit,
         angular
         ) {
     var app = angular.module('angularApp', [
@@ -43,10 +53,15 @@ define([
     refreshService(app);
     repositoryService(app);
     statusService(app);
+    jsonldService(app);
+    infoService(app);
+    localizedTextInputInit(app);
+    iriListInit(app);
     //
     pipelineListCtrlInit(app);
     pipelineEditCanvasCtrlInit(app);
     pipelineUploadCtrlInit(app);
+    pipelineExportDialogCtrlInit(app);
     executionListCtrlInit(app);
     executionDetailCtrlInit(app);
     //

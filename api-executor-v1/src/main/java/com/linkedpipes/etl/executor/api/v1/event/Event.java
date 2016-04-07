@@ -9,7 +9,15 @@ import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
  */
 public interface Event {
 
-    public void assignSubject(String messageUri);
+    public void setResource(String iri);
+
+    /**
+     * The IRI that should be referenced from execution. Is not
+     * called before {@link #setResource(java.lang.String)}.
+     *
+     * @return Resource IRI.
+     */
+    public String getResource();
 
     public void write(StatementWriter writer);
 

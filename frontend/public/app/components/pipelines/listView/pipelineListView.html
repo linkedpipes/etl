@@ -29,13 +29,18 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
+                                <md-button ng-click="onExport(item, $event)" aria-label="Download anonymized">
+                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download without credentials
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
                                 <md-button ng-click="onCopy(item)">
                                     <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="onDelete(item, $event)">
-                                    <md-icon md-menu-origin md-svg-icon="delete" class="lp-icon"></md-icon> Delete
+                                    <md-icon md-menu-origin md-svg-icon="delete_forever" class="lp-icon"></md-icon> Delete
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>
@@ -51,9 +56,8 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="" ng-href="./resources/pipelines/{{item.id}}"
-                                           target="_blank" download="{{item.label}}.jsonld" aria-label="Download">
-                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
+                                <md-button ng-click="onExport(item, $event)" aria-label="Export">
+                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Export
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
@@ -63,7 +67,7 @@
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="onDelete(item, $event)">
-                                    <md-icon md-menu-origin md-svg-icon="delete" class="lp-icon"></md-icon> Delete
+                                    <md-icon md-menu-origin md-svg-icon="delete_forever" class="lp-icon"></md-icon> Delete
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>

@@ -1,0 +1,30 @@
+<div layout="column" tabindex="-1" flex style="margin-top:18px;">
+    <label style="margin-bottom: 18px">{{topLabel}}</label>
+
+    <md-button class="md-icon-button" ng-click="onAdd(0)"
+               style="margin-left:0px;" ng-show="data.length === 0">
+        <md-icon md-svg-src="add_circle_outline" aria-label="Add"></md-icon>
+    </md-button>
+
+    <div layout="row" ng-repeat="item in data">
+
+        <md-button class="md-icon-button" ng-click="onAdd($index)"
+                   style="margin-left:0px;">
+            <md-icon md-svg-src="add_circle_outline" aria-label="Add"></md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" ng-click="onDelete($index)"
+                   style="margin-left:0px;" ng-disabled="last">
+            <md-icon md-svg-src="clear" aria-label="Delete"></md-icon>
+        </md-button>
+
+        <md-input-container class="md-block" style="width:100%;margin-top:0px;">
+            <label>{{itemLabel}}</label>
+            <input ng-model="item['@id']" aria-label="{{itemLabel}}"
+                   ng-change="onChange()" type="url">
+        </md-input-container>
+
+    </div>
+
+</div>
+

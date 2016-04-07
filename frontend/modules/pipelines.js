@@ -22,7 +22,6 @@ module.exports = gModule;
  * @return String as a pipeline label.
  */
 var getPipelineLabel = function (id, definition) {
-    var label;
 
     var findLabels = function (resource) {
         if (!resource['@type']) {
@@ -30,23 +29,44 @@ var getPipelineLabel = function (id, definition) {
         }
         var type = resource['@type'];
         if (type.indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
-            if (resource['http://www.w3.org/2004/02/skos/core#prefLabel']) {
-                label = resource['http://www.w3.org/2004/02/skos/core#prefLabel'];
+            var value = resource['http://www.w3.org/2004/02/skos/core#prefLabel'];
+            if (!value) {
+                // Pipeline does not have a name.
+                return resource['@id'];
+            }
+            // Label can be save as a direct value or in a array
+            // under the "@value" element.
+            if (value[0]['@value']) {
+                return value[0]['@value'];
+            } else {
+                return value;
             }
         }
     };
-    definition['@graph'].forEach(function (graph) {
-        // Search for objects.
+
+    var graphList;
+    if (definition['@graph']) {
+        graphList = definition['@graph'];
+    } else {
+        graphList = definition;
+    }
+
+    var label;
+    for (var graphIndex in graphList) {
+        var graph = graphList[graphIndex];
         if (graph['@graph']) {
+            // Search for pipeline object and label.
             graph['@graph'].forEach(function (resource) {
                 if (!label) {
-                    findLabels(resource);
+                    label = findLabels(resource);
                 }
             });
-        } else {
-            // Such entity should not be here - it represents an empty graph.
         }
-    });
+        // Break if we found the label.
+        if (label) {
+            break;
+        }
+    }
 
     if (label) {
         return label;
@@ -258,6 +278,16 @@ gModule.import = function (id, pipeline, callback) {
  * @param id Pipeline ID, used to create new pipeline URI.
  */
 var updateResourceUri = function (content, id) {
+
+    var getValue = function (resource, property) {
+        var value = resource[property];
+        if (Array.isArray(value)) {
+            return value[0];
+        } else {
+            return value;
+        }
+    };
+
     var targetDomain = gConfiguration.storage.domain + '/resources/pipelines/' + id;
     targetDomain = targetDomain.replace("[^:]//", "/");
     // Storage of objects that we wan't to change @id to.
@@ -280,12 +310,11 @@ var updateResourceUri = function (content, id) {
             }
             if (resource['http://linkedpipes.com/ontology/template']) {
                 // Update URI - for now in a simple way by string replace
-                var componentUri = resource['http://linkedpipes.com/ontology/template']['@id'];
+                var componentUri = getValue(resource, 'http://linkedpipes.com/ontology/template')['@id'];
                 var componentId = componentUri.substring(componentUri.lastIndexOf("/") + 1);
                 var newComponentUri = gConfiguration.storage.domain + '/resources/components/' + componentId;
                 newComponentUri = newComponentUri.replace("[^:]//", "/");
                 resource['http://linkedpipes.com/ontology/template']['@id'] = newComponentUri;
-
             }
         } else if (type.indexOf('http://linkedpipes.com/ontology/Connection') !== -1 ||
                 type.indexOf('http://linkedpipes.com/ontology/RunAfter') !== -1) {
@@ -307,7 +336,14 @@ var updateResourceUri = function (content, id) {
         }
     };
 
-    content['@graph'].forEach(function (graph) {
+    var graphList;
+    if (content['@graph']) {
+        graphList = content['@graph'];
+    } else {
+        graphList = content;
+    }
+
+    graphList.forEach(function (graph) {
         objects.push(graph);
         // Search for objects.
         if (graph['@graph']) {
@@ -324,7 +360,9 @@ var updateResourceUri = function (content, id) {
 
     pipelineObject['@id'] = targetDomain;
     objects.forEach(function (object) {
-        if (object['@id']) {
+        if (Array.isArray(object)) {
+            object[0]['@id'] = targetDomain + object[0]['@id'].substring(sourceDomainLength);
+        } else {
             object['@id'] = targetDomain + object['@id'].substring(sourceDomainLength);
         }
     });
@@ -346,7 +384,6 @@ gModule.update = function (id, content, updateUri) {
         return false;
     }
     if (updateUri) {
-        console.log('Performing URI update.');
         updateResourceUri(content, id);
     }
     gFs.writeFile(fileName, JSON.stringify(content, null, 2));

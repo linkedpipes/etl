@@ -26,6 +26,14 @@ abstract class ColumnAbstract {
 
     }
 
+    public static class MissingNameInHeader extends Exception {
+
+        public MissingNameInHeader(String name) {
+            super("Missing column with name '" + name + "'.");
+        }
+
+    }
+
     protected static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
     protected final String name;

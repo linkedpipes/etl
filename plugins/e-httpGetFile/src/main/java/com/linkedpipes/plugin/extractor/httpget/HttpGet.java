@@ -7,6 +7,9 @@ import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
 import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -64,7 +67,23 @@ public final class HttpGet implements SequentialExecution {
         final File destination = output.createFile(configuration.getFileName());
         // Download file.
         faultTolerance.call(() -> {
-            FileUtils.copyURLToFile(source, destination);
+            HttpURLConnection connection
+                    = (HttpURLConnection) source.openConnection();
+            if (configuration.isForceFollowRedirect()) {
+                // Check for redirect. We can hawe multiple redirects
+                // so follow untill there is no one.
+                HttpURLConnection oldConnection;
+                do {
+                    oldConnection = connection;
+                    connection = followRedirect(oldConnection);
+                } while(connection != oldConnection);
+            }
+            // Copy content.
+            try (InputStream inputStream = connection.getInputStream()) {
+                FileUtils.copyInputStreamToFile(inputStream, destination);
+            } finally {
+                connection.disconnect();
+            }
         });
         progressReport.entryProcessed();
         // Wait before next download - chck for cancel before and after.
@@ -104,6 +123,37 @@ public final class HttpGet implements SequentialExecution {
             HttpsURLConnection.setDefaultHostnameVerifier((String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
             throw ex;
+        }
+    }
+
+    /**
+     * Open connection and check for redirect. If there is redirect then
+     * close given connection and return connection to the new location.
+     *
+     * @param connection
+     * @return
+     * @throws IOException
+     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
+     */
+    private static HttpURLConnection followRedirect(
+            HttpURLConnection connection) throws IOException, ExecutionFailed {
+        connection.connect();
+        if (connection.getResponseCode()
+                == HttpURLConnection.HTTP_SEE_OTHER) {
+            final String location = connection.getHeaderField("Location");
+            if (location == null) {
+                throw new ExecutionFailed("Missing Location for redirect.");
+            } else {
+                // Update based on the redirect.
+                connection.disconnect();
+                final URL source = new URL(location);
+                LOG.debug("Follow redirect: {}", location);
+                final HttpURLConnection newConnection
+                    = (HttpURLConnection) source.openConnection();
+                return newConnection;
+            }
+        } else {
+            return connection;
         }
     }
 

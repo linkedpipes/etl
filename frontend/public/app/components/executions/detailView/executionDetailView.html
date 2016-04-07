@@ -1,78 +1,81 @@
 <div layout="row" layout-align="space-around">
     <div class="container" style="max-width: 66em;width: 100%;">
-        <md-tabs md-dynamic-height>
-            <md-tab label="Messages">
-                <md-list>
-                    <md-list-item ng-repeat="item in messages| orderBy:'-created'" class="md-2-line" ng-click='onMessage(item)'>
-                        <div class="md-primary">
-                            <md-icon md-svg-icon="{{item.icon.name}}" class="lp-icon-avatar md-avatar" ng-style="item.icon.style"></md-icon>
+        <md-content>
+            <div ng-show="!status.loaded" layout="row">
+                <span flex="50"/>
+                <img src="app/components/pipelines/listView/assets/img/loading.gif" class="center-block" title="Loading..."
+                     style="padding-top: 5em"/>
+            </div>
+            <md-list ng-show="status.loaded">
+                <md-list-item ng-repeat="component in data.components| orderBy:'-order'">
+                    <div class="md-primary">
+                        <md-icon md-svg-icon="{{component.icon.name}}" class="lp-icon-avatar md-avatar" ng-style="component.icon.style"></md-icon>
+                    </div>
+                    <div class="md-list-item-text">
+                        <div style="margin-top: 10px" class="lp-font-list-label">
+                            <span>{{component.label}}</span>
+                            <span class="lp-font-list-content">{{component.description}}</span>
                         </div>
-                        <div class="md-list-item-text">
-                            <div class="lp-font-list-label">
-                                <span style="width:12em;text-overflow: ellipsis;white-space: nowrap;display:inline-block;overflow: hidden;vertical-align: bottom;">
-                                    {{item.componentLabel}}
-                                </span>
-                                <span>
-                                    {{item['http://www.w3.org/2004/02/skos/core#prefLabel']}}
-                                </span>
-                            </div>
-                            <div>
-                                <!-- We need to have font set here, as em is determiend by the font size. -->
-                                <span class="lp-font-list-label" style="width:12em;display:inline-block;">
-                                </span>
-                                <span ng-if="item.error" class="lp-font-list-content">
-                                    Root cause: {{item['http://linkedpipes.com/ontology/events/rootException']}}
-                                </span>
-                            </div>
+                        <div ng-switch on="component.detailType" class="lp-font-list-content">
+                            <span ng-switch-when="RUNNING">
+                                <span>{{component.startTime| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                            </span>
+                            <span ng-switch-when="FINISHED">
+                                <span>{{component.startTime| date:'yyyy-MM-dd HH:mm:ss'}}</span>,
+                                <span>{{component.duration}}</span>
+                            </span>
+                            <span ng-switch-when="FAILED">
+                                <span>{{component.startTime| date:'yyyy-MM-dd HH:mm:ss'}}</span>,
+                                <span>{{component.duration}}</span><br/>
+                                <div style="margin-top: 10px;margin-left: 8px">
+                                    Root cause: <span>{{component.exception}}</span>
+                                </div>
+                            </span>
+                            <span ng-switch-when="MAPPED">
+
+                            </span>
                         </div>
-                        <md-divider></md-divider>
-                    </md-list-item>
-                </md-list>
-            </md-tab>
-            <md-tab label="Debug">
-                <md-list>
-                    <md-list-item ng-repeat="item in debug| orderBy:'component'" class="md-2-line" ng-click='onDebug(item)'>
-                        <div class="md-primary">
-                            <!-- Put information about type here.-->
+                        <div layout="row" style="margin-bottom: 10px">
+                            <md-button ng-repeat="dataUnit in component.dataUnits"
+                                       ng-href="{{dataUnit.ftp}}" target="_blank"
+                                       class="md-raised">
+                                <md-icon md-svg-icon="save"></md-icon>
+                                <span>{{dataUnit.binding}}</span>
+                            </md-button>
                         </div>
-                        <div class="md-list-item-text">
-                            <span>{{item.component}}</span> -
-                            <span>{{item.label}}</span>
-                        </div>
-                        <md-divider></md-divider>
-                    </md-list-item>
-                </md-list>
-            </md-tab>
-        </md-tabs>
+                    </div>
+                    <md-divider></md-divider>
+                </md-list-item>
+            </md-list>
     </div>
 </div>
 
 <script type="text/ng-template" id="messageDetail.html">
-<md-dialog aria-label="Message detail">
+    <md-dialog aria-label="Message detail">
     <form>
-        <md-toolbar>
-          <div class="md-toolbar-tools">
-            <h4>Message detail</h4>
-            <span flex></span>
-            <md-button class="md-icon-button" ng-click="onClose()">
-              <md-icon md-svg-src="close" aria-label="Close dialog"></md-icon>
-            </md-button>
-          </div>
-        </md-toolbar>
-        <md-dialog-content>
-            <div class="md-dialog-content">
-                <div><b>Label: </b>{{label}}</div><br/>
-                <div><b>Created: </b>{{created| date:'yyyy-MM-dd HH:mm:ss'}}</div><br/>
-                <div ng-show="componentLabel"><b>Component: </b>{{componentLabel}}</div><br/>
-                <div ng-show="error">
-                    <br/>
-                    <b>Reason:</b>
-                    <pre> {{reason}} </pre>
-                    <b>Exception:</b>
-                    <pre> {{exception}} </pre>
-                </div>
-            </div>
-        </md-dialog-content>
+    <md-toolbar>
+    <div class="md-toolbar-tools">
+    <h4>Message detail</h4>
+    <span flex></span>
+    <md-button class="md-icon-button" ng-click="onClose()">
+    <md-icon md-svg-src="close" aria-label="Close dialog"></md-icon>
+    </md-button>
+    </div>
+    </md-toolbar>
+    <md-dialog-content>
+    <div class="md-dialog-content">
+    <div><b>Label: </b>{{label}}</div><br/>
+    <div><b>Created: </b>{{created| date:'yyyy-MM-dd HH:mm:ss'}}</div><br/>
+    <div ng-show="componentLabel"><b>Component: </b>{{componentLabel}}</div><br/>
+    <div ng-show="error">
+    <br/>
+    <b>Reason:</b>
+    <pre> {{reason}} </pre>
+    <b>Exception:</b>
+    <pre> {{exception}} </pre>
+    </div>
+    </div>
+    </md-dialog-content>
     </form>
-</md-dialog>
+    </md-dialog>
 </script>

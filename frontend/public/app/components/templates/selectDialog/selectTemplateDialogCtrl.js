@@ -53,7 +53,7 @@ define([], function () {
             //
             if (filter.source) {
                 //
-                var sourceTemplate = templatesRepository.getTemplate(filter.source.templateUri);
+                var sourceTemplate = templatesRepository.getTemplate(filter.source.templateIri);
                 var sourcePort;
                 for (var index in sourceTemplate.outputs) {
                     if (sourceTemplate.outputs[index]['binding'] === filter.source.binding) {
@@ -69,25 +69,33 @@ define([], function () {
                 // Add only those that pass the filter.
                 var data = [];
                 templatesRepository.getTemplates().forEach(function (component) {
-                    // For now we require one port only!
-                    if (component.inputs.length !== 1) {
+                    if (component.inputs.length === 0) {
                         return;
                     }
+                    //
                     var order = 0;
                     if (sourceTemplate.followup[component['id']]) {
                         order = sourceTemplate.followup[component['id']];
                     }
-                    // Check for binding.
-                    var port = component.inputs[0];
-                    if (port['type']['0'] === sourcePort['type']['0']) {
-                        //
-                        data.push({
-                            'label': component['label'],
-                            'icon': returnIconName(component),
-                            'component': component,
-                            'portBinding': port['binding'],
-                            'order': order
-                        });
+                    //
+                    var newObjects = [];
+                    component.inputs.forEach(function (port) {
+                        if (port['type']['0'] === sourcePort['type']['0']) {
+                            var record = {
+                                'label': component['label'],
+                                'icon': returnIconName(component),
+                                'component': component,
+                                'portBinding': port['binding'],
+                                'portLabel': port['label'],
+                                'order': order
+                            };
+                            data.push(record);
+                            newObjects.push(record);
+                        }
+                    });
+                    // Hyde port label if there is only one instance.
+                    if (newObjects.length === 1) {
+                        newObjects[0].portLabel = '';
                     }
                 });
                 $scope.data = data;
