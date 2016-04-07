@@ -10,6 +10,20 @@
             "http://linkedpipes.com/ontology/port": [ ],
             "http://linkedpipes.com/ontology/keyword": [
                 "virtuoso"
+            ],
+            "http://linkedpipes.com/ontology/configurationDescription": [
+                {"@id": "http://localhost:8080/resources/components/x-virtuoso/1.0.0/configurationDescription"}
+            ]
+        },
+        {
+            "@id": "http://localhost:8080/resources/components/x-virtuoso/1.0.0/configurationDescription",
+            "@type": [
+                "http://linkedpipes.com/ontology/ConfigurationDescription"
+            ],
+            "http://linkedpipes.com/ontology/privateProperties" : [
+                {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuoso#uri"},
+                {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuoso#username"},
+                {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuoso#password"}
             ]
         }
     ]
