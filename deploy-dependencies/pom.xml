@@ -310,6 +310,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-mustache</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-mustache/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-packZip</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-packZip/</outputDirectory>
@@ -472,6 +478,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-graphMerger/"/>
                                         <copy todir="${deploy.directory}/components/t-graphMerger/">
                                             <fileset dir="${plugins.directory}/t-graphMerger/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-mustache/"/>
+                                        <copy todir="${deploy.directory}/components/t-mustache/">
+                                            <fileset dir="${plugins.directory}/t-mustache/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
