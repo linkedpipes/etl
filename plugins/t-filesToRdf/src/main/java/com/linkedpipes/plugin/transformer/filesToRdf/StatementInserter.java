@@ -56,6 +56,15 @@ public class StatementInserter implements RDFHandler {
     @Override
     public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
         // No operation here.
+        try {
+            dataUnit.execute((connection) -> {
+                if (connection.getNamespace(prefix) == null) {
+                    connection.setNamespace(prefix, uri);
+                }
+            });
+        } catch (SesameDataUnit.RepositoryActionFailed ex) {
+            throw new RDFHandlerException(ex);
+        }
     }
 
     @Override
