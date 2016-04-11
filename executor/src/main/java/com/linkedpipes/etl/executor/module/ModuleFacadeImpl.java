@@ -74,11 +74,10 @@ class ModuleFacadeImpl implements ModuleFacade,
             + "org.apache.log4j.api;version=\"1.7.12\","
             + "org.apache.log4j.xml;version=\"1.7.12\","
             + "" // core API
+            + "com.linkedpipes.etl.executor.api.v1,"
             + "com.linkedpipes.etl.executor.api.v1.component,"
-            + "com.linkedpipes.etl.executor.api.v1.context,"
             + "com.linkedpipes.etl.executor.api.v1.dataunit,"
             + "com.linkedpipes.etl.executor.api.v1.event,"
-            + "com.linkedpipes.etl.executor.api.v1.plugin,"
             + "com.linkedpipes.etl.executor.api.v1.rdf,"
             + "com.linkedpipes.etl.executor.api.v1.vocabulary";
 
