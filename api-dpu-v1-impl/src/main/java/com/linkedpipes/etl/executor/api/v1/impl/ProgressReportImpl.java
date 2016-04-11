@@ -61,12 +61,13 @@ class ProgressReportImpl implements ProgressReport {
 
     private long reportNext;
 
-    private String componentIri;
+    private final String componentIri;
 
     private final BaseComponent.Context context;
 
-    ProgressReportImpl(BaseComponent.Context context) {
+    ProgressReportImpl(BaseComponent.Context context, String componentIri) {
         this.context = context;
+        this.componentIri = componentIri;
     }
 
     @Override

@@ -139,7 +139,8 @@ final class SimpleComponentImpl implements SimpleComponent {
             // Create extension instance.
             Object object;
             if (field.getType() == ProgressReport.class) {
-                object = new ProgressReportImpl(context);
+                object = new ProgressReportImpl(context,
+                        configuration.getResourceIri());
             } else if (field.getType() == AfterExecution.class) {
                 afterExecution = new AfterExecutionImpl();
                 object = afterExecution;
