@@ -1,9 +1,7 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
+import com.linkedpipes.etl.dpu.api.service.AfterExecution;
+import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,12 +16,14 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import virtuoso.sesame2.driver.VirtuosoRepository;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class Virtuoso implements SequentialExecution {
+public final class Virtuoso implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Virtuoso.class);
 
@@ -38,24 +38,24 @@ public final class Virtuoso implements SequentialExecution {
     private static final String SQL_QUERY_FINISHED
             = "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state = 2";
 
-    @DataProcessingUnit.Extension
+    @Component.Inject
     public ProgressReport progressReport;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public VirtuosoConfiguration configuration;
 
-    @DataProcessingUnit.Extension
+    @Component.Inject
     public AfterExecution cleanUp;
 
     @Override
-    public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
+    public void execute(Component.Context context) throws NonRecoverableException {
         // Create remote repository.
         final VirtuosoRepository virtuosoRepository = new VirtuosoRepository(
                 configuration.getVirtuosoUrl(), configuration.getUsername(), configuration.getPassword());
         try {
             virtuosoRepository.initialize();
         } catch (RepositoryException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't connect to Virtuoso repository.", ex);
+            throw new Component.ExecutionFailed("Can't connect to Virtuoso repository.", ex);
         }
         cleanUp.addAction(() -> {
             try {
@@ -90,7 +90,7 @@ public final class Virtuoso implements SequentialExecution {
             final ResultSet resultSetLdDir = statementLdDir.executeQuery();
             resultSetLdDir.close();
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't execute ld_dir query.", ex);
+            throw new Component.ExecutionFailed("Can't execute ld_dir query.", ex);
         }
         // Check number of files to load.
         final int filesToLoad;
@@ -101,7 +101,7 @@ public final class Virtuoso implements SequentialExecution {
                 filesToLoad = resultSetProcessing.getInt(1);
             }
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't query load_list table.", ex);
+            throw new Component.ExecutionFailed("Can't query load_list table.", ex);
         } finally {
             // Here we can close the connection.
             try {
@@ -168,16 +168,16 @@ public final class Virtuoso implements SequentialExecution {
         return "DEFINE sql:log-enable 3 CLEAR GRAPH <" + graph + ">";
     }
 
-    private Connection getSqlConnection() throws DataProcessingUnit.ExecutionFailed {
+    private Connection getSqlConnection() throws Component.ExecutionFailed {
         try {
             return DriverManager.getConnection(configuration.getVirtuosoUrl(), configuration.getUsername(),
                     configuration.getPassword());
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't create sql connection.", ex);
+            throw new Component.ExecutionFailed("Can't create sql connection.", ex);
         }
     }
 
-    private void startLoading() throws DataProcessingUnit.ExecutionFailed {
+    private void startLoading() throws Component.ExecutionFailed {
         // Start loading.
         Connection loaderConnection = null;
         try {
@@ -187,7 +187,7 @@ public final class Virtuoso implements SequentialExecution {
                 resultSetRun.close();
             }
         } catch (SQLException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't start loading.", ex);
+            throw new Component.ExecutionFailed("Can't start loading.", ex);
         } finally {
             try {
                 if (loaderConnection != null) {

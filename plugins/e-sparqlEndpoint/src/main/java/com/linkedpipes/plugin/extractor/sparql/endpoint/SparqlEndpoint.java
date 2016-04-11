@@ -1,8 +1,6 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -14,29 +12,31 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class SparqlEndpoint implements SequentialExecution {
+public final class SparqlEndpoint implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlEndpoint.class);
 
-    @DataProcessingUnit.InputPort(id = "OutputRdf")
+    @Component.InputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public SparqlEndpointConfiguration configuration;
 
     @Override
-    public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
+    public void execute(Component.Context context) throws NonRecoverableException {
         //
         final SPARQLRepository repository = new SPARQLRepository(configuration.getEndpoint());
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't connnect to endpoint.", ex);
+            throw new Component.ExecutionFailed("Can't connnect to endpoint.", ex);
         }
         //
         try {

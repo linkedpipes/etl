@@ -2,24 +2,24 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class ExcelToCsv implements SequentialExecution {
+public class ExcelToCsv implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExcelToCsv.class);
 
-    @DataProcessingUnit.InputPort(id = "InputFiles")
+    @Component.InputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @DataProcessingUnit.InputPort(id = "OutputFiles")
+    @Component.InputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @Configuration

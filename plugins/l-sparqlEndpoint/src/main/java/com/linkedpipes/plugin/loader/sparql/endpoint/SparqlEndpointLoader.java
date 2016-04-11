@@ -1,9 +1,7 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
+import com.linkedpipes.etl.dpu.api.service.AfterExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,20 +21,22 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sparql.SPARQLRepository;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class SparqlEndpointLoader implements SequentialExecution {
+public class SparqlEndpointLoader implements SimpleExecution {
 
-    @DataProcessingUnit.InputPort(id = "InputRdf")
+    @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit outputRdf;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public SparqlEndpointLoaderConfiguration configuration;
 
-    @DataProcessingUnit.Extension
+    @Component.Inject
     public AfterExecution afterExecution;
 
     @Override

@@ -1,11 +1,11 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
+import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import java.util.Collection;
 
 import org.openrdf.model.Statement;
 import org.openrdf.rio.*;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  * Support cancel and progress report.
@@ -16,14 +16,14 @@ public class RdfWriterContext implements RDFWriter {
 
     private final ProgressReport progressReport;
 
-    private final DataProcessingUnit.Context context;
+    private final Component.Context context;
 
     /**
      * Underlying RDF writer.
      */
     private final RDFWriter writer;
 
-    public RdfWriterContext(RDFWriter writer, DataProcessingUnit.Context context, ProgressReport progressReport) {
+    public RdfWriterContext(RDFWriter writer, Component.Context context, ProgressReport progressReport) {
         this.writer = writer;
         this.context = context;
         this.progressReport = progressReport;
@@ -70,7 +70,7 @@ public class RdfWriterContext implements RDFWriter {
         progressReport.entryProcessed();
         writer.handleStatement(stmnt);
         if (context.canceled()) {
-            throw new RDFHandlerException(new DataProcessingUnit.ExecutionCancelled());
+            throw new RDFHandlerException(new Component.ExecutionCancelled());
         }
     }
 

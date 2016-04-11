@@ -33,27 +33,32 @@ public interface SesameDataUnit {
     @FunctionalInterface
     public interface RepositoryFunction<T> {
 
-        public T accept(RepositoryConnection connection) throws RecoverableException, NonRecoverableException, OpenRDFException;
+        public T accept(RepositoryConnection connection) throws
+                RecoverableException, NonRecoverableException, OpenRDFException;
 
     }
 
     @FunctionalInterface
     public interface RepositoryProcedure {
 
-        public void accept(RepositoryConnection connection) throws RecoverableException, NonRecoverableException, OpenRDFException;
+        public void accept(RepositoryConnection connection) throws
+                RecoverableException, NonRecoverableException, OpenRDFException;
 
     }
 
     @FunctionalInterface
     public interface Procedure {
 
-        public void accept() throws RecoverableException, NonRecoverableException, OpenRDFException;
+        public void accept() throws
+                RecoverableException, NonRecoverableException, OpenRDFException;
 
     }
 
-    public void execute(RepositoryProcedure action) throws RepositoryActionFailed;
+    public void execute(RepositoryProcedure action) throws
+            RepositoryActionFailed;
 
-    public <T> T execute(RepositoryFunction<T> action) throws RepositoryActionFailed;
+    public <T> T execute(RepositoryFunction<T> action) throws
+            RepositoryActionFailed;
 
     public void execute(Procedure action) throws RepositoryActionFailed;
 

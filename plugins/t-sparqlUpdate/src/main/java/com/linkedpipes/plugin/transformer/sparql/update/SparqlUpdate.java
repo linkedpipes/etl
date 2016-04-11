@@ -3,35 +3,35 @@ package com.linkedpipes.plugin.transformer.sparql.update;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit.SesameDataUnitException;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import org.openrdf.model.IRI;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
 import org.openrdf.query.impl.DatasetImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class SparqlUpdate implements SequentialExecution {
+public final class SparqlUpdate implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlUpdate.class);
 
-    @DataProcessingUnit.InputPort(id = "InputRdf")
+    @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @DataProcessingUnit.InputPort(id = "OutputRdf")
+    @Component.InputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public SparqlUpdateConfiguration configuration;
 
     @Override
-    public void execute(DataProcessingUnit.Context context)
-            throws DataProcessingUnit.ExecutionFailed, SesameDataUnitException {
+    public void execute(Component.Context context)
+            throws Component.ExecutionFailed, SesameDataUnitException {
         final IRI inputGraph = inputRdf.getGraph();
         final IRI outputGraph = outputRdf.getGraph();
         LOG.info("Update: {} -> {}", inputGraph, outputGraph);

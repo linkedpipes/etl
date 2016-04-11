@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 
 /**
  *

@@ -13,22 +13,15 @@ public interface WritableFilesDataUnit extends FilesDataUnit {
     /**
      *
      * @param fileName
-     * @return Path to yet not existing file, which is inside the data unit storage.
+     * @return Path to yet not existing file, in the data unit storage.
      * @throws SystemDataUnitException
      */
-    public File createFile(String fileName) throws SystemDataUnitException;
+    public Entry createFile(String fileName) throws SystemDataUnitException;
 
     /**
      *
      * @return Root directory of the data unit storage.
      */
     public File getRootDirectory();
-
-    /**
-     *
-     * @return Undefined value.
-     */
-    @Override
-    public long size();
 
 }

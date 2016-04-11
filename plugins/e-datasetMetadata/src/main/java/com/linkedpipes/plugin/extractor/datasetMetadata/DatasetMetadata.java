@@ -1,8 +1,6 @@
 package com.linkedpipes.plugin.extractor.datasetMetadata;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,17 +19,19 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class DatasetMetadata implements SequentialExecution {
+public class DatasetMetadata implements SimpleExecution {
 
-    @DataProcessingUnit.OutputPort(id = "Metadata")
+    @Component.OutputPort(id = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public DatasetMetadataConfig configuration;
 
     private Resource dataset;

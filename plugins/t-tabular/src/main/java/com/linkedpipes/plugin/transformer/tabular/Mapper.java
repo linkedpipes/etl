@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
 import java.io.UnsupportedEncodingException;
@@ -10,6 +9,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  * https://www.w3.org/TR/2015/REC-csv2rdf-20151217/#bib-tabular-data-model
@@ -156,7 +156,7 @@ class Mapper {
      *
      * @param header Null if there is no header.
      */
-    public void onHeader(List<String> header) throws MissingNameInHeader, InvalidTemplate, DataProcessingUnit.ExecutionFailed {
+    public void onHeader(List<String> header) throws MissingNameInHeader, InvalidTemplate, Component.ExecutionFailed {
         usedColumns = new ArrayList<>(columns.size());
         if (configuration.isFullMapping()) {
             usedColumns.addAll(ColumnFactory.createColumList(configuration, header));

@@ -2,13 +2,13 @@ package com.linkedpipes.plugin.transformer.filesToRdf;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
@@ -18,7 +18,7 @@ public class StatementInserter implements RDFHandler {
 
     private final int commintSize;
 
-    private final DataProcessingUnit.Context context;
+    private final Component.Context context;
 
     private final WritableGraphListDataUnit dataUnit;
 
@@ -26,7 +26,7 @@ public class StatementInserter implements RDFHandler {
 
     private URI targetGraph;
 
-    public StatementInserter(int commintSize, DataProcessingUnit.Context context, WritableGraphListDataUnit dataUnit) {
+    public StatementInserter(int commintSize, Component.Context context, WritableGraphListDataUnit dataUnit) {
         this.commintSize = commintSize;
         this.context = context;
         this.dataUnit = dataUnit;
@@ -75,7 +75,7 @@ public class StatementInserter implements RDFHandler {
         // We can enforce context here.
         statements.add(st);
         if (context.canceled()) {
-            throw new RDFHandlerException(new DataProcessingUnit.ExecutionCancelled());
+            throw new RDFHandlerException(new Component.ExecutionCancelled());
         }
     }
 

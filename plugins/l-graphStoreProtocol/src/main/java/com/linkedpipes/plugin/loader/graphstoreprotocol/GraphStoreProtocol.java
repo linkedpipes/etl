@@ -2,8 +2,6 @@ package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -36,20 +34,22 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class GraphStoreProtocol implements SequentialExecution {
+public class GraphStoreProtocol implements SimpleExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(GraphStoreProtocol.class);
 
-    @DataProcessingUnit.InputPort(id = "InputFiles")
+    @Component.InputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public GraphStoreProtocolConfiguration configuration;
 
     @Override
@@ -78,7 +78,7 @@ public class GraphStoreProtocol implements SequentialExecution {
             final Optional<RDFFormat> optionalFormat
                     = Rio.getParserFormatForFileName(entry.getFileName());
             if (!optionalFormat.isPresent()) {
-                throw new DataProcessingUnit.ExecutionFailed(
+                throw new Component.ExecutionFailed(
                         "Can't determine format for file: {}", entry);
             }
             final String mimeType = optionalFormat.get().getDefaultMIMEType();
@@ -87,21 +87,21 @@ public class GraphStoreProtocol implements SequentialExecution {
             switch (configuration.getRepository()) {
                 case BLAZEGRAPH:
                     uploadBlazegraph(configuration.getEndpoint(),
-                            entry.getPath(),
+                            entry.toFile(),
                             mimeType,
                             configuration.getTargetGraph(),
                             configuration.isReplace());
                     break;
                 case FUSEKI:
                     uploadFuseki(configuration.getEndpoint(),
-                            entry.getPath(),
+                            entry.toFile(),
                             mimeType,
                             configuration.getTargetGraph(),
                             configuration.isReplace());
                     break;
                 case VIRTUOSO:
                     uploadVirtuoso(configuration.getEndpoint(),
-                            entry.getPath(),
+                            entry.toFile(),
                             mimeType,
                             configuration.getTargetGraph(),
                             configuration.isReplace());

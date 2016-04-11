@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.dpu.test;
 
-import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.AfterExecution.CustomAction;
+import com.linkedpipes.etl.dpu.api.service.AfterExecution;
+import com.linkedpipes.etl.dpu.api.service.AfterExecution.CustomAction;
 import java.util.LinkedList;
 import java.util.List;
 

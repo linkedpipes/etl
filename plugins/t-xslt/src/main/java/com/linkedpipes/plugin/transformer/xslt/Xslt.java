@@ -5,9 +5,7 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
+import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import java.io.File;
 import java.io.StringReader;
 import javax.xml.transform.stream.StreamSource;
@@ -26,33 +24,35 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class Xslt implements SequentialExecution {
+public final class Xslt implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Xslt.class);
 
-    @DataProcessingUnit.InputPort(id = "FilesInput")
+    @Component.InputPort(id = "FilesInput")
     public FilesDataUnit inputFiles;
 
-    @DataProcessingUnit.InputPort(id = "Parameters", optional = true)
+    @Component.InputPort(id = "Parameters", optional = true)
     public SingleGraphDataUnit parametersRdf;
 
-    @DataProcessingUnit.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(id = "FilesOutput")
     public WritableFilesDataUnit outputFiles;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public XsltConfiguration configuration;
 
-    @DataProcessingUnit.Extension
+    @Component.Inject
     public ProgressReport progressReport;
 
     @Override
-    public void execute(DataProcessingUnit.Context context)
-            throws DataProcessingUnit.ExecutionFailed, SystemDataUnitException,
+    public void execute(Component.Context context)
+            throws Component.ExecutionFailed, SystemDataUnitException,
             SesameDataUnit.RepositoryActionFailed {
         final Processor processor = new Processor(false);
         processor.registerExtensionFunction(UUIDGenerator.getInstance());
@@ -63,19 +63,19 @@ public final class Xslt implements SequentialExecution {
             executable = compiler.compile(new StreamSource(
                     new StringReader(configuration.getXsltTemplate())));
         } catch (SaxonApiException ex) {
-            throw new DataProcessingUnit.ExecutionFailed(
+            throw new Component.ExecutionFailed(
                     "Can't compile template.", ex);
         }
 
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing: {}", entry.getFileName());
-            final File inputFile = entry.getPath();
+            final File inputFile = entry.toFile();
             final File outputFile = outputFiles.createFile(addExtension(
                     entry.getFileName(),
-                    configuration.getNewExtension()));
+                    configuration.getNewExtension())).toFile();
 
             if (context.canceled()) {
-                throw new DataProcessingUnit.ExecutionCancelled();
+                throw new Component.ExecutionCancelled();
             }
             // Prepare transformer.
             final XsltTransformer transformer = executable.load();
@@ -111,7 +111,7 @@ public final class Xslt implements SequentialExecution {
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
-                throw new DataProcessingUnit.ExecutionFailed(
+                throw new Component.ExecutionFailed(
                         "Can't transform file.", ex);
             } finally {
                 // Clear document cache.

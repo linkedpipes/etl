@@ -33,6 +33,7 @@
         <module>l-graphStoreProtocol</module>
         <module>l-sparqlEndpoint</module>
         <module>t-filesBase64Decode</module>
+        <module>t-mustache</module>
     </modules>
 
 </project>

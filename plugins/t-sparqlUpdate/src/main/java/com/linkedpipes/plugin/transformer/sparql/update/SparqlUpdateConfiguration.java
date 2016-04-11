@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.sparql.update;
 
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 
 /**
  *

@@ -1,18 +1,17 @@
 package com.linkedpipes.etl.dpu.test;
 
+import com.linkedpipes.etl.dataunit.sesame.GraphListDataUnitImpl;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.rdf.RdfDataUnitConfiguration;
-import com.linkedpipes.etl.dataunit.sesame.rdf.SesameRdfDataUnitFactory;
+import com.linkedpipes.etl.dataunit.sesame.RdfDataUnitConfiguration;
+import com.linkedpipes.etl.dataunit.sesame.SingleGraphDataUnitImpl;
+import com.linkedpipes.etl.dataunit.system.FilesDataUnitConfiguration;
+import com.linkedpipes.etl.dataunit.system.FilesDataUnitImpl;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.files.FilesDataUnitConfiguration;
-import com.linkedpipes.etl.dataunit.system.files.SystemFilesDataUnitFactory;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit.InputPort;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit.OutputPort;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
+import com.linkedpipes.etl.dpu.api.Component.InputPort;
+import com.linkedpipes.etl.dpu.api.Component.OutputPort;
+import com.linkedpipes.etl.dpu.api.service.AfterExecution;
+import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import java.io.File;
 import java.lang.reflect.Field;
 import org.openrdf.model.IRI;
@@ -22,6 +21,8 @@ import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
@@ -31,21 +32,24 @@ public class TestEnvironment implements AutoCloseable {
 
     private static final String IRI_PREFIX = "http://localhost/test/";
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestEnvironment.class);
+    private static final Logger LOG
+            = LoggerFactory.getLogger(TestEnvironment.class);
 
-    private final SequentialExecution dpu;
+    private final SimpleExecution dpu;
 
-    private final DataProcessingUnit.Context context;
+    private final Component.Context context;
 
     private final Repository sesameRepository;
 
     private Integer suffixCounter = 0;
 
-    private final MockedAfterExecution afterExecution = new MockedAfterExecution();
+    private final MockedAfterExecution afterExecution
+            = new MockedAfterExecution();
 
-    protected TestEnvironment(SequentialExecution dpu, File workingDirectory) {
+    protected TestEnvironment(SimpleExecution dpu, File workingDirectory) {
         this.dpu = dpu;
-        this.context = new TestContext(IRI_PREFIX + "component", workingDirectory);
+        this.context = new TestContext(
+                IRI_PREFIX + "component", workingDirectory);
         sesameRepository = new SailRepository(new MemoryStore());
         sesameRepository.initialize();
     }
@@ -79,13 +83,16 @@ public class TestEnvironment implements AutoCloseable {
      * @param workingDirectory
      * @return
      */
-    public WritableFilesDataUnit bindSystemDataUnit(String binding, File workingDirectory) {
+    public WritableFilesDataUnit bindSystemDataUnit(String binding,
+            File workingDirectory) {
         final IRI dataUnitIri = getUri("dataUnit");
-        final FilesDataUnitConfiguration configuration = new FilesDataUnitConfiguration(
-                dataUnitIri.stringValue(),
-                binding,
-                workingDirectory.toURI().toString());
-        final WritableFilesDataUnit dataUnit = SystemFilesDataUnitFactory.create(configuration);
+        final FilesDataUnitConfiguration configuration
+                = new FilesDataUnitConfiguration(
+                        dataUnitIri.stringValue(),
+                        binding,
+                        workingDirectory.toURI().toString());
+        final WritableFilesDataUnit dataUnit
+                = new FilesDataUnitImpl(configuration);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
     }
@@ -100,10 +107,8 @@ public class TestEnvironment implements AutoCloseable {
         final IRI dataUnitIri = getUri("dataUnit");
         final RdfDataUnitConfiguration configuration = new RdfDataUnitConfiguration(
                 dataUnitIri.stringValue(), binding);
-        final WritableSingleGraphDataUnit dataUnit = SesameRdfDataUnitFactory.createSingleGraph(
-                dataUnitIri,
-                sesameRepository,
-                configuration);
+        final WritableSingleGraphDataUnit dataUnit = new SingleGraphDataUnitImpl(
+                dataUnitIri, sesameRepository, configuration);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
     }
@@ -116,12 +121,11 @@ public class TestEnvironment implements AutoCloseable {
      */
     public WritableGraphListDataUnit bindGraphListDataUnit(String binding) {
         final IRI dataUnitIri = getUri("dataUnit");
-        final RdfDataUnitConfiguration configuration = new RdfDataUnitConfiguration(
-                dataUnitIri.stringValue(), binding);
-        final WritableGraphListDataUnit dataUnit = SesameRdfDataUnitFactory.createGraphList(
-                dataUnitIri,
-                sesameRepository,
-                configuration);
+        final RdfDataUnitConfiguration configuration
+                = new RdfDataUnitConfiguration(
+                        dataUnitIri.stringValue(), binding);
+        final WritableGraphListDataUnit dataUnit = new GraphListDataUnitImpl(
+                dataUnitIri, sesameRepository, configuration);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
     }
@@ -131,9 +135,10 @@ public class TestEnvironment implements AutoCloseable {
     /**
      * Bind extensions to current {@link #dpu}.
      */
-    private void bindExtensions() throws IllegalArgumentException, IllegalAccessException {
+    private void bindExtensions() throws IllegalArgumentException,
+            IllegalAccessException {
         for (Field field : dpu.getClass().getFields()) {
-            if (field.getAnnotation(DataProcessingUnit.Extension.class) != null) {
+            if (field.getAnnotation(Component.Inject.class) != null) {
                 // Based on type set extension.
                 if (field.getType() == ProgressReport.class) {
                     field.set(dpu, new MockedProgressReport());
@@ -153,23 +158,26 @@ public class TestEnvironment implements AutoCloseable {
      */
     private IRI getUri(String type) {
         suffixCounter++;
-        return SimpleValueFactory.getInstance().createIRI(IRI_PREFIX + type + "/" + suffixCounter);
+        return SimpleValueFactory.getInstance().createIRI(
+                IRI_PREFIX + type + "/" + suffixCounter);
     }
 
     /**
      *
      *
      * @param name
-     * @return Field for data unit with given name, or null if no such field can be found.
+     * @return Field for data unit with given name, or null.
      */
     private Field getDataUnitField(String name) {
         for (Field field : dpu.getClass().getFields()) {
-            for (InputPort annotation : field.getAnnotationsByType(DataProcessingUnit.InputPort.class)) {
+            for (InputPort annotation : field.getAnnotationsByType(
+                    Component.InputPort.class)) {
                 if (annotation.id().equals(name)) {
                     return field;
                 }
             }
-            for (OutputPort annotation : field.getAnnotationsByType(DataProcessingUnit.OutputPort.class)) {
+            for (OutputPort annotation : field.getAnnotationsByType(
+                    Component.OutputPort.class)) {
                 if (annotation.id().equals(name)) {
                     return field;
                 }
@@ -192,7 +200,8 @@ public class TestEnvironment implements AutoCloseable {
         try {
             field.set(dpu, dataUnit);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
-            throw new RuntimeException("Can't bind data unit, check for type and acess modifier.", ex);
+            throw new RuntimeException("Can't bind data unit, "
+                    + "check for type and acess modifier.", ex);
         }
     }
 
@@ -203,7 +212,8 @@ public class TestEnvironment implements AutoCloseable {
      * @param workingDirectory
      * @return
      */
-    public static final TestEnvironment create(SequentialExecution dpu, File workingDirectory) {
+    public static final TestEnvironment create(SimpleExecution dpu,
+            File workingDirectory) {
         return new TestEnvironment(dpu, workingDirectory);
     }
 

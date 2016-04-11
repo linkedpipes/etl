@@ -33,7 +33,8 @@ public class TestUtils {
     private TestUtils() {
     }
 
-    public static void load(WritableSingleGraphDataUnit dataUnit, File file, RDFFormat format) throws Exception {
+    public static void load(WritableSingleGraphDataUnit dataUnit, File file,
+            RDFFormat format) throws Exception {
         final RDFParser rdfParser = Rio.createParser(format);
         Repositories.consume(dataUnit.getRepository(), (connection) -> {
             final RDFInserter inserter = new RDFInserter(connection);
@@ -57,7 +58,8 @@ public class TestUtils {
      * @param format
      * @throws Exception
      */
-    public static void store(SingleGraphDataUnit dataUnit, File file, RDFFormat format) throws Exception {
+    public static void store(SingleGraphDataUnit dataUnit, File file,
+            RDFFormat format) throws Exception {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             final RDFWriter writer = Rio.createWriter(format, outputStream);
             Repositories.consume(dataUnit.getRepository(), (connection) -> {
@@ -74,7 +76,8 @@ public class TestUtils {
      * @param format
      * @throws Exception
      */
-    public static void store(Repository repository, File file, RDFFormat format) throws Exception {
+    public static void store(Repository repository, File file,
+            RDFFormat format) throws Exception {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             final RDFWriter writer = Rio.createWriter(format, outputStream);
             Repositories.consume(repository, (connection) -> {
@@ -89,9 +92,11 @@ public class TestUtils {
      * @return Path to file in test resources.
      */
     public static File fileFromResource(String fileName) {
-        final URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
+        final URL url = Thread.currentThread().getContextClassLoader().
+                getResource(fileName);
         if (url == null) {
-            throw new RuntimeException("Required resourcce '" + fileName + "' is missing.");
+            throw new RuntimeException("Required resourcce '"
+                    + fileName + "' is missing.");
         }
         return new File(url.getPath());
     }
@@ -111,20 +116,26 @@ public class TestUtils {
      * @param dataUnit
      * @throws com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException
      */
-    public static void printContent(WritableGraphListDataUnit dataUnit) throws NonRecoverableException {
+    public static void printContent(WritableGraphListDataUnit dataUnit)
+            throws NonRecoverableException {
         for (IRI graph : dataUnit.getGraphs()) {
             System.out.println(": " + graph.toString());
-            Repositories.consume(dataUnit.getRepository(), (RepositoryConnection connection) -> {
-                connection.exportStatements(null, null, null, true, new AbstractRDFHandler() {
+            Repositories.consume(dataUnit.getRepository(),
+                    (RepositoryConnection connection) -> {
+                        connection.exportStatements(null, null, null, true,
+                                new AbstractRDFHandler() {
 
-                    @Override
-                    public void handleStatement(Statement st) throws RDFHandlerException {
-                        System.out.println("\t" + st.getSubject().stringValue() + "\t" +
-                                st.getPredicate().stringValue() + "\t" + st.getObject().stringValue());
-                    }
+                            @Override
+                            public void handleStatement(Statement st)
+                                    throws RDFHandlerException {
+                                System.out.println(
+                                        "\t" + st.getSubject().stringValue()
+                                        + "\t" + st.getPredicate().stringValue()
+                                        + "\t" + st.getObject().stringValue());
+                            }
 
-                }, graph);
-            });
+                        }, graph);
+                    });
         }
     }
 ;

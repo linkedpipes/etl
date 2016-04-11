@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.execution;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentBegin;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentFailed;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentFinished;
-import com.linkedpipes.etl.executor.api.v1.event.ComponentProgress;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.event.ExecutionBegin;
@@ -210,16 +209,6 @@ public final class ExecutionModel implements EventManager.EventListener {
         private final List<DataUnit> dataUnits = new LinkedList<>();
 
         /**
-         * If not null then represent current component execution progress.
-         */
-        private Integer progress = null;
-
-        /**
-         * If not null then represents the maximum progress value.
-         */
-        private Integer progressTotal = null;
-
-        /**
          * Execution status.
          */
         private ExecutionStatus status;
@@ -386,17 +375,7 @@ public final class ExecutionModel implements EventManager.EventListener {
                 graph));
         events.add(executionEvent);
         //
-        if (event instanceof ComponentProgress) {
-            final ComponentProgress e = (ComponentProgress) event;
-            final Component component = getComponent(e.getComponentUri());
-            if (component == null) {
-                LOG.warn("Ignored event ({}) with unknown component.",
-                        event.getResource());
-            } else {
-                component.progress = e.getCurrent();
-                component.progressTotal = e.getTotal();
-            }
-        } else if (event instanceof ComponentBegin) {
+        if (event instanceof ComponentBegin) {
             final ComponentBegin e = (ComponentBegin) event;
             final Component component = getComponent(e.getComponentUri());
             if (component == null) {
@@ -521,17 +500,6 @@ public final class ExecutionModel implements EventManager.EventListener {
             handler.handleStatement(vf.createStatement(componentResource,
                     vf.createIRI("http://etl.linkedpipes.com/ontology/status"),
                     vf.createIRI(component.status.getIri()), graph));
-            // Sve progress if avalable.
-            if (component.progress != null) {
-                handler.handleStatement(vf.createStatement(componentResource,
-                        vf.createIRI("http://etl.linkedpipes.com/ontology/progress/current"),
-                        vf.createLiteral(component.progress), graph));
-            }
-            if (component.progressTotal != null) {
-                handler.handleStatement(vf.createStatement(componentResource,
-                        vf.createIRI("http://etl.linkedpipes.com/ontology/progress/total"),
-                        vf.createLiteral(component.progressTotal), graph));
-            }
             // Save data units.
             for (DataUnit dataUnit : component.dataUnits) {
                 final IRI dataUnitResource = vf.createIRI(dataUnit.iri);
