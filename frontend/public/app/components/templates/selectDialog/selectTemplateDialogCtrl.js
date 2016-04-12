@@ -30,6 +30,8 @@ define([], function () {
                 return 'file_upload';
             } else if (component.type === 'http://etl.linkedpipes.com/ontology/component/type/Executor') {
                 return 'call_split';
+            } else if (component.type === 'http://etl.linkedpipes.com/ontology/component/type/Quality') {
+                return 'help_outline';
             } else {
                 return '';
             }
