@@ -262,6 +262,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>q-sparqlAsk</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/q-sparqlAsk/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesFilter</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesFilter/</outputDirectory>
@@ -430,6 +436,12 @@
                                         <mkdir dir="${deploy.directory}/components/e-sparqlEndpoint/"/>
                                         <copy todir="${deploy.directory}/components/e-sparqlEndpoint/">
                                             <fileset dir="${plugins.directory}/e-sparqlEndpoint/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/q-sparqlAsk/"/>
+                                        <copy todir="${deploy.directory}/components/q-sparqlAsk/">
+                                            <fileset dir="${plugins.directory}/q-sparqlAsk/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

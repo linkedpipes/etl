@@ -34,6 +34,7 @@
         <module>l-sparqlEndpoint</module>
         <module>t-filesBase64Decode</module>
         <module>t-mustache</module>
+        <module>q-sparqlAsk</module>
     </modules>
 
 </project>
