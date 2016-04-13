@@ -35,6 +35,7 @@
         <module>t-filesBase64Decode</module>
         <module>t-mustache</module>
         <module>q-sparqlAsk</module>
+        <module>l-filesToLocal</module>
         <module>e-filesFromLocal</module>
     </modules>
 

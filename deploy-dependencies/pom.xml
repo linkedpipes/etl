@@ -274,6 +274,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-filesToLocal</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-filesToLocal/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-filesToScp</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/l-filesToScp/</outputDirectory>
@@ -454,6 +460,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-filesFilter/"/>
                                         <copy todir="${deploy.directory}/components/t-filesFilter/">
                                             <fileset dir="${plugins.directory}/t-filesFilter/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-filesToLocal/"/>
+                                        <copy todir="${deploy.directory}/components/l-filesToLocal/">
+                                            <fileset dir="${plugins.directory}/l-filesToLocal/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
