@@ -465,8 +465,8 @@ gModule.unpack = function (uri, configuration, callback) {
             if (resource['@type'].indexOf('http://etl.linkedpipes.com/ontology/DataUnit') > -1) {
                 // The data unit we map could have been mapped from another execution.
                 var execution = resource['http://etl.linkedpipes.com/ontology/execution'];
-                if (typeof(execution) === 'undefined') {
-                    execution = {'@id':  mapping.execution };
+                if (typeof (execution) === 'undefined') {
+                    execution = {'@id': mapping.execution};
                 }
                 //
                 dataUnits[resource['@id']] = {
