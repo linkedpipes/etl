@@ -430,20 +430,32 @@ gModule.unpack = function (uri, configuration, callback) {
 
         // Add sources - ie. for each data unit determine it's sources. The source list
         // are build based on the connections in pipeline.
-        data.metadata.definition.graph['@graph'].forEach(function (resource) {
-            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
-                var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
-                var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
-                var sourcePort = portsByOwnerAndBinding[source][
-                        getString(resource, 'http://linkedpipes.com/ontology/sourceBinding')];
-                var targetPort = portsByOwnerAndBinding[target][
-                        getString(resource, 'http://linkedpipes.com/ontology/targetBinding')];
-                if (!targetPort['http://linkedpipes.com/ontology/source']) {
-                    targetPort['http://linkedpipes.com/ontology/source'] = [];
+        try {
+            data.metadata.definition.graph['@graph'].forEach(function (resource) {
+                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
+                    var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
+                    var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
+                    var sourcePort = portsByOwnerAndBinding[source][
+                            getString(resource, 'http://linkedpipes.com/ontology/sourceBinding')];
+                    var targetPort = portsByOwnerAndBinding[target][
+                            getString(resource, 'http://linkedpipes.com/ontology/targetBinding')];
+                    if (typeof (targetPort) === 'undefined') {
+                        throw {
+                            'errorMessage': '',
+                            'systemMessage': '',
+                            'userMessage': "Invalid pipeline definition, cycle detected!",
+                            'errorCode': 'ERROR'
+                        };
+                    }
+                    if (!targetPort['http://linkedpipes.com/ontology/source']) {
+                        targetPort['http://linkedpipes.com/ontology/source'] = [];
+                    }
+                    targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
                 }
-                targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
-            }
-        });
+            });
+        } catch (error) {
+            callback(false, error);
+        }
         next();
     }).add(function (data, next) {
         // For some data units, we need to load resources from directory. This is used
