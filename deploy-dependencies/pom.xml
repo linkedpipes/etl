@@ -304,6 +304,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-filesFromLocal</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-filesFromLocal/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdf</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesToRdf/</outputDirectory>
@@ -478,6 +484,12 @@
                                         <mkdir dir="${deploy.directory}/components/e-distributionMetadata/"/>
                                         <copy todir="${deploy.directory}/components/e-distributionMetadata/">
                                             <fileset dir="${plugins.directory}/e-distributionMetadata/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-filesFromLocal/"/>
+                                        <copy todir="${deploy.directory}/components/e-filesFromLocal/">
+                                            <fileset dir="${plugins.directory}/e-filesFromLocal/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
