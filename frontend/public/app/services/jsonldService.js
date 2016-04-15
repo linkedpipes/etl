@@ -338,13 +338,13 @@ define(['jquery'], function (jQuery) {
                 return;
             }
             //
-            if (value['@value']) {
+            if (typeof(value['@value']) !== 'undefined') {
                 return value['@value'];
             } else {
                 return value;
             }
         } else {
-            if (value['@value']) {
+            if (typeof(value['@value']) !== 'undefined') {
                 return value['@value'];
             } else {
                 return value;
