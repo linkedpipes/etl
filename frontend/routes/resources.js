@@ -27,7 +27,9 @@ var wrapContent = function (content) {
 //
 
 gApiRouter.get('/components', function (request, response) {
-    var value = wrapContent(gTemplates.getList());
+    var value = {
+        '@graph': gTemplates.getList()
+    };
     response.json(value);
 });
 
