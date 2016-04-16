@@ -86,13 +86,23 @@ var insertPipeline = function (id, definition) {
     if (!definition) {
         definition = JSON.parse(gFs.readFileSync(definitionFile));
     }
-    gModule.list.push({
-        'uri': gConfiguration.storage.domain + '/resources/pipelines/' + id,
-        'id': id,
-        'label': getPipelineLabel(id, definition)
-    });
+    var pipelineIri = gConfiguration.storage.domain + '/resources/pipelines/' + id;
+    var pipelineRecord = {
+        '@graph': [{
+                '@id': pipelineIri + '/reference',
+                '@type': [
+                    'http://etl.linkedpipes.com/ontology/Reference'
+                ],
+                'http://linkedpipes.com/ontology/pipeline': pipelineIri,
+                'http://linkedpipes.com/ontology/id': id,
+                'http://www.w3.org/2004/02/skos/core#prefLabel': getPipelineLabel(id, definition)
+            }],
+        '@id': pipelineIri + '/graph'
+    };
+    gModule.list.push(pipelineRecord);
     gModule.map[id] = {
-        'definitionFile': definitionFile
+        'definitionFile': definitionFile,
+        'pipelineRecord': pipelineRecord
     };
 };
 
@@ -157,14 +167,10 @@ gModule.delete = function (id) {
     if (!gModule.map[id]) {
         return;
     }
-    // Remove from lists.
-    for (var i = 0; i < this.list.length; ++i) {
-        if (this.list[i].id === id) {
-            this.list.splice(i, 1);
-            break;
-        }
-    }
     var record = this.map[id];
+    // Remove from lists.
+    var index = this.list.indexOf(record['pipelineRecord']);
+    this.list.splice(index, 1);
     delete this.map[id];
     // Delete file from disk.
     gFs.unlinkSync(record.definitionFile);

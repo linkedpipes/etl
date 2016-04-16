@@ -15,13 +15,6 @@ module.exports = gApiRouter;
 
 var gMonitorUri = gConfiguration.executor.monitor.url;
 
-var wrapContent = function (content) {
-    return {
-        'metadata': {},
-        'payload': content
-    };
-};
-
 //
 // Components as templates.
 //
@@ -84,7 +77,9 @@ gApiRouter.get('/components/:name/:type', function (request, response) {
 //
 
 gApiRouter.get('/pipelines', function (request, response) {
-    var value = wrapContent(gPipelines.getList());
+    var value = {
+        '@graph': gPipelines.getList()
+    };
     response.json(value);
 });
 

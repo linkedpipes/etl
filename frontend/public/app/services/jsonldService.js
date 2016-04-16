@@ -481,7 +481,7 @@ define(['jquery'], function (jQuery) {
             this.loading = true;
 
             //
-            $http.get('/resources/executions').then(function (response) {
+            $http.get(this.url).then(function (response) {
                 console.time('Loading data');
                 var json = toJson(response.data, repository.query.data,
                         repository.template);
@@ -491,7 +491,9 @@ define(['jquery'], function (jQuery) {
                 repository.data = json;
                 //
                 var metadata = parseMetadata(response.data);
-                repository.lastCheck = metadata.serverTime;
+                if (metadata && metadata['serverTime']) {
+                    repository.lastCheck = metadata['serverTime'];
+                }
                 //
                 console.timeEnd('Loading data');
                 if (onSuccess) {
