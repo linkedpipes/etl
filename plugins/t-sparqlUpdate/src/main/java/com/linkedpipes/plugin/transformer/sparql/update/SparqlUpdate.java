@@ -23,6 +23,10 @@ public final class SparqlUpdate implements SimpleExecution {
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(id = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
