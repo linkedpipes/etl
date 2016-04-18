@@ -182,9 +182,6 @@ var expandComponent = function (pipeline, component, template) {
             portCounter += 1;
             // Add port to the pipeline definition.
             pipeline['@graph'].push(portObject);
-        } else {
-            // Unknown object.
-            console.log('Unknown object type record ignored:', resource);
         }
     });
     // Store references.
