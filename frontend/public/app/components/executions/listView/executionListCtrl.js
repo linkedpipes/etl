@@ -199,7 +199,8 @@ define([
         };
 
         $scope.onExecute = function (execution) {
-            $http.post('/api/v1/execute?uri=' + execution.pipeline.iri)
+            $http.post('/resources/executions?pipeline='
+                    + execution.pipeline.iri)
                     .then(function () {
                         $scope.repository.update();
                     }, function (response) {

@@ -39,7 +39,7 @@ define([], function () {
         };
 
         $scope.onExecute = function (pipeline) {
-            $http.post('/api/v1/execute?uri=' + pipeline.iri)
+            $http.post('/resources/executions?pipeline=' + pipeline.iri)
                     .then(function (response) {
                         $location.path('/executions').search({});
                     }, function (response) {

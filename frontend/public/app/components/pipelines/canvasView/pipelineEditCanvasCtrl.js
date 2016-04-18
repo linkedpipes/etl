@@ -531,7 +531,8 @@ define([
         };
 
         var executePipeline = function (configuration, onSucess) {
-            $http.post('/api/v1/execute?uri=' + $scope.data.iri, configuration)
+            $http.post('/resources/executions?pipeline=' + $scope.data.iri,
+                    configuration)
                     .then(function () {
                         if (onSucess) {
                             onSucess();
