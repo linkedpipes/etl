@@ -49,6 +49,9 @@ public final class SparqlSelect implements SimpleExecution {
                 final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, configuration.getQuery());
                 final SimpleDataset dataset = new SimpleDataset();
                 dataset.addDefaultGraph(inputGraph);
+                // We need to add this else we can not use
+                // GRAPH ?g in query.
+                dataset.addNamedGraph(inputGraph);
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
