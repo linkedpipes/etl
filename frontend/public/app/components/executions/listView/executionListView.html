@@ -21,7 +21,7 @@
                             </span>
                             <span ng-switch-when="PROGRESS">
                                 <span hide-xs>
-                                    <span>{{item.startTime| date:'yyyy-MM-dd HH:mm:ss'}}</span> - ...</br>
+                                    <span>{{item.startTime ? (item.startTime| date:'yyyy-MM-dd HH:mm:ss') : '...'}}</span> - ...</br>
                                 </span>
                                 <md-progress-linear md-mode="determinate" value="{{item.progress.value}}"></md-progress-linear>
                             </span>
