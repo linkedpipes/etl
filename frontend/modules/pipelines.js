@@ -393,14 +393,10 @@ gModule.update = function (id, content, updateUri) {
         updateResourceUri(content, id);
     }
     gFs.writeFile(fileName, JSON.stringify(content, null, 2));
-    // Update definition ID.
-    for (var index in gModule.list) {
-        var item = gModule.list[index];
-        if (item.id === id) {
-            item.label = getPipelineLabel(id, content);
-            break;
-        }
-    }
+    // Update definition ID, pipeline record has predefined structure.
+    var pipeline = gModule.map[id].pipelineRecord;
+    pipeline['@graph'][0]['http://www.w3.org/2004/02/skos/core#prefLabel']
+            = getPipelineLabel(id, content);
     // Update preferences.
     var pipelineIri = gConfiguration.storage.domain +
             '/resources/pipelines/' + id;
