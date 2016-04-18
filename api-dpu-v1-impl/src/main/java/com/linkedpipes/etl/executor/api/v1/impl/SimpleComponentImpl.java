@@ -229,17 +229,14 @@ final class SimpleComponentImpl implements SimpleComponent {
     }
 
     /**
-     * Search for configuration data unit. If it's found then try to convert
-     * it into {@link SparqlSelect} interface and return it.
+     * Search for configuration field. If it's found then try to convert
+     * it into {@link SparqlSelect} and return it.
      *
      * Must be called after all the data units are bound.
      *
-     * @param dataUnits
      * @return Null if there is no configuration data unit.
      */
-    private SparqlSelect getConfigurationDataUnit(
-            Map<String, DataUnit> dataUnits) throws InitializationFailed {
-
+    private SparqlSelect getConfigurationDataUnit() throws InitializationFailed {
         for (Field field : component.getClass().getFields()) {
             final Component.ContainsConfiguration config
                     = field.getAnnotation(Component.ContainsConfiguration.class);
@@ -251,38 +248,19 @@ final class SimpleComponentImpl implements SimpleComponent {
                     throw new InitializationFailed("Can't read field.", ex);
                 }
                 final SparqlSelect sparqlSelect;
-                if (SparqlSelect.class.isAssignableFrom(value.getClass())) {
+                if (value instanceof SparqlSelect) {
                     sparqlSelect = (SparqlSelect) value;
                 } else {
                     sparqlSelect = null;
                 }
-                if (sparqlSelect != null) {
-                    LOG.warn("Can not used data unit"
+                if (sparqlSelect == null) {
+                    throw new InitializationFailed("Can not use data unit"
                             + " ({}) as a configuration source.",
                             field.getName());
                 }
                 return sparqlSelect;
             }
         }
-
-        for (DataUnit item : dataUnits.values()) {
-            if ("Configuration".equals(item.getBinding())) {
-                // Try conversion to SparqlSelect.
-                final SparqlSelect sparqlSelect;
-                if (item instanceof SparqlSelect) {
-                    sparqlSelect = (SparqlSelect) item;
-                } else {
-                    sparqlSelect = null;
-                }
-                if (sparqlSelect != null) {
-                    LOG.warn("Can not wrap configuration data unit"
-                            + " ({}) as a configuration source.",
-                            item.getResourceIri());
-                }
-                return sparqlSelect;
-            }
-        }
-
         // No configuration data unit is presented.
         return null;
     }
@@ -294,7 +272,7 @@ final class SimpleComponentImpl implements SimpleComponent {
         bindPorts(dataUnits);
         injectObjects(context);
         // Must be called after bindPorts.
-        loadConfigurations(getConfigurationDataUnit(dataUnits));
+        loadConfigurations(getConfigurationDataUnit());
     }
 
     @Override

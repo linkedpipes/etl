@@ -171,6 +171,9 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                         QueryLanguage.SPARQL, query);
                 final SimpleDataset dataset = new SimpleDataset();
                 dataset.addDefaultGraph(graph);
+                // We need to add this else we can not use
+                // GRAPH ?g in query.
+                dataset.addNamedGraph(graph);
                 tupleQuery.setDataset(dataset);
                 final TupleQueryResult result = tupleQuery.evaluate();
                 while (result.hasNext()) {
