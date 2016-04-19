@@ -32,7 +32,7 @@ We recommend using [Cygwin] and proceeding as with Linux.
 Now edit the configuration file, mainly adding paths to working, storage, log and library directories. Especially:
 - `executor.execution.working_directory`
 - `executor.log.directory`
-- `executor.osgi.lib.directory`
+- `executor.osgi.lib.directory` - This needs to be an absolute path to the `deploy/osgi` directory.
 - `executor-monitor.log.directory`
 - `storage.components.directory` - This needs to be an absolute path to the `deploy/components` directory.
 - `storage.pipelines.directory`
