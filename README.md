@@ -34,7 +34,7 @@ Now edit the configuration file, mainly adding paths to working, storage, log an
 - `executor.log.directory`
 - `executor.osgi.lib.directory`
 - `executor-monitor.log.directory`
-- `storage.components.directory`
+- `storage.components.directory` - This needs to be an absolute path to the `deploy/components` directory.
 - `storage.pipelines.directory`
 
 ## Running LinkedPipes ETL
