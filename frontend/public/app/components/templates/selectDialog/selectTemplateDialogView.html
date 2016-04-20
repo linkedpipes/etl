@@ -10,25 +10,22 @@
             </div>
         </md-toolbar>
         <md-dialog-content style="min-width:400px;">
-            <div class="md-dialog-content">
-                <form name="pipelineForm">
-                    <div layout-gt-xs="row">
-                        <md-input-container>
-                            <label>Filter by name</label>
-                            <input ng-model="search" md-autofocus/>
-                        </md-input-container>
-                    </div>
-                </form>
+            <div class="md-dialog-content" layout="column">
+                <md-input-container style="md-block">
+                    <label>Filter</label>
+                    <input ng-model="search" md-autofocus/>
+                </md-input-container>
                 <md-list>
-                    <md-list-item class="md-1-line" ng-repeat="item in data| filter:filterItems | orderBy:'-order'"
+                    <md-list-item class="md-1-line"
+                                  ng-repeat="item in data| filter:filterItems | orderBy:'-order'"
                                   ng-click="onSelect(item)">
                         <div class="md-primary">
-                            <md-icon md-svg-icon="{{item.icon}}" class="lp-icon-avatar md-avatar"></md-icon>
+                            <md-icon md-svg-icon="{{::item.icon}}" class="lp-icon-avatar md-avatar"></md-icon>
                         </div>
                         <div class="md-list-item-text" layout="column">
                             <span>
-                                <div>{{item.label}}</div>
-                                <div style="margin-left: 2em">{{item.portLabel}}</div>
+                                <div>{{::item.label}}</div>
+                                <div style="margin-left: 2em">{{::item.portLabel}}</div>
                             </span>
                         </div>
                     </md-list-item>
