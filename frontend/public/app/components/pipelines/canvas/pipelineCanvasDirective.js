@@ -213,6 +213,10 @@ define([
             // Sometimes this event is called even if there is no change
             // in position.
             if (x !== 0 || y !== 0) {
+                if (!this.options.scroll.moved) {
+                    // Report start of the movement to the owner.
+                    this.options.api.onMoveStart();
+                }
                 this.options.scroll.moved = true;
             }
         },
@@ -374,7 +378,7 @@ define([
         /**
          * Report click on empty space.
          */
-        'onEmptyClick': function (x, y) {},
+        'onEmptyClick': function (x, y, event) {},
         /**
          * Can be used only on selected objects.
          */
@@ -407,6 +411,10 @@ define([
          */
         'onConnectionToEmpty': function (id, x, y) {},
         /**
+         * Called when use starts moving canvas.
+         */
+        'onMoveStart': function () {},
+        /**
          * Called when position of selected component changed, is called as the position is changing.
          */
         'onMoveSelected': function (id, x, y) {},
@@ -438,6 +446,10 @@ define([
          * Vertices for connection with given id.
          */
         'getVertices': function (id) {},
+        /**
+         * Delete content of the canvas.
+         */
+        'clear': function () {},
         /**
          *
          */
@@ -507,7 +519,8 @@ define([
                 // Add scrollable view to canvas.
                 $scope.scrollableView = new ScrollableView({
                     'paper': $scope.paper,
-                    'scroll': $scope.status.scroll
+                    'scroll': $scope.status.scroll,
+                    'api': $scope.api
                 });
                 $scope.scrollableView.$el.css({
                     'width': '100%', 'height': '100%'}).appendTo(element);
@@ -632,7 +645,7 @@ define([
                         $scope.paper.trigger('component-select:clean');
                         return;
                     } else {
-                        $scope.api.onEmptyClick(x, y);
+                        $scope.api.onEmptyClick(x, y, event);
                     }
                 });
             },
@@ -732,9 +745,12 @@ define([
                         return cell.attributes.vertices;
                     };
 
+                    $scope.api.clear = function () {
+                        $scope.graph.clear();
+                    };
+
                     $scope.api.loadStart = function () {
                         $scope.status.loading = true;
-                        $scope.graph.clear();
                     };
 
                     $scope.api.loadEnd = function () {

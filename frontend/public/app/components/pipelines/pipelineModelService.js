@@ -58,6 +58,18 @@ define([], function () {
             component['@id'] = model.definition.iri + '/components/' + id;
         };
 
+        /**
+         * Set component tamplate IRI.
+         *
+         * @param component
+         * @param iri
+         */
+        service.component.setTemplate = function (component, iri) {
+            component['http://linkedpipes.com/ontology/template'] = {
+                '@id': iri
+            };
+        };
+
         service.connection.getSource = function (connection) {
             return jsonld.getReference(connection,
                     'http://linkedpipes.com/ontology/sourceComponent');
@@ -334,6 +346,16 @@ define([], function () {
         service.getRunAfter = function (model) {
             return service.findByType(service.getDefinitionGraph(model),
                     'http://linkedpipes.com/ontology/RunAfter');
+        };
+
+        /**
+         * Add given resource as it is to the pipeline model.
+         *
+         * @param model Pipeline model.
+         * @param resource Resource object.
+         */
+        service.addResource = function (model, resource) {
+            service.getDefinitionGraph(model).push(resource);
         };
 
         /**

@@ -67,7 +67,7 @@
         </md-button>
     </md-content>
 
-    <div id="componentMenu" style="position:absolute;overflow:visible;width:0px;" ng-show="status.menuVisible && !status.moving">
+    <div id="componentMenu" style="position:absolute;overflow:visible;width:0px;" ng-show="status.componentMenuVisible && !status.moving">
         <span class="topLine" style="position:relative;top:-60px;">
             <md-button class="md-fab md-mini" style="position:absolute;left:-30px;" aria-label="Edit" ng-click="onEditComponent()">
                 <md-tooltip md-direction="top">Edit</md-tooltip>
@@ -94,6 +94,19 @@
             <md-button class="md-fab md-mini" style="position:absolute;left:70px;top:55px;" aria-label="Change mapping" ng-click="onMappingComponent()" ng-show="status.mappingVisible">
                 <md-tooltip md-direction="bottom">Enable/disable mapping</md-tooltip>
                 <md-icon md-menu-origin md-svg-src="autorenew"></md-icon>
+            </md-button>
+        </span>
+    </div>
+
+    <div id="emptySpaceMenu" style="position:absolute;overflow:visible;width:0px;" ng-show="status.emptyMenuVisible">
+        <span style="position:relative;left:-25px;top:-70px;">
+            <md-button class="md-fab md-mini" style="position:absolute;left:-40px;top:-20px;" ng-click="onAddComponent()">
+                <md-tooltip md-direction="top">Insert component</md-tooltip>
+                <md-icon md-menu-origin md-svg-src="edit"></md-icon>
+            </md-button>
+            <md-button class="md-fab md-mini" style="position:absolute;left:40px;top:-20px;" ng-click="onImportPipeline()">
+                <md-tooltip md-direction="top">Insert pipeline</md-tooltip>
+                <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
             </md-button>
         </span>
     </div>

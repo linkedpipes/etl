@@ -152,11 +152,27 @@ define(['jquery'], function (jQuery) {
 
         /**
          *
-         * @param uri Template URI.
+         * @param iri Template IRI.
          * @returns Template object or nothing if URI is invalid.
          */
-        service.getTemplate = function (uri) {
-            return templates.map[uri];
+        service.getTemplate = function (iri) {
+            return templates.map[iri];
+        };
+
+        /**
+         * Try to map given template IRI to the stored templates.
+         *
+         * @param iri
+         * @returns
+         */
+        service.mapToIri = function (iri) {
+            var postfix = iri.substring(iri.indexOf('/resources/components/'));
+            for (var key in templates.map) {
+                if (key.endsWith(postfix)) {
+                    return key;
+                }
+            }
+            console.warn("Can't map template:", iri);
         };
 
         /**

@@ -7,10 +7,12 @@ define([
     'app/components/pipelines/pipelineModelService',
     'app/components/templates/templatesRepository',
     'app/components/pipelines/configurationDialog/configurationDialogCtrl',
-    'app/components/templates/selectDialog/selectTemplateDialogCtrl'
+    'app/components/templates/selectDialog/selectTemplateDialogCtrl',
+    'app/components/pipelines/importDialog/pipelineImportDialogCtrl'
 ], function ($, saveAs, angular, pipelineDetailDialog, pipelineCanvasDirective
         , pipelineServiceModule, templatesRepositoryModule
-        , configurationDialogCtrlModule, selectTemplateDialogModule) {
+        , configurationDialogCtrlModule, selectTemplateDialogModule,
+        pipelineImportDialogModule) {
 
     function controller($scope, $http, $location, $routeParams, $timeout,
             $mdDialog, $mdMedia, pipelineModel, templates, statusService,
@@ -41,7 +43,8 @@ define([
         };
 
         $scope.status = {
-            'menuVisible': false,
+            'componentMenuVisible': false,
+            'emptyMenuVisible': false,
             'moving': false,
             'selected': '',
             'noApply': false,
@@ -50,7 +53,11 @@ define([
                 'source': ''
             },
             'dialogOpened': false,
-            'mappingVisible': false
+            'mappingVisible': false,
+            'position': {
+                'x': 0,
+                'y': 0
+            }
         };
 
         var data = {
@@ -74,7 +81,143 @@ define([
             }
         };
 
-        $scope.canvasApi.onEmptyClick = function (x, y) {
+        /**
+         * Insert pipeline to given position.
+         */
+        var insertPipeline = function (pipeline, x, y) {
+
+            var iriToId = {};
+            // We need to update IRI of imported components.
+            var iriToIri = {};
+            var model = pplFacade.fromJsonLd(pipeline);
+
+            $scope.status.noApply = true;
+            $scope.canvasApi.loadStart();
+
+            var components = pplFacade.getComponents(model);
+
+            // Find left most component.
+            var minX = Number.POSITIVE_INFINITY;
+            var minY = Number.POSITIVE_INFINITY;
+            components.forEach(function (component) {
+                minX = Math.min(minX, comFacade.getX(component));
+                minY = Math.min(minY, comFacade.getX(component));
+            });
+
+            components.forEach(function (component) {
+                // Update position.
+                comFacade.setPosition(component,
+                        comFacade.getX(component) + x - minX,
+                        comFacade.getY(component) + y - minY);
+                //
+                var originalId = component['@id'];
+                // Map template.
+                var templateIri = templates.mapToIri(
+                        comFacade.getTemplateIri(component));
+                comFacade.setTemplate(component, templateIri);
+                if (typeof (templateIri) === 'undefined') {
+                    // Missing template!
+                    console.warn('Missing tempalte ignored');
+                    return;
+                }
+                var template = templates.getTemplate(templateIri);
+                // Add a copy of rhe resource to current model.
+                pipelineModel.addResource($scope.data.model, component);
+                // Create canvas representation.
+                var id = $scope.canvasApi.addComponent(
+                        component, template, pipelineModel.component);
+                comFacade.setIriFromId($scope.data.model, component, id);
+                $scope.data.idToModel[id] = component;
+                // Copy configuration.
+                var config = pipelineModel.getComponentConfigurationGraph(
+                        model, component);
+                if (typeof (config) !== 'undefined') {
+                    pipelineModel.setComponentConfiguration($scope.data.model,
+                            component,
+                            comFacade.getIri(component) + '/configuration',
+                            config);
+                }
+                //
+                iriToId[component['@id']] = id;
+                iriToIri[originalId] = component['@id'];
+            });
+
+            var connections = pipelineModel.getConnections(model);
+            connections.forEach(function (connection) {
+                var vertices = conFacade.getVerticesView(
+                        model, connection);
+                var sourceIri = iriToIri[conFacade.getSource(connection)];
+                var targetIri = iriToIri[conFacade.getTarget(connection)];
+                var source = iriToId[sourceIri];
+                var target = iriToId[targetIri];
+                // Ignore invalid connections.
+                if (typeof (source) === 'undefined' ||
+                        typeof ('target') === 'undefined') {
+                    console.warn('Ignored invalid connection.', connection);
+                    return;
+                }
+                // Add connection to the view.
+                var id = $scope.canvasApi.addConnection(
+                        source,
+                        conFacade.getSourceBinding(connection),
+                        target,
+                        conFacade.getTargetBinding(connection),
+                        vertices, 'link');
+
+                // Add connection to the model.
+                var newConnection = conFacade.createConnection(
+                        $scope.data.model);
+                conFacade.setIriFromId($scope.data.model, newConnection, id);
+                conFacade.setSource(newConnection,
+                        $scope.data.idToModel[source],
+                        conFacade.getSourceBinding(connection));
+                conFacade.setTarget(newConnection,
+                        $scope.data.idToModel[target],
+                        conFacade.getTargetBinding(connection));
+
+                $scope.data.idToModel[id] = newConnection;
+            });
+
+            var runAfter = pipelineModel.getRunAfter(model);
+            runAfter.forEach(function (connection) {
+                var vertices = conFacade.getVerticesView(
+                        model, connection);
+                var sourceIri = iriToIri[conFacade.getSource(connection)];
+                var targetIri = iriToIri[conFacade.getTarget(connection)];
+                var source = iriToId[sourceIri];
+                var target = iriToId[targetIri];
+                // Ignore invalid connections.
+                if (typeof (source) === 'undefined' ||
+                        typeof ('target') === 'undefined') {
+                    console.warn('Ignored invalid connection.', connection);
+                    return;
+                }
+                // Add connection to the view.
+                var id = $scope.canvasApi.addConnection(
+                        source,
+                        conFacade.getSourceBinding(connection),
+                        target,
+                        conFacade.getTargetBinding(connection),
+                        vertices, 'control');
+
+                // Add connection to the model.
+                var newConnection = conFacade.createRunAfter(
+                        $scope.data.model);
+                conFacade.setIriFromId($scope.data.model, newConnection, id);
+                conFacade.setSource(newConnection,
+                        $scope.data.idToModel[source]);
+                conFacade.setTarget(newConnection,
+                        $scope.data.idToModel[target]);
+
+                $scope.data.idToModel[id] = newConnection;
+            });
+
+            $scope.canvasApi.loadEnd();
+            $scope.status.noApply = false;
+
+        };
+
+        $scope.canvasApi.onEmptyClick = function (x, y, event) {
             // Check for opened dialog.
             if ($scope.status.dialogOpened) {
                 return;
@@ -83,9 +226,23 @@ define([
                 $scope.status.prerequisite.active = false;
                 return;
             }
-            selectComponent({}, function (template) {
-                insertComponent(template, x, y);
-            });
+            // Show/hyde empty space menu.
+            if ($scope.status.emptyMenuVisible) {
+                $scope.status.emptyMenuVisible = false;
+            } else {
+                var menu = $('#emptySpaceMenu');
+                menu.css('left', event.clientX);
+                menu.css('top', event.clientY);
+                $scope.status.emptyMenuVisible = true;
+                // Store position.
+                $scope.status.position.x = x;
+                $scope.status.position.y = y;
+            }
+
+            // Angular would no notice change in emptyMenuVisible,
+            // so we need to notify it.
+            $scope.$apply();
+
         };
 
         $scope.canvasApi.onDoubleClick = function (id) {
@@ -170,6 +327,14 @@ define([
             });
         };
 
+        $scope.canvasApi.onMoveStart = function () {
+            // Hyde empty menu if visible.
+            if ($scope.status.emptyMenuVisible) {
+                $scope.status.emptyMenuVisible = false;
+                $scope.$apply();
+            }
+        };
+
         $scope.canvasApi.onMoveSelected = function (id, x, y, width, height) {
             var canvasPosition = $('#canvas').position();
             var menu = $('#componentMenu');
@@ -182,6 +347,9 @@ define([
         };
 
         $scope.canvasApi.onUpdateSelection = function (id) {
+            $scope.status.emptyMenuVisible = false;
+            // Next lines will update scope, so we do not need
+            // to call $scope.$apply().
             if (id) {
                 var component = $scope.data.idToModel[id];
                 if (!component) {
@@ -209,10 +377,10 @@ define([
                     $scope.status.mappingVisible = false;
                 }
                 //
-                $scope.status.menuVisible = true;
+                $scope.status.componentMenuVisible = true;
                 $scope.status.selected = id;
             } else {
-                $scope.status.menuVisible = false;
+                $scope.status.componentMenuVisible = false;
                 $scope.status.selected = '';
             }
             // We need to notify angular about change.
@@ -367,6 +535,7 @@ define([
         var pipelineToCanvas = function () {
             console.time('pipelineToCanvas');
             $scope.status.noApply = true;
+            $scope.canvasApi.clear();
             $scope.canvasApi.loadStart();
             var iriToId = {};
             // We also need to deterine the left top corner.
@@ -667,6 +836,49 @@ define([
             });
         };
 
+        /**
+         * Let user select a component to insert.
+         * Require $scope.status.position to be set.
+         */
+        $scope.onAddComponent = function () {
+            $scope.status.emptyMenuVisible = false;
+            // Next lines will update scope, so we do not need
+            // to call $scope.$apply().
+            selectComponent({}, function (template) {
+                insertComponent(template, $scope.status.position.x,
+                        $scope.status.position.y);
+            });
+        };
+
+        /**
+         * Let user import pipeline.
+         * Require $scope.status.position to be set.
+         */
+        $scope.onImportPipeline = function () {
+            $scope.status.emptyMenuVisible = false;
+            // Next lines will update scope, so we do not need
+            // to call $scope.$apply().
+            $scope.status.dialogOpened = true;
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                'controller': 'components.pipelines.import.dialog',
+                'templateUrl': 'app/components/pipelines/importDialog/pipelineImportDialogView.html',
+                'parent': angular.element(document.body),
+                'hasBackdrop': false,
+                'clickOutsideToClose': true,
+                'fullscreen': useFullScreen
+            }).then(function (result) {
+                insertPipeline(result['pipeline'],
+                        $scope.status.position.x,
+                        $scope.status.position.y);
+                //
+                $scope.status.dialogOpened = false;
+            }, function () {
+                $scope.status.dialogOpened = false;
+            });
+
+        };
+
         $scope.onEditComponent = function (id) {
             if (!id) {
                 id = $scope.status.selected;
@@ -927,6 +1139,7 @@ define([
         templatesRepositoryModule(app);
         configurationDialogCtrlModule(app);
         selectTemplateDialogModule(app);
+        pipelineImportDialogModule(app);
 
         app.controller('components.pipelines.edit.canvas', controller);
     };
