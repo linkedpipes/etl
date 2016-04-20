@@ -13,7 +13,7 @@
             <div class="md-dialog-content" layout="column">
                 <md-radio-group ng-model="type" ng-show="!loading">
                     <md-radio-button value="URL">From URL</md-radio-button>
-                    <md-radio-button value="Text">From text area</md-radio-button>
+                    <md-radio-button value="Text">Direct input (JSON-LD)</md-radio-button>
                 </md-radio-group>
                 <div ng-show="type === 'URL'">
                     <md-input-container class="md-block">
