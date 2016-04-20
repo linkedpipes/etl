@@ -8,7 +8,8 @@
             "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Extractor"},
             "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
             "http://linkedpipes.com/ontology/port": [
-                {"@id": "http://localhost:8080/resources/components/e-sparqlEndpoint/1.0.0/output"}
+                {"@id": "http://localhost:8080/resources/components/e-sparqlEndpoint/1.0.0/output"},
+                {"@id": "http://localhost:8080/resources/components/e-sparqlEndpoint/1.0.0/configuration"}
             ],
             "http://linkedpipes.com/ontology/keyword": [
                 "SPARQL", "query", "endpoint"
@@ -23,6 +24,16 @@
                 "http://linkedpipes.com/ontology/Output"
             ],
             "http://linkedpipes.com/ontology/binding": "OutputRdf"
+        },
+        {
+            "@id": "http://localhost:8080/resources/components/e-sparqlEndpoint/1.0.0/configuration",
+            "http://www.w3.org/2004/02/skos/core#prefLabel": "Configuration",
+            "@type": [
+                "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
+                "http://linkedpipes.com/ontology/Port",
+                "http://linkedpipes.com/ontology/Input"
+            ],
+            "http://linkedpipes.com/ontology/binding": "Configuration"
         }
     ]
 }

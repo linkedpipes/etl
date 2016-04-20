@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
+import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.OpenRDFException;
@@ -25,6 +26,10 @@ public final class SparqlEndpoint implements SimpleExecution {
 
     @Component.InputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(id = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.Configuration
     public SparqlEndpointConfiguration configuration;
