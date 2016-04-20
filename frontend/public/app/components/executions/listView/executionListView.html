@@ -33,12 +33,15 @@
                         </div>
                     </div>
                     <md-button ng-click='onPipeline(item)' class="md-icon-button md-secondary" aria-label="Edit" hide-xs>
+                        <md-tooltip>Edit</md-tooltip>
                         <md-icon md-svg-icon="autorenew" class="lp-icon"></md-icon>
                     </md-button>
                     <md-button ng-click='onExecute(item)' class="md-icon-button md-secondary" aria-label="Execute" hide-xs>
+                        <md-tooltip>Execute</md-tooltip>
                         <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon>
                     </md-button>
                     <md-button ng-click='onDelete(item)' class="md-icon-button md-secondary" aria-label="Delete" ng-disabled="!item.canDelete" hide-xs>
+                        <md-tooltip>Delete</md-tooltip>
                         <md-icon md-svg-icon="delete_forever" class="lp-icon"></md-icon>
                     </md-button>
                     <md-menu class="md-secondary" md-position-mode="target-right target" hide-xs>
