@@ -186,8 +186,8 @@ define([
         initialize: function (args) {
             this.options = _.extend({}, _.result(this, 'options'), args || {});
             this.paper = this.options.paper;
-            this.positionY = 0;
             this.positionX = 0;
+            this.positionY = 0;
         },
         startPanning: function (event) {
             // Store initial position.
@@ -204,8 +204,8 @@ define([
             event = joint.util.normalizeEvent(event);
             var x = event.clientX - this._clientX;
             var y = event.clientY - this._clientY;
-            this.positionY += y;
             this.positionX += x;
+            this.positionY += y;
             // Update position.
             this.paper.setOrigin(this.positionX, this.positionY);
             this._clientX = event.clientX;

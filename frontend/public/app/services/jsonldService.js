@@ -380,12 +380,16 @@ define(['jquery'], function (jQuery) {
     };
 
     jsonldService.getInteger = function (object, property) {
-        if (!object[property]) {
+        if (typeof(object[property]) === 'undefined') {
             return;
         }
         var value = object[property];
         if (jQuery.isArray(value)) {
             value = value[0];
+        }
+        // Replace null with 0.
+        if (value === null) {
+            return 0;
         }
         if (value['@value']) {
             return parseInt(value['@value']);

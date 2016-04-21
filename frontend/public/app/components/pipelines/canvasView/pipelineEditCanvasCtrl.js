@@ -539,11 +539,17 @@ define([
             $scope.canvasApi.loadStart();
             var iriToId = {};
             // We also need to deterine the left top corner.
-            var leftTopX = null;
-            var leftTopY = null;
+            var leftTopX = Number.POSITIVE_INFINITY;
+            var leftTopY = Number.POSITIVE_INFINITY;
             //
             console.time('components');
             var components = pplFacade.getComponents($scope.data.model);
+
+            if (components.length === 0) {
+                leftTopX = 0;
+                leftTopY = 0;
+            }
+
             components.forEach(function (component) {
                 var template = templates.getTemplate(
                         comFacade.getTemplateIri(component));
@@ -554,11 +560,14 @@ define([
                 // Store position.
                 var x = comFacade.getX(component);
                 var y = comFacade.getY(component);
-                if (leftTopX === null) {
-                    leftTopX = x;
-                    leftTopY = y;
+                if (typeof (x) === 'undefined') {
+                    console.warn('Missing x position: ', component);
                 } else {
                     leftTopX = Math.min(leftTopX, x);
+                }
+                if (typeof (y) === 'undefined') {
+                    console.warn('Missing y position: ', component);
+                } else {
                     leftTopY = Math.min(leftTopY, y);
                 }
                 //
