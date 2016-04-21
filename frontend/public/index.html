@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html ng-controller="index.ctrl">
     <head lang="en">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="#2196f3"/>
-        <title>LinkedPipes</title>
+        <title ng-bind='title'>LinkedPipes ETL</title>
         <!-- JointJs. -->
         <link rel="stylesheet" href="app/components/pipelines/canvas/libraries/jointjs/0.9.7/css/joint.css">
         <!-- Application styles. -->
@@ -25,8 +25,7 @@
             }
         </style>
     </head>
-    <body ng-cloak style="height: 100vh" layout="column" ng-controller="index.ctrl"
-          ng-cloak class="ng-cloak">
+    <body ng-cloak style="height: 100vh" layout="column" class="ng-cloak">
     <md-toolbar layout="row"> <!-- Top menu. -->
         <md-button class="menuBtn" ng-click="toggleSidenav()" hide-gt-sm aria-label="menu">
             <md-icon md-svg-icon="menu" style="color:white;"></md-icon>

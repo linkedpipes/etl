@@ -72,8 +72,13 @@ define([
     function controler($scope, $mdSidenav, $route, $location) {
 
         $scope.route = $route;
-        var sidenavId = 'left';
+        $scope.title = 'LinkedPipes ETL';
 
+        $scope.$on('$routeChangeSuccess', function (event, current, previous) {
+            $scope.title = current.$$route.pageTitle;
+        });
+
+        var sidenavId = 'left';
         $scope.toggleSidenav = function () {
             $mdSidenav(sidenavId).toggle();
         };
