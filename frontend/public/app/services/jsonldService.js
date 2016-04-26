@@ -354,6 +354,43 @@ define(['jquery'], function (jQuery) {
         return [];
     };
 
+    jsonldService.getValue = function (object, property) {
+        var value = object[property];
+        if (!value) {
+            return;
+        }
+        if (jQuery.isArray(value)) {
+            value = value[0];
+            if (!value) {
+                return;
+            }
+            //
+            if (typeof (value['@value']) !== 'undefined') {
+                return value['@value'];
+            } else {
+                return value;
+            }
+        } else {
+            if (typeof (value['@value']) !== 'undefined') {
+                return value['@value'];
+            } else {
+                return value;
+            }
+        }
+    };
+
+    jsonldService.getBoolean = function (object, property) {
+        var value = jsonldService.getValue(object, property);
+        var type = typeof value;
+        if (type === 'undefined') {
+            return;
+        } else if (type === 'string') {
+            return value === 'true';
+        } else {
+            return value;
+        }
+    };
+
     jsonldService.getString = function (object, property) {
         var value = object[property];
         if (!value) {
@@ -380,7 +417,7 @@ define(['jquery'], function (jQuery) {
     };
 
     jsonldService.getInteger = function (object, property) {
-        if (typeof(object[property]) === 'undefined') {
+        if (typeof (object[property]) === 'undefined') {
             return;
         }
         var value = object[property];

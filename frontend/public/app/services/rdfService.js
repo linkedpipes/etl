@@ -353,14 +353,7 @@ define([], function () {
 
                 service.getBoolean = function (resource, property) {
                     property = service.prefix + property;
-                    var value = jsonld.getString(resource, property);
-                    if (typeof value === 'undefined') {
-                        // We can not return reasonable default value here,
-                        //  so we return nothing.
-                        return;
-                    } else {
-                        return value;
-                    }
+                    return jsonld.getBoolean(resource, property);
                 };
 
                 service.setBoolean = function (resource, property, value) {
