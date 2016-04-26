@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
 import com.linkedpipes.etl.dpu.api.service.AfterExecution;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,9 +36,6 @@ public final class Virtuoso implements SimpleExecution {
 
     private static final String SQL_QUERY_FINISHED
             = "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state = 2";
-
-    @Component.Inject
-    public ProgressReport progressReport;
 
     @Component.Configuration
     public VirtuosoConfiguration configuration;

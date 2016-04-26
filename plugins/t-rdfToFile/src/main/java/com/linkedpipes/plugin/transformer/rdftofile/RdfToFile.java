@@ -53,15 +53,13 @@ public final class RdfToFile implements SimpleExecution {
                             connection.getValueFactory().createURI(configuration.getGraphUri()));
                 }
                 writer = new RdfWriterContext(writer, context, progressReport);
-                // TODO We can !optionaly! find out data size here, based on configutaion.
                 progressReport.start((int) connection.size(inputRdf.getGraph()));
-                // Export.
                 connection.export(writer, inputRdf.getGraph());
+                progressReport.done();
             } catch (IOException ex) {
                 throw new ExecutionFailed("Can't write data.", ex);
             }
         });
-        progressReport.done();
     }
 
 }

@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit.RepositoryActionFailed;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.impl.DatasetImpl;
@@ -63,9 +62,6 @@ public final class DcatApToCkan implements SimpleExecution {
 
     @Component.Configuration
     public DcatApToCkanConfiguration configuration;
-
-    @Component.Inject
-    public ProgressReport progressReport;
 
     @Override
     public void execute(Component.Context context) throws NonRecoverableException {

@@ -35,6 +35,7 @@ public final class PackZip implements SimpleExecution {
     public void execute(Component.Context context) throws NonRecoverableException {
         final File zipFile = output.createFile(configuration.getFileName()).toFile();
         final byte[] buffer = new byte[8196];
+        progressReport.start(input.size());
         try (FileOutputStream fos = new FileOutputStream(zipFile); ZipOutputStream zos = new ZipOutputStream(fos)) {
             for (FilesDataUnit.Entry entry : input) {
                 if (context.canceled()) {

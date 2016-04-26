@@ -66,7 +66,7 @@ public final class Xslt implements SimpleExecution {
             throw new Component.ExecutionFailed(
                     "Can't compile template.", ex);
         }
-
+        progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing: {}", entry.getFileName());
             final File inputFile = entry.toFile();

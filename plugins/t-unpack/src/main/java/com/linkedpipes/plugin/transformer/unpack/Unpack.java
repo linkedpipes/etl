@@ -42,6 +42,7 @@ public final class Unpack implements SimpleExecution {
     @Override
     public void execute(Component.Context context) throws NonRecoverableException {
         LOG.info("Used extension option: {}", configuration.getFormat());
+        progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
             if (context.canceled()) {
                 throw new Component.ExecutionCancelled();

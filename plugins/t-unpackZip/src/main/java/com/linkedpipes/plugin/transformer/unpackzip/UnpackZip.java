@@ -30,6 +30,7 @@ public final class UnpackZip implements SimpleExecution {
 
     @Override
     public void execute(Component.Context context) throws NonRecoverableException {
+        progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
             if (context.canceled()) {
                 throw new Component.ExecutionCancelled();

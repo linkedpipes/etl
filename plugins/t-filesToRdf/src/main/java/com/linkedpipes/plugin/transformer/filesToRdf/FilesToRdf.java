@@ -55,6 +55,7 @@ public final class FilesToRdf implements SimpleExecution {
             }
         }
         // Load files.
+        progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry file : inputFiles) {
             // Create output graph.
             final IRI outputGraph = outputRdf.createGraph();
