@@ -60,6 +60,12 @@ define([
      * Create component view model instance.
      */
     var createComponentCell = function (component, template, componentService) {
+
+        if (typeof(template) === 'undefined') {
+            console.error('Missing template', component);
+            return;
+        }
+
         // Create ports in not presented in cache.
         var ports = createPorts(component, template);
         // Create view.
@@ -420,6 +426,7 @@ define([
         'onMoveSelected': function (id, x, y) {},
         /**
          * Create a new component view for given component and view. ID is optional.
+         * Return nothing if component can not be created.
          */
         'addComponent': function (component, template, componentService) {},
         /**
@@ -655,8 +662,12 @@ define([
                             componentService) {
                         var cell = createComponentCell(component, template,
                                 componentService);
-                        $scope.graph.addCell(cell);
-                        return cell.id;
+                        if (cell) {
+                            $scope.graph.addCell(cell);
+                            return cell.id;
+                        } else {
+                            return;
+                        }
                     };
 
                     $scope.api.updateComponent = function (id, component,

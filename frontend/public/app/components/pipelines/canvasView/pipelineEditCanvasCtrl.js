@@ -126,6 +126,10 @@ define([
                 // Create canvas representation.
                 var id = $scope.canvasApi.addComponent(
                         component, template, pipelineModel.component);
+                if (!id) {
+                    // Skip missing.
+                    return;
+                }
                 comFacade.setIriFromId($scope.data.model, component, id);
                 $scope.data.idToModel[id] = component;
                 // Copy configuration.
@@ -152,7 +156,7 @@ define([
                 var target = iriToId[targetIri];
                 // Ignore invalid connections.
                 if (typeof (source) === 'undefined' ||
-                        typeof ('target') === 'undefined') {
+                        typeof (target) === 'undefined') {
                     console.warn('Ignored invalid connection.', connection);
                     return;
                 }
@@ -188,7 +192,7 @@ define([
                 var target = iriToId[targetIri];
                 // Ignore invalid connections.
                 if (typeof (source) === 'undefined' ||
-                        typeof ('target') === 'undefined') {
+                        typeof (target) === 'undefined') {
                     console.warn('Ignored invalid connection.', connection);
                     return;
                 }
@@ -427,6 +431,10 @@ define([
             comFacade.setPosition(component, x, y);
             var id = $scope.canvasApi.addComponent(component,
                     template['component'], pipelineModel.component);
+            if (!id) {
+                // Skip missing.
+                return;
+            }
             comFacade.setIriFromId($scope.data.model, component, id);
             //
             $scope.data.idToModel[id] = component;
@@ -556,6 +564,10 @@ define([
                 //
                 var id = $scope.canvasApi.addComponent(
                         component, template, pipelineModel.component);
+                if (!id) {
+                    // Skip missing.
+                    return;
+                }
                 $scope.data.idToModel[id] = component;
                 // Store position.
                 var x = comFacade.getX(component);
@@ -584,7 +596,7 @@ define([
                 var target = iriToId[conFacade.getTarget(connection)];
                 // Ignore invalid connections.
                 if (typeof (source) === 'undefined' ||
-                        typeof ('target') === 'undefined') {
+                        typeof (target) === 'undefined') {
                     console.warn('Ignored invalid connection.', connection);
                     return;
                 }
@@ -601,10 +613,18 @@ define([
             runAfter.forEach(function (connection) {
                 var vertices = conFacade.getVerticesView(
                         $scope.data.model, connection);
+                var source = iriToId[conFacade.getSource(connection)];
+                var target = iriToId[conFacade.getTarget(connection)];
+                // Ignore invalid connections.
+                if (typeof (source) === 'undefined' ||
+                        typeof (target) === 'undefined') {
+                    console.warn('Ignored invalid connection.', connection);
+                    return;
+                }
                 var id = $scope.canvasApi.addConnection(
-                        iriToId[conFacade.getSource(connection)],
+                        source,
                         null,
-                        iriToId[conFacade.getTarget(connection)],
+                        target,
                         null, vertices, 'control');
                 $scope.data.idToModel[id] = connection;
             });
@@ -945,6 +965,10 @@ define([
             //
             var id = $scope.canvasApi.addComponent(
                     component, template, comFacade);
+            if (!id) {
+                // Skip missing.
+                return;
+            }
             $scope.data.idToModel[id] = component;
         };
 
