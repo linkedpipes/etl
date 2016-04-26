@@ -396,17 +396,25 @@ define([], function () {
             // Copy configuration if it exists.
             var configIri = jsonld.getReference(component,
                     'http://linkedpipes.com/ontology/configurationGraph');
-            if (configIri) {
-                var newConfigUri = newComponent['@id'] + '/configuration';
-                newComponent['http://linkedpipes.com/ontology/configurationGraph'] = {
-                    '@id': newConfigUri
-                };
-                var configGraph = [];
-                model['graphs'][configIri].forEach(function (item) {
-                    configGraph.push(jQuery.extend(true, {}, item));
-                });
-                model['graphs'][newConfigUri] = configGraph;
+            if (typeof(configIri) === 'undefined') {
+                return newComponent;
             }
+            if (typeof(model['graphs'][configIri]) === 'undefined') {
+                // Configuration graph is missing.
+                console.warn('Missing configuration graph: ', configIri);
+                delete newComponent['http://linkedpipes.com/ontology/configurationGraph'];
+                return newComponent;
+            }
+            // Create copy of a configuration graph.
+            var newConfigUri = newComponent['@id'] + '/configuration';
+            newComponent['http://linkedpipes.com/ontology/configurationGraph'] = {
+                '@id': newConfigUri
+            };
+            var configGraph = [];
+            model['graphs'][configIri].forEach(function (item) {
+                configGraph.push(jQuery.extend(true, {}, item));
+            });
+            model['graphs'][newConfigUri] = configGraph;
             return newComponent;
         };
 
@@ -509,11 +517,19 @@ define([], function () {
             }
         };
 
-        service.setComponentConfiguration = function (model, component, uri, graph) {
+        /**
+         * Replace current configuration with new one. The old configuration
+         * graph is removed.
+         */
+        service.replaceComponentConfiguration = function (model, component, uri, graph) {
             var oldUri = service.getComponentConfigurationUri(component);
             if (oldUri !== uri) {
                 delete model['graphs'][oldUri];
             }
+            service.setComponentConfiguration(model, component, uri, graph);
+        };
+
+        service.setComponentConfiguration = function (model, component, uri, graph) {
             component['http://linkedpipes.com/ontology/configurationGraph'] = {'@id': uri};
             model['graphs'][uri] = graph;
         };
