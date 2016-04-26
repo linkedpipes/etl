@@ -301,7 +301,7 @@ var updateResourceUri = function (content, id) {
     var pipelineObject;
 
     // We search for all objects that we need to update.
-    var findObjects = function (resource) {
+    var checkResource = function (resource) {
         if (!resource['@type']) {
             return;
         }
@@ -320,7 +320,9 @@ var updateResourceUri = function (content, id) {
                 var componentId = componentUri.substring(componentUri.lastIndexOf("/") + 1);
                 var newComponentUri = gConfiguration.storage.domain + '/resources/components/' + componentId;
                 newComponentUri = newComponentUri.replace("[^:]//", "/");
-                resource['http://linkedpipes.com/ontology/template']['@id'] = newComponentUri;
+                resource['http://linkedpipes.com/ontology/template'] = [
+                    {'@id': newComponentUri}
+                ];
             }
         } else if (type.indexOf('http://linkedpipes.com/ontology/Connection') !== -1 ||
                 type.indexOf('http://linkedpipes.com/ontology/RunAfter') !== -1) {
@@ -354,7 +356,7 @@ var updateResourceUri = function (content, id) {
         // Search for objects.
         if (graph['@graph']) {
             graph['@graph'].forEach(function (resource) {
-                findObjects(resource);
+                checkResource(resource);
             });
         }
     });
