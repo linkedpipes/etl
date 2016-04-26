@@ -75,7 +75,7 @@ define([
         $scope.title = 'LinkedPipes ETL';
 
         $scope.$on('$routeChangeSuccess', function (event, current, previous) {
-            if (current.$$route.pageTitle) {
+            if (current.$$route && current.$$route.pageTitle) {
                 $scope.title = current.$$route.pageTitle;
             }
         });
