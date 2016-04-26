@@ -38,6 +38,7 @@
         <module>l-filesToLocal</module>
         <module>e-filesFromLocal</module>
         <module>t-tabularUv</module>
+        <module>t-singleGraphUnion</module>
     </modules>
 
 </project>

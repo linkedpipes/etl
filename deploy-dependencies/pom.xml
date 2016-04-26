@@ -422,6 +422,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/x-virtuoso/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-singleGraphUnion</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-singleGraphUnion/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>
@@ -616,6 +622,12 @@
                                         <mkdir dir="${deploy.directory}/components/x-virtuoso/"/>
                                         <copy todir="${deploy.directory}/components/x-virtuoso/">
                                             <fileset dir="${plugins.directory}/x-virtuoso/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-singleGraphUnion/"/>
+                                        <copy todir="${deploy.directory}/components/t-singleGraphUnion/">
+                                            <fileset dir="${plugins.directory}/t-singleGraphUnion/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
