@@ -370,6 +370,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-tabularUv</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-tabularUv/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-textHolder</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-textHolder/</outputDirectory>
@@ -556,6 +562,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-tabular/"/>
                                         <copy todir="${deploy.directory}/components/t-tabular/">
                                             <fileset dir="${plugins.directory}/t-tabular/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-tabularUv/"/>
+                                        <copy todir="${deploy.directory}/components/t-tabularUv/">
+                                            <fileset dir="${plugins.directory}/t-tabularUv/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

@@ -37,6 +37,7 @@
         <module>q-sparqlAsk</module>
         <module>l-filesToLocal</module>
         <module>e-filesFromLocal</module>
+        <module>t-tabularUv</module>
     </modules>
 
 </project>
