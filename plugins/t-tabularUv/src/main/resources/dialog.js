@@ -52,7 +52,7 @@ define([], function () {
             $scope.dialog.advancedKey = rdf.getBoolean(table, 'advancedKey');
             $scope.dialog.rowTriple = rdf.getBoolean(table, 'rowTriple');
             $scope.dialog.tableSubject = rdf.getBoolean(table, 'tableSubject');
-            $scope.dialog.rowClass = rdf.getBoolean(table, 'rowClass');
+            $scope.dialog.rowClass = rdf.getString(table, 'rowsClass');
             $scope.dialog.sheetName = rdf.getString(table, 'sheetName');
             $scope.dialog.staticRowCounter = rdf.getBoolean(table, 'staticRowCounter');
             $scope.dialog.rowTriple = rdf.getBoolean(table, 'rowTriple');
@@ -125,7 +125,7 @@ define([], function () {
             rdf.setBoolean(table, 'advancedKey', $scope.dialog.advancedKey);
             rdf.setBoolean(table, 'rowTriple', $scope.dialog.rowTriple);
             rdf.setBoolean(table, 'tableSubject', $scope.dialog.tableSubject);
-            rdf.setString(table, 'rowClass', $scope.dialog.rowClass);
+            rdf.setString(table, 'rowsClass', $scope.dialog.rowClass);
             rdf.setString(table, 'sheetName', $scope.dialog.sheetName);
             rdf.setBoolean(table, 'staticRowCounter', $scope.dialog.staticRowCounter);
             rdf.setBoolean(table, 'rowTriple', $scope.dialog.rowTriple);

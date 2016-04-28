@@ -277,7 +277,7 @@ public class TabularConfig_V2 {
     /**
      * If null no class is set.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowClass")
+    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsClass")
     private String rowsClass = TabularOntology.ROW_CLASS.toString();
 
     /**
