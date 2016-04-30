@@ -346,6 +346,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesToStatements</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesToStatements/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlConstruct</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-sparqlConstruct/</outputDirectory>
@@ -544,6 +550,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-rdfToFile/"/>
                                         <copy todir="${deploy.directory}/components/t-rdfToFile/">
                                             <fileset dir="${plugins.directory}/t-rdfToFile/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesToStatements/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesToStatements/">
+                                            <fileset dir="${plugins.directory}/t-filesToStatements/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

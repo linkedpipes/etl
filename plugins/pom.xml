@@ -15,6 +15,7 @@
         <module>e-datasetMetadata</module>
         <module>e-distributionMetadata</module>
         <module>t-filesToRdf</module>
+        <module>t-filesToStatements</module>
         <module>t-graphMerger</module>
         <module>t-packZip</module>
         <module>t-rdfToFile</module>
