@@ -29,6 +29,10 @@ public final class SparqlSelect implements SimpleExecution {
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(id = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.OutputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
