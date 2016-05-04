@@ -1,0 +1,43 @@
+---
+short: x-virtuoso
+type: other
+color: grey
+title: Virtuoso loader
+description: Instructs Virtuoso to load a file.
+---
+
+<p class="flow-text">
+Special purpose component, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">Openlink Virtuoso</a> triplestore to load a file from the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
+</p>
+<dl class="flow-text">
+    <dt>Host address</dt>
+    <dd>JDBC database connection string to connect to the Virtuoso iSQL port (typically <code>1111</code>)</dd>
+    <dt>Name of file to load</dt>
+    <dd>File name of the file to load</dd>
+    <dt>Target graph</dt>
+    <dd>Target RDF graph for input triple files and default graph in quad files</dd>
+    <dt>Directory with files to upload</dt>
+    <dd>Directory on the remote file system (local to Virtuoso) where the files to be loaded are located</dd>
+    <dt>Clear destination graph</dt>
+    <dd>When checked, executes SPARQL CLEAR GRAPH on the target graph before loading</dd>
+    <dt>Clear load list</dt>
+    <dd>When checked, deletes the db.dba.load_list table in Virtuoso</dd>
+    <dt>User name</dt>
+    <dd>User name to Virtuoso</dd>
+    <dt>Password</dt>
+    <dd>Password to Virtuoso. Note that this is plain text and in no way secured</dd>
+    <dt>Interval of status update</dt>
+    <dd>Interval in which the component polls Virtuoso for the status of the load</dd>
+</dl>
+<!--more-->
+<div class="row">
+    <div class="col s12 m7 l6">
+        <p class="flow-text">
+        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
+        </p>
+    </div>
+    <div class="col s12 m5 l6">
+        <p class="flow-text">
+        </p>
+    </div>
+</div>

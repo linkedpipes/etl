@@ -1,44 +1,11 @@
 <header class="site-header" >
     <nav class="blue" role="navigation">
-        {% if page.layout == 'post' %}
-        <div class="nav-wrapper container hide-on-large-only">
-            <a href="http://linkedpipes.com" class="breadcrumb">LP</a>
-            <a href="{{ site.url }}" class="breadcrumb">ETL</a>
-            <a href="/tips/" class="breadcrumb">Tips &amp; Tricks</a>
-        </div>
-        <div class="nav-wrapper container hide-on-med-and-down">
-            <a href="http://linkedpipes.com" class="breadcrumb">LinkedPipes</a>
-            <a href="{{ site.url }}" class="breadcrumb">ETL</a>
-            <a href="/tips/" class="breadcrumb">Tips &amp; Tricks</a>
-            <span class="breadcrumb">{{ page.title }}</span>
-        </div>
+        {% if page.layout == 'component' %}
+            {% include compnav.html %}
+        {% elsif page.layout == 'post' %}
+            {% include postnav.html %}
         {% else %}
-        <div class="nav-wrapper container hide-on-large-only">
-            <a href="http://linkedpipes.com" class="breadcrumb">LP</a>
-            {% for my_page in site.pages %}
-                {% if page.url == my_page.url %}
-                    {% if my_page.homepage %}
-                        <a class="breadcrumb">ETL</a>
-                    {% else %}
-                        <a href="{{ site.url }}" class="breadcrumb">ETL</a>
-                        <span class="breadcrumb">{{ my_page.title }}</span>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="nav-wrapper container hide-on-med-and-down">
-            <a href="http://linkedpipes.com" class="breadcrumb">LinkedPipes</a>
-            {% for my_page in site.pages %}
-                {% if page.url == my_page.url %}
-                    {% if my_page.homepage %}
-                        <a class="breadcrumb">ETL</a>
-                    {% else %}
-                        <a href="{{ site.url }}" class="breadcrumb">ETL</a>
-                        <span class="breadcrumb">{{ my_page.title }}</span>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </div>
+            {% include nav.html %}
         {% endif %}
     </nav>
 </header>

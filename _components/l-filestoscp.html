@@ -1,0 +1,36 @@
+---
+short: l-filestoscp
+type: loader
+color: green
+title: Files to SCP
+description: Loads files via the SCP protocol.
+---
+
+<p class="flow-text">
+Loader, allows the user to transfer a file to a server via the SCP protocol.
+</p>
+<dl class="flow-text">
+    <dt>Host address</dt>
+    <dd>Address of the target server for the file upload. E.g. <code>obeu.vse.cz</code></dd>
+    <dt>Port</dt>
+    <dd>SSH port to use. Typically <code>22</code></dd>
+    <dt>Target directory</dt>
+    <dd>Directory on the server where the file should be uploaded. E.g.<code>~/upload/</code></dd>
+    <dt>Create the target directory</dt>
+    <dd>When checked, tries to create the target directory, when it is not present on the server. Fails otherwise.</dd>
+    <dt>User name</dt>
+    <dd>User name for the server</dd>
+    <dt>Password</dt>
+    <dd>Password for the server. Note that this is plain text and not secure in any way.</dd></dl>
+<!--more-->
+<div class="row">
+    <div class="col s12 m7 l6">
+        <p class="flow-text">
+        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
+        </p>
+    </div>
+    <div class="col s12 m5 l6">
+        <p class="flow-text">
+        </p>
+    </div>
+</div>

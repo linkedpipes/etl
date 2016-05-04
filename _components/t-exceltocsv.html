@@ -1,0 +1,45 @@
+---
+short: t-exceltocsv
+type: transformer
+color: indigo
+title: Excel to CSV
+description: Transforms Excel files to CSV files.
+---
+
+<p class="flow-text">
+Transformer, allows the user to transform Excel files to CSV files.
+</p>
+<dl class="flow-text">
+    <dt>Output file name</dt>
+    <dd>File name under which the output CSV file will be visible in the pipeline, including extension</dd>
+    <dt>Sheet filter</dt>
+    <dd>Excel sheet name to process. If empty, all sheets are processed</dd>
+    <dt>Row start</dt>
+    <dd>Number of the first row to be transformed</dd>
+    <dt>Row end</dt>
+    <dd>Number of the last row to be transformed</dd>
+    <dt>Column start</dt>
+    <dd>Number of the first column to be transformed</dd>
+    <dt>Column end</dt>
+    <dd>Number of the last column to be transformed</dd>
+    <dt>Virtual columns have header</dt>
+    <dd>TODO - do not use now</dd>
+    <dt>Try to determine cell type (date, integer)</dt>
+    <dd>Excel stores dates and integers as double values. When checked, the transformer tries to parse these as dates and integers</dd>
+    <dt>Skip empty rows</dt>
+    <dd>When checked, empty rows are not included in the output CSV. Otherwise, they are full of NULL values</dd>
+    <dt>Include sheet name as additional column</dt>
+    <dd>When checked, a <code>sheet_name</code> column is added, with source Excel sheet name as a value</dd>
+</dl>
+<!--more-->
+<div class="row">
+    <div class="col s12 m7 l6">
+        <p class="flow-text">
+        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
+        </p>
+    </div>
+    <div class="col s12 m5 l6">
+        <p class="flow-text">
+        </p>
+    </div>
+</div>

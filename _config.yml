@@ -9,6 +9,16 @@ url: "http://etl.linkedpipes.com" # the base hostname & protocol for your site
 # Build settings
 markdown: kramdown
 excerpt_separator: <!--more-->
+collections:
+  components:
+    output: true
+  
+defaults:
+  - scope:
+      path: ""
+      type: components
+    values:
+      layout: component
 
 sass:
     sass_dir: _sass

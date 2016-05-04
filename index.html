@@ -74,57 +74,25 @@ homepage: true
           </div>
           <div class="col l4 hide-on-med-and-down">
             <h3 class="center orange-text">Featured component</h3>
-              <div class="card small indigo lighten-4 hoverable">
+            {% assign featured = site.components | where:"featured","true" %}
+            {% for component in featured %}
+            <div class="card small {{component.color}} lighten-4 hoverable">
                 <div class="card-image waves-effect waves-block waves-light">
-                  <img class="activator" src="../assets/components/t-tabular.png" alt="Tabular">
+                  <img class="activator" src="../assets/components/{{component.short}}.png" alt="{{component.title}}">
                 </div>
                 <div class="card-content">
-                  <span class="card-title activator grey-text text-darken-4">Tabular<i class="material-icons right">more_vert</i></span>
-                  <p>Transforms CSV files to RDF triples.
+                  <span class="card-title">{{component.title}}</span><a href="/components/{{component.short}}" title="{{component.title}}"><i class="material-icons right">open_in_browser</i></a>
+                  <p>{{component.description}}</p>
                 </div>
-                <div class="card-reveal indigo lighten-4">
-                  <span class="card-title grey-text text-darken-4">Tabular<i class="material-icons right">close</i></span>
-                  <p>
-                    Transformer. Used to transform CSV files to RDF data according to the <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a> W3C Recommendation.
-                    The first set of parameters is there simply do deal with CSV files incompliant with <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a>, which specifiec a comma as a delimiter, the double-quote as a quote character and UTF-8 as the encoding.
-                  </p>
-                    <dl>
-                        <dt>Delimiter</dt>
-                        <dd>Character separating columns in a row</dd>
-                        <dt>Quote</dt>
-                        <dd>Character used as quote in case the column value contains the column separator</dd>
-                        <dt>Encoding</dt>
-                        <dd>Encoding of the CSV file</dd>
-                    </dl>
-                    <p>The second group of parameters deals with the transformation itself.
-                    </p>
-                    <dl>
-                        <dt>Table has header</dt>
-                        <dd>Character separating columns in a row</dd>
-                        <dt>Trim</dt>
-                        <dd>Removes trailing whitespaces from cells</dd>
-                        <dt>Default resource IRI template</dt>
-                        <dd>An <a href="https://tools.ietf.org/html/rfc6570#section-2">RFC 6570</a> IRI template. E.g. <code>http://ex.org/{COLUMN_WITH_ID}</code></dd>
-                        <dt>Rows skip</dt>
-                        <dd>Number of rows to be skipped during transformation</dd>
-                        <dt>Rows limit</dt>
-                        <dd>Number of rows to be processed during transformation</dd>
-                        <dt>Output metadata</dt>
-                        <dd>When checked, entities for rows and the table are generated. Otherwise, only raw row data is generated</dd>
-                        <dt>Generate full mapping</dt>
-                        <dd>When checked, uses the default mapping specified by the Recommendation. Otherwise, lets the user specify the mapping manually</dd>
-                        <dt>Use IRI base</dt>
-                        <dd>When checked, lets the user specify the IRI base for IRIs of rows and properties used to attach column value to the row entity. Otherwise, the IRIs are generated according to the Recommendation, which includes a file name with full path, which is random in LinkedPipes ETL and makes it hard to process the resulting data</dd>
-                        <dt>IRI base</dt>
-                        <dd>The IRI base for row and property IRIs</dd>
-                    </dl>
-                <p>
-                The advanced row mapping will be documented later. 
-                Basically, it allows the user to directly specify output literal data type, language tag or specify that the output value is an IRI.
-                In addition, it allows to specify a custom predicate IRI based on column name.
-                </p>
+                <div class="card-reveal {{component.color}} lighten-4">
+                    <span class="card-title grey-text text-darken-4">{{component.title}}<i class="material-icons right">close</i></span>
+                    {{component.excerpt}}
                 </div>
-              </div>
+            </div>
+            
+            {% else %}
+            See all our components
+            {% endfor%}
               <p class="center"><a href="/components/" class="btn waves-effect waves-light orange"><i class="material-icons left">extension</i>More components</a></p>
             </div>
      </div>
