@@ -1,0 +1,29 @@
+---
+short: t-mustache
+type: transformer
+color: indigo
+title: Mustache
+description: Generates text files using the {{ mustache }} template.
+---
+
+<p class="flow-text">
+Transformer, generates text files using the {% raw %} <a href="https://mustache.github.io/">{{ mustache }}</a> {% endraw %} template.
+</p>
+<dl class="flow-text">
+    <dt>Entity class IRI</dt>
+    <dd>IRI of the RDF class of the objects, to which the {% raw %} <a href="https://mustache.github.io/">{{ mustache }}</a> {% endraw %} template is applied.</dd>
+    <dt>Mustache template</dt>
+    <dd>The {% raw %} <a href="https://mustache.github.io/">{{ mustache }}</a> {% endraw %} template</dd>
+</dl>
+<!--more-->
+<div class="row">
+    <div class="col s12 m7 l6">
+        <p class="flow-text">
+        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
+        </p>
+    </div>
+    <div class="col s12 m5 l6">
+        <p class="flow-text">
+        </p>
+    </div>
+</div>

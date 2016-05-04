@@ -1,0 +1,30 @@
+---
+short: q-sparqlask
+type: quality
+color: yellow
+title: SPARQL ask
+description: Checks data with a SPARQL ask query and stops pipeline execution on success or fail.
+---
+
+<p class="flow-text">
+Quality assurance component, Checks data with a <a href="https://www.w3.org/TR/sparql11-query/#ask">ASK query</a> and stops pipeline execution on success or fail.
+</p>
+<dl class="flow-text">
+    <dt>Fail on ASK success</dt>
+    <dd>When checked, the component will stop pipeline execution, when the ASK query returns <code>true</code>,
+    when unchecked, the component will stop pipeline execution, when the ASK query returns <code>false</code></dd>
+    <dt>SPARQL ASK query</dt>
+    <dd>Query for the data check</dd>
+</dl>
+<!--more-->
+<div class="row">
+    <div class="col s12 m7 l6">
+        <p class="flow-text">
+        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
+        </p>
+    </div>
+    <div class="col s12 m5 l6">
+        <p class="flow-text">
+        </p>
+    </div>
+</div>
