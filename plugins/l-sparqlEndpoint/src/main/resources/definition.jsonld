@@ -3,7 +3,7 @@
         {
             "@id": "http://localhost:8080/resources/components/l-sparqlEndpoint/1.0.0",
             "@type": "http://linkedpipes.com/ontology/Component",
-            "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL endpoint",
+            "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL update endpoint",
             "http://linkedpipes.com/ontology/color": "#CEF6D8",
             "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Loader"},
             "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},

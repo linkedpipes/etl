@@ -3,10 +3,10 @@
         <md-input-container class="md-block" flex-gt-sm>
             <label>Endpoint</label>
             <input type="url" ng-model="dialog.endpoint" required
-                   placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/">
+                   placeholder="http://example.com/sparql">
         </md-input-container>
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Target graph URI:</label>
+            <label>Target graph IRI:</label>
             <input type="url" ng-model="dialog.targetGraphURI" required
                    placeholder="http://localhost/resource/upload">
         </md-input-container>
@@ -18,8 +18,8 @@
         <label>Commit size</label>
         <input type="number" ng-model="dialog.commitSize" placeholder="100000" min="10000" step="10000">
     </md-input-container>
-    <md-switch ng-model="dialog.useAuthentification">Use authentification</md-switch>
-    <div layout-gt-sm="row" ng-show="dialog.useAuthentification">
+    <md-switch ng-model="dialog.useAuthentication">Use authentication</md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.useAuthentication">
         <md-input-container class="md-block" flex-gt-sm>
             <label>User name</label>
             <input ng-model="dialog.userName" required placeholder="dba">

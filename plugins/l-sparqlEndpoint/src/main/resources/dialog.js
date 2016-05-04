@@ -6,7 +6,7 @@ define([], function () {
             'targetGraphURI': '',
             'clearGraph': true,
             'commitSize': '',
-            'useAuthentification': false,
+            'useAuthentication': false,
             'userName': '',
             'password': ''
         };
@@ -20,7 +20,7 @@ define([], function () {
             $scope.dialog.targetGraphURI = rdf.getString(resource, 'targetGraphURI');
             $scope.dialog.clearGraph = rdf.getBoolean(resource, 'clearGraph');
             $scope.dialog.commitSize = rdf.getInteger(resource, 'commitSize');
-            $scope.dialog.useAuthentification = rdf.getBoolean(resource, 'useAuthentification');
+            $scope.dialog.useAuthentication = rdf.getBoolean(resource, 'useAuthentification');
             $scope.dialog.userName = rdf.getString(resource, 'userName');
             $scope.dialog.password = rdf.getString(resource, 'password');
         };
@@ -31,7 +31,7 @@ define([], function () {
             rdf.setString(resource, 'targetGraphURI', $scope.dialog.targetGraphURI);
             rdf.setBoolean(resource, 'clearGraph', $scope.dialog.clearGraph);
             rdf.setInteger(resource, 'commitSize', $scope.dialog.commitSize);
-            rdf.setBoolean(resource, 'useAuthentification', $scope.dialog.useAuthentification);
+            rdf.setBoolean(resource, 'useAuthentification', $scope.dialog.useAuthentication);
             rdf.setString(resource, 'userName', $scope.dialog.userName);
             rdf.setString(resource, 'password', $scope.dialog.password);
             return rdf.getData();
