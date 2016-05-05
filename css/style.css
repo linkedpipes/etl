@@ -45,3 +45,6 @@ dt {
 .table-of-contents a:hover {
     border-left-color: #ff9800;
 }
+figure {
+    margin: 0;
+}
