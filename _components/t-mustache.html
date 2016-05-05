@@ -17,7 +17,7 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
 </dl>
 <!--more-->
 
-<div class="row">
+<div class="row" id="characteristics">
     <h3 class="orange-text center">Characteristics</h3>
     <div class="col s12 l6">
         <dl class="flow-text">
@@ -43,7 +43,7 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
     </div>
 </div>
 
-<div class="row">
+<div class="row" id="inputs">
     <h3 class="orange-text center">Mustache input data in JSON and in RDF</h3>
     <p class="flow-text">Below, you can see the original Mustache input data from the demo in JSON and the same input data in RDF.
     This can be used for comparison, because the structure and meaning remains the same.</p>
@@ -94,7 +94,7 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
     </div>
 </div>
 
-<div class="row">
+<div class="row" id="templates">
     <h3 class="orange-text center">Mustache templates for JSON and for RDF</h3>
     <p class="flow-text">Below, you can see the original {% raw %} <a href="https://mustache.github.io/">{{ mustache }}</a> {% endraw %} template from the <a href="https://mustache.github.io/#demo" title="{% raw %} {{ mustache }} demo {% endraw %}">demo</a> for the JSON data and the same template usable for RDF data in LP-ETL.
     This can be used for comparison, because the structure and meaning remains the same.</p>
@@ -146,7 +146,7 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
     </div>
 </div>
 
-<div class="row">
+<div class="row" id="output">
     <h3 class="orange-text center ">Output in HTML</h3>
     <p class="flow-text">The templates, when executed on the input data, both JSON data and JSON template and RDF data and LP-ETL template, produce the same result, which in this case is the following simple HTML.
     A <a href="../assets/pipelines/{{page.short}}-1.jsonld"> sample importable {% raw %} {{ mustache }} {% endraw %} pipeline fragment</a> is available.</p>
@@ -159,7 +159,7 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
 {% endhighlight %}
 </div>
 
-<div class="row">
+<div class="row" id="specifics">
     <h3 class="orange-text center ">LP-ETL template specifics</h3>
     <p class="flow-text">The component looks in the input data for the instances of the entity class specified in the configuration and executes the template on each one.
     In our example, the entity class was <code>http://localhost/outputClass</code>.
