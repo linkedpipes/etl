@@ -14,14 +14,24 @@ Loader, allows files from the pipeline to be stored on a local file system.
     <dd>Copies a file or directory to a local file system from the pipeline</dd>
 </dl>
 <!--more-->
-<div class="row">
-    <div class="col s12 m7 l6">
-        <p class="flow-text">
-        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
-        </p>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
     </div>
-    <div class="col s12 m5 l6">
+    <div class="col s12 l6">
         <p class="flow-text">
-        </p>
+        The {{page.title}} component provides access from the pipeline to the local file system to place output files.
+        This is useful for local instances of LP-ETL, for example on a developer's laptop.
+        It is not recommended to use this component on remote servers as the access to local file system can be a security risk.
     </div>
 </div>

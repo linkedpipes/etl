@@ -48,3 +48,7 @@ dt {
 figure {
     margin: 0;
 }
+
+code.breakurl {
+    word-break: break-all; 
+}
