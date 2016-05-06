@@ -1,0 +1,85 @@
+{
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567",
+          "@type": [
+            "http://linkedpipes.com/ontology/Pipeline"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "FilesToStatements demo"
+        },
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/50e7f021-670e-430d-801e-f02bbf17af57",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Text holder",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/components/e-textHolder"
+          },
+          "http://linkedpipes.com/ontology/x": -20,
+          "http://linkedpipes.com/ontology/y": 0,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/50e7f021-670e-430d-801e-f02bbf17af57/configuration"
+          }
+        },
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/14e62472-8fca-4bad-91f9-82d4bab04f9c",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Files to Statements",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/components/t-filesToStatements"
+          },
+          "http://linkedpipes.com/ontology/x": 180,
+          "http://linkedpipes.com/ontology/y": 0,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/14e62472-8fca-4bad-91f9-82d4bab04f9c/configuration"
+          }
+        },
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/connection/86b1d7ad-fc74-4b8c-b2e2-bf6efcce671e",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/50e7f021-670e-430d-801e-f02bbf17af57"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "FilesOutput",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/14e62472-8fca-4bad-91f9-82d4bab04f9c"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputFiles"
+        }
+      ],
+      "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": "output.txt",
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#content": "Testing text"
+        }
+      ],
+      "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/50e7f021-670e-430d-801e-f02bbf17af57/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-filesToStatements#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-filesToStatements#predicate": "http://localhost/textfile"
+        }
+      ],
+      "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1462535989567/components/14e62472-8fca-4bad-91f9-82d4bab04f9c/configuration"
+    }
+  ]
+}
