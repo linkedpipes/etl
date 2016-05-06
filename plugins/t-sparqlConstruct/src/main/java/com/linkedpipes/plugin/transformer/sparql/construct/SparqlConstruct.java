@@ -35,7 +35,7 @@ public final class SparqlConstruct implements SimpleExecution {
     @Override
     public void execute(Component.Context context) throws NonRecoverableException {
         // We always perfrom inserts.
-        final String query = configuration.getQuery().replaceFirst("(?i)CONSTRUCT", "INSERT");
+        final String query = updateQuery(configuration.getQuery());
         LOG.debug("Query: {}", query);
         LOG.debug("{} -> {}", inputRdf.getGraph(), outputRdf.getGraph());
         // Execute query - TODO We should check that they share the same repository!
@@ -48,5 +48,16 @@ public final class SparqlConstruct implements SimpleExecution {
             update.execute();
         });
     }
+
+    /**
+     * Rewrite given SPARQL construct to SPARQL insert.
+     *
+     * @param query
+     * @return
+     */
+    static String updateQuery(String query) {
+        return query.replaceFirst("(?i)CONSTRUCT\\s*\\{", "INSERT \\{");
+    }
+;
 
 }
