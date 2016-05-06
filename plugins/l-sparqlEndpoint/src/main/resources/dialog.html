@@ -6,13 +6,13 @@
                    placeholder="http://example.com/sparql">
         </md-input-container>
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Target graph IRI:</label>
+            <label>Target graph IRI</label>
             <input type="url" ng-model="dialog.targetGraphURI" required
                    placeholder="http://localhost/resource/upload">
         </md-input-container>
     </div>
     <div layout-gt-sm="row">
-         <md-switch ng-model="dialog.clearGraph">Clear graph before loading</md-switch>
+         <md-switch ng-model="dialog.clearGraph">Clear target graph before loading</md-switch>
     </div>
     <md-input-container class="md-block" flex-gt-sm>
         <label>Commit size</label>

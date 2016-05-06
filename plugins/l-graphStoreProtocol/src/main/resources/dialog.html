@@ -11,21 +11,21 @@
     </div>
     <div class="row">
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Endpoint CRUD:</label>
+            <label>Graph store protocol endpoint:</label>
             <input type="url" ng-model="dialog.endpoint" required
                    placeholder="http://localhost:8890/sparql-graph-crud">
         </md-input-container>
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Target graph URI:</label>
+            <label>Target graph IRI</label>
             <input type="url" ng-model="dialog.graph" required
                    placeholder="http://localhost/resource/upload">
         </md-input-container>
-        <md-switch ng-model="dialog.replace">Delete old data</md-switch>
+        <md-switch ng-model="dialog.replace">Clear target graph before loading</md-switch>
     </div>
     <md-switch ng-model="dialog.checkSize">Log graph size</md-switch>
     <div class="row" ng-show="dialog.checkSize">
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Endpoint select:</label>
+            <label>SPARQL Endpoint</label>
             <input type="url" ng-model="dialog.endpointSelect" required
                    placeholder="http://localhost:8890/sparql">
         </md-input-container>
