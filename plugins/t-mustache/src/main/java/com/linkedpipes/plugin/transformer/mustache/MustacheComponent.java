@@ -82,7 +82,7 @@ public final class MustacheComponent implements SimpleExecution {
         final Collection<ObjectMetadata> data = loadData();
         progressReport.start(data.size());
         Integer counter = 0;
-        for (ObjectMetadata object : loadData()) {
+        for (ObjectMetadata object : data) {
             final String fileName;
             counter += 1;
             if (object.fileName != null) {
