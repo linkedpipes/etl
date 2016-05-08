@@ -49,25 +49,28 @@ class Parser {
         }
         for (int index = 0; index < workbook.getNumberOfSheets(); ++index) {
             final Sheet sheet = workbook.getSheetAt(index);
-            final boolean match;
             try {
-                match = sheet.getSheetName().matches(configuration.getSheetFilter());
+                if (configuration.getSheetFilter() != null
+                        && !configuration.getSheetFilter().isEmpty()
+                        && !sheet.getSheetName().matches(configuration.getSheetFilter())) {
+                    // Skip the sheet as it does not match non empty
+                    // sheet filter.
+                    continue;
+                }
             } catch (PatternSyntaxException ex) {
                 throw new Component.ExecutionFailed("Invalid regular expression for sheet filter.", ex);
             }
-            if (match) {
-                // Create output file name.
-                final String outputFileName = configuration.getFileNamePattern().
-                        replace(ExcelToCsvConfiguration.FILE_HOLDER, entry.getFileName()).
-                        replace(ExcelToCsvConfiguration.SHEET_HOLDER, sheet.getSheetName());
-                final File outputFile = outputFiles.createFile(outputFileName).toFile();
-                LOG.info("Parsing sheet: '{}' number of rows: {} into file: {}",
-                        sheet.getSheetName(), sheet.getLastRowNum(), outputFile);
-                try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile), false, "UTF-8")) {
-                    processSheet(sheet, outputStream, context);
-                } catch (IOException ex) {
-                    throw new Component.ExecutionFailed("Can't write output to file.", ex);
-                }
+            // Create output file name.
+            final String outputFileName = configuration.getFileNamePattern().
+                    replace(ExcelToCsvConfiguration.FILE_HOLDER, entry.getFileName()).
+                    replace(ExcelToCsvConfiguration.SHEET_HOLDER, sheet.getSheetName());
+            final File outputFile = outputFiles.createFile(outputFileName).toFile();
+            LOG.info("Parsing sheet: '{}' number of rows: {} into file: {}",
+                    sheet.getSheetName(), sheet.getLastRowNum(), outputFile);
+            try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile), false, "UTF-8")) {
+                processSheet(sheet, outputStream, context);
+            } catch (IOException ex) {
+                throw new Component.ExecutionFailed("Can't write output to file.", ex);
             }
         }
     }
