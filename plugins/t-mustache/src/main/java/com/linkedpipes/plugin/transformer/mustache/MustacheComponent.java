@@ -16,7 +16,6 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -163,8 +162,8 @@ public final class MustacheComponent implements SimpleExecution {
             Map<Resource, Map<IRI, List<Value>>> objects) {
         final Map<IRI, List<Value>> data = objects.get(resource);
         if (data == null || data.isEmpty()) {
-            // There are no data, return empty object.
-            return Collections.EMPTY_MAP;
+            // There are no data, return string representaion or IRI..
+            return resource.stringValue();
         }
         final Map<String, Object> result = new HashMap<>();
         for (Map.Entry<IRI, List<Value>> entry : data.entrySet()) {
