@@ -1,6 +1,6 @@
 define([], function () {
     function controler($scope, $location, $http, $timeout, $mdDialog, $mdMedia,
-            refreshService, repositoryService, statusService, jsonldService) {
+            refreshService, statusService, jsonldService) {
 
         var template = {
             'iri': {
@@ -96,13 +96,13 @@ define([], function () {
         $scope.onCopy = function (pipeline) {
             var id = 'created-' + (new Date()).getTime();
             var url = '/resources/pipelines/' + id + '?pipeline='
-                    + pipeline.uri;
+                    + pipeline.iri;
             $http.post(url).then(function (response) {
                 statusService.success({
                     'title': 'Pipeline has been successfully copied.'
                 });
                 // Force update.
-                repositoryService.get($scope.repository);
+                $scope.repository.update();
             }, function (response) {
                 statusService.postFailed({
                     'title': "Can't copy pipeline.",
@@ -136,14 +136,16 @@ define([], function () {
                     });
 
             refreshService.set(function () {
-                // TOTO Update data here!
+                // TODO Enable update once the server has
+                // proper support of the JSON-LD repository.
+//                $scope.repository.update();
             });
         };
         $timeout(initialize, 0);
     }
     //
     controler.$inject = ['$scope', '$location', '$http', '$timeout',
-        '$mdDialog', '$mdMedia', 'service.refresh', 'services.repository',
+        '$mdDialog', '$mdMedia', 'service.refresh',
         'services.status', 'services.jsonld'];
     //
     function init(app) {

@@ -568,9 +568,10 @@ define(['jquery'], function (jQuery) {
             //
             repository.loading = true;
             //
-            $http.get('/resources/executions', {
+            $http.get(this.url, {
                 params: {'changedSince': repository.lastCheck}}
             ).then(function (response) {
+                console.time('Updating data');
                 // Delete executions, based on tombstones.
                 var deleted = toJson(response.data, repository.query.deleted, {
                     'iri': {'$resource': ''}
@@ -604,7 +605,9 @@ define(['jquery'], function (jQuery) {
                 });
                 //
                 var metadata = parseMetadata(response.data);
-                this.lastCheck = metadata.serverTime;
+                if (metadata !== undefined) {
+                    this.lastCheck = metadata.serverTime;
+                }
                 //
                 console.timeEnd('Updating data');
                 if (onSuccess) {
