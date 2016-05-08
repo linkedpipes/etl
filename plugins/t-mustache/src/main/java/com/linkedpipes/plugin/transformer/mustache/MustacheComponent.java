@@ -166,6 +166,9 @@ public final class MustacheComponent implements SimpleExecution {
             return resource.stringValue();
         }
         final Map<String, Object> result = new HashMap<>();
+        // Add @id to the resource.
+        result.put("@id", resource);
+        // Add data entries.
         for (Map.Entry<IRI, List<Value>> entry : data.entrySet()) {
             // Check type.
             if (entry.getValue().isEmpty()) {
