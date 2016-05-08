@@ -26,8 +26,8 @@ define([], function () {
                     'pageTitle': 'Pipelines - LinkedPipes ETL'
                 })
                 .when('/pipelines/edit/canvas', {
-                    'templateUrl': 'app/components/pipelines/canvasView/pipelineEditCanvasView.html',
-                    'controller': 'components.pipelines.edit.canvas',
+                    'templateUrl': 'app/components/pipelines/canvasView/pipelineCanvasView.html',
+                    'controller': 'components.pipeline.canvas.view',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipelines - LinkedPipes ETL'
                 })

@@ -8,7 +8,7 @@
             </div>
             <md-list ng-show="repository.loaded">
                 <md-list-item ng-repeat="item in repository.data| orderBy:'-start'"
-                              ng-click="onExecution(item)" class="md-2-line"
+                              ng-click="onPipeline(item)" class="md-2-line"
                               aria-label="Show detail">
                     <div class="md-primary">
                         <md-icon md-svg-icon="{{item.icon.name}}" class="lp-icon-avatar md-avatar" ng-style="item.icon.style"></md-icon>
@@ -21,7 +21,7 @@
                             </span>
                             <span ng-switch-when="PROGRESS">
                                 <span hide-xs>
-                                    <span>{{item.startTime ? (item.startTime| date:'yyyy-MM-dd HH:mm:ss') : '...'}}</span> - ...</br>
+                                    <span>{{item.startTime ? (item.startTime | date:'yyyy-MM-dd HH:mm:ss') : '...'}}</span> - ...</br>
                                 </span>
                                 <md-progress-linear md-mode="determinate" value="{{item.progress.value}}"></md-progress-linear>
                             </span>
@@ -32,10 +32,6 @@
                             </span>
                         </div>
                     </div>
-                    <md-button ng-click='onPipeline(item)' class="md-icon-button md-secondary" aria-label="Edit" hide-xs>
-                        <md-tooltip>Edit</md-tooltip>
-                        <md-icon md-svg-icon="autorenew" class="lp-icon"></md-icon>
-                    </md-button>
                     <md-button ng-click='onExecute(item)' class="md-icon-button md-secondary" aria-label="Execute" hide-xs>
                         <md-tooltip>Execute</md-tooltip>
                         <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon>
@@ -44,11 +40,17 @@
                         <md-tooltip>Delete</md-tooltip>
                         <md-icon md-svg-icon="delete_forever" class="lp-icon"></md-icon>
                     </md-button>
+
                     <md-menu class="md-secondary" md-position-mode="target-right target" hide-xs>
                         <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
                             <md-icon md-svg-icon="more_vert" class="lp-icon"></md-icon>
                         </md-button>
                         <md-menu-content>
+                            <md-menu-item>
+                                <md-button ng-click='onExecution(item)' aria-label="Edit">
+                                    <md-icon md-svg-icon="autorenew" class="lp-icon"></md-icon> Execution detail
+                                </md-button>
+                            </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-href="./resources/executions/{{item.id}}/logs" target="_blank">
                                     <md-icon md-svg-icon="visibility"></md-icon> See logs
@@ -68,8 +70,8 @@
                         </md-button>
                         <md-menu-content>
                             <md-menu-item>
-                                <md-button ng-click='onPipeline(item)'>
-                                    <md-icon md-svg-icon="autorenew"></md-icon> Edit
+                                <md-button ng-click='onExecution(item)'>
+                                    <md-icon md-svg-icon="autorenew"></md-icon> Execution detail
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
@@ -77,8 +79,8 @@
                                     <md-icon md-svg-icon="play_circle_outline"></md-icon> Execute
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click='onDelete(item)' ng-hide="!item.canDelete">
+                            <md-menu-item ng-hide="!item.canDelete">
+                                <md-button ng-click='onDelete(item)'>
                                     <md-icon md-svg-icon="delete_forever"></md-icon> Delete
                                 </md-button>
                             </md-menu-item>

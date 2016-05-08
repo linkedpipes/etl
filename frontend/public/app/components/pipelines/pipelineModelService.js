@@ -396,10 +396,10 @@ define([], function () {
             // Copy configuration if it exists.
             var configIri = jsonld.getReference(component,
                     'http://linkedpipes.com/ontology/configurationGraph');
-            if (typeof(configIri) === 'undefined') {
+            if (typeof (configIri) === 'undefined') {
                 return newComponent;
             }
-            if (typeof(model['graphs'][configIri]) === 'undefined') {
+            if (typeof (model['graphs'][configIri]) === 'undefined') {
                 // Configuration graph is missing.
                 console.warn('Missing configuration graph: ', configIri);
                 delete newComponent['http://linkedpipes.com/ontology/configurationGraph'];
@@ -524,7 +524,7 @@ define([], function () {
         service.replaceComponentConfiguration = function (model, component, uri, graph) {
             var oldUri = service.getComponentConfigurationUri(component);
             if (oldUri !== uri) {
-                delete model['graphs'][oldUri];
+                service.deleteGraph(model, oldUri);
             }
             service.setComponentConfiguration(model, component, uri, graph);
         };
@@ -532,6 +532,11 @@ define([], function () {
         service.setComponentConfiguration = function (model, component, uri, graph) {
             component['http://linkedpipes.com/ontology/configurationGraph'] = {'@id': uri};
             model['graphs'][uri] = graph;
+        };
+
+        service.deleteGraph = function (model, iri) {
+            delete model['graphs'][iri];
+            console.log('deleteGraph', iri, model);
         };
 
         return service;

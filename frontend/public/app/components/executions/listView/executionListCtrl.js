@@ -191,7 +191,7 @@ define([
                 'execution': execution.iri
             });
         };
-
+        
         $scope.onPipeline = function (execution) {
             $location.path('/pipelines/edit/canvas').search({
                 'pipeline': execution.pipeline.iri,

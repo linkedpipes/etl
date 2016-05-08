@@ -1,11 +1,13 @@
 define([
     'app/app.config',
+    'app/models/executionModel',
     'app/components/pipelines/listView/pipelineListCtrl',
-    'app/components/pipelines/canvasView/pipelineEditCanvasCtrl',
+    'app/components/pipelines/canvasView/pipelineCanvasCtrl',
     'app/components/pipelines/uploadView/pipelineUploadCtrl',
     'app/components/pipelines/exportDialog/pipelineExportDialogCtrl',
     'app/components/executions/listView/executionListCtrl',
     'app/components/executions/detailView/executionDetailCtrl',
+    'app/components/componentExecutionDetail/componentExecutionDetailCtrl',
     'app/services/rdfService',
     'app/services/refreshService',
     'app/services/repositoryService',
@@ -23,12 +25,14 @@ define([
     'angular-ui-notification'
 ], function (
         config,
+        executionModel,
         pipelineListCtrlInit,
         pipelineEditCanvasCtrlInit,
         pipelineUploadCtrlInit,
         pipelineExportDialogCtrlInit,
         executionListCtrlInit,
         executionDetailCtrlInit,
+        componentExecutionDetailCtrl,
         rdfService,
         refreshService,
         repositoryService,
@@ -58,12 +62,14 @@ define([
     localizedTextInputInit(app);
     iriListInit(app);
     //
+    executionModel(app);
     pipelineListCtrlInit(app);
     pipelineEditCanvasCtrlInit(app);
     pipelineUploadCtrlInit(app);
     pipelineExportDialogCtrlInit(app);
     executionListCtrlInit(app);
     executionDetailCtrlInit(app);
+    componentExecutionDetailCtrl(app);
     //
     app.bootstrap = function () {
         angular.bootstrap(document, ['angularApp']);
