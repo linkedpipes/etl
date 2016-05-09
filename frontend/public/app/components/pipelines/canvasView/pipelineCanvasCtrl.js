@@ -8,7 +8,8 @@ define([
     'app/components/templates/templatesRepository',
     'app/components/pipelines/pipelineModelService',
     'app/components/templates/selectDialog/selectTemplateDialogCtrl',
-    'app/components/pipelines/importDialog/pipelineImportDialogCtrl'
+    'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
+    'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl'
 ], function (
         jQuery,
         pipelineCanvasDirective,
@@ -19,7 +20,8 @@ define([
         templatesRepositoryFactory,
         pipelineModelService,
         selectTemplateDialog,
-        importPipelineDialog
+        importPipelineDialog,
+        pipelineDetailDialog
         ) {
     function controler(
             $scope,
@@ -567,6 +569,7 @@ define([
         pipelineModelService(app);
         selectTemplateDialog(app);
         importPipelineDialog(app);
+        pipelineDetailDialog(app);
     };
 
 });
