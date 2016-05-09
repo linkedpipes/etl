@@ -119,7 +119,7 @@ define([], function () {
             rdf.setString(table, 'encoding', $scope.dialog.encoding);
             rdf.setInteger(table, 'rowsLimit', $scope.dialog.rowsLimit);
             rdf.setString(table, 'tableType', $scope.dialog.tableType);
-            rdf.setString(table, 'hasHeader', $scope.dialog.hasHeader);
+            rdf.setBoolean(table, 'hasHeader', $scope.dialog.hasHeader);
             rdf.setBoolean(table, 'generateNew', $scope.dialog.generateNew);
             rdf.setBoolean(table, 'ignoreBlankCell', $scope.dialog.ignoreBlankCell);
             rdf.setBoolean(table, 'advancedKey', $scope.dialog.advancedKey);

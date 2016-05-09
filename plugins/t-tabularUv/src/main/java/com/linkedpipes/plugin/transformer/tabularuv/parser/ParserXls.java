@@ -67,7 +67,7 @@ public class ParserXls implements Parser {
         // get sheet to process
         final List<Integer> toProcess = new LinkedList<>();
         for (Integer index = 0; index < wb.getNumberOfSheets(); ++index) {
-            if (config.sheetName == null
+            if (config.sheetName == null || config.sheetName.isEmpty()
                     || config.sheetName.compareTo(wb.getSheetName(index)) == 0) {
                 // add
                 toProcess.add(index);

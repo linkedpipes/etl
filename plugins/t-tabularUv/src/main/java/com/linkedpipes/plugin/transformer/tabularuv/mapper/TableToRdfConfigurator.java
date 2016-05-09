@@ -88,7 +88,8 @@ public class TableToRdfConfigurator {
             // add column name
             tableToRdf.nameToIndex.put(columnName, index);
             // test for key
-            if (config.keyColumn != null && !config.advancedKeyColumn
+            if (config.keyColumn != null  && !config.keyColumn.isEmpty()
+                    && !config.advancedKeyColumn
                     && config.keyColumn.compareTo(columnName) == 0) {
                 // we construct tempalte and use it
                 keyTemplateStr = "<" + prepareAsUri("{", config)
