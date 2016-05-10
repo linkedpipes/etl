@@ -249,7 +249,7 @@ public final class ExecutionModel implements EventManager.EventListener {
     /**
      * IRI of executed pipeline.
      */
-    private final String pipeline;
+    private String pipeline = null;
 
     /**
      * Execution IRI.
@@ -266,7 +266,7 @@ public final class ExecutionModel implements EventManager.EventListener {
     /**
      * List of components, sorted in execution order.
      */
-    private final List<Component> components;
+    private final List<Component> components = new ArrayList<>(64);
 
     private final ResourceManager resources;
 
@@ -277,18 +277,29 @@ public final class ExecutionModel implements EventManager.EventListener {
      */
     private Date lastChange = new Date();
 
-    public ExecutionModel(PipelineModel pipeline, String iri,
+    public ExecutionModel(String iri,
             ResourceManager resources) {
-        this.pipeline = pipeline.getIri();
         this.iri = iri;
-        this.components = new ArrayList<>(pipeline.getComponents().size());
         this.resources = resources;
         this.status = status.INITIALIZING;
         //
         final ValueFactory vf = SimpleValueFactory.getInstance();
         this.graph = vf.createIRI(iri);
-        //
+    }
+
+    /**
+     * Build model for the pipeline, must be called after constructor and
+     * before any other method.
+     *
+     * @param pipeline
+     */
+    public void assignPipeline(PipelineModel pipeline) {
+        this.pipeline = pipeline.getIri();
         initialize(pipeline, resources);
+    }
+
+    public String getIri() {
+        return iri;
     }
 
     public List<Component> getComponents() {
@@ -476,9 +487,11 @@ public final class ExecutionModel implements EventManager.EventListener {
         handler.handleStatement(vf.createStatement(executionResource, RDF.TYPE,
                 vf.createIRI("http://etl.linkedpipes.com/ontology/Execution"),
                 graph));
-        handler.handleStatement(vf.createStatement(executionResource,
-                vf.createIRI("http://etl.linkedpipes.com/ontology/pipeline"),
-                vf.createIRI(pipeline), graph));
+        if (pipeline != null) {
+            handler.handleStatement(vf.createStatement(executionResource,
+                    vf.createIRI("http://etl.linkedpipes.com/ontology/pipeline"),
+                    vf.createIRI(pipeline), graph));
+        }
         handler.handleStatement(vf.createStatement(executionResource,
                 vf.createIRI("http://etl.linkedpipes.com/ontology/status"),
                 vf.createIRI(status.getIri()), graph));

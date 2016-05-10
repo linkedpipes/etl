@@ -72,24 +72,20 @@ public class PipelineExecutor implements EventManager.EventListener {
     private boolean stopExecution = false;
 
     public PipelineExecutor(File executionDirectory,
-            ModuleFacade modules) {
-        // TODO This is a fake, we should determine the path somehow else.
+            ModuleFacade modules, String iri) {
+        // TODO Determine path by proper way, this is more of a hack.
         this.resources = new ResourceManager(executionDirectory.getParentFile(),
                 executionDirectory);
         this.pipeline = new PipelineDefinition(
                 this.resources.getWorkingDirectory("definition"));
         this.loggerFacade.setSystemAppender(resources.getExecutionLogFile());
         this.modules = modules;
+        execution = new ExecutionModel(iri, resources);
     }
 
-    /**
-     *
-     * @param iri Execution IRI.
-     * @return False if initialization failed and pipeline can not be executed.
-     */
-    public boolean initialize(String iri) {
+    public void initialize() {
         MDC.put(LoggerFacade.SYSTEM_MDC, null);
-        events = new EventManager(iri);
+        events = new EventManager(execution.getIri());
         events.addListener(this);
         // Load definition.
         try {
@@ -99,17 +95,13 @@ public class PipelineExecutor implements EventManager.EventListener {
                     "Can't load pipeline definition.", ex));
             afterExecution();
             MDC.remove(LoggerFacade.SYSTEM_MDC);
-            return false;
         }
-        // Create modules.
-        execution = new ExecutionModel(pipeline.getPipelineModel(), iri,
-                resources);
+        execution.assignPipeline(pipeline.getPipelineModel());
         events.addListener(execution);
         dataUnits = new DataUnitManager(pipeline, execution,
                 modules);
         //
         MDC.remove(LoggerFacade.SYSTEM_MDC);
-        return true;
     }
 
     /**
@@ -195,7 +187,9 @@ public class PipelineExecutor implements EventManager.EventListener {
      */
     private void afterExecution() {
         // Close data units.
-        dataUnits.close(events);
+        if (dataUnits != null) {
+            dataUnits.close(events);
+        }
         // Notify plugins that we are done and they can close too.
         // Behind this point we can't work with data units.
         sendExecutionEndNotification();

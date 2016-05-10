@@ -93,10 +93,10 @@ class ExecutionServlet {
                 return false;
             }
             final PipelineExecutor newExecutor
-                    = new PipelineExecutor(executionDirectory, modules);
-            newExecutor.initialize(iri);
+                    = new PipelineExecutor(executionDirectory, modules, iri);
             executor = newExecutor;
             taskExecutor.execute(() -> {
+                executor.initialize();
                 executor.execute();
                 // Detach execution object once execution is finished.
                 executor = null;
