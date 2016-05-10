@@ -437,6 +437,7 @@ define([
         // Used to search for the pipeline left top corner.
         var leftTopX = void 0;
         var leftTopY = void 0;
+        var missingTemplates = {};
         components.forEach(function (component) {
             var templateIri = comService.getTemplateIri(component);
             var template = this.templates.getTemplate(templateIri);
@@ -444,6 +445,14 @@ define([
                 // FIXME Missing template !
                 console.error('Missing template.', templateIri, component);
                 console.timeEnd('canvasPipeline.load');
+                if (missingTemplates[templateIri] === undefined) {
+                    this.statusService.error({
+                       'title' : 'Missing template',
+                       'message': templateIri
+                    });
+                    missingTemplates[templateIri] = [];
+                }
+                missingTemplates[templateIri].push(component);
                 return;
             }
             // Create element and store reference.
@@ -911,10 +920,11 @@ define([
 
     };
 
-    function factory(templates, pipelineModel) {
+    function factory(templates, pipelineModel, statusService) {
         return jQuery.extend({
             'templates': templates,
-            'pipelineModel': pipelineModel
+            'pipelineModel': pipelineModel,
+            'statusService': statusService
         }, service);
     }
 
@@ -925,6 +935,7 @@ define([
         app.factory('canvas.pipeline', [
             'components.templates.services.repository',
             'components.pipelines.services.model',
+            'services.status',
             factory]);
     };
 
