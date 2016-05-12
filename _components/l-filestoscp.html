@@ -12,25 +12,36 @@ Loader, allows the user to transfer a file to a server via the SCP protocol.
 <dl class="flow-text">
     <dt>Host address</dt>
     <dd>Address of the target server for the file upload. E.g. <code>obeu.vse.cz</code></dd>
-    <dt>Port</dt>
+    <dt>Port number</dt>
     <dd>SSH port to use. Typically <code>22</code></dd>
+    <dt>User name</dt>
+    <dd>User name for the server</dd>
+    <dt>Password</dt>
+    <dd>Password for the server. Note that this is plain text and not secure in any way.</dd>
     <dt>Target directory</dt>
     <dd>Directory on the server where the file should be uploaded. E.g.<code>~/upload/</code></dd>
     <dt>Create the target directory</dt>
     <dd>When checked, tries to create the target directory, when it is not present on the server. Fails otherwise.</dd>
-    <dt>User name</dt>
-    <dd>User name for the server</dd>
-    <dt>Password</dt>
-    <dd>Password for the server. Note that this is plain text and not secure in any way.</dd></dl>
+</dl>
 <!--more-->
-<div class="row">
-    <div class="col s12 m7 l6">
-        <p class="flow-text">
-        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
-        </p>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
     </div>
-    <div class="col s12 m5 l6">
+    <div class="col s12 l6">
         <p class="flow-text">
-        </p>
+        The {{page.title}} component takes input files and uploads them to the specified directory on the specified server using the <a href="https://en.wikipedia.org/wiki/Secure_copy" title="SCP protocol">SCP protocol</a>.
+        Useful for uploading dumps of the data resulting from a pipeline.
+        It is often used with the <a href="./x-virtuoso" title="Virtuoso loader">Virtuoso loader</a>, which tells a remote OpenLink Virtuoso instance to load a file located on the file system of the server it is running on.
     </div>
 </div>

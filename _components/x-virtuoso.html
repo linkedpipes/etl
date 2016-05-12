@@ -7,7 +7,7 @@ description: Instructs Virtuoso to load a file.
 ---
 
 <p class="flow-text">
-Special purpose component, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">Openlink Virtuoso</a> triplestore to load a file from the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
+Special purpose component, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">OpenLink Virtuoso</a> triplestore to load a file from the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
 </p>
 <dl class="flow-text">
     <dt>Host address</dt>
@@ -30,14 +30,22 @@ Special purpose component, allows the user to instruct <a href="http://virtuoso.
     <dd>Interval in which the component polls Virtuoso for the status of the load</dd>
 </dl>
 <!--more-->
-<div class="row">
-    <div class="col s12 m7 l6">
-        <p class="flow-text">
-        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
-        </p>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
     </div>
-    <div class="col s12 m5 l6">
+    <div class="col s12 l6">
         <p class="flow-text">
+        The {{page.title}} component instructs a remote instance of <a href="http://virtuoso.openlinksw.com/">OpenLink Virtuoso</a> to load a file or a directory using the <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a>.
+        It is recommended to use it together with <a href="./l-filestoscp" title="Files to SCP">Files to SCP</a> to load larger RDF files (approx. &gt; 5M triples) to Virtuoso, as the other methods, the <a href="./l-sparqlendpoint" title="SPARQL endpoint">SPARQL endpoint</a> and the <a href="./l-graphstoreprotocol" title="Graph store protocol">Graph store protocol</a>, can cause Virtuoso to become unstable or crash.
         </p>
     </div>
 </div>

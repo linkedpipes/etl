@@ -7,22 +7,34 @@ description: Filters input files by file name.
 ---
 
 <p class="flow-text">
-Transformer, allows the user to filter files by file name and <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html">Java regular expressions</a>.
-You can <a href="http://regexr.com/">test your regular expressions here</a>.
+Transformer, allows the user to filter files by file name using <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" title="Pattern documentation">Java regular expressions</a>.
 </p>
 <dl class="flow-text">
     <dt>File name filter pattern</dt>
     <dd>Regular expression to filter file names by</dd>
 </dl>
 <!--more-->
-<div class="row">
-    <div class="col s12 m7 l6">
-        <p class="flow-text">
-        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
-        </p>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
     </div>
-    <div class="col s12 m5 l6">
+    <div class="col s12 l6">
         <p class="flow-text">
+        The {{page.title}} component takes the input files and only passes on those matching the specified filter.
+        The filters use the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" title="Pattern documentation">Java regular expressions</a>.
+        You can <a href="http://regexr.com/" title="RegExr">test your regular expressions here</a>.
         </p>
     </div>
 </div>

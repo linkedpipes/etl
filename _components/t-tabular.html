@@ -45,14 +45,31 @@ The advanced row mapping will be documented later.
 Basically, it allows the user to directly specify output literal data type, language tag or specify that the output value is an IRI.
 In addition, it allows to specify a custom predicate IRI based on column name.
 </p>
-<div class="row">
-    <div class="col s12 m7 l6">
-        <p class="flow-text">
-        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
-        </p>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
     </div>
-    <div class="col s12 m5 l6">
+    <div class="col s12 l6">
         <p class="flow-text">
+        The {{page.title}} component takes the input <a href="https://tools.ietf.org/html/rfc4180" title="Comma Separated Values">CSV</a> files and transforms them to an RDF representation according to the <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a> W3C Recommendation.
+        Not all aspects are covered by the recommendation, there we add our own functionality.
+        This is one of the most complex components we have in LP-ETL.
+        One of the reasons is that tabular data is the most common on the web and therefore we had to cover the most situations.</p>
+        <p class="flow-text">
+        We recommend not to use the custom mapping section of the component.
+        Instead, we recommend using the default transformation and adjusting the resulting RDF representation using <a href="./t-sparqlconstruct" title="SPARQL Construct">SPARQL Construct</a> and <a href="./t-sparqlupdate" title="SPARQL Update">SPARQL Update</a>.
         </p>
     </div>
 </div>

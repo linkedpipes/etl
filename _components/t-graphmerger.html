@@ -8,18 +8,30 @@ description: Transforms Data Unit containing multiple graphs to a Data Unit cont
 
 <p class="flow-text">
 Transformer. There are two types of RDF Data Units in LinkedPipes ETL right now.
-There is a data unit, that can contain multiple RDF named graphs, which is currently produced only by the <a href="#t-filestordf">Files to RDF</a>, which may transform files containing RDF quads.
+There is a data unit, that can contain multiple RDF named graphs, which is currently produced only by the <a href="./t-filestordf" title="Files to RDF">Files to RDF</a>, which may transform files containing RDF quads.
 When the user then wants to work with such data using components that only support triples, Graph merger is needed to do the conversion.
 </p>
 <!--more-->
-<div class="row">
-    <div class="col s12 m7 l6">
-        <p class="flow-text">
-        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
-        </p>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF multiple graphs</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
     </div>
-    <div class="col s12 m5 l6">
+    <div class="col s12 l6">
         <p class="flow-text">
+        The {{page.title}} component takes input that may contain multiple RDF graphs, merges it and produces a single RDF graph.
+        Currently, this component is only used after the <a href="./t-filestordf" title="Files to RDF">Files to RDF</a> component, which may produce data with multiple RDF graphs.
         </p>
     </div>
 </div>

@@ -7,7 +7,7 @@ description: Transforms Excel files to CSV files.
 ---
 
 <p class="flow-text">
-Transformer, allows the user to transform Excel files to CSV files.
+Transformer, allows the user to transform <a href="https://products.office.com/excel" title="Microsoft Excel">Microsoft Excel</a> files to <a href="https://tools.ietf.org/html/rfc4180" title="Comma Separated Values">CSV</a> files.
 </p>
 <dl class="flow-text">
     <dt>Output file name</dt>
@@ -32,14 +32,27 @@ Transformer, allows the user to transform Excel files to CSV files.
     <dd>When checked, a <code>sheet_name</code> column is added, with source Excel sheet name as a value</dd>
 </dl>
 <!--more-->
-<div class="row">
-    <div class="col s12 m7 l6">
-        <p class="flow-text">
-        <img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}">    
-        </p>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
     </div>
-    <div class="col s12 m5 l6">
+    <div class="col s12 l6">
         <p class="flow-text">
+        The {{page.title}} component takes the input <a href="https://products.office.com/excel" title="Microsoft Excel">Microsoft Excel</a> files and extracts <a href="https://tools.ietf.org/html/rfc4180" title="Comma Separated Values">CSV</a> files from them.
+        Multiple Excel sheets can be extracted into multiple CSV files.
+        The information of from which sheet a particular CSV file came from can be included in the CSV file itself as an additional column.
         </p>
     </div>
 </div>
