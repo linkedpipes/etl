@@ -13,6 +13,9 @@
             ],
             "http://linkedpipes.com/ontology/keyword": [
                 "CKAN", "DCAT-AP"
+            ],
+            "http://linkedpipes.com/ontology/configurationDescription": [
+                {"@id": "http://localhost:8080/resources/components/l-dcatApToCkan/1.0.0/configurationDescription"}
             ]
         },
         {
@@ -35,6 +38,15 @@
             ],
             "http://linkedpipes.com/ontology/binding": "OutputFiles",
             "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
+        },
+        {
+            "@id": "http://localhost:8080/resources/components/l-dcatApToCkan/1.0.0/configurationDescription",
+            "@type": [
+                "http://linkedpipes.com/ontology/ConfigurationDescription"
+            ],
+            "http://linkedpipes.com/ontology/privateProperties" : [
+                {"@id": "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKey"}
+            ]
         }
     ]
 }

@@ -74,4 +74,6 @@ public class TabularVocabulary {
 
     public static final String HAS_BASE_URI = "http://plugins.linkedpipes.com/ontology/t-tabular#baseUri";
 
+    public static final String HAS_GENERETE_NULL_HEADER = "http://plugins.linkedpipes.com/ontology/t-tabular#generateNullHeaderNames";
+
 }

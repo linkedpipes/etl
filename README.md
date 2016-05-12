@@ -1,5 +1,7 @@
 # LinkedPipes ETL
 
+> Upgrade note: When upgrading from master prior to 2016-04-07 to master after 2016-04-07, you need to delete your old execution data (e.g. in /data/lp/etl/working/data)
+
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - REST API based set of components for easy integration
 - Library of Data Processing Units (DPUs) to get you started faster
@@ -27,7 +29,13 @@ $ vi deploy/configuration.properties
 We recommend using [Cygwin] and proceeding as with Linux.
 
 ### Configuration
-Now edit the configuration file, mainly adding paths to working, storage, log and library directories.
+Now edit the configuration file, mainly adding paths to working, storage, log and library directories. Especially:
+- `executor.execution.working_directory`
+- `executor.log.directory`
+- `executor.osgi.lib.directory` - This needs to be an absolute path to the `deploy/osgi` directory.
+- `executor-monitor.log.directory`
+- `storage.components.directory` - This needs to be an absolute path to the `deploy/components` directory.
+- `storage.pipelines.directory`
 
 ## Running LinkedPipes ETL
 To run LP-ETL, you need to run the three components it consists of. For debugging purposes, it is useful to store the console logs.

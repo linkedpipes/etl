@@ -1,7 +1,5 @@
 package com.linkedpipes.etl.dataunit.system;
 
-import com.linkedpipes.etl.dataunit.system.files.FilesDataUnitConfiguration;
-import com.linkedpipes.etl.dataunit.system.files.SystemFilesDataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
@@ -16,20 +14,22 @@ import org.osgi.service.component.annotations.Component;
 public class SystemPlugin implements DataUnitFactory {
 
     @Override
-    public ManagableDataUnit create(SparqlSelect definition, String resourceUri, String graph)
-            throws CreationFailed {
+    public ManagableDataUnit create(SparqlSelect definition, String resourceIri,
+            String graph) throws CreationFailed {
         // Load configuration.
-        final FilesDataUnitConfiguration config = new FilesDataUnitConfiguration(resourceUri);
+        final FilesDataUnitConfiguration config
+                = new FilesDataUnitConfiguration(resourceIri);
         try {
-            EntityLoader.load(definition, resourceUri, graph, config);
+            EntityLoader.load(definition, resourceIri, graph, config);
         } catch (EntityLoader.LoadingFailed ex) {
-            throw new CreationFailed(String.format("Can't load configuration for: %s", resourceUri), ex);
+            throw new CreationFailed("Can't load configuration for: {}",
+                    resourceIri, ex);
         }
         // Based on type create instance.
         for (String type : config.getTypes()) {
             switch (type) {
                 case "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror":
-                    return SystemFilesDataUnitFactory.create(config);
+                    return new FilesDataUnitImpl(config);
                 default:
                     break;
             }

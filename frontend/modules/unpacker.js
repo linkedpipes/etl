@@ -58,23 +58,27 @@ var getAndNext = function (executor, uri, callback, args) {
     });
 };
 
-var prepareMetadata = function (pipeline) {
+var prepareMetadata = function (data) {
     var metadata = {};
-
-    pipeline['@graph'].forEach(function (graph) {
-        // Search for pipeline definition.
-        if (!metadata.definition) {
-            graph['@graph'].forEach(function (resource) {
-                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
-                    metadata.definition = {
-                        'uri': graph['@id'],
-                        'graph': graph
-                    };
-                }
-            });
-        }
-    });
-
+    var graphList;
+    if (data['@graph']) {
+        graphList = data['@graph'];
+    } else {
+        graphList = data;
+    }
+    //
+    for (var graphIndex in graphList) {
+        var graph = graphList[graphIndex];
+        graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
+                metadata.definition = {
+                    'uri': graph['@id'],
+                    'graph': graph
+                };
+                return;
+            }
+        });
+    }
     return metadata;
 };
 
@@ -178,14 +182,147 @@ var expandComponent = function (pipeline, component, template) {
             portCounter += 1;
             // Add port to the pipeline definition.
             pipeline['@graph'].push(portObject);
-        } else {
-            // Unknown object.
-            console.log('Unknown object type record ignored:', resource);
         }
     });
     // Store references.
     for (var key in references) {
         component[key] = references[key];
+    }
+};
+
+var getReference = function (object, property) {
+    if (!object[property]) {
+        return;
+    }
+    var value = object[property];
+    if (value['@id']) {
+        return value['@id'];
+    } else if (value[0]['@id']) {
+        return value[0]['@id'];
+    } else {
+        return value['@id'];
+    }
+};
+
+var getReferenceAll = function (object, property) {
+    if (!object[property]) {
+        return [];
+    }
+    var value = object[property];
+    if (Array.isArray(value)) {
+        var result = [];
+        value.forEach(function (item) {
+            if (item['@id']) {
+                result.push(item['@id']);
+            } else {
+                result.push(item);
+            }
+        });
+        return result;
+    } else {
+        return [getReference(object, property)];
+    }
+    return [];
+};
+
+var getIri = function (object) {
+    if (!object['@id']) {
+        return;
+    }
+    var value = object['@id'];
+    if (value['@id']) {
+        return value['@id'];
+    } else if (value[0]['@id']) {
+        return value[0]['@id'];
+    } else {
+        return value['@id'];
+    }
+};
+
+var getString = function (object, property) {
+
+    if (!object[property]) {
+        return;
+    }
+    var value = object[property];
+
+    /**
+     * Return object with @lang and @value.
+     */
+    var getString = function (value, result) {
+        if (typeof value['@value'] === 'undefined') {
+            return value;
+        } else if (typeof value['@lang'] === 'undefined') {
+            return value['@value'];
+        } else {
+            // Return first value in given language.
+            return value['@value'];
+        }
+    };
+
+    if (Array.isArray(value)) {
+        if (value.length === 0) {
+            // Skip as empty array does not contains any data.
+            return;
+        } else if (value.length === 1) {
+            return getString(value[0]);
+        } else {
+            for (var itemIndex in value) {
+                return getString(value[itemIndex]);
+            }
+        }
+    } else {
+        return getString(value);
+    }
+};
+
+var iterateGraphs = function (data, callback) {
+    var graphList;
+    if (data['@graph']) {
+        if (data['@id']) {
+            // There is a graph directly in the data root.
+            graphList = [data];
+        } else {
+            graphList = data['@graph'];
+        }
+    } else {
+        graphList = data;
+    }
+    //
+    for (var graphIndex in graphList) {
+        var graph = graphList[graphIndex];
+        if (graph['@graph'] && graph['@id']) {
+            if (callback(graph['@graph'], graph['@id'])) {
+                return graph['@id'];
+            }
+        } else {
+            console.log('Invalid graph detected: ', graph);
+        }
+    }
+};
+
+var iterateObjects = function (data, callback) {
+    var graphList;
+    if (data['@graph']) {
+        if (data['@id']) {
+            // There is a graph directly in the data root.
+            graphList = [data];
+        } else {
+            graphList = data['@graph'];
+        }
+    } else {
+        graphList = data;
+    }
+    //
+    for (var graphIndex in graphList) {
+        var graph = graphList[graphIndex];
+        if (graph['@graph'] && graph['@id']) {
+            for (var object_index in graph['@graph']) {
+                callback(graph['@graph'][object_index]);
+            }
+        } else {
+            console.log('Invalid graph detected: ', graph);
+        }
     }
 };
 
@@ -228,7 +365,8 @@ gModule.unpack = function (uri, configuration, callback) {
             // Download templates and their configurations.
             data.metadata.definition.graph['@graph'].forEach(function (resource) {
                 if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
-                    downloadTemplate(executor, data, resource['http://linkedpipes.com/ontology/template']['@id']);
+                    downloadTemplate(executor, data,
+                            getReference(resource, 'http://linkedpipes.com/ontology/template'));
                 }
             });
             next();
@@ -239,8 +377,9 @@ gModule.unpack = function (uri, configuration, callback) {
         var pipeline = data.metadata.definition;
         pipeline.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
+                var template_iri = getReference(resource, 'http://linkedpipes.com/ontology/template');
                 expandComponent(pipeline.graph, resource,
-                        data.templates[resource['http://linkedpipes.com/ontology/template']['@id']]);
+                        data.templates[template_iri]);
             }
         });
         next();
@@ -248,13 +387,13 @@ gModule.unpack = function (uri, configuration, callback) {
         // If we have some references to other executions in data.execution.mapping we download
         // their debug data.
         if (configuration.mapping) {
-            configuration.mapping.forEach(function (reference) {
-                var uri = gConfiguration.executor.monitor.url + 'executions/' + reference['id'] + '/debug';
-                getAndNext(executor, uri, function (error, response, body) {
-                    // TODO Add error handling here!
-                    data.executions[reference['id']] = JSON.parse(body);
-                });
+            var iri = configuration.mapping.execution;
+            var id = iri.substring(iri.indexOf('executions/') + 11);
+            getAndNext(executor, iri, function (error, response, body) {
+                // TODO Add error handling here!
+                data.executions[id] = JSON.parse(body);
             });
+            configuration.mapping['id'] = id;
         }
         //
         next();
@@ -288,18 +427,32 @@ gModule.unpack = function (uri, configuration, callback) {
 
         // Add sources - ie. for each data unit determine it's sources. The source list
         // are build based on the connections in pipeline.
-        data.metadata.definition.graph['@graph'].forEach(function (resource) {
-            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
-                var source = resource['http://linkedpipes.com/ontology/sourceComponent']['@id'];
-                var target = resource['http://linkedpipes.com/ontology/targetComponent']['@id'];
-                var sourcePort = portsByOwnerAndBinding[source][resource['http://linkedpipes.com/ontology/sourceBinding']];
-                var targetPort = portsByOwnerAndBinding[target][resource['http://linkedpipes.com/ontology/targetBinding']];
-                if (!targetPort['http://linkedpipes.com/ontology/source']) {
-                    targetPort['http://linkedpipes.com/ontology/source'] = [];
+        try {
+            data.metadata.definition.graph['@graph'].forEach(function (resource) {
+                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
+                    var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
+                    var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
+                    var sourcePort = portsByOwnerAndBinding[source][
+                            getString(resource, 'http://linkedpipes.com/ontology/sourceBinding')];
+                    var targetPort = portsByOwnerAndBinding[target][
+                            getString(resource, 'http://linkedpipes.com/ontology/targetBinding')];
+                    if (typeof (targetPort) === 'undefined') {
+                        throw {
+                            'errorMessage': '',
+                            'systemMessage': '',
+                            'userMessage': "Invalid pipeline definition, cycle detected!",
+                            'errorCode': 'ERROR'
+                        };
+                    }
+                    if (!targetPort['http://linkedpipes.com/ontology/source']) {
+                        targetPort['http://linkedpipes.com/ontology/source'] = [];
+                    }
+                    targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
                 }
-                targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
-            }
-        });
+            });
+        } catch (error) {
+            callback(false, error);
+        }
         next();
     }).add(function (data, next) {
         // For some data units, we need to load resources from directory. This is used
@@ -311,25 +464,48 @@ gModule.unpack = function (uri, configuration, callback) {
             return;
         }
 
-        var portSources = {};
-        configuration.mapping.forEach(function (mapping) {
-            var executionDebug = data['executions'][mapping['id']];
-            for (var sourceUri in mapping['components']) {
-                var targetUri = mapping['components'][sourceUri];
-                // Now we check for data units of this component that we could use.
-                for (var index in executionDebug['dataUnits']) {
-                    var dataUnitTarget = executionDebug['dataUnits'][index];
-                    if (dataUnitTarget['componentUri'] === targetUri) {
-                        // This data unit is used by this DPU - we save the source path.
-                        portSources[dataUnitTarget['iri']] = {
-                            'load' : dataUnitTarget['saveDirectory'],
-                            'debug': dataUnitTarget['debugDirectories']
-                        };
-                    }
-                }
+        // Store for faster access.
+        var mapping = configuration.mapping;
 
+        var dataUnits = {};
+        var componenetsDataUnit = {};
+        // Load information from the execution.
+        iterateObjects(data.executions[mapping['id']], function (resource) {
+            if (resource['@type'].indexOf('http://etl.linkedpipes.com/ontology/DataUnit') > -1) {
+                // The data unit we map could have been mapped from another execution.
+                var execution = resource['http://etl.linkedpipes.com/ontology/execution'];
+                if (typeof (execution) === 'undefined') {
+                    execution = {'@id': mapping.execution};
+                }
+                //
+                dataUnits[resource['@id']] = {
+                    'execution': execution,
+                    'debug': resource['http://etl.linkedpipes.com/ontology/debug'],
+                    'loadPath': resource['http://etl.linkedpipes.com/ontology/dataPath'],
+                    'debugPath': resource['http://etl.linkedpipes.com/ontology/debugPath']
+                };
+                return;
+            }
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
+                componenetsDataUnit[resource['@id']] = getReferenceAll(resource,
+                        'http://etl.linkedpipes.com/ontology/dataUnit');
             }
         });
+
+        var portSources = {};
+        for (var sourceUri in mapping['components']) {
+            var targetUri = mapping['components'][sourceUri];
+            var dataUnitReference = componenetsDataUnit[sourceUri];
+            if (typeof (dataUnitReference) === 'undefined') {
+                console.log('Component without mapping detected!');
+                console.log(sourceUri, '->', targetUri);
+                continue;
+            }
+            for (var index in dataUnitReference) {
+                var iri = dataUnitReference[index];
+                portSources[iri] = dataUnits[iri];
+            }
+        }
 
         var ports = [];
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
@@ -342,12 +518,16 @@ gModule.unpack = function (uri, configuration, callback) {
             if (portSources[resource['@id']]) {
                 // Delete source as a depdency on other data units.
                 delete resource['http://linkedpipes.com/ontology/source'];
+                //
+                var portSource = portSources[resource['@id']];
                 // Create source object.
                 var sourceObject = {
                     '@id': resource['@id'] + '/source',
                     '@type': ['http://linkedpipes.com/ontology/PortSource'],
-                    'http://linkedpipes.com/ontology/loadPath': portSources[resource['@id']]['load'],
-                    'http://linkedpipes.com/ontology/debugPath': portSources[resource['@id']]['debug']
+                    'http://linkedpipes.com/ontology/execution': portSource['execution'],
+                    'http://linkedpipes.com/ontology/debug': portSource['debug'],
+                    'http://linkedpipes.com/ontology/loadPath': portSource['loadPath'],
+                    'http://linkedpipes.com/ontology/debugPath': portSource['debugPath']
                 };
                 resource['http://linkedpipes.com/ontology/dataSource'] = {'@id': sourceObject['@id']};
                 data.metadata.definition.graph['@graph'].push(sourceObject);
@@ -376,8 +556,8 @@ gModule.unpack = function (uri, configuration, callback) {
         data.metadata.definition.graph['@graph'].forEach(function (resource) {
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1 ||
                     resource['@type'].indexOf('http://linkedpipes.com/ontology/RunAfter') > -1) {
-                var source = resource['http://linkedpipes.com/ontology/sourceComponent']['@id'];
-                var target = resource['http://linkedpipes.com/ontology/targetComponent']['@id'];
+                var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
+                var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
                 // Check for duplicity.
                 if (neighboursList[target].indexOf(source) === -1) {
                     neighboursList[target].push(source);
@@ -386,10 +566,10 @@ gModule.unpack = function (uri, configuration, callback) {
         });
         // Construct list of component to execute, in case of debug-to we need to restrict this list
         // to only some components.
-        if (configuration && configuration.execution && configuration.execution.to) {
-            var toExecute = [configuration.execution.to]; // List of components to execute.
+        if (configuration && configuration.execute_to) {
+            var toExecute = [configuration.execute_to]; // List of components to execute.
             // Add transitive dependencies.
-            var toAdd = neighboursList[configuration.execution.to].slice(0);
+            var toAdd = neighboursList[configuration.execute_to].slice(0);
             while (toAdd.length > 0) {
                 var toAddNew = [];
                 // Add all from toAdd to the toExecute.
@@ -499,11 +679,9 @@ gModule.unpack = function (uri, configuration, callback) {
         // Create list of mapped components.
         var mappedComponents = {};
         if (configuration.mapping) {
-            configuration.mapping.forEach(function (mapping) {
-                for (var key in mapping['components']) {
-                    mappedComponents[key] = true;
-                }
-            });
+            for (var key in configuration.mapping['components']) {
+                mappedComponents[key] = true;
+            }
         }
 
         // Set component execution types.

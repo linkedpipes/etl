@@ -3,7 +3,8 @@ define([], function () {
 
         $scope.dialog = {
             'fileUri': '',
-            'fileName': ''
+            'fileName': '',
+            'hardRedirect': false
         };
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/e-httpGetFile#');
@@ -14,6 +15,7 @@ define([], function () {
 
             $scope.dialog.uri = rdf.getString(resource, 'fileUri');
             $scope.dialog.fileName = rdf.getString(resource, 'fileName');
+            $scope.dialog.hardRedirect = rdf.getBoolean(resource, 'hardRedirect');
         };
 
         $scope.getConfiguration = function () {
@@ -21,6 +23,7 @@ define([], function () {
 
             rdf.setString(resource, 'fileUri', $scope.dialog.uri);
             rdf.setString(resource, 'fileName', $scope.dialog.fileName);
+            rdf.setBoolean(resource, 'hardRedirect', $scope.dialog.hardRedirect);
 
             return rdf.getData();
         };

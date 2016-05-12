@@ -28,7 +28,7 @@ class BufferedOutput implements StatementConsumer {
 
     private final List<Statement> buffer = new ArrayList<>(BUFFER_SIZE);
 
-    public BufferedOutput(WritableSingleGraphDataUnit dataUnit) {
+    BufferedOutput(WritableSingleGraphDataUnit dataUnit) {
         this.dataUnit = dataUnit;
         graph = dataUnit.getGraph();
     }
@@ -45,6 +45,7 @@ class BufferedOutput implements StatementConsumer {
         }
     }
 
+    @Override
     public void onFileStart() throws NonRecoverableException {
         // No operation here.
     }
@@ -56,7 +57,8 @@ class BufferedOutput implements StatementConsumer {
 
     @Override
     public void submit(Resource subject, IRI predicate, Value object) {
-        buffer.add(VALUE_FACTORY.createStatement(subject, predicate, object, graph));
+        buffer.add(VALUE_FACTORY.createStatement(subject, predicate, object,
+                graph));
     }
 
     private void flushBuffer() throws NonRecoverableException {

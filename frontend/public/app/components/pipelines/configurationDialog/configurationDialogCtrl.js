@@ -1,14 +1,17 @@
 define(['app/components/configuration/configurationHolderDirective'], function (configurationHolderDirective) {
-    function controler($scope, $timeout, $mdDialog, component, template, data) {
+    function controler($scope, $timeout, $mdDialog, component, template, data,
+            jsonldService) {
+
+        var jsonld = jsonldService.jsonld();
 
         /**
          * Load $scope.general object.
          */
         var loadGeneral = function () {
             $scope.general = {
-                'label': component['http://www.w3.org/2004/02/skos/core#prefLabel'],
-                'description': component['http://purl.org/dc/terms/description'],
-                'color': component['http://linkedpipes.com/ontology/color']
+                'label': jsonld.getString(component, 'http://www.w3.org/2004/02/skos/core#prefLabel'),
+                'description': jsonld.getString(component, 'http://purl.org/dc/terms/description'),
+                'color': jsonld.getString(component, 'http://linkedpipes.com/ontology/color')
             };
             if ($scope.general.color) {
                 $scope.general.templateColor = false;
@@ -35,16 +38,17 @@ define(['app/components/configuration/configurationHolderDirective'], function (
          * Load and prepare $scope.configuration object.
          */
         var loadConfiguration = function () {
-            if (component['http://linkedpipes.com/ontology/configurationGraph']) {
-                var uri = component['http://linkedpipes.com/ontology/configurationGraph']['@id'];
+            var configGraphIri = jsonld.getReference(component,
+                'http://linkedpipes.com/ontology/configurationGraph');
+            if (configGraphIri) {
                 $scope.configuration = {
-                    'uri': uri,
-                    'value': data.model['graphs'][uri]
+                    'uri': configGraphIri,
+                    'value': data.model['graphs'][configGraphIri]
                 };
             } else {
                 $scope.configuration = {
                     'uri': component['@id'] + '/configuration',
-                    'value': template['configuration']
+                    'value': template['configuration']['@graph']
                 };
             }
         };
@@ -54,6 +58,11 @@ define(['app/components/configuration/configurationHolderDirective'], function (
                 'api': {},
                 'loaded': false
             };
+            // Dialog is an obligatory dialog component.
+            if (!template['dialog']) {
+                return;
+            }
+            //
             $scope.dialogs.reference = {
                 'js': template['dialog']['js'],
                 'html': template['dialog']['html']
@@ -74,12 +83,14 @@ define(['app/components/configuration/configurationHolderDirective'], function (
                 return;
             }
             var configurationObject = $scope.dialogs.api.getConfiguration();
-            component['http://linkedpipes.com/ontology/configurationGraph'] = {
-                '@id': $scope.configuration.uri
-            };
-            // Make sure the the configuration graph has the right name (IRI).
-            configurationObject['@id'] = $scope.configuration.uri;
-            data.model['graphs'][$scope.configuration.uri] = configurationObject;
+            if (typeof(configurationObject) !== 'undefined') {
+                component['http://linkedpipes.com/ontology/configurationGraph'] = {
+                    '@id': $scope.configuration.uri
+                };
+                // Make sure the the configuration graph has the right name (IRI).
+                configurationObject['@id'] = $scope.configuration.uri;
+                data.model['graphs'][$scope.configuration.uri] = configurationObject;
+            }
         };
 
         $scope.onSave = function () {
@@ -97,7 +108,8 @@ define(['app/components/configuration/configurationHolderDirective'], function (
         loadConfiguration();
         loadDialogs();
     }
-    controler.$inject = ['$scope', '$timeout', '$mdDialog', 'component', 'template', 'data'];
+    controler.$inject = ['$scope', '$timeout', '$mdDialog', 'component',
+        'template', 'data', 'services.jsonld'];
     //
     function init(app) {
         configurationHolderDirective(app);

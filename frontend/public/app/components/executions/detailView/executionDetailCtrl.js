@@ -1,211 +1,388 @@
 define([
+    'jquery',
     'angular'
-], function (angular) {
-    function controler($scope, $http, $routeParams, $mdDialog, $mdMedia, refreshService) {
-        var executionUri = $routeParams.uri;
+], function (jQuery, angular) {
+    function controler($scope, $http, $routeParams, $mdDialog, $mdMedia,
+            refreshService, jsonldService, infoService) {
 
-        $scope.execution = {};
-        $scope.messages = [];
-        $scope.files = [];
-        $scope.labels = {};
+        var jsonld = jsonldService.jsonld();
 
-        var typeDecorators = {
-            'http://linkedpipes.com/ontology/events/ExecutionFailed': function (message) {
-                message.error = {
-                };
-                message.icon = {
-                    'name': 'error',
-                    'style': {
-                        'color': 'red'
-                    }
-                };
-                message.help = true;
+        var status = {
+            'pipelineLoading': false,
+            'pipelineLoaded': false,
+            'labelsLoading': false
+        };
+
+        $scope.status = {
+            'loaded': false
+        };
+
+        $scope.data = {
+            'components': [],
+            'componentsMap': {},
+            'pipeline': null
+        };
+
+        /**
+         * Update changing properties in target from source.
+         */
+        var updateComponent = function (target, source) {
+            target.startTime = Date.parse(source.start);
+            if (source.end) {
+                target.endTime = Date.parse(source.end);
+            }
+            // Compute duration.
+            if (target.endTime) {
+                var duration = (target.endTime - target.startTime) / 1000;
+                var seconds = Math.ceil((duration) % 60);
+                var minutes = Math.floor((duration / (60)) % 60);
+                var hours = Math.floor(duration / (60 * 60));
+                target.duration = (hours < 10 ? '0' + hours : hours) +
+                        ':' + (minutes < 10 ? '0' + minutes : minutes) +
+                        ':' + (seconds < 10 ? '0' + seconds : seconds);
+            } else {
+                target.duration = '';
+            }
+            //
+            if (typeof (source.current) !== undefined) {
+                target.progress = 100 * (source.current / source.total);
+            }
+            //
+            // Determine detail and icon type.
+            switch (source.status) {
+                case 'http://etl.linkedpipes.com/resources/status/mapped':
+                    target.detailType = 'MAPPED';
+                    target.icon = {
+                        'name': 'done',
+                        'style': {
+                            'color': 'blue'
+                        }
+                    };
+                    break;
+                case 'http://etl.linkedpipes.com/resources/status/initializing':
+                case 'http://etl.linkedpipes.com/resources/status/running':
+                    target.detailType = 'RUNNING';
+                    target.icon = {
+                        'name': 'run',
+                        'style': {
+                            'color': 'blue'
+                        }
+                    };
+                    break;
+                case 'http://etl.linkedpipes.com/resources/status/finished':
+                    target.detailType = 'FINISHED';
+                    target.icon = {
+                        'name': 'done',
+                        'style': {
+                            'color': 'green'
+                        }
+                    };
+                    break;
+                case 'http://etl.linkedpipes.com/resources/status/failed':
+                    target.detailType = 'FAILED';
+                    target.icon = {
+                        'name': 'error',
+                        'style': {
+                            'color': 'red'
+                        }
+                    };
+                    break;
+                default:
+                    target.detailType = 'NONE';
+                    break;
             }
         };
-        typeDecorators['http://linkedpipes.com/ontology/events/InitializationFailed'] =
-                typeDecorators['http://linkedpipes.com/ontology/events/ExecutionFailed'];
 
-        var updateMessage = function (message) {
-            // Store created time to be more acessible.
-            message['created'] = message['http://linkedpipes.com/ontology/events/created'];
-            // Get component label.
-            if (message['http://linkedpipes.com/ontology/component']) {
-                var labels = $scope.labels[message['http://linkedpipes.com/ontology/component']];
-                if (labels) {
-                    message['componentLabel'] = labels.labels[''];
+        /**
+         * Compute aditional properties for given component.
+         */
+        var decorateComponent = function (component) {
+            // Prepare paths in data units.
+            var exec = $routeParams.execution;
+            var ftpPath = infoService.get().path.ftp + '/' +
+                    exec.substring(exec.lastIndexOf('executions/') + 11) + '/';
+            component.dataUnits.forEach(function (dataUnit) {
+                dataUnit.ftp = ftpPath + dataUnit.debug;
+            });
+            // Get label.
+            component.label = component.iri;
+            //
+            updateComponent(component, component);
+        };
+
+        /**
+         * Load pipeline info and execute onSuccess callback when
+         * the pipeline is loaded. If called multiple times other
+         * calls are ignored.
+         */
+        var loadPipeline = function (iri, onSuccess) {
+            if (status.pipelineLoading) {
+                return;
+            } else {
+                status.pipelineLoading = true;
+            }
+            $http.get(iri).then(function (response) {
+                var components = {};
+                jsonld.iterateObjects(response.data, function (resource, graph) {
+                    var types;
+                    if (jQuery.isArray(resource['@type'])) {
+                        types = resource['@type'];
+                    } else {
+                        types = [resource['@type']];
+                    }
+                    for (var index in types) {
+                        switch (types[index]) {
+                            case 'http://linkedpipes.com/ontology/Component':
+                                var component = {};
+                                component['label'] = jsonld.getString(resource,
+                                        'http://www.w3.org/2004/02/skos/core#prefLabel');
+                                component['description'] = jsonld.getString(resource,
+                                        'http://purl.org/dc/terms/description');
+                                components[resource['@id']] = component;
+                                break;
+                        }
+                    }
+                });
+                $scope.data.pipeline = components;
+                status.pipelineLoading = false;
+                status.pipelineLoaded = true;
+                if (onSuccess) {
+                    onSuccess();
+                }
+            });
+        };
+
+        var selectString = function (value) {
+            if (jQuery.isPlainObject(value)) {
+                if (value['en']) {
+                    return value['en'];
+                } else if (value['']) {
+                    return value[''];
                 } else {
-                    message['componentLabel'] = message['http://linkedpipes.com/ontology/component'];
+                    // TODO Use any other.
                 }
             } else {
-                // Use pipeline if no name is provided.
-                message['componentLabel'] = 'Pipeline';
-            }
-            // Set default icon.
-            message.icon = {
-                'name': 'info',
-                'style': {
-                    'color': 'blue'
-                }
-            };
-            // Check decorators based on types.
-            var types = [].concat(message['@type']);
-            for (var index in types) {
-                var type = types[index];
-                if (typeDecorators[type]) {
-                    typeDecorators[type](message);
-                }
+                return value;
             }
         };
 
-        var loadLabels = function (next) {
-            $http.get(executionUri + '/labels').then(function (response) {
-                $scope.labels = response.data['resources'];
-                if (next) {
-                    next();
-                }
-            }, function () {
-                if (next) {
-                    next();
-                }
-            });
-        };
+        /**
+         * Bind labels from the $scope.data.pipeline to the
+         * $scope.data.components.
+         */
+        var bindLabels = function () {
+            if (status.labelsLoading || !status.pipelineLoaded) {
+                return;
+            }
+            $scope.data.components.forEach(function (component) {
+                var componentInfo = $scope.data.pipeline[component.iri];
+                component.label = selectString(componentInfo['label']);
+                component.description = selectString(componentInfo['description']);
 
-        $scope.onMessage = function (message) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            $mdDialog.show({
-                controller: messageController,
-                templateUrl: 'messageDetail.html',
-                parent: angular.element(document.body),
-                locals: {
-                    'message': message
-                },
-                clickOutsideToClose: true,
-                fullscreen: useFullScreen
-            });
-        };
-
-        $scope.onDebug = function (debug) {
-            window.open(debug.browseUri, '_blank');
-        };
-
-        $scope.loadExecution = function (next) {
-            $http.get(executionUri).then(function (response) {
-                var exception = response.data["exception"];
-                var data = response.data["payload"];
-                // TODO Exception handling!
-                $scope.execution = data;
-                if (!$scope.execution.running) {
-                    // Cancel refresh as execution is completed.
-                    refreshService.reset();
-                }
-                //
-                if (next) {
-                    next();
-                }
-            }, function (response) {
-                // We retry later.
-                if (next) {
-                    next();
-                }
-            });
-        };
-
-        $scope.loadMessages = function (next) {
-            $http.get(executionUri + "/messages").then(function (response) {
-                var exception = response.data["exception"];
-                var metadata = response.data["metadata"];
-                var data = response.data["payload"];
-                // TODO Exception handling!
-                data.forEach(function (item) {
-                    updateMessage(item);
-                });
-                $scope.messages = data;
-                //
-                if (next) {
-                    next();
-                }
-            }, function (response) {
-                // We retry later.
-                if (next) {
-                    next();
-                }
-            });
-        };
-
-        $scope.loadDebug = function (next) {
-            $http.get(executionUri + "/debug").then(function (response) {
-                var exception = response.data["exception"];
-                var metadata = response.data["metadata"];
-                var data = response.data["payload"];
-                // TODO Exception handling!
-
-                // Transform into a list of debug.
-                $scope.debug = [];
-                data['dataUnits'].forEach(function (dataUnit) {
-                    // Check for RDF data unit.
-                    var fusekiVisible = false;
-                    //
-                    var record = {
-                        'component': dataUnit['component'],
-                        'browseUri': dataUnit['browseUri'],
-                        'fusekiVisible': fusekiVisible,
-                        'uriFragment': dataUnit['uriFragment']
-                    };
-                    //
-                    var labels = $scope.labels[dataUnit['uri']];
-                    if (labels) {
-                        record['label'] = labels.labels[''];
+                if (typeof(component.description) !== 'undefined') {
+                    if (component.description.length > 120) {
+                        component.description = ' - ' +
+                                component.description.substring(0, 116) + ' ...';
                     } else {
-                        record['label'] = '';
+                        component.description = ' - ' + component.description;
                     }
-                    $scope.debug.push(record);
-                });
+                }
+            });
+            status.labelsLoading = false;
+        };
+
+        var parseData = function (executionJsonld) {
+            console.time('Parse data');
+
+            var pipeline = {};
+            var components = {};
+            var dataUnits = {};
+
+            jsonld.iterateObjects(executionJsonld, function (resource, graph) {
+                var types;
+                if (jQuery.isArray(resource['@type'])) {
+                    types = resource['@type'];
+                } else {
+                    types = [resource['@type']];
+                }
+                for (var index in types) {
+                    switch (types[index]) {
+                        case 'http://etl.linkedpipes.com/ontology/Execution':
+                            pipeline.status = jsonld.getReference(resource,
+                                    'http://etl.linkedpipes.com/ontology/status');
+                            pipeline.pipeline = jsonld.getReference(resource,
+                                    'http://etl.linkedpipes.com/ontology/pipeline');
+                            if ($scope.data.pipeline === null) {
+                                loadPipeline(resource['@id'] + '/pipeline', bindLabels);
+                            }
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ExecutionBegin':
+                            pipeline.start = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ComponentBegin':
+                            var iri = jsonld.getReference(resource,
+                                    'http://linkedpipes.com/ontology/component');
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
+                                };
+                            }
+                            var component = components[iri];
+                            //
+                            component.start = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ComponentEnd':
+                            var iri = jsonld.getReference(resource,
+                                    'http://linkedpipes.com/ontology/component');
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
+                                };
+                            }
+                            var component = components[iri];
+                            //
+                            component.end = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ComponentFailed':
+                            var iri = jsonld.getReference(resource,
+                                    'http://linkedpipes.com/ontology/component');
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
+                                };
+                            }
+                            var component = components[iri];
+                            //
+                            component.exception = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/rootException');
+                            component.end = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/events/ExecutionEnd':
+                            pipeline.end = jsonld.getString(resource,
+                                    'http://linkedpipes.com/ontology/events/created');
+                            break;
+                        case 'http://linkedpipes.com/ontology/Component':
+                            var iri = resource['@id'];
+                            if (!components[iri]) {
+                                components[iri] = {
+                                    'iri': iri
+                                };
+                            }
+                            var component = components[iri];
+                            //
+                            component.status = jsonld.getReference(resource,
+                                    'http://etl.linkedpipes.com/ontology/status');
+                            component.order = jsonld.getInteger(resource,
+                                    'http://linkedpipes.com/ontology/executionOrder');
+                            component.dataUnits = jsonld.getReferenceAll(
+                                    resource, 'http://etl.linkedpipes.com/ontology/dataUnit');
+                            break;
+                        case 'http://etl.linkedpipes.com/ontology/DataUnit':
+                            var dataunit = {
+                                'iri': resource['@id'],
+                                'binding': jsonld.getString(resource,
+                                        'http://etl.linkedpipes.com/ontology/binding'),
+                                'debug': jsonld.getString(resource,
+                                        'http://etl.linkedpipes.com/ontology/debug')
+                            };
+                            // 005 - > ftp://localhost:2221/e4a9640d-f032-40ef-b7ab-14bc28e55f7c/005/
+                            dataUnits[dataunit.iri] = dataunit;
+                            break;
+                    }
+                }
+            });
+
+            for (var iri in components) {
+                var component = components[iri];
+                // Filter components.
+                if (component.status === 'http://etl.linkedpipes.com/resources/status/queued') {
+                    continue;
+                }
+                // Bind data units.
+                for (var index in component.dataUnits) {
+                    component.dataUnits[index] =
+                            dataUnits[component.dataUnits[index]];
+                }
+            }
+
+            console.timeEnd('Parse data');
+            return {
+                'components': components,
+                'pipeline': pipeline
+            };
+        };
+
+        var loadExecution = function () {
+            $http.get($routeParams.execution).then(function (response) {
+                var data = parseData(response.data);
+                var componentsMap = {};
+                var componentsArray = [];
+                for (var iri in data.components) {
+                    var component = data.components[iri];
+                    if (component.status === 'http://etl.linkedpipes.com/resources/status/queued') {
+                        continue;
+                    }
+                    decorateComponent(component);
+                    componentsArray.push(component);
+                    componentsMap[iri] = component;
+                }
+                // Set data.
+                $scope.data.components = componentsArray;
+                $scope.data.componentsMap = componentsMap;
+                $scope.status.loaded = true;
+                $scope.data.pipeline = data.pipeline;
                 //
-                if (next) {
-                    next();
-                }
-            }, function (response) {
-                // We retry later.
-                if (next) {
-                    next();
-                }
+                bindLabels();
             });
         };
 
-        $scope.update = function () {
-            $scope.loadExecution();
-            $scope.loadMessages();
-            $scope.loadDebug();
+        var updateExecution = function () {
+            if ($scope.data.pipeline.status === 'http://etl.linkedpipes.com/resources/status/finished'
+                    || 'http://etl.linkedpipes.com/resources/status/failed') {
+                return;
+            }
+            $http.get($routeParams.execution).then(function (response) {
+                var data = parseData(response.data);
+                for (var iri in data.components) {
+                    var component = data.components[iri];
+                    if (component.status === 'http://etl.linkedpipes.com/resources/status/queued') {
+                        continue;
+                    }
+                    if (!$scope.data.componentsMap[iri]) {
+                        // New component.
+                        decorateComponent(component);
+                        $scope.data.components.push(component);
+                        $scope.data.componentsMap[iri] = component;
+                    } else {
+                        // Update existing.
+                        updateComponent($scope.data.componentsMap[iri],
+                                component);
+                    }
+                }
+                $scope.data.pipeline = data.pipeline;
+            });
         };
 
-        loadLabels(function () {
-            $scope.loadExecution();
-            $scope.loadMessages();
-            $scope.loadDebug();
-        });
-
-        refreshService.set($scope.update);
-    }
-
-    controler.$inject = ['$scope', '$http', '$routeParams', '$mdDialog', '$mdMedia', 'service.refresh'];
-
-    function messageController($mdDialog, $scope, message) {
-        $scope.label = message['http://www.w3.org/2004/02/skos/core#prefLabel'];
-        $scope.created = message.created;
-        $scope.componentLabel = message.componentLabel;
-        $scope.error = message.error;
-        $scope.reason = message['http://linkedpipes.com/ontology/events/reason'];
-        $scope.exception = message['http://linkedpipes.com/ontology/events/exception'];
-
-        $scope.onClose = function () {
-            $mdDialog.hide();
+        var initialize = function () {
+            infoService.wait(loadExecution);
+            refreshService.set(function () {
+                updateExecution();
+            });
         };
+
+        initialize();
+
     }
 
-    messageController.$inject = ['$mdDialog', '$scope', 'message'];
+    controler.$inject = ['$scope', '$http', '$routeParams', '$mdDialog',
+        '$mdMedia', 'service.refresh', 'services.jsonld', 'service.info'];
 
-    function init(app) {
+    return function init(app) {
         app.controller('components.executions.detail', controler);
-    }
-    return init;
+    };
+
 });

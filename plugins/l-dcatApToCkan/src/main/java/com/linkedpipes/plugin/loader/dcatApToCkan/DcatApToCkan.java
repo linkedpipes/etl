@@ -40,39 +40,31 @@ import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit.RepositoryActionFailed;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.impl.DatasetImpl;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Klímek Jakub
  */
-public final class DcatApToCkan implements SequentialExecution {
+public final class DcatApToCkan implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(DcatApToCkan.class);
 
-    @DataProcessingUnit.InputPort(id = "Metadata")
+    @Component.InputPort(id = "Metadata")
     public SingleGraphDataUnit metadata;
 
-    @DataProcessingUnit.OutputPort(id = "OutputFiles")
+    @Component.OutputPort(id = "OutputFiles")
     public WritableFilesDataUnit outFileSimple;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public DcatApToCkanConfiguration configuration;
 
-    @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
-
-    @DataProcessingUnit.Extension
-    public ProgressReport progressReport;
-
     @Override
-    public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
+    public void execute(Component.Context context) throws NonRecoverableException {
         // Load files.
         LOG.debug("Querying metadata");
 
@@ -507,7 +499,7 @@ public final class DcatApToCkan implements SequentialExecution {
 
             String json = root.toString();
 
-            File outfile = outFileSimple.createFile(configuration.getFilename());
+            File outfile = outFileSimple.createFile(configuration.getFilename()).toFile();
             try {
                 FileUtils.writeStringToFile(outfile, json, "UTF-8");
             } catch (IOException e) {

@@ -2,9 +2,7 @@ package com.linkedpipes.plugin.transformer.unpack;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
+import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,33 +16,36 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class Unpack implements SequentialExecution {
+public final class Unpack implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Unpack.class);
 
-    @DataProcessingUnit.InputPort(id = "FilesInput")
+    @Component.InputPort(id = "FilesInput")
     public FilesDataUnit input;
 
-    @DataProcessingUnit.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(id = "FilesOutput")
     public WritableFilesDataUnit output;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public UnpackConfiguration configuration;
 
-    @DataProcessingUnit.Extension
+    @Component.Inject
     public ProgressReport progressReport;
 
     @Override
-    public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
+    public void execute(Component.Context context) throws NonRecoverableException {
         LOG.info("Used extension option: {}", configuration.getFormat());
+        progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
             if (context.canceled()) {
-                throw new DataProcessingUnit.ExecutionCancelled();
+                throw new Component.ExecutionCancelled();
             }
             // ..
             final File outputDirectory;
@@ -65,7 +66,7 @@ public final class Unpack implements SequentialExecution {
 
     private void unpack(FilesDataUnit.Entry inputEntry, File targetDirectory) throws NonRecoverableException {
         final String extension = getExtension(inputEntry);
-        try (final InputStream stream = new FileInputStream(inputEntry.getPath())) {
+        try (final InputStream stream = new FileInputStream(inputEntry.toFile())) {
             switch (extension) {
                 case "zip":
                     unpackZip(stream, targetDirectory);
@@ -74,11 +75,11 @@ public final class Unpack implements SequentialExecution {
                     unpackBzip2(stream, targetDirectory, inputEntry);
                     break;
                 default:
-                    throw new DataProcessingUnit.ExecutionFailed("Unknown file format (" + extension + ") : " +
+                    throw new Component.ExecutionFailed("Unknown file format (" + extension + ") : " +
                             inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Extraction failed: {}", inputEntry.getFileName(), ex);
+            throw new Component.ExecutionFailed("Extraction failed: {}", inputEntry.getFileName(), ex);
         }
     }
 

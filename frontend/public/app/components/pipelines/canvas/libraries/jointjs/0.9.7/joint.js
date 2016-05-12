@@ -6323,9 +6323,13 @@ joint.dia.ElementView = joint.dia.CellView.extend({
 
     pointerdown: function(evt, x, y) {
 
+        var interactive = _.isFunction(this.options.interactive)
+            ? this.options.interactive(this, 'pointerdown')
+            : this.options.interactive;
+
         var paper = this.paper;
 
-        if (evt.target.getAttribute('magnet') && paper.options.validateMagnet.call(paper, this, evt.target)) {
+        if (evt.target.getAttribute('magnet') && paper.options.validateMagnet.call(paper, this, evt.target) && interactive) {
 
             this.model.trigger('batch:start', { batchName: 'add-link' });
 

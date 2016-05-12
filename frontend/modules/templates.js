@@ -22,18 +22,17 @@ var constructUri = function (name) {
 
 var addComponent = function (name, path) {
     var dataItem = {
-        'jar': '',
+        // Contains JSON ld configuration.
         'definition': '',
-        'configuration': ''
-    };
-    var listItem = {
-        'inputs': [],
-        'outputs': [],
-        'keyword': [],
-        'followup': {},
-        'type': ''
+        // Path to the JAR file.
+        'jar': '',
+        // Path to the configuration.
+        'configuration': '',
+        // A shortcut to the Component resource.
+        'resource': {}
     };
     var pathDefinition;
+    // Scan directory for files.
     gFs.readdirSync(path).forEach(function (file) {
         if (file.indexOf('.jar') > 0) {
             dataItem['jar'] = path + file;
@@ -54,14 +53,7 @@ var addComponent = function (name, path) {
         }
     });
 
-    // Create dialog record.
-    if (dataItem['dialog']) {
-        listItem['dialog'] = {
-            'js': gConfiguration.storage.domain + '/resources/components/' + name + '/dialog.js',
-            'html': gConfiguration.storage.domain + '/resources/components/' + name + '/dialog.html'
-        };
-    }
-
+    // Parse the definition file.
     var definition;
     try {
         definition = JSON.parse(String(gFs.readFileSync(pathDefinition)));
@@ -71,10 +63,8 @@ var addComponent = function (name, path) {
     }
     dataItem['definition'] = definition;
 
-    // We required JSON-LD to be in expanded form!
-
-    var ports = [];
-    var portsDefinition = {};
+    // Scan entities.
+    var dialogItem;
     definition['@graph'].forEach(function (item) {
         var resource = item;
         var types = [].concat(resource['@type']);
@@ -84,52 +74,35 @@ var addComponent = function (name, path) {
             var configurationUri = gConfiguration.storage.domain + '/resources/components/' + name + '/configuration';
             item['http://linkedpipes.com/ontology/configurationGraph'] = configurationUri;
             // Construct item list.
-            listItem['id'] = constructUri(name);
-            listItem['label'] = resource['http://www.w3.org/2004/02/skos/core#prefLabel'];
-            listItem['color'] = resource['http://linkedpipes.com/ontology/color'];
-            if (resource['http://linkedpipes.com/ontology/componentType']) {
-                listItem['type'] = resource['http://linkedpipes.com/ontology/componentType']['@id'];
+            item['http://linkedpipes.com/resources/component'] = resource['@id'];
+            resource['@id'] = constructUri(name);
+            definition['@id'] = resource['@id'] + '/graph';
+            // Add reference to the dialog.
+            if (dataItem['dialog']) {
+                dialogItem = {
+                    '@id': resource['@id'] + '/dialog',
+                    '@type': [
+                        'http://linkedpipes.com/ontology/Dialog'
+                    ],
+                    'http://linkedpipes.com/ontology/js': {
+                        '@id': resource['@id'] + '/dialog.js'
+                    },
+                    'http://linkedpipes.com/ontology/html': {
+                        '@id': resource['@id'] + '/dialog.html'
+                    }
+                };
+                item['http://linkedpipes.com/ontology/dialog'] = [{
+                        '@id': dialogItem['@id']
+                    }];
             }
-            listItem['configurationUri'] = configurationUri;
-            if (resource['http://linkedpipes.com/ontology/port']) {
-                ports = [].concat(resource['http://linkedpipes.com/ontology/port']);
-            }
-            // Keyword list.
-            if (resource['http://linkedpipes.com/ontology/keyword']) {
-                listItem['keyword'] = resource['http://linkedpipes.com/ontology/keyword'];
-            }
-        }
-        if (types.indexOf('http://linkedpipes.com/ontology/Port') > -1) {
-            portsDefinition[resource['@id']] = resource;
+            dataItem['resource'] = resource;
         }
     });
-    // Add ports.
-    ports.forEach(function (portRef) {
-        var resource = portsDefinition[portRef['@id']];
-        var types = [].concat(resource['@type']);
-        var port = {
-            'label': resource['http://www.w3.org/2004/02/skos/core#prefLabel'],
-            'binding': resource['http://linkedpipes.com/ontology/binding'],
-            'type': []
-        };
-        // Exclude lp types ..
-        types.forEach(function (type) {
-            if (type === "http://linkedpipes.com/ontology/Port") {
-                return;
-            }
-            if (type === "http://linkedpipes.com/ontology/Output") {
-                listItem['outputs'].push(port);
-                return;
-            }
-            if (type === "http://linkedpipes.com/ontology/Input") {
-                listItem['inputs'].push(port);
-                return;
-            }
-            port['type'].push(String(type));
-        });
-    });
+    if (dialogItem) {
+        definition['@graph'].push(dialogItem);
+    }
     // Add to lists.
-    gModule.list.push(listItem);
+    gModule.list.push(dataItem.definition);
     gModule.data[name] = dataItem;
 };
 
@@ -141,7 +114,7 @@ var updatePipeline = function (pipelineObject, pipelineUri) {
         }
         // Parse definition graph.
         var components = {};
-        var connection =[];
+        var connection = [];
         graph['@graph'].forEach(function (resource) {
             if (!resource['@id']) {
                 return;
@@ -204,11 +177,26 @@ var rebuilFollowUp = function () {
         }
     }
     //
-    gModule.list.forEach(function(item) {
-        if (followup[item['id']]) {
-            item['followup'] = followup[item['id']];
+    for (var name in gModule.data) {
+        var item = gModule.data[name];
+        var resource = item['resource'];
+        var references = [];
+        if (followup[resource['@id']]) {
+            var followupList = followup[resource['@id']];
+            for (var iri in followupList) {
+                var number = followupList[iri];
+                var object = {
+                    '@id': iri + '/reference',
+                    '@type': ['http://linkedpipes.com/ontology/Refrence'],
+                    'http://linkedpipes.com/ontology/reference': iri,
+                    'http://linkedpipes.com/ontology/followUpCount': number
+                };
+                item['definition']['@graph'].push(object);
+                references.push({'@id': iri + '/reference'});
+            }
+            resource['http://linkedpipes.com/ontology/followup'] = references;
         }
-    });
+    }
 };
 
 (function initialize() {
@@ -241,12 +229,12 @@ var rebuilFollowUp = function () {
 /**
  * Update definition based on chanegs in a pipeline.
  */
-gModule.onPipelineUpdate = function(pipelineObject, pipelineIri) {
+gModule.onPipelineUpdate = function (pipelineObject, pipelineIri) {
     updatePipeline(pipelineObject, pipelineIri);
     rebuilFollowUp();
 };
 
-gModule.onPipelineDelete = function(pipelineIri) {
+gModule.onPipelineDelete = function (pipelineIri) {
     delete gModule.pipelines[pipelineIri];
     rebuilFollowUp();
 };

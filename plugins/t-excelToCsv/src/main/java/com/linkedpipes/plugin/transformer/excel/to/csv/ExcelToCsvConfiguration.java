@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 import java.util.LinkedList;
 import java.util.List;
 

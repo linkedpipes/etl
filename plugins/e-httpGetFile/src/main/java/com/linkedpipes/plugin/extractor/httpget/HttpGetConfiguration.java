@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.extractor.httpget;
 
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 
 /**
  *
@@ -9,11 +9,22 @@ import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
 @RdfToPojo.Type(uri = HttpGetVocabulary.CONFIG_CLASS)
 public class HttpGetConfiguration {
 
-    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_ENTRY_URI)
+    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_HAS_URI)
     private String uri;
 
-    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_ENTRY_NAME)
+    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_HAS_NAME)
     private String fileName;
+
+    /**
+     * Force custom redirect. The Java follow only redirect in scope of
+     * a protocol. So specially it does not allow redirect from http
+     * to https - see
+     * http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4620571 .
+     *
+     * If true DPU follow redirect to any location and protocol.
+     */
+    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_HAS_FOLLOW_REDIRECT)
+    private boolean forceFollowRedirect;
 
     public HttpGetConfiguration() {
     }
@@ -32,6 +43,14 @@ public class HttpGetConfiguration {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public boolean isForceFollowRedirect() {
+        return forceFollowRedirect;
+    }
+
+    public void setForceFollowRedirect(boolean forceFollowRedirect) {
+        this.forceFollowRedirect = forceFollowRedirect;
     }
 
 }

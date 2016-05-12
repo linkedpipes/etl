@@ -49,8 +49,13 @@ public abstract class AbstractEvent implements Event {
     }
 
     @Override
-    public void assignSubject(String subject) {
+    public void setResource(String subject) {
         this.uri = subject;
+    }
+
+    @Override
+    public String getResource() {
+        return this.uri;
     }
 
     @Override

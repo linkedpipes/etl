@@ -20,12 +20,14 @@ public interface SparqlSelect {
     }
 
     /**
-     * Evaluate given SPARQL select query and return result in uniform string representation.
+     * Evaluate given SPARQL select query and return result in uniform string
+     * representation.
      *
      * @param query
      * @return
      * @throws QueryException
      */
-    public List<Map<String, String>> executeSelect(String query) throws QueryException;
+    public List<Map<String, String>> executeSelect(String query)
+            throws QueryException;
 
 }

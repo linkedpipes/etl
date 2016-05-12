@@ -5,13 +5,11 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.executor.api.v1.exception.RecoverableException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.AfterExecution;
-import com.linkedpipes.etl.dpu.api.extensions.FaultTolerance;
+import com.linkedpipes.etl.dpu.api.service.AfterExecution;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,6 +18,8 @@ import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
@@ -31,24 +31,22 @@ import org.slf4j.LoggerFactory;
  *
  * @author Petr Škoda
  */
-public final class LoaderScp implements SequentialExecution {
+public final class LoaderScp implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(LoaderScp.class);
 
-    @DataProcessingUnit.OutputPort(id = "FilesInput")
+    @Component.OutputPort(id = "FilesInput")
     public FilesDataUnit input;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public LoaderScpConfiguration configuration;
 
-    @DataProcessingUnit.Extension
-    public FaultTolerance faultTolerance;
-
-    @DataProcessingUnit.Extension
+    @Component.Inject
     public AfterExecution cleanUp;
 
     @Override
-    public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
+    public void execute(Component.Context context)
+            throws NonRecoverableException {
         final String user = configuration.getUserName();
         final String password = configuration.getPassword();
         final String host = configuration.getHost();
@@ -58,30 +56,48 @@ public final class LoaderScp implements SequentialExecution {
         final JSch jsch = new JSch();
 
         // Create session.
-        final Session session = faultTolerance.call(() -> jsch.getSession(user, host, port));
-        session.setPassword(password);
+        final Session session;
+        try {
+            session = jsch.getSession(user, host, port);
+            session.setPassword(password);
+        } catch (JSchException ex) {
+            throw new ExecutionFailed("Can't create session.", ex);
+        }
 
         // Enable connection to machines with unknown host key - this is potential secutiry risk!
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);
-        faultTolerance.call(() -> session.connect());
+        try {
+            session.connect();
+        } catch (JSchException ex) {
+
+        }
         cleanUp.addAction(() -> session.disconnect());
 
         if (configuration.isCreateDirectory()) {
-            faultTolerance.call(() -> secureCreateDirectory(session, targetFile));
+            try {
+                secureCreateDirectory(session, targetFile);
+            } catch (JSchException | SftpException | IOException ex) {
+                throw new ExecutionFailed("Can't create directory.", ex);
+            }
         }
 
         // Execute 'scp -t targetFile' on remote machine and get related streams.
-        final Channel channel = faultTolerance.call(() -> session.openChannel("exec"));
-
+        final Channel channel;
+        try {
+            channel = session.openChannel("exec");
+        } catch (JSchException ex) {
+            throw new ExecutionFailed("Can't create session.", ex);
+        }
         // File transfer.
         // -r - enable copy of empty directory
         //  echo D0755 0 testdir;
         //  echo E
         // -d - means directory transfer
         ((ChannelExec) channel).setCommand("scp -r -t -d " + targetFile);
-        try (OutputStream remoteOut = channel.getOutputStream(); InputStream remoteIn = channel.getInputStream()) {
+        try (OutputStream remoteOut = channel.getOutputStream();
+                InputStream remoteIn = channel.getInputStream()) {
             channel.connect();
             resonseCheck(remoteIn);
             // Send content of files data unit.
@@ -89,7 +105,8 @@ public final class LoaderScp implements SequentialExecution {
                 sendDirectoryContent(remoteOut, remoteIn, rootDirectory);
             }
         } catch (IOException | JSchException | RecoverableException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't upload data!", ex);
+            throw new Component.ExecutionFailed(
+                    "Can't upload data!", ex);
         } finally {
             if (channel.isConnected()) {
                 channel.disconnect();
@@ -105,24 +122,17 @@ public final class LoaderScp implements SequentialExecution {
      * @throws JSchException
      * @throws IOException
      */
-    private static void secureCreateDirectory(Session session, String targetPath) throws JSchException, IOException {
+    private static void secureCreateDirectory(Session session,
+            String targetPath) throws JSchException, IOException,
+            SftpException {
         LOG.debug("secureCreateDirectory ...");
         final Channel channel = session.openChannel("exec");
         // We just execute given command.
         ((ChannelExec) channel).setCommand("mkdir " + targetPath);
-        final InputStream remoteIn = channel.getInputStream();
+        final InputStream remoteIn = channel.getExtInputStream();
         channel.connect();
         LOG.debug("\tWaiting for response!");
-        final StringBuffer buffer = new StringBuffer();
-        int value;
-        while (!channel.isConnected()) {
-            value = remoteIn.read();
-            buffer.append((char) value);
-            if (value != '\n' || value != 0) {
-                break;
-            }
-        }
-        LOG.debug("\tResponse: {}", buffer.toString());
+        LOG.debug("\tResponse: {}", readResponseLine(remoteIn));
         channel.disconnect();
         LOG.debug("secureCreateDirectory ... done");
     }
@@ -137,8 +147,10 @@ public final class LoaderScp implements SequentialExecution {
      * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
      * @throws RecoverableException
      */
-    private static void sendDirectoryContent(OutputStream remoteOut, InputStream remoteIn, File sourceDirectory)
-            throws IOException, DataProcessingUnit.ExecutionFailed, RecoverableException {
+    private static void sendDirectoryContent(OutputStream remoteOut,
+            InputStream remoteIn, File sourceDirectory)
+            throws IOException, Component.ExecutionFailed,
+            RecoverableException {
         // Scan for files.
         for (final File file : sourceDirectory.listFiles()) {
             if (file.isDirectory()) {
@@ -161,8 +173,10 @@ public final class LoaderScp implements SequentialExecution {
      * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
      * @throws RecoverableException
      */
-    private static void sendDirectory(OutputStream remoteOut, InputStream remoteIn, File sourceDirectory,
-            String directoryName) throws IOException, DataProcessingUnit.ExecutionFailed, RecoverableException {
+    private static void sendDirectory(OutputStream remoteOut,
+            InputStream remoteIn, File sourceDirectory, String directoryName)
+            throws IOException, Component.ExecutionFailed,
+            RecoverableException {
         LOG.debug("Sending directory: {} ... ", directoryName);
         // Send command.
         String command = "D0755 0 " + directoryName + "\n";
@@ -194,8 +208,9 @@ public final class LoaderScp implements SequentialExecution {
      * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
      * @throws com.linkedpipes.etl.executor.api.v1.exception.RecoverableException
      */
-    private static void sendFile(OutputStream remoteOut, InputStream remoteIn, File sourceFile, String fileName)
-            throws IOException, DataProcessingUnit.ExecutionFailed, RecoverableException {
+    private static void sendFile(OutputStream remoteOut, InputStream remoteIn,
+            File sourceFile, String fileName) throws IOException,
+            Component.ExecutionFailed, RecoverableException {
         LOG.debug("Sending file: {} ... ", fileName);
         if (fileName.indexOf('/') > 0) {
             throw new IllegalArgumentException("File name '" + fileName + "'");
@@ -207,7 +222,8 @@ public final class LoaderScp implements SequentialExecution {
         remoteOut.flush();
         resonseCheck(remoteIn);
         // Copy file.
-        try (FileInputStream sourceFileStream = new FileInputStream(sourceFile)) {
+        try (FileInputStream sourceFileStream
+                = new FileInputStream(sourceFile)) {
             IOUtils.copy(sourceFileStream, remoteOut);
         }
         remoteOut.flush();
@@ -228,20 +244,23 @@ public final class LoaderScp implements SequentialExecution {
      * @throws com.linkedpipes.etl.executor.api.v1.exception.RecoverableException
      */
     private static void resonseCheck(InputStream stream) throws IOException,
-            DataProcessingUnit.ExecutionFailed, RecoverableException {
+            Component.ExecutionFailed, RecoverableException {
         final int response = stream.read();
         switch (response) {
             case -1: // No response from server.
-                throw new DataProcessingUnit.ExecutionFailed("No respnse from server!");
+                throw new Component.ExecutionFailed(
+                        "No response from server!");
             case 0: // Success.
                 break;
             case 1:
-                // TODO This is non-fatal error we can recover!
-                throw new DataProcessingUnit.ExecutionFailed("Error: {}", readResponseLine(stream));
+                throw new Component.ExecutionFailed("Error: {}",
+                        readResponseLine(stream));
             case 2:
-                throw new DataProcessingUnit.ExecutionFailed("Fatal error: {}", readResponseLine(stream));
+                throw new Component.ExecutionFailed("Fatal error: {}",
+                        readResponseLine(stream));
             default:
-                throw new DataProcessingUnit.ExecutionFailed("Invalid reponse: {}", response);
+                throw new Component.ExecutionFailed(
+                        "Invalid reponse: {}", response);
         }
     }
 
@@ -252,13 +271,17 @@ public final class LoaderScp implements SequentialExecution {
      * @return
      * @throws IOException
      */
-    private static String readResponseLine(InputStream stream) throws IOException {
+    private static String readResponseLine(InputStream stream)
+            throws IOException {
         final StringBuffer buffer = new StringBuffer();
         int value;
-        do {
+        while (true) {
             value = stream.read();
+            if (value == '\n' || value == 0 || value == -1) {
+                break;
+            }
             buffer.append((char) value);
-        } while (value != '\n' && value != 0);
+        }
         return buffer.toString();
     }
 

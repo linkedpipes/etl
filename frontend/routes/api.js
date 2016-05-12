@@ -5,59 +5,34 @@
 'use strict';
 
 var gExpress = require('express');
-var gRequest = require('request'); // https://github.com/request/request
-var gUnpacker = require('./../modules/unpacker');
-var gStream = require('stream');
 var gConfiguration = require('./../modules/configuration');
+var gRequest = require('request'); // https://github.com/request/request
 
 var gApiRouter = gExpress.Router();
 module.exports = gApiRouter;
-
-var gMonitorUri = gConfiguration.executor.monitor.url;
 
 //
 // Components as templates.
 //
 
-gApiRouter.get('/unpack', function (request, response) {
-    response.status(200).setHeader('content-type', 'text/trig');
-    gUnpacker.unpack(request.query.uri, {}, function (sucess, result) {
-        if (sucess === false) {
-            response.status(503).json(result);
-        } else {
-            response.status(200).setHeader('content-type', 'application/json');
-            response.json(result);
+gApiRouter.get('/info', function (request, response) {
+    response.status(200).json({
+        'path': {
+            'ftp': gConfiguration.executor.ftp.uri
         }
     });
 });
 
-gApiRouter.post('/execute', function (request, response) {
-    var postUri = gMonitorUri + 'executions';
-    gUnpacker.unpack( request.query.uri, request.body, function (sucess, result) {
-        if (sucess === false) {
-            response.status(503).json(result);
-            return;
-        }
-        var formData = {
-            extension: 'jsonld',
-            file: {
-                value: JSON.stringify(result),
-                options: {
-                    contentType: 'application/octet-stream',
-                    filename: 'file.jsonld'
-                }
-            }
-        };
-        // Do post on executor service.
-        gRequest.post({url: postUri, formData: formData}).on('error', function (error) {
-            response.status(500).json({
-               'exception' : {
-                   'errorMessage': JSON.stringify(error),
-                   'systemMessage': 'Executor-monitor is offline!',
-                   'userMessage': "Can't connect to backend.",
-                   'errorCode': 'CONNECTION_REFUSED'
-               }
-            });
-        }).pipe(response);
-    });
+gApiRouter.get('/proxy', function (request, response) {
+    // request.query.url must contains IRI of a fragment to proxy download from.
+    gRequest.get(request.query.url).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': '',
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }});
+    }).pipe(response);
 });
+

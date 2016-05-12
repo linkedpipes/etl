@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionCancelled;
+import com.linkedpipes.etl.dpu.api.Component.ExecutionCancelled;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.excel.to.csv.ExcelToCsvConfiguration.VirtualColumn;
 import java.io.File;
@@ -24,6 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
@@ -40,39 +40,42 @@ class Parser {
     }
 
     public void processEntry(FilesDataUnit.Entry entry, WritableFilesDataUnit outputFiles,
-            DataProcessingUnit.Context context) throws NonRecoverableException {
+            Component.Context context) throws NonRecoverableException {
         final Workbook workbook;
         try {
-            workbook = WorkbookFactory.create(entry.getPath());
+            workbook = WorkbookFactory.create(entry.toFile());
         } catch (IOException | InvalidFormatException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't open workbook file.", ex);
+            throw new Component.ExecutionFailed("Can't open workbook file.", ex);
         }
         for (int index = 0; index < workbook.getNumberOfSheets(); ++index) {
             final Sheet sheet = workbook.getSheetAt(index);
-            final boolean match;
             try {
-                match = sheet.getSheetName().matches(configuration.getSheetFilter());
-            } catch (PatternSyntaxException ex) {
-                throw new DataProcessingUnit.ExecutionFailed("Invalid regular expression for sheet filter.", ex);
-            }
-            if (match) {
-                // Create output file name.
-                final String outputFileName = configuration.getFileNamePattern().
-                        replace(ExcelToCsvConfiguration.FILE_HOLDER, entry.getFileName()).
-                        replace(ExcelToCsvConfiguration.SHEET_HOLDER, sheet.getSheetName());
-                final File outputFile = outputFiles.createFile(outputFileName);
-                LOG.info("Parsing sheet: '{}' number of rows: {} into file: {}",
-                        sheet.getSheetName(), sheet.getLastRowNum(), outputFile);
-                try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile))) {
-                    processSheet(sheet, outputStream, context);
-                } catch (IOException ex) {
-                    throw new DataProcessingUnit.ExecutionFailed("Can't write output to file.", ex);
+                if (configuration.getSheetFilter() != null
+                        && !configuration.getSheetFilter().isEmpty()
+                        && !sheet.getSheetName().matches(configuration.getSheetFilter())) {
+                    // Skip the sheet as it does not match non empty
+                    // sheet filter.
+                    continue;
                 }
+            } catch (PatternSyntaxException ex) {
+                throw new Component.ExecutionFailed("Invalid regular expression for sheet filter.", ex);
+            }
+            // Create output file name.
+            final String outputFileName = configuration.getFileNamePattern().
+                    replace(ExcelToCsvConfiguration.FILE_HOLDER, entry.getFileName()).
+                    replace(ExcelToCsvConfiguration.SHEET_HOLDER, sheet.getSheetName());
+            final File outputFile = outputFiles.createFile(outputFileName).toFile();
+            LOG.info("Parsing sheet: '{}' number of rows: {} into file: {}",
+                    sheet.getSheetName(), sheet.getLastRowNum(), outputFile);
+            try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile), false, "UTF-8")) {
+                processSheet(sheet, outputStream, context);
+            } catch (IOException ex) {
+                throw new Component.ExecutionFailed("Can't write output to file.", ex);
             }
         }
     }
 
-    private void processSheet(Sheet sheet, PrintStream outputStream, DataProcessingUnit.Context context)
+    private void processSheet(Sheet sheet, PrintStream outputStream, Component.Context context)
             throws NonRecoverableException {
         final int rowEnd;
         if (configuration.getRowsEnd() == -1) {

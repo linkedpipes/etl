@@ -4,6 +4,8 @@
  *
  * TODO: We can report to some component about failure or sucess of operation, we can also directly bind to
  *  refresher service.
+ * TODO Remove and repalce with JSON-LD repository.
+ *
  */
 define([], function () {
     function factoryFunction($http, refreshService) {

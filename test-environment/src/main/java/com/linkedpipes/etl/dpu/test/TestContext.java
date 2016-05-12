@@ -1,19 +1,19 @@
 package com.linkedpipes.etl.dpu.test;
 
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import java.io.File;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-final class TestContext implements DataProcessingUnit.Context {
+final class TestContext implements Component.Context {
 
     private final String componentUri;
 
     private final File workingDirectory;
 
-    public TestContext(String componentUri, File workingDirectory) {
+    TestContext(String componentUri, File workingDirectory) {
         this.componentUri = componentUri;
         this.workingDirectory = workingDirectory;
     }
@@ -24,7 +24,7 @@ final class TestContext implements DataProcessingUnit.Context {
     }
 
     @Override
-    public String getComponentUri() {
+    public String getComponentIri() {
         return componentUri;
     }
 

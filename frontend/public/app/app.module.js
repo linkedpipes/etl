@@ -1,14 +1,19 @@
 define([
     'app/app.config',
+    'app/models/executionModel',
     'app/components/pipelines/listView/pipelineListCtrl',
-    'app/components/pipelines/canvasView/pipelineEditCanvasCtrl',
+    'app/components/pipelines/canvasView/pipelineCanvasCtrl',
     'app/components/pipelines/uploadView/pipelineUploadCtrl',
+    'app/components/pipelines/exportDialog/pipelineExportDialogCtrl',
     'app/components/executions/listView/executionListCtrl',
     'app/components/executions/detailView/executionDetailCtrl',
+    'app/components/componentExecutionDetail/componentExecutionDetailCtrl',
     'app/services/rdfService',
     'app/services/refreshService',
     'app/services/repositoryService',
     'app/services/statusService',
+    'app/services/jsonldService',
+    'app/services/infoService',
     'app/components/inputs/localizedTextInput/localizedTextInput',
     'app/components/inputs/iriList/iriList',
     'angular',
@@ -20,15 +25,20 @@ define([
     'angular-ui-notification'
 ], function (
         config,
+        executionModel,
         pipelineListCtrlInit,
         pipelineEditCanvasCtrlInit,
         pipelineUploadCtrlInit,
+        pipelineExportDialogCtrlInit,
         executionListCtrlInit,
         executionDetailCtrlInit,
+        componentExecutionDetailCtrl,
         rdfService,
         refreshService,
         repositoryService,
         statusService,
+        jsonldService,
+        infoService,
         localizedTextInputInit,
         iriListInit,
         angular
@@ -47,14 +57,19 @@ define([
     refreshService(app);
     repositoryService(app);
     statusService(app);
+    jsonldService(app);
+    infoService(app);
     localizedTextInputInit(app);
     iriListInit(app);
     //
+    executionModel(app);
     pipelineListCtrlInit(app);
     pipelineEditCanvasCtrlInit(app);
     pipelineUploadCtrlInit(app);
+    pipelineExportDialogCtrlInit(app);
     executionListCtrlInit(app);
     executionDetailCtrlInit(app);
+    componentExecutionDetailCtrl(app);
     //
     app.bootstrap = function () {
         angular.bootstrap(document, ['angularApp']);
@@ -63,8 +78,15 @@ define([
     function controler($scope, $mdSidenav, $route, $location) {
 
         $scope.route = $route;
-        var sidenavId = 'left';
+        $scope.title = 'LinkedPipes ETL';
 
+        $scope.$on('$routeChangeSuccess', function (event, current, previous) {
+            if (current.$$route && current.$$route.pageTitle) {
+                $scope.title = current.$$route.pageTitle;
+            }
+        });
+
+        var sidenavId = 'left';
         $scope.toggleSidenav = function () {
             $mdSidenav(sidenavId).toggle();
         };

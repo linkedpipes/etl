@@ -1,10 +1,10 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit.Context;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionCancelled;
+import com.linkedpipes.etl.dpu.api.Component.Context;
+import com.linkedpipes.etl.dpu.api.Component.ExecutionCancelled;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import org.supercsv.io.CsvListReader;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.quote.QuoteMode;
 import org.supercsv.util.CsvContext;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
@@ -53,7 +54,7 @@ class Parser {
 
     public void parse(FilesDataUnit.Entry entry, Mapper mapper, Context context)
             throws UnsupportedEncodingException, IOException, ExecutionCancelled, NonRecoverableException {
-        try (FileInputStream fileInputStream = new FileInputStream(entry.getPath());
+        try (FileInputStream fileInputStream = new FileInputStream(entry.toFile());
                 InputStreamReader inputStreamReader = getInputStream(fileInputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 CsvListReader csvListReader = new CsvListReader(bufferedReader, csvPreference)) {
@@ -78,7 +79,7 @@ class Parser {
             try {
                 mapper.onHeader(header);
             } catch (InvalidTemplate | MissingNameInHeader ex) {
-                throw new DataProcessingUnit.ExecutionFailed("Can initalize on header row.", ex);
+                throw new Component.ExecutionFailed("Can initalize on header row.", ex);
             }
             if (row == null) {
                 LOG.info("No data found in file: {}", entry.getFileName());

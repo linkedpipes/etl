@@ -2,8 +2,6 @@ package com.linkedpipes.plugin.extractor.distributionMetadata;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,22 +19,24 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class DistributionMetadata implements SequentialExecution {
+public class DistributionMetadata implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributionMetadata.class);
 
-    @DataProcessingUnit.InputPort(id = "DatasetMetadata", optional = true)
+    @Component.InputPort(id = "DatasetMetadata", optional = true)
     public SingleGraphDataUnit inputRdf;
 
-    @DataProcessingUnit.OutputPort(id = "Metadata")
+    @Component.OutputPort(id = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public DistributionMetadataConfig configuration;
 
     private final List<Statement> statements = new ArrayList<>();

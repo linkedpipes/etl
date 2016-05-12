@@ -1,24 +1,19 @@
-requirejs.onResourceLoad = function (context, map, depArray) {
-    console.log('onResourceLoad name:', map.name, 'uri:', 'dependensies:', depArray, 'defined:',
-            typeof (requirejs.s.contexts._.defined[map.name]) !== 'undefined');
-};
-
 requirejs.config({
     baseUrl: '',
     paths: {
         'jquery': 'libraries/jquery/2.2.0/jquery',
         // Angular.
-        'angular': 'libraries/angularjs/1.4.1/angular',
-        'angular-route': 'libraries/angularjs/1.4.1/angular-route',
-        'angular-resource': 'libraries/angularjs/1.4.1/angular-resource',
-        'angular-messages': 'libraries/angularjs/1.4.1/angular-messages',
+        'angular': 'libraries/angularjs/1.5.5/angular',
+        'angular-route': 'libraries/angularjs/1.5.5/angular-route',
+        'angular-resource': 'libraries/angularjs/1.5.5/angular-resource',
+        'angular-messages': 'libraries/angularjs/1.5.5/angular-messages',
         // Angular Material and dependencies.
         // https://github.com/angular/material/tree/v1.0.4
         // http://stackoverflow.com/questions/27567822/angular-material-with-requirejs
         // http://stackoverflow.com/questions/29542275/angular-material-requirejs-not-working-together
-        'angular-aria': 'libraries/angularjs/1.4.1/angular-aria',
-        'angular-animate': 'libraries/angularjs/1.4.1/angular-animate',
-        'angular-material': 'libraries/angularjs.material/master/angular-material',
+        'angular-aria': 'libraries/angularjs/1.5.5/angular-aria',
+        'angular-animate': 'libraries/angularjs/1.5.5/angular-animate',
+        'angular-material': 'libraries/angularjs.material/1.1.0-rc4/angular-material',
         //
         'angular-file-upload': 'libraries/ng-file-upload/11.2.3/ng-file-upload',
         // https://github.com/alexcrack/angular-ui-notification
@@ -28,7 +23,9 @@ requirejs.config({
         // JoinJS and dependencies.
         'jointjs': 'app/components/pipelines/canvas/libraries/jointjs/0.9.7/joint',
         'lodash': '/app/components/pipelines/canvas/libraries/lodash/3.10.1/lodash.min',
-        'backbone': '/app/components/pipelines/canvas/libraries/backbone/1.2.3/backbone'
+        'backbone': '/app/components/pipelines/canvas/libraries/backbone/1.2.3/backbone',
+        // Library for client side download
+        'file-saver': 'libraries/filesaver/FileSaver'
     },
     map: {
         'backbone': {

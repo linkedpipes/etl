@@ -2,27 +2,27 @@ package com.linkedpipes.plugin.transformer.filesFilter;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class FilesFilter implements SequentialExecution {
+public class FilesFilter implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(FilesFilter.class);
 
-    @DataProcessingUnit.InputPort(id = "InputFiles")
+    @Component.InputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @DataProcessingUnit.InputPort(id = "OutputFiles")
+    @Component.InputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @Configuration
@@ -36,11 +36,11 @@ public class FilesFilter implements SequentialExecution {
             final boolean matches = entry.getFileName().matches(pattern);
             LOG.debug("Entry: {} : {}", entry.getFileName(), matches);
             if (matches) {
-                final File outputFile = outputFiles.createFile(entry.getFileName());
+                final File outputFile = outputFiles.createFile(entry.getFileName()).toFile();
                 try {
-                    Files.copy(entry.getPath().toPath(), outputFile.toPath());
+                    Files.copy(entry.toFile().toPath(), outputFile.toPath());
                 } catch (IOException ex) {
-                    throw new DataProcessingUnit.ExecutionFailed("Can't copy file: {}", entry.getFileName(), ex);
+                    throw new Component.ExecutionFailed("Can't copy file: {}", entry.getFileName(), ex);
                 }
             }
         }

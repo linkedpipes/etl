@@ -9,25 +9,21 @@ var gTemplates = require('./../modules/templates');
 var gPipelines = require('./../modules/pipelines');
 var gRequest = require('request'); // https://github.com/request/request
 var gConfiguration = require('./../modules/configuration');
+var gUnpacker = require('./../modules/unpacker');
 
 var gApiRouter = gExpress.Router();
 module.exports = gApiRouter;
 
 var gMonitorUri = gConfiguration.executor.monitor.url;
 
-var wrapContent = function (content) {
-    return {
-        'metadata': {},
-        'payload': content
-    };
-};
-
 //
 // Components as templates.
 //
 
 gApiRouter.get('/components', function (request, response) {
-    var value = wrapContent(gTemplates.getList());
+    var value = {
+        '@graph': gTemplates.getList()
+    };
     response.json(value);
 });
 
@@ -82,7 +78,9 @@ gApiRouter.get('/components/:name/:type', function (request, response) {
 //
 
 gApiRouter.get('/pipelines', function (request, response) {
-    var value = wrapContent(gPipelines.getList());
+    var value = {
+        '@graph': gPipelines.getList()
+    };
     response.json(value);
 });
 
@@ -194,6 +192,11 @@ gApiRouter.delete('/executions/:id', function (request, response) {
     gRequest.del(uri).pipe(response);
 });
 
+gApiRouter.get('/executions/:id/pipeline', function (request, response) {
+    var uri = gMonitorUri + 'executions/' + request.params.id + '/pipeline';
+    pipeGet(uri, response);
+});
+
 gApiRouter.get('/executions/:id/messages', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/messages';
     pipeGet(uri, response);
@@ -286,11 +289,35 @@ gApiRouter.get('/executions/:id/debug', function (request, response) {
 });
 
 gApiRouter.post('/executions', function (request, response) {
-    var uri = gMonitorUri + 'executions';
-    // Redirect to the API for upload.
-    var postRequest = gRequest.post(uri);
-    request.pipe(postRequest);
-    postRequest.pipe(response);
+    var postUri = gMonitorUri + 'executions';
+    // Unpack and create an execution.
+    gUnpacker.unpack( request.query.pipeline, request.body, function (sucess, result) {
+        if (sucess === false) {
+            response.status(503).json(result);
+            return;
+        }
+        var formData = {
+            format: 'application/ld+json',
+            file: {
+                value: JSON.stringify(result),
+                options: {
+                    contentType: 'application/octet-stream',
+                    filename: 'file.jsonld'
+                }
+            }
+        };
+        // Do post on executor service.
+        gRequest.post({url: postUri, formData: formData}).on('error', function (error) {
+            response.status(500).json({
+               'exception' : {
+                   'errorMessage': JSON.stringify(error),
+                   'systemMessage': 'Executor-monitor is offline!',
+                   'userMessage': "Can't connect to backend.",
+                   'errorCode': 'CONNECTION_REFUSED'
+               }
+            });
+        }).pipe(response);
+    });
 });
 
 //
