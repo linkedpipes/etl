@@ -27,6 +27,8 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -62,6 +64,8 @@ public final class MustacheComponent implements SimpleExecution {
 
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(MustacheComponent.class);
+
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit input;
 
@@ -76,9 +80,16 @@ public final class MustacheComponent implements SimpleExecution {
 
     @Override
     public void execute(Context context) throws NonRecoverableException {
+        // Prepare template
+        final String template
+                = UpdateQuery.expandPrefixes(configuration.getTemplate());
+        LOG.info("Input template:\n{}\nUsed template:\n{}",
+                configuration.getTemplate(),
+                template);
+        //
         final MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         final Mustache mustache = mustacheFactory.compile(
-                new StringReader(configuration.getTemplate()), "template");
+                new StringReader(template), "template");
         final Collection<ObjectMetadata> data = loadData();
         progressReport.start(data.size());
         Integer counter = 0;
