@@ -1,7 +1,6 @@
 {
-  "@context": "http://schema.org/",
   "@type": "Person",
   "@id" : "http://localhost/resource",
-  "name": "Adam",
-  "jobTitle": "Professor"
+  "http://schema.org/name": "Adam",
+  "http://schema.org/jobTitle": "Professor"
 }
