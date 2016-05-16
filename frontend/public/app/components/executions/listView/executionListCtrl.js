@@ -1,7 +1,7 @@
 define([
 ], function () {
     function controler($scope, $location, $timeout, $http, refreshService,
-             statusService, jsonldService) {
+            statusService, jsonldService) {
 
         var template = {
             'iri': {
@@ -43,10 +43,37 @@ define([
                         }
                     }
                 }
+            },
+            'metadata': {
+                '_pipeline': {
+                    '$property': 'http://etl.linkedpipes.com/ontology/pipeline',
+                    '$oneToOne': {
+                        '_metadata': {
+                            '$property': 'http://linkedpipes.com/ontology/executionMetadata',
+                            '$oneToOne': {
+                                'executionType': {
+                                    '$property': 'http://linkedpipes.com/ontology/execution/type'
+                                },
+                                '_component': {
+                                    '$property': 'http://linkedpipes.com/ontology/execution/targetComponent',
+                                    '$oneToOne': {
+                                        'targetComponent': {
+                                            'labels': {
+                                                '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel',
+                                                '$type': 'string'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         };
 
         var decorator = function (execution) {
+            console.log(':', execution.metadata);
             //
             execution.id = execution.iri.substring(
                     execution.iri.lastIndexOf('executions/') + 11);
@@ -165,7 +192,31 @@ define([
                     break;
                 default:
                     break;
-            };
+            }
+            // Update metadata.
+
+            switch(execution.metadata.executionType) {
+                case 'http://linkedpipes.com/resources/executionType/Full':
+                    execution.metadata.executionTypeLabel =
+                            'Full execution';
+                    break;
+                case 'http://linkedpipes.com/resources/executionType/DebugFrom':
+                    execution.metadata.executionTypeLabel =
+                            'Partial execution (debug from)';
+                    break;
+                case 'http://linkedpipes.com/resources/executionType/DebugTo':
+                    execution.metadata.executionTypeLabel =
+                            'Partial execution (debug to: "' +
+                            execution.metadata.targetComponent.labels[''] +
+                            '")';
+                    break;
+                case 'http://linkedpipes.com/resources/executionType/DebugFromTo':
+                    execution.metadata.executionTypeLabel =
+                            'Partial execution (debug from & to: "' +
+                            execution.metadata.targetComponent.labels[''] +
+                            '")';
+                    break;
+            }
         };
 
         $scope.repository = jsonldService.createRepository({
@@ -191,7 +242,7 @@ define([
                 'execution': execution.iri
             });
         };
-        
+
         $scope.onPipeline = function (execution) {
             $location.path('/pipelines/edit/canvas').search({
                 'pipeline': execution.pipeline.iri,

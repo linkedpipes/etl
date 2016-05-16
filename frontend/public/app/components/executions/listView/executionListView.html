@@ -17,19 +17,21 @@
                         <div class="lp-font-list-label">{{item.label}}</div>
                         <div ng-switch on="item.detailType" class="lp-font-list-content">
                             <span ng-switch-when="NONE">
-
+                                <span>{{item.metadata.executionTypeLabel}}</span>
                             </span>
                             <span ng-switch-when="PROGRESS">
                                 <span hide-xs>
-                                    <span>{{item.startTime ? (item.startTime | date:'yyyy-MM-dd HH:mm:ss') : '...'}}</span> - ...</br>
+                                    <span>{{item.startTime ? (item.startTime | date:'yyyy-MM-dd HH:mm:ss') : '...'}}</span> - ... </br>
                                 </span>
+                                <span>{{item.metadata.executionTypeLabel}}</span> </br>
                                 <md-progress-linear md-mode="determinate" value="{{item.progress.value}}"></md-progress-linear>
                             </span>
                             <span ng-switch-when="FULL" hide-xs>
                                 <span>{{item.startTime| date:'yyyy-MM-dd HH:mm:ss'}}</span>,
-                                <span>{{item.duration}}</span>
-                                <br/>Size: <span>{{item.size / 1048576| number : 2 }} mB</span>
+                                <span>{{item.duration}}</span> <br/>
+                                <span>{{item.metadata.executionTypeLabel}}</span> Size: <span>{{item.size / 1048576| number : 2 }} mB</span>
                             </span>
+
                         </div>
                     </div>
                     <md-button ng-click='onExecute(item)' class="md-icon-button md-secondary" aria-label="Execute" hide-xs>
