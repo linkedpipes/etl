@@ -291,11 +291,16 @@ gApiRouter.get('/executions/:id/debug', function (request, response) {
 gApiRouter.post('/executions', function (request, response) {
     var postUri = gMonitorUri + 'executions';
     // Unpack and create an execution.
-    gUnpacker.unpack( request.query.pipeline, request.body, function (sucess, result) {
+    console.time('Execution start');
+    console.time('  Unpack');
+    gUnpacker.unpack(request.query.pipeline, request.body, function (sucess, result) {
+        console.timeEnd('  Unpack');
+
         if (sucess === false) {
             response.status(503).json(result);
             return;
         }
+        console.time('  Stringify');
         var formData = {
             format: 'application/ld+json',
             file: {
@@ -306,16 +311,21 @@ gApiRouter.post('/executions', function (request, response) {
                 }
             }
         };
+        console.timeEnd('  Stringify');
         // Do post on executor service.
+        console.time('  POST');
         gRequest.post({url: postUri, formData: formData}).on('error', function (error) {
             response.status(500).json({
-               'exception' : {
-                   'errorMessage': JSON.stringify(error),
-                   'systemMessage': 'Executor-monitor is offline!',
-                   'userMessage': "Can't connect to backend.",
-                   'errorCode': 'CONNECTION_REFUSED'
-               }
+                'exception': {
+                    'errorMessage': JSON.stringify(error),
+                    'systemMessage': 'Executor-monitor is offline!',
+                    'userMessage': "Can't connect to backend.",
+                    'errorCode': 'CONNECTION_REFUSED'
+                }
             });
+        }).on('response', function (response) {
+            console.timeEnd('  POST');
+            console.timeEnd('Execution start');
         }).pipe(response);
     });
 });

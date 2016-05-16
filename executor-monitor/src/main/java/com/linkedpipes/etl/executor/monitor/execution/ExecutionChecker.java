@@ -85,6 +85,7 @@ class ExecutionChecker {
      */
     public static void checkExecution(Execution execution,
             InputStream stream) throws OperationFailed, ExecutionMismatch {
+        LOG.info("checkExecution ... ");
         final Date checkStart = new Date();
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final List<Statement> output = new ArrayList<>(8);
@@ -184,6 +185,7 @@ class ExecutionChecker {
         if (lastChange != null && execution.getLastChange() != null
                 && lastChange.before(execution.getLastChange())) {
             // We have newer data already loaded.
+            LOG.info("checkExecution ... old data detected");
             return;
         }
 
@@ -286,6 +288,7 @@ class ExecutionChecker {
 
         updateGenerated(execution);
         execution.setExecutionStatements(output);
+        LOG.info("checkExecution ... done");
     }
 
     /**
