@@ -216,6 +216,10 @@ define([
                             execution.metadata.targetComponent.labels[''] +
                             '")';
                     break;
+                default:
+                    // Can happen for older executions.
+                    execution.metadata.executionTypeLabel = '';
+                    break;
             }
         };
 
