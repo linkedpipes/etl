@@ -73,7 +73,6 @@ define([
         };
 
         var decorator = function (execution) {
-            console.log(':', execution.metadata);
             //
             execution.id = execution.iri.substring(
                     execution.iri.lastIndexOf('executions/') + 11);
@@ -107,7 +106,10 @@ define([
                 execution.duration = '';
             }
             //
-            if (execution.progress) {
+            if (execution.progress.current === undefined) {
+                // Start with no progress.
+                execution.progress.value = 0;
+            } else {
                 execution.progress.value = 100 *
                         (execution.progress.current / execution.progress.total);
             }
