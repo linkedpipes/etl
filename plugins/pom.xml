@@ -15,6 +15,7 @@
         <module>e-datasetMetadata</module>
         <module>e-distributionMetadata</module>
         <module>t-filesToRdf</module>
+        <module>t-filesToStatements</module>
         <module>t-graphMerger</module>
         <module>t-packZip</module>
         <module>t-rdfToFile</module>
@@ -33,6 +34,13 @@
         <module>l-graphStoreProtocol</module>
         <module>l-sparqlEndpoint</module>
         <module>t-filesBase64Decode</module>
+        <module>t-mustache</module>
+        <module>q-sparqlAsk</module>
+        <module>l-filesToLocal</module>
+        <module>e-filesFromLocal</module>
+        <module>t-tabularUv</module>
+        <module>t-singleGraphUnion</module>
+        <module>e-httpGetFiles</module>
     </modules>
 
 </project>

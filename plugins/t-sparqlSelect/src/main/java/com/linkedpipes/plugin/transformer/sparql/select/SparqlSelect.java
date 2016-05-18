@@ -2,8 +2,6 @@ package com.linkedpipes.plugin.transformer.sparql.select;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,29 +15,35 @@ import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class SparqlSelect implements SequentialExecution {
+public final class SparqlSelect implements SimpleExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlSelect.class);
 
-    @DataProcessingUnit.InputPort(id = "InputRdf")
+    @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @DataProcessingUnit.OutputPort(id = "OutputFiles")
+    @Component.ContainsConfiguration
+    @Component.InputPort(id = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
+    @Component.OutputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public SparqlSelectConfiguration configuration;
 
     @Override
-    public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
+    public void execute(Component.Context context) throws NonRecoverableException {
         // For each graph.
         final IRI inputGraph = inputRdf.getGraph();
-        final File outputFile = outputFiles.createFile(configuration.getFileName());
+        final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
         LOG.info("{} -> {}", inputGraph, outputFile);
         final SPARQLResultsCSVWriterFactory writerFactory = new SPARQLResultsCSVWriterFactory();
         // Create output file and write the result.
@@ -49,10 +53,13 @@ public final class SparqlSelect implements SequentialExecution {
                 final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, configuration.getQuery());
                 final SimpleDataset dataset = new SimpleDataset();
                 dataset.addDefaultGraph(inputGraph);
+                // We need to add this else we can not use
+                // GRAPH ?g in query.
+                dataset.addNamedGraph(inputGraph);
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw new DataProcessingUnit.ExecutionFailed("Exception.", ex);
+                throw new Component.ExecutionFailed("Exception.", ex);
             }
         });
     }

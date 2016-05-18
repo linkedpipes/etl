@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.component;
 
-import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager.CantInitializeDataUnit;
@@ -14,6 +13,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import com.linkedpipes.etl.executor.api.v1.component.SimpleComponent;
 
 /**
  * Execute component with "EXECUTE" execution type.
@@ -28,7 +28,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
     /**
      * Instance of component to execute.
      */
-    private final Component componentInstance;
+    private final SimpleComponent componentInstance;
 
     /**
      * Definition of component to execute.
@@ -52,7 +52,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
      */
     private final ComponentContext executionContext;
 
-    ExecuteComponent(Component componentInstance,
+    ExecuteComponent(SimpleComponent componentInstance,
             ExecutionModel.Component componentExecution,
             PipelineModel.Component componentDefinition,
             DataUnitManager dataUnitManager,
@@ -133,7 +133,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
         eventManager.publish(EventFactory.componentBegin(componentDefinition));
         MDC.put(LoggerFacade.COMPONENT_MDC, null);
         try {
-            componentInstance.execute(executionContext);
+            componentInstance.execute();
             eventManager.publish(EventFactory.componentFinished(
                     componentDefinition));
         } catch (Throwable t) {

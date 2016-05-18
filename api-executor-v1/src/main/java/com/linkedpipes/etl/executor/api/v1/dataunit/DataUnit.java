@@ -14,9 +14,9 @@ public interface DataUnit {
 
     /**
      *
-     * @return URI of the data unit.
+     * @return IRI of the data unit.
      */
-    public String getResourceUri();
+    public String getResourceIri();
 
     /**
      *

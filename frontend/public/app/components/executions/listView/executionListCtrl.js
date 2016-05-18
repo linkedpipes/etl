@@ -1,7 +1,7 @@
 define([
 ], function () {
     function controler($scope, $location, $timeout, $http, refreshService,
-             statusService, jsonldService) {
+            statusService, jsonldService) {
 
         var template = {
             'iri': {
@@ -43,6 +43,32 @@ define([
                         }
                     }
                 }
+            },
+            'metadata': {
+                '_pipeline': {
+                    '$property': 'http://etl.linkedpipes.com/ontology/pipeline',
+                    '$oneToOne': {
+                        '_metadata': {
+                            '$property': 'http://linkedpipes.com/ontology/executionMetadata',
+                            '$oneToOne': {
+                                'executionType': {
+                                    '$property': 'http://linkedpipes.com/ontology/execution/type'
+                                },
+                                '_component': {
+                                    '$property': 'http://linkedpipes.com/ontology/execution/targetComponent',
+                                    '$oneToOne': {
+                                        'targetComponent': {
+                                            'labels': {
+                                                '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel',
+                                                '$type': 'string'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         };
 
@@ -80,7 +106,10 @@ define([
                 execution.duration = '';
             }
             //
-            if (execution.progress) {
+            if (execution.progress.current === undefined) {
+                // Start with no progress.
+                execution.progress.value = 0;
+            } else {
                 execution.progress.value = 100 *
                         (execution.progress.current / execution.progress.total);
             }
@@ -165,7 +194,35 @@ define([
                     break;
                 default:
                     break;
-            };
+            }
+            // Update metadata.
+
+            switch(execution.metadata.executionType) {
+                case 'http://linkedpipes.com/resources/executionType/Full':
+                    execution.metadata.executionTypeLabel =
+                            'Full execution';
+                    break;
+                case 'http://linkedpipes.com/resources/executionType/DebugFrom':
+                    execution.metadata.executionTypeLabel =
+                            'Partial execution (debug from)';
+                    break;
+                case 'http://linkedpipes.com/resources/executionType/DebugTo':
+                    execution.metadata.executionTypeLabel =
+                            'Partial execution (debug to: "' +
+                            execution.metadata.targetComponent.labels[''] +
+                            '")';
+                    break;
+                case 'http://linkedpipes.com/resources/executionType/DebugFromTo':
+                    execution.metadata.executionTypeLabel =
+                            'Partial execution (debug from & to: "' +
+                            execution.metadata.targetComponent.labels[''] +
+                            '")';
+                    break;
+                default:
+                    // Can happen for older executions.
+                    execution.metadata.executionTypeLabel = '';
+                    break;
+            }
         };
 
         $scope.repository = jsonldService.createRepository({
@@ -199,7 +256,8 @@ define([
         };
 
         $scope.onExecute = function (execution) {
-            $http.post('/api/v1/execute?uri=' + execution.pipeline.iri)
+            $http.post('/resources/executions?pipeline='
+                    + execution.pipeline.iri)
                     .then(function () {
                         $scope.repository.update();
                     }, function (response) {

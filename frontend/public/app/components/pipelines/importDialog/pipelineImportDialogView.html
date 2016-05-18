@@ -1,0 +1,48 @@
+<md-dialog aria-label="Select pipeline"  ng-cloak flex="80">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h4>Insert pipeline</h4>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="onCancel()">
+                    <md-icon md-svg-src="close" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="min-width:400px;">
+            <div class="md-dialog-content" layout="column">
+                <md-radio-group ng-model="type" ng-show="!loading">
+                    <md-radio-button value="URL">From URL</md-radio-button>
+                    <md-radio-button value="Text">Direct input (JSON-LD)</md-radio-button>
+                </md-radio-group>
+                <div ng-show="type === 'URL'">
+                    <md-input-container class="md-block">
+                        <label>URL (must start with http://)</label>
+                        <input ng-model="url" ng-disabled="loading">
+                    </md-input-container>
+                    <div ng-show="loading">
+                        <div>Loading ...</div><br/>
+                        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+                    </div>
+                </div>
+                <div ng-show="type === 'Text'">
+                    <md-input-container class="md-block">
+                        <label>Pipeline</label>
+                        <textarea ng-model="text"></textarea>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="onCancel()">
+                Don't import anything
+            </md-button>
+            <md-button ng-click="onImport()" ng-disabled="loading">
+                Import pipeline
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+
+

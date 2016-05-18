@@ -13,21 +13,23 @@ public interface DataUnitFactory {
     public class CreationFailed extends LocalizedException {
 
         public CreationFailed(String message, Object... args) {
-            super(Arrays.asList(new LocalizedString(message, "en")), args);
+            super(Arrays.asList(new LocalizedException.LocalizedString(
+                    message, "en")), args);
         }
 
     }
 
     /**
-     * Create {@link ManagableDataUnit} that implements given interfaces. Returned object should not yet been
-     * initialized.
+     * Create {@link ManagableDataUnit} that implements given interfaces.
+     * Returned object should not yet been initialized.
      *
      * @param definition
-     * @param resourceUri
+     * @param resourceIri
      * @param graph
-     * @return Null if this factory can not create {@link ManagableDataUnit} with given interfaces.
-     * @throws com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory.CreationFailed
+     * @return {@link ManagableDataUnit} or null.
+     * @throws CreationFailed
      */
-    public ManagableDataUnit create(SparqlSelect definition, String resourceUri, String graph) throws CreationFailed;
+    public ManagableDataUnit create(SparqlSelect definition, String resourceIri,
+            String graph) throws CreationFailed;
 
 }

@@ -256,15 +256,33 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-httpGetFiles</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-httpGetFiles/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-sparqlEndpoint</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-sparqlEndpoint/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>q-sparqlAsk</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/q-sparqlAsk/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesFilter</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesFilter/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-filesToLocal</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-filesToLocal/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -298,6 +316,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-filesFromLocal</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-filesFromLocal/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdf</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesToRdf/</outputDirectory>
@@ -310,6 +334,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-mustache</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-mustache/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-packZip</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-packZip/</outputDirectory>
@@ -319,6 +349,12 @@
                                             <artifactId>t-rdfToFile</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-rdfToFile/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesToStatements</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesToStatements/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -343,6 +379,12 @@
                                             <artifactId>t-tabular</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-tabular/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-tabularUv</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-tabularUv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -392,6 +434,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/x-virtuoso/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-singleGraphUnion</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-singleGraphUnion/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>
@@ -421,15 +469,33 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-httpGetFiles/"/>
+                                        <copy todir="${deploy.directory}/components/e-httpGetFiles/">
+                                            <fileset dir="${plugins.directory}/e-httpGetFiles/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/e-sparqlEndpoint/"/>
                                         <copy todir="${deploy.directory}/components/e-sparqlEndpoint/">
                                             <fileset dir="${plugins.directory}/e-sparqlEndpoint/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/q-sparqlAsk/"/>
+                                        <copy todir="${deploy.directory}/components/q-sparqlAsk/">
+                                            <fileset dir="${plugins.directory}/q-sparqlAsk/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/t-filesFilter/"/>
                                         <copy todir="${deploy.directory}/components/t-filesFilter/">
                                             <fileset dir="${plugins.directory}/t-filesFilter/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-filesToLocal/"/>
+                                        <copy todir="${deploy.directory}/components/l-filesToLocal/">
+                                            <fileset dir="${plugins.directory}/l-filesToLocal/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
@@ -463,6 +529,12 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-filesFromLocal/"/>
+                                        <copy todir="${deploy.directory}/components/e-filesFromLocal/">
+                                            <fileset dir="${plugins.directory}/e-filesFromLocal/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/t-filesToRdf/"/>
                                         <copy todir="${deploy.directory}/components/t-filesToRdf/">
                                             <fileset dir="${plugins.directory}/t-filesToRdf/target/classes">
@@ -475,6 +547,12 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-mustache/"/>
+                                        <copy todir="${deploy.directory}/components/t-mustache/">
+                                            <fileset dir="${plugins.directory}/t-mustache/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/t-packZip/"/>
                                         <copy todir="${deploy.directory}/components/t-packZip/">
                                             <fileset dir="${plugins.directory}/t-packZip/target/classes">
@@ -484,6 +562,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-rdfToFile/"/>
                                         <copy todir="${deploy.directory}/components/t-rdfToFile/">
                                             <fileset dir="${plugins.directory}/t-rdfToFile/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesToStatements/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesToStatements/">
+                                            <fileset dir="${plugins.directory}/t-filesToStatements/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
@@ -508,6 +592,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-tabular/"/>
                                         <copy todir="${deploy.directory}/components/t-tabular/">
                                             <fileset dir="${plugins.directory}/t-tabular/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-tabularUv/"/>
+                                        <copy todir="${deploy.directory}/components/t-tabularUv/">
+                                            <fileset dir="${plugins.directory}/t-tabularUv/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
@@ -556,6 +646,12 @@
                                         <mkdir dir="${deploy.directory}/components/x-virtuoso/"/>
                                         <copy todir="${deploy.directory}/components/x-virtuoso/">
                                             <fileset dir="${plugins.directory}/x-virtuoso/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-singleGraphUnion/"/>
+                                        <copy todir="${deploy.directory}/components/t-singleGraphUnion/">
+                                            <fileset dir="${plugins.directory}/t-singleGraphUnion/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.executor.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.context.Context;
+import com.linkedpipes.etl.executor.api.v1.Plugin;
+import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.api.v1.plugin.ExecutionListener;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager.CantInitializeDataUnit;
@@ -25,6 +24,7 @@ import org.apache.log4j.MDC;
 import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.executor.api.v1.component.SimpleComponent;
 
 /**
  *
@@ -33,6 +33,10 @@ import org.slf4j.LoggerFactory;
 public class PipelineExecutor implements EventManager.EventListener {
 
     private static class InitializationFailure extends Exception {
+
+        InitializationFailure(String message) {
+            super(message);
+        }
 
         InitializationFailure(Throwable cause) {
             super(cause);
@@ -68,24 +72,20 @@ public class PipelineExecutor implements EventManager.EventListener {
     private boolean stopExecution = false;
 
     public PipelineExecutor(File executionDirectory,
-            ModuleFacade modules) {
-        // TODO This is a fake, we should determine the path somehow else.
+            ModuleFacade modules, String iri) {
+        // TODO Determine path by proper way, this is more of a hack.
         this.resources = new ResourceManager(executionDirectory.getParentFile(),
                 executionDirectory);
         this.pipeline = new PipelineDefinition(
                 this.resources.getWorkingDirectory("definition"));
         this.loggerFacade.setSystemAppender(resources.getExecutionLogFile());
         this.modules = modules;
+        execution = new ExecutionModel(iri, resources);
     }
 
-    /**
-     *
-     * @param iri Execution IRI.
-     * @return False if initialization failed and pipeline can not be executed.
-     */
-    public boolean initialize(String iri) {
+    public void initialize() {
         MDC.put(LoggerFacade.SYSTEM_MDC, null);
-        events = new EventManager(iri);
+        events = new EventManager(execution.getIri());
         events.addListener(this);
         // Load definition.
         try {
@@ -95,17 +95,13 @@ public class PipelineExecutor implements EventManager.EventListener {
                     "Can't load pipeline definition.", ex));
             afterExecution();
             MDC.remove(LoggerFacade.SYSTEM_MDC);
-            return false;
         }
-        // Create modules.
-        execution = new ExecutionModel(pipeline.getPipelineModel(), iri,
-                resources);
+        execution.assignPipeline(pipeline.getPipelineModel());
         events.addListener(execution);
         dataUnits = new DataUnitManager(pipeline, execution,
                 modules);
         //
         MDC.remove(LoggerFacade.SYSTEM_MDC);
-        return true;
     }
 
     /**
@@ -141,7 +137,7 @@ public class PipelineExecutor implements EventManager.EventListener {
         beforeExecution();
         // Get all components, so if some is missing we find out at the
         // beginning of a pipeline.
-        final Map<String, Component> componenInstances;
+        final Map<String, SimpleComponent> componenInstances;
         try {
             sendExecutionBeginNotification();
             componenInstances = initializeComponents();
@@ -191,7 +187,9 @@ public class PipelineExecutor implements EventManager.EventListener {
      */
     private void afterExecution() {
         // Close data units.
-        dataUnits.close(events);
+        if (dataUnits != null) {
+            dataUnits.close(events);
+        }
         // Notify plugins that we are done and they can close too.
         // Behind this point we can't work with data units.
         sendExecutionEndNotification();
@@ -213,17 +211,17 @@ public class PipelineExecutor implements EventManager.EventListener {
      * @throws InitializationFailure
      */
     private void sendExecutionBeginNotification() throws InitializationFailure {
-        final Context context = (Event message) -> {
+        final Plugin.Context context = (Event message) -> {
             events.publish(message);
         };
 
-        final Collection<ExecutionListener> listeners;
+        final Collection<Plugin.ExecutionListener> listeners;
         try {
             listeners = modules.getExecutionListeners();
         } catch (ModuleException ex) {
             throw new InitializationFailure(ex);
         }
-        for (ExecutionListener plugin : listeners) {
+        for (Plugin.ExecutionListener plugin : listeners) {
             try {
                 plugin.onExecutionBegin(pipeline,
                         pipeline.getPipelineModel().getIri(),
@@ -240,7 +238,7 @@ public class PipelineExecutor implements EventManager.EventListener {
      * Notify all plugins about the end of a new execution.
      */
     private void sendExecutionEndNotification() {
-        final Collection<ExecutionListener> listeners;
+        final Collection<Plugin.ExecutionListener> listeners;
         try {
             listeners = modules.getExecutionListeners();
         } catch (ModuleException ex) {
@@ -248,7 +246,7 @@ public class PipelineExecutor implements EventManager.EventListener {
                     "Can't get plugins. Please report this error.", ex));
             return;
         }
-        for (ExecutionListener plugin : listeners) {
+        for (Plugin.ExecutionListener plugin : listeners) {
             try {
                 plugin.onExecutionEnd();
             } catch (Throwable t) {
@@ -265,17 +263,23 @@ public class PipelineExecutor implements EventManager.EventListener {
      *
      * @return
      */
-    private Map<String, Component> initializeComponents()
+    private Map<String, SimpleComponent> initializeComponents()
             throws InitializationFailure {
-        final Map<String, Component> result = new HashMap<>();
+        final Map<String, SimpleComponent> result = new HashMap<>();
         for (PipelineModel.Component component
                 : pipeline.getPipelineModel().getComponents()) {
+            final BaseComponent instance;
             try {
-                final Component instance = modules.getComponent(pipeline,
+                instance = modules.getComponent(pipeline,
                         component.getIri());
-                result.put(component.getIri(), instance);
             } catch (ModuleException ex) {
                 throw new InitializationFailure(ex);
+            }
+
+            if (instance instanceof SimpleComponent) {
+                result.put(component.getIri(), (SimpleComponent)instance);
+            } else {
+                throw new InitializationFailure("Unknown component type.");
             }
         }
         return result;

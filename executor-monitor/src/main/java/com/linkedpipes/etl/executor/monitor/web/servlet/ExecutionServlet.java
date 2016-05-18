@@ -121,7 +121,7 @@ public class ExecutionServlet {
     }
 
     @RequestMapping(value = "/{id}/logs", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public FileSystemResource getExecutionLogs(@PathVariable String id,
             HttpServletResponse response) {

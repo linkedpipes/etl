@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.filesFilter;
 
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 
 /**
  *

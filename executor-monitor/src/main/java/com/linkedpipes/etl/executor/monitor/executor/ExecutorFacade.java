@@ -105,6 +105,8 @@ public class ExecutorFacade {
      */
     private void startExecution(Execution execution, Executor executor)
             throws Exception {
+        LOG.info("startExecution: {} on {}", execution.getIri(),
+                executor.getAddress());
         final MultiValueMap<String, String> headers
                 = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
@@ -127,11 +129,7 @@ public class ExecutorFacade {
                 String.class);
 
         executor.setExecution(execution);
-
-        LOG.info("Started execution: {} on {}", execution.getIri(),
-                executor.getAddress());
-        LOG.info(" reponse status code: {}", response.getStatusCode());
-
+        LOG.info("   reponse status code: {}", response.getStatusCode());
         // Add references.
         executor.setExecution(execution);
         executionFacade.attachExecutor(execution);

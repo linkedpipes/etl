@@ -1,0 +1,10 @@
+{
+    "@graph": [
+        {
+            "@id": "http://localhost/resources/configuration",
+            "@type" : ["http://plugins.linkedpipes.com/ontology/q-sparqlAsk#Configuration"],
+            "http://plugins.linkedpipes.com/ontology/q-sparqlAsk#query": "ASK { ?s ?p ?o }",
+            "http://plugins.linkedpipes.com/ontology/q-sparqlAsk#failOnTrue": true
+        }
+    ]
+}

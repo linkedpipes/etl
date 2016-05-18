@@ -26,7 +26,8 @@ final class FactoryConfiguration implements EntityLoader.Loadable {
     }
 
     @Override
-    public EntityLoader.Loadable load(String predicate, String value) throws EntityLoader.LoadingFailed {
+    public EntityLoader.Loadable load(String predicate, String value)
+            throws EntityLoader.LoadingFailed {
         switch (predicate) {
             case LINKEDPIPES.HAS_WORKING_DIRECTORY:
                 workingDirectory = value;
@@ -39,7 +40,8 @@ final class FactoryConfiguration implements EntityLoader.Loadable {
     @Override
     public void validate() throws EntityLoader.LoadingFailed {
         if (workingDirectory == null) {
-            throw new EntityLoader.LoadingFailed("Working directory must be set!");
+            throw new EntityLoader.LoadingFailed(
+                    "Working directory must be set!");
         }
     }
 

@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.component;
 
-import com.linkedpipes.etl.executor.api.v1.context.ExecutionContext;
+import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.event.EventManager;
 
@@ -9,7 +9,7 @@ import com.linkedpipes.etl.executor.event.EventManager;
  *
  * @author Petr Škoda
  */
-class ComponentContext implements ExecutionContext {
+class ComponentContext implements BaseComponent.Context {
 
     private final EventManager eventManager;
 

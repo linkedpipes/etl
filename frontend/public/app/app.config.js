@@ -2,32 +2,37 @@ define([], function () {
     function config($routeProvider, $mdIconProvider, $mdThemingProvider) {
         $routeProvider
                 .when('/executions', {
-                    templateUrl: 'app/components/executions/listView/executionListView.html',
-                    controller: 'components.executions.list',
-                    activeView: 'executions'
+                    'templateUrl': 'app/components/executions/listView/executionListView.html',
+                    'controller': 'components.executions.list',
+                    'activeView': 'executions',
+                    'pageTitle': 'Executions - LinkedPipes ETL'
                 })
                 .when('/executions/detail', {
-                    templateUrl: 'app/components/executions/detailView/executionDetailView.html',
-                    controller: 'components.executions.detail',
-                    activeView: 'executions'
+                    'templateUrl': 'app/components/executions/detailView/executionDetailView.html',
+                    'controller': 'components.executions.detail',
+                    'activeView': 'executions',
+                    'pageTitle': 'Executions - LinkedPipes ETL'
                 })
                 .when('/pipelines', {
-                    templateUrl: 'app/components/pipelines/listView/pipelineListView.html',
-                    controller: 'components.pipelines.list',
-                    activeView: 'pipelines'
+                    'templateUrl': 'app/components/pipelines/listView/pipelineListView.html',
+                    'controller': 'components.pipelines.list',
+                    'activeView': 'pipelines',
+                    'pageTitle': 'Pipelines - LinkedPipes ETL'
                 })
                 .when('/pipelines/upload', {
-                    templateUrl: 'app/components/pipelines/uploadView/pipelineUploadView.html',
-                    controller: 'components.pipelines.upload',
-                    activeView: 'pipelines'
+                    'templateUrl': 'app/components/pipelines/uploadView/pipelineUploadView.html',
+                    'controller': 'components.pipelines.upload',
+                    'activeView': 'pipelines',
+                    'pageTitle': 'Pipelines - LinkedPipes ETL'
                 })
                 .when('/pipelines/edit/canvas', {
-                    templateUrl: 'app/components/pipelines/canvasView/pipelineEditCanvasView.html',
-                    controller: 'components.pipelines.edit.canvas',
-                    activeView: 'pipelines'
+                    'templateUrl': 'app/components/pipelines/canvasView/pipelineCanvasView.html',
+                    'controller': 'components.pipeline.canvas.view',
+                    'activeView': 'pipelines',
+                    'pageTitle': 'Pipelines - LinkedPipes ETL'
                 })
                 .otherwise({
-                    redirectTo: '/executions'
+                    'redirectTo': '/executions'
                 });
         //
         $mdIconProvider

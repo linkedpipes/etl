@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.execution;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentBegin;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentFailed;
 import com.linkedpipes.etl.executor.api.v1.event.ComponentFinished;
-import com.linkedpipes.etl.executor.api.v1.event.ComponentProgress;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.event.ExecutionBegin;
@@ -210,16 +209,6 @@ public final class ExecutionModel implements EventManager.EventListener {
         private final List<DataUnit> dataUnits = new LinkedList<>();
 
         /**
-         * If not null then represent current component execution progress.
-         */
-        private Integer progress = null;
-
-        /**
-         * If not null then represents the maximum progress value.
-         */
-        private Integer progressTotal = null;
-
-        /**
          * Execution status.
          */
         private ExecutionStatus status;
@@ -260,7 +249,7 @@ public final class ExecutionModel implements EventManager.EventListener {
     /**
      * IRI of executed pipeline.
      */
-    private final String pipeline;
+    private String pipeline = null;
 
     /**
      * Execution IRI.
@@ -277,7 +266,7 @@ public final class ExecutionModel implements EventManager.EventListener {
     /**
      * List of components, sorted in execution order.
      */
-    private final List<Component> components;
+    private final List<Component> components = new ArrayList<>(64);
 
     private final ResourceManager resources;
 
@@ -288,18 +277,29 @@ public final class ExecutionModel implements EventManager.EventListener {
      */
     private Date lastChange = new Date();
 
-    public ExecutionModel(PipelineModel pipeline, String iri,
+    public ExecutionModel(String iri,
             ResourceManager resources) {
-        this.pipeline = pipeline.getIri();
         this.iri = iri;
-        this.components = new ArrayList<>(pipeline.getComponents().size());
         this.resources = resources;
         this.status = status.INITIALIZING;
         //
         final ValueFactory vf = SimpleValueFactory.getInstance();
         this.graph = vf.createIRI(iri);
-        //
+    }
+
+    /**
+     * Build model for the pipeline, must be called after constructor and
+     * before any other method.
+     *
+     * @param pipeline
+     */
+    public void assignPipeline(PipelineModel pipeline) {
+        this.pipeline = pipeline.getIri();
         initialize(pipeline, resources);
+    }
+
+    public String getIri() {
+        return iri;
     }
 
     public List<Component> getComponents() {
@@ -386,17 +386,7 @@ public final class ExecutionModel implements EventManager.EventListener {
                 graph));
         events.add(executionEvent);
         //
-        if (event instanceof ComponentProgress) {
-            final ComponentProgress e = (ComponentProgress) event;
-            final Component component = getComponent(e.getComponentUri());
-            if (component == null) {
-                LOG.warn("Ignored event ({}) with unknown component.",
-                        event.getResource());
-            } else {
-                component.progress = e.getCurrent();
-                component.progressTotal = e.getTotal();
-            }
-        } else if (event instanceof ComponentBegin) {
+        if (event instanceof ComponentBegin) {
             final ComponentBegin e = (ComponentBegin) event;
             final Component component = getComponent(e.getComponentUri());
             if (component == null) {
@@ -497,9 +487,11 @@ public final class ExecutionModel implements EventManager.EventListener {
         handler.handleStatement(vf.createStatement(executionResource, RDF.TYPE,
                 vf.createIRI("http://etl.linkedpipes.com/ontology/Execution"),
                 graph));
-        handler.handleStatement(vf.createStatement(executionResource,
-                vf.createIRI("http://etl.linkedpipes.com/ontology/pipeline"),
-                vf.createIRI(pipeline), graph));
+        if (pipeline != null) {
+            handler.handleStatement(vf.createStatement(executionResource,
+                    vf.createIRI("http://etl.linkedpipes.com/ontology/pipeline"),
+                    vf.createIRI(pipeline), graph));
+        }
         handler.handleStatement(vf.createStatement(executionResource,
                 vf.createIRI("http://etl.linkedpipes.com/ontology/status"),
                 vf.createIRI(status.getIri()), graph));
@@ -521,17 +513,6 @@ public final class ExecutionModel implements EventManager.EventListener {
             handler.handleStatement(vf.createStatement(componentResource,
                     vf.createIRI("http://etl.linkedpipes.com/ontology/status"),
                     vf.createIRI(component.status.getIri()), graph));
-            // Sve progress if avalable.
-            if (component.progress != null) {
-                handler.handleStatement(vf.createStatement(componentResource,
-                        vf.createIRI("http://etl.linkedpipes.com/ontology/progress/current"),
-                        vf.createLiteral(component.progress), graph));
-            }
-            if (component.progressTotal != null) {
-                handler.handleStatement(vf.createStatement(componentResource,
-                        vf.createIRI("http://etl.linkedpipes.com/ontology/progress/total"),
-                        vf.createLiteral(component.progressTotal), graph));
-            }
             // Save data units.
             for (DataUnit dataUnit : component.dataUnits) {
                 final IRI dataUnitResource = vf.createIRI(dataUnit.iri);
@@ -589,7 +570,7 @@ public final class ExecutionModel implements EventManager.EventListener {
         // Save events - we need to iterate using index as the list may change
         // during time.
         for (int i = 0; i < events.size(); i++) {
-            final Event event  = events.get(i);
+            final Event event = events.get(i);
             handler.handleStatement(vf.createStatement(executionResource,
                     vf.createIRI("http://etl.linkdpipes.com/ontology/event"),
                     vf.createIRI(event.iri),

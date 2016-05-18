@@ -14,14 +14,18 @@ define([], function () {
             },
             'wait': function (callback) {
                 if (service.ready) {
-                    callback();
+                    if (callback) {
+                        callback();
+                    }
                 } else {
                     // TODO Add error handler if loading fail
                     $http.get('api/v1/info').then(function (response) {
                         service.data = response.data;
                         service.ready = true;
                         //
-                        callback();
+                        if (callback) {
+                            callback();
+                        }
                     });
                 }
             }

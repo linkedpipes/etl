@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.dpu.test;
 
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
+import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +11,11 @@ import org.slf4j.LoggerFactory;
  */
 final class MockedProgressReport implements ProgressReport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MockedProgressReport.class);
+    private static final Logger LOG
+            = LoggerFactory.getLogger(MockedProgressReport.class);
 
     @Override
-    public void start(int entriesToProcess) {
+    public void start(long entriesToProcess) {
         LOG.info("Progress: start on {} entries", entriesToProcess);
     }
 

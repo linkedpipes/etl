@@ -1,0 +1,5 @@
+@prefix schema : <http://schema.org/> .
+
+<http://localhost/resource> a schema:Person ;
+    schema:jobTitle "Professor" ;
+    schema:name "Adam" .

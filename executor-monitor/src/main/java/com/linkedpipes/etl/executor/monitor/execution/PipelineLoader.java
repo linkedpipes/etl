@@ -79,21 +79,60 @@ class PipelineLoader {
         final List<Statement> output = new ArrayList<>(16);
         // Load pipeline.
         final List<Statement> pipelineStatements = loadFile(pipelineFile);
+        final List<String> loadPrefLabel = new ArrayList<>(4);
         // Find pipeline subject.
         Resource pipelineResource = null;
+        Resource pipelineMetadata = null;
         for (Statement statement : pipelineStatements) {
             if (RDF.TYPE.equals(statement.getPredicate())) {
                 if (statement.getObject().stringValue().equals(
                         "http://linkedpipes.com/ontology/Pipeline")) {
                     pipelineResource = statement.getSubject();
-                    break;
+                    loadPrefLabel.add(pipelineResource.stringValue());
+                } else if (statement.getObject().stringValue().equals(
+                        "http://linkedpipes.com/ontology/ExecutionMetadata")) {
+                    pipelineMetadata = statement.getSubject();
                 }
             }
         }
+
         if (pipelineResource == null) {
             LOG.error("Missing pipeline, execution: {}", execution);
             execution.setPipelineStatements(Collections.EMPTY_LIST);
         }
+
+        if (pipelineMetadata != null) {
+            output.add(valueFactory.createStatement(
+                    pipelineMetadata, RDF.TYPE,
+                    valueFactory.createIRI(
+                            "http://linkedpipes.com/ontology/ExecutionMetadata"),
+                    graph));
+            output.add(valueFactory.createStatement(
+                    pipelineResource,
+                    valueFactory.createIRI(
+                            "http://linkedpipes.com/ontology/executionMetadata"),
+                    pipelineMetadata,
+                    graph));
+        }
+
+        // Add information from metadata.
+        for (Statement statement : pipelineStatements) {
+            if (statement.getSubject().equals(pipelineMetadata)) {
+                switch (statement.getPredicate().stringValue()) {
+                    case "http://linkedpipes.com/ontology/execution/targetComponent":
+                        loadPrefLabel.add(statement.getObject().stringValue());
+                    case "http://linkedpipes.com/ontology/execution/type":
+                        output.add(valueFactory.createStatement(
+                                statement.getSubject(),
+                                statement.getPredicate(),
+                                statement.getObject(), graph));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         // Create output.
         output.add(valueFactory.createStatement(
                 pipelineResource, RDF.TYPE,
@@ -108,9 +147,11 @@ class PipelineLoader {
                 pipelineResource,
                 graph));
 
+        // Add labels.
         for (Statement statement : pipelineStatements) {
             if (SKOS.PREF_LABEL.equals(statement.getPredicate())) {
-                if (statement.getSubject().equals(pipelineResource)) {
+                if (loadPrefLabel.contains(
+                        statement.getSubject().stringValue())) {
                     output.add(valueFactory.createStatement(
                             statement.getSubject(),
                             statement.getPredicate(),

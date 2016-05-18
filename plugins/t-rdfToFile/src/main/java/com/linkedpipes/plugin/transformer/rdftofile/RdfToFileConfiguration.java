@@ -1,9 +1,9 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
@@ -48,9 +48,9 @@ public class RdfToFileConfiguration {
         this.graphUri = graphUri;
     }
 
-    public RDFFormat getFileFormat() throws DataProcessingUnit.ExecutionFailed {
+    public RDFFormat getFileFormat() throws Component.ExecutionFailed {
         return Rio.getParserFormatForMIMEType(fileType).orElseThrow(() -> {
-            return new DataProcessingUnit.ExecutionFailed("Invalid output file type: {1}", fileType);
+            return new Component.ExecutionFailed("Invalid output file type: {1}", fileType);
         });
     }
 

@@ -182,9 +182,6 @@ var expandComponent = function (pipeline, component, template) {
             portCounter += 1;
             // Add port to the pipeline definition.
             pipeline['@graph'].push(portObject);
-        } else {
-            // Unknown object.
-            console.log('Unknown object type record ignored:', resource);
         }
     });
     // Store references.
@@ -333,11 +330,10 @@ var iterateObjects = function (data, callback) {
  * Possible configurations:
  *
  * configuration
- *   .execution
- *     .to - URI of component to execute, use for debug-to
- *   .mapping []
- *     .uri - URI of execution.
- *     .componets - Contains component to component mapping.
+ *   .execute_to - Debug to IRI.
+  *   .mapping
+ *     .execution - URI of execution.
+ *     .componets - Object with component to component mapping.
  *
  * @param String uri
  * @param Object configuration
@@ -430,20 +426,32 @@ gModule.unpack = function (uri, configuration, callback) {
 
         // Add sources - ie. for each data unit determine it's sources. The source list
         // are build based on the connections in pipeline.
-        data.metadata.definition.graph['@graph'].forEach(function (resource) {
-            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
-                var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
-                var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
-                var sourcePort = portsByOwnerAndBinding[source][
-                        getString(resource, 'http://linkedpipes.com/ontology/sourceBinding')];
-                var targetPort = portsByOwnerAndBinding[target][
-                        getString(resource, 'http://linkedpipes.com/ontology/targetBinding')];
-                if (!targetPort['http://linkedpipes.com/ontology/source']) {
-                    targetPort['http://linkedpipes.com/ontology/source'] = [];
+        try {
+            data.metadata.definition.graph['@graph'].forEach(function (resource) {
+                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
+                    var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
+                    var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
+                    var sourcePort = portsByOwnerAndBinding[source][
+                            getString(resource, 'http://linkedpipes.com/ontology/sourceBinding')];
+                    var targetPort = portsByOwnerAndBinding[target][
+                            getString(resource, 'http://linkedpipes.com/ontology/targetBinding')];
+                    if (typeof (targetPort) === 'undefined') {
+                        throw {
+                            'errorMessage': '',
+                            'systemMessage': '',
+                            'userMessage': "Invalid pipeline definition, cycle detected!",
+                            'errorCode': 'ERROR'
+                        };
+                    }
+                    if (!targetPort['http://linkedpipes.com/ontology/source']) {
+                        targetPort['http://linkedpipes.com/ontology/source'] = [];
+                    }
+                    targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
                 }
-                targetPort['http://linkedpipes.com/ontology/source'].push({'@id': sourcePort['@id']});
-            }
-        });
+            });
+        } catch (error) {
+            callback(false, error);
+        }
         next();
     }).add(function (data, next) {
         // For some data units, we need to load resources from directory. This is used
@@ -465,8 +473,8 @@ gModule.unpack = function (uri, configuration, callback) {
             if (resource['@type'].indexOf('http://etl.linkedpipes.com/ontology/DataUnit') > -1) {
                 // The data unit we map could have been mapped from another execution.
                 var execution = resource['http://etl.linkedpipes.com/ontology/execution'];
-                if (typeof(execution) === 'undefined') {
-                    execution = {'@id':  mapping.execution };
+                if (typeof (execution) === 'undefined') {
+                    execution = {'@id': mapping.execution};
                 }
                 //
                 dataUnits[resource['@id']] = {
@@ -696,6 +704,52 @@ gModule.unpack = function (uri, configuration, callback) {
                 }
             }
         }
+        next();
+    }).add(function (data, next) {
+        // Construct and add metadata about the execution.
+
+        // Search for pipeline resource.
+        var pipelineResource = {};
+        data.metadata.definition.graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') > -1) {
+                pipelineResource = resource;
+            }
+        });
+
+        // Construct resource with information about the execution.
+        var id = pipelineResource['@id'] + '/executionInfo';
+        var executionInfo = {
+            '@id' : id,
+            '@type': [
+                'http://linkedpipes.com/ontology/ExecutionMetadata'
+            ]
+        };
+        var executionType = void 0;
+        // Execution type.
+        if (configuration.execute_to === undefined) {
+            if (configuration.mapping === undefined) {
+                executionType = 'http://linkedpipes.com/resources/executionType/Full';
+            } else {
+                executionType = 'http://linkedpipes.com/resources/executionType/DebugFrom';
+            }
+        } else {
+            executionInfo['http://linkedpipes.com/ontology/execution/targetComponent'] = {
+                '@id': configuration.execute_to
+            };
+            if (configuration.mapping === undefined) {
+                executionType = 'http://linkedpipes.com/resources/executionType/DebugTo';
+            } else {
+                executionType = 'http://linkedpipes.com/resources/executionType/DebugFromTo';
+            }
+        }
+        executionInfo['http://linkedpipes.com/ontology/execution/type'] = executionType;
+
+        // Add to the graph.
+        pipelineResource['http://linkedpipes.com/ontology/executionMetadata'] = {
+            '@id' : id
+        };
+        data.metadata.definition.graph['@graph'].push(executionInfo);
+
         next();
     }).add(function (data) {
         // Add some hard coded objects (hopefully just for now).

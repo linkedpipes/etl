@@ -50,9 +50,6 @@ public class LocalizedException extends Exception {
     public LocalizedException(List<LocalizedString> messages, Object... args) {
         // For now use first message.
         super(messages.get(0).value);
-        //
-        LOG.error("LocalizedException");
-        LOG.info(messages.get(0).value, args);
         // Initialize exception.
         if (args.length > 0) {
             if (args[args.length - 1] instanceof Exception) {
@@ -61,6 +58,8 @@ public class LocalizedException extends Exception {
         }
         this.messages = messages;
         this.args = args;
+        //
+        LOG.error("LocalizedException: " + messages.get(0).value, args);
     }
 
 }

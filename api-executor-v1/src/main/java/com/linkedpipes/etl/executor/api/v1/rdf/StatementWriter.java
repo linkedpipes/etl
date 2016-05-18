@@ -7,7 +7,8 @@ package com.linkedpipes.etl.executor.api.v1.rdf;
  */
 public interface StatementWriter {
 
-    public void add(String subject, String predicate, String object, String type);
+    public void add(String subject, String predicate, String object,
+            String type);
 
     public void addUri(String subject, String predicate, String object);
 
@@ -18,6 +19,7 @@ public interface StatementWriter {
      * @param object
      * @param language If null no information about language is stored.
      */
-    public void addString(String subject, String predicate, String object, String language);
+    public void addString(String subject, String predicate, String object,
+            String language);
 
 }

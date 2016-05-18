@@ -83,12 +83,14 @@ define(['app/components/configuration/configurationHolderDirective'], function (
                 return;
             }
             var configurationObject = $scope.dialogs.api.getConfiguration();
-            component['http://linkedpipes.com/ontology/configurationGraph'] = {
-                '@id': $scope.configuration.uri
-            };
-            // Make sure the the configuration graph has the right name (IRI).
-            configurationObject['@id'] = $scope.configuration.uri;
-            data.model['graphs'][$scope.configuration.uri] = configurationObject;
+            if (typeof(configurationObject) !== 'undefined') {
+                component['http://linkedpipes.com/ontology/configurationGraph'] = {
+                    '@id': $scope.configuration.uri
+                };
+                // Make sure the the configuration graph has the right name (IRI).
+                configurationObject['@id'] = $scope.configuration.uri;
+                data.model['graphs'][$scope.configuration.uri] = configurationObject;
+            }
         };
 
         $scope.onSave = function () {

@@ -1,11 +1,11 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.util.List;
 import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  * Default predicate: valueFactory.createIRI(configuration.url + "#" + URLEncoder.encode(column.name, "UTF-8"));
@@ -18,7 +18,7 @@ abstract class ColumnAbstract {
     /**
      * Used to report missing required value.
      */
-    public static class MissingColumnValue extends DataProcessingUnit.ExecutionFailed {
+    public static class MissingColumnValue extends Component.ExecutionFailed {
 
         public MissingColumnValue(String name, int rowNumber) {
             super("Missing value for required column: '" + name + "' on row " + Integer.toString(rowNumber));

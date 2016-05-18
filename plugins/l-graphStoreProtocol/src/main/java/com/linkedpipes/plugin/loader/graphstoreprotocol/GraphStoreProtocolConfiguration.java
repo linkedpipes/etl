@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 
 /**
  *

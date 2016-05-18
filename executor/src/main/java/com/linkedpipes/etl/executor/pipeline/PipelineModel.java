@@ -245,7 +245,7 @@ public class PipelineModel implements EntityLoader.Loadable {
                             object.stringValue(), this);
                     dataUnits.add(newDataUnit);
                     return newDataUnit;
-                case LINKEDPIPES.HAS_EXECUTION_TYPE:
+                case LINKEDPIPES.HAS_COMPONENT_EXECUTION_TYPE:
                     switch (object.stringValue()) {
                         case "http://linkedpipes.com/resources/execution/type/execute":
                             executionType = ExecutionType.EXECUTE;

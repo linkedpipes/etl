@@ -28,16 +28,19 @@ public final class SparqlUtils {
      * @param dataUnit
      * @param query
      * @return
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException
+     * @throws NonRecoverableException
      */
-    public static List<Map<String, Value>> executeSelect(SingleGraphDataUnit dataUnit, String query)
+    public static List<Map<String, Value>> executeSelect(
+            SingleGraphDataUnit dataUnit, String query)
             throws NonRecoverableException {
         final List<Map<String, Value>> result = new LinkedList<>();
         dataUnit.execute(() -> {
             result.clear();
-            Repositories.tupleQuery(dataUnit.getRepository(), query, new AbstractTupleQueryResultHandler() {
+            Repositories.tupleQuery(dataUnit.getRepository(),
+                    query, new AbstractTupleQueryResultHandler() {
                 @Override
-                public void handleSolution(BindingSet bindingSet) throws TupleQueryResultHandlerException {
+                public void handleSolution(BindingSet bindingSet)
+                        throws TupleQueryResultHandlerException {
                     final Map<String, Value> row = new HashMap<>();
                     for (Binding binding : bindingSet) {
                         row.put(binding.getName(), binding.getValue());

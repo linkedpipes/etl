@@ -21,28 +21,6 @@ define(['jquery'], function (jQuery) {
     };
 
     /**
-     * Read and store value based on the reference template.
-     *
-     * @param result The output object.
-     */
-    var convertOneToOne = function (value, result, data, graph, templateItem) {
-        if (value[0] && value[0]['@id']) {
-            var resource = getResourceByIri(data, graph,
-                    value[0]['@id']);
-            // Check if we have the reference to the object.
-            if (typeof resource === 'undefined') {
-                return;
-            }
-            var toAdd = evaluateTemplate(data, graph, resource,
-                    templateItem['$oneToOne']);
-            // Merge results.
-            for (var key in toAdd) {
-                result[key] = toAdd[key];
-            }
-        }
-    };
-
-    /**
      * Convert value with string to the string langugae map.
      */
     var convertString = function (value) {
@@ -127,10 +105,10 @@ define(['jquery'], function (jQuery) {
             // Search in every graph.
             for (var graphIndex in data) {
                 var graph = data[graphIndex];
-                for (var object_index in graph['@graph']) {
-                    if (graph['@graph'][object_index]['@id'] &&
-                            graph['@graph'][object_index] === iri) {
-                        return graph['@graph'][object_index];
+                for (var objectIndex in graph['@graph']) {
+                    if (graph['@graph'][objectIndex]['@id'] &&
+                            graph['@graph'][objectIndex] === iri) {
+                        return graph['@graph'][objectIndex];
                     }
                 }
             }
@@ -138,10 +116,11 @@ define(['jquery'], function (jQuery) {
             // Search only in given graph.
             for (var graphIndex in data) {
                 if (data[graphIndex]['@id'] === graphIri) {
+
                     var graph = data[graphIndex];
-                    for (var object_index in graph['@graph']) {
-                        if (graph['@graph'][object_index]['@id'] === iri) {
-                            return graph['@graph'][object_index];
+                    for (var objectIndex in graph['@graph']) {
+                        if (graph['@graph'][objectIndex]['@id'] === iri) {
+                            return graph['@graph'][objectIndex];
                         }
                     }
                     break;
@@ -172,9 +151,14 @@ define(['jquery'], function (jQuery) {
             }
             var propertyValue = object[templateItem['$property']];
             // Select a convertion function based on the template.
-            if (typeof templateItem['$oneToOne'] !== 'undefined') {
+            if (typeof templateItem['$oneToMany'] !== 'undefined') {
+                // References we should continue with another objects.
+                convertOneToMany(propertyValue, result, data, graph,
+                        templateItem, key);
+            } else if (typeof templateItem['$oneToOne'] !== 'undefined') {
                 // Reference we should continue with another object.
-                convertOneToOne(propertyValue, result, data, graph, templateItem);
+                convertOneToOne(propertyValue, result, data, graph,
+                        templateItem);
             } else if (templateItem['$type'] === 'string') {
                 var value = convertString(propertyValue);
                 if (typeof value !== 'undefined') {
@@ -192,16 +176,47 @@ define(['jquery'], function (jQuery) {
 
     // ---------------------------------------------------------------------- //
 
+    var convertOneToOne = function (value, result, data, graph, templateItem) {
+        var resource;
+        if (jQuery.isArray(value)) {
+            if (value[0] && value[0]['@id']) {
+                resource = jsonldService.getResource(data, graph, value[0]['@id']);
+            }
+        } else {
+            resource = jsonldService.getResource(data, graph, value['@id']);
+        }
+        if (typeof resource === 'undefined') {
+            return;
+        }
+        var toAdd = evaluateTemplate(data, graph, resource,
+                templateItem['$oneToOne']);
+        // Merge results.
+        for (var key in toAdd) {
+            result[key] = toAdd[key];
+        }
+    };
+
+    var convertOneToMany = function (value, result, data, graph, templateItem,
+            key) {
+        var resources = [];
+        if (jQuery.isArray(value)) {
+            value.forEach(function (item) {
+                var resource = jsonldService.getResource(data, graph,
+                        item['@id']);
+                var newObject = evaluateTemplate(data, graph, resource,
+                        templateItem['$oneToMany']);
+                resources.push(newObject);
+            });
+        } else {
+            // We can use convertOneToOne as there is onlu one object.
+            resources.push(convertOneToOne(value, {}, data, graph, templateItem));
+        }
+        result[key] = resources;
+    };
+
     var jsonldService = {};
 
-    /**
-     * Iterate graphs. Call callback as callback(graph, graph_iri). If callback
-     * return true then stop the iteration and return graph's id.
-     * In other case return nothing.
-     *
-     * TODO: Check if we need to return something.
-     */
-    jsonldService.iterateGraphs = function (data, callback) {
+    jsonldService.getGraphList = function (data) {
         var graphList;
         if (data['@graph']) {
             if (data['@id']) {
@@ -219,6 +234,18 @@ define(['jquery'], function (jQuery) {
         } else {
             graphList = data;
         }
+        return graphList;
+    };
+
+    /**
+     * Iterate graphs. Call callback as callback(graph, graph_iri). If callback
+     * return true then stop the iteration and return graph's id.
+     * In other case return nothing.
+     *
+     * TODO: Check if we need to return something.
+     */
+    jsonldService.iterateGraphs = function (data, callback) {
+        var graphList = jsonldService.getGraphList(data);
         //
         for (var graphIndex in graphList) {
             var graph = graphList[graphIndex];
@@ -240,10 +267,10 @@ define(['jquery'], function (jQuery) {
     jsonldService.iterateObjects = function (data, callback) {
         var result;
         this.iterateGraphs(data, function (graph, iri) {
-            for (var object_index in graph) {
-                if (callback(graph[object_index], iri)) {
+            for (var objectIndex in graph) {
+                if (callback(graph[objectIndex], iri)) {
                     result = {
-                        'resource': graph[object_index],
+                        'resource': graph[objectIndex],
                         'graph': iri
                     };
                     return true;
@@ -327,6 +354,43 @@ define(['jquery'], function (jQuery) {
         return [];
     };
 
+    jsonldService.getValue = function (object, property) {
+        var value = object[property];
+        if (!value) {
+            return;
+        }
+        if (jQuery.isArray(value)) {
+            value = value[0];
+            if (!value) {
+                return;
+            }
+            //
+            if (typeof (value['@value']) !== 'undefined') {
+                return value['@value'];
+            } else {
+                return value;
+            }
+        } else {
+            if (typeof (value['@value']) !== 'undefined') {
+                return value['@value'];
+            } else {
+                return value;
+            }
+        }
+    };
+
+    jsonldService.getBoolean = function (object, property) {
+        var value = jsonldService.getValue(object, property);
+        var type = typeof value;
+        if (type === 'undefined') {
+            return;
+        } else if (type === 'string') {
+            return value === 'true';
+        } else {
+            return value;
+        }
+    };
+
     jsonldService.getString = function (object, property) {
         var value = object[property];
         if (!value) {
@@ -338,13 +402,13 @@ define(['jquery'], function (jQuery) {
                 return;
             }
             //
-            if (value['@value']) {
+            if (typeof (value['@value']) !== 'undefined') {
                 return value['@value'];
             } else {
                 return value;
             }
         } else {
-            if (value['@value']) {
+            if (typeof (value['@value']) !== 'undefined') {
                 return value['@value'];
             } else {
                 return value;
@@ -353,17 +417,49 @@ define(['jquery'], function (jQuery) {
     };
 
     jsonldService.getInteger = function (object, property) {
-        if (!object[property]) {
+        if (typeof (object[property]) === 'undefined') {
             return;
         }
         var value = object[property];
         if (jQuery.isArray(value)) {
             value = value[0];
         }
+        // Replace null with 0.
+        if (value === null) {
+            return 0;
+        }
         if (value['@value']) {
             return parseInt(value['@value']);
         } else {
             return parseInt(value);
+        }
+    };
+
+    jsonldService.getResource = function (data, graphIri, iri) {
+        var graphList = jsonldService.getGraphList(data);
+        var toSearch = [];
+        if (typeof (graphIri) === 'undefined') {
+            // Searchin all graphs.
+            for (var graphIndex in graphList) {
+                toSearch.push(graphList[graphIndex]);
+            }
+        } else {
+            // Filter graphs.
+            for (var graphIndex in graphList) {
+                var graph = graphList[graphIndex];
+                if (graph['@id'] === graphIri) {
+                    toSearch.push(graph);
+                }
+            }
+        }
+        // Search for the resource.
+        for (var graphIndex in toSearch) {
+            var graph = toSearch[graphIndex];
+            for (var objectIndex in graph['@graph']) {
+                if (graph['@graph'][objectIndex]['@id'] === iri) {
+                    return graph['@graph'][objectIndex];
+                }
+            }
         }
     };
 
@@ -380,8 +476,8 @@ define(['jquery'], function (jQuery) {
             }
         });
         var json = [];
-        for (var object_index in objects) {
-            var object = objects[object_index];
+        for (var objectIndex in objects) {
+            var object = objects[objectIndex];
             json.push(evaluateTemplate(data,
                     object['graph'], object['value'], template));
         }
@@ -426,7 +522,7 @@ define(['jquery'], function (jQuery) {
             this.loading = true;
 
             //
-            $http.get('/resources/executions').then(function (response) {
+            $http.get(this.url).then(function (response) {
                 console.time('Loading data');
                 var json = toJson(response.data, repository.query.data,
                         repository.template);
@@ -436,7 +532,9 @@ define(['jquery'], function (jQuery) {
                 repository.data = json;
                 //
                 var metadata = parseMetadata(response.data);
-                repository.lastCheck = metadata.serverTime;
+                if (metadata && metadata['serverTime']) {
+                    repository.lastCheck = metadata['serverTime'];
+                }
                 //
                 console.timeEnd('Loading data');
                 if (onSuccess) {
@@ -470,9 +568,10 @@ define(['jquery'], function (jQuery) {
             //
             repository.loading = true;
             //
-            $http.get('/resources/executions', {
+            $http.get(this.url, {
                 params: {'changedSince': repository.lastCheck}}
             ).then(function (response) {
+                console.time('Updating data');
                 // Delete executions, based on tombstones.
                 var deleted = toJson(response.data, repository.query.deleted, {
                     'iri': {'$resource': ''}
@@ -506,7 +605,9 @@ define(['jquery'], function (jQuery) {
                 });
                 //
                 var metadata = parseMetadata(response.data);
-                this.lastCheck = metadata.serverTime;
+                if (metadata !== undefined) {
+                    this.lastCheck = metadata.serverTime;
+                }
                 //
                 console.timeEnd('Updating data');
                 if (onSuccess) {

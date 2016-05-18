@@ -1,39 +1,38 @@
 package com.linkedpipes.etl.executor.api.v1.component;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import org.osgi.framework.BundleContext;
-
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import java.util.Arrays;
+import org.osgi.framework.BundleContext;
 
 /**
- * This class is used to load {@link Component} from bundles.
+ * This class is used to load {@link SimpleComponent} from bundles.
  *
  * @author Škoda Petr
  */
 public interface ComponentFactory {
 
-    /**
-     * Used to report that given bundle is not compatible with given {@link ManagerFactory}.
-     */
-    public class InvalidBundle extends NonRecoverableException {
+        public class CreationFailed extends LocalizedException {
 
-        public InvalidBundle(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedString(messages, "en")), args);
+            public CreationFailed(String message, Object... args) {
+                super(Arrays.asList(new LocalizedException.LocalizedString(
+                        message, "en")), args);
+            }
+
         }
 
-    }
-
-    /**
-     *
-     * @param definition Access to the SPARQL-like interface of the pipeline definition.
-     * @param resoureIri Component IRI.
-     * @param graph Name of graph with definition.
-     * @param context
-     * @return Null if this factory can not be used to create ComponentInstance from given bundle.
-     * @throws com.linkedpipes.etl.executor.api.v1.component.ComponentFactory.InvalidBundle
-     */
-    public Component createComponent(SparqlSelect definition, String resoureIri, String graph, BundleContext context)
-            throws InvalidBundle;
+        /**
+         * Create {@link ManagableDataUnit} that implements given interfaces.
+         * Returned object should not yet been initialized.
+         *
+         * @param definition
+         * @param resourceIri
+         * @param graph
+         * @param context
+         * @return {@link ManagableDataUnit} or null.
+         * @throws CreationFailed
+         */
+        public BaseComponent create(SparqlSelect definition, String resourceIri,
+                String graph, BundleContext context) throws CreationFailed;
 
 }

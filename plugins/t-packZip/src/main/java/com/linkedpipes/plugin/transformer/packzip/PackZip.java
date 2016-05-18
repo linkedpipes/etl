@@ -2,9 +2,7 @@ package com.linkedpipes.plugin.transformer.packzip;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
-import com.linkedpipes.etl.dpu.api.extensions.ProgressReport;
+import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,40 +10,43 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class PackZip implements SequentialExecution {
+public final class PackZip implements SimpleExecution {
 
-    @DataProcessingUnit.InputPort(id = "FilesInput")
+    @Component.InputPort(id = "FilesInput")
     public FilesDataUnit input;
 
-    @DataProcessingUnit.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(id = "FilesOutput")
     public WritableFilesDataUnit output;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public PackZipConfiguration configuration;
 
-    @DataProcessingUnit.Extension
+    @Component.Inject
     public ProgressReport progressReport;
 
     @Override
-    public void execute(DataProcessingUnit.Context context) throws NonRecoverableException {
-        final File zipFile = output.createFile(configuration.getFileName());
+    public void execute(Component.Context context) throws NonRecoverableException {
+        final File zipFile = output.createFile(configuration.getFileName()).toFile();
         final byte[] buffer = new byte[8196];
+        progressReport.start(input.size());
         try (FileOutputStream fos = new FileOutputStream(zipFile); ZipOutputStream zos = new ZipOutputStream(fos)) {
             for (FilesDataUnit.Entry entry : input) {
                 if (context.canceled()) {
-                    throw new DataProcessingUnit.ExecutionCancelled();
+                    throw new Component.ExecutionCancelled();
                 }
                 // ...
                 addZipEntry(zos, buffer, entry);
                 progressReport.entryProcessed();
             }
         } catch (IOException ex) {
-            throw new DataProcessingUnit.ExecutionFailed("Can't create archive.", ex);
+            throw new Component.ExecutionFailed("Can't create archive.", ex);
         }
         progressReport.done();
     }
@@ -59,9 +60,9 @@ public final class PackZip implements SequentialExecution {
      * @throws DataUnitException
      */
     private void addZipEntry(ZipOutputStream zos, byte[] buffer, final FilesDataUnit.Entry entry)
-            throws DataProcessingUnit.ExecutionFailed {
+            throws Component.ExecutionFailed {
         // Add to the zip file.
-        final File sourceFile = entry.getPath();
+        final File sourceFile = entry.toFile();
         try (FileInputStream in = new FileInputStream(sourceFile)) {
             final ZipEntry ze = new ZipEntry(entry.getFileName());
             zos.putNextEntry(ze);
@@ -71,7 +72,7 @@ public final class PackZip implements SequentialExecution {
                 zos.write(buffer, 0, len);
             }
         } catch (Exception ex) {
-            throw new DataProcessingUnit.ExecutionFailed("", ex);
+            throw new Component.ExecutionFailed("", ex);
         }
     }
 

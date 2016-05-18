@@ -1,5 +1,5 @@
-define([], function () {
-    function factoryFunction($http) {
+define(['jquery'], function (jQuery) {
+    function factoryFunction($http, jsonldService) {
         var service = {};
 
         var templates = {
@@ -8,34 +8,134 @@ define([], function () {
         };
 
         /**
-         * Load templates, if templates are already loaded imiidiately call onSucess.
+         * Perform full load of templates.
          *
          * @param onSucess Called on sucess.
          * @param onFailure Called on failure.
          */
         service.load = function (onSucess, onFailure) {
-            console.log('templatesRepository.load');
-            // TODO: Optimize and load only if necesarry - or use an update function?
             $http.get("./resources/components").then(function (response) {
-                // We must not change the array entity as that would,
-                // break synchronization - also we only add new templates.
-                response.data['payload'].forEach(function (item) {
-                    if (!templates.map[item['id']]) {
-                        // Construct filtering string - the value is used as a filter
-                        // for searching DPUs.
-                        item['filterString'] = item.label.toLowerCase();
-                        item['keyword'].forEach(function(word) {
-                            item['filterString'] += ',' + word.toLowerCase();
-                        });
-                        //
-                        templates.map[item['id']] = item;
-                        templates.list.push(item);
+                console.time('loading templates');
+                var newTemplates = jsonldService.toJson(response.data, {
+                    'property': '@type',
+                    'operation': 'in',
+                    'value': 'http://linkedpipes.com/ontology/Component'
+                }, {
+                    'id': {
+                        '$resource': ''
+                    },
+                    'label': {
+                        '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
+                    },
+                    'keyword': {
+                        '$property': 'http://linkedpipes.com/ontology/keyword'
+                    },
+                    'color': {
+                        '$property': 'http://linkedpipes.com/ontology/color'
+                    },
+                    'configurationUri': {
+                        '$property': 'http://linkedpipes.com/ontology/configurationGraph'
+                    },
+                    'type': {
+                        '$property': 'http://linkedpipes.com/ontology/componentType'
+                    },
+                    'dialog': {
+                        '_dialog': {
+                            '$property': 'http://linkedpipes.com/ontology/dialog',
+                            '$oneToOne': {
+                                'js': {
+                                    '$property': 'http://linkedpipes.com/ontology/js'
+                                },
+                                'html': {
+                                    '$property': 'http://linkedpipes.com/ontology/html'
+                                }
+                            }
+                        }
+                    },
+                    'ports': {
+                        '$property': 'http://linkedpipes.com/ontology/port',
+                        '$oneToMany': {
+                            'label': {
+                                '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
+                            },
+                            'binding': {
+                                '$property': 'http://linkedpipes.com/ontology/binding'
+                            },
+                            'types': {
+                                '$property': '@type'
+                            }
+                        }
+                    },
+                    'followups': {
+                        '$property': 'http://linkedpipes.com/ontology/followup',
+                        '$oneToMany': {
+                            'id': {
+                                '$property': 'http://linkedpipes.com/ontology/reference'
+                            },
+                            'order': {
+                                '$property': 'http://linkedpipes.com/ontology/followUpCount'
+                            }
+                        }
                     }
                 });
+
+                newTemplates.forEach(function (template) {
+                    if (templates.map[template['id']]) {
+                        // Item was already stored! This can hapen on the
+                        // reload (update).
+                        return;
+                    }
+                    template['filterString'] = template.label.toLowerCase();
+                    if (jQuery.isArray(template['keyword'])) {
+                        template['keyword'].forEach(function (word) {
+                            template['filterString'] += ',' + word.toLowerCase();
+                        });
+                    } else {
+                        if (template['filterString']) {
+                            template['filterString'] +=
+                                    ',' + template['keyword'].toLowerCase();
+                        }
+                    }
+                    // Create followup
+                    template['followup'] = {};
+                    if (template['followups']) {
+                        template['followups'].forEach(function (item) {
+                            template['followup'][item['id']] = item['order'];
+                        });
+                    }
+                    // Check ports.
+                    var inputs = [];
+                    var outputs = [];
+                    template['ports'].forEach(function (port) {
+                        var newPort = {
+                            'label': port['label'],
+                            'binding': port['binding'],
+                            'type': []
+                        };
+                        port['types'].forEach(function (type) {
+                            if (type === 'http://linkedpipes.com/ontology/Port') {
+                                // Ignore.
+                            } else if (type === 'http://linkedpipes.com/ontology/Input') {
+                                inputs.push(newPort);
+                            } else if (type === 'http://linkedpipes.com/ontology/Output') {
+                                outputs.push(newPort);
+                            } else {
+                                // Add all others to port type.
+                                newPort['type'].push(type);
+                            }
+                        });
+                    });
+                    template['inputs'] = inputs;
+                    template['outputs'] = outputs;
+                    // Store.
+                    templates.map[template['id']] = template;
+                    templates.list.push(template);
+                });
+                console.timeEnd('loading templates');
                 if (onSucess) {
                     onSucess();
                 }
-            }, function(response) {
+            }, function (response) {
                 if (onFailure) {
                     onFailure(response);
                 }
@@ -44,7 +144,7 @@ define([], function () {
 
         /**
          *
-         * @returns List of templates, can be used for binding as the reference will not change.
+         * @returns List of templates.
          */
         service.getTemplates = function () {
             return templates.list;
@@ -52,11 +152,27 @@ define([], function () {
 
         /**
          *
-         * @param uri Template URI.
+         * @param iri Template IRI.
          * @returns Template object or nothing if URI is invalid.
          */
-        service.getTemplate = function (uri) {
-            return templates.map[uri];
+        service.getTemplate = function (iri) {
+            return templates.map[iri];
+        };
+
+        /**
+         * Try to map given template IRI to the stored templates.
+         *
+         * @param iri
+         * @returns
+         */
+        service.mapToIri = function (iri) {
+            var postfix = iri.substring(iri.indexOf('/resources/components/'));
+            for (var key in templates.map) {
+                if (key.endsWith(postfix)) {
+                    return key;
+                }
+            }
+            console.warn("Can't map template:", iri);
         };
 
         /**
@@ -68,7 +184,7 @@ define([], function () {
          */
         service.fetchTemplateConfiguration = function (template, onSucess, onFailure) {
             $http.get(template['configurationUri'], {
-                // Supress default AngularJS conversion form JSON to JavaScript object.
+                // Supress default AngularJS conversion.
                 transformResponse: function (data, headersGetter) {
                     return data;
                 }
@@ -76,8 +192,9 @@ define([], function () {
                 template['configuration'] = JSON.parse(response.data);
                 if (onSucess) {
                     onSucess();
-                };
-            }, function(response) {
+                }
+                ;
+            }, function (response) {
                 if (onFailure) {
                     onFailure(response);
                 }
@@ -86,13 +203,10 @@ define([], function () {
 
         return service;
     }
-    factoryFunction.$inject = ['$http'];
-    /**
-     *
-     * @param app Angular modeule.
-     */
-    function register(app) {
+    factoryFunction.$inject = ['$http', 'services.jsonld'];
+
+    return function register(app) {
         app.factory('components.templates.services.repository', factoryFunction);
-    }
-    return register;
+    };
+
 });

@@ -1,6 +1,8 @@
 package com.linkedpipes.etl.executor.module;
 
 import com.linkedpipes.etl.executor.Configuration;
+import com.linkedpipes.etl.executor.api.v1.Plugin;
+import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,13 +33,10 @@ import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.linkedpipes.etl.executor.api.v1.plugin.ExecutionListener;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect.QueryException;
-import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.plugin.MessageListener;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
 
@@ -75,11 +74,10 @@ class ModuleFacadeImpl implements ModuleFacade,
             + "org.apache.log4j.api;version=\"1.7.12\","
             + "org.apache.log4j.xml;version=\"1.7.12\","
             + "" // core API
+            + "com.linkedpipes.etl.executor.api.v1,"
             + "com.linkedpipes.etl.executor.api.v1.component,"
-            + "com.linkedpipes.etl.executor.api.v1.context,"
             + "com.linkedpipes.etl.executor.api.v1.dataunit,"
             + "com.linkedpipes.etl.executor.api.v1.event,"
-            + "com.linkedpipes.etl.executor.api.v1.plugin,"
             + "com.linkedpipes.etl.executor.api.v1.rdf,"
             + "com.linkedpipes.etl.executor.api.v1.vocabulary";
 
@@ -175,19 +173,19 @@ class ModuleFacadeImpl implements ModuleFacade,
     }
 
     @Override
-    public Collection<ExecutionListener> getExecutionListeners()
+    public Collection<Plugin.ExecutionListener> getExecutionListeners()
             throws ModuleException {
-        return getServices(ExecutionListener.class);
+        return getServices(Plugin.ExecutionListener.class);
     }
 
     @Override
-    public Collection<MessageListener> getMessageListeners()
+    public Collection<Plugin.MessageListener> getMessageListeners()
             throws ModuleException {
-        return getServices(MessageListener.class);
+        return getServices(Plugin.MessageListener.class);
     }
 
     @Override
-    public Component getComponent(PipelineDefinition definition,
+    public BaseComponent getComponent(PipelineDefinition definition,
             String resource) throws ModuleException {
         // We need to get path to jar file first.
         final Map<String, String> componentInfo;
@@ -229,10 +227,10 @@ class ModuleFacadeImpl implements ModuleFacade,
         // Use manager to get the component representation.
         for (ComponentFactory factory : getServices(ComponentFactory.class)) {
             try {
-                return factory.createComponent(definition, resource,
+                return factory.create(definition, resource,
                         definition.getDefinitionGraph(),
                         componenetContext);
-            } catch (ComponentFactory.InvalidBundle ex) {
+            } catch (ComponentFactory.CreationFailed ex) {
                 throw new ModuleException("Invalid bundle detected!", ex);
             }
         }
@@ -247,8 +245,7 @@ class ModuleFacadeImpl implements ModuleFacade,
         for (DataUnitFactory factory : getServices(DataUnitFactory.class)) {
             try {
                 final ManagableDataUnit dataUnit = factory.create(definition,
-                        subject,
-                        definition.getDefinitionGraph());
+                        subject, definition.getDefinitionGraph());
                 if (dataUnit != null) {
                     return dataUnit;
                 }

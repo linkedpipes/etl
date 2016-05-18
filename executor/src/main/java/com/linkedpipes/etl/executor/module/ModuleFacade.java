@@ -1,11 +1,10 @@
 package com.linkedpipes.etl.executor.module;
 
+import com.linkedpipes.etl.executor.api.v1.Plugin;
+import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import java.util.Collection;
 
-import com.linkedpipes.etl.executor.api.v1.plugin.ExecutionListener;
-import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.plugin.MessageListener;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
 
 /**
@@ -32,7 +31,7 @@ public interface ModuleFacade {
      * @return
      * @throws ModuleException
      */
-    public Collection<ExecutionListener> getExecutionListeners()
+    public Collection<Plugin.ExecutionListener> getExecutionListeners()
             throws ModuleException;
 
     /**
@@ -41,7 +40,7 @@ public interface ModuleFacade {
      * @return
      * @throws ModuleException
      */
-    public Collection<MessageListener> getMessageListeners()
+    public Collection<Plugin.MessageListener> getMessageListeners()
             throws ModuleException;
 
     /**
@@ -49,11 +48,11 @@ public interface ModuleFacade {
      *
      * @param definition
      * @param subject
-     * @return Does not return null!
+     * @return Never null.
      * @throws ModuleException
      */
-    public Component getComponent(PipelineDefinition definition, String subject)
-            throws ModuleException;
+    public BaseComponent getComponent(PipelineDefinition definition,
+            String subject) throws ModuleException;
 
     /**
      * Create and return manageable data unit that matches given specification.

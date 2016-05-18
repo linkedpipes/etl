@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.textHolder;
 
-import com.linkedpipes.etl.dpu.api.rdf.RdfToPojo;
+import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 
 /**
  *
