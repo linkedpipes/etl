@@ -483,7 +483,7 @@ define([
                 // Delete pipeline.
                 $http({
                     'method': 'DELETE',
-                    'url': $scope.data.iri
+                    'url': data.pipeline.iri
                 }).then(function () {
                     $location.path('/pipelines').search({});
                 }, function (response) {
