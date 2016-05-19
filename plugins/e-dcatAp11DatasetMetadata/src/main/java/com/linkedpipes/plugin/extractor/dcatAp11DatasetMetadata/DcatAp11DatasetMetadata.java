@@ -1,9 +1,10 @@
 package com.linkedpipes.plugin.extractor.dcatAp11DatasetMetadata;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.DataProcessingUnit;
-import com.linkedpipes.etl.dpu.api.executable.SequentialExecution;
+import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.dpu.api.Component;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,16 +23,12 @@ import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 
-/**
- *
- * @author Petr Škoda
- */
-public class DcatAp11DatasetMetadata implements SequentialExecution {
+public class DcatAp11DatasetMetadata implements SimpleExecution {
 
-    @DataProcessingUnit.OutputPort(id = "Metadata")
+    @Component.OutputPort(id = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
-    @DataProcessingUnit.Configuration
+    @Component.Configuration
     public DcatAp11DatasetMetadataConfig configuration;
 
     private Resource dataset;

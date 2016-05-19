@@ -5,7 +5,6 @@
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-dpu</artifactId>
         <version>0.0.0</version>
-        <relativePath>../../pom-dpu/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
     <artifactId>e-dcatAp11DatasetMetadata</artifactId>
