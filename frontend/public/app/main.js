@@ -25,7 +25,9 @@ requirejs.config({
         'lodash': '/app/components/pipelines/canvas/libraries/lodash/3.10.1/lodash.min',
         'backbone': '/app/components/pipelines/canvas/libraries/backbone/1.2.3/backbone',
         // Library for client side download
-        'file-saver': 'libraries/filesaver/FileSaver'
+        'file-saver': 'libraries/filesaver/FileSaver',
+        // https://github.com/omichelsen/angular-clipboard
+        'angular-clipboard' : 'libraries/angular-clipboard/1.4.2/angular-clipboard'
     },
     map: {
         'backbone': {
