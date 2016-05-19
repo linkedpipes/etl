@@ -179,5 +179,33 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
         We could have used the RDF list, however, it seemed that the explicit order will be more usable.
         The property is denoted by the <code class="breakurl">http://plugins.linkedpipes.com/ontology/t-mustache#order</code> IRI and can be attached to a list item.</p>
     </div>
+</div>
+<div class="row">
+    <h4 class="orange-text center">Prefixes in templates</h4>
+    <div class="col s12 l6">
+    
+<pre>
+{% raw %}
+{{!
+  PREFIX on: &lt;http://localhost/ontology/&gt;
+}}
+&lt;h1&gt;{{on:header}}&lt;/h1&gt;
+IRI: {{on:iri}}
 
+{{#on:item}}
+  {{#on:first}}
+    &lt;li&gt;&lt;strong&gt;{{http://localhost/ontology/name}}&lt;/strong&gt;
+      &lt;a href={{@id}}&gt;{{@id}}&lt;/a&gt;
+    &lt;/li&gt;
+  {{/on:first}}
+  {{#on:link}}
+    &lt;li&gt;&lt;a href=\"{{on:url}}\"&gt;{{on:name}}&lt;/a&gt;&lt;/li&gt;
+  {{/on:link}}
+{{/on:item}}
+{% endraw %}
+</pre>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">You can also use Turtle-like prefixes in templates to shorten IRIs.</p>
+    </div>
 </div>
