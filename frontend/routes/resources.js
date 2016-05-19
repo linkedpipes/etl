@@ -84,6 +84,11 @@ gApiRouter.get('/pipelines', function (request, response) {
     response.json(value);
 });
 
+gApiRouter.post('/pipelines', function (request, response) {
+    var record = gPipelines.create();
+    response.json(record);
+});
+
 gApiRouter.get('/pipelines/:id', function (request, response) {
     var id = request.params.id;
     var content = gPipelines.getDefinitionStream(id);
@@ -105,11 +110,6 @@ gApiRouter.delete('/pipelines/:id', function (request, response) {
     gPipelines.delete(request.params.id);
     response.status(200);
     response.send('');
-});
-
-gApiRouter.post('/pipelines', function (request, response) {
-    var record = gPipelines.create();
-    response.json(record);
 });
 
 gApiRouter.post('/pipelines/:id', function (request, response) {
@@ -182,6 +182,48 @@ gApiRouter.get('/executions', function (request, response) {
     pipeGet(uri, response);
 });
 
+gApiRouter.post('/executions', function (request, response) {
+    var postUri = gMonitorUri + 'executions';
+    // Unpack and create an execution.
+    console.time('Execution start');
+    console.time('  Unpack');
+    gUnpacker.unpack(request.query.pipeline, request.body, function (sucess, result) {
+        console.timeEnd('  Unpack');
+
+        if (sucess === false) {
+            response.status(503).json(result);
+            return;
+        }
+        console.time('  Stringify');
+        var formData = {
+            format: 'application/ld+json',
+            file: {
+                value: JSON.stringify(result),
+                options: {
+                    contentType: 'application/octet-stream',
+                    filename: 'file.jsonld'
+                }
+            }
+        };
+        console.timeEnd('  Stringify');
+        // Do post on executor service.
+        console.time('  POST');
+        gRequest.post({url: postUri, formData: formData}).on('error', function (error) {
+            response.status(500).json({
+                'exception': {
+                    'errorMessage': JSON.stringify(error),
+                    'systemMessage': 'Executor-monitor is offline!',
+                    'userMessage': "Can't connect to backend.",
+                    'errorCode': 'CONNECTION_REFUSED'
+                }
+            });
+        }).on('response', function (response) {
+            console.timeEnd('  POST');
+            console.timeEnd('Execution start');
+        }).pipe(response);
+    });
+});
+
 gApiRouter.get('/executions/:id', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id;
     pipeGet(uri, response);
@@ -197,147 +239,8 @@ gApiRouter.get('/executions/:id/pipeline', function (request, response) {
     pipeGet(uri, response);
 });
 
-gApiRouter.get('/executions/:id/messages', function (request, response) {
-    var uri = gMonitorUri + 'executions/' + request.params.id + '/messages';
-    pipeGet(uri, response);
-});
-
 gApiRouter.get('/executions/:id/logs', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/logs';
     pipeGet(uri, response);
-});
-
-gApiRouter.get('/executions/:id/labels', function (request, response) {
-    var uri = gMonitorUri + 'executions/' + request.params.id + '/labels';
-    pipeGet(uri, response);
-});
-
-
-gApiRouter.get('/executions/:id/debug', function (request, response) {
-    var uriDebug = gMonitorUri + 'executions/' + request.params.id + '/debug';
-    var uriLabels = gMonitorUri + 'executions/' + request.params.id + '/labels';
-    gRequest(uriDebug, function (error, res, body) {
-        if (error) {
-            response.status(503).setHeader('content-type', 'application/json');
-            response.send({
-                'exception': {
-                    'errorMessage': '',
-                    'systemMessage': 'Executor-monitor is offline.',
-                    'userMessage': 'Backend is offline.',
-                    'errorCode': 'CONNECTION_REFUSED'
-                }});
-            return;
-        }
-        // Check for backend error code.
-        if (res.statusCode !== 200) {
-            response.status(404).setHeader('content-type', 'application/json');
-            response.send({
-                'exception': {
-                    'errorMessage': '',
-                    'systemMessage': 'Error response from backend: ' + response.statusCode,
-                    'userMessage': 'Invalid request.',
-                    'errorCode': 'INVALID_INPUT'
-                }});
-            return;
-        }
-        var debugInfo = JSON.parse(body);
-        // Try to load labels.
-        gRequest(uriLabels, function (error, res, body) {
-            // TODO: Error handling
-
-            var executionId = request.params.id;
-
-            var labels;
-            if (body) {
-                labels = JSON.parse(body)['resources'];
-            }
-            if (!labels) {
-                // Server might be offline - by default consider there are no labels.
-                labels = {};
-            }
-            // Convert body to output object.
-            var dataUnits = [];
-            for (var index in debugInfo['dataUnits']) {
-                var dataUnit = debugInfo['dataUnits'][index];
-                var newDataUnit = {
-                    'uriFragment': dataUnit['uriFragment'],
-                    'componentUri': dataUnit['componentUri'],
-                    'uri': dataUnit['iri'],
-                    'browseUri': gConfiguration.executor.ftp.uri + '/' + executionId + '/' + dataUnit['uriFragment']
-                };
-                // Update labels.
-                if (dataUnit['componentUri'] in labels) {
-                    // TODO Set language -> we can transfer this to the client, also for messages etc ..
-                    newDataUnit['component'] = labels[dataUnit['componentUri']]['labels'][''];
-                } else {
-                    // Missing label.
-                    newDataUnit['component'] = dataUnit['componentUri'];
-                }
-                //
-                dataUnits.push(newDataUnit);
-            }
-
-            var output = {
-                'dataUnits': dataUnits
-            };
-            response.json({
-                'metadata': '',
-                'payload': output
-            });
-        });
-    });
-});
-
-gApiRouter.post('/executions', function (request, response) {
-    var postUri = gMonitorUri + 'executions';
-    // Unpack and create an execution.
-    gUnpacker.unpack( request.query.pipeline, request.body, function (sucess, result) {
-        if (sucess === false) {
-            response.status(503).json(result);
-            return;
-        }
-        var formData = {
-            format: 'application/ld+json',
-            file: {
-                value: JSON.stringify(result),
-                options: {
-                    contentType: 'application/octet-stream',
-                    filename: 'file.jsonld'
-                }
-            }
-        };
-        // Do post on executor service.
-        gRequest.post({url: postUri, formData: formData}).on('error', function (error) {
-            response.status(500).json({
-               'exception' : {
-                   'errorMessage': JSON.stringify(error),
-                   'systemMessage': 'Executor-monitor is offline!',
-                   'userMessage': "Can't connect to backend.",
-                   'errorCode': 'CONNECTION_REFUSED'
-               }
-            });
-        }).pipe(response);
-    });
-});
-
-//
-// Processes.
-//
-
-gApiRouter.get('/processes', function (request, response) {
-    var uri = gMonitorUri + 'processes';
-    pipeGet(uri, response);
-});
-
-gApiRouter.delete('/processes/:id', function (request, response) {
-    var uri = gMonitorUri + 'processes/' + request.params.id;
-    gRequest.del(uri).pipe(response);
-});
-
-gApiRouter.post('/processes/fuseki/:execution/:dataUnit', function (request, response) {
-    var uri = gMonitorUri + '/processes/fuseki/' + request.params.execution + '/' + request.params.dataUnit;
-    var postRequest = gRequest.post(uri);
-    request.pipe(postRequest);
-    postRequest.pipe(response);
 });
 

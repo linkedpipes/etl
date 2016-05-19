@@ -85,6 +85,7 @@ class ExecutionChecker {
      */
     public static void checkExecution(Execution execution,
             InputStream stream) throws OperationFailed, ExecutionMismatch {
+        final Date startTime = new Date();
         final Date checkStart = new Date();
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final List<Statement> output = new ArrayList<>(8);
@@ -265,15 +266,14 @@ class ExecutionChecker {
                 // We have start and end event.
                 execution.setStatus(Execution.StatusType.FINISHED);
             }
-        } else // We are updating the status.
-         if (endEvent == null) {
-                // Here we can only change from queued to running.
-                if (execution.getStatus() == Execution.StatusType.QUEUED) {
-                    execution.setStatus(Execution.StatusType.RUNNING);
-                }
-            } else {
-                execution.setStatus(Execution.StatusType.FINISHED);
+        } else if (endEvent == null) {
+            // Here we can only change from queued to running.
+            if (execution.getStatus() == Execution.StatusType.QUEUED) {
+                execution.setStatus(Execution.StatusType.RUNNING);
             }
+        } else {
+            execution.setStatus(Execution.StatusType.FINISHED);
+        }
 
         if (execution.getStatus() == Execution.StatusType.RUNNING) {
             execution.setExecutionStatementsFull(executionStatements);
@@ -287,6 +287,11 @@ class ExecutionChecker {
 
         updateGenerated(execution);
         execution.setExecutionStatements(output);
+
+        long diff = (new Date()).getTime() - startTime.getTime();
+        if (diff > 500) {
+            LOG.info("checkExecution takes: {} ms", diff);
+        }
     }
 
     /**

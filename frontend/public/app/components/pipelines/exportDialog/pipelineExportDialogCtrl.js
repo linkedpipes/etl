@@ -39,7 +39,7 @@ define(['file-saver'], function (saveAs) {
         };
 
         /**
-         * Search for componenets, configurations in the pipeline.
+         * Search for componenets in the pipeline.
          */
         var parsePipeline = function (onSucess) {
             console.time('parsePipeline');
@@ -58,6 +58,10 @@ define(['file-saver'], function (saveAs) {
             });
 
             jsonld.iterateObjects(data.pipeline, function (resource) {
+                if (resource['@type'] === undefined) {
+                    // Ignore resources without type.
+                    return;
+                }
                 if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1) {
                     data.model.componenets.push(resource);
                     var templateIri = jsonld.getReference(resource,

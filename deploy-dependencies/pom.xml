@@ -256,6 +256,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-httpGetFiles</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-httpGetFiles/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-sparqlEndpoint</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-sparqlEndpoint/</outputDirectory>
@@ -460,6 +466,12 @@
                                         <mkdir dir="${deploy.directory}/components/e-httpGetFile/"/>
                                         <copy todir="${deploy.directory}/components/e-httpGetFile/">
                                             <fileset dir="${plugins.directory}/e-httpGetFile/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-httpGetFiles/"/>
+                                        <copy todir="${deploy.directory}/components/e-httpGetFiles/">
+                                            <fileset dir="${plugins.directory}/e-httpGetFiles/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

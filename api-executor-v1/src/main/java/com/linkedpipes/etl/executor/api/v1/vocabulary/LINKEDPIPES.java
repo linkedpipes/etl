@@ -30,7 +30,7 @@ public final class LINKEDPIPES {
 
     public static final String HAS_PORT = PREFIX_ONTOLOGY + "port";
 
-    public static final String HAS_EXECUTION_TYPE = PREFIX_ONTOLOGY + "executionType";
+    public static final String HAS_COMPONENT_EXECUTION_TYPE = PREFIX_ONTOLOGY + "executionType";
 
     public static final String HAS_EXECUTION = PREFIX_ONTOLOGY + "execution";
 
@@ -49,6 +49,12 @@ public final class LINKEDPIPES {
     public static final String HAS_DEBUG_PATH = PREFIX_ONTOLOGY + "debugPath";
 
     public static final String HAS_SOURCE = PREFIX_ONTOLOGY + "dataSource";
+
+    public static final String HAS_EXECUTION_METADATA = PREFIX_ONTOLOGY + "executionMetadata";
+
+    public static final String HAS_EXECUTION_TYPE = PREFIX_ONTOLOGY + "execution/type";
+
+    public static final String HAS_TARGET_COMPONENT = PREFIX_ONTOLOGY + "execution/targetComponent";
 
     public static class CONFIGURATION {
 

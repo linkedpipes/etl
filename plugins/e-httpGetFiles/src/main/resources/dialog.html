@@ -1,0 +1,13 @@
+<div class="container-flow">
+    <div class="row">
+        <p>Files to download can be specified via the configuration input.</p>
+        <md-switch ng-model="dialog.hardRedirect">
+            Force to follow redirects
+            <md-tooltip>If false only redirect in scope of the same protocol
+                are followed. If true redirect to any any address is followed.
+                Can be used to for example follow redirect from http
+                to https.
+            </md-tooltip>
+        </md-switch>
+    </div>
+</div>

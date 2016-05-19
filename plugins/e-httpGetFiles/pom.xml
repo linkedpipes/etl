@@ -8,10 +8,10 @@
         <relativePath>../../pom-dpu/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
-    <artifactId>e-filesFromLocal</artifactId>
+    <artifactId>e-httpGetFiles</artifactId>
     <version>0.0.0</version>
     <packaging>bundle</packaging>
-    <name>plugin e-filesFromLocal</name>
+    <name>plugin e-httpGetFiles</name>
 
     <dependencies>
         <dependency>
@@ -21,6 +21,10 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-dpu-v1</artifactId>
+        </dependency>
+                <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>dataunit-sesame</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>

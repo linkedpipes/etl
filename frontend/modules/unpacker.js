@@ -330,11 +330,10 @@ var iterateObjects = function (data, callback) {
  * Possible configurations:
  *
  * configuration
- *   .execution
- *     .to - URI of component to execute, use for debug-to
- *   .mapping []
- *     .uri - URI of execution.
- *     .componets - Contains component to component mapping.
+ *   .execute_to - Debug to IRI.
+  *   .mapping
+ *     .execution - URI of execution.
+ *     .componets - Object with component to component mapping.
  *
  * @param String uri
  * @param Object configuration
@@ -705,6 +704,52 @@ gModule.unpack = function (uri, configuration, callback) {
                 }
             }
         }
+        next();
+    }).add(function (data, next) {
+        // Construct and add metadata about the execution.
+
+        // Search for pipeline resource.
+        var pipelineResource = {};
+        data.metadata.definition.graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') > -1) {
+                pipelineResource = resource;
+            }
+        });
+
+        // Construct resource with information about the execution.
+        var id = pipelineResource['@id'] + '/executionInfo';
+        var executionInfo = {
+            '@id' : id,
+            '@type': [
+                'http://linkedpipes.com/ontology/ExecutionMetadata'
+            ]
+        };
+        var executionType = void 0;
+        // Execution type.
+        if (configuration.execute_to === undefined) {
+            if (configuration.mapping === undefined) {
+                executionType = 'http://linkedpipes.com/resources/executionType/Full';
+            } else {
+                executionType = 'http://linkedpipes.com/resources/executionType/DebugFrom';
+            }
+        } else {
+            executionInfo['http://linkedpipes.com/ontology/execution/targetComponent'] = {
+                '@id': configuration.execute_to
+            };
+            if (configuration.mapping === undefined) {
+                executionType = 'http://linkedpipes.com/resources/executionType/DebugTo';
+            } else {
+                executionType = 'http://linkedpipes.com/resources/executionType/DebugFromTo';
+            }
+        }
+        executionInfo['http://linkedpipes.com/ontology/execution/type'] = executionType;
+
+        // Add to the graph.
+        pipelineResource['http://linkedpipes.com/ontology/executionMetadata'] = {
+            '@id' : id
+        };
+        data.metadata.definition.graph['@graph'].push(executionInfo);
+
         next();
     }).add(function (data) {
         // Add some hard coded objects (hopefully just for now).
