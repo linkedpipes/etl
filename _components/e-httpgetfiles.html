@@ -1,0 +1,60 @@
+---
+short: e-httpgetfiles
+type: extractor
+color: red
+title: HTTP get list
+description: Downloads a list of files from the Web using HTTP.
+---
+
+<p class="flow-text">
+Extractor, allows the user to download a list of files from the web.
+</p>
+<dl class="flow-text">
+    <dt>Force to follow redirects</dt>
+    <dd>The component will follow <a href="https://www.httpwatch.com/httpgallery/redirection/">HTTP 3XX redirects</a></dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">available</a></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component downloads a list of files given on the input, potentially following redirects, and stores them under given file names.
+        </p>
+    </div>
+</div>
+<div class="row" id="runtimeconfig">
+<h3 class="orange-text center">Runtime configuration</h3>
+<p class="flow-text">Below you can see sample runtime configuration for the component. You can also import a <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a>.</p>
+{% highlight turtle %}
+@prefix httpList: <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#> .
+
+<http://localhost/resource/configuration> a httpList:Configuration ;
+    httpList:reference <http://localhost/resource/ref/1> ;
+    httpList:reference <http://localhost/resource/ref/2> .
+
+<http://localhost/resource/ref/1>  a httpList:Reference ;
+    httpList:fileUri "https://raw.githubusercontent.com/linkedpipes/etl/master/LICENSE" ;
+    httpList:fileName "LICENSE" .
+
+<http://localhost/resource/ref/2>  a httpList:Reference ;
+    httpList:fileUri "https://raw.githubusercontent.com/linkedpipes/etl/master/README.md" ;
+    httpList:fileName "README.md" .
+{% endhighlight %}
+    </div>    
+</div>
