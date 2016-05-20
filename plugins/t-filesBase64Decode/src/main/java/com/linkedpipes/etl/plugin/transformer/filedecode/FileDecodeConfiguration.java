@@ -9,7 +9,7 @@ import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
 @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-fileDecode#Configuration")
 public class FileDecodeConfiguration {
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-fileDecode#Configuration")
+    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-fileDecode#skipOnError")
     private boolean skipOnError = false;
 
     public FileDecodeConfiguration() {
