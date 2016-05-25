@@ -90,6 +90,34 @@ define([
         }
     };
 
+    service.getComponentMenuDom = function() {
+        if (this.componentMenu.DOM === undefined) {
+            this.componentMenu.DOM = jQuery('#componentMenu');
+        }
+        return this.componentMenu.DOM;
+    };
+
+    service.getComponentMenuMappingDom = function() {
+        if (this.componentMenu.mapping.DOM === undefined) {
+           this.componentMenu.mapping.DOM = jQuery('#mapping');
+        }
+        return this.componentMenu.mapping.DOM;
+    };
+
+    service.getCanvasDom = function() {
+        if (this.canvas.DOM === undefined) {
+            this.canvas.DOM = jQuery('#canvas');
+        }
+        return this.canvas.DOM;
+    };
+
+    service.getBlankMenuDom = function() {
+        if (this.blankMenu.DOM === undefined) {
+            this.blankMenu.DOM = jQuery('#blankMenu');
+        }
+        return this.blankMenu.DOM;
+    };
+
     service.showComponentMenu = function (view, component) {
         // We can't use bounding box of the cell as it includes
         // the labels, instead we need to get
@@ -104,40 +132,42 @@ define([
         boundingBox.x += paperOffset.e;
         boundingBox.y += paperOffset.f;
         // Update position.
-        var canvasPosition = this.canvas.DOM.position();
-        this.componentMenu.DOM.css('left',
+        var canvasPosition = this.getCanvasDom().position();
+        var componentMenuDom = this.getComponentMenuDom();
+        componentMenuDom.css('left',
                 boundingBox.x + canvasPosition.left + 20);
-        this.componentMenu.DOM.css('top',
+        componentMenuDom.css('top',
                 boundingBox.y + canvasPosition.top + 0);
         // Update size.
         service.menuComponentUpdateHeight(boundingBox.height);
         // Show.
-        this.componentMenu.DOM.css('display', 'inline');
+        componentMenuDom.css('display', 'inline');
         this.componentMenu.view = view;
         this.componentMenu.component = component;
         this.componentMenu.visible = true;
         // Mapping
         if (this.API.mappingAvailable(component)) {
-            this.componentMenu.mapping.DOM.css('display', 'inline');
+            this.getComponentMenuMappingDom().css('display', 'inline');
         } else {
-            this.componentMenu.mapping.DOM.css('display', 'none');
+            this.getComponentMenuMappingDom().css('display', 'none');
         }
     };
 
     service.menuComponentUpdateHeight = function (height) {
-        var bottomMenu = this.componentMenu.DOM.find('#bottomBar');
+        var bottomMenu = this.getComponentMenuDom().find('#bottomBar');
         bottomMenu.css('top', (height - 45) + 'px');
     };
 
     service.hydeComponentMenu = function () {
-        this.componentMenu.DOM.css('display', 'none');
+        this.getComponentMenuDom().css('display', 'none');
         this.componentMenu.visible = false;
     };
 
     service.showEmptySpaceMenu = function (event, x, y) {
-        this.blankMenu.DOM.css('left', event.clientX);
-        this.blankMenu.DOM.css('top', event.clientY);
-        this.blankMenu.DOM.css('display', 'inline');
+        var blankMenuDom = this.getBlankMenuDom();
+        blankMenuDom.css('left', event.clientX);
+        blankMenuDom.css('top', event.clientY);
+        blankMenuDom.css('display', 'inline');
         // Save position of the empty space menu.
         this.blankMenu.x = x;
         this.blankMenu.y = y;
@@ -145,7 +175,7 @@ define([
     };
 
     service.hydeEmptySpaceMenu = function () {
-        this.blankMenu.DOM.css('display', 'none');
+        this.getBlankMenuDom().css('display', 'none');
         this.blankMenu.visible = false;
     };
 
@@ -390,10 +420,10 @@ define([
             'link': function ($scope, element, attrs) {
                 instance = jQuery.extend($scope.api, service);
                 // Get references.
-                instance.canvas.DOM = jQuery('#canvas');
-                instance.componentMenu.DOM = jQuery('#componentMenu');
-                instance.componentMenu.mapping.DOM = jQuery('#mapping');
-                instance.blankMenu.DOM = jQuery('#blankMenu');
+                instance.canvas.DOM = void 0;
+                instance.componentMenu.DOM = void 0;
+                instance.componentMenu.mapping.DOM = void 0;
+                instance.blankMenu.DOM = void 0;
             }
         };
     }
