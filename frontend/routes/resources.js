@@ -118,8 +118,7 @@ gApiRouter.delete('/pipelines/:id', function (request, response) {
 
 gApiRouter.post('/pipelines/:id', function (request, response) {
     if (request.query.pipeline) {
-        // Update exisitng pipeline.
-        // TODO Body must contains pipeline definition !
+        // Import pipeline from given URL.
         gPipelines.import(request.params.id, request.query.pipeline, function (record) {
             if (record) {
                 response.json(record);
