@@ -18,6 +18,7 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -167,16 +168,16 @@ public class ExecutionFacade {
     }
 
     /**
-     * Create execution from given source.
+     * Create execution from given sources.
      *
-     * @param stream
-     * @param format Format of data in given stream.
+     * @param pipeline
+     * @param inputs
      * @return
      * @throws ExecutionFacade.OperationFailed
      */
-    public Execution createExecution(InputStream stream, RDFFormat format)
-            throws OperationFailed {
-        return storage.createExecution(stream, format);
+    public Execution createExecution(MultipartFile pipeline,
+            List<MultipartFile> inputs) throws OperationFailed {
+        return storage.createExecution(pipeline, inputs);
     }
 
     /**
