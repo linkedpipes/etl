@@ -153,14 +153,27 @@ gApiRouter.post('/pipelines/:id', function (request, response) {
 });
 
 gApiRouter.put('/pipelines/:id', function (request, response) {
-    // We may need to modify the URIs in pipeline.
-    if (request.query.unchecked === 'true') {
-        gPipelines.update(request.params.id, request.body, false);
-    } else {
-        gPipelines.update(request.params.id, request.body, true);
-    }
-    response.status(200);
-    response.send('');
+
+    var body = '';
+    request.on('data', function (chunk) {
+        body += chunk;
+    });
+    request.on('end', function () {
+        if (gPipelines.update(request.params.id, JSON.parse(body),
+                request.query.unchecked !== 'true')) {
+            response.status(200).send('');
+        } else {
+            response.status(500).json({
+                'exception': {
+                    'errorMessage': '',
+                    'systemMessage': '',
+                    'userMessage': 'Pipeline does not exist.',
+                    'errorCode': 'ERROR'
+                }});
+        }
+
+
+    });
 });
 
 //
