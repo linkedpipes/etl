@@ -251,7 +251,7 @@ gApiRouter.post('/executions', function (request, response) {
             gRequest.post({
                 'url': gMonitorUri + 'executions',
                 'formData': formData,
-                'headers' : {
+                'headers': {
                     'Accept': 'application/json'
                 }
             }).on('error', function (error) {
