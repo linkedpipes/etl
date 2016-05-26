@@ -17,11 +17,11 @@ define([
         },
         'http://etl.linkedpipes.com/resources/status/initializing': {
             'stroke': 'blue',
-            'stroke-width': 2
+            'stroke-width': 3
         },
         'http://etl.linkedpipes.com/resources/status/running': {
             'stroke': 'blue',
-            'stroke-width': 2
+            'stroke-width': 4
         },
         'http://etl.linkedpipes.com/resources/status/finished': {
             'stroke': '#388E3C',
