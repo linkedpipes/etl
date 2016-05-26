@@ -214,7 +214,13 @@ var rebuilFollowUp = function () {
     var pipelineFiles = gFs.readdirSync(pipelineDirectory);
     pipelineFiles.forEach(function (fileName) {
         var path = pipelineDirectory + '/' + fileName;
-        var pipeline = JSON.parse(gFs.readFileSync(path));
+        try {
+            var pipeline = JSON.parse(gFs.readFileSync(path));
+        } catch (err) {
+            console.error('Can not read pipeline from: ', path);
+            console.info('Exception:' , err.message, err.stack);
+            return;
+        }
         var pipelineIri =
                 gConfiguration.storage.domain +
                 '/resources/pipelines/' +
