@@ -208,8 +208,6 @@ gApiRouter.post('/executions', function (request, response) {
             !request.headers['content-type'].toLowerCase().
             startsWith('multipart/form-data')) {
 
-        console.log('request.query', request.query);
-
         if (request.query.pipeline === undefined) {
             response.status(500).json({
                 'exception': {
@@ -227,44 +225,51 @@ gApiRouter.post('/executions', function (request, response) {
         var pipelineObject = {
             'iri': request.query.pipeline
         };
-        gUnpacker.unpack(pipelineObject, request.body, function (sucess, result) {
-            console.timeEnd('  Unpack');
-            if (sucess === false) {
-                response.status(503).json(result);
-                return;
-            }
-            console.time('  Stringify');
-            var formData = {
-                'format': 'application/ld+json',
-                'pipeline': {
-                    'value': JSON.stringify(result),
-                    'options': {
-                        'contentType': 'application/octet-stream',
-                        'filename': 'pipeline.jsonld'
-                    }
+        var body = '';
+        request.on('data', function (chunk) {
+            body += chunk;
+        });
+        request.on('end', function () {
+            configuration = JSON.parse(body);
+            gUnpacker.unpack(pipelineObject, configuration, function (sucess, result) {
+                console.timeEnd('  Unpack');
+                if (sucess === false) {
+                    response.status(503).json(result);
+                    return;
                 }
-            };
-            console.timeEnd('  Stringify');
-            // Do post on executor service.
-            console.time('  POST');
-            gRequest.post({
-                'url': gMonitorUri + 'executions',
-                'formData': formData,
-                'headers': {
-                    'Accept': 'application/json'
-                }
-            }).on('error', function (error) {
-                response.status(500).json({
-                    'exception': {
-                        'errorMessage': JSON.stringify(error),
-                        'systemMessage': 'Executor-monitor is offline!',
-                        'userMessage': "Can't connect to backend.",
-                        'errorCode': 'CONNECTION_REFUSED'
+                console.time('  Stringify');
+                var formData = {
+                    'format': 'application/ld+json',
+                    'pipeline': {
+                        'value': JSON.stringify(result),
+                        'options': {
+                            'contentType': 'application/octet-stream',
+                            'filename': 'pipeline.jsonld'
+                        }
                     }
-                });
-            }).on('response', function (res) {
-                console.timeEnd('  POST');
-            }).pipe(response);
+                };
+                console.timeEnd('  Stringify');
+                // Do post on executor service.
+                console.time('  POST');
+                gRequest.post({
+                    'url': gMonitorUri + 'executions',
+                    'formData': formData,
+                    'headers': {
+                        'Accept': 'application/json'
+                    }
+                }).on('error', function (error) {
+                    response.status(500).json({
+                        'exception': {
+                            'errorMessage': JSON.stringify(error),
+                            'systemMessage': 'Executor-monitor is offline!',
+                            'userMessage': "Can't connect to backend.",
+                            'errorCode': 'CONNECTION_REFUSED'
+                        }
+                    });
+                }).on('response', function (res) {
+                    console.timeEnd('  POST');
+                }).pipe(response);
+            });
         });
         return;
     }
