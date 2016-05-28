@@ -280,13 +280,13 @@ define([
                 return executionCanvas.switchMapping(component['@id']);
             };
             $scope.pipelineEdit.API.mappingAvailable = function (component) {
-                // TODO Add better check.
                 if (data.execution.iri === undefined) {
                     return;
+                } else {
+                    return executionCanvas.isMappingAvailable(
+                            component['@id']);
                 }
-                return executionCanvas.onCanChangeMapping(component['@id']);
             };
-
             // Set mode based on the input.
             // TODO This should each component do on it own.
             if (data.execution.iri === undefined) {
@@ -379,7 +379,7 @@ define([
                 }
                 // Make sure we should (and can) use mapping
                 // and if so use it.
-                if (data.execution.model.mapping.isEnabled(component)) {
+                if (data.execution.model.mapping.isUsedForExecution(component)) {
                     mapping[iri] = component['iri'];
                 }
             }
@@ -508,7 +508,7 @@ define([
             }
         };
 
-        $scope.onEditMode = function() {
+        $scope.onEditMode = function () {
             editMode();
         };
 

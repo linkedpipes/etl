@@ -2,8 +2,9 @@
 // Provides functionality that enable usage of pipelines on the canvas.
 // Provide support for add/delete/clone/etc... operation on the pipeline.
 // Custom events:
-//  lp:resource:remove - Called whenever a resource is removed, parameter
-//      is resource IRI.
+//  lp:resource:remove - Called whenever a component is removed, parameter
+//      is component IRI. Is fired before the component is removed
+//      from the pipeline.
 //  lp:component:update - Used to notify all about change in the component,
 //      parameter is the component IRI, the second parameter is the component
 //      and it's optional.
@@ -447,8 +448,8 @@ define([
                 console.timeEnd('canvasPipeline.load');
                 if (missingTemplates[templateIri] === undefined) {
                     this.statusService.error({
-                       'title' : 'Missing template',
-                       'message': templateIri
+                        'title': 'Missing template',
+                        'message': templateIri
                     });
                     missingTemplates[templateIri] = [];
                 }
@@ -603,7 +604,7 @@ define([
                     model, connection);
             // Update verticies positions.
             if (vertices !== undefined) {
-                vertices.forEach(function(item) {
+                vertices.forEach(function (item) {
                     item.x = item.x + x - minX;
                     item.y = item.y + y - minY;
                 });
@@ -649,7 +650,7 @@ define([
                     model, connection);
             // Update verticies positions.
             if (vertices !== undefined) {
-                vertices.forEach(function(item) {
+                vertices.forEach(function (item) {
                     item.x = item.x + x - minX;
                     item.y = item.y + y - minY;
                 });
@@ -758,6 +759,8 @@ define([
         if (resource === undefined) {
             return;
         }
+        // Notify all, but only if we are deleting something.
+        this.canvas.getPaper().trigger('lp:resource:remove', resource['@id']);
         // Remove references from maps.
         delete this.data.iriToId[resource['@id']];
         delete this.data.idToResource[cell.id];
@@ -770,8 +773,6 @@ define([
         if (iri !== undefined) {
             this.pipelineModel.deleteGraph(this.pipeline, iri);
         }
-        // Notify other component.
-        this.canvas.getPaper().trigger('lp:resource:remove', resource['@id']);
     };
 
     service.onAdd = function (cell) {

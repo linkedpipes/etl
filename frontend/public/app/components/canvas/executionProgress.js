@@ -61,14 +61,17 @@ define([
                 return;
             }
         }
-        if (!execution.mapping.isAvailable(component)) {
+        // Changed components are not available for mapping.
+        if (execution.mapping.isChanged(component)) {
             cell.attr('rect', statusToHighligh['notAvailable']);
             return;
         }
+        // Disabled mapping.
         if (!execution.mapping.isEnabled(component)) {
             cell.attr('rect', statusToHighligh['disabled']);
             return;
         }
+        // Otherwise decide based on the status.
         cell.attr('rect', statusToHighligh[status]);
     };
 
@@ -146,6 +149,9 @@ define([
         window.open(ftpPath + dataUnit.debug, '_blank');
     };
 
+    /**
+     * Enabled of disable the execution progress component.
+     */
     service.setEnabled = function (enabled) {
         this.enabled = enabled;
         // Update, this would show/hide the running oomponent.
@@ -173,14 +179,15 @@ define([
     };
 
     /**
-     * True if mapping for a component can be changed.
+     * True if mapping for a component can be changed. Ie. if button
+     * can be shown to enable/dissable the mapping.
      */
-    service.onCanChangeMapping = function (iri) {
+    service.isMappingAvailable = function (iri) {
         var component = this.execution.getComponents()[iri];
         if (component === undefined) {
-            return;
+            return false;
         }
-        return this.execution.mapping.isAvailable(component);
+        return this.execution.mapping.canChangeMapping(component);
     };
 
     /**
@@ -189,12 +196,10 @@ define([
     service.switchMapping = function (iri) {
         var component = this.execution.getComponents()[iri];
         if (component === undefined) {
-            console.log('swithMapping: out');
+            console.log('swithMapping: undefined component for iri: ', iri);
             return;
         }
-        if (!this.execution.mapping.isAvailable(component)) {
-            return;
-        }
+        // Change status.
         if (this.execution.mapping.isEnabled(component)) {
             this.onDisableMapping(iri);
         } else {
@@ -210,7 +215,7 @@ define([
         if (component === undefined) {
             return;
         }
-        if (!this.execution.mapping.isAvailable(component)) {
+        if (!this.execution.mapping.canEnableMapping(component)) {
             return;
         }
         this.execution.mapping.enable(component);
@@ -251,15 +256,16 @@ define([
         }.bind(this));
     };
 
-    service.onRemoveMapping = function (iri) {
+    service.onChangeComponent = function (iri) {
+        console.log('onChangeComponent' , iri);
         var component = this.execution.getComponents()[iri];
         if (component === undefined) {
             return;
         }
-        if (!this.execution.mapping.isEnabled(component)) {
+        if (this.execution.mapping.isChanged(component)) {
             return;
         }
-        this.execution.mapping.changed(component);
+        this.execution.mapping.onChange(component);
         // Update visual.
         updateVisual(this.pipelineCanvas.getCell(iri), component,
                 this.execution, this.enabled);
@@ -269,7 +275,7 @@ define([
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
             if (conService.getSource(connection) === iri) {
-                this.onRemoveMapping(conService.getTarget(connection));
+                this.onChangeComponent(conService.getTarget(connection));
             }
         }.bind(this));
     };
@@ -282,11 +288,34 @@ define([
         canvas.getPaper().on('cell:pointerclick',
                 this.onPointerClick.bind(this));
 
-        canvas.getPaper().on('lp:resource:remove',
-                this.onRemoveMapping.bind(this));
+        // 'Remove' and 'change 'of component both are considered to be
+        // change in the component.
 
-        canvas.getPaper().on('lp:component:changed',
-                this.onRemoveMapping.bind(this));
+        canvas.getPaper().on('lp:resource:remove', function (iri) {
+            // Here the edge to a component could been removed.
+            var component = this.execution.getComponents()[iri];
+            if (component === undefined) {
+                // Can be a connection!
+                var connections = this.pipelineModel.getConnections(
+                        this.pipelineCanvas.getPipeline());
+                var conService = this.pipelineModel.connection;
+                // Disable mapping for all that use given
+                // connection.
+                connections.forEach(function (connection) {
+                    if (connection['@id'] === iri) {
+                        this.onChangeComponent(
+                                conService.getTarget(connection));
+                    }
+                }.bind(this));
+            } else {
+                // Is component.
+                this.onChangeComponent(iri);
+            }
+        }.bind(this));
+
+        canvas.getPaper().on('lp:component:changed', function (iri) {
+            this.onChangeComponent(iri);
+        }.bind(this));
 
     };
 
