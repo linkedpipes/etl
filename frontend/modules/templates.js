@@ -106,6 +106,20 @@ var addComponent = function (name, path) {
     gModule.data[name] = dataItem;
 };
 
+var getReference = function (object, property) {
+    if (!object[property]) {
+        return;
+    }
+    var value = object[property];
+    if (value['@id']) {
+        return value['@id'];
+    } else if (value[0]['@id']) {
+        return value[0]['@id'];
+    } else {
+        return value['@id'];
+    }
+};
+
 var updatePipeline = function (pipelineObject, pipelineUri) {
     for (var graphIndex in pipelineObject['@graph']) {
         var graph = pipelineObject['@graph'][graphIndex];
@@ -120,7 +134,7 @@ var updatePipeline = function (pipelineObject, pipelineUri) {
                 return;
             }
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1) {
-                components[resource['@id']] = resource['http://linkedpipes.com/ontology/template']['@id'];
+                components[resource['@id']] = getReference(resource, 'http://linkedpipes.com/ontology/template');
             } else if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') !== -1) {
                 connection.push({
                     'source': resource['http://linkedpipes.com/ontology/sourceComponent']['@id'],
