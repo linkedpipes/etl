@@ -424,6 +424,10 @@ define([
                 instance.componentMenu.DOM = void 0;
                 instance.componentMenu.mapping.DOM = void 0;
                 instance.blankMenu.DOM = void 0;
+                // Callback when ready.
+                if (instance.onLink) {
+                    instance.onLink();
+                }
             }
         };
     }

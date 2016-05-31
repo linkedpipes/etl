@@ -253,20 +253,10 @@ define([
             $scope.pipelineEdit.setEnabled(true);
         }
 
-        $timeout(function () {
+        //
+        var readyComponents = 0;
 
-            // Wait for the end of the initialization.
-
-            data.execution.model = executionModel.create(jsonldService);
-
-            pipelineCanvas.bind(
-                    $scope.canvas);
-
-            executionCanvas.bind(
-                    $scope.canvas,
-                    pipelineCanvas,
-                    data.execution.model);
-
+        $scope.pipelineEdit.onLink = function () {
             $scope.pipelineEdit.bind(
                     $scope.canvas,
                     pipelineCanvas);
@@ -287,6 +277,15 @@ define([
                             component['@id']);
                 }
             };
+
+            readyComponents++;
+            initialize();
+        };
+
+        function initialize() {
+            if (readyComponents !== 2) {
+                return;
+            }
             // Set mode based on the input.
             // TODO This should each component do on it own.
             if (data.execution.iri === undefined) {
@@ -311,7 +310,27 @@ define([
                     'response': response
                 });
             });
-        }, 0);
+        }
+
+        $timeout(function () {
+
+            console.log('components.pipeline.canvas.view : timeout');
+
+            // Wait for the end of the initialization.
+
+            data.execution.model = executionModel.create(jsonldService);
+
+            pipelineCanvas.bind(
+                    $scope.canvas);
+
+            executionCanvas.bind(
+                    $scope.canvas,
+                    pipelineCanvas,
+                    data.execution.model);
+
+            readyComponents++;
+            initialize();
+        });
 
         /**
          * Save current pipeline to ginve URI.
