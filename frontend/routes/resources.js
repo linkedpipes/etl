@@ -230,12 +230,28 @@ gApiRouter.post('/executions', function (request, response) {
             body += chunk;
         });
         request.on('end', function () {
-            configuration = JSON.parse(body);
+            if (body === '') {
+                configuration = {};
+            } else {
+                try {
+                    configuration = JSON.parse(body);
+                } catch (error) {
+                    console.error(error);
+                    response.status(500).json({
+                        'exception': {
+                            'errorMessage': JSON.stringify(error),
+                            'systemMessage': 'Invalid configuration',
+                            'userMessage': "Invalid execution command.",
+                            'errorCode': 'ERROR'
+                        }
+                    });
+                    return;
+                }
+            }
             gUnpacker.unpack(pipelineObject, configuration, function (sucess, result) {
                 console.timeEnd('  Unpack');
                 if (sucess === false) {
                     response.status(503).json(result);
-                    return;
                 }
                 console.time('  Stringify');
                 var formData = {
