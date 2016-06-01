@@ -202,17 +202,6 @@ gApiRouter.get('/executions', function (request, response) {
 gApiRouter.post('/executions', function (request, response) {
 
     console.log('[POST] /executions');
-    if (request.headers['content-type'] === undefined) {
-        response.status(500).json({
-            'exception': {
-                'systemMessage': '',
-                'userMessage': "Missing content-type.",
-                'errorCode': 'ERROR'
-            }
-        });
-    }
-    var contentType = request.headers['content-type'].toLowerCase();
-    console.log('  content-type: ', contentType);
     console.log('  content-type: ', request.headers['content-type']);
 
     if (request.headers['content-type'] === undefined ||
