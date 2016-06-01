@@ -202,12 +202,20 @@ gApiRouter.get('/executions', function (request, response) {
 gApiRouter.post('/executions', function (request, response) {
 
     console.log('[POST] /executions');
-    console.log('content: ', request.headers['content-type']);
+    if (request.headers['content-type'] === undefined) {
+        response.status(500).json({
+            'exception': {
+                'systemMessage': '',
+                'userMessage': "Missing content-type.",
+                'errorCode': 'ERROR'
+            }
+        });
+    }
+    var contentType = request.headers['content-type'].toLowerCase();
+    console.log('  content-type: ', contentType);
 
     if (request.headers['content-type'] === undefined ||
-            !request.headers['content-type'].toLowerCase().
-            startsWith('multipart/form-data')) {
-
+            !contentType.startsWith('multipart/form-data')) {
         if (request.query.pipeline === undefined) {
             response.status(500).json({
                 'exception': {
@@ -221,7 +229,7 @@ gApiRouter.post('/executions', function (request, response) {
         // This is not a multipart request, but we have the pipeline
         // IRI in the URL. The content of the body
         // is considered to be a configuration.
-        console.time('  Unpack');
+        console.time('  unpack');
         var pipelineObject = {
             'iri': request.query.pipeline
         };
@@ -249,11 +257,11 @@ gApiRouter.post('/executions', function (request, response) {
                 }
             }
             gUnpacker.unpack(pipelineObject, configuration, function (sucess, result) {
-                console.timeEnd('  Unpack');
+                console.timeEnd('  unpack');
                 if (sucess === false) {
                     response.status(503).json(result);
                 }
-                console.time('  Stringify');
+                console.time('  stringify');
                 var formData = {
                     'format': 'application/ld+json',
                     'pipeline': {
@@ -264,7 +272,7 @@ gApiRouter.post('/executions', function (request, response) {
                         }
                     }
                 };
-                console.timeEnd('  Stringify');
+                console.timeEnd('  stringify');
                 // Do post on executor service.
                 console.time('  POST');
                 gRequest.post({
@@ -321,6 +329,8 @@ gApiRouter.post('/executions', function (request, response) {
     var firstBoundary = true;
     var configuration = '{}'; // Default is empty configuration.
     var pipelineAsString = '';
+    // If true we need to unpack given pipeline.
+    var unpack_pipeline = !request.query.unpacked_pipeline;
     form.on('part', function (part) {
         if (part.name === 'configuration') {
             configuration = '';
@@ -330,8 +340,9 @@ gApiRouter.post('/executions', function (request, response) {
             });
             return;
         }
-        if (part.name === 'pipeline' && request.query.unpack_pipeline) {
-            // Read and save the pipeline.
+        if (part.name === 'pipeline' && unpack_pipeline) {
+            console.log('  unpacking pipeline');
+            // Read and save the pipeline for unpacking.
             part.on('data', function (chunk) {
                 pipelineAsString += chunk;
             });
@@ -353,17 +364,20 @@ gApiRouter.post('/executions', function (request, response) {
         console.timeEnd('  posting data');
         // When we here, all the data were transfered or read.
         var pipelineObject = {};
-        if (request.query.unpack_pipeline !== undefined) {
-            pipelineObject.pipeline = pipelineAsString;
-        } else if (request.query.pipeline !== undefined) {
+        if (request.query.pipeline !== undefined) {
+            // Get pipeline based on IRI.
             pipelineObject.iri = request.query.pipeline;
+        } else if (unpack_pipeline) {
+            // Pipeline (frontend format) form the POST request.
+            pipelineObject.pipeline = pipelineAsString;
         } else {
-            // Pipeline send as a part of request.
+            // Pipeline was send as a part of request.
             postRequest.write('\r\n--' + boundary + '--\r\n');
             postRequest.end();
             console.timeEnd('  total');
             return;
         }
+
         // Unpack the pipeline.
         try {
             console.time('  unpack');
