@@ -10,11 +10,6 @@ var gApp = gExpress();
 // Load configuration.
 var gConfiguration = require('./modules/configuration');
 
-// Support for POST content.
-var gBodyParser = require('body-parser');
-gApp.use(gBodyParser.urlencoded({extended: true}));
-gApp.use(gBodyParser.json({limit: '16mb'}));
-
 // Static content.
 gApp.use('/app', gExpress.static('public/app'));
 gApp.use('/libraries', gExpress.static('public/libraries'));

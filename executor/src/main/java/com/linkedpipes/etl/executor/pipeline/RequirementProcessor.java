@@ -47,6 +47,24 @@ class RequirementProcessor {
 
     }
 
+    private static class InputDirectory implements EntityLoader.Loadable {
+
+        private String targetProperty;
+
+        @Override
+        public EntityLoader.Loadable load(String predicate, Value object)
+                throws EntityLoader.LoadingFailed {
+            switch (predicate) {
+                case LINKEDPIPES.REQUIREMENTS.HAS_TARGET_PROPERTY:
+                    targetProperty = object.stringValue();
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+    }
+
     private RequirementProcessor() {
     }
 
@@ -83,6 +101,13 @@ class RequirementProcessor {
                             item.get("requirement"),
                             item.get("source"));
                     break;
+                case LINKEDPIPES.REQUIREMENTS.INPUT_DIRECTORY:
+                    handleInputDirectory(
+                            definition,
+                            resourceManager,
+                            item.get("requirement"),
+                            item.get("source"));
+                    break;
                 default:
                     break;
             }
@@ -113,6 +138,36 @@ class RequirementProcessor {
                         vf.createIRI(source),
                         vf.createIRI(tempDirectory.targetProperty),
                         vf.createIRI(workingDir.toURI().toString())),
+                        vf.createIRI(definition.getDefinitionGraph()));
+            });
+        } catch (RepositoryException ex) {
+            throw new ProcessingFailed(ex);
+        }
+    }
+
+    private static void handleInputDirectory(PipelineDefinition definition,
+            ResourceManager resourceManager, String requirement, String source)
+            throws ProcessingFailed {
+        // Read requirements.
+        final InputDirectory inputDirectory = new InputDirectory();
+        try {
+            EntityLoader.load(
+                    definition.getRepository(),
+                    requirement,
+                    definition.getDefinitionGraph(),
+                    inputDirectory);
+        } catch (EntityLoader.LoadingFailed ex) {
+            throw new ProcessingFailed(ex);
+        }
+        // Add triple with path to the temp directory.
+        final File inputDir = resourceManager.getInputDirectory();
+        try {
+            Repositories.consume(definition.getRepository(), (connection) -> {
+                final ValueFactory vf = SimpleValueFactory.getInstance();
+                connection.add(vf.createStatement(
+                        vf.createIRI(source),
+                        vf.createIRI(inputDirectory.targetProperty),
+                        vf.createIRI(inputDir.toURI().toString())),
                         vf.createIRI(definition.getDefinitionGraph()));
             });
         } catch (RepositoryException ex) {

@@ -41,6 +41,7 @@
         <module>t-tabularUv</module>
         <module>t-singleGraphUnion</module>
         <module>e-httpGetFiles</module>
+        <module>e-pipelineInput</module>
     </modules>
 
 </project>

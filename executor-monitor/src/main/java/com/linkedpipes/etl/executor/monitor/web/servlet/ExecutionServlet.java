@@ -3,13 +3,12 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorFacade;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.openrdf.model.Statement;
@@ -18,13 +17,10 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,8 +36,26 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/executions")
 public class ExecutionServlet {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(ExecutionServlet.class);
+    public static class CreateExecution {
+
+        /**
+         * Execution IRI.
+         */
+        private String iri;
+
+        public CreateExecution(Execution execution) {
+            this.iri = execution.getIri();
+        }
+
+        public String getIri() {
+            return iri;
+        }
+
+        public void setIri(String iri) {
+            this.iri = iri;
+        }
+
+    };
 
     @Autowired
     private ExecutionFacade executionFacade;
@@ -150,44 +164,16 @@ public class ExecutionServlet {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void acceptMultipart(
-            @RequestParam("file") MultipartFile multipart,
-            @RequestParam(value = "format") String format,
+    public CreateExecution acceptMultipart(
+            @RequestParam("pipeline") MultipartFile pipeline,
+            @RequestParam("input") List<MultipartFile> inputs,
             HttpServletResponse response)
             throws ExecutionFacade.OperationFailed, IOException {
-        startExecution(response, multipart.getInputStream(), format);
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public void acceptJsonLd(@RequestBody String body,
-            HttpServletRequest request, HttpServletResponse response)
-            throws ExecutionFacade.OperationFailed, IOException {
-        final InputStream inputStream = new ByteArrayInputStream(
-                body.getBytes("UTF-8"));
-        startExecution(response, inputStream, request.getHeader("Content-Type"));
-    }
-
-    /**
-     * Start execution.
-     *
-     * @param response
-     * @param inputStream
-     * @param type
-     */
-    private void startExecution(HttpServletResponse response,
-            InputStream inputStream, String type)
-            throws ExecutionFacade.OperationFailed {
-        final RDFFormat format = Rio.getParserFormatForMIMEType(type).
-                orElse(null);
-        if (format == null) {
-            LOG.info("Invalid format: {}", type);
-            response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
-            return;
-        }
-        executionFacade.createExecution(inputStream, format);
-        // Prompt start of executions.
+        final Execution execution = executionFacade.createExecution(pipeline,
+                inputs);
+        // TODO Execution in other thread !
         executorFacade.startExecutions();
+        return new CreateExecution(execution);
     }
 
 }

@@ -84,7 +84,13 @@ var getPipelineLabel = function (id, definition) {
 var insertPipeline = function (id, definition) {
     var definitionFile = gConfiguration.storage.pipelines + '/' + id + '.json';
     if (!definition) {
-        definition = JSON.parse(gFs.readFileSync(definitionFile));
+        try {
+            definition = JSON.parse(gFs.readFileSync(definitionFile));
+        } catch(err) {
+            console.error('Can not read pipeline from: ', definitionFile);
+            console.info('Exception:' , err.message, err.stack);
+            return;
+        }
     }
     var pipelineIri = gConfiguration.storage.domain + '/resources/pipelines/' + id;
     var pipelineRecord = {

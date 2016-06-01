@@ -253,20 +253,10 @@ define([
             $scope.pipelineEdit.setEnabled(true);
         }
 
-        $timeout(function () {
+        //
+        var readyComponents = 0;
 
-            // Wait for the end of the initialization.
-
-            data.execution.model = executionModel.create(jsonldService);
-
-            pipelineCanvas.bind(
-                    $scope.canvas);
-
-            executionCanvas.bind(
-                    $scope.canvas,
-                    pipelineCanvas,
-                    data.execution.model);
-
+        $scope.pipelineEdit.onLink = function () {
             $scope.pipelineEdit.bind(
                     $scope.canvas,
                     pipelineCanvas);
@@ -280,13 +270,22 @@ define([
                 return executionCanvas.switchMapping(component['@id']);
             };
             $scope.pipelineEdit.API.mappingAvailable = function (component) {
-                // TODO Add better check.
                 if (data.execution.iri === undefined) {
                     return;
+                } else {
+                    return executionCanvas.isMappingAvailable(
+                            component['@id']);
                 }
-                return executionCanvas.onCanChangeMapping(component['@id']);
             };
 
+            readyComponents++;
+            initialize();
+        };
+
+        function initialize() {
+            if (readyComponents !== 2) {
+                return;
+            }
             // Set mode based on the input.
             // TODO This should each component do on it own.
             if (data.execution.iri === undefined) {
@@ -311,7 +310,27 @@ define([
                     'response': response
                 });
             });
-        }, 0);
+        }
+
+        $timeout(function () {
+
+            console.log('components.pipeline.canvas.view : timeout');
+
+            // Wait for the end of the initialization.
+
+            data.execution.model = executionModel.create(jsonldService);
+
+            pipelineCanvas.bind(
+                    $scope.canvas);
+
+            executionCanvas.bind(
+                    $scope.canvas,
+                    pipelineCanvas,
+                    data.execution.model);
+
+            readyComponents++;
+            initialize();
+        });
 
         /**
          * Save current pipeline to ginve URI.
@@ -379,7 +398,7 @@ define([
                 }
                 // Make sure we should (and can) use mapping
                 // and if so use it.
-                if (data.execution.model.mapping.isEnabled(component)) {
+                if (data.execution.model.mapping.isUsedForExecution(component)) {
                     mapping[iri] = component['iri'];
                 }
             }
@@ -483,7 +502,7 @@ define([
                 // Delete pipeline.
                 $http({
                     'method': 'DELETE',
-                    'url': $scope.data.iri
+                    'url': data.pipeline.iri
                 }).then(function () {
                     $location.path('/pipelines').search({});
                 }, function (response) {
@@ -508,7 +527,7 @@ define([
             }
         };
 
-        $scope.onEditMode = function() {
+        $scope.onEditMode = function () {
             editMode();
         };
 

@@ -41,6 +41,10 @@ public final class ResourceManager {
         return new File(root, executionId + "/" + path);
     }
 
+    public File getInputDirectory() {
+        return new File(executionRoot, "input");
+    }
+
     public File getWorkingDirectory(String name) {
         counter += 1;
         final File working = new File(executionRoot, "working/" + name + "-" + counter);

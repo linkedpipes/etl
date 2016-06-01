@@ -22,7 +22,8 @@ define([
     'angular-messages',
     'angular-material',
     'angular-file-upload',
-    'angular-ui-notification'
+    'angular-ui-notification',
+    'angular-clipboard'
 ], function (
         config,
         executionModel,
@@ -49,7 +50,8 @@ define([
         'ngMaterial',
         'ngMessages', // Support for ng-messages directive used in dialogs.
         'ngFileUpload',
-        'ui-notification' // Notification
+        'ui-notification', // Notification
+        'angular-clipboard'
     ]);
     app.config(config);
     //

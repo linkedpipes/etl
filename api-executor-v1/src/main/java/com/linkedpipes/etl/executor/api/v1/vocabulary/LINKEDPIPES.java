@@ -139,6 +139,11 @@ public final class LINKEDPIPES {
         public static final String TEMP_DIRECTORY = PREFIX_ONTOLOGY + "TempDirectory";
 
         /**
+         * Assign path to the input directory. THe directory may not exist.
+         */
+        public static final String INPUT_DIRECTORY = PREFIX_ONTOLOGY + "InputDirectory";
+
+        /**
          * Resolve path to resource from the pipeline definition.
          */
         public static final String RESOLVE_DEFINITION_RESOURCE = PREFIX_ONTOLOGY + "DefinitionResource";

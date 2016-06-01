@@ -16,6 +16,7 @@ import com.linkedpipes.etl.dpu.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.dpu.api.service.DefinitionReader;
 import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SimpleComponent;
 
@@ -140,6 +141,9 @@ final class SimpleComponentImpl implements SimpleComponent {
             Object object;
             if (field.getType() == ProgressReport.class) {
                 object = new ProgressReportImpl(context,
+                        configuration.getResourceIri());
+            } else if (field.getType() == DefinitionReader.class) {
+                object = new DefinitionReaderImpl(definition, definitionGraph,
                         configuration.getResourceIri());
             } else if (field.getType() == AfterExecution.class) {
                 afterExecution = new AfterExecutionImpl();
