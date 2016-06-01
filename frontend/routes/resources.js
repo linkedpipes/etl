@@ -213,9 +213,12 @@ gApiRouter.post('/executions', function (request, response) {
     }
     var contentType = request.headers['content-type'].toLowerCase();
     console.log('  content-type: ', contentType);
+    console.log('  content-type: ', request.headers['content-type']);
 
     if (request.headers['content-type'] === undefined ||
-            !contentType.startsWith('multipart/form-data')) {
+            request.headers['content-type'].toLowerCase().
+            indexOf('multipart/form-data') === -1) {
+        // It's not multipart/form-data request.
         if (request.query.pipeline === undefined) {
             response.status(500).json({
                 'exception': {
