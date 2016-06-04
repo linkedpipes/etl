@@ -285,7 +285,7 @@ define([
         this.pipelineCanvas = pipelineCanvas;
         this.execution = execution;
 
-        canvas.getPaper().on('cell:pointerclick',
+        canvas.getPaper().on('cell:pointerdown',
                 this.onPointerClick.bind(this));
 
         // 'Remove' and 'change 'of component both are considered to be
