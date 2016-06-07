@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
 import com.linkedpipes.etl.dpu.api.Component;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -66,23 +68,47 @@ public final class Xslt implements SimpleExecution {
             throw new Component.ExecutionFailed(
                     "Can't compile template.", ex);
         }
+        // Load name mapping from input to output.
+        final Map<String, String> nameMapping = new HashMap<>();
+        parametersRdf.execute((connection) -> {
+            final String strQuery = createNamesQuery();
+            final TupleQuery query = connection.prepareTupleQuery(
+                    QueryLanguage.SPARQL, strQuery);
+            final SimpleDataset dataset = new SimpleDataset();
+            dataset.addDefaultGraph(parametersRdf.getGraph());
+            query.setDataset(dataset);
+            final TupleQueryResult result = query.evaluate();
+            while (result.hasNext()) {
+                final BindingSet binding = result.next();
+                nameMapping.put(binding.getValue("fileName").stringValue(),
+                        binding.getValue("outputName").stringValue());
+            }
+        });
+        //
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing: {}", entry.getFileName());
             final File inputFile = entry.toFile();
-            final File outputFile = outputFiles.createFile(addExtension(
-                    entry.getFileName(),
-                    configuration.getNewExtension())).toFile();
-
+            // Check cancel.
             if (context.canceled()) {
                 throw new Component.ExecutionCancelled();
+            }
+            // Prepare output name.
+            final File outputFile;
+            if (nameMapping.containsKey(entry.getFileName())) {
+                outputFile = outputFiles.createFile(
+                        nameMapping.get(entry.getFileName())).toFile();
+            } else {
+                outputFile = outputFiles.createFile(addExtension(
+                        entry.getFileName(),
+                        configuration.getNewExtension())).toFile();
             }
             // Prepare transformer.
             final XsltTransformer transformer = executable.load();
             if (parametersRdf != null) {
                 LOG.debug("Reading parameters.");
                 parametersRdf.execute((connection) -> {
-                    final String strQuery = createQuery(entry.getFileName());
+                    final String strQuery = createParametersQuery(entry.getFileName());
                     final TupleQuery query = connection.prepareTupleQuery(
                             QueryLanguage.SPARQL, strQuery);
                     final SimpleDataset dataset = new SimpleDataset();
@@ -151,7 +177,34 @@ public final class Xslt implements SimpleExecution {
         }
     }
 
-    private static String createQuery(String fileName) {
+    /**
+     * Return query that can be used to map input files to their output
+     * names.
+     *
+     * If outputName is set is should be used, in such case the extension is ignored.
+     *
+     * @return
+     */
+    private static String createNamesQuery() {
+        return ""
+                + "SELECT ?fileName ?outputName WHERE {\n"
+                + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
+                + "        \n"
+                + "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> ?fileName ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/outputName> ?outputName .\n"
+                + "}";
+    }
+
+    /**
+     * Return query that can be used to get configuration parameters
+     * for file of given name.
+     *
+     * @param fileName
+     * @return
+     */
+    private static String createParametersQuery(String fileName) {
         return ""
                 + "SELECT ?name ?value WHERE {\n"
                 + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
