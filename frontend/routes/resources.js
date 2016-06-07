@@ -13,7 +13,7 @@ var gUnpacker = require('./../modules/unpacker');
 var gMultiparty = require('multiparty');
 var gHttp = require('http');
 var gUrl = require('url');
-
+var gStream = require('stream');
 
 var gApiRouter = gExpress.Router();
 module.exports = gApiRouter;
@@ -191,6 +191,90 @@ var pipeGet = function (uri, response) {
     }).pipe(response);
 };
 
+// Class for appending stream.
+var StreamCombiner = function (stream) {
+
+    // Wrapped stream.
+    this.target = stream;
+
+    this.sources = [];
+
+    // Index of currently streaming stream.
+    this.index = -1;
+
+    // If true then close once there are no streams.
+    this.closeOnEnd = false;
+
+    this.streaming = false;
+
+    // If true stream on this.index ended and was closed.
+    this.currentClosed = false;
+
+    // Append given stream to the wrapped stream.
+    this.append = function (stream) {
+        this.sources.push(stream);
+        console.log('  : append() as ', this.sources.length - 1);
+        // Here we rely on single thread execution.
+        if (!this.streaming) {
+            this.pipeNext();
+        }
+    };
+
+    this.end = function () {
+        console.log('  : end()');
+        this.closeOnEnd = true;
+        // Here we rely on single thread execution.
+        if (!this.streaming) {
+            this.pipeNext();
+        }
+    };
+
+    this.closeCurrent = function () {
+        if (this.index > -1 && !this.currentClosed) {
+            console.log('   : closing', this.index);
+            var oldStream = this.sources[this.index];
+            oldStream.unpipe(this.target);
+            this.currentClosed = true;
+        }
+    };
+
+    // Look for next stream and pipe it.
+    this.pipeNext = function () {
+        this.streaming = true;
+        if (this.index + 1 < this.sources.length) {
+            // Unpipe finished.
+            this.closeCurrent();
+            // Send new stream.
+            console.log('   : sending ', this.index + 1, ' of ',
+                    this.sources.length);
+
+            this.index += 1;
+            var stream = this.sources[this.index];
+            stream.on('end', function () {
+                // Check for next pipeline.
+                console.log('     end');
+                this.pipeNext();
+            }.bind(this));
+            stream.pipe(this.target, {'end': false});
+            this.currentClosed = false;
+        } else {
+            // Unpipe finished.
+            this.closeCurrent();
+            // Nothing to stream.
+            if (this.closeOnEnd) {
+                console.log('  : closing');
+                // Close the target stream.
+                this.target.end();
+            } else {
+                console.log('  : waiting');
+            }
+            // Wait for next pipeline. Here we rely on a single thread
+            // execution.
+            this.streaming = false;
+        }
+    };
+};
+
 gApiRouter.get('/executions', function (request, response) {
     var uri = gMonitorUri + 'executions?';
     if (request.query.changedSince !== undefined) {
@@ -295,14 +379,14 @@ gApiRouter.post('/executions', function (request, response) {
     console.time('  total');
     // Open the POST request to the executor.
     var postUrl = gUrl.parse(gMonitorUri + 'executions');
-    var boundary = '------------------------a76d7ee9b9b2b7ef';
+    var boundaryString = '------------------------a76d7ee9b9b2b7ef';
     var post_options = {
-        host: postUrl.postname,
-        port: postUrl.port,
-        path: postUrl.path,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'multipart/form-data; boundary=' + boundary,
+        'host': postUrl.postname,
+        'port': postUrl.port,
+        'path': postUrl.path,
+        'method': 'POST',
+        'headers': {
+            'Content-Type': 'multipart/form-data; boundary=' + boundaryString,
             'Transfer-Encoding': 'chunked',
             'Accept': 'application/json',
             'Connection': 'keep-alive'
@@ -312,10 +396,13 @@ gApiRouter.post('/executions', function (request, response) {
     // executor-monitor, instead custom error is provided.
     var pipePost = true;
     var postRequest = gHttp.request(post_options, function (res) {
+        // Pipe result bach to caller if pipePost is true.
         if (pipePost) {
             res.pipe(response);
         }
     });
+    // We use wrap to pipe multiple streams.
+    var postStream = new StreamCombiner(postRequest);
     // Parse incomming data.
     var form = new gMultiparty.Form();
     var firstBoundary = true;
@@ -325,6 +412,7 @@ gApiRouter.post('/executions', function (request, response) {
     var unpack_pipeline = !request.query.unpacked_pipeline;
     form.on('part', function (part) {
         if (part.name === 'configuration') {
+            console.log('  configuration detected');
             configuration = '';
             // Read and save the configuration.
             part.on('data', function (chunk) {
@@ -341,15 +429,19 @@ gApiRouter.post('/executions', function (request, response) {
             return;
         }
         // Pipe to executor server.
+        var textStream = new gStream.PassThrough();
         if (firstBoundary) {
             firstBoundary = false;
         } else {
-            postRequest.write('\r\n');
+            textStream.write('\r\n');
         }
-        postRequest.write('--' + boundary + '\r\n');
-        postRequest.write('Content-Disposition:' + part.headers['content-disposition'] + '\r\n');
-        postRequest.write('Content-Type: ' + part.headers['content-type'] + '\r\n\r\n');
-        part.pipe(postRequest, {'end': false});
+        textStream.write('--' + boundaryString + '\r\n');
+        textStream.write('Content-Disposition:' + part.headers['content-disposition'] + '\r\n');
+        textStream.write('Content-Type: ' + part.headers['content-type'] + '\r\n\r\n');
+        textStream.end();
+        // Append header and data.
+        postStream.append(textStream);
+        postStream.append(part);
     });
 
     form.on('close', function () {
@@ -363,9 +455,13 @@ gApiRouter.post('/executions', function (request, response) {
             // Pipeline (frontend format) form the POST request.
             pipelineObject.pipeline = pipelineAsString;
         } else {
-            // Pipeline was send as a part of request.
-            postRequest.write('\r\n--' + boundary + '--\r\n');
-            postRequest.end();
+            // Pipeline was send as a part of request, se we just
+            // need to close the request.
+            var textStream = new gStream.PassThrough();
+            textStream.write('\r\n--' + boundaryString + '--\r\n');
+            textStream.end();
+            postStream.append(textStream);
+            textStream.end();
             console.timeEnd('  total');
             return;
         }
@@ -380,20 +476,23 @@ gApiRouter.post('/executions', function (request, response) {
                     console.log('unpack:fail');
                     pipePost = false;
                     response.status(503).json(result);
-                    postRequest.end();
+                    postStream.end();
                     return;
                 }
+                var textStream = new gStream.PassThrough();
                 if (firstBoundary) {
                     firstBoundary = false;
                 } else {
-                    postRequest.write('\r\n');
+                    textStream.write('\r\n');
                 }
-                postRequest.write('--' + boundary + '\r\n');
-                postRequest.write('Content-Disposition: form-data; name="pipeline"; filename="pipeline.jsonld"\r\n');
-                postRequest.write('Content-Type: application/octet-stream\r\n\r\n');
-                postRequest.write(JSON.stringify(result));
-                postRequest.write('\r\n--' + boundary + '--\r\n');
-                postRequest.end();
+                textStream.write('--' + boundaryString + '\r\n');
+                textStream.write('Content-Disposition: form-data; name="pipeline"; filename="pipeline.jsonld"\r\n');
+                textStream.write('Content-Type: application/octet-stream\r\n\r\n');
+                textStream.write(JSON.stringify(result));
+                textStream.write('\r\n--' + boundaryString + '--\r\n');
+                textStream.end();
+                postStream.append(textStream);
+                postStream.end();
                 console.timeEnd('  total');
             });
         } catch (err) {
@@ -409,7 +508,7 @@ gApiRouter.post('/executions', function (request, response) {
             });
             // Here we fail the multiplart/request as we fail to write
             // the closing boundary.
-            postRequest.end();
+            postStream.end();
             console.timeEnd('  total');
         }
     });
@@ -437,4 +536,3 @@ gApiRouter.get('/executions/:id/logs', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/logs';
     pipeGet(uri, response);
 });
-
