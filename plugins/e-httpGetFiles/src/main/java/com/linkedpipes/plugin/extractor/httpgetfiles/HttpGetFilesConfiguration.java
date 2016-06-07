@@ -53,7 +53,13 @@ public class HttpGetFilesConfiguration {
      * If true DPU follow redirect to any location and protocol.
      */
     @RdfToPojo.Property(uri = HttpGetFilesVocabulary.CONFIG_HAS_FOLLOW_REDIRECT)
-    private boolean forceFollowRedirect;
+    private boolean forceFollowRedirect = true;
+
+    /**
+     * If true skip file in case of an error.
+     */
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.SKIP_ON_ERROR)
+    private boolean skipOnError = false;
 
     public HttpGetFilesConfiguration() {
     }
@@ -72,6 +78,14 @@ public class HttpGetFilesConfiguration {
 
     public void setForceFollowRedirect(boolean forceFollowRedirect) {
         this.forceFollowRedirect = forceFollowRedirect;
+    }
+
+    public boolean isSkipOnError() {
+        return skipOnError;
+    }
+
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
     }
 
 }

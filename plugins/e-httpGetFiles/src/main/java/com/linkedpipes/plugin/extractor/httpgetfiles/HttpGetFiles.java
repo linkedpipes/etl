@@ -62,7 +62,16 @@ public final class HttpGetFiles implements SimpleExecution {
         progressReport.start(configuration.getReferences().size());
         for (HttpGetFilesConfiguration.Reference reference
                 : configuration.getReferences()) {
-            download(reference);
+            try{
+                download(reference);
+            } catch (Throwable t) {
+                if (configuration.isSkipOnError()) {
+                    LOG.warn("Skipping file: {} -> {}", reference.getFileName(),
+                            reference.getUri(), t);
+                } else {
+                    throw t;
+                }
+            }
             progressReport.entryProcessed();
             // Check for cancel.
             if (context.canceled()) {
