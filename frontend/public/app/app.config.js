@@ -5,31 +5,36 @@ define([], function () {
                     'templateUrl': 'app/components/executions/listView/executionListView.html',
                     'controller': 'components.executions.list',
                     'activeView': 'executions',
-                    'pageTitle': 'Executions - LinkedPipes ETL'
+                    'pageTitle': 'Executions - LinkedPipes ETL',
+                    'color': '#FF9800'
                 })
                 .when('/executions/detail', {
                     'templateUrl': 'app/components/executions/detailView/executionDetailView.html',
                     'controller': 'components.executions.detail',
                     'activeView': 'executions',
-                    'pageTitle': 'Executions - LinkedPipes ETL'
+                    'pageTitle': 'Execution - LinkedPipes ETL',
+                    'color': '#FF9800'
                 })
                 .when('/pipelines', {
                     'templateUrl': 'app/components/pipelines/listView/pipelineListView.html',
                     'controller': 'components.pipelines.list',
                     'activeView': 'pipelines',
-                    'pageTitle': 'Pipelines - LinkedPipes ETL'
+                    'pageTitle': 'Pipelines - LinkedPipes ETL',
+                    'color': '#2196F3'
                 })
                 .when('/pipelines/upload', {
                     'templateUrl': 'app/components/pipelines/uploadView/pipelineUploadView.html',
                     'controller': 'components.pipelines.upload',
                     'activeView': 'pipelines',
-                    'pageTitle': 'Pipelines - LinkedPipes ETL'
+                    'pageTitle': 'Pipelines - LinkedPipes ETL',
+                    'color': '#2196F3'
                 })
                 .when('/pipelines/edit/canvas', {
                     'templateUrl': 'app/components/pipelines/canvasView/pipelineCanvasView.html',
                     'controller': 'components.pipeline.canvas.view',
                     'activeView': 'pipelines',
-                    'pageTitle': 'Pipelines - LinkedPipes ETL'
+                    'pageTitle': 'Pipeline - LinkedPipes ETL',
+                    'color': '#2196F3'
                 })
                 .otherwise({
                     'redirectTo': '/executions'
