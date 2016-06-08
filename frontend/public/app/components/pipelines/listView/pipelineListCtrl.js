@@ -1,6 +1,6 @@
 define([], function () {
     function controler($scope, $location, $http, $timeout, $mdDialog, $mdMedia,
-            refreshService, statusService, jsonldService) {
+            refreshService, statusService, jsonldService, clipboard) {
 
         var template = {
             'iri': {
@@ -12,6 +12,10 @@ define([], function () {
             'label': {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
             }
+        };
+
+        $scope.info = {
+            'clipboard' : clipboard.supported
         };
 
         $scope.repository = jsonldService.createRepository({
@@ -111,6 +115,10 @@ define([], function () {
             });
         };
 
+        $scope.onCopyIri = function(pipeline) {
+            clipboard.copyText(pipeline.iri);
+        };
+
         $scope.onDelete = function (pipeline, event) {
             var confirm = $mdDialog.confirm()
                     .title('Would you like to delete pipeline "'
@@ -146,7 +154,7 @@ define([], function () {
     //
     controler.$inject = ['$scope', '$location', '$http', '$timeout',
         '$mdDialog', '$mdMedia', 'service.refresh',
-        'services.status', 'services.jsonld'];
+        'services.status', 'services.jsonld', 'clipboard'];
     //
     function init(app) {
         app.controller('components.pipelines.list', controler);

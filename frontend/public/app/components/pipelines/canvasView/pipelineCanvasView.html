@@ -53,7 +53,7 @@
         <md-button ng-click="onClose()" class="md-warn">
             <md-icon md-menu-origin md-svg-src="close"></md-icon> Close
         </md-button>
-        <md-button ng-click="onEditMode()" ng-show="data.tools.execFinished">Edit mode</md-button>
+        <md-button ng-click="onEditMode()" ng-show="data.tools.execFinished && !data.tools.edit">Edit mode</md-button>
     </md-content>
 
     <md-content hide-gt-sm layout="row" layout-align="space-around center">

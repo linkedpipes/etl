@@ -335,11 +335,11 @@ var iterateObjects = function (data, callback) {
  *     .execution - URI of execution.
  *     .componets - Object with component to component mapping.
  *
- * @param String uri
+ * @param String pipelineObject
  * @param Object configuration
  * @param Function callback Called(sucess, object) in case of sucess object is a TRIG in case of failure an error message.
  */
-gModule.unpack = function (uri, configuration, callback) {
+gModule.unpack = function (pipelineObject, configuration, callback) {
 
     var sequenceExecution = new SequenceExecution();
 
@@ -353,23 +353,36 @@ gModule.unpack = function (uri, configuration, callback) {
         'executions': {} // List of mentioned executions.
     };
 
-    sequenceExecution.add(function (data, next, executor) {
-        // Get pipeline definition and all used definitions.
-        // This require name resolution and fail without network connection!!
-        gRequest(uri, function (error, response, body) {
-            // TODO Expand prefixes here!
-            data.pipeline = JSON.parse(body);
-            // Search for the pipeline graph.
-            data.metadata = prepareMetadata(data.pipeline);
-            // Download templates and their configurations.
-            data.metadata.definition.graph['@graph'].forEach(function (resource) {
-                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
-                    downloadTemplate(executor, data,
-                            getReference(resource, 'http://linkedpipes.com/ontology/template'));
-                }
-            });
+    if (configuration === undefined) {
+        configuration = {};
+    }
+
+    sequenceExecution.add(function (data, next) {
+        // Store pipeline definition object into data.pipeline
+
+        if (pipelineObject.pipeline !== undefined) {
+            data.pipeline = JSON.parse(pipelineObject.pipeline);
             next();
+        } else {
+            // This require name resolution and fail without network connection!!
+            gRequest(pipelineObject.iri, function (error, response, body) {
+                data.pipeline = JSON.parse(body);
+                next();
+            });
+        }
+    }).add(function (data, next, executor) {
+        // Parse pipeline.
+
+        // Search for the pipeline graph.
+        data.metadata = prepareMetadata(data.pipeline);
+        // Download templates and their configurations.
+        data.metadata.definition.graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
+                downloadTemplate(executor, data,
+                        getReference(resource, 'http://linkedpipes.com/ontology/template'));
+            }
         });
+        next();
     }).add(function (data, next) {
         // Now we have downloaded all components mentioned on pipeline so we can begin transformation - in
         // this step we expand components to templates.
@@ -760,6 +773,16 @@ gModule.unpack = function (uri, configuration, callback) {
                 'http://linkedpipes.com/ontology/requirements/TempDirectory'
             ],
             'http://linkedpipes.com/ontology/requirements/target': 'http://linkedpipes.com/ontology/workingDirectory'
+        });
+
+        // TODO Move to the e-pipelineComponent
+        data.metadata.definition.graph['@graph'].push({
+            '@id': 'http://linkedpipes.com/resources/components/e-pipelineInput/inputDirectory',
+            '@type': [
+                'http://linkedpipes.com/ontology/requirements/Requirement',
+                'http://linkedpipes.com/ontology/requirements/InputDirectory'
+            ],
+            'http://linkedpipes.com/ontology/requirements/target': 'http://linkedpipes.com/resources/components/e-pipelineInput/inputDirectory'
         });
 
         data.metadata.definition.graph['@graph'].push({

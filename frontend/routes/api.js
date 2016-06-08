@@ -24,7 +24,6 @@ gApiRouter.get('/info', function (request, response) {
 });
 
 gApiRouter.get('/proxy', function (request, response) {
-    // request.query.url must contains IRI of a fragment to proxy download from.
     gRequest.get(request.query.url).on('error', function (error) {
         response.status(503).json({
             'exception': {

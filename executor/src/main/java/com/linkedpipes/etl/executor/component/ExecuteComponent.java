@@ -104,6 +104,9 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
 
     @Override
     public void run() {
+        // We will consider preparation of the data part of the component
+        // execution.
+        eventManager.publish(EventFactory.componentBegin(componentDefinition));
         // Prepare data units - we  use this first in order to initialize
         // data units that are used by this component. As even if
         // mapped we need to store the debug data. It would be nice
@@ -130,7 +133,6 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
             return;
         }
         //
-        eventManager.publish(EventFactory.componentBegin(componentDefinition));
         MDC.put(LoggerFacade.COMPONENT_MDC, null);
         try {
             componentInstance.execute();

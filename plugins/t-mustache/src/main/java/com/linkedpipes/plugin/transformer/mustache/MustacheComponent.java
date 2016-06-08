@@ -91,6 +91,13 @@ public final class MustacheComponent implements SimpleExecution {
         final Mustache mustache = mustacheFactory.compile(
                 new StringReader(template), "template");
         final Collection<ObjectMetadata> data = loadData();
+        // If there is no input add an empty object.
+        // https://github.com/linkedpipes/etl/issues/152
+        if (data.isEmpty()) {
+            final ObjectMetadata emptyOutput = new ObjectMetadata();
+            emptyOutput.output = true;
+            data.add(emptyOutput);
+        }
         progressReport.start(data.size());
         Integer counter = 0;
         for (ObjectMetadata object : data) {

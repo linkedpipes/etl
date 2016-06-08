@@ -19,11 +19,11 @@ define([
             model.components[iri] = {
                 'iri': iri,
                 'messages': [],
-                'mapping' : {
+                'mapping': {
                     /**
                      * True if mapping is on for this component.
                      */
-                    'enabled' : true,
+                    'enabled': true,
                     /**
                      * True if there is possibility to map this component.
                      */
@@ -121,11 +121,13 @@ define([
         switch (component.status) {
             case 'http://etl.linkedpipes.com/resources/status/finished':
             case 'http://etl.linkedpipes.com/resources/status/mapped':
+                component.mapping = MappingStatus.FINISHED_MAPPED;
+                break;
             case 'http://etl.linkedpipes.com/resources/status/failed':
-                component.mapping.available = true;
+                component.mapping = MappingStatus.FAILED;
                 break;
             default:
-                component.mapping.available = false;
+                component.mapping = MappingStatus.UNFINISHED;
                 break;
         }
     }
@@ -238,31 +240,120 @@ define([
         return resource.status;
     };
 
+    var MappingStatus = {
+        /**
+         * Finished component with mapping.
+         */
+        'FINISHED_MAPPED': 0,
+        /**
+         * Finished component with disabled mapping, can be enabled.
+         */
+        'FINISHED': 1,
+        /**
+         * Failed component, it has always the same style.
+         */
+        'FAILED': 3,
+        /**
+         * Represent an unfinished component.
+         */
+        'UNFINISHED': 4,
+        /**
+         * Cahnged component, mapping is not available and can not be changed.
+         */
+        'CHANGED': 5
+    };
+
     service.mapping = {};
 
-    service.mapping.enable = function(resource) {
-        resource.mapping.enabled = resource.mapping.available;
+    /**
+     * Enable mapping.
+     */
+    service.mapping.enable = function (resource) {
+        switch (resource.mapping) {
+            case MappingStatus.FINISHED:
+                resource.mapping = MappingStatus.FINISHED_MAPPED;
+                break
+        }
     };
 
-    service.mapping.disable = function(resource) {
-        resource.mapping.enabled = false;
+    /**
+     * Disable mapping.
+     */
+    service.mapping.disable = function (resource) {
+        switch (resource.mapping) {
+            case MappingStatus.FINISHED_MAPPED:
+                resource.mapping = MappingStatus.FINISHED;
+                break
+        }
     };
 
-    service.mapping.isEnabled = function(resource) {
-        // TODO Raise exception if this is not true!
-        return resource.mapping.enabled;
+    /**
+     * If true mapping based on the status is used otherwise
+     * a 'disable' mapping should be used.
+     */
+    service.mapping.isEnabled = function (resource) {
+        switch (resource.mapping) {
+            case MappingStatus.FINISHED_MAPPED:
+            case MappingStatus.FAILED:
+                return true;
+            default:
+                return false;
+        }
+    };
+
+    /**
+     * If component is has not not changed, mapping is available and is
+     * enabled, it's used in the execution.
+     */
+    service.mapping.isUsedForExecution = function (resource) {
+        return resource.mapping === MappingStatus.FINISHED_MAPPED;
     };
 
     /**
      * Report change on the component and thus disable mapping.
      */
-    service.mapping.changed = function(resource) {
-        resource.mapping.enabled = false;
-        resource.mapping.available = false;
+    service.mapping.onChange = function (resource) {
+        switch (resource.mapping) {
+            case MappingStatus.FINISHED_MAPPED:
+            case MappingStatus.FINISHED:
+                resource.mapping = MappingStatus.CHANGED;
+                break;
+        }
     };
 
-    service.mapping.isAvailable = function(resource) {
-        return resource.mapping.available;
+    /**
+     * If not changed mapping can be enabled / disabled.
+     */
+    service.mapping.isChanged = function (resource) {
+        return resource.mapping === MappingStatus.CHANGED;
+    };
+
+    /**
+     * If if mapping for the component can be enabled.
+     * It might be enabled now, that does not matter.
+     */
+    service.mapping.canEnableMapping = function (resource) {
+        switch (resource.mapping) {
+            case MappingStatus.FINISHED_MAPPED:
+            case MappingStatus.FINISHED:
+                return true;
+            default:
+                return false;
+        }
+    };
+
+    /**
+     * True if mapping can be changed. If. if button changing the mapping
+     * should be visible.
+     */
+    service.mapping.canChangeMapping = function (resource) {
+        switch (resource.mapping) {
+            case MappingStatus.FINISHED_MAPPED:
+            case MappingStatus.FINISHED:
+                return true;
+            default:
+                return false;
+        }
     };
 
     service.isFinished = function () {
@@ -272,7 +363,7 @@ define([
         return !this.data.execution.status.running;
     };
 
-    service.getDataUnit = function(component, bindingName) {
+    service.getDataUnit = function (component, bindingName) {
         for (var index in component.dataUnits) {
             var dataUnit = this.data.dataUnits[component.dataUnits[index]];
             if (dataUnit !== undefined && dataUnit.binding === bindingName) {
@@ -284,7 +375,7 @@ define([
     /**
      * Return execution IRI.
      */
-    service.getIri = function() {
+    service.getIri = function () {
         return this.data.execution.iri;
     };
 

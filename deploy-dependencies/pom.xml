@@ -262,6 +262,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-pipelineInput</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-pipelineInput/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-sparqlEndpoint</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-sparqlEndpoint/</outputDirectory>
@@ -472,6 +478,12 @@
                                         <mkdir dir="${deploy.directory}/components/e-httpGetFiles/"/>
                                         <copy todir="${deploy.directory}/components/e-httpGetFiles/">
                                             <fileset dir="${plugins.directory}/e-httpGetFiles/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-pipelineInput/"/>
+                                        <copy todir="${deploy.directory}/components/e-pipelineInput/">
+                                            <fileset dir="${plugins.directory}/e-pipelineInput/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

@@ -7,22 +7,24 @@ import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.UnknownExe
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Responsible for storing information about existing executions.
@@ -99,28 +101,50 @@ class ExecutionStorage {
         return null;
     }
 
-    /**
-     * Create new execution from given stream. The execution is added
-     * with the QUEUED status.
-     *
-     * @param stream Stream with pipeline definition.
-     * @param format File extension - format.
-     * @return Newly created execution.
-     */
-    public Execution createExecution(InputStream stream, RDFFormat format)
-            throws OperationFailed {
+    public Execution createExecution(MultipartFile pipeline, List<MultipartFile> inputs) throws OperationFailed {
         final String uuid = UUID.randomUUID().toString();
         final File directory = new File(
                 configuration.getWorkingDirectory(), uuid);
+        if (pipeline.getOriginalFilename() == null) {
+            throw new OperationFailed("Missing name of the pipeline.");
+        }
+        final Optional<RDFFormat> format = Rio.getWriterFormatForFileName(
+                pipeline.getOriginalFilename());
+        if (!format.isPresent()) {
+            throw new OperationFailed("Can't determined format type.");
+        }
+        // Save pipeline definition.
         final File definitionFile = new File(directory,
                 "definition" + File.separator + "definition."
-                + format.getDefaultFileExtension());
+                + format.get().getDefaultFileExtension());
         definitionFile.getParentFile().mkdirs();
-        // Save stream content into the definition file.
         try {
-            Files.copy(stream, definitionFile.toPath());
-        } catch (IOException ex) {
-            throw new OperationFailed("Can't copy definition file.", ex);
+            pipeline.transferTo(definitionFile);
+        } catch (IOException | IllegalStateException ex) {
+            try {
+                FileUtils.deleteDirectory(directory);
+            } catch (IOException ioex) {
+                LOG.error("Can't delete directory.", ioex);
+            }
+            throw new OperationFailed("Can't save pipeline definition.", ex);
+        }
+        // Save resources.
+        final File inputDirectory = new File(directory, "input");
+        for (MultipartFile input : inputs) {
+            final File inputFile = new File(inputDirectory,
+                    input.getOriginalFilename());
+            inputFile.getParentFile().mkdirs();
+            try {
+                input.transferTo(inputFile);
+            } catch (IOException | IllegalStateException ex) {
+                try {
+                    FileUtils.deleteDirectory(directory);
+                } catch (IOException ioex) {
+                    LOG.error("Can't delete directory.", ioex);
+                }
+                //
+                throw new OperationFailed("Can't prepare inputs.", ex);
+            }
         }
         //
         final Execution newExecution = new Execution();
