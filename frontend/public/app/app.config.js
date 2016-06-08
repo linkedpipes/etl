@@ -33,8 +33,7 @@ define([], function () {
                     'templateUrl': 'app/components/pipelines/canvasView/pipelineCanvasView.html',
                     'controller': 'components.pipeline.canvas.view',
                     'activeView': 'pipelines',
-                    'pageTitle': 'Pipeline - LinkedPipes ETL',
-                    'color': '#2196F3'
+                    'pageTitle': 'Pipeline - LinkedPipes ETL'
                 })
                 .otherwise({
                     'redirectTo': '/executions'

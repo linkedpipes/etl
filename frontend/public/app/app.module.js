@@ -93,7 +93,9 @@ define([
         $scope.$on('$routeChangeSuccess', function (event, current, previous) {
             if (current.$$route && current.$$route.pageTitle) {
                 $scope.index.title = current.$$route.pageTitle;
-                $scope.index.color = current.$$route.color;
+                if (current.$$route.color !== undefined) {
+                    $scope.index.color = current.$$route.color;
+                }
             }
         });
 
