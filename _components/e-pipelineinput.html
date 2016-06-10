@@ -1,0 +1,34 @@
+---
+short: e-pipelineinput
+type: extractor
+color: red
+title: Pipeline input
+description: Passes files from an HTTP POST pipeline execution request
+---
+
+<p class="flow-text">
+Extractor, allows the user to pass files from an HTTP POST pipeline execution request.
+</p>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        A LinkedPipes ETL pipeline can be executed via the <a href="https://github.com/linkedpipes/etl/wiki" title="LP-ETL REST API documentation">REST API</a>.
+        It is possible to pass files to the pipeline via an HTTP POST request and these files appear as output of the {{page.title}} component.
+        The typical usage is passing different input files to a fixed pipeline via the API, e.g. in a larger, repetitive data processing workflow.
+        </p>
+    </div>
+</div>
