@@ -31,6 +31,8 @@ Transformer, allows the user to transform <a href="https://www.w3.org/TR/xml/">X
             <dd>Files</dd>
             <dt>Look in pipeline</dt>
             <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">available</a></dd>
         </dl>
     </div>
     <div class="col s12 l6">
@@ -39,4 +41,38 @@ Transformer, allows the user to transform <a href="https://www.w3.org/TR/xml/">X
         It supports multiple input files and it also supports XSLT parameters serialized in RDF, different parameters can be applied to different files based on their file names.
         </p>
     </div>
+</div>
+<div class="row" id="runtimeconfig">
+<h3 class="orange-text center">Runtime configuration</h3>
+<p class="flow-text">Below you can see sample runtime configuration for the component. You can also import a <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a>.
+Currently, output file names and XSLT parameters for multiple transformed files can be passed through the runtime configuration.
+</p>
+{% highlight turtle %}
+@prefix xslt: <http://etl.linkedpipes.com/ontology/components/t-xslt/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://localhost/resource/configuration> a xslt:Config ;
+    xslt:fileInfo <http://localhost/resource/configuration/fileinfo/1>,
+        <http://localhost/resource/configuration/fileinfo/2> .
+
+<http://localhost/resource/configuration/fileinfo/1> a xslt:FileInfo ;
+    xslt:fileName "data-1.xml" ;
+    xslt:parameter <http://localhost/resource/configuration/fileinfo/1/param/1> .
+
+<http://localhost/resource/configuration/fileinfo/1/param/1> a xslt:Parameter ;
+    xslt:parameterName "recordid" ;
+    xslt:parameterValue "365670661" .
+
+<http://localhost/resource/configuration/fileinfo/2> a xslt:FileInfo ;
+    xslt:fileName "data-2.xml" ;
+    xslt:outputName "data-2-output.ttl" ;
+    xslt:parameter <http://localhost/resource/configuration/fileinfo/2/param/1> .
+
+<http://localhost/resource/configuration/fileinfo/2/param/1> a xslt:Parameter ;
+    xslt:parameterName "recordid" ;
+    xslt:parameterValue "365670662" .
+{% endhighlight %}
 </div>
