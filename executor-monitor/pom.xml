@@ -236,6 +236,7 @@
                                         <copy todir="${deploy.directory}/lib">
                                             <fileset dir="${project.build.directory}/lib" />
                                         </copy>
+                                        <chmod perm="u+x" file="${deploy.directory}/../executor-monitor.sh" />
                                     </target>
                                 </configuration>
                             </execution>
