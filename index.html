@@ -74,7 +74,7 @@ homepage: true
           </div>
           <div class="col l4 hide-on-med-and-down">
             <h3 class="center orange-text">Featured component</h3>
-            {% assign featured = site.components | where:"short","e-httpgetfiles" %}
+            {% assign featured = site.components | where:"short","e-pipelineinput" %}
             {% for component in featured %}
             <div class="card small {{component.color}} lighten-4 hoverable">
                 <div class="card-image waves-effect waves-block waves-light">
