@@ -24,8 +24,6 @@
         <module>dataunit-sesame-impl</module>
         <module>dataunit-system-impl</module>
         <!-- Applications. -->
-        <module>commons-code</module>
-        <module>commons-entities</module>
         <module>executor</module>
         <module>executor-monitor</module>
         <!-- Plugins. -->
