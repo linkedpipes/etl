@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.dpu.api.Component;
+import org.apache.poi.ss.usermodel.DateUtil;
 
 /**
  *
@@ -218,8 +219,8 @@ class Parser {
                         + " column: " + Integer.toString(cell.getColumnIndex()));
             case Cell.CELL_TYPE_NUMERIC:
                 if (configuration.isNumericParse()) {
-                    // Check for Date - https://poi.apache.org/faq.html#faq-N1008D FAQ 8
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    // DataFormatter.formatCellValue use custom date format.
+                    if (DateUtil.isCellDateFormatted(cell)) {
                         final Calendar cal = new GregorianCalendar();
                         cal.setTime(HSSFDateUtil.getJavaDate(cell.getNumericCellValue()));
                         final StringBuilder dateStr = new StringBuilder(10);
@@ -230,18 +231,10 @@ class Parser {
                         dateStr.append(String.format("%02d", cal.get(Calendar.DAY_OF_MONTH)));
                         return dateStr.toString();
                     }
-                    // Can be double or long/integer.
-                    final double doubleValue = cell.getNumericCellValue();
-                    // Check if the value is decimal or not.
-                    if ((doubleValue % 1) == 0) {
-                        // It's integer or long.
-                        return Long.toString((long) doubleValue);
-                    } else {
-                        return Double.toString(doubleValue);
-                    }
-                } else {
-                    return Double.toString(cell.getNumericCellValue());
                 }
+                // formatRawCellContents
+                CsvDataFormatter format = new CsvDataFormatter(true);
+                return format.formatCellValue(cell);
             case Cell.CELL_TYPE_STRING:
                 return cell.getStringCellValue();
             default:
