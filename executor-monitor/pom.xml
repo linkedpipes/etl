@@ -24,18 +24,6 @@
             <version>0.0.0</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>commons-code</artifactId>
-            <version>0.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>commons-entities</artifactId>
-            <version>0.0.0</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- FTP server -->
         <dependency>
             <groupId>org.apache.ftpserver</groupId>
