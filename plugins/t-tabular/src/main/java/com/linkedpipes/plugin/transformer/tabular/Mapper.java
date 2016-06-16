@@ -9,7 +9,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  * https://www.w3.org/TR/2015/REC-csv2rdf-20151217/#bib-tabular-data-model

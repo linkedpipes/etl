@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.Component.ExecutionCancelled;
+import com.linkedpipes.etl.component.api.Component.ExecutionCancelled;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.excel.to.csv.ExcelToCsvConfiguration.VirtualColumn;
 import java.io.File;
@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
 import org.apache.poi.ss.usermodel.DateUtil;
 
 /**

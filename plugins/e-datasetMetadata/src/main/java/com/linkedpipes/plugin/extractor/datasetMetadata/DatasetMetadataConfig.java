@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.extractor.datasetMetadata;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;

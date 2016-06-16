@@ -5,7 +5,7 @@ import java.util.List;
 import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  * Default predicate: valueFactory.createIRI(configuration.url + "#" + URLEncoder.encode(column.name, "UTF-8"));

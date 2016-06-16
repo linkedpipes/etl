@@ -7,8 +7,8 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 import org.openrdf.query.impl.SimpleDataset;
 
 /**

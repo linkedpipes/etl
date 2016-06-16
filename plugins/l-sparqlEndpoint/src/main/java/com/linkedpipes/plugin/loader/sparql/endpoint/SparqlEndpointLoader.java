@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sparql.SPARQLRepository;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

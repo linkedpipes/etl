@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
-import com.linkedpipes.etl.dpu.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,8 +15,8 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import virtuoso.sesame2.driver.VirtuosoRepository;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

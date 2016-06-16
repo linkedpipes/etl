@@ -1,8 +1,8 @@
 package com.linkedpipes.plugin.quality.sparql.ask;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.Component;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;

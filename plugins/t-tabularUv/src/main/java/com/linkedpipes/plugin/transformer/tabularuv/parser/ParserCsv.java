@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.dpu.api.Component;
-import com.linkedpipes.etl.dpu.api.Component.ExecutionFailed;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.*;
 import java.util.Arrays;

@@ -1,9 +1,9 @@
 package com.linkedpipes.plugin.loader.local;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dpu.api.Component;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.IOException;

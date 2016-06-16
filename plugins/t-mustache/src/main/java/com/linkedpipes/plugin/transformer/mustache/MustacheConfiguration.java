@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.mustache;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *

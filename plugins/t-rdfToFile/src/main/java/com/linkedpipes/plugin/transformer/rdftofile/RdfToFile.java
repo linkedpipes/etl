@@ -2,8 +2,8 @@ package com.linkedpipes.plugin.transformer.rdftofile;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.Component.ExecutionFailed;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
+import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,8 +14,8 @@ import java.nio.charset.Charset;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

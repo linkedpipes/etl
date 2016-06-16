@@ -19,8 +19,8 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

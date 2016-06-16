@@ -8,10 +8,10 @@ import com.linkedpipes.etl.dataunit.sesame.SingleGraphDataUnitImpl;
 import com.linkedpipes.etl.dataunit.system.FilesDataUnitConfiguration;
 import com.linkedpipes.etl.dataunit.system.FilesDataUnitImpl;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.Component.InputPort;
-import com.linkedpipes.etl.dpu.api.Component.OutputPort;
-import com.linkedpipes.etl.dpu.api.service.AfterExecution;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
+import com.linkedpipes.etl.component.api.Component.InputPort;
+import com.linkedpipes.etl.component.api.Component.OutputPort;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import java.io.File;
 import java.lang.reflect.Field;
 import org.openrdf.model.IRI;
@@ -21,8 +21,8 @@ import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

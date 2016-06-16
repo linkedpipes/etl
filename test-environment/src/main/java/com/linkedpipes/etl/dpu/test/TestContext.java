@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.dpu.test;
 
 import java.io.File;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

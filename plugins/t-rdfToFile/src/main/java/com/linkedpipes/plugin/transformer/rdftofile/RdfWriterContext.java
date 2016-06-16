@@ -1,11 +1,11 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import java.util.Collection;
 
 import org.openrdf.model.Statement;
 import org.openrdf.rio.*;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  * Support cancel and progress report.

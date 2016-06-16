@@ -15,12 +15,12 @@
         <!-- API. -->
         <module>api-executor-v1</module>
         <module>api-commons</module>
-        <module>api-dpu-v1</module>
+        <module>api-component-v1</module>
         <module>dataunit-sesame</module>
         <module>dataunit-system</module>
         <!-- Implementation. -->
         <module>utils-core</module>
-        <module>api-dpu-v1-impl</module>
+        <module>api-component-v1-impl</module>
         <module>dataunit-sesame-impl</module>
         <module>dataunit-system-impl</module>
         <!-- Applications. -->

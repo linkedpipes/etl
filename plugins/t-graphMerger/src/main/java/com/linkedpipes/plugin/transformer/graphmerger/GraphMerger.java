@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.graphmerger;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.GraphListDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.util.Collection;
 import org.openrdf.model.IRI;
@@ -11,8 +11,8 @@ import org.openrdf.query.Update;
 import org.openrdf.query.impl.DatasetImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

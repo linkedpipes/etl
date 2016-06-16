@@ -9,7 +9,7 @@ import com.jcraft.jsch.SftpException;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.executor.api.v1.exception.RecoverableException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dpu.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,8 +18,8 @@ import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

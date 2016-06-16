@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
-import com.linkedpipes.etl.dpu.api.Component.ExecutionFailed;
+import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnInfo_V1;

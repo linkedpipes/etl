@@ -1,8 +1,8 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dpu.api.Component.Context;
-import com.linkedpipes.etl.dpu.api.Component.ExecutionCancelled;
+import com.linkedpipes.etl.component.api.Component.Context;
+import com.linkedpipes.etl.component.api.Component.ExecutionCancelled;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
 import java.io.BufferedReader;
@@ -20,7 +20,7 @@ import org.supercsv.io.CsvListReader;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.quote.QuoteMode;
 import org.supercsv.util.CsvContext;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
 
 /**
  *

@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.plugin.transformer.filedecode;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
