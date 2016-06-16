@@ -14,4 +14,6 @@ public class SparqlEndpointVocabulary {
 
     public static final String HAS_ENDPOINT = PREFIX + "endpoint";
 
+    public static final String HAS_DEFAULT_GRAPH = PREFIX + "defaultGraph";
+
 }

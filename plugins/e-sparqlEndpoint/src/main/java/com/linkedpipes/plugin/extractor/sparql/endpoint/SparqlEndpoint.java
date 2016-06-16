@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
 import org.openrdf.query.GraphQuery;
 import org.openrdf.query.GraphQueryResult;
 import org.openrdf.query.QueryLanguage;
@@ -15,6 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
 import com.linkedpipes.etl.dpu.api.Component;
+import org.openrdf.model.IRI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
+import org.openrdf.query.impl.SimpleDataset;
 
 /**
  *
@@ -33,6 +36,8 @@ public final class SparqlEndpoint implements SimpleExecution {
 
     @Component.Configuration
     public SparqlEndpointConfiguration configuration;
+
+    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @Override
     public void execute(Component.Context context) throws NonRecoverableException {
@@ -56,7 +61,7 @@ public final class SparqlEndpoint implements SimpleExecution {
     }
 
     public void queryRemote(SPARQLRepository repository) throws ExecutionFailed {
-        final URI graph = outputRdf.getGraph();
+        final IRI graph = outputRdf.getGraph();
         try (RepositoryConnection localConnection = outputRdf.getRepository().getConnection()) {
             localConnection.begin();
             // We can't use Repositories.graphQuery (Repositories.get) here, as Virtuoso fail with
@@ -65,7 +70,13 @@ public final class SparqlEndpoint implements SimpleExecution {
             try (RepositoryConnection remoteConnection = repository.getConnection()) {
                 final GraphQuery preparedQuery = remoteConnection.prepareGraphQuery(QueryLanguage.SPARQL,
                         configuration.getQuery());
-                final GraphQueryResult result =  preparedQuery.evaluate();
+                // Construct dataset.
+                final SimpleDataset dataset = new SimpleDataset();
+                for (String iri : configuration.getDefaultGraphs()) {
+                    dataset.addDefaultGraph(valueFactory.createIRI(iri));
+                }
+                preparedQuery.setDataset(dataset);
+                final GraphQueryResult result = preparedQuery.evaluate();
                 localConnection.add(result, graph);
             }
             localConnection.commit();

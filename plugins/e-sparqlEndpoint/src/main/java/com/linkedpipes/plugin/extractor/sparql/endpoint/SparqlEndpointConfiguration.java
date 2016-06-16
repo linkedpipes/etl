@@ -1,6 +1,8 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
 import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,6 +16,12 @@ public class SparqlEndpointConfiguration {
 
     @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_ENDPOINT)
     private String endpoint;
+
+    /**
+     * Default graphs can be specified only via the runtime configuration.
+     */
+    @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_DEFAULT_GRAPH)
+    private List<String> defaultGraphs = new ArrayList<>();
 
     public SparqlEndpointConfiguration() {
     }
@@ -32,6 +40,14 @@ public class SparqlEndpointConfiguration {
 
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public List<String> getDefaultGraphs() {
+        return defaultGraphs;
+    }
+
+    public void setDefaultGraphs(List<String> defaultGraphs) {
+        this.defaultGraphs = defaultGraphs;
     }
 
 }
