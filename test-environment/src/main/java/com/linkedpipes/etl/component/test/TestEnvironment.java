@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.dpu.test;
+package com.linkedpipes.etl.component.test;
 
 import com.linkedpipes.etl.dataunit.sesame.GraphListDataUnitImpl;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
@@ -19,10 +19,8 @@ import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
@@ -32,12 +30,7 @@ public class TestEnvironment implements AutoCloseable {
 
     private static final String IRI_PREFIX = "http://localhost/test/";
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(TestEnvironment.class);
-
-    private final SimpleExecution dpu;
-
-    private final Component.Context context;
+    private final Component.Sequential component;
 
     private final Repository sesameRepository;
 
@@ -46,10 +39,8 @@ public class TestEnvironment implements AutoCloseable {
     private final MockedAfterExecution afterExecution
             = new MockedAfterExecution();
 
-    protected TestEnvironment(SimpleExecution dpu, File workingDirectory) {
-        this.dpu = dpu;
-        this.context = new TestContext(
-                IRI_PREFIX + "component", workingDirectory);
+    protected TestEnvironment(Component.Sequential dpu, File workingDirectory) {
+        this.component = dpu;
         sesameRepository = new SailRepository(new MemoryStore());
         sesameRepository.initialize();
     }
@@ -62,7 +53,7 @@ public class TestEnvironment implements AutoCloseable {
     public void execute() throws Exception {
         bindExtensions();
         try {
-            dpu.execute(context);
+            component.execute();
         } finally {
             // Execute after execution.
             afterExecution.execute();
@@ -133,17 +124,19 @@ public class TestEnvironment implements AutoCloseable {
     ;
 
     /**
-     * Bind extensions to current {@link #dpu}.
+     * Bind extensions to current {@link #component}.
      */
     private void bindExtensions() throws IllegalArgumentException,
             IllegalAccessException {
-        for (Field field : dpu.getClass().getFields()) {
+        for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Inject.class) != null) {
                 // Based on type set extension.
                 if (field.getType() == ProgressReport.class) {
-                    field.set(dpu, new MockedProgressReport());
+                    field.set(component, new MockedProgressReport());
                 } else if (field.getType() == AfterExecution.class) {
-                    field.set(dpu, afterExecution);
+                    field.set(component, afterExecution);
+                } else if (field.getType() == ExceptionFactory.class) {
+                    field.set(component, new MockedExceptionFactory());
                 } else {
                     throw new RuntimeException("Can't initialize extension!");
                 }
@@ -169,7 +162,7 @@ public class TestEnvironment implements AutoCloseable {
      * @return Field for data unit with given name, or null.
      */
     private Field getDataUnitField(String name) {
-        for (Field field : dpu.getClass().getFields()) {
+        for (Field field : component.getClass().getFields()) {
             for (InputPort annotation : field.getAnnotationsByType(
                     Component.InputPort.class)) {
                 if (annotation.id().equals(name)) {
@@ -187,7 +180,7 @@ public class TestEnvironment implements AutoCloseable {
     }
 
     /**
-     * Set given data unit to the {@link #dpu}.
+     * Set given data unit to the {@link #component}.
      *
      * @param binding
      * @param dataUnit
@@ -198,7 +191,7 @@ public class TestEnvironment implements AutoCloseable {
             throw new RuntimeException("Invalid binding name:" + binding);
         }
         try {
-            field.set(dpu, dataUnit);
+            field.set(component, dataUnit);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
             throw new RuntimeException("Can't bind data unit, "
                     + "check for type and acess modifier.", ex);
@@ -212,7 +205,7 @@ public class TestEnvironment implements AutoCloseable {
      * @param workingDirectory
      * @return
      */
-    public static final TestEnvironment create(SimpleExecution dpu,
+    public static final TestEnvironment create(Component.Sequential dpu,
             File workingDirectory) {
         return new TestEnvironment(dpu, workingDirectory);
     }

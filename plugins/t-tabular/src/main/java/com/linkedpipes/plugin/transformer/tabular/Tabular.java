@@ -7,14 +7,14 @@ import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Petr Škoda
  */
-public class Tabular implements SimpleExecution {
+public class Tabular implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tabular.class);
 
@@ -24,14 +24,17 @@ public class Tabular implements SimpleExecution {
     @Component.OutputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdfDataUnit;
 
-    @Configuration
+    @Component.Configuration
     public TabularConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws NonRecoverableException, ExecutionCancelled {
+    public void execute() throws NonRecoverableException {
         final BufferedOutput output = new BufferedOutput(outputRdfDataUnit);
-        final Parser parser = new Parser(configuration);
-        final Mapper mapper = new Mapper(output, configuration, ColumnFactory.createColumnList(configuration));
+        final Parser parser = new Parser(configuration, exceptionFactory);
+        final Mapper mapper = new Mapper(output, configuration, ColumnFactory.createColumnList(configuration, exceptionFactory), exceptionFactory);
         // TODO We could use some table group URI from user?
         mapper.initialize(null);
         for (Entry entry : inputFilesDataUnit) {
@@ -39,9 +42,9 @@ public class Tabular implements SimpleExecution {
             output.onFileStart();
             mapper.onTableStart("file://" + entry.getFileName(), null);
             try {
-                parser.parse(entry, mapper, context);
-            } catch (IOException ex) {
-                throw new Component.ExecutionFailed("Can't process file: " + entry.getFileName(), ex);
+                parser.parse(entry, mapper);
+            } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
+                throw exceptionFactory.failed("Can't process file: " + entry.getFileName(), ex);
             }
             mapper.onTableEnd();
             output.onFileEnd();

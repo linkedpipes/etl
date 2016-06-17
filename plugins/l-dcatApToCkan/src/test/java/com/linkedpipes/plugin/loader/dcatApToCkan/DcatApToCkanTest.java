@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.openrdf.rio.RDFFormat;
 
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.test.TestEnvironment;
-import com.linkedpipes.etl.dpu.test.TestUtils;
+import com.linkedpipes.etl.component.test.TestEnvironment;
+import com.linkedpipes.etl.component.test.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

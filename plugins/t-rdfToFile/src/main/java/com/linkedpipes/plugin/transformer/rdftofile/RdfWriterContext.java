@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.openrdf.model.Statement;
 import org.openrdf.rio.*;
-import com.linkedpipes.etl.component.api.Component;
 
 /**
  * Support cancel and progress report.
@@ -16,16 +15,13 @@ public class RdfWriterContext implements RDFWriter {
 
     private final ProgressReport progressReport;
 
-    private final Component.Context context;
-
     /**
      * Underlying RDF writer.
      */
     private final RDFWriter writer;
 
-    public RdfWriterContext(RDFWriter writer, Component.Context context, ProgressReport progressReport) {
+    public RdfWriterContext(RDFWriter writer, ProgressReport progressReport) {
         this.writer = writer;
-        this.context = context;
         this.progressReport = progressReport;
     }
 
@@ -69,9 +65,6 @@ public class RdfWriterContext implements RDFWriter {
     public void handleStatement(Statement stmnt) throws RDFHandlerException {
         progressReport.entryProcessed();
         writer.handleStatement(stmnt);
-        if (context.canceled()) {
-            throw new RDFHandlerException(new Component.ExecutionCancelled());
-        }
     }
 
     @Override

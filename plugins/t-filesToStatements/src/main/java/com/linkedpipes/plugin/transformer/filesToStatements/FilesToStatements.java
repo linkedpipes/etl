@@ -7,8 +7,8 @@ import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import org.openrdf.model.IRI;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
@@ -20,7 +20,7 @@ import org.openrdf.model.impl.SimpleValueFactory;
  *
  * @author Škoda Petr
  */
-public final class FilesToStatements implements SimpleExecution {
+public final class FilesToStatements implements Component.Sequential {
 
     @Component.OutputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;
@@ -34,8 +34,11 @@ public final class FilesToStatements implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         final List<Statement> statements = new ArrayList<>(64);
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final IRI predicate = valueFactory.createIRI(
@@ -48,7 +51,7 @@ public final class FilesToStatements implements SimpleExecution {
             try {
                 content = FileUtils.readFileToString(file.toFile());
             } catch (IOException ex) {
-                throw new ExecutionFailed("Can't read file: {}", file, ex);
+                throw exceptionFactory.failed("Can't read file: {}", file, ex);
             }
             // Add to output.
             final IRI outputGraph = outputRdf.createGraph();

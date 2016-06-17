@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.component.api.impl;
 
+import com.linkedpipes.etl.component.api.Component;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import org.osgi.framework.wiring.BundleWiring;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
 import com.linkedpipes.etl.utils.core.entity.EntityLoader;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import org.osgi.framework.BundleContext;
 
@@ -31,10 +31,14 @@ public class ComponentFactoryImpl implements ComponentFactory {
 
         // Scan bundle for class with ComponentInstance class.
         final BundleInformation info = scanBundle(context.getBundle());
+        if (info == null) {
+            // We can not use this bundle.
+            return null;
+        }
         // Create an instance.
-        final SimpleExecution instance;
+        final Component.Sequential instance;
         try {
-            instance = (SimpleExecution) info.getClazz().newInstance();
+            instance = (Component.Sequential) info.getClazz().newInstance();
         } catch (IllegalAccessException | InstantiationException ex) {
             throw new CreationFailed("Can't create component class!", ex);
         }
@@ -85,7 +89,7 @@ public class ComponentFactoryImpl implements ComponentFactory {
                 // Scan interfaces.
                 for (Type item : clazz.getGenericInterfaces()) {
                     if (item.getTypeName().equals(
-                            SimpleExecution.class.getCanonicalName())) {
+                            Component.Sequential.class.getTypeName())) {
                         mainClasses.add(clazz);
                     }
                 }

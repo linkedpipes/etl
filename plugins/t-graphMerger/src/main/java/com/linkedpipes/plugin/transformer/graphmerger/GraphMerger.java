@@ -11,14 +11,13 @@ import org.openrdf.query.Update;
 import org.openrdf.query.impl.DatasetImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public final class GraphMerger implements SimpleExecution {
+public final class GraphMerger implements Component.Sequential {
 
     private static final String COPY_QUERY = "INSERT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
@@ -34,7 +33,7 @@ public final class GraphMerger implements SimpleExecution {
     public ProgressReport progressReport;
 
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         final IRI outputGraph = outputRdf.getGraph();
         final Collection<IRI> inputGraphs = inputRdf.getGraphs();
         progressReport.start(inputGraphs);

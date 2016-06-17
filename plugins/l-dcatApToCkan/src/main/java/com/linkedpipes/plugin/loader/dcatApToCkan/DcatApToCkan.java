@@ -43,14 +43,14 @@ import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.impl.DatasetImpl;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Klímek Jakub
  */
-public final class DcatApToCkan implements SimpleExecution {
+public final class DcatApToCkan implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(DcatApToCkan.class);
 
@@ -63,8 +63,11 @@ public final class DcatApToCkan implements SimpleExecution {
     @Component.Configuration
     public DcatApToCkanConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         // Load files.
         LOG.debug("Querying metadata");
 
@@ -471,12 +474,12 @@ public final class DcatApToCkan implements SimpleExecution {
                     } else if (response.getStatusLine().getStatusCode() == 409) {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Dataset already exists: " + ent);
-                        throw new ExecutionFailed("Dataset already exists");
+                        throw exceptionFactory.failed("Dataset already exists");
                         //ContextUtils.sendError(context, "Dataset already exists", "Dataset already exists: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw new ExecutionFailed("Error creating dataset");
+                        throw exceptionFactory.failed("Error creating dataset");
                         //ContextUtils.sendError(context, "Error creating dataset", "Response while creating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -490,7 +493,7 @@ public final class DcatApToCkan implements SimpleExecution {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw new ExecutionFailed("Error creating dataset");
+                            throw exceptionFactory.failed("Error creating dataset");
                             //ContextUtils.sendError(context, "Error creating dataset", e.getLocalizedMessage());
                         }
                     }
@@ -506,7 +509,7 @@ public final class DcatApToCkan implements SimpleExecution {
                 LOG.error(e.getLocalizedMessage(), e);
             }
 
-            if (!context.canceled() && configuration.isLoadToCKAN()) {
+            if (configuration.isLoadToCKAN()) {
                 LOG.debug("Posting to CKAN");
                 CloseableHttpClient client = HttpClients.createDefault();
                 HttpPost httpPost = new HttpPost(apiURI + "/package_update?id=" + datasetID);
@@ -525,7 +528,7 @@ public final class DcatApToCkan implements SimpleExecution {
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw new ExecutionFailed("Error updating dataset");
+                        throw exceptionFactory.failed("Error updating dataset");
                         //ContextUtils.sendError(context, "Error updating dataset", "Response while updating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -539,7 +542,7 @@ public final class DcatApToCkan implements SimpleExecution {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw new ExecutionFailed("Error updating dataset");
+                            throw exceptionFactory.failed("Error updating dataset");
 //		                	ContextUtils.sendError(context, "Error updating dataset", e.getLocalizedMessage());
                         }
                     }

@@ -8,7 +8,6 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
-import com.linkedpipes.etl.component.api.Component;
 
 /**
  *
@@ -18,17 +17,14 @@ public class StatementInserter implements RDFHandler {
 
     private final int commintSize;
 
-    private final Component.Context context;
-
     private final WritableGraphListDataUnit dataUnit;
 
     private final List<Statement> statements;
 
     private URI targetGraph;
 
-    public StatementInserter(int commintSize, Component.Context context, WritableGraphListDataUnit dataUnit) {
+    public StatementInserter(int commintSize, WritableGraphListDataUnit dataUnit) {
         this.commintSize = commintSize;
-        this.context = context;
         this.dataUnit = dataUnit;
         this.statements = new ArrayList<>(commintSize);
     }
@@ -83,9 +79,6 @@ public class StatementInserter implements RDFHandler {
         }
         // We can enforce context here.
         statements.add(st);
-        if (context.canceled()) {
-            throw new RDFHandlerException(new Component.ExecutionCancelled());
-        }
     }
 
     @Override

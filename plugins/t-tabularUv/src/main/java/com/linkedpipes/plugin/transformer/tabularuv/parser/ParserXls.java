@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnType;
@@ -45,15 +44,11 @@ public class ParserXls implements Parser {
 
     private final TableToRdf tableToRdf;
 
-    private final Component.Context context;
-
     private int rowNumber = 0;
 
-    public ParserXls(ParserXlsConfig config, TableToRdf tableToRdf,
-            Component.Context context) {
+    public ParserXls(ParserXlsConfig config, TableToRdf tableToRdf) {
         this.config = config;
         this.tableToRdf = tableToRdf;
-        this.context = context;
     }
 
     @Override
@@ -75,9 +70,6 @@ public class ParserXls implements Parser {
         }
         // process selected sheets
         for (Integer sheetIndex : toProcess) {
-            if (context.canceled()) {
-                break;
-            }
             parseSheet(wb, sheetIndex);
         }
     }
@@ -201,9 +193,6 @@ public class ParserXls implements Parser {
         int skippedLinesCounter = 0;
         for (Integer rowNumPerFile = startRow; rowNumPerFile < dataEndAtRow;
                 ++rowNumber, ++rowNumPerFile) {
-            if (context.canceled()) {
-                break;
-            }
             // skip till data
             if (rowNumPerFile < config.numberOfStartLinesToIgnore) {
                 continue;

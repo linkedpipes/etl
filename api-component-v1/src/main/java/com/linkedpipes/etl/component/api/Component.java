@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.component.api;
 
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class provide basic definition that should by new components.
@@ -15,47 +14,29 @@ import java.util.Arrays;
  */
 public interface Component {
 
-    public interface Context {
+    /**
+     * Interface of component designed for sequential execution.
+     */
+    public interface Sequential {
 
         /**
-         * Return true if the execution of current {@link DPU}
-         * should be stopped as soon as possible.
+         * Perform execution of the component.
          *
-         * @return True if the execution should stop.
+         * @throws NonRecoverableException
          */
-        public boolean canceled();
-
-        public String getComponentIri();
-
-        public File getWorkingDirectory();
+        void execute() throws NonRecoverableException;
 
     }
 
-    /**
-     * Base class for exception and failure reporting.
-     *
-     * The reference of arguments in message must by done by '{}' string.
-     */
     public class ExecutionFailed extends NonRecoverableException {
 
-        public ExecutionFailed(String message, Object... args) {
-            super(Arrays.asList(new LocalizedString(message, "en")), args);
+        public ExecutionFailed(List<LocalizedString> messages, Object... args) {
+            super(messages, args);
         }
 
     }
 
-    /**
-     * Use to report execution cancellation.
-     */
-    public class ExecutionCancelled extends ExecutionFailed {
-
-        public ExecutionCancelled() {
-            super("Execution cancelled.");
-        }
-
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
+     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface Inject {
 

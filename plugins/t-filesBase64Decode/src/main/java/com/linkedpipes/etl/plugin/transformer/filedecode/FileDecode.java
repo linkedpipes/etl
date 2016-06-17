@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import org.apache.commons.io.FileUtils;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Petr Škoda
  */
-public class FileDecode implements SimpleExecution {
+public class FileDecode implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileDecode.class);
 
@@ -28,11 +28,14 @@ public class FileDecode implements SimpleExecution {
     @Component.OutputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
-    @Configuration
+    @Component.Configuration
     public FileDecodeConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         for (FilesDataUnit.Entry entry : inputFiles) {
             final File outputFile = outputFiles.createFile(
                     entry.getFileName()).toFile();
@@ -40,11 +43,11 @@ public class FileDecode implements SimpleExecution {
                 FileUtils.copyInputStreamToFile(
                         Base64.getDecoder().wrap(input),
                         outputFile);
-            } catch (IOException  ex) {
+            } catch (IOException ex) {
                 if (configuration.isSkipOnError()) {
                     LOG.warn("Invalid file ignored", ex);
                 } else {
-                    throw new ExecutionFailed("Can't decode file: {}",
+                    throw exceptionFactory.failed("Can't decode file: {}",
                             entry, ex);
                 }
             }

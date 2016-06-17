@@ -1,9 +1,6 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.Rio;
-import com.linkedpipes.etl.component.api.Component;
 
 /**
  *
@@ -46,12 +43,6 @@ public class RdfToFileConfiguration {
 
     public void setGraphUri(String graphUri) {
         this.graphUri = graphUri;
-    }
-
-    public RDFFormat getFileFormat() throws Component.ExecutionFailed {
-        return Rio.getParserFormatForMIMEType(fileType).orElseThrow(() -> {
-            return new Component.ExecutionFailed("Invalid output file type: {1}", fileType);
-        });
     }
 
 }

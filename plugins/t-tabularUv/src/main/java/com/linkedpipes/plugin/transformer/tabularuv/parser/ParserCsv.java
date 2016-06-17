@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.*;
@@ -31,15 +30,12 @@ public class ParserCsv implements Parser {
 
     private final TableToRdf tableToRdf;
 
-    private final Component.Context context;
 
     private int rowNumber = 0;
 
-    public ParserCsv(ParserCsvConfig config, TableToRdf tableToRdf,
-            Component.Context context) {
+    public ParserCsv(ParserCsvConfig config, TableToRdf tableToRdf) {
         this.config = config;
         this.tableToRdf = tableToRdf;
-        this.context = context;
     }
 
     @Override
@@ -97,8 +93,7 @@ public class ParserCsv implements Parser {
                 LOG.debug("Row limit: {}", config.rowLimit);
             }
             while (row != null && (config.rowLimit == null
-                    || rowNumPerFile < config.rowLimit)
-                    && !context.canceled()) {
+                    || rowNumPerFile < config.rowLimit)) {
                 // cast string to objects
                 tableToRdf.paserRow((List) row, rowNumber);
                 // read next row

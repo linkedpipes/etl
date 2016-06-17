@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
@@ -31,15 +30,11 @@ public class ParserDbf implements Parser {
 
     private final TableToRdf tableToRdf;
 
-    private final Component.Context context;
-
     private int rowNumber = 0;
 
-    public ParserDbf(ParserDbfConfig config, TableToRdf tableToRdf,
-            Component.Context context) {
+    public ParserDbf(ParserDbfConfig config, TableToRdf tableToRdf) {
         this.config = config;
         this.tableToRdf = tableToRdf;
-        this.context = context;
     }
 
     @Override
@@ -82,8 +77,7 @@ public class ParserDbf implements Parser {
             LOG.debug("Row limit: {}", config.rowLimit);
         }
         while (row != null
-                && (config.rowLimit == null || rowNumPerFile < config.rowLimit)
-                && !context.canceled()) {
+                && (config.rowLimit == null || rowNumPerFile < config.rowLimit)) {
             // convert
             for (Object item : row) {
                 if (item instanceof byte[]) {

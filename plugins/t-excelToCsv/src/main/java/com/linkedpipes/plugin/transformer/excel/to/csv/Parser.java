@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.Component.ExecutionCancelled;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.excel.to.csv.ExcelToCsvConfiguration.VirtualColumn;
 import java.io.File;
@@ -23,7 +23,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
 import org.apache.poi.ss.usermodel.DateUtil;
 
 /**
@@ -40,13 +39,12 @@ class Parser {
         this.configuration = configuration;
     }
 
-    public void processEntry(FilesDataUnit.Entry entry, WritableFilesDataUnit outputFiles,
-            Component.Context context) throws NonRecoverableException {
+    public void processEntry(FilesDataUnit.Entry entry, WritableFilesDataUnit outputFiles, ExceptionFactory exceptionFactory) throws NonRecoverableException {
         final Workbook workbook;
         try {
             workbook = WorkbookFactory.create(entry.toFile());
         } catch (IOException | InvalidFormatException ex) {
-            throw new Component.ExecutionFailed("Can't open workbook file.", ex);
+            throw exceptionFactory.failed("Can't open workbook file.", ex);
         }
         for (int index = 0; index < workbook.getNumberOfSheets(); ++index) {
             final Sheet sheet = workbook.getSheetAt(index);
@@ -59,7 +57,7 @@ class Parser {
                     continue;
                 }
             } catch (PatternSyntaxException ex) {
-                throw new Component.ExecutionFailed("Invalid regular expression for sheet filter.", ex);
+                throw exceptionFactory.failed("Invalid regular expression for sheet filter.", ex);
             }
             // Create output file name.
             final String outputFileName = configuration.getFileNamePattern().
@@ -69,14 +67,14 @@ class Parser {
             LOG.info("Parsing sheet: '{}' number of rows: {} into file: {}",
                     sheet.getSheetName(), sheet.getLastRowNum(), outputFile);
             try (PrintStream outputStream = new PrintStream(new FileOutputStream(outputFile), false, "UTF-8")) {
-                processSheet(sheet, outputStream, context);
+                processSheet(sheet, outputStream);
             } catch (IOException ex) {
-                throw new Component.ExecutionFailed("Can't write output to file.", ex);
+                throw exceptionFactory.failed("Can't write output to file.", ex);
             }
         }
     }
 
-    private void processSheet(Sheet sheet, PrintStream outputStream, Component.Context context)
+    private void processSheet(Sheet sheet, PrintStream outputStream)
             throws NonRecoverableException {
         final int rowEnd;
         if (configuration.getRowsEnd() == -1) {
@@ -116,10 +114,6 @@ class Parser {
         // Parse rows and columns.
         boolean firstRow = true;
         for (int rowIndex = configuration.getRowsStart(); rowIndex <= rowEnd; ++rowIndex) {
-            if (context.canceled()) {
-                throw new ExecutionCancelled();
-            }
-            //
             final Row row = sheet.getRow(rowIndex);
             // rowValues can contains null that are sanitized in the
             // sanitizeValue before usege.

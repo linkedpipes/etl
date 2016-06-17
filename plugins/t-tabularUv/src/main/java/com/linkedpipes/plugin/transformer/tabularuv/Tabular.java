@@ -3,7 +3,8 @@ package com.linkedpipes.plugin.transformer.tabularuv;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
+import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserXls;
@@ -25,7 +26,7 @@ import org.openrdf.model.impl.SimpleValueFactory;
  *
  * @author Škoda Petr
  */
-public class Tabular implements SimpleExecution {
+public class Tabular implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tabular.class);
 
@@ -41,11 +42,11 @@ public class Tabular implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    public Tabular() {
-    }
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute(Context context)
+    public void execute()
             throws NonRecoverableException, ExecutionFailed {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final RdfWriter writer = new RdfWriter(outputRdf);
@@ -58,25 +59,22 @@ public class Tabular implements SimpleExecution {
         switch (configuration.getTableType()) {
             case CSV:
                 parser = new ParserCsv(configuration.getParserCsvConfig(),
-                        tableToRdf, context);
+                        tableToRdf);
                 break;
             case DBF:
                 parser = new ParserDbf(configuration.getParserDbfConfig(),
-                        tableToRdf, context);
+                        tableToRdf);
                 break;
             case XLS:
                 parser = new ParserXls(configuration.getParserXlsConfig(),
-                        tableToRdf, context);
+                        tableToRdf);
                 break;
             default:
-                throw new ExecutionFailed("Unknown table type: {}",
+                throw exceptionFactory.failed("Unknown table type: {}",
                         configuration.getTableType());
         }
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
-            if (context.canceled()) {
-                throw new ExecutionCancelled();
-            }
             final IRI outputGraph = outputRdf.createGraph();
             writer.setGraph(outputGraph);
             LOG.info("Processing: {}", entry.getFileName());
@@ -94,7 +92,7 @@ public class Tabular implements SimpleExecution {
             try {
                 parser.parse(entry.toFile());
             } catch (ParseFailed ex) {
-                throw new ExecutionFailed("Can't parse file: {}",
+                throw exceptionFactory.failed("Can't parse file: {}",
                         entry.getFileName(), ex);
             }
             progressReport.entryProcessed();

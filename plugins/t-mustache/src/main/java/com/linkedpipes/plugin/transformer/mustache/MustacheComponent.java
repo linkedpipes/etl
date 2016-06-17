@@ -7,8 +7,8 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Petr Škoda
  */
-public final class MustacheComponent implements SimpleExecution {
+public final class MustacheComponent implements Component.Sequential {
 
     /**
      * Used to hold metadata about loaded objects.
@@ -78,8 +78,11 @@ public final class MustacheComponent implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         // Prepare template
         final String template
                 = UpdateQuery.expandPrefixes(configuration.getTemplate());
@@ -113,7 +116,7 @@ public final class MustacheComponent implements SimpleExecution {
                     new FileOutputStream(outputFile), "UTF8")) {
                 mustache.execute(outputStream, object.data).flush();
             } catch (IOException ex) {
-                throw new ExecutionFailed("Can't write output file.", ex);
+                throw exceptionFactory.failed("Can't write output file.", ex);
             }
             progressReport.entryProcessed();
         }
@@ -230,7 +233,8 @@ public final class MustacheComponent implements SimpleExecution {
                     result.put(entry.getKey().stringValue(), newData);
                 }
             } else // Values.
-             if (entry.getValue().size() == 1) {
+            {
+                if (entry.getValue().size() == 1) {
                     result.put(entry.getKey().stringValue(),
                             getValue(entry.getValue().get(0)));
                 } else {
@@ -241,6 +245,7 @@ public final class MustacheComponent implements SimpleExecution {
                     }
                     result.put(entry.getKey().stringValue(), newData);
                 }
+            }
         }
         return result;
     }

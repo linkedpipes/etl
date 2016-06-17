@@ -7,7 +7,6 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
 import org.openrdf.query.impl.SimpleDataset;
 
@@ -15,7 +14,7 @@ import org.openrdf.query.impl.SimpleDataset;
  *
  * @author Škoda Petr
  */
-public final class SparqlConstruct implements SimpleExecution {
+public final class SparqlConstruct implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlConstruct.class);
 
@@ -33,7 +32,7 @@ public final class SparqlConstruct implements SimpleExecution {
     public SparqlConstructConfiguration configuration;
 
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         // We always perfrom inserts.
         final String query = updateQuery(configuration.getQuery());
         LOG.debug("Query: {}", query);

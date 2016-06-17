@@ -21,17 +21,6 @@ public interface ComponentFactory {
 
         }
 
-        /**
-         * Create {@link ManagableDataUnit} that implements given interfaces.
-         * Returned object should not yet been initialized.
-         *
-         * @param definition
-         * @param resourceIri
-         * @param graph
-         * @param context
-         * @return {@link ManagableDataUnit} or null.
-         * @throws CreationFailed
-         */
         public BaseComponent create(SparqlSelect definition, String resourceIri,
                 String graph, BundleContext context) throws CreationFailed;
 

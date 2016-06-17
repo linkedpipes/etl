@@ -19,14 +19,13 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class DistributionMetadata implements SimpleExecution {
+public class DistributionMetadata implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributionMetadata.class);
 
@@ -43,8 +42,7 @@ public class DistributionMetadata implements SimpleExecution {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         //
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //

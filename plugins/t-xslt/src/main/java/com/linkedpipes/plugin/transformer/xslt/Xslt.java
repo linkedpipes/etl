@@ -24,8 +24,8 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +33,7 @@ import java.util.Map;
  *
  * @author Škoda Petr
  */
-public final class Xslt implements SimpleExecution {
+public final class Xslt implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Xslt.class);
 
@@ -52,8 +52,11 @@ public final class Xslt implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context)
+    public void execute()
             throws Component.ExecutionFailed, SystemDataUnitException,
             SesameDataUnit.RepositoryActionFailed {
         final Processor processor = new Processor(false);
@@ -65,7 +68,7 @@ public final class Xslt implements SimpleExecution {
             executable = compiler.compile(new StreamSource(
                     new StringReader(configuration.getXsltTemplate())));
         } catch (SaxonApiException ex) {
-            throw new Component.ExecutionFailed(
+            throw exceptionFactory.failed(
                     "Can't compile template.", ex);
         }
         // Load name mapping from input to output.
@@ -89,10 +92,6 @@ public final class Xslt implements SimpleExecution {
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing: {}", entry.getFileName());
             final File inputFile = entry.toFile();
-            // Check cancel.
-            if (context.canceled()) {
-                throw new Component.ExecutionCancelled();
-            }
             // Prepare output name.
             final File outputFile;
             if (nameMapping.containsKey(entry.getFileName())) {
@@ -137,7 +136,7 @@ public final class Xslt implements SimpleExecution {
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
-                throw new Component.ExecutionFailed(
+                throw exceptionFactory.failed(
                         "Can't transform file.", ex);
             } finally {
                 // Clear document cache.

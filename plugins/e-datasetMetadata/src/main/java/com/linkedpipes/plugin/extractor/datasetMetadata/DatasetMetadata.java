@@ -19,14 +19,13 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
 
 /**
  *
  * @author Petr Škoda
  */
-public class DatasetMetadata implements SimpleExecution {
+public class DatasetMetadata implements Component.Sequential {
 
     @Component.OutputPort(id = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
@@ -41,7 +40,7 @@ public class DatasetMetadata implements SimpleExecution {
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         dataset = valueFactory.createIRI(configuration.getDatasetURI());
         addValue(RDF.TYPE, DatasetMetadataVocabulary.DCAT_DATASET_CLASS);
         //

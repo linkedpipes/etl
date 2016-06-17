@@ -26,7 +26,7 @@
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>api-dpu-v1</artifactId>
+                <artifactId>api-component-v1</artifactId>
                 <version>0.0.0</version>
                 <scope>provided</scope>
             </dependency>

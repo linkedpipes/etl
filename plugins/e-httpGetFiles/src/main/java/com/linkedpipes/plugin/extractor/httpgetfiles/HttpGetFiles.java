@@ -23,14 +23,15 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class HttpGetFiles implements SimpleExecution {
+public final class HttpGetFiles implements Component.Sequential {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(HttpGetFiles.class);
@@ -38,6 +39,9 @@ public final class HttpGetFiles implements SimpleExecution {
     @Component.ContainsConfiguration
     @Component.InputPort(id = "Configuration")
     public SingleGraphDataUnit configurationRdf;
+
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
 
     @Component.OutputPort(id = "FilesOutput")
     public WritableFilesDataUnit output;
@@ -49,20 +53,20 @@ public final class HttpGetFiles implements SimpleExecution {
     public ProgressReport progressReport;
 
     @Override
-    public void execute(Component.Context context)
+    public void execute()
             throws NonRecoverableException {
         // TODO Do not use this, but be selective about certs we trust.
         try {
             LOG.warn("'Trust all certs' policy used -> security risk!");
             setTrustAllCerts();
         } catch (Exception ex) {
-            throw new Component.ExecutionFailed(
+            throw exceptionFactory.failed(
                     "Can't set trust all certificates.", ex);
         }
         progressReport.start(configuration.getReferences().size());
         for (HttpGetFilesConfiguration.Reference reference
                 : configuration.getReferences()) {
-            try{
+            try {
                 download(reference);
             } catch (Throwable t) {
                 if (configuration.isSkipOnError()) {
@@ -73,11 +77,6 @@ public final class HttpGetFiles implements SimpleExecution {
                 }
             }
             progressReport.entryProcessed();
-            // Check for cancel.
-            if (context.canceled()) {
-                throw new Component.ExecutionCancelled();
-            }
-            // TODO Add wait time.
         }
         progressReport.done();
     }
@@ -98,7 +97,7 @@ public final class HttpGetFiles implements SimpleExecution {
         try {
             source = new URL(reference.getUri());
         } catch (MalformedURLException ex) {
-            throw new Component.ExecutionFailed("Invalid URI: {}.",
+            throw exceptionFactory.failed("Invalid URI: {}.",
                     reference.getUri(), ex);
         }
         // Prepare target destination.
@@ -109,7 +108,7 @@ public final class HttpGetFiles implements SimpleExecution {
         try {
             connection = (HttpURLConnection) source.openConnection();
         } catch (IOException ex) {
-            throw new ExecutionFailed("Can't open connection.", ex);
+            throw exceptionFactory.failed("Can't open connection.", ex);
         }
         if (configuration.isForceFollowRedirect()) {
             // Check for redirect. We can hawe multiple redirects
@@ -121,14 +120,14 @@ public final class HttpGetFiles implements SimpleExecution {
                     connection = followRedirect(oldConnection);
                 } while (connection != oldConnection);
             } catch (IOException ex) {
-                throw new ExecutionFailed("Can't resolve redirect.", ex);
+                throw exceptionFactory.failed("Can't resolve redirect.", ex);
             }
         }
         // Copy content.
         try (InputStream inputStream = connection.getInputStream()) {
             FileUtils.copyInputStreamToFile(inputStream, destination);
         } catch (IOException ex) {
-            throw new ExecutionFailed("Can't copy file.", ex);
+            throw exceptionFactory.failed("Can't copy file.", ex);
         } finally {
             connection.disconnect();
         }
@@ -143,7 +142,8 @@ public final class HttpGetFiles implements SimpleExecution {
         final TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                public java.security.cert.X509Certificate[]
+                        getAcceptedIssuers() {
                     return null;
                 }
 
@@ -182,14 +182,14 @@ public final class HttpGetFiles implements SimpleExecution {
      * @throws IOException
      * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
      */
-    private static HttpURLConnection followRedirect(
-            HttpURLConnection connection) throws IOException, ExecutionFailed {
+    private HttpURLConnection followRedirect(HttpURLConnection connection)
+            throws IOException, ExecutionFailed {
         connection.connect();
         if (connection.getResponseCode()
                 == HttpURLConnection.HTTP_SEE_OTHER) {
             final String location = connection.getHeaderField("Location");
             if (location == null) {
-                throw new ExecutionFailed("Missing Location for redirect.");
+                throw exceptionFactory.failed("Missing Location for redirect.");
             } else {
                 // Update based on the redirect.
                 connection.disconnect();

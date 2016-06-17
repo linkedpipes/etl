@@ -10,14 +10,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class PackZip implements SimpleExecution {
+public final class PackZip implements Component.Sequential {
 
     @Component.InputPort(id = "FilesInput")
     public FilesDataUnit input;
@@ -31,22 +31,21 @@ public final class PackZip implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         final File zipFile = output.createFile(configuration.getFileName()).toFile();
         final byte[] buffer = new byte[8196];
         progressReport.start(input.size());
         try (FileOutputStream fos = new FileOutputStream(zipFile); ZipOutputStream zos = new ZipOutputStream(fos)) {
             for (FilesDataUnit.Entry entry : input) {
-                if (context.canceled()) {
-                    throw new Component.ExecutionCancelled();
-                }
-                // ...
                 addZipEntry(zos, buffer, entry);
                 progressReport.entryProcessed();
             }
         } catch (IOException ex) {
-            throw new Component.ExecutionFailed("Can't create archive.", ex);
+            throw exceptionFactory.failed("Can't create archive.", ex);
         }
         progressReport.done();
     }
@@ -72,7 +71,7 @@ public final class PackZip implements SimpleExecution {
                 zos.write(buffer, 0, len);
             }
         } catch (Exception ex) {
-            throw new Component.ExecutionFailed("", ex);
+            throw exceptionFactory.failed("", ex);
         }
     }
 

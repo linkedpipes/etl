@@ -2,7 +2,6 @@ package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,14 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.linkedpipes.etl.component.api.impl.RdfReader.CanNotDeserializeObject;
-import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.service.DefinitionReader;
+import com.linkedpipes.etl.component.api.service.WorkingDirectory;
 import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SimpleComponent;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
@@ -32,7 +32,7 @@ final class SimpleComponentImpl implements SimpleComponent {
     /**
      * Instance of a DPU code to execute.
      */
-    private final SimpleExecution component;
+    private final Component.Sequential component;
 
     /**
      * Bundle information about the DPU.
@@ -64,7 +64,7 @@ final class SimpleComponentImpl implements SimpleComponent {
      */
     private Context context = null;
 
-    SimpleComponentImpl(SimpleExecution dpu, BundleInformation info,
+    SimpleComponentImpl(Component.Sequential dpu, BundleInformation info,
             ComponentConfiguration configuration, SparqlSelect definition,
             String graph) {
         this.component = dpu;
@@ -148,6 +148,11 @@ final class SimpleComponentImpl implements SimpleComponent {
             } else if (field.getType() == AfterExecution.class) {
                 afterExecution = new AfterExecutionImpl();
                 object = afterExecution;
+            } else if (field.getType() == WorkingDirectory.class) {
+                object = new WorkingDirectory(
+                        configuration.getWorkingDirectory().getPath());
+            } else if (field.getType() == ExceptionFactory.class) {
+                object = new ExceptionFactoryImpl();
             } else {
                 throw new InitializationFailed("Can't initialize extension!");
             }
@@ -282,24 +287,7 @@ final class SimpleComponentImpl implements SimpleComponent {
     @Override
     public void execute() throws ComponentFailed {
         try {
-            component.execute(new Component.Context() {
-
-                @Override
-                public boolean canceled() {
-                    return context.canceled();
-                }
-
-                @Override
-                public String getComponentIri() {
-                    return configuration.getResourceIri();
-                }
-
-                @Override
-                public File getWorkingDirectory() {
-                    return configuration.getWorkingDirectory();
-                }
-
-            });
+            component.execute();
         } catch (NonRecoverableException ex) {
             throw new ComponentFailed("Component failed!", ex);
         } catch (Throwable ex) {

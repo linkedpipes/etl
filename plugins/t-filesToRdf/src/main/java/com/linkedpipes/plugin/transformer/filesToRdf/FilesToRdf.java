@@ -16,14 +16,14 @@ import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class FilesToRdf implements SimpleExecution {
+public final class FilesToRdf implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(FilesToRdf.class);
 
@@ -39,10 +39,13 @@ public final class FilesToRdf implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         // Prepare parsers and inserters.
-        final StatementInserter rdfInserter = new StatementInserter(configuration.getCommitSize(), context, outputRdf);
+        final StatementInserter rdfInserter = new StatementInserter(configuration.getCommitSize(), outputRdf);
         final RDFFormat defaultFormat;
         if (configuration.getMimeType() == null || configuration.getMimeType().isEmpty()) {
             defaultFormat = null;
@@ -65,7 +68,7 @@ public final class FilesToRdf implements SimpleExecution {
             if (defaultFormat == null) {
                 final Optional<RDFFormat> optionalFormat = Rio.getParserFormatForFileName(file.getFileName());
                 if (!optionalFormat.isPresent()) {
-                    throw new Component.ExecutionFailed("Can't determine format for file:" + file.getFileName());
+                    throw exceptionFactory.failed("Can't determine format for file:" + file.getFileName());
                 }
                 format = optionalFormat.get();
             } else {
@@ -77,10 +80,7 @@ public final class FilesToRdf implements SimpleExecution {
             try (final InputStream fileStream = new FileInputStream(file.toFile())) {
                 rdfParser.parse(fileStream, "http://localhost/base/");
             } catch (IOException | RDFHandlerException | RDFParseException ex) {
-                throw new Component.ExecutionFailed("Can't parse file: {}", file.getFileName(), ex);
-            }
-            if (context.canceled()) {
-                throw new Component.ExecutionCancelled();
+                throw exceptionFactory.failed("Can't parse file: {}", file.getFileName(), ex);
             }
             progressReport.entryProcessed();
         }

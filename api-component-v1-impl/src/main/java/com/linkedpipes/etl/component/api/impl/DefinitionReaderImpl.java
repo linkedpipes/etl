@@ -32,9 +32,10 @@ class DefinitionReaderImpl implements DefinitionReader {
     }
 
     @Override
-    public Collection<String> getProperty(String predicate) throws OperationFailed  {
+    public Collection<String> getProperty(String predicate)
+            throws OperationFailed  {
         final String query = "SELECT ?value FROM <" + graph +
-                ">WHERE { <" + componentIri +
+                "> WHERE { <" + componentIri +
                 "> <" + predicate + "> ?value }";
         //
         final List<Map<String, String>> queryResult;

@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.dpu.test;
+package com.linkedpipes.etl.component.test;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;

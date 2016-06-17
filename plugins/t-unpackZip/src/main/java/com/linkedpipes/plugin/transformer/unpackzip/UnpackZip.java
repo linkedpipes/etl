@@ -7,14 +7,14 @@ import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class UnpackZip implements SimpleExecution {
+public final class UnpackZip implements Component.Sequential {
 
     @Component.InputPort(id = "FilesInput")
     public FilesDataUnit input;
@@ -28,14 +28,13 @@ public final class UnpackZip implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
-            if (context.canceled()) {
-                throw new Component.ExecutionCancelled();
-            }
-            // ..
             final File outputDirectory;
             if (configuration.isUsePrefix()) {
                 outputDirectory = new File(output.getRootDirectory(), entry.getFileName());
@@ -61,11 +60,11 @@ public final class UnpackZip implements SimpleExecution {
         try {
             final ZipFile zip = new ZipFile(zipFile);
             if (zip.isEncrypted()) {
-                throw new Component.ExecutionFailed("File is encrypted: {}", zipFile.getName());
+                throw exceptionFactory.failed("File is encrypted: {}", zipFile.getName());
             }
             zip.extractAll(targetDirectory.toString());
         } catch (ZipException ex) {
-            throw new Component.ExecutionFailed("Extraction failed: {}", zipFile.getName(), ex);
+            throw exceptionFactory.failed("Extraction failed: {}", zipFile.getName(), ex);
         }
     }
 

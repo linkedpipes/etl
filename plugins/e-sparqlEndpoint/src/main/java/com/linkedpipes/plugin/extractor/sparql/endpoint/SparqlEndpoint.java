@@ -12,8 +12,8 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -23,7 +23,7 @@ import org.openrdf.query.impl.SimpleDataset;
  *
  * @author Škoda Petr
  */
-public final class SparqlEndpoint implements SimpleExecution {
+public final class SparqlEndpoint implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlEndpoint.class);
 
@@ -34,19 +34,22 @@ public final class SparqlEndpoint implements SimpleExecution {
     @Component.InputPort(id = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Component.Configuration
     public SparqlEndpointConfiguration configuration;
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         //
         final SPARQLRepository repository = new SPARQLRepository(configuration.getEndpoint());
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
-            throw new Component.ExecutionFailed("Can't connnect to endpoint.", ex);
+            throw exceptionFactory.failed("Can't connnect to endpoint.", ex);
         }
         //
         try {
@@ -60,7 +63,7 @@ public final class SparqlEndpoint implements SimpleExecution {
         }
     }
 
-    public void queryRemote(SPARQLRepository repository) throws ExecutionFailed {
+    public void queryRemote(SPARQLRepository repository) throws Component.ExecutionFailed {
         final IRI graph = outputRdf.getGraph();
         try (RepositoryConnection localConnection = outputRdf.getRepository().getConnection()) {
             localConnection.begin();

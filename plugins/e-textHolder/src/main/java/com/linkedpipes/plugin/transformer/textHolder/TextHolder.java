@@ -6,14 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class TextHolder implements SimpleExecution {
+public final class TextHolder implements Component.Sequential {
 
     @Component.OutputPort(id = "FilesOutput")
     public WritableFilesDataUnit outputFiles;
@@ -21,13 +21,16 @@ public final class TextHolder implements SimpleExecution {
     @Component.Configuration
     public TextHolderConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
         try {
             Files.write(outputFile.toPath(), configuration.getContent().getBytes(Charset.forName("UTF-8")));
         } catch (IOException ex) {
-            throw new Component.ExecutionFailed("Can't write content to file.", ex);
+            throw exceptionFactory.failed("Can't write content to file.", ex);
         }
     }
 

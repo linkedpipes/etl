@@ -9,14 +9,13 @@ import org.openrdf.query.Update;
 import org.openrdf.query.impl.DatasetImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class SparqlUpdate implements SimpleExecution {
+public final class SparqlUpdate implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlUpdate.class);
 
@@ -34,7 +33,7 @@ public final class SparqlUpdate implements SimpleExecution {
     public SparqlUpdateConfiguration configuration;
 
     @Override
-    public void execute(Component.Context context)
+    public void execute()
             throws Component.ExecutionFailed, SesameDataUnitException {
         final IRI inputGraph = inputRdf.getGraph();
         final IRI outputGraph = outputRdf.getGraph();

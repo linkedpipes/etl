@@ -10,6 +10,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  * https://www.w3.org/TR/2015/REC-csv2rdf-20151217/#bib-tabular-data-model
@@ -73,6 +74,8 @@ class Mapper {
 
     private String tableResource;
 
+    private final ExceptionFactory exceptionFactory;
+
     /**
      * Does not call any other method on {@link StatementConsumer} than onRowStart, onRowEnd and submit for new
      * statement.
@@ -81,7 +84,7 @@ class Mapper {
      * @param configuration
      * @param columns
      */
-    public Mapper(StatementConsumer consumer, TabularConfiguration configuration, List<ColumnAbstract> columns) {
+    public Mapper(StatementConsumer consumer, TabularConfiguration configuration, List<ColumnAbstract> columns, ExceptionFactory exceptionFactory) {
         this.consumer = consumer;
         this.configuration = configuration;
         this.columns = columns;
@@ -90,6 +93,7 @@ class Mapper {
         } else {
             this.outputMode = Mode.MINIMAL;
         }
+        this.exceptionFactory = exceptionFactory;
     }
 
     /**
@@ -159,7 +163,7 @@ class Mapper {
     public void onHeader(List<String> header) throws MissingNameInHeader, InvalidTemplate, Component.ExecutionFailed {
         usedColumns = new ArrayList<>(columns.size());
         if (configuration.isFullMapping()) {
-            usedColumns.addAll(ColumnFactory.createColumList(configuration, header));
+            usedColumns.addAll(ColumnFactory.createColumList(configuration, header, exceptionFactory));
         } else {
             // Use user given.
             usedColumns.addAll(columns);
@@ -174,7 +178,7 @@ class Mapper {
      * @param row Row from the CSV file.
      * @return True if next line should be processed if it exists.
      */
-    public boolean onRow(List<String> row) throws UnsupportedEncodingException, NonRecoverableException {
+    public boolean onRow(List<String> row) throws UnsupportedEncodingException, NonRecoverableException, ColumnAbstract.MissingColumnValue {
         consumer.onRowStart();
         rowNumber++;
         if (rowNumber <= configuration.getDialect().getSkipRows()) {

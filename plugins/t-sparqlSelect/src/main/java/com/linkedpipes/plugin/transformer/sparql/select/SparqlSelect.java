@@ -15,14 +15,14 @@ import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class SparqlSelect implements SimpleExecution {
+public final class SparqlSelect implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlSelect.class);
 
@@ -39,8 +39,11 @@ public final class SparqlSelect implements SimpleExecution {
     @Component.Configuration
     public SparqlSelectConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         // For each graph.
         final IRI inputGraph = inputRdf.getGraph();
         final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
@@ -59,7 +62,7 @@ public final class SparqlSelect implements SimpleExecution {
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw new Component.ExecutionFailed("Exception.", ex);
+                throw exceptionFactory.failed("Exception.", ex);
             }
         });
     }

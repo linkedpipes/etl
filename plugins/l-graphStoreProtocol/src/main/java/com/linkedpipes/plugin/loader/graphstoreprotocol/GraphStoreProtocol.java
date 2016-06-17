@@ -34,14 +34,15 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Petr Škoda
  */
-public class GraphStoreProtocol implements SimpleExecution {
+public class GraphStoreProtocol implements Component.Sequential {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(GraphStoreProtocol.class);
@@ -52,11 +53,14 @@ public class GraphStoreProtocol implements SimpleExecution {
     @Component.Configuration
     public GraphStoreProtocolConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws ExecutionFailed {
+    public void execute() throws ExecutionFailed {
         //
         if (inputFiles.size() > 1 && configuration.isReplace()) {
-            throw new ExecutionFailed("More then one file on input, "
+            throw exceptionFactory.failed("More then one file on input, "
                     + "with replace mode.");
         }
         //
@@ -66,19 +70,14 @@ public class GraphStoreProtocol implements SimpleExecution {
             try {
                 beforeSize = getGraphSize();
             } catch(IOException ex) {
-                throw new ExecutionFailed("Can't get graph size.", ex);
+                throw exceptionFactory.failed("Can't get graph size.", ex);
             }
         }
         for (final Entry entry : inputFiles) {
-            //
-            if (context.canceled()) {
-                throw new ExecutionCancelled();
-            }
-            //
             final Optional<RDFFormat> optionalFormat
                     = Rio.getParserFormatForFileName(entry.getFileName());
             if (!optionalFormat.isPresent()) {
-                throw new Component.ExecutionFailed(
+                throw exceptionFactory.failed(
                         "Can't determine format for file: {}", entry);
             }
             final String mimeType = optionalFormat.get().getDefaultMIMEType();
@@ -107,13 +106,13 @@ public class GraphStoreProtocol implements SimpleExecution {
                             configuration.isReplace());
                     break;
                 default:
-                    throw new ExecutionFailed("Unknown repository type!");
+                    throw exceptionFactory.failed("Unknown repository type!");
             }
             if (configuration.isCheckSize()) {
                 try {
                 afterSize = getGraphSize();
             } catch(IOException ex) {
-                throw new ExecutionFailed("Can't get graph size.", ex);
+                throw exceptionFactory.failed("Can't get graph size.", ex);
             }
             }
         }
@@ -141,7 +140,7 @@ public class GraphStoreProtocol implements SimpleExecution {
                         QueryLanguage.SPARQL, query).evaluate();
                 if (!result.hasNext()) {
                     // Empty result.
-                    throw new ExecutionFailed(
+                    throw exceptionFactory.failed(
                             "Remote query for size does not return any value.");
                 }
                 final Binding binding = result.next().getBinding("count");
@@ -159,7 +158,7 @@ public class GraphStoreProtocol implements SimpleExecution {
         try {
             url += "?context-uri=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw new ExecutionFailed("URLEncoder failed.", ex);
+            throw exceptionFactory.failed("URLEncoder failed.", ex);
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
@@ -170,7 +169,7 @@ public class GraphStoreProtocol implements SimpleExecution {
             try {
                 url += "&query=" + URLEncoder.encode(query, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
-                throw new ExecutionFailed("URLEncoder failed.", ex);
+                throw exceptionFactory.failed("URLEncoder failed.", ex);
             }
             //
             httpMethod = new HttpPut(url);
@@ -189,7 +188,7 @@ public class GraphStoreProtocol implements SimpleExecution {
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw new ExecutionFailed("URLEncoder failed.", ex);
+            throw exceptionFactory.failed("URLEncoder failed.", ex);
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
@@ -214,7 +213,7 @@ public class GraphStoreProtocol implements SimpleExecution {
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw new ExecutionFailed("URLEncoder failed.", ex);
+            throw exceptionFactory.failed("URLEncoder failed.", ex);
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
@@ -242,12 +241,12 @@ public class GraphStoreProtocol implements SimpleExecution {
                         response.getStatusLine().getReasonPhrase());
                 final int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode < 200 && statusCode >= 300) {
-                    throw new ExecutionFailed("Can't upload data, reason: {}",
+                    throw exceptionFactory.failed("Can't upload data, reason: {}",
                             response.getStatusLine().getReasonPhrase());
                 }
             }
         } catch (IOException | ParseException ex) {
-            throw new ExecutionFailed("Can't execute request.", ex);
+            throw exceptionFactory.failed("Can't execute request.", ex);
         }
     }
 

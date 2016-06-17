@@ -30,7 +30,7 @@ class ColumnTyped extends ColumnAbstract {
 
     @Override
     public List<Resource> emit(StatementConsumer outputConsumer, List<String> row, int rowNumber)
-            throws NonRecoverableException {
+            throws NonRecoverableException, MissingColumnValue {
         final Resource s = aboutUrl.getResource(row, rowNumber);
         if (s == null) {
             return Collections.EMPTY_LIST;

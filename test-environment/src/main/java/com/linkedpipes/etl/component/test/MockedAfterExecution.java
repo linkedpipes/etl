@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.dpu.test;
+package com.linkedpipes.etl.component.test;
 
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.AfterExecution.CustomAction;

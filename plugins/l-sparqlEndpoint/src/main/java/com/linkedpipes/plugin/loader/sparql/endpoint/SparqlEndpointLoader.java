@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,14 +20,15 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sparql.SPARQLRepository;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Petr Škoda
  */
-public class SparqlEndpointLoader implements SimpleExecution {
+public class SparqlEndpointLoader implements Component.Sequential {
 
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit outputRdf;
@@ -39,8 +39,11 @@ public class SparqlEndpointLoader implements SimpleExecution {
     @Component.Inject
     public AfterExecution afterExecution;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         // Create repository.
         final SPARQLRepository sparqlRepository = new SPARQLRepository(
                 configuration.getEndpoint());
@@ -58,13 +61,13 @@ public class SparqlEndpointLoader implements SimpleExecution {
                         configuration.getTargetGraphName());
             }
         } catch (IOException ex) {
-            throw new ExecutionFailed("Can't clear data.", ex);
+            throw exceptionFactory.failed("Can't clear data.", ex);
         }
         try (final CloseableHttpClient httpclient = getHttpClient()) {
             sparqlRepository.setHttpClient(httpclient);
             loadData(sparqlRepository);
         } catch (IOException ex) {
-            throw new ExecutionFailed("Can't load data.", ex);
+            throw exceptionFactory.failed("Can't load data.", ex);
         }
     }
 

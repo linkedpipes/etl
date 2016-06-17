@@ -16,14 +16,14 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.executable.SimpleExecution;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class Unpack implements SimpleExecution {
+public final class Unpack implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Unpack.class);
 
@@ -39,15 +39,14 @@ public final class Unpack implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws NonRecoverableException {
         LOG.info("Used extension option: {}", configuration.getFormat());
         progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
-            if (context.canceled()) {
-                throw new Component.ExecutionCancelled();
-            }
-            // ..
             final File outputDirectory;
             if (configuration.isUsePrefix()) {
                 outputDirectory = new File(output.getRootDirectory(), entry.getFileName());
@@ -75,11 +74,11 @@ public final class Unpack implements SimpleExecution {
                     unpackBzip2(stream, targetDirectory, inputEntry);
                     break;
                 default:
-                    throw new Component.ExecutionFailed("Unknown file format (" + extension + ") : " +
+                    throw exceptionFactory.failed("Unknown file format (" + extension + ") : " +
                             inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
-            throw new Component.ExecutionFailed("Extraction failed: {}", inputEntry.getFileName(), ex);
+            throw exceptionFactory.failed("Extraction failed: {}", inputEntry.getFileName(), ex);
         }
     }
 
