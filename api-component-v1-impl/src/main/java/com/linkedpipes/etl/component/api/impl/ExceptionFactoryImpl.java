@@ -19,5 +19,24 @@ class ExceptionFactoryImpl implements ExceptionFactory {
                 args);
     }
 
+    @Override
+    public ExecutionFailed invalidConfigurationProperty(String propertyIri,
+            String message, Object... args) {
+        final String mergedMessage = "Invalid configuration property <"
+                + propertyIri + ">\n" + message;
+        return new ExecutionFailed(Arrays.asList(
+                new ExecutionFailed.Message(mergedMessage, "en")),
+                args);
+    }
+
+    @Override
+    public ExecutionFailed missingConfigurationProperty(String propertyIri) {
+        return new ExecutionFailed(Arrays.asList(
+                new ExecutionFailed.Message(
+                        "Missing configuration property: {}", "en")),
+                propertyIri);
+    }
+
+
 
 }

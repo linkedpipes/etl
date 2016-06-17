@@ -23,4 +23,23 @@ public class MockedExceptionFactory implements ExceptionFactory {
                 args);
     }
 
+    @Override
+    public ExecutionFailed invalidConfigurationProperty(
+            String propertyIri, String message, Object... args) {
+        LOG.error("Invalid configuration property: {}", propertyIri);
+        return new ExecutionFailed(Arrays.asList(
+                new ExecutionFailed.Message(
+                        "Invalid configuration field.", "en")),
+                args);
+    }
+
+    @Override
+    public ExecutionFailed missingConfigurationProperty(
+            String propertyIri) {
+        LOG.error("Missing configuration property: {}", propertyIri);
+        return new ExecutionFailed(Arrays.asList(
+                new ExecutionFailed.Message(
+                        "Missing configuration field.", "en")));
+    }
+
 }
