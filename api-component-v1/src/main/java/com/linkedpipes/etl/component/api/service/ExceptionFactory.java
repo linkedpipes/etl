@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.component.api.service;
 
-import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 
 /**
  * Can be used to create an exception that reports various failures.
@@ -17,6 +17,7 @@ public interface ExceptionFactory {
      * @param args
      * @return
      */
-    public Component.ExecutionFailed failed(String message, Object ... args);
+    public ExecutionFailed failed(String message, Object... args);
+
 
 }

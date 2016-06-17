@@ -10,6 +10,7 @@ import org.openrdf.query.impl.DatasetImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 
 /**
  *
@@ -33,8 +34,7 @@ public final class SparqlUpdate implements Component.Sequential {
     public SparqlUpdateConfiguration configuration;
 
     @Override
-    public void execute()
-            throws Component.ExecutionFailed, SesameDataUnitException {
+    public void execute() throws ExecutionFailed, SesameDataUnitException {
         final IRI inputGraph = inputRdf.getGraph();
         final IRI outputGraph = outputRdf.getGraph();
         LOG.info("Update: {} -> {}", inputGraph, outputGraph);

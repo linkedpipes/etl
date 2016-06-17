@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
@@ -152,7 +153,7 @@ public final class LoaderScp implements Component.Sequential {
      */
     private void sendDirectoryContent(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory)
-            throws IOException, Component.ExecutionFailed,
+            throws IOException, ExecutionFailed,
             RecoverableException {
         // Scan for files.
         for (final File file : sourceDirectory.listFiles()) {
@@ -178,8 +179,7 @@ public final class LoaderScp implements Component.Sequential {
      */
     private void sendDirectory(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory, String directoryName)
-            throws IOException, Component.ExecutionFailed,
-            RecoverableException {
+            throws IOException, ExecutionFailed, RecoverableException {
         LOG.debug("Sending directory: {} ... ", directoryName);
         // Send command.
         String command = "D0755 0 " + directoryName + "\n";
@@ -213,7 +213,7 @@ public final class LoaderScp implements Component.Sequential {
      */
     private void sendFile(OutputStream remoteOut, InputStream remoteIn,
             File sourceFile, String fileName) throws IOException,
-            Component.ExecutionFailed, RecoverableException {
+            ExecutionFailed, RecoverableException {
         LOG.debug("Sending file: {} ... ", fileName);
         if (fileName.indexOf('/') > 0) {
             throw new IllegalArgumentException("File name '" + fileName + "'");
@@ -247,7 +247,7 @@ public final class LoaderScp implements Component.Sequential {
      * @throws com.linkedpipes.etl.executor.api.v1.exception.RecoverableException
      */
     private void resonseCheck(InputStream stream) throws IOException,
-            Component.ExecutionFailed, RecoverableException {
+            ExecutionFailed, RecoverableException {
         final int response = stream.read();
         switch (response) {
             case -1: // No response from server.

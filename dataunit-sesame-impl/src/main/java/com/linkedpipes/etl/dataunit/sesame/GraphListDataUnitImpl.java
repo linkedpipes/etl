@@ -12,7 +12,7 @@ import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.LocalizedString;
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.Message;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.executor.api.v1.exception.RecoverableException;
 import java.io.File;
@@ -93,8 +93,7 @@ public final class GraphListDataUnitImpl extends SesameDataUnitImpl
                         factory.createIRI(HAS_GRAPH), graphUri),
                         metadataGraphIri);
             } catch (RepositoryException ex) {
-                throw new RecoverableException(Arrays.asList(
-                        new LocalizedString("Can't add graph record.", "en")),
+                throw new RecoverableException(Arrays.asList(new Message("Can't add graph record.", "en")),
                         ex);
             }
         });
@@ -123,8 +122,7 @@ public final class GraphListDataUnitImpl extends SesameDataUnitImpl
                 return graphList;
             } catch (RepositoryException | MalformedQueryException |
                     QueryEvaluationException ex) {
-                throw new RecoverableException(Arrays.asList(
-                        new LocalizedString("Can't list graphs.", "en")), ex);
+                throw new RecoverableException(Arrays.asList(new Message("Can't list graphs.", "en")), ex);
             }
         });
     }
@@ -166,8 +164,7 @@ public final class GraphListDataUnitImpl extends SesameDataUnitImpl
                         = new FileInputStream(dataFile.getPath())) {
                     rdfParser.parse(fileStream, "http://localhost/base");
                 } catch (IOException ex) {
-                    throw new NonRecoverableException(Arrays.asList(
-                            new LocalizedString("Can't read file.", "en")), ex);
+                    throw new NonRecoverableException(Arrays.asList(new Message("Can't read file.", "en")), ex);
                 }
                 LOG.debug("initialize: commiting ...");
                 connection.commit();
@@ -217,7 +214,7 @@ public final class GraphListDataUnitImpl extends SesameDataUnitImpl
                     connection.export(writer, graphs.toArray(new IRI[0]));
                 } catch (IOException ex) {
                     throw new NonRecoverableException(
-                            Arrays.asList(new LocalizedString(
+                            Arrays.asList(new Message(
                                     "Can't write data to file.", "en")), ex);
                 }
             });

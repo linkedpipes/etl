@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
-import com.linkedpipes.etl.component.api.Component.ExecutionFailed;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabularuv.RdfWriter;
 import java.util.ArrayList;

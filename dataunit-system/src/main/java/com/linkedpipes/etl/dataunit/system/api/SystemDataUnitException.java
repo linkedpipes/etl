@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class SystemDataUnitException extends NonRecoverableException {
 
     public SystemDataUnitException(String messages, Object... args) {
-        super(Arrays.asList(new LocalizedString(messages, "en")), args);
+        super(Arrays.asList(new Message(messages, "en")), args);
     }
 
 }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
@@ -59,7 +60,7 @@ public final class PackZip implements Component.Sequential {
      * @throws DataUnitException
      */
     private void addZipEntry(ZipOutputStream zos, byte[] buffer, final FilesDataUnit.Entry entry)
-            throws Component.ExecutionFailed {
+            throws ExecutionFailed {
         // Add to the zip file.
         final File sourceFile = entry.toFile();
         try (FileInputStream in = new FileInputStream(sourceFile)) {

@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.dataunit.sesame.api.rdf;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.LocalizedString;
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.Message;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.executor.api.v1.exception.RecoverableException;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public interface SesameDataUnit {
     public class SesameDataUnitException extends NonRecoverableException {
 
         public SesameDataUnitException(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedString(messages, "en")), args);
+            super(Arrays.asList(new Message(messages, "en")), args);
         }
 
     }

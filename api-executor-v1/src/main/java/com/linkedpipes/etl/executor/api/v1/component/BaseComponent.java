@@ -34,7 +34,7 @@ public interface BaseComponent {
     public class InitializationFailed extends NonRecoverableException {
 
         public InitializationFailed(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedException.LocalizedString(
+            super(Arrays.asList(new LocalizedException.Message(
                     messages, "en")), args);
         }
 
@@ -46,7 +46,7 @@ public interface BaseComponent {
     public static class ComponentFailed extends NonRecoverableException {
 
         public ComponentFailed(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedException.LocalizedString(
+            super(Arrays.asList(new LocalizedException.Message(
                     messages, "en")), args);
         }
 

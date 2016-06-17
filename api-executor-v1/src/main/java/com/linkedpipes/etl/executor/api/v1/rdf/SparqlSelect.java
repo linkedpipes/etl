@@ -14,7 +14,7 @@ public interface SparqlSelect {
     public static class QueryException extends LocalizedException {
 
         public QueryException(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedString(messages, "en")), args);
+            super(Arrays.asList(new Message(messages, "en")), args);
         }
 
     }

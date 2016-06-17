@@ -13,8 +13,8 @@ public class ExceptionTest {
 
     @Test
     public void oneLanguageMessage() {
-        final List<LocalizedException.LocalizedString> messages
-                = Arrays.asList(new LocalizedException.LocalizedString(
+        final List<LocalizedException.Message> messages
+                = Arrays.asList(new LocalizedException.Message(
                         "Value: {} {}", "en"));
         final LocalizedException ex = new LocalizedException(
                 messages, 12, "text");
@@ -24,8 +24,8 @@ public class ExceptionTest {
 
     @Test
     public void oneLanguageMessageWithCause() {
-        final List<LocalizedException.LocalizedString> messages
-                = Arrays.asList(new LocalizedException.LocalizedString(
+        final List<LocalizedException.Message> messages
+                = Arrays.asList(new LocalizedException.Message(
                         "Value: {} {}", "en"));
         final Exception rootCause = new Exception();
         final LocalizedException ex = new LocalizedException(

@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import virtuoso.sesame2.driver.VirtuosoRepository;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
@@ -167,7 +168,7 @@ public final class Virtuoso implements Component.Sequential {
         return "DEFINE sql:log-enable 3 CLEAR GRAPH <" + graph + ">";
     }
 
-    private Connection getSqlConnection() throws Component.ExecutionFailed {
+    private Connection getSqlConnection() throws ExecutionFailed {
         try {
             return DriverManager.getConnection(configuration.getVirtuosoUrl(), configuration.getUsername(),
                     configuration.getPassword());
@@ -176,7 +177,7 @@ public final class Virtuoso implements Component.Sequential {
         }
     }
 
-    private void startLoading() throws Component.ExecutionFailed {
+    private void startLoading() throws ExecutionFailed {
         // Start loading.
         Connection loaderConnection = null;
         try {

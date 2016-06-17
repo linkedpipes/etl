@@ -19,7 +19,7 @@ public final class EntityLoader {
     public static class LoadingFailed extends LocalizedException {
 
         public LoadingFailed(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedString(messages, "en")), args);
+            super(Arrays.asList(new Message(messages, "en")), args);
         }
 
     }

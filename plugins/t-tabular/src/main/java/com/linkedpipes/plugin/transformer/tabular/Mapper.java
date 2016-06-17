@@ -9,7 +9,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
-import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
@@ -160,7 +160,7 @@ class Mapper {
      *
      * @param header Null if there is no header.
      */
-    public void onHeader(List<String> header) throws MissingNameInHeader, InvalidTemplate, Component.ExecutionFailed {
+    public void onHeader(List<String> header) throws MissingNameInHeader, InvalidTemplate, ExecutionFailed {
         usedColumns = new ArrayList<>(columns.size());
         if (configuration.isFullMapping()) {
             usedColumns.addAll(ColumnFactory.createColumList(configuration, header, exceptionFactory));

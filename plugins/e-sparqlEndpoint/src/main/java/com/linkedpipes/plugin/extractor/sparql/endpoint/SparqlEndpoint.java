@@ -13,6 +13,7 @@ import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
@@ -63,7 +64,7 @@ public final class SparqlEndpoint implements Component.Sequential {
         }
     }
 
-    public void queryRemote(SPARQLRepository repository) throws Component.ExecutionFailed {
+    public void queryRemote(SPARQLRepository repository) throws ExecutionFailed {
         final IRI graph = outputRdf.getGraph();
         try (RepositoryConnection localConnection = outputRdf.getRepository().getConnection()) {
             localConnection.begin();

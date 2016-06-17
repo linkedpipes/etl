@@ -7,7 +7,7 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
 import org.openrdf.repository.Repository;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.LocalizedString;
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.Message;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,8 +95,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                         = new FileInputStream(dataFile.getPath())) {
                     rdfParser.parse(fileStream, "http://localhost/base");
                 } catch (IOException ex) {
-                    throw new NonRecoverableException(Arrays.asList(
-                            new LocalizedString("Can't read file.", "en")), ex);
+                    throw new NonRecoverableException(Arrays.asList(new Message("Can't read file.", "en")), ex);
                 }
                 LOG.debug("initialize: commiting ...");
                 connection.commit();
@@ -138,8 +137,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                     connection.export(writer,
                             Arrays.asList(graph).toArray(new IRI[0]));
                 } catch (IOException ex) {
-                    throw new NonRecoverableException(Arrays.asList(
-                            new LocalizedString(
+                    throw new NonRecoverableException(Arrays.asList(new Message(
                                     "Can't write data to file.", "en")),
                             ex);
                 }

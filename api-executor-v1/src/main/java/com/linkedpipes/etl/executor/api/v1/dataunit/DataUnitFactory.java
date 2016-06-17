@@ -13,7 +13,7 @@ public interface DataUnitFactory {
     public class CreationFailed extends LocalizedException {
 
         public CreationFailed(String message, Object... args) {
-            super(Arrays.asList(new LocalizedException.LocalizedString(
+            super(Arrays.asList(new LocalizedException.Message(
                     message, "en")), args);
         }
 

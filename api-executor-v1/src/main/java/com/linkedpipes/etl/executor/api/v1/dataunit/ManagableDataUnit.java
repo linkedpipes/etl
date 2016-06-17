@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
 import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.LocalizedString;
+import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.Message;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +17,7 @@ public interface ManagableDataUnit extends DataUnit {
     public static class DataUnitException extends LocalizedException {
 
         public DataUnitException(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedString(messages, "en")), args);
+            super(Arrays.asList(new Message(messages, "en")), args);
         }
 
     }

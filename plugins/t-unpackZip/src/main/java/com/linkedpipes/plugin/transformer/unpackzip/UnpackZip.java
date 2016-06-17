@@ -8,6 +8,7 @@ import java.io.File;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 
 /**
@@ -56,7 +57,7 @@ public final class UnpackZip implements Component.Sequential {
      * @param targetDirectory
      * @throws DPUException
      */
-    private void unzip(File zipFile, File targetDirectory) throws Component.ExecutionFailed {
+    private void unzip(File zipFile, File targetDirectory) throws ExecutionFailed {
         try {
             final ZipFile zip = new ZipFile(zipFile);
             if (zip.isEncrypted()) {

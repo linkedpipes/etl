@@ -5,7 +5,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.List;
 
 /**
  * This class provide basic definition that should by new components.
@@ -23,20 +22,13 @@ public interface Component {
          * Perform execution of the component.
          *
          * @throws NonRecoverableException
+         * @throws com.linkedpipes.etl.component.api.ExecutionFailed
          */
-        void execute() throws NonRecoverableException;
+        void execute() throws NonRecoverableException, ExecutionFailed;
 
     }
 
-    public class ExecutionFailed extends NonRecoverableException {
-
-        public ExecutionFailed(List<LocalizedString> messages, Object... args) {
-            super(messages, args);
-        }
-
-    }
-
-     @Retention(RetentionPolicy.RUNTIME)
+    @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface Inject {
 

@@ -3,6 +3,7 @@ package com.linkedpipes.plugin.extractor.local;
 import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
@@ -49,7 +50,7 @@ public class FilesFromLocal implements Component.Sequential {
      * @throws com.linkedpipes.etl.dpu.api.Component.ExecutionFailed
      */
     private void copy(File file, String fileName)
-            throws SystemDataUnitException, Component.ExecutionFailed {
+            throws SystemDataUnitException, ExecutionFailed {
         final File destination = output.createFile(fileName).toFile();
         try {
             if (file.isDirectory()) {

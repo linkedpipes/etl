@@ -17,7 +17,7 @@ public class LocalizedException extends Exception {
     /**
      * Used to store a string in a given language.
      */
-    public static final class LocalizedString {
+    public static final class Message {
 
         /**
          * Language tag.
@@ -29,7 +29,7 @@ public class LocalizedException extends Exception {
          */
         private final String value;
 
-        public LocalizedString(String value, String language) {
+        public Message(String value, String language) {
             this.language = language;
             this.value = value;
         }
@@ -47,14 +47,14 @@ public class LocalizedException extends Exception {
     /**
      * For each language a message with place holders for arguments.
      */
-    protected final List<LocalizedString> messages;
+    protected final List<Message> messages;
 
     /**
      * Arguments referenced from the message.
      */
     protected final Object[] args;
 
-    public LocalizedException(List<LocalizedString> messages, Object... args) {
+    public LocalizedException(List<Message> messages, Object... args) {
         // For now use first message as representation
         // of this exception.
         super(messages.get(0).value);
@@ -74,7 +74,7 @@ public class LocalizedException extends Exception {
         if (messages.isEmpty()) {
             return "No message provided!";
         }
-        final LocalizedString message = messages.iterator().next();
+        final Message message = messages.iterator().next();
         return MessageFormatter.arrayFormat(message.value, args).getMessage();
     }
 

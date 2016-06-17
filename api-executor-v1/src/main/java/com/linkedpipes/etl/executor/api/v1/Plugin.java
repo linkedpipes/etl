@@ -33,7 +33,7 @@ public interface Plugin {
         public static class InitializationFailure extends LocalizedException {
 
             public InitializationFailure(String messages, Object... args) {
-                super(Arrays.asList(new LocalizedException.LocalizedString(
+                super(Arrays.asList(new LocalizedException.Message(
                         messages, "en")), args);
             }
 

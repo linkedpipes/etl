@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class RecoverableException extends LocalizedException {
 
-    public RecoverableException(List<LocalizedString> messages,
+    public RecoverableException(List<Message> messages,
             Object... args) {
         super(messages, args);
     }

@@ -25,6 +25,7 @@ import org.openrdf.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +57,7 @@ public final class Xslt implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute()
-            throws Component.ExecutionFailed, SystemDataUnitException,
+    public void execute() throws ExecutionFailed, SystemDataUnitException,
             SesameDataUnit.RepositoryActionFailed {
         final Processor processor = new Processor(false);
         processor.registerExtensionFunction(UUIDGenerator.getInstance());

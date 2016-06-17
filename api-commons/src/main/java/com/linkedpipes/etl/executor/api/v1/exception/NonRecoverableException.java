@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class NonRecoverableException extends LocalizedException {
 
-    public NonRecoverableException(List<LocalizedString> messages,
+    public NonRecoverableException(List<Message> messages,
             Object... args) {
         super(messages, args);
     }
