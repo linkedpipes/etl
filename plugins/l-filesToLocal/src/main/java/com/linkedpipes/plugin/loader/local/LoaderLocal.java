@@ -4,7 +4,7 @@ import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,20 +34,27 @@ public final class LoaderLocal implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
+        if (configuration.getPath() == null
+                || configuration.getPath().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderLocalVocabulary.HAS_PATH);
+        }
+        //
         progress.start(input.size());
         final File rootDirectory = new File(configuration.getPath());
         for (FilesDataUnit.Entry entry : input) {
             //
             final File inputFile = entry.toFile();
-            final File outputFile = new File(rootDirectory, entry.getFileName());
+            final File outputFile = new File(rootDirectory,
+                    entry.getFileName());
             try {
                 outputFile.getParentFile().mkdirs();
                 Files.copy(inputFile.toPath(), outputFile.toPath(),
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
                 LOG.error("{} -> {}", inputFile, outputFile);
-                throw exceptionFactory.failed("Can't copy file.", ex);
+                throw exceptionFactory.failed("Can't copy files.", ex);
             }
             //
             progress.entryProcessed();

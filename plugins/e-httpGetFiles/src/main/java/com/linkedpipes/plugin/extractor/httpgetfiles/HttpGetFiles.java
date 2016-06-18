@@ -1,10 +1,8 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +22,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -53,8 +51,7 @@ public final class HttpGetFiles implements Component.Sequential {
     public ProgressReport progressReport;
 
     @Override
-    public void execute()
-            throws NonRecoverableException {
+    public void execute() throws LpException {
         // TODO Do not use this, but be selective about certs we trust.
         try {
             LOG.warn("'Trust all certs' policy used -> security risk!");
@@ -85,11 +82,20 @@ public final class HttpGetFiles implements Component.Sequential {
      * Download and store referenced resource.
      *
      * @param reference
-     * @throws com.linkedpipes.etl.dpu.api.Component.ExecutionFailed
-     * @throws SystemDataUnitException
+     * @throws LpException
      */
     private void download(HttpGetFilesConfiguration.Reference reference)
-            throws ExecutionFailed, SystemDataUnitException {
+            throws LpException {
+        if (reference.getUri() == null
+                || reference.getUri().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    HttpGetFilesVocabulary.HAS_URI);
+        }
+        if (reference.getFileName() == null
+                || reference.getFileName().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    HttpGetFilesVocabulary.HAS_NAME);
+        }
         LOG.info("Downloading: {} -> {}", reference.getUri(),
                 reference.getFileName());
         // Prepare source URL.
@@ -97,7 +103,8 @@ public final class HttpGetFiles implements Component.Sequential {
         try {
             source = new URL(reference.getUri());
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.failed("Invalid URI: {}.",
+            throw exceptionFactory.invalidConfigurationProperty(
+                    HttpGetFilesVocabulary.HAS_URI, "{}",
                     reference.getUri(), ex);
         }
         // Prepare target destination.
@@ -180,10 +187,10 @@ public final class HttpGetFiles implements Component.Sequential {
      * @param connection
      * @return
      * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
+     * @throws LpException
      */
     private HttpURLConnection followRedirect(HttpURLConnection connection)
-            throws IOException, ExecutionFailed {
+            throws IOException, LpException {
         connection.connect();
         if (connection.getResponseCode()
                 == HttpURLConnection.HTTP_SEE_OTHER) {

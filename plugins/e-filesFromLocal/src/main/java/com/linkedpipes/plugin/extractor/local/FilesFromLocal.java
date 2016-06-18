@@ -1,11 +1,9 @@
 package com.linkedpipes.plugin.extractor.local;
 
-import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,8 +25,15 @@ public class FilesFromLocal implements Component.Sequential {
     public FilesFromLocalConfiguration configuration;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         final File source = new File(configuration.getPath());
+        if (!source.exists()) {
+            throw exceptionFactory.invalidConfigurationProperty(
+                    FilesFromLocalVocabulary.HAS_PATH,
+                    "Source path does not exists."
+            );
+        }
+        //
         if (source.isDirectory()) {
             // Copy all files in a directory.
             final Path rootPath = source.toPath();
@@ -46,11 +51,9 @@ public class FilesFromLocal implements Component.Sequential {
      *
      * @param file Path to file to add.
      * @param fileName Name of added file.
-     * @throws SystemDataUnitException
-     * @throws com.linkedpipes.etl.dpu.api.Component.ExecutionFailed
+     * @throws LpException
      */
-    private void copy(File file, String fileName)
-            throws SystemDataUnitException, ExecutionFailed {
+    private void copy(File file, String fileName) throws LpException {
         final File destination = output.createFile(fileName).toFile();
         try {
             if (file.isDirectory()) {

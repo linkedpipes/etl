@@ -1,14 +1,13 @@
 package com.linkedpipes.plugin.transformer.filesToStatements;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import org.openrdf.model.IRI;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
@@ -17,10 +16,13 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
+ * Read content of files and save it in form of literals.
  *
  * @author Škoda Petr
  */
 public final class FilesToStatements implements Component.Sequential {
+
+    private static final int BUFFER_SIZE = 64;
 
     @Component.OutputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;
@@ -38,11 +40,18 @@ public final class FilesToStatements implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
-        final List<Statement> statements = new ArrayList<>(64);
+    public void execute() throws LpException {
+        final List<Statement> statements = new ArrayList<>(BUFFER_SIZE + 1);
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        final IRI predicate = valueFactory.createIRI(
-                configuration.getPredicate());
+        final IRI predicate;
+        try {
+            predicate = valueFactory.createIRI(
+                    configuration.getPredicate());
+        } catch (Throwable t) {
+            throw exceptionFactory.invalidConfigurationProperty(
+                    FilesToStatementsVocabulary.PREDICATE,
+                    "Invalid predicate.", t);
+        }
         //
         progressReport.start(inputFiles.size() + 1);
         for (FilesDataUnit.Entry file : inputFiles) {
@@ -61,7 +70,7 @@ public final class FilesToStatements implements Component.Sequential {
                     valueFactory.createLiteral(content),
                     outputGraph));
             // Add to the repository.
-            if (statements.size() > 63) {
+            if (statements.size() >= BUFFER_SIZE) {
                 addStatements(statements);
             }
             progressReport.entryProcessed();
@@ -74,8 +83,7 @@ public final class FilesToStatements implements Component.Sequential {
     /**
      * Add statements to output and clear given list.
      */
-    private void addStatements(List<Statement> statements)
-            throws SesameDataUnit.RepositoryActionFailed {
+    private void addStatements(List<Statement> statements) throws LpException {
         outputRdf.execute((connection) -> {
             connection.add(statements);
         });

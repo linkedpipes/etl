@@ -6,11 +6,11 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = LoaderLocalVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = LoaderLocalVocabulary.CONFIG)
 public class LoaderLocalConfiguration {
 
     @RdfToPojo.Property(uri = LoaderLocalVocabulary.HAS_PATH)
-    public String path;
+    private String path;
 
     public LoaderLocalConfiguration() {
     }

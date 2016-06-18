@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.transformer.singleGraphUnion;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
 import org.openrdf.query.impl.SimpleDataset;
@@ -25,7 +25,7 @@ public class SingleGraphUnion implements Component.Sequential {
     public WritableSingleGraphDataUnit outputRdf;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         // TODO: We should use faster merge here!
         try (RepositoryConnection connection
                 = inputRdf.getRepository().getConnection()) {

@@ -2,7 +2,6 @@ package com.linkedpipes.etl.plugin.transformer.filedecode;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.util.Base64;
 import org.apache.commons.io.FileUtils;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ public class FileDecode implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         for (FilesDataUnit.Entry entry : inputFiles) {
             final File outputFile = outputFiles.createFile(
                     entry.getFileName()).toFile();

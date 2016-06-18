@@ -6,16 +6,16 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = RdfToFileVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = RdfToFileVocabulary.CONFIG)
 public class RdfToFileConfiguration {
 
-    @RdfToPojo.Property(uri = RdfToFileVocabulary.CONFIG_FILE_NAME)
+    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_FILE_NAME)
     private String fileName;
 
-    @RdfToPojo.Property(uri = RdfToFileVocabulary.CONFIG_FILE_TYPE)
+    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_FILE_TYPE)
     private String fileType;
 
-    @RdfToPojo.Property(uri = RdfToFileVocabulary.CONFIG_GRAPH_URI)
+    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_GRAPH_URI)
     private String graphUri;
 
     public RdfToFileConfiguration() {

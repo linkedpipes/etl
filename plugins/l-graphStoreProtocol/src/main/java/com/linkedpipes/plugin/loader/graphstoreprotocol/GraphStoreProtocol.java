@@ -35,8 +35,8 @@ import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -57,10 +57,15 @@ public class GraphStoreProtocol implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws ExecutionFailed {
+    public void execute() throws LpException {
+        if (configuration.getEndpoint() == null
+                || configuration.getEndpoint().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    GraphStoreProtocolVocabulary.HAS_CRUD);
+        }
         //
         if (inputFiles.size() > 1 && configuration.isReplace()) {
-            throw exceptionFactory.failed("More then one file on input, "
+            throw exceptionFactory.failed("Only one file can be uploaded"
                     + "with replace mode.");
         }
         //
@@ -69,7 +74,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         if (configuration.isCheckSize()) {
             try {
                 beforeSize = getGraphSize();
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 throw exceptionFactory.failed("Can't get graph size.", ex);
             }
         }
@@ -110,21 +115,22 @@ public class GraphStoreProtocol implements Component.Sequential {
             }
             if (configuration.isCheckSize()) {
                 try {
-                afterSize = getGraphSize();
-            } catch(IOException ex) {
-                throw exceptionFactory.failed("Can't get graph size.", ex);
-            }
+                    afterSize = getGraphSize();
+                } catch (IOException ex) {
+                    throw exceptionFactory.failed("Can't get graph size.", ex);
+                }
             }
         }
+        LOG.info("Before: {} After: {}", beforeSize, afterSize);
     }
 
     /**
      *
      * @return Size of a remote graph.
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
+     * @throws LpException
      * @throws IOException
      */
-    private long getGraphSize() throws ExecutionFailed, IOException {
+    private long getGraphSize() throws LpException, IOException {
         final SPARQLRepository repository = new SPARQLRepository(
                 configuration.getEndpointSelect());
         // Does nothing on SPARQLRepository.
@@ -134,8 +140,9 @@ public class GraphStoreProtocol implements Component.Sequential {
         try (final CloseableHttpClient httpclient = getHttpClient()) {
             repository.setHttpClient(httpclient);
             try (RepositoryConnection connection = repository.getConnection()) {
-                final String query = "SELECT (count(*) as ?count) WHERE { GRAPH "
-                        + "<" + configuration.getTargetGraph() + "> { ?s ?p ?o } }";
+                final String query = "SELECT (count(*) as ?count) WHERE { "
+                        + "GRAPH <" + configuration.getTargetGraph()
+                        + "> { ?s ?p ?o } }";
                 final TupleQueryResult result = connection.prepareTupleQuery(
                         QueryLanguage.SPARQL, query).evaluate();
                 if (!result.hasNext()) {
@@ -154,7 +161,7 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     private void uploadBlazegraph(String url, File file, String mimeType,
-            String graph, boolean update) throws ExecutionFailed {
+            String graph, boolean update) throws LpException {
         try {
             url += "?context-uri=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
@@ -177,13 +184,14 @@ public class GraphStoreProtocol implements Component.Sequential {
             httpMethod = new HttpPost(url);
         }
         LOG.debug("url: {}", url);
-        httpMethod.setEntity(new FileEntity(file, ContentType.create(mimeType)));
+        httpMethod.setEntity(new FileEntity(file,
+                ContentType.create(mimeType)));
         //
         executeHttp(httpMethod);
     }
 
     private void uploadFuseki(String url, File file, String mimeType,
-            String graph, boolean update) throws ExecutionFailed {
+            String graph, boolean update) throws LpException {
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
@@ -208,7 +216,7 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     public void uploadVirtuoso(String url, File file, String mimeType,
-            String graph, boolean update) throws ExecutionFailed {
+            String graph, boolean update) throws LpException {
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
@@ -223,16 +231,20 @@ public class GraphStoreProtocol implements Component.Sequential {
             httpMethod = new HttpPost(url);
         }
         //
-        httpMethod.setEntity(new FileEntity(file, ContentType.create(mimeType)));
+        httpMethod.setEntity(new FileEntity(file,
+                ContentType.create(mimeType)));
         //
         executeHttp(httpMethod);
     }
 
-    private void executeHttp(HttpEntityEnclosingRequestBase httpMethod) throws ExecutionFailed {
+    private void executeHttp(HttpEntityEnclosingRequestBase httpMethod)
+            throws LpException {
         try (final CloseableHttpClient httpclient = getHttpClient()) {
-            try (final CloseableHttpResponse response = httpclient.execute(httpMethod)) {
+            try (final CloseableHttpResponse response
+                    = httpclient.execute(httpMethod)) {
                 try {
-                    LOG.debug("Response:\n {} ", EntityUtils.toString(response.getEntity()));
+                    LOG.debug("Response:\n {} ",
+                            EntityUtils.toString(response.getEntity()));
                 } catch (java.net.SocketException ex) {
                     LOG.error("Can't read response.", ex);
                 }
@@ -241,7 +253,8 @@ public class GraphStoreProtocol implements Component.Sequential {
                         response.getStatusLine().getReasonPhrase());
                 final int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode < 200 && statusCode >= 300) {
-                    throw exceptionFactory.failed("Can't upload data, reason: {}",
+                    throw exceptionFactory.failed(
+                            "Can't upload data, reason: {}",
                             response.getStatusLine().getReasonPhrase());
                 }
             }

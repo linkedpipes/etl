@@ -4,7 +4,7 @@ import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.DefinitionReader;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -17,6 +17,10 @@ import org.apache.commons.io.FileUtils;
  */
 public class PipelineInput implements Component.Sequential {
 
+    private static final String HAS_INPUT_DIRECTORY
+            = "http://linkedpipes.com/resources/components/e-pipelineInput/"
+            + "inputDirectory";
+
     @Component.OutputPort(id = "FilesOutput")
     public WritableFilesDataUnit output;
 
@@ -27,12 +31,11 @@ public class PipelineInput implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         final Collection<String> values;
         try {
-            values = definition.getProperty(
-                    "http://linkedpipes.com/resources/components/e-pipelineInput/inputDirectory");
-        } catch (DefinitionReader.OperationFailed ex) {
+            values = definition.getProperty(HAS_INPUT_DIRECTORY);
+        } catch (LpException ex) {
             throw exceptionFactory.failed("Can't read property.", ex);
         }
         //

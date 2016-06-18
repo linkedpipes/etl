@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 
 /**
  *
@@ -30,9 +29,11 @@ public abstract class AbstractEvent implements Event {
 
     protected String labelLanguage;
 
-    protected final static DateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd");
+    protected final static DateFormat DATE_FORMAT
+            = new SimpleDateFormat("YYYY-MM-dd");
 
-    protected final static DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss.SSS");
+    protected final static DateFormat TIME_FORMAT
+            = new SimpleDateFormat("HH:mm:ss.SSS");
 
     public AbstractEvent(String type) {
         this.created = new Date();
@@ -59,10 +60,13 @@ public abstract class AbstractEvent implements Event {
     }
 
     @Override
-    public void write(StatementWriter writer) {
-        writer.addUri(uri, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", type);
+    public void serialize(Writer writer) {
+        writer.addUri(uri, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                type);
         if (label != null) {
-            writer.addString(uri, "http://www.w3.org/2004/02/skos/core#prefLabel", label, labelLanguage);
+            writer.addString(uri,
+                    "http://www.w3.org/2004/02/skos/core#prefLabel", label,
+                    labelLanguage);
         }
 
         final StringBuilder createdAsString = new StringBuilder(25);
@@ -70,7 +74,8 @@ public abstract class AbstractEvent implements Event {
         createdAsString.append("T");
         createdAsString.append(TIME_FORMAT.format(created));
 
-        writer.add(uri, LINKEDPIPES.EVENTS.HAS_CREATED, createdAsString.toString(),
+        writer.add(uri, LINKEDPIPES.EVENTS.HAS_CREATED,
+                createdAsString.toString(),
                 "http://www.w3.org/2001/XMLSchema#datetime");
     }
 

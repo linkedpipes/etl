@@ -2,7 +2,7 @@ package com.linkedpipes.etl.dataunit.system.api.files;
 
 import java.io.File;
 
-import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -14,9 +14,9 @@ public interface WritableFilesDataUnit extends FilesDataUnit {
      *
      * @param fileName
      * @return Path to yet not existing file, in the data unit storage.
-     * @throws SystemDataUnitException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public Entry createFile(String fileName) throws SystemDataUnitException;
+    public Entry createFile(String fileName) throws LpException;
 
     /**
      *

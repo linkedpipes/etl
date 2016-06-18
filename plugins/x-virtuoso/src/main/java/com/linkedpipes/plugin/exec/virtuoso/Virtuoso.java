@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,9 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import virtuoso.sesame2.driver.VirtuosoRepository;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -48,7 +47,7 @@ public final class Virtuoso implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         // Create remote repository.
         final VirtuosoRepository virtuosoRepository = new VirtuosoRepository(
                 configuration.getVirtuosoUrl(), configuration.getUsername(), configuration.getPassword());
@@ -168,7 +167,7 @@ public final class Virtuoso implements Component.Sequential {
         return "DEFINE sql:log-enable 3 CLEAR GRAPH <" + graph + ">";
     }
 
-    private Connection getSqlConnection() throws ExecutionFailed {
+    private Connection getSqlConnection() throws LpException {
         try {
             return DriverManager.getConnection(configuration.getVirtuosoUrl(), configuration.getUsername(),
                     configuration.getPassword());
@@ -177,7 +176,7 @@ public final class Virtuoso implements Component.Sequential {
         }
     }
 
-    private void startLoading() throws ExecutionFailed {
+    private void startLoading() throws LpException {
         // Start loading.
         Connection loaderConnection = null;
         try {

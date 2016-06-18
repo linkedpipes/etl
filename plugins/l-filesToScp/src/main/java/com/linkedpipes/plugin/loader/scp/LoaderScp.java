@@ -6,8 +6,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import com.linkedpipes.etl.executor.api.v1.exception.RecoverableException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,9 +16,9 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -49,16 +47,30 @@ public final class LoaderScp implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute()
-            throws NonRecoverableException {
+    public void execute() throws LpException {
         final String user = configuration.getUserName();
         final String password = configuration.getPassword();
         final String host = configuration.getHost();
         final int port = configuration.getPort();
         final String targetFile = configuration.getTargetDirectory();
-
+        if (user == null || user.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_USERNAME);
+        }
+        if (password == null || password.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_PASSWORD);
+        }
+        if (host == null || host.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_HOST);
+        }
+        if (targetFile == null || targetFile.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_TARGET_DIRECTORY);
+        }
+        //
         final JSch jsch = new JSch();
-
         // Create session.
         final Session session;
         try {
@@ -67,15 +79,15 @@ public final class LoaderScp implements Component.Sequential {
         } catch (JSchException ex) {
             throw exceptionFactory.failed("Can't create session.", ex);
         }
-
-        // Enable connection to machines with unknown host key - this is potential secutiry risk!
+        // Enable connection to machines with unknown host
+        // key - this is potential secutiry risk!
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);
         try {
             session.connect();
         } catch (JSchException ex) {
-
+            throw exceptionFactory.failed("Can't connect to host", ex);
         }
         cleanUp.addAction(() -> session.disconnect());
 
@@ -108,7 +120,7 @@ public final class LoaderScp implements Component.Sequential {
             for (File rootDirectory : input.getReadRootDirectories()) {
                 sendDirectoryContent(remoteOut, remoteIn, rootDirectory);
             }
-        } catch (IOException | JSchException | RecoverableException ex) {
+        } catch (IOException | JSchException | LpException ex) {
             throw exceptionFactory.failed(
                     "Can't upload data!", ex);
         } finally {
@@ -148,13 +160,11 @@ public final class LoaderScp implements Component.Sequential {
      * @param remoteIn
      * @param sourceDirectory
      * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws RecoverableException
+     * @throws LpException
      */
     private void sendDirectoryContent(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory)
-            throws IOException, ExecutionFailed,
-            RecoverableException {
+            throws IOException, LpException {
         // Scan for files.
         for (final File file : sourceDirectory.listFiles()) {
             if (file.isDirectory()) {
@@ -174,12 +184,11 @@ public final class LoaderScp implements Component.Sequential {
      * @param sourceDirectory
      * @param directoryName
      * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws RecoverableException
+     * @throws LpException
      */
     private void sendDirectory(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory, String directoryName)
-            throws IOException, ExecutionFailed, RecoverableException {
+            throws IOException, LpException {
         LOG.debug("Sending directory: {} ... ", directoryName);
         // Send command.
         String command = "D0755 0 " + directoryName + "\n";
@@ -208,12 +217,10 @@ public final class LoaderScp implements Component.Sequential {
      * @param sourceFile
      * @param fileName Must not include '/'.
      * @throws java.io.IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.RecoverableException
+     * @throws LpException
      */
     private void sendFile(OutputStream remoteOut, InputStream remoteIn,
-            File sourceFile, String fileName) throws IOException,
-            ExecutionFailed, RecoverableException {
+            File sourceFile, String fileName) throws IOException, LpException {
         LOG.debug("Sending file: {} ... ", fileName);
         if (fileName.indexOf('/') > 0) {
             throw new IllegalArgumentException("File name '" + fileName + "'");
@@ -243,11 +250,9 @@ public final class LoaderScp implements Component.Sequential {
      *
      * @param stream
      * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.RecoverableException
+     * @throws LpException
      */
-    private void resonseCheck(InputStream stream) throws IOException,
-            ExecutionFailed, RecoverableException {
+    private void resonseCheck(InputStream stream) throws IOException, LpException{
         final int response = stream.read();
         switch (response) {
             case -1: // No response from server.

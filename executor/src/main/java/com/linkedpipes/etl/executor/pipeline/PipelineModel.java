@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.executor.pipeline;
 
+import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.rdf.EntityLoader;
 import java.util.ArrayList;
@@ -79,7 +81,7 @@ public class PipelineModel implements EntityLoader.Loadable {
 
         @Override
         public EntityLoader.Loadable load(String predicate, Value object)
-                throws EntityLoader.LoadingFailed {
+                throws LpException {
             switch (predicate) {
                 case LINKEDPIPES.HAS_DEBUG:
                     this.debug = object.stringValue();
@@ -152,7 +154,7 @@ public class PipelineModel implements EntityLoader.Loadable {
 
         @Override
         public EntityLoader.Loadable load(String predicate, Value object)
-                throws EntityLoader.LoadingFailed {
+                throws LpException {
             switch (predicate) {
                 case "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
                     types.add(object.stringValue());
@@ -225,7 +227,7 @@ public class PipelineModel implements EntityLoader.Loadable {
 
         @Override
         public EntityLoader.Loadable load(String predicate, Value object)
-                throws EntityLoader.LoadingFailed {
+                throws LpException {
             switch (predicate) {
                 case "http://www.w3.org/2004/02/skos/core#prefLabel":
                     final Literal label = (Literal) object;
@@ -236,8 +238,9 @@ public class PipelineModel implements EntityLoader.Loadable {
                     try {
                         executionOrder = Integer.parseInt(object.stringValue());
                     } catch (NumberFormatException ex) {
-                        throw new EntityLoader.LoadingFailed(
-                                "Execution order must be an integer!", ex);
+                        throw RdfException.invalidProperty(iri,
+                                LINKEDPIPES.HAS_EXECUTION_ORDER,
+                                "Must be string.", ex);
                     }
                     return null;
                 case LINKEDPIPES.HAS_PORT:
@@ -257,9 +260,9 @@ public class PipelineModel implements EntityLoader.Loadable {
                             executionType = ExecutionType.SKIP;
                             break;
                         default:
-                            throw new EntityLoader.LoadingFailed(
-                                    "Invalid value of executionType: {}",
-                                    object.stringValue());
+                            throw RdfException.invalidProperty(iri,
+                                    LINKEDPIPES.HAS_COMPONENT_EXECUTION_TYPE,
+                                    "Invalid value: {}", object.stringValue());
                     }
                     return null;
                 default:
@@ -268,9 +271,10 @@ public class PipelineModel implements EntityLoader.Loadable {
         }
 
         @Override
-        public void afterLoad() throws EntityLoader.LoadingFailed {
+        public void afterLoad() throws LpException {
             if (executionOrder == null || executionType == null) {
-                throw new EntityLoader.LoadingFailed("Incomplete definition.");
+                throw RdfException.invalidProperty(iri, null,
+                        "Incomplete definition.");
             }
         }
 
@@ -303,7 +307,7 @@ public class PipelineModel implements EntityLoader.Loadable {
 
     @Override
     public EntityLoader.Loadable load(String predicate, Value object)
-            throws EntityLoader.LoadingFailed {
+            throws LpException {
         switch (predicate) {
             case LINKEDPIPES.HAS_COMPONENT:
                 final Component comp = new Component(object.stringValue());

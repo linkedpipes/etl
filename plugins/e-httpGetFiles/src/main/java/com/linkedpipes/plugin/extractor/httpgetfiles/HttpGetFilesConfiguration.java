@@ -8,16 +8,16 @@ import java.util.List;
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = HttpGetFilesVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = HttpGetFilesVocabulary.CONFIG)
 public class HttpGetFilesConfiguration {
 
-    @RdfToPojo.Type(uri = HttpGetFilesVocabulary.REFERENCE_CLASS)
+    @RdfToPojo.Type(uri = HttpGetFilesVocabulary.REFERENCE)
     public static class Reference {
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.REFERENCE_HAS_URI)
+        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_URI)
         private String uri;
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.REFERENCE_HAS_NAME)
+        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_NAME)
         private String fileName;
 
         public Reference() {
@@ -41,7 +41,7 @@ public class HttpGetFilesConfiguration {
 
     }
 
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.CONFIG_HAS_REFERENCE)
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_REFERENCE)
     private List<Reference> references = new LinkedList<>();
 
     /**
@@ -52,7 +52,7 @@ public class HttpGetFilesConfiguration {
      *
      * If true DPU follow redirect to any location and protocol.
      */
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.CONFIG_HAS_FOLLOW_REDIRECT)
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_FOLLOW_REDIRECT)
     private boolean forceFollowRedirect = true;
 
     /**

@@ -37,14 +37,13 @@ import org.openrdf.query.TupleQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit.RepositoryActionFailed;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.impl.DatasetImpl;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.openrdf.query.impl.SimpleDataset;
 
 /**
  *
@@ -67,7 +66,7 @@ public final class DcatApToCkan implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         // Load files.
         LOG.debug("Querying metadata");
 
@@ -553,10 +552,10 @@ public final class DcatApToCkan implements Component.Sequential {
         }
     }
 
-    private String executeSimpleSelectQuery(final String queryAsString, String bindingName) throws RepositoryActionFailed {
+    private String executeSimpleSelectQuery(final String queryAsString, String bindingName) throws LpException {
         return metadata.execute((connection) -> {
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
-            final DatasetImpl dataset = new DatasetImpl();
+            final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(metadata.getGraph());
             preparedQuery.setDataset(dataset);
             //
@@ -569,11 +568,11 @@ public final class DcatApToCkan implements Component.Sequential {
         });
     }
 
-    private List<Map<String, Value>> executeSelectQuery(final String queryAsString) throws RepositoryActionFailed {
+    private List<Map<String, Value>> executeSelectQuery(final String queryAsString) throws LpException {
         return metadata.execute((connection) -> {
             final List<Map<String, Value>> output = new LinkedList<>();
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
-            final DatasetImpl dataset = new DatasetImpl();
+            final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(metadata.getGraph());
             preparedQuery.setDataset(dataset);
             //

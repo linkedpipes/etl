@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.component.api.impl;
 
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.io.File;
 
@@ -21,6 +22,8 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
      */
     static class Configuration implements EntityLoader.Loadable {
 
+        private final String iri;
+
         /**
          * Order in which the configuration should be loaded. The value
          * determines priority of configuration entity loading.
@@ -37,20 +40,21 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
          */
         private String configurationGraph = null;
 
-        Configuration() {
+        Configuration(String iri) {
+            this.iri = iri;
         }
 
         @Override
         public EntityLoader.Loadable load(String predicate, String value)
-                throws EntityLoader.LoadingFailed {
+                throws RdfException {
             switch (predicate) {
                 case LINKEDPIPES.CONFIGURATION.HAS_ORDER:
                     try {
                         order = Integer.parseInt(value);
                     } catch (NumberFormatException ex) {
-                        throw new EntityLoader.LoadingFailed(
-                                LINKEDPIPES.CONFIGURATION.HAS_ORDER
-                                + " must be an integer!", ex);
+                        throw RdfException.invalidProperty(iri,
+                                LINKEDPIPES.CONFIGURATION.HAS_ORDER,
+                                "Must be a string.", ex);
                     }
                     return null;
                 case LINKEDPIPES.CONFIGURATION.HAS_RESOURCE:
@@ -65,7 +69,7 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
         }
 
         @Override
-        public void validate() throws EntityLoader.LoadingFailed {
+        public void validate() {
 
         }
 
@@ -116,13 +120,13 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
 
     @Override
     public EntityLoader.Loadable load(String predicate, String value)
-            throws EntityLoader.LoadingFailed {
+            throws RdfException {
         switch (predicate) {
             case LINKEDPIPES.HAS_WORKING_DIRECTORY:
                 workingDirectory = value;
                 return null;
             case LINKEDPIPES.HAS_CONFIGURATION:
-                final Configuration holder = new Configuration();
+                final Configuration holder = new Configuration(value);
                 configurations.add(holder);
                 return holder;
             default:
@@ -131,11 +135,10 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
     }
 
     @Override
-    public void validate() throws EntityLoader.LoadingFailed {
+    public void validate() throws RdfException {
         if (workingDirectory == null) {
-            throw new EntityLoader.LoadingFailed(
-                    "Missing working directory! (uri: '" + resourceIri
-                    + "')", resourceIri);
+            throw RdfException.missingProperty(resourceIri,
+                    LINKEDPIPES.HAS_WORKING_DIRECTORY);
         }
         // Sort configurations based on order in decreasing order - so we
         // load the configuration with highest order first.

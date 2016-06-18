@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.component.api.service;
 
-import com.linkedpipes.etl.component.api.ExecutionFailed;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  * Can be used to create an exception that reports various failures.
@@ -17,7 +17,7 @@ public interface ExceptionFactory {
      * @param args
      * @return
      */
-    public ExecutionFailed failed(String message, Object... args);
+    public LpException failed(String message, Object... args);
 
     /**
      * Used to report general problem with certain configuration property.
@@ -27,8 +27,8 @@ public interface ExceptionFactory {
      * @param args
      * @return
      */
-    public ExecutionFailed invalidConfigurationProperty(
-            String propertyIri, String message, Object... args);
+    public LpException invalidConfigurationProperty(String propertyIri,
+            String message, Object... args);
 
     /**
      * Used to report missing or empty value in configuration where
@@ -37,7 +37,6 @@ public interface ExceptionFactory {
      * @param propertyIri
      * @return
      */
-    public ExecutionFailed missingConfigurationProperty(
-            String propertyIri);
+    public LpException missingConfigurationProperty(String propertyIri);
 
 }

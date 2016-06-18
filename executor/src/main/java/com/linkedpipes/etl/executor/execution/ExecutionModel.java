@@ -369,7 +369,7 @@ public final class ExecutionModel implements EventManager.EventListener {
     @Override
     public void onEvent(com.linkedpipes.etl.executor.api.v1.event.Event event) {
         final StatementsCollector collector = new StatementsCollector(graph);
-        event.write(collector);
+        event.serialize(collector);
         final Event executionEvent = new Event(events.size(),
                 event.getResource(), collector.getStatements());
         // Add class for event and order.

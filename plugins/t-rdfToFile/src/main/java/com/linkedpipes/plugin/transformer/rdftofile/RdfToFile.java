@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.transformer.rdftofile;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +14,7 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.Optional;
 
 /**
@@ -41,20 +41,25 @@ public final class RdfToFile implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
-        Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(configuration.getFileType());
+    public void execute() throws LpException {
+        Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
+                configuration.getFileType());
         if (!rdfFormat.isPresent()) {
-            throw exceptionFactory.failed("Invalid output file type: {}", configuration.getFileName());
+            throw exceptionFactory.failed("Invalid output file type: {}",
+                    configuration.getFileName());
         }
-        final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
+        final File outputFile = outputFiles.createFile(
+                configuration.getFileName()).toFile();
         inputRdf.execute((connection) -> {
             try (FileOutputStream outStream = new FileOutputStream(outputFile);
-                    OutputStreamWriter outWriter = new OutputStreamWriter(outStream, Charset.forName(FILE_ENCODE))) {
+                    OutputStreamWriter outWriter = new OutputStreamWriter(
+                            outStream, Charset.forName(FILE_ENCODE))) {
                 // Based on data type utilize graph (context) renamer on not.
                 RDFWriter writer = Rio.createWriter(rdfFormat.get(), outWriter);
                 if (rdfFormat.get().supportsContexts()) {
                     writer = new RdfWriterContextRenamer(writer,
-                            connection.getValueFactory().createURI(configuration.getGraphUri()));
+                            connection.getValueFactory().createIRI(
+                                    configuration.getGraphUri()));
                 }
                 writer = new RdfWriterContext(writer, progressReport);
                 progressReport.start((int) connection.size(inputRdf.getGraph()));

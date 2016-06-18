@@ -6,7 +6,7 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = MustacheVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = MustacheVocabulary.CONFIG)
 public class MustacheConfiguration {
 
     @RdfToPojo.Property(uri = MustacheVocabulary.HAS_CLASS)

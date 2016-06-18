@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = SparqlEndpointVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = SparqlEndpointVocabulary.CONFIG)
 public class SparqlEndpointConfiguration {
 
     @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_QUERY)

@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.system;
 
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
@@ -15,16 +16,11 @@ public class SystemPlugin implements DataUnitFactory {
 
     @Override
     public ManagableDataUnit create(SparqlSelect definition, String resourceIri,
-            String graph) throws CreationFailed {
+            String graph) throws RdfException {
         // Load configuration.
         final FilesDataUnitConfiguration config
                 = new FilesDataUnitConfiguration(resourceIri);
-        try {
-            EntityLoader.load(definition, resourceIri, graph, config);
-        } catch (EntityLoader.LoadingFailed ex) {
-            throw new CreationFailed("Can't load configuration for: {}",
-                    resourceIri, ex);
-        }
+        EntityLoader.load(definition, resourceIri, graph, config);
         // Based on type create instance.
         for (String type : config.getTypes()) {
             switch (type) {

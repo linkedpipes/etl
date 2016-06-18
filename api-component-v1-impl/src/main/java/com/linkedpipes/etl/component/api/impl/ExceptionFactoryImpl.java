@@ -1,42 +1,39 @@
 package com.linkedpipes.etl.component.api.impl;
 
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import java.util.Arrays;
+import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  * TODO: Implement custom formats of ExecutionFailed with proper
  * support of serialisation into RDF.
  *
+ * TODO: Check if given exception is not instance of RdfException.
+ *
  * @author Petr Škoda
  */
 class ExceptionFactoryImpl implements ExceptionFactory {
 
-    @Override
-    public ExecutionFailed failed(String message, Object... args) {
-        return new ExecutionFailed(Arrays.asList(
-                new ExecutionFailed.Message(message, "en")),
-                args);
+    private final String componentIri;
+
+    ExceptionFactoryImpl(String componentIri) {
+        this.componentIri = componentIri;
     }
 
     @Override
-    public ExecutionFailed invalidConfigurationProperty(String propertyIri,
+    public LpException failed(String message, Object... args) {
+        return RdfException.componentFailed(message, args);
+    }
+
+    @Override
+    public LpException invalidConfigurationProperty(String propertyIri,
             String message, Object... args) {
-        final String mergedMessage = "Invalid configuration property <"
-                + propertyIri + ">\n" + message;
-        return new ExecutionFailed(Arrays.asList(
-                new ExecutionFailed.Message(mergedMessage, "en")),
-                args);
+        return RdfException.invalidProperty(null, propertyIri, message, args);
     }
 
     @Override
-    public ExecutionFailed missingConfigurationProperty(String propertyIri) {
-        return new ExecutionFailed(Arrays.asList(
-                new ExecutionFailed.Message(
-                        "Missing configuration property: {}", "en")),
-                propertyIri);
+    public LpException missingConfigurationProperty(String propertyIri) {
+        return RdfException.missingProperty(null, propertyIri);
     }
-
-
 
 }

@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.dataunit;
 
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit.DataUnitException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.event.EventFactory;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.execution.ExecutionModel;
@@ -108,7 +108,7 @@ public class DataUnitManager {
                     dataUnit.getBinding(), dataUnit.getIri());
             try {
                 instance.initialize(dataUnit.getLoadPath());
-            } catch (DataUnitException ex) {
+            } catch (LpException ex) {
                 throw new CantInitializeDataUnit("Can't load: "
                         + dataUnit.getIri(), ex);
             }
@@ -119,7 +119,7 @@ public class DataUnitManager {
                     dataUnit.getBinding(), dataUnit.getIri());
             try {
                 instance.initialize(dataUnits);
-            } catch (DataUnitException ex) {
+            } catch (LpException ex) {
                 throw new CantInitializeDataUnit("Can't initialize: "
                         + dataUnit.getIri(), ex);
             }
@@ -175,7 +175,7 @@ public class DataUnitManager {
         }
         try {
             instance.close();
-        } catch (DataUnitException ex) {
+        } catch (LpException ex) {
             result = false;
             LOG.error("Can't close data unit.", ex);
         }

@@ -6,7 +6,7 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = FilesFromLocalVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = FilesFromLocalVocabulary.CONFIG)
 public class FilesFromLocalConfiguration {
 
     @RdfToPojo.Property(uri = FilesFromLocalVocabulary.HAS_PATH)

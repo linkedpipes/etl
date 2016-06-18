@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
+import com.linkedpipes.etl.executor.api.v1.Plugin;
 
 import java.util.Collection;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 import com.linkedpipes.etl.utils.core.event.AbstractEvent;
 
 /**
@@ -40,8 +39,8 @@ class ProgressReportImpl implements ProgressReport {
         }
 
         @Override
-        public void write(StatementWriter writer) {
-            super.write(writer);
+        public void serialize(Writer writer) {
+            super.serialize(writer);
             writer.add(uri, LINKEDPIPES.EVENTS.PROGRESS.HAS_TOTAL,
                     Long.toString(total),
                     "http://www.w3.org/2001/XMLSchema#long");
@@ -61,11 +60,11 @@ class ProgressReportImpl implements ProgressReport {
 
     private long reportNext;
 
+    private final Plugin.Context context;
+
     private final String componentIri;
 
-    private final BaseComponent.Context context;
-
-    ProgressReportImpl(BaseComponent.Context context, String componentIri) {
+    ProgressReportImpl(Plugin.Context context, String componentIri) {
         this.context = context;
         this.componentIri = componentIri;
     }

@@ -6,10 +6,10 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = SparqlConstructVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = SparqlConstructVocabulary.CONFIG)
 public class SparqlConstructConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlConstructVocabulary.CONFIG_SPARQL)
+    @RdfToPojo.Property(uri = SparqlConstructVocabulary.HAS_QUERY)
     private String query = "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
     public SparqlConstructConfiguration() {

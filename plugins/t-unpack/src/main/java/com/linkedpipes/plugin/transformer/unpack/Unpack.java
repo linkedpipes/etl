@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.transformer.unpack;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -43,13 +43,14 @@ public final class Unpack implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         LOG.info("Used extension option: {}", configuration.getFormat());
         progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
             final File outputDirectory;
             if (configuration.isUsePrefix()) {
-                outputDirectory = new File(output.getRootDirectory(), entry.getFileName());
+                outputDirectory = new File(output.getRootDirectory(),
+                        entry.getFileName());
             } else {
                 outputDirectory = output.getRootDirectory();
             }
@@ -63,7 +64,8 @@ public final class Unpack implements Component.Sequential {
         //
     }
 
-    private void unpack(FilesDataUnit.Entry inputEntry, File targetDirectory) throws NonRecoverableException {
+    private void unpack(FilesDataUnit.Entry inputEntry, File targetDirectory)
+            throws LpException {
         final String extension = getExtension(inputEntry);
         try (final InputStream stream = new FileInputStream(inputEntry.toFile())) {
             switch (extension) {
@@ -74,11 +76,13 @@ public final class Unpack implements Component.Sequential {
                     unpackBzip2(stream, targetDirectory, inputEntry);
                     break;
                 default:
-                    throw exceptionFactory.failed("Unknown file format (" + extension + ") : " +
+                    throw exceptionFactory.failed(
+                            "Unknown file format (" + extension + ") : " +
                             inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
-            throw exceptionFactory.failed("Extraction failed: {}", inputEntry.getFileName(), ex);
+            throw exceptionFactory.failed("Extraction failed: {}",
+                    inputEntry.getFileName(), ex);
         }
     }
 

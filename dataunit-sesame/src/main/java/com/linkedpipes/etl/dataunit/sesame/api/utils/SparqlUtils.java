@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.dataunit.sesame.api.utils;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,11 +28,10 @@ public final class SparqlUtils {
      * @param dataUnit
      * @param query
      * @return
-     * @throws NonRecoverableException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public static List<Map<String, Value>> executeSelect(
-            SingleGraphDataUnit dataUnit, String query)
-            throws NonRecoverableException {
+            SingleGraphDataUnit dataUnit, String query) throws LpException {
         final List<Map<String, Value>> result = new LinkedList<>();
         dataUnit.execute(() -> {
             result.clear();

@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.component.api.ExecutionFailed;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -38,7 +37,7 @@ public class ParserDbf implements Parser {
     }
 
     @Override
-    public void parse(File inFile) throws ExecutionFailed, ParseFailed, NonRecoverableException {
+    public void parse(File inFile) throws LpException, ParseFailed {
         final String encoding;
         if (config.encoding == null || config.encoding.isEmpty()) {
             // parse from DBF file

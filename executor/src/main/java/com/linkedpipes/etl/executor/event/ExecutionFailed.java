@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.event;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -30,8 +29,8 @@ public class ExecutionFailed extends AbstractEvent {
     }
 
     @Override
-    public void write(StatementWriter writer) {
-        super.write(writer);
+    public void serialize(Writer writer) {
+        super.serialize(writer);
         writer.addString(iri, LINKEDPIPES.EVENTS.HAS_REASON, reason, "en");
         //
         final StringWriter sw = new StringWriter();

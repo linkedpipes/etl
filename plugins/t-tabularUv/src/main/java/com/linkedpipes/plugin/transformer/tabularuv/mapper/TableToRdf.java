@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
-import com.linkedpipes.etl.component.api.ExecutionFailed;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.RdfWriter;
 import java.util.ArrayList;
 
@@ -60,8 +59,7 @@ public class TableToRdf {
                 "http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     }
 
-    public void paserRow(List<Object> row, int rowNumber)
-            throws ExecutionFailed, NonRecoverableException {
+    public void paserRow(List<Object> row, int rowNumber) throws LpException {
         if (row.size() < nameToIndex.size()) {
             LOG.warn("Row is smaller ({} instead of {}) - ignore.",
                     row.size(), nameToIndex.size());

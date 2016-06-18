@@ -6,9 +6,9 @@ import com.github.mustachejava.MustacheFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -64,7 +64,8 @@ public final class MustacheComponent implements Component.Sequential {
 
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(MustacheComponent.class);
+    private static final Logger LOG
+            = LoggerFactory.getLogger(MustacheComponent.class);
 
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit input;
@@ -82,7 +83,7 @@ public final class MustacheComponent implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         // Prepare template
         final String template
                 = UpdateQuery.expandPrefixes(configuration.getTemplate());
@@ -129,8 +130,7 @@ public final class MustacheComponent implements Component.Sequential {
      * @return
      * @throws NonRecoverableException
      */
-    private Collection<ObjectMetadata> loadData()
-            throws NonRecoverableException {
+    private Collection<ObjectMetadata> loadData() throws LpException {
         final Map<Resource, ObjectMetadata> objectsInfo = new HashMap<>();
         final Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
         // Load basic informations about objects.
@@ -233,8 +233,7 @@ public final class MustacheComponent implements Component.Sequential {
                     result.put(entry.getKey().stringValue(), newData);
                 }
             } else // Values.
-            {
-                if (entry.getValue().size() == 1) {
+             if (entry.getValue().size() == 1) {
                     result.put(entry.getKey().stringValue(),
                             getValue(entry.getValue().get(0)));
                 } else {
@@ -245,7 +244,6 @@ public final class MustacheComponent implements Component.Sequential {
                     }
                     result.put(entry.getKey().stringValue(), newData);
                 }
-            }
         }
         return result;
     }

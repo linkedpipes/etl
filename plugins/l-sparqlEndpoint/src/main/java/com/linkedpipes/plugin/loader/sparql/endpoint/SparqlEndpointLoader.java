@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ import org.openrdf.repository.sparql.SPARQLRepository;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -43,12 +43,17 @@ public class SparqlEndpointLoader implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         // Create repository.
         final SPARQLRepository sparqlRepository = new SPARQLRepository(
                 configuration.getEndpoint());
         // No action here.
-        sparqlRepository.initialize();
+        try {
+            sparqlRepository.initialize();
+        } catch (Throwable t) {
+            throw exceptionFactory.failed(
+                    "Can't connect to remote SPARQL.", t);
+        }
         //
         afterExecution.addAction(() -> {
             sparqlRepository.shutDown();

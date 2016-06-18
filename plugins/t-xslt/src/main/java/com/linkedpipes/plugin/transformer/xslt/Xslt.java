@@ -1,8 +1,6 @@
 package com.linkedpipes.plugin.transformer.xslt;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
@@ -25,8 +23,8 @@ import org.openrdf.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,8 +55,7 @@ public final class Xslt implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws ExecutionFailed, SystemDataUnitException,
-            SesameDataUnit.RepositoryActionFailed {
+    public void execute() throws LpException {
         final Processor processor = new Processor(false);
         processor.registerExtensionFunction(UUIDGenerator.getInstance());
 

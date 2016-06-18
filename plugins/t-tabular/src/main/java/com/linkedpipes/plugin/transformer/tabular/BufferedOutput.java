@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.ArrayList;
 import java.util.List;
 import org.openrdf.model.IRI;
@@ -39,19 +39,19 @@ class BufferedOutput implements StatementConsumer {
     }
 
     @Override
-    public void onRowEnd() throws NonRecoverableException {
+    public void onRowEnd() throws LpException {
         if (buffer.size() > BUFFER_SIZE * 0.9) {
             flushBuffer();
         }
     }
 
     @Override
-    public void onFileStart() throws NonRecoverableException {
+    public void onFileStart() throws LpException {
         // No operation here.
     }
 
     @Override
-    public void onFileEnd() throws NonRecoverableException {
+    public void onFileEnd() throws LpException {
         flushBuffer();
     }
 
@@ -61,7 +61,7 @@ class BufferedOutput implements StatementConsumer {
                 graph));
     }
 
-    private void flushBuffer() throws NonRecoverableException {
+    private void flushBuffer() throws LpException {
         dataUnit.execute((connection) -> {
             connection.add(buffer, graph);
         });

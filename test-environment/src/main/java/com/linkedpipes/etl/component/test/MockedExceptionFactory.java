@@ -1,8 +1,7 @@
 package com.linkedpipes.etl.component.test;
 
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import java.util.Arrays;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,34 +11,35 @@ import org.slf4j.LoggerFactory;
  */
 public class MockedExceptionFactory implements ExceptionFactory {
 
+    public static class MockedLpException extends LpException {
+
+        public MockedLpException(String message) {
+            super(message);
+        }
+
+    }
+
     private static final Logger LOG
             = LoggerFactory.getLogger(MockedExceptionFactory.class);
 
     @Override
-    public ExecutionFailed failed(String message, Object... args) {
+    public LpException failed(String message, Object... args) {
         LOG.error("Exception: " + message, args);
-        return new ExecutionFailed(Arrays.asList(
-                new ExecutionFailed.Message(message, "en")),
-                args);
+        return new MockedLpException("failed");
     }
 
     @Override
-    public ExecutionFailed invalidConfigurationProperty(
+    public LpException invalidConfigurationProperty(
             String propertyIri, String message, Object... args) {
         LOG.error("Invalid configuration property: {}", propertyIri);
-        return new ExecutionFailed(Arrays.asList(
-                new ExecutionFailed.Message(
-                        "Invalid configuration field.", "en")),
-                args);
+        return new MockedLpException("invalidConfigurationProperty");
     }
 
     @Override
-    public ExecutionFailed missingConfigurationProperty(
+    public LpException missingConfigurationProperty(
             String propertyIri) {
         LOG.error("Missing configuration property: {}", propertyIri);
-        return new ExecutionFailed(Arrays.asList(
-                new ExecutionFailed.Message(
-                        "Missing configuration field.", "en")));
+        return new MockedLpException("missingConfigurationProperty");
     }
 
 }

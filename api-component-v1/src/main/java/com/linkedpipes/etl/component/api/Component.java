@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.component.api;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,10 +21,9 @@ public interface Component {
         /**
          * Perform execution of the component.
          *
-         * @throws NonRecoverableException
-         * @throws com.linkedpipes.etl.component.api.ExecutionFailed
+         * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
          */
-        void execute() throws NonRecoverableException, ExecutionFailed;
+        void execute() throws LpException;
 
     }
 

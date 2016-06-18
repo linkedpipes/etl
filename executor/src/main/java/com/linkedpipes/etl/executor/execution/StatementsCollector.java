@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.execution;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
+import com.linkedpipes.etl.executor.api.v1.rdf.SerializableToRdf;
 import java.util.ArrayList;
 import java.util.List;
 import org.openrdf.model.IRI;
@@ -14,7 +14,7 @@ import org.openrdf.model.impl.SimpleValueFactory;
  *
  * @author Petr Škoda
  */
-class StatementsCollector implements StatementWriter {
+class StatementsCollector implements SerializableToRdf.Writer {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 

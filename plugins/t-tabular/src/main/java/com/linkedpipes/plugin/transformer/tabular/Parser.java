@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -54,7 +54,7 @@ class Parser {
     }
 
     public void parse(FilesDataUnit.Entry entry, Mapper mapper)
-            throws UnsupportedEncodingException, IOException, NonRecoverableException, ColumnAbstract.MissingColumnValue {
+            throws UnsupportedEncodingException, IOException, LpException, ColumnAbstract.MissingColumnValue {
         try (FileInputStream fileInputStream = new FileInputStream(entry.toFile());
                 InputStreamReader inputStreamReader = getInputStream(fileInputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);

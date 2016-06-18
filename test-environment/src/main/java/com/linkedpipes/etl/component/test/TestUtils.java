@@ -3,7 +3,7 @@ package com.linkedpipes.etl.component.test;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -117,7 +117,7 @@ public class TestUtils {
      * @throws com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException
      */
     public static void printContent(WritableGraphListDataUnit dataUnit)
-            throws NonRecoverableException {
+            throws LpException {
         for (IRI graph : dataUnit.getGraphs()) {
             System.out.println(": " + graph.toString());
             Repositories.consume(dataUnit.getRepository(),

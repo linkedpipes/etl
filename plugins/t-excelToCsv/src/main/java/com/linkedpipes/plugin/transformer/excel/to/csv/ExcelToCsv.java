@@ -2,11 +2,11 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -29,7 +29,13 @@ public class ExcelToCsv implements Component.Sequential {
     public ExcelToCsvConfiguration configuration;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
+        if (configuration.getFileNamePattern() == null
+                || configuration.getFileNamePattern().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    ExcelToCsvVocabulary.HAS_FILE_NAME);
+        }
+        //
         final Parser parser = new Parser(configuration);
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing file:", entry.getFileName());

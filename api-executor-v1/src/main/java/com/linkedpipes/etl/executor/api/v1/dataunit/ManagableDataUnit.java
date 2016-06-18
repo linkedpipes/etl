@@ -1,9 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.Message;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,41 +12,33 @@ import java.util.Map;
  */
 public interface ManagableDataUnit extends DataUnit {
 
-    public static class DataUnitException extends LocalizedException {
-
-        public DataUnitException(String messages, Object... args) {
-            super(Arrays.asList(new Message(messages, "en")), args);
-        }
-
-    }
-
     /**
      * Called before data unit is used. Only one initializer method is called!
      * Content of this data unit should be loaded from given directory.
      *
      * @param directory
-     * @throws ManagableDataUnit.DataUnitException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public void initialize(File directory) throws DataUnitException;
+    public void initialize(File directory) throws LpException;
 
     /**
      * Called before data unit is used. Only one initializer method is called!
      * Should prepare content of data unit from given data units.
      *
      * @param dataUnits
-     * @throws ManagableDataUnit.DataUnitException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public void initialize(Map<String, ManagableDataUnit> dataUnits)
-            throws DataUnitException;
+            throws LpException;
 
     /**
      * Save content of data unit into a directory so it can be later loaded
      * by the {@link #initialize(java.io.File)}.
      *
      * @param directory
-     * @throws ManagableDataUnit.DataUnitException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public void save(File directory) throws DataUnitException;
+    public void save(File directory) throws LpException;
 
     /**
      * Called just once before close. This method should store any data or
@@ -62,20 +52,20 @@ public interface ManagableDataUnit extends DataUnit {
      * they are not deleted if debug is used.
      *
      * The optionally returned additional directories must be working
-     * directories assigned by the core. Utilization of any other directory
+     * directories assigned by the core. Utilisation of any other directory
      * is forbidden.
      *
      * @param directory Directory where to store debug dump.
      * @return Optionally additional directories that contains debug data.
-     * @throws ManagableDataUnit.DataUnitException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public List<File> dumpContent(File directory) throws DataUnitException;
+    public List<File> dumpContent(File directory) throws LpException;
 
     /**
      * Close given data unit. After this call no other method is called.
      *
-     * @throws ManagableDataUnit.DataUnitException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public void close() throws DataUnitException;
+    public void close() throws LpException;
 
 }

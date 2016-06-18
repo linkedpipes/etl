@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -26,7 +27,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
- *
+ * Load object from RDF to JAVA.
+ * 
  * @author Škoda Petr
  */
 final class RdfReader {
@@ -115,7 +117,7 @@ final class RdfReader {
      * @throws RdfSerialization.CanNotDeserializeObject
      */
     public static void addToObject(Object object, SparqlSelect source,
-            String graph) throws CanNotDeserializeObject {
+            String graph) throws CanNotDeserializeObject, RdfException {
         final String typeAsString = getObjectType(object);
         final String query;
         if (graph == null) {
@@ -123,18 +125,14 @@ final class RdfReader {
         } else {
             query = getQueryForTypes(typeAsString, graph);
         }
-        try {
-            for (Map<String, String> configPair : source.executeSelect(query)) {
-                if (graph == null) {
-                    loadIntoObject(object, source, configPair.get("s"),
-                            configPair.get("g"), new HashMap<>());
-                } else {
-                    loadIntoObject(object, source, configPair.get("s"),
-                            graph, new HashMap<>());
-                }
+        for (Map<String, String> configPair : source.executeSelect(query)) {
+            if (graph == null) {
+                loadIntoObject(object, source, configPair.get("s"),
+                        configPair.get("g"), new HashMap<>());
+            } else {
+                loadIntoObject(object, source, configPair.get("s"),
+                        graph, new HashMap<>());
             }
-        } catch (SparqlSelect.QueryException ex) {
-            throw new CanNotDeserializeObject("Query failure!", ex);
         }
     }
 
@@ -148,13 +146,10 @@ final class RdfReader {
      * @throws RdfSerialization.CanNotDeserializeObject
      */
     public static void addToObject(Object object, SparqlSelect source,
-            String graph, String resourceIri) throws CanNotDeserializeObject {
+            String graph, String resourceIri)
+            throws CanNotDeserializeObject, RdfException {
         LOG.info("addToObject graph: {} uri: {}", graph, resourceIri);
-        try {
-            loadIntoObject(object, source, resourceIri, graph, new HashMap<>());
-        } catch (SparqlSelect.QueryException ex) {
-            throw new CanNotDeserializeObject("Query failure!", ex);
-        }
+        loadIntoObject(object, source, resourceIri, graph, new HashMap<>());
     }
 
     /**
@@ -259,11 +254,12 @@ final class RdfReader {
      * @param graph
      * @param descriptionCache
      * @throws SparqlSelect.QueryException
+     * @throws RdfException
      */
     static void loadIntoObject(Object object, SparqlSelect source,
             String resourceIri, String graph,
             Map<Class<?>, ObjectDescription> descriptionCache)
-            throws SparqlSelect.QueryException, CanNotDeserializeObject {
+            throws CanNotDeserializeObject, RdfException {
         if (!descriptionCache.containsKey(object.getClass())) {
             descriptionCache.put(object.getClass(),
                     createDescription(object.getClass()));
@@ -377,12 +373,12 @@ final class RdfReader {
      * @param descriptionCache
      * @return
      * @throws RdfSerialization.CanNotDeserializeObject
-     * @throws SparqlSelect.QueryException
+     * @throws RdfException
      */
     static Object loadIntoNewObject(Collection<Class<?>> classes,
             String valueAsString, String graph, SparqlSelect source,
             Map<Class<?>, ObjectDescription> descriptionCache)
-            throws CanNotDeserializeObject, SparqlSelect.QueryException {
+            throws CanNotDeserializeObject, RdfException {
         for (Class<?> clazz : classes) {
             final Object output = loadIntoNewObject(clazz, valueAsString, graph,
                     source, descriptionCache);
@@ -404,12 +400,12 @@ final class RdfReader {
      * @param descriptionCache
      * @return
      * @throws RdfSerialization.CanNotDeserializeObject
-     * @throws SparqlSelect.QueryException
+     * @throws RdfException
      */
     static Object loadIntoNewObject(Class<?> clazz, String valueAsString,
             String graph, SparqlSelect source,
             Map<Class<?>, ObjectDescription> descriptionCache)
-            throws CanNotDeserializeObject, SparqlSelect.QueryException {
+            throws CanNotDeserializeObject, RdfException {
         // Get description.
         if (!descriptionCache.containsKey(clazz)) {
             descriptionCache.put(clazz, createDescription(clazz));
@@ -444,7 +440,7 @@ final class RdfReader {
     static void loadCollection(FieldDescription description, Object object,
             String valueAsString, String graph, SparqlSelect source,
             Map<Class<?>, ObjectDescription> descriptionCache)
-            throws CanNotDeserializeObject, SparqlSelect.QueryException {
+            throws CanNotDeserializeObject, RdfException {
         // Get read method as we need to call add method on given collection.
         final Method readMethod = description.property.getReadMethod();
         final Collection collection;
@@ -580,7 +576,7 @@ final class RdfReader {
         return description;
     }
 
-    private static final boolean isPrimitive(Class<?> fieldClass) {
+    private static boolean isPrimitive(Class<?> fieldClass) {
         return fieldClass.isPrimitive() || WRAP_TYPES.contains(fieldClass);
     }
 

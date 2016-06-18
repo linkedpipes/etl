@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.List;
 import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
@@ -76,7 +76,7 @@ abstract class ColumnAbstract {
      * @throws NonRecoverableException
      */
     public abstract List<Resource> emit(StatementConsumer outputConsumer, List<String> row, int rowNumber)
-            throws NonRecoverableException, MissingColumnValue;
+            throws LpException, MissingColumnValue;
 
     /**
      * Get value for this column or throw if the column is missing.

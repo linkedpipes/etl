@@ -1,7 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.component.api.ExecutionFailed;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabular.TabularConfiguration.Column;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,6 +11,7 @@ import org.openrdf.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -32,7 +31,7 @@ class ColumnFactory {
      * @return
      */
     public static List<ColumnAbstract> createColumnList(TabularConfiguration configuration, ExceptionFactory exceptionFactory)
-            throws NonRecoverableException {
+            throws LpException {
         final List<ColumnAbstract> result = new ArrayList<>(configuration.getTableSchema().getColumns().size());
         final TabularConfiguration.Schema schema = configuration.getTableSchema();
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -84,7 +83,7 @@ class ColumnFactory {
      * @param header Data header.
      * @return
      */
-    public static List<ColumnAbstract> createColumList(TabularConfiguration configuration, List<String> header, ExceptionFactory exceptionFactory) throws ExecutionFailed {
+    public static List<ColumnAbstract> createColumList(TabularConfiguration configuration, List<String> header, ExceptionFactory exceptionFactory) throws LpException {
         final List<ColumnAbstract> result = new ArrayList<>(header.size());
         final TabularConfiguration.Schema schema = configuration.getTableSchema();
 

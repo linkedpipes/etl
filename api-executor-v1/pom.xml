@@ -25,6 +25,7 @@
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-commons</artifactId>
             <version>0.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

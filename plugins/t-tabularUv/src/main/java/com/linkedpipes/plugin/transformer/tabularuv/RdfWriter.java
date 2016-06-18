@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.transformer.tabularuv;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.ArrayList;
 import java.util.List;
 import org.openrdf.model.IRI;
@@ -32,13 +32,13 @@ public class RdfWriter {
         this.dataUnit = dataUnit;
     }
 
-    public void setGraph(IRI graph) throws NonRecoverableException {
+    public void setGraph(IRI graph) throws LpException {
         flushBuffer();
         this.graph = graph;
     }
 
     public void add(Resource subject, IRI predicate, Value object)
-            throws NonRecoverableException {
+            throws LpException {
         buffer.add(VALUE_FACTORY.createStatement(subject, predicate, object,
                 graph));
         if (buffer.size() > BUFFER_SIZE * 0.9) {
@@ -46,11 +46,11 @@ public class RdfWriter {
         }
     }
 
-    public void flush() throws NonRecoverableException {
+    public void flush() throws LpException {
         flushBuffer();
     }
 
-    private void flushBuffer() throws NonRecoverableException {
+    private void flushBuffer() throws LpException {
         dataUnit.execute((connection) -> {
             connection.add(buffer, graph);
         });

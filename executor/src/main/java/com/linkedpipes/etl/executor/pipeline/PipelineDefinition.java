@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
@@ -120,7 +121,7 @@ public class PipelineDefinition implements SparqlSelect {
         try {
             EntityLoader.load(repository, pipelineResource,
                     definitionGraph, pipelineModel);
-        } catch (EntityLoader.LoadingFailed ex) {
+        } catch (LpException ex) {
             throw new InitializationFailed(
                     "Can't load pipeline definition.", ex);
         }
@@ -131,7 +132,7 @@ public class PipelineDefinition implements SparqlSelect {
             throw new InitializationFailed("Can't resolve requirements.", ex);
         }
         // Store.
-        try (RepositoryConnection connection = repository.getConnection()){
+        try (RepositoryConnection connection = repository.getConnection()) {
             store(connection, resourceManager.getPipelineFile());
         } catch (Exception ex) {
             throw new InitializationFailed("Can't save definition.", ex);
@@ -147,8 +148,7 @@ public class PipelineDefinition implements SparqlSelect {
     }
 
     @Override
-    public List<Map<String, String>> executeSelect(String query)
-            throws QueryException {
+    public List<Map<String, String>> executeSelect(String query) {
         try (RepositoryConnection connection = repository.getConnection()) {
             return executeSelect(connection, query);
         }
@@ -174,7 +174,7 @@ public class PipelineDefinition implements SparqlSelect {
 
     private static void store(RepositoryConnection connection, File file)
             throws IOException {
-        try (OutputStream stream = new FileOutputStream(file)){
+        try (OutputStream stream = new FileOutputStream(file)) {
             final RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
             connection.export(writer);
         }

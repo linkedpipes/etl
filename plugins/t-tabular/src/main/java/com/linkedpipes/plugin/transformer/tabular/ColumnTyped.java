@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +30,7 @@ class ColumnTyped extends ColumnAbstract {
 
     @Override
     public List<Resource> emit(StatementConsumer outputConsumer, List<String> row, int rowNumber)
-            throws NonRecoverableException, MissingColumnValue {
+            throws LpException, MissingColumnValue {
         final Resource s = aboutUrl.getResource(row, rowNumber);
         if (s == null) {
             return Collections.EMPTY_LIST;

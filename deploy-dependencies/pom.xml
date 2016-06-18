@@ -201,12 +201,6 @@
                                         <!-- Core libraries -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-commons</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>api-component-v1</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>

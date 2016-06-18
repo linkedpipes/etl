@@ -6,7 +6,7 @@ import com.linkedpipes.etl.executor.execution.ExecutionModel;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
-import com.linkedpipes.etl.executor.api.v1.component.SimpleComponent;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
 
 /**
  * Interface and factory for component execution objects.
@@ -44,7 +44,7 @@ public interface ComponentExecutor {
     public static ComponentExecutor create(ModuleFacade module,
             DataUnitManager dataunit, EventManager events,
             PipelineDefinition pipeline, ExecutionModel execution,
-            String componentIri, SimpleComponent instance) {
+            String componentIri, SequentialComponent instance) {
         final PipelineModel.Component component
                 = pipeline.getPipelineModel().getComponent(componentIri);
         final ExecutionModel.Component executionComponent

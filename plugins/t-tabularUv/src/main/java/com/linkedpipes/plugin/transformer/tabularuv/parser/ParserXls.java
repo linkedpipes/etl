@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.component.api.ExecutionFailed;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnType;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.NamedCell_V1;
 import java.io.File;
@@ -52,7 +51,7 @@ public class ParserXls implements Parser {
     }
 
     @Override
-    public void parse(File inFile) throws ParseFailed, NonRecoverableException {
+    public void parse(File inFile) throws LpException, ParseFailed {
         final Workbook wb;
         try {
             wb = WorkbookFactory.create(inFile);
@@ -80,10 +79,10 @@ public class ParserXls implements Parser {
      * @param wb
      * @param sheetIndex
      * @throws com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public void parseSheet(Workbook wb, Integer sheetIndex) throws ParseFailed,
-            ExecutionFailed,
-            NonRecoverableException {
+    public void parseSheet(Workbook wb, Integer sheetIndex)
+            throws ParseFailed, LpException {
 
         LOG.debug("parseSheet({}, {})", wb.getSheetName(sheetIndex), sheetIndex);
 

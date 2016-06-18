@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect.QueryException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.util.Map;
 
@@ -35,7 +35,7 @@ class RequirementProcessor {
 
         @Override
         public EntityLoader.Loadable load(String predicate, Value object)
-                throws EntityLoader.LoadingFailed {
+                throws LpException {
             switch (predicate) {
                 case LINKEDPIPES.REQUIREMENTS.HAS_TARGET_PROPERTY:
                     targetProperty = object.stringValue();
@@ -53,7 +53,7 @@ class RequirementProcessor {
 
         @Override
         public EntityLoader.Loadable load(String predicate, Value object)
-                throws EntityLoader.LoadingFailed {
+                throws LpException {
             switch (predicate) {
                 case LINKEDPIPES.REQUIREMENTS.HAS_TARGET_PROPERTY:
                     targetProperty = object.stringValue();
@@ -85,12 +85,8 @@ class RequirementProcessor {
                 + "  }\n"
                 + "}";
 
-        final List<Map<String, String>> queryResult;
-        try {
-            queryResult = definition.executeSelect(query);
-        } catch (QueryException ex) {
-            throw new ProcessingFailed(ex);
-        }
+        final List<Map<String, String>> queryResult
+                = definition.executeSelect(query);
         //
         for (Map<String, String> item : queryResult) {
             switch (item.get("type")) {
@@ -126,7 +122,7 @@ class RequirementProcessor {
                     requirement,
                     definition.getDefinitionGraph(),
                     tempDirectory);
-        } catch (EntityLoader.LoadingFailed ex) {
+        } catch (LpException ex) {
             throw new ProcessingFailed(ex);
         }
         // Add triple with path to the temp directory.
@@ -156,7 +152,7 @@ class RequirementProcessor {
                     requirement,
                     definition.getDefinitionGraph(),
                     inputDirectory);
-        } catch (EntityLoader.LoadingFailed ex) {
+        } catch (LpException ex) {
             throw new ProcessingFailed(ex);
         }
         // Add triple with path to the temp directory.

@@ -6,13 +6,13 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = HttpGetVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = HttpGetVocabulary.CONFIG)
 public class HttpGetConfiguration {
 
-    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_HAS_URI)
+    @RdfToPojo.Property(uri = HttpGetVocabulary.HAS_URI)
     private String uri;
 
-    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_HAS_NAME)
+    @RdfToPojo.Property(uri = HttpGetVocabulary.HAS_NAME)
     private String fileName;
 
     /**
@@ -23,7 +23,7 @@ public class HttpGetConfiguration {
      *
      * If true DPU follow redirect to any location and protocol.
      */
-    @RdfToPojo.Property(uri = HttpGetVocabulary.CONFIG_HAS_FOLLOW_REDIRECT)
+    @RdfToPojo.Property(uri = HttpGetVocabulary.HAS_FOLLOW_REDIRECT)
     private boolean forceFollowRedirect;
 
     public HttpGetConfiguration() {

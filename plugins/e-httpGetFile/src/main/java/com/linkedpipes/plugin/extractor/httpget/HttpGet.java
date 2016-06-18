@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.httpget;
 
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,8 +21,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.ExecutionFailed;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -46,7 +45,17 @@ public final class HttpGet implements Component.Sequential {
     public ProgressReport progressReport;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
+        if (configuration.getUri() == null
+                || configuration.getUri().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    HttpGetVocabulary.HAS_URI);
+        }
+        if (configuration.getFileName() == null
+                || configuration.getFileName().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    HttpGetVocabulary.HAS_NAME);
+        }
         // TODO Do not use this, but be selective about certs we trust.
         try {
             LOG.warn("'Trust all certs' policy used -> security risk!");
@@ -63,8 +72,9 @@ public final class HttpGet implements Component.Sequential {
         try {
             source = new URL(configuration.getUri());
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.failed(
-                    "Invalid URI: {}.", configuration.getUri(), ex);
+            throw exceptionFactory.invalidConfigurationProperty(
+                    HttpGetVocabulary.HAS_URI, "{}",
+                    configuration.getUri(), ex);
         }
         // Prepare target destination.
         final File destination = output.createFile(
@@ -151,7 +161,7 @@ public final class HttpGet implements Component.Sequential {
      * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
      */
     private HttpURLConnection followRedirect(HttpURLConnection connection)
-            throws IOException, ExecutionFailed {
+            throws IOException, LpException {
         connection.connect();
         if (connection.getResponseCode() == HttpURLConnection.HTTP_SEE_OTHER) {
             final String location = connection.getHeaderField("Location");

@@ -3,12 +3,12 @@ package com.linkedpipes.plugin.transformer.tabular;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -31,7 +31,7 @@ public class Tabular implements Component.Sequential {
     public ExceptionFactory exceptionFactory;
 
     @Override
-    public void execute() throws NonRecoverableException {
+    public void execute() throws LpException {
         final BufferedOutput output = new BufferedOutput(outputRdfDataUnit);
         final Parser parser = new Parser(configuration, exceptionFactory);
         final Mapper mapper = new Mapper(output, configuration, ColumnFactory.createColumnList(configuration, exceptionFactory), exceptionFactory);
