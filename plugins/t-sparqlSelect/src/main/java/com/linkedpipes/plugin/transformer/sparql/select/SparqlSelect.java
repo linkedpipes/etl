@@ -44,7 +44,6 @@ public final class SparqlSelect implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        // For each graph.
         final IRI inputGraph = inputRdf.getGraph();
         final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
         LOG.info("{} -> {}", inputGraph, outputFile);

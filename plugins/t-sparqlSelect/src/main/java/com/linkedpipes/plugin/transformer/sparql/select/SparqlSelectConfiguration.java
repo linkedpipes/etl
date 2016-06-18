@@ -6,13 +6,13 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = SparqlSelectVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = SparqlSelectVocabulary.CONFIG)
 public class SparqlSelectConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlSelectVocabulary.CONFIG_SPARQL)
+    @RdfToPojo.Property(uri = SparqlSelectVocabulary.HAS_QUERY)
     private String query = "INSERT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
-    @RdfToPojo.Property(uri = SparqlSelectVocabulary.OUTPUT_FILE_NAME)
+    @RdfToPojo.Property(uri = SparqlSelectVocabulary.HAS_FILE_NAME)
     private String fileName;
 
     public SparqlSelectConfiguration() {
