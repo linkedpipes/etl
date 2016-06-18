@@ -370,6 +370,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlSelectMulti</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-sparqlSelectMulti/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlUpdate</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-sparqlUpdate/</outputDirectory>
@@ -586,6 +592,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-sparqlSelect/"/>
                                         <copy todir="${deploy.directory}/components/t-sparqlSelect/">
                                             <fileset dir="${plugins.directory}/t-sparqlSelect/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-sparqlSelectMulti/"/>
+                                        <copy todir="${deploy.directory}/components/t-sparqlSelectMulti/">
+                                            <fileset dir="${plugins.directory}/t-sparqlSelectMulti/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
