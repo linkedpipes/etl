@@ -418,6 +418,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesRenamer</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesRenamer/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-unpack</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-unpack/</outputDirectory>
@@ -640,6 +646,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-filesBase64Decode/"/>
                                         <copy todir="${deploy.directory}/components/t-filesBase64Decode/">
                                             <fileset dir="${plugins.directory}/t-filesBase64Decode/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesRenamer/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesRenamer/">
+                                            <fileset dir="${plugins.directory}/t-filesRenamer/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

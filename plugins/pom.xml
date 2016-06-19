@@ -43,6 +43,7 @@
         <module>e-httpGetFiles</module>
         <module>e-pipelineInput</module>
         <module>t-sparqlSelectMulti</module>
+        <module>t-filesRenamer</module>
     </modules>
 
 </project>
