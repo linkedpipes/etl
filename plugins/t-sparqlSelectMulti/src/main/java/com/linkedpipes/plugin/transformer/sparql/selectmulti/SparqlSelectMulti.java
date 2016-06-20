@@ -35,11 +35,14 @@ public final class SparqlSelectMulti implements Component.Sequential {
      */
     private static final class Configuration {
 
+        private final String iri;
+
         private final String query;
 
         private final String fileName;
 
-        Configuration(String query, String fileName) {
+        Configuration(String iri, String query, String fileName) {
+            this.iri = iri;
             this.query = query;
             this.fileName = fileName;
         }
@@ -69,12 +72,25 @@ public final class SparqlSelectMulti implements Component.Sequential {
             while (results.hasNext()) {
                 final BindingSet binding = results.next();
                 configurations.add(new Configuration(
+                        binding.getValue("s").stringValue(),
                         binding.getValue("query").stringValue(),
                         binding.getValue("fileName").stringValue()));
             }
         });
         // Transform.
         for (Configuration configuration : configurations) {
+            if (configuration.fileName == null
+                    || configuration.fileName.isEmpty()) {
+                throw exceptionFactory.invalidConfigurationProperty(
+                        SparqlSelectMultiVocabulary.HAS_FILE_NAME,
+                        "Configuration resource: {}", configuration.iri);
+            }
+            if (configuration.fileName == null
+                    || configuration.fileName.isEmpty()) {
+                throw exceptionFactory.invalidConfigurationProperty(
+                        SparqlSelectMultiVocabulary.HAS_FILE_NAME,
+                        "Configuration resource: {}", configuration.iri);
+            }
             transform(configuration.query, configuration.fileName);
         }
     }
@@ -107,12 +123,12 @@ public final class SparqlSelectMulti implements Component.Sequential {
     }
 
     private static String getConfigurationQuery() {
-        return "SELECT DISTINCT ?query ?fileName WHERE {\n"
-                + "  ?s a <" + SparqlSelectVocabulary.CONFIG
+        return "SELECT DISTINCT ?s ?query ?fileName WHERE {\n"
+                + "  ?s a <" + SparqlSelectMultiVocabulary.CONFIG
                 + "> ;\n"
-                + "    <" + SparqlSelectVocabulary.HAS_FILE_NAME
+                + "    <" + SparqlSelectMultiVocabulary.HAS_FILE_NAME
                 + "> ?fileName ;\n"
-                + "    <" + SparqlSelectVocabulary.HAS_QUERY
+                + "    <" + SparqlSelectMultiVocabulary.HAS_QUERY
                 + "> ?query .\n"
                 + "}";
     }
