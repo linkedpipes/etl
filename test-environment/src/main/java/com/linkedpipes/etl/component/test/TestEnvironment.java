@@ -21,6 +21,7 @@ import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.component.api.service.WorkingDirectory;
 
 /**
  *
@@ -39,10 +40,13 @@ public class TestEnvironment implements AutoCloseable {
     private final MockedAfterExecution afterExecution
             = new MockedAfterExecution();
 
+    private final File workingDirectory;
+
     protected TestEnvironment(Component.Sequential dpu, File workingDirectory) {
         this.component = dpu;
-        sesameRepository = new SailRepository(new MemoryStore());
-        sesameRepository.initialize();
+        this.sesameRepository = new SailRepository(new MemoryStore());
+        this.sesameRepository.initialize();
+        this.workingDirectory = workingDirectory;
     }
 
     /**
@@ -137,6 +141,9 @@ public class TestEnvironment implements AutoCloseable {
                     field.set(component, afterExecution);
                 } else if (field.getType() == ExceptionFactory.class) {
                     field.set(component, new MockedExceptionFactory());
+                } else if (field.getType() == WorkingDirectory.class) {
+                    field.set(component, new WorkingDirectory(
+                            workingDirectory.getPath()));
                 } else {
                     throw new RuntimeException("Can't initialize extension!");
                 }
