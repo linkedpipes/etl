@@ -31,7 +31,8 @@ Extractor, allows the user to extract RDF triples from a SPARQL endpoint using a
             <dt>Look in pipeline</dt>
             <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
             <dt>Sample pipeline</dt>
-            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">available</a></dd>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">First</a></dd>
+            <dd><a href="../assets/pipelines/{{page.short}}-2.jsonld">Second</a></dd>
         </dl>
     </div>
     <div class="col s12 l6">
@@ -42,7 +43,8 @@ Extractor, allows the user to extract RDF triples from a SPARQL endpoint using a
 </div>
 <div class="row" id="runtimeconfig">
 <h3 class="orange-text center">Runtime configuration</h3>
-<p class="flow-text">Below you can see sample runtime configuration for the component. You can also import a <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a>.
+<p class="flow-text">Below you can see sample runtime configuration for the component, which includes specification of default graph IRIs.
+You can also import a <a href="../assets/pipelines/{{page.short}}-2.jsonld">sample pipeline</a>.
 Note that <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes" title="Blank nodes">RDF blank nodes</a> are not allowed in runtime configurations.
 </p>
 {% highlight turtle %}
@@ -50,6 +52,8 @@ Note that <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes" ti
 
 <http://localhost/config> a se:Configuration ;
     se:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
-    se:endpoint <http://linked.opendata.cz/sparql> .
+    se:endpoint <http://linked.opendata.cz/sparql> ;
+    se:defaultGraph <http://comsode.eu/resource/dataset/COMSODE_D3.2> ;
+    se:defaultGraph <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> .
 {% endhighlight %}
 </div>
