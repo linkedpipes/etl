@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.sesame.api.rdf;
 
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.Collection;
 
 import org.openrdf.model.IRI;
@@ -13,6 +14,6 @@ import org.openrdf.model.IRI;
  */
 public interface GraphListDataUnit extends SesameDataUnit {
 
-    public Collection<IRI> getGraphs() throws SesameDataUnitException;
+    public Collection<IRI> getGraphs() throws LpException;
 
 }

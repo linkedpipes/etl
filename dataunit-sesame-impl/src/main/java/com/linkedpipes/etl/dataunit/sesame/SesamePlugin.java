@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.dataunit.sesame;
 
 import com.linkedpipes.etl.executor.api.v1.Plugin;
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
@@ -24,8 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 @Component(immediate = true,
         service = {DataUnitFactory.class, Plugin.ExecutionListener.class})
-public class SesamePlugin
-        implements DataUnitFactory, Plugin.ExecutionListener {
+public class SesamePlugin implements DataUnitFactory, Plugin.ExecutionListener {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(SesamePlugin.class);
@@ -59,7 +59,7 @@ public class SesamePlugin
 
     @Override
     public ManagableDataUnit create(SparqlSelect definition, String resourceIri,
-            String graph) throws CreationFailed {
+            String graph) throws RdfException {
         if (!initialized) {
             return null;
         }
@@ -69,9 +69,9 @@ public class SesamePlugin
         try {
             EntityLoader.load(definition, resourceIri, graph,
                     dataUnitConfiguration);
-        } catch (EntityLoader.LoadingFailed ex) {
-            throw new CreationFailed("Can't load configuration for: {}",
-                    resourceIri, ex);
+        } catch (RdfException ex) {
+            throw ExceptionFactory.wrap(ex, "Can't load configuration for: {}",
+                    resourceIri);
         }
         // Create data unit.
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -96,13 +96,13 @@ public class SesamePlugin
 
     @Override
     public void onExecutionBegin(SparqlSelect definition, String resourceIri,
-            String graph, Plugin.Context context) throws InitializationFailure {
+            String graph) throws RdfException {
         final List<Map<String, String>> resourceList;
         try {
             resourceList = definition.executeSelect(
                     QUERY_SELECT_CONFIGURATION_RESOURCE);
-        } catch (SparqlSelect.QueryException ex) {
-            throw new InitializationFailure("Can't read basic info.", ex);
+        } catch (RdfException ex) {
+            throw ExceptionFactory.wrap(ex, "Can't query definition.");
         }
         if (resourceList.isEmpty()) {
             // This factory is not used in this pipeline execution.
@@ -111,16 +111,16 @@ public class SesamePlugin
         } else if (resourceList.size() != 1) {
             // Everything else than just one result is a problem,
             // as we do not known what to load.
-            throw new InitializationFailure("Invalid number of results: {}",
-                    resourceList.size());
+            throw ExceptionFactory.initializationFailed(
+                    "Invalid number of results: {}", resourceList.size());
         }
         // Load configuration - defensive style (load and then set).
         final FactoryConfiguration newConfiguration = new FactoryConfiguration();
         try {
             EntityLoader.load(definition, resourceList.get(0).get("s"), graph,
                     newConfiguration);
-        } catch (EntityLoader.LoadingFailed ex) {
-            throw new InitializationFailure("Can't load configuration for: {}",
+        } catch (RdfException ex) {
+            throw ExceptionFactory.wrap(ex, "Can't load configuration for: {}",
                     resourceList.get(0).get("s"), ex);
         }
         configuration = newConfiguration;
@@ -131,8 +131,8 @@ public class SesamePlugin
             sharedRepository.initialize();
         } catch (RepositoryException ex) {
             sharedRepository = null;
-            throw new InitializationFailure("Can't create shared repository.",
-                    ex);
+            throw ExceptionFactory.initializationFailed(
+                    "Can't create shared repository.", ex);
         }
         initialized = true;
     }

@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-dpu-v1</artifactId>
+            <artifactId>api-component-v1</artifactId>
         </dependency>
                 <dependency>
             <groupId>com.linkedpipes</groupId>

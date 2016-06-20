@@ -283,6 +283,10 @@ define([
             componentService) {
         // Construct label.
         var label = componentService.getLabel(component);
+        // Use empty string instead of undefined.
+        if (label === undefined) {
+            label = '';
+        }
         var description = componentService.getDescription(component);
         if (description !== undefined) {
             label += '\n';

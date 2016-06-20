@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.Plugin;
-import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
@@ -24,7 +23,8 @@ import org.apache.log4j.MDC;
 import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.executor.api.v1.component.SimpleComponent;
+import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
 
 /**
  *
@@ -137,7 +137,7 @@ public class PipelineExecutor implements EventManager.EventListener {
         beforeExecution();
         // Get all components, so if some is missing we find out at the
         // beginning of a pipeline.
-        final Map<String, SimpleComponent> componenInstances;
+        final Map<String, SequentialComponent> componenInstances;
         try {
             sendExecutionBeginNotification();
             componenInstances = initializeComponents();
@@ -211,10 +211,6 @@ public class PipelineExecutor implements EventManager.EventListener {
      * @throws InitializationFailure
      */
     private void sendExecutionBeginNotification() throws InitializationFailure {
-        final Plugin.Context context = (Event message) -> {
-            events.publish(message);
-        };
-
         final Collection<Plugin.ExecutionListener> listeners;
         try {
             listeners = modules.getExecutionListeners();
@@ -225,8 +221,7 @@ public class PipelineExecutor implements EventManager.EventListener {
             try {
                 plugin.onExecutionBegin(pipeline,
                         pipeline.getPipelineModel().getIri(),
-                        pipeline.getDefinitionGraph(),
-                        context);
+                        pipeline.getDefinitionGraph());
             } catch (Throwable t) {
                 throw new InitializationFailure(t);
             }
@@ -263,21 +258,29 @@ public class PipelineExecutor implements EventManager.EventListener {
      *
      * @return
      */
-    private Map<String, SimpleComponent> initializeComponents()
+    private Map<String, SequentialComponent> initializeComponents()
             throws InitializationFailure {
-        final Map<String, SimpleComponent> result = new HashMap<>();
+        final Map<String, SequentialComponent> result = new HashMap<>();
         for (PipelineModel.Component component
                 : pipeline.getPipelineModel().getComponents()) {
             final BaseComponent instance;
             try {
                 instance = modules.getComponent(pipeline,
-                        component.getIri());
+                        component.getIri(),
+                        new Plugin.Context() {
+
+                    @Override
+                    public void sendMessage(Event message) {
+                        events.publish(message);
+                    }
+
+                });
             } catch (ModuleException ex) {
                 throw new InitializationFailure(ex);
             }
 
-            if (instance instanceof SimpleComponent) {
-                result.put(component.getIri(), (SimpleComponent)instance);
+            if (instance instanceof SequentialComponent) {
+                result.put(component.getIri(), (SequentialComponent) instance);
             } else {
                 throw new InitializationFailure("Unknown component type.");
             }

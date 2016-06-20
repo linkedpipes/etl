@@ -1,7 +1,5 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
-import com.linkedpipes.etl.dpu.api.service.AfterExecution;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,14 +13,16 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import virtuoso.sesame2.driver.VirtuosoRepository;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class Virtuoso implements SimpleExecution {
+public final class Virtuoso implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Virtuoso.class);
 
@@ -43,15 +43,18 @@ public final class Virtuoso implements SimpleExecution {
     @Component.Inject
     public AfterExecution cleanUp;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
         // Create remote repository.
         final VirtuosoRepository virtuosoRepository = new VirtuosoRepository(
                 configuration.getVirtuosoUrl(), configuration.getUsername(), configuration.getPassword());
         try {
             virtuosoRepository.initialize();
         } catch (RepositoryException ex) {
-            throw new Component.ExecutionFailed("Can't connect to Virtuoso repository.", ex);
+            throw exceptionFactory.failed("Can't connect to Virtuoso repository.", ex);
         }
         cleanUp.addAction(() -> {
             try {
@@ -86,7 +89,7 @@ public final class Virtuoso implements SimpleExecution {
             final ResultSet resultSetLdDir = statementLdDir.executeQuery();
             resultSetLdDir.close();
         } catch (SQLException ex) {
-            throw new Component.ExecutionFailed("Can't execute ld_dir query.", ex);
+            throw exceptionFactory.failed("Can't execute ld_dir query.", ex);
         }
         // Check number of files to load.
         final int filesToLoad;
@@ -97,7 +100,7 @@ public final class Virtuoso implements SimpleExecution {
                 filesToLoad = resultSetProcessing.getInt(1);
             }
         } catch (SQLException ex) {
-            throw new Component.ExecutionFailed("Can't query load_list table.", ex);
+            throw exceptionFactory.failed("Can't query load_list table.", ex);
         } finally {
             // Here we can close the connection.
             try {
@@ -114,7 +117,7 @@ public final class Virtuoso implements SimpleExecution {
         // Start loading, we use only a single thread call here.
         startLoading();
         // Check for status - periodic and final.
-        while (!context.canceled()) {
+        while (true) {
             final Connection connectionForStatusCheck = getSqlConnection();
             try (PreparedStatement statement = connectionForStatusCheck.prepareStatement(SQL_QUERY_FINISHED)) {
                 statement.setString(1, configuration.getLoadDirectoryPath() + "%");
@@ -164,16 +167,16 @@ public final class Virtuoso implements SimpleExecution {
         return "DEFINE sql:log-enable 3 CLEAR GRAPH <" + graph + ">";
     }
 
-    private Connection getSqlConnection() throws Component.ExecutionFailed {
+    private Connection getSqlConnection() throws LpException {
         try {
             return DriverManager.getConnection(configuration.getVirtuosoUrl(), configuration.getUsername(),
                     configuration.getPassword());
         } catch (SQLException ex) {
-            throw new Component.ExecutionFailed("Can't create sql connection.", ex);
+            throw exceptionFactory.failed("Can't create sql connection.", ex);
         }
     }
 
-    private void startLoading() throws Component.ExecutionFailed {
+    private void startLoading() throws LpException {
         // Start loading.
         Connection loaderConnection = null;
         try {
@@ -183,7 +186,7 @@ public final class Virtuoso implements SimpleExecution {
                 resultSetRun.close();
             }
         } catch (SQLException ex) {
-            throw new Component.ExecutionFailed("Can't start loading.", ex);
+            throw exceptionFactory.failed("Can't start loading.", ex);
         } finally {
             try {
                 if (loaderConnection != null) {

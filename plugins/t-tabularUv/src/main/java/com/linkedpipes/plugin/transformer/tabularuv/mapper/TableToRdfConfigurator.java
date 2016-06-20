@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
-import com.linkedpipes.etl.dpu.api.Component.ExecutionFailed;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnInfo_V1;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnType;
@@ -38,11 +37,11 @@ public class TableToRdfConfigurator {
      * @param data Contains first data row, or ColumnType if type is already known.
      * @param numberOfLeadingEmpty Number of leading empty columns, this is useful for xsl-like.
      * @throws com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed
-     * @throws com.linkedpipes.etl.dpu.api.Component.ExecutionFailed
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public static void configure(TableToRdf tableToRdf, List<String> header,
             List<Object> data, int numberOfLeadingEmpty)
-            throws ParseFailed, ExecutionFailed, NonRecoverableException {
+            throws ParseFailed, LpException {
         // initial checks
         if (data == null) {
             throw new ParseFailed("First data row is null!");

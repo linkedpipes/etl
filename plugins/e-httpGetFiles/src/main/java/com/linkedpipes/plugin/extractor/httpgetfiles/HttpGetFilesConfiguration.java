@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,16 +8,16 @@ import java.util.List;
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = HttpGetFilesVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = HttpGetFilesVocabulary.CONFIG)
 public class HttpGetFilesConfiguration {
 
-    @RdfToPojo.Type(uri = HttpGetFilesVocabulary.REFERENCE_CLASS)
+    @RdfToPojo.Type(uri = HttpGetFilesVocabulary.REFERENCE)
     public static class Reference {
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.REFERENCE_HAS_URI)
+        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_URI)
         private String uri;
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.REFERENCE_HAS_NAME)
+        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_NAME)
         private String fileName;
 
         public Reference() {
@@ -41,7 +41,7 @@ public class HttpGetFilesConfiguration {
 
     }
 
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.CONFIG_HAS_REFERENCE)
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_REFERENCE)
     private List<Reference> references = new LinkedList<>();
 
     /**
@@ -52,8 +52,14 @@ public class HttpGetFilesConfiguration {
      *
      * If true DPU follow redirect to any location and protocol.
      */
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.CONFIG_HAS_FOLLOW_REDIRECT)
-    private boolean forceFollowRedirect;
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_FOLLOW_REDIRECT)
+    private boolean forceFollowRedirect = true;
+
+    /**
+     * If true skip file in case of an error.
+     */
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.SKIP_ON_ERROR)
+    private boolean skipOnError = false;
 
     public HttpGetFilesConfiguration() {
     }
@@ -72,6 +78,14 @@ public class HttpGetFilesConfiguration {
 
     public void setForceFollowRedirect(boolean forceFollowRedirect) {
         this.forceFollowRedirect = forceFollowRedirect;
+    }
+
+    public boolean isSkipOnError() {
+        return skipOnError;
+    }
+
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
     }
 
 }

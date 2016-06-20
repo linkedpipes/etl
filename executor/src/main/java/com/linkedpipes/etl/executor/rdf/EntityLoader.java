@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.executor.rdf;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
+import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.ArrayList;
 
-import java.util.Arrays;
 import java.util.List;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
@@ -21,17 +21,6 @@ import org.openrdf.repository.util.Repositories;
 public class EntityLoader {
 
     /**
-     * Used to report error in the object loading.
-     */
-    public static class LoadingFailed extends LocalizedException {
-
-        public LoadingFailed(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedString(messages, "en")), args);
-        }
-
-    }
-
-    /**
      * Interface for loadable entities.
      */
     public static interface Loadable {
@@ -44,21 +33,20 @@ public class EntityLoader {
          * @param predicate
          * @param object
          * @return Null no new object was created.
-         * @throws LoadingFailed
+         * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
          */
-        public Loadable load(String predicate, Value object)
-                throws LoadingFailed;
+        public Loadable load(String predicate, Value object) throws LpException;
 
         /**
          * Called when the object is loaded. Can be used to finalise loading
          * or perform validation.
          *
-         * @throws LoadingFailed
+         * @throws LpException
          */
-        public default void afterLoad() throws LoadingFailed {
+        public default void afterLoad() throws LpException {
             // No operation.
-        };
-
+        }
+    ;
 
     }
 
@@ -95,10 +83,10 @@ public class EntityLoader {
      * @param resource URI of resource to load.
      * @param graph
      * @param instance Instance to load.
-     * @throws LoadingFailed
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public static void load(Repository repository, String resource,
-            String graph, Loadable instance) throws LoadingFailed {
+            String graph, Loadable instance) throws LpException {
         // Load statements.
         final List<PredicateObject> records = new ArrayList<>(64);
         try {
@@ -118,7 +106,7 @@ public class EntityLoader {
                 }
             });
         } catch (RepositoryException ex) {
-            throw new LoadingFailed("Can't load statements.", ex);
+            throw RdfException.failure("Can't load statements.", ex);
         }
         // Parse values.
         for (PredicateObject record : records) {

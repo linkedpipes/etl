@@ -4,11 +4,12 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
  *
  * @author Petr Škoda
  */
-public class ExcelToCsvVocabulary {
+final class ExcelToCsvVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-excelToCsv#";
+    private static final String PREFIX
+            = "http://plugins.linkedpipes.com/ontology/t-excelToCsv#";
 
-    public static final String CONFIGURATION = PREFIX + "Configuration";
+    public static final String CONFIG = PREFIX + "Configuration";
 
     public static final String HAS_FILE_NAME = PREFIX + "fileName";
 
@@ -39,5 +40,8 @@ public class ExcelToCsvVocabulary {
     public static final String HAS_COLUMN = PREFIX + "column";
 
     public static final String HAS_NAME = PREFIX + "name";
+
+    private ExcelToCsvVocabulary() {
+    }
 
 }

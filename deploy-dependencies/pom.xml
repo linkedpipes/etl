@@ -201,19 +201,13 @@
                                         <!-- Core libraries -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-commons</artifactId>
+                                            <artifactId>api-component-v1</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-dpu-v1</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-dpu-v1-impl</artifactId>
+                                            <artifactId>api-component-v1-impl</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
@@ -376,6 +370,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlSelectMulti</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-sparqlSelectMulti/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlUpdate</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-sparqlUpdate/</outputDirectory>
@@ -415,6 +415,12 @@
                                             <artifactId>t-filesBase64Decode</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesBase64Decode/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesRenamer</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesRenamer/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -595,6 +601,12 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-sparqlSelectMulti/"/>
+                                        <copy todir="${deploy.directory}/components/t-sparqlSelectMulti/">
+                                            <fileset dir="${plugins.directory}/t-sparqlSelectMulti/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/t-sparqlUpdate/"/>
                                         <copy todir="${deploy.directory}/components/t-sparqlUpdate/">
                                             <fileset dir="${plugins.directory}/t-sparqlUpdate/target/classes">
@@ -634,6 +646,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-filesBase64Decode/"/>
                                         <copy todir="${deploy.directory}/components/t-filesBase64Decode/">
                                             <fileset dir="${plugins.directory}/t-filesBase64Decode/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesRenamer/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesRenamer/">
+                                            <fileset dir="${plugins.directory}/t-filesRenamer/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

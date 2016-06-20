@@ -1,8 +1,8 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dpu.test.TestEnvironment;
-import com.linkedpipes.etl.dpu.test.TestUtils;
+import com.linkedpipes.etl.component.test.TestEnvironment;
+import com.linkedpipes.etl.component.test.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.model.IRI;

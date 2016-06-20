@@ -1,30 +1,30 @@
 package com.linkedpipes.plugin.loader.scp;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = LoaderScpVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = LoaderScpVocabulary.CONFIG)
 public class LoaderScpConfiguration {
 
-    @RdfToPojo.Property(uri = LoaderScpVocabulary.USERNAME)
+    @RdfToPojo.Property(uri = LoaderScpVocabulary.HAS_USERNAME)
     private String userName;
 
-    @RdfToPojo.Property(uri = LoaderScpVocabulary.PASSWORD)
+    @RdfToPojo.Property(uri = LoaderScpVocabulary.HAS_PASSWORD)
     private String password;
 
-    @RdfToPojo.Property(uri = LoaderScpVocabulary.HOST)
+    @RdfToPojo.Property(uri = LoaderScpVocabulary.HAS_HOST)
     private String host;
 
-    @RdfToPojo.Property(uri = LoaderScpVocabulary.PORT)
+    @RdfToPojo.Property(uri = LoaderScpVocabulary.HAS_PORT)
     private int port;
 
-    @RdfToPojo.Property(uri = LoaderScpVocabulary.TARGET_DIRECTORY)
+    @RdfToPojo.Property(uri = LoaderScpVocabulary.HAS_TARGET_DIRECTORY)
     private String targetDirectory;
 
-    @RdfToPojo.Property(uri = LoaderScpVocabulary.CREATE_DIRECTORY)
+    @RdfToPojo.Property(uri = LoaderScpVocabulary.HAS_CREATE_DIRECTORY)
     private boolean createDirectory = false;
 
     public LoaderScpConfiguration() {

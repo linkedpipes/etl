@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.distributionMetadata;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,14 +18,14 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
  * @author Petr Škoda
  */
-public class DistributionMetadata implements SimpleExecution {
+public class DistributionMetadata implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributionMetadata.class);
 
@@ -43,8 +42,7 @@ public class DistributionMetadata implements SimpleExecution {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
         //
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //

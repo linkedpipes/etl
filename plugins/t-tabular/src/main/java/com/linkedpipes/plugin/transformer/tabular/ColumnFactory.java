@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabular.TabularConfiguration.Column;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -11,7 +10,8 @@ import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -30,8 +30,8 @@ class ColumnFactory {
      * @param configuration
      * @return
      */
-    public static List<ColumnAbstract> createColumnList(TabularConfiguration configuration)
-            throws NonRecoverableException {
+    public static List<ColumnAbstract> createColumnList(TabularConfiguration configuration, ExceptionFactory exceptionFactory)
+            throws LpException {
         final List<ColumnAbstract> result = new ArrayList<>(configuration.getTableSchema().getColumns().size());
         final TabularConfiguration.Schema schema = configuration.getTableSchema();
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -50,7 +50,7 @@ class ColumnFactory {
 
             final UrlTemplate predicate;
             if (column.getPropertyUrl() == null)  {
-                throw new Component.ExecutionFailed("Missing predicate for column: '" + column.getName() + "'");
+                throw exceptionFactory.failed("Missing predicate for column: '" + column.getName() + "'");
             } else {
                 predicate = new UrlTemplate(column.getPropertyUrl());
             }
@@ -70,7 +70,7 @@ class ColumnFactory {
                 result.add(new ColumnTyped(valueFactory.createIRI(column.getDatatype()), column.getLang(),
                         column.getName(), column.isRequired(), aboutUrl, predicate));
             } else {
-                throw new Component.ExecutionFailed("Invalid configuration for colum: " + column.getName());
+                throw exceptionFactory.failed("Invalid configuration for colum: " + column.getName());
             }
         }
         return result;
@@ -83,7 +83,7 @@ class ColumnFactory {
      * @param header Data header.
      * @return
      */
-    public static List<ColumnAbstract> createColumList(TabularConfiguration configuration, List<String> header) throws Component.ExecutionFailed {
+    public static List<ColumnAbstract> createColumList(TabularConfiguration configuration, List<String> header, ExceptionFactory exceptionFactory) throws LpException {
         final List<ColumnAbstract> result = new ArrayList<>(header.size());
         final TabularConfiguration.Schema schema = configuration.getTableSchema();
 
@@ -107,7 +107,7 @@ class ColumnFactory {
                     header.set(counter - 1, name);
                 } else {
                     LOG.info("Header: {}", header);
-                    throw new Component.ExecutionFailed(
+                    throw exceptionFactory.failed(
                             "Header must not contains null values.");
                 }
             }

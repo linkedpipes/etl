@@ -10,9 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.IOException;
 
 /**
@@ -79,12 +79,12 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         }
     }
 
-    private void merge(FilesDataUnitImpl source) throws DataUnitException {
+    private void merge(FilesDataUnitImpl source) {
         readRootDirectories.addAll(source.readRootDirectories);
     }
 
     @Override
-    public void initialize(File directory) throws DataUnitException {
+    public void initialize(File directory) throws LpException {
         final ObjectMapper mapper = new ObjectMapper();
         final File inputFile = new File(directory, "data.json");
         final JavaType type = mapper.getTypeFactory().constructCollectionType(
@@ -92,24 +92,28 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         try {
             readRootDirectories = mapper.readValue(inputFile, type);
         } catch (IOException ex) {
-            throw new DataUnitException("Can't load directory list.", ex);
+            throw ExceptionFactory.initializationFailed(
+                    "Can't load directory list.", ex);
         }
     }
 
     @Override
     public void initialize(Map<String, ManagableDataUnit> dataUnits)
-            throws DataUnitException {
-        initialized = true;
+            throws LpException {
+        if (rootDirectory == null) {
+            throw ExceptionFactory.initializationFailed(
+                    "Root directory is not set!");
+        }
         // Iterate over sources and add their content.
         for (String sourceUri : sources) {
             if (!dataUnits.containsKey(sourceUri)) {
-                throw new DataUnitException("Missing input!");
+                throw ExceptionFactory.initializationFailed("Missing input!");
             }
             final ManagableDataUnit dataunit = dataUnits.get(sourceUri);
             if (dataunit instanceof FilesDataUnitImpl) {
                 merge((FilesDataUnitImpl) dataunit);
             } else {
-                throw new DataUnitException(
+                throw ExceptionFactory.initializationFailed(
                         "Can't merge with source data unit!");
             }
         }
@@ -117,24 +121,25 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     }
 
     @Override
-    public void save(File directory) throws DataUnitException {
+    public void save(File directory) throws LpException {
         final ObjectMapper mapper = new ObjectMapper();
         final File outputFile = new File(directory, "data.json");
         // Load read directories.
         try {
             mapper.writeValue(outputFile, readRootDirectories);
         } catch (IOException ex) {
-            throw new DataUnitException("Can't save directory list.", ex);
+            throw ExceptionFactory.failure(
+                    "Can't save directory list.", ex);
         }
     }
 
     @Override
-    public List<File> dumpContent(File directory) throws DataUnitException {
+    public List<File> dumpContent(File directory) throws LpException {
         return readRootDirectories;
     }
 
     @Override
-    public void close() throws DataUnitException {
+    public void close() throws LpException {
         // No operation here.
     }
 
@@ -154,10 +159,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     }
 
     @Override
-    public Entry createFile(String fileName) throws SystemDataUnitException {
-        if (rootDirectory == null) {
-            throw new SystemDataUnitException("Root directory is not set!");
-        }
+    public FilesDataUnit.Entry createFile(String fileName) throws LpException {
         final File output = new File(rootDirectory, fileName);
         output.getParentFile().mkdirs();
         return new Entry(output, rootDirectory);
@@ -186,7 +188,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     public long size() {
         // TODO We should use better approeach here.
         long size = 0;
-        for (com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry item : this) {
+        for (FilesDataUnit.Entry item : this) {
             ++size;
         }
         return size;

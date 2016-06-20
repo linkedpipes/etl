@@ -2,19 +2,19 @@ package com.linkedpipes.plugin.transformer.unpackzip;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import java.io.File;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class UnpackZip implements SimpleExecution {
+public final class UnpackZip implements Component.Sequential {
 
     @Component.InputPort(id = "FilesInput")
     public FilesDataUnit input;
@@ -28,17 +28,17 @@ public final class UnpackZip implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
         progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
-            if (context.canceled()) {
-                throw new Component.ExecutionCancelled();
-            }
-            // ..
             final File outputDirectory;
             if (configuration.isUsePrefix()) {
-                outputDirectory = new File(output.getRootDirectory(), entry.getFileName());
+                outputDirectory = new File(output.getRootDirectory(),
+                        entry.getFileName());
             } else {
                 outputDirectory = output.getRootDirectory();
             }
@@ -57,15 +57,17 @@ public final class UnpackZip implements SimpleExecution {
      * @param targetDirectory
      * @throws DPUException
      */
-    private void unzip(File zipFile, File targetDirectory) throws Component.ExecutionFailed {
+    private void unzip(File zipFile, File targetDirectory) throws LpException {
         try {
             final ZipFile zip = new ZipFile(zipFile);
             if (zip.isEncrypted()) {
-                throw new Component.ExecutionFailed("File is encrypted: {}", zipFile.getName());
+                throw exceptionFactory.failed("File is encrypted: {}",
+                        zipFile.getName());
             }
             zip.extractAll(targetDirectory.toString());
         } catch (ZipException ex) {
-            throw new Component.ExecutionFailed("Extraction failed: {}", zipFile.getName(), ex);
+            throw exceptionFactory.failed("Extraction failed: {}",
+                    zipFile.getName(), ex);
         }
     }
 

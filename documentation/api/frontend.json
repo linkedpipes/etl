@@ -1,4 +1,3 @@
-
 {
     "swagger": "2.0",
     "info": {
@@ -233,8 +232,106 @@
                     }
                 }
             }
+        },
+        "/executions": {
+            "post": {
+                "description": "Create a new execution. The pipeline must be specified via query of body parametr.",
+                "parameters": [
+                    {
+                        "name": "pipeline",
+                        "in": "query",
+                        "description": "Pipeline IRI.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "input",
+                        "in": "formData",
+                        "description": "Input files. Can be used for more files, but swagger does not support that yet.",
+                        "required": false,
+                        "type": "file"
+                    },
+                    {
+                        "name": "pipeline",
+                        "in": "formData",
+                        "description": "Pipeline definition.",
+                        "required": false,
+                        "type": "file"
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "iri"
+                            ],
+                            "properties": {
+                                "iri": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "description": "List of all executions.",
+                "produces": [
+                    "application/ld+json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/executions/{id}": {
+            "get": {
+                "description": "Execution.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Execution ID.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/ld+json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete execution.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Execution ID.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/ld+json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         }
-    },
-    "definitions": {
     }
 }

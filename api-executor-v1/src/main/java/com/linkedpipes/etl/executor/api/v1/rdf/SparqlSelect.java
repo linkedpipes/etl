@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.rdf;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
-import java.util.Arrays;
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import java.util.List;
 import java.util.Map;
 
@@ -11,23 +10,15 @@ import java.util.Map;
  */
 public interface SparqlSelect {
 
-    public static class QueryException extends LocalizedException {
-
-        public QueryException(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedString(messages, "en")), args);
-        }
-
-    }
-
     /**
      * Evaluate given SPARQL select query and return result in uniform string
      * representation.
      *
      * @param query
      * @return
-     * @throws QueryException
+     * @throws com.linkedpipes.etl.executor.api.v1.RdfException
      */
     public List<Map<String, String>> executeSelect(String query)
-            throws QueryException;
+            throws RdfException;
 
 }

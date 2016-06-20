@@ -27,13 +27,13 @@
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-dpu-v1</artifactId>
+            <artifactId>api-component-v1</artifactId>
             <version>0.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-dpu-v1-impl</artifactId>
+            <artifactId>api-component-v1-impl</artifactId>
             <version>0.0.0</version>
             <scope>compile</scope>
         </dependency>

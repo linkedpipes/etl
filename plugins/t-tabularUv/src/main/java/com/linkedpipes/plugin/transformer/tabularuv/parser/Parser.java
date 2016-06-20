@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 
 /**
@@ -13,9 +13,9 @@ public interface Parser {
      * Parse given file.
      *
      * @param inFile
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      * @throws ParseFailed
      */
-    void parse(File inFile) throws NonRecoverableException, ParseFailed;
+    void parse(File inFile) throws LpException, ParseFailed;
 
 }

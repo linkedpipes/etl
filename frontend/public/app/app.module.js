@@ -76,15 +76,26 @@ define([
     app.bootstrap = function () {
         angular.bootstrap(document, ['angularApp']);
     };
-    // Root controller.
-    function controler($scope, $mdSidenav, $route, $location) {
+    // Service for index page, used to store variables.
+    app.service('indexPage', function () {
+        this.color = '#2196f3';
+        this.title = 'LinkedPipes ETL';
+    });
+    // Index controller.
+    app.controller('index.ctrl', function ($scope, $mdSidenav, $route,
+            $location, indexPage) {
 
         $scope.route = $route;
-        $scope.title = 'LinkedPipes ETL';
+        $scope.index = indexPage;
+
+        console.log('indexPage', indexPage);
 
         $scope.$on('$routeChangeSuccess', function (event, current, previous) {
             if (current.$$route && current.$$route.pageTitle) {
-                $scope.title = current.$$route.pageTitle;
+                $scope.index.title = current.$$route.pageTitle;
+                if (current.$$route.color !== undefined) {
+                    $scope.index.color = current.$$route.color;
+                }
             }
         });
 
@@ -107,9 +118,7 @@ define([
             $location.path('/executions').search({});
         };
 
-    }
+    });
     //
-    controler.$inject = ['$scope', '$mdSidenav', '$route', '$location'];
-    app.controller('index.ctrl', controler);
     return app;
 });

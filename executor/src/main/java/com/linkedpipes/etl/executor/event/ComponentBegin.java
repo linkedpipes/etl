@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.event;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 
 /**
  *
@@ -17,8 +16,8 @@ class ComponentBegin extends AbstractEvent
     }
 
     @Override
-    public void write(StatementWriter writer) {
-        super.write(writer);
+    public void serialize(Writer writer) {
+        super.serialize(writer);
         writer.addUri(iri, LINKEDPIPES.HAS_COMPONENT, componentIri);
     }
 

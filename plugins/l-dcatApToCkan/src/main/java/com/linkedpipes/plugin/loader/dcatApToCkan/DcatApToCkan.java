@@ -37,20 +37,19 @@ import org.openrdf.query.TupleQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit.RepositoryActionFailed;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.impl.DatasetImpl;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.openrdf.query.impl.SimpleDataset;
 
 /**
  *
  * @author Klímek Jakub
  */
-public final class DcatApToCkan implements SimpleExecution {
+public final class DcatApToCkan implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(DcatApToCkan.class);
 
@@ -63,8 +62,11 @@ public final class DcatApToCkan implements SimpleExecution {
     @Component.Configuration
     public DcatApToCkanConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
         // Load files.
         LOG.debug("Querying metadata");
 
@@ -471,12 +473,12 @@ public final class DcatApToCkan implements SimpleExecution {
                     } else if (response.getStatusLine().getStatusCode() == 409) {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Dataset already exists: " + ent);
-                        throw new ExecutionFailed("Dataset already exists");
+                        throw exceptionFactory.failed("Dataset already exists");
                         //ContextUtils.sendError(context, "Dataset already exists", "Dataset already exists: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw new ExecutionFailed("Error creating dataset");
+                        throw exceptionFactory.failed("Error creating dataset");
                         //ContextUtils.sendError(context, "Error creating dataset", "Response while creating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -490,7 +492,7 @@ public final class DcatApToCkan implements SimpleExecution {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw new ExecutionFailed("Error creating dataset");
+                            throw exceptionFactory.failed("Error creating dataset");
                             //ContextUtils.sendError(context, "Error creating dataset", e.getLocalizedMessage());
                         }
                     }
@@ -506,7 +508,7 @@ public final class DcatApToCkan implements SimpleExecution {
                 LOG.error(e.getLocalizedMessage(), e);
             }
 
-            if (!context.canceled() && configuration.isLoadToCKAN()) {
+            if (configuration.isLoadToCKAN()) {
                 LOG.debug("Posting to CKAN");
                 CloseableHttpClient client = HttpClients.createDefault();
                 HttpPost httpPost = new HttpPost(apiURI + "/package_update?id=" + datasetID);
@@ -525,7 +527,7 @@ public final class DcatApToCkan implements SimpleExecution {
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw new ExecutionFailed("Error updating dataset");
+                        throw exceptionFactory.failed("Error updating dataset");
                         //ContextUtils.sendError(context, "Error updating dataset", "Response while updating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -539,7 +541,7 @@ public final class DcatApToCkan implements SimpleExecution {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw new ExecutionFailed("Error updating dataset");
+                            throw exceptionFactory.failed("Error updating dataset");
 //		                	ContextUtils.sendError(context, "Error updating dataset", e.getLocalizedMessage());
                         }
                     }
@@ -550,10 +552,10 @@ public final class DcatApToCkan implements SimpleExecution {
         }
     }
 
-    private String executeSimpleSelectQuery(final String queryAsString, String bindingName) throws RepositoryActionFailed {
+    private String executeSimpleSelectQuery(final String queryAsString, String bindingName) throws LpException {
         return metadata.execute((connection) -> {
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
-            final DatasetImpl dataset = new DatasetImpl();
+            final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(metadata.getGraph());
             preparedQuery.setDataset(dataset);
             //
@@ -566,11 +568,11 @@ public final class DcatApToCkan implements SimpleExecution {
         });
     }
 
-    private List<Map<String, Value>> executeSelectQuery(final String queryAsString) throws RepositoryActionFailed {
+    private List<Map<String, Value>> executeSelectQuery(final String queryAsString) throws LpException {
         return metadata.execute((connection) -> {
             final List<Map<String, Value>> output = new LinkedList<>();
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
-            final DatasetImpl dataset = new DatasetImpl();
+            final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(metadata.getGraph());
             preparedQuery.setDataset(dataset);
             //

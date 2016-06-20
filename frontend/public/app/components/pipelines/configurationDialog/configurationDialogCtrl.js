@@ -15,9 +15,10 @@ define(['app/components/configuration/configurationHolderDirective'], function (
             };
             if ($scope.general.color) {
                 $scope.general.templateColor = false;
-                $scope.general.color = template['color'];
+                $scope.general.color = component['http://linkedpipes.com/ontology/color'];
             } else {
                 $scope.general.templateColor = true;
+                $scope.general.color = template['color'];
             }
         };
 

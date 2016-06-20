@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.sesame;
 
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import java.util.List;
 import java.util.Map;
 import org.openrdf.model.IRI;
@@ -7,8 +8,7 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
 import org.openrdf.repository.Repository;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException.LocalizedString;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,8 +57,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
         this.graph = graphIri;
     }
 
-    protected void merge(SingleGraphDataUnitImpl source)
-            throws ManagableDataUnit.DataUnitException {
+    protected void merge(SingleGraphDataUnitImpl source) throws LpException {
         try {
             execute((connection) -> {
                 final Update update = connection.prepareUpdate(
@@ -69,8 +68,9 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                 update.setDataset(dataset);
                 update.execute();
             });
-        } catch (RepositoryActionFailed ex) {
-            throw new DataUnitException("Can't merge data.", ex);
+        } catch (LpException ex) {
+            throw ExceptionFactory.wrap(ex, "Can't merge with: {}",
+                    source.getResourceIri());
         }
     }
 
@@ -80,7 +80,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
     }
 
     @Override
-    public void initialize(File directory) throws DataUnitException {
+    public void initialize(File directory) throws LpException {
         final File dataFile = new File(directory, "data.ttl");
         final RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE);
         //
@@ -95,31 +95,30 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                         = new FileInputStream(dataFile.getPath())) {
                     rdfParser.parse(fileStream, "http://localhost/base");
                 } catch (IOException ex) {
-                    throw new NonRecoverableException(Arrays.asList(
-                            new LocalizedString("Can't read file.", "en")), ex);
+                    throw ExceptionFactory.failure("Can't read file.", ex);
                 }
                 LOG.debug("initialize: commiting ...");
                 connection.commit();
             });
-        } catch (RepositoryActionFailed ex) {
-            throw new DataUnitException("Can't load data file.", ex);
+        } catch (LpException ex) {
+            throw ExceptionFactory.initializationFailed("Can't initialize.", ex);
         }
         LOG.debug("initialize: done");
     }
 
     @Override
     public void initialize(Map<String, ManagableDataUnit> dataUnits)
-            throws DataUnitException {
+            throws LpException {
         // Merge content of other data units.
         for (String sourceUri : sources) {
             if (!dataUnits.containsKey(sourceUri)) {
-                throw new DataUnitException("Missing input!");
+                throw ExceptionFactory.initializationFailed("Missing input!");
             }
             final ManagableDataUnit dataunit = dataUnits.get(sourceUri);
             if (dataunit instanceof SingleGraphDataUnitImpl) {
                 merge((SingleGraphDataUnitImpl) dataunit);
             } else {
-                throw new DataUnitException(
+                throw ExceptionFactory.initializationFailed(
                         "Can't merge with source data unit!");
             }
         }
@@ -127,43 +126,36 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
     }
 
     @Override
-    public void save(File directory) throws DataUnitException {
+    public void save(File directory) throws LpException {
         final File dataFile = new File(directory, "data.ttl");
-        try {
-            execute((connection) -> {
-                try (FileOutputStream outputStream
-                        = new FileOutputStream(dataFile)) {
-                    final RDFWriter writer
-                            = Rio.createWriter(RDFFormat.TURTLE, outputStream);
-                    connection.export(writer,
-                            Arrays.asList(graph).toArray(new IRI[0]));
-                } catch (IOException ex) {
-                    throw new NonRecoverableException(Arrays.asList(
-                            new LocalizedString(
-                                    "Can't write data to file.", "en")),
-                            ex);
-                }
-            });
-        } catch (SesameDataUnitException ex) {
-            throw new DataUnitException("Can't write debug data.", ex);
-        }
+        execute((connection) -> {
+            try (FileOutputStream outputStream
+                    = new FileOutputStream(dataFile)) {
+                final RDFWriter writer
+                        = Rio.createWriter(RDFFormat.TURTLE, outputStream);
+                connection.export(writer,
+                        Arrays.asList(graph).toArray(new IRI[0]));
+            } catch (IOException ex) {
+                throw ExceptionFactory.failure("Can't write data to file.", ex);
+            }
+        });
     }
 
     @Override
-    public List<File> dumpContent(File directory) throws DataUnitException {
+    public List<File> dumpContent(File directory) throws LpException {
         // TODO We could use the save output here as a debug.
         save(directory);
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public void close() throws DataUnitException {
+    public void close() throws LpException {
         // No operation here.
     }
 
     @Override
     public List<Map<String, String>> executeSelect(String query)
-            throws QueryException {
+            throws RdfException {
         try {
             return execute((connection) -> {
                 List<Map<String, String>> output = new LinkedList<>();
@@ -187,8 +179,8 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                 }
                 return output;
             });
-        } catch (RepositoryActionFailed ex) {
-            throw new QueryException("Can't query data.", ex);
+        } catch (LpException ex) {
+            throw ExceptionFactory.wrap(ex, "Can't query data.");
         }
     }
 

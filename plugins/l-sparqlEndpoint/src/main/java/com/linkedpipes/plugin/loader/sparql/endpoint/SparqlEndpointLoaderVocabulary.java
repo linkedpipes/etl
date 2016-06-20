@@ -4,11 +4,12 @@ package com.linkedpipes.plugin.loader.sparql.endpoint;
  *
  * @author Petr Škoda
  */
-class SparqlEndpointLoaderVocabulary {
+final class SparqlEndpointLoaderVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#";
+    private static final String PREFIX
+            = "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#";
 
-    public static final String CONFIG_CLASS = PREFIX + "Configuration";
+    public static final String CONFIG = PREFIX + "Configuration";
 
     public static final String HAS_ENDPOINT = PREFIX + "endpoint";
 

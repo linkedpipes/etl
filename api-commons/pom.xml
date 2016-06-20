@@ -11,7 +11,15 @@
     <name>lp-api-commons</name>
     <version>0.0.0</version>
     <packaging>bundle</packaging>
-    <description>Contains definition common API that shoudl be used by DPU and data unit API.</description>
+    <description>Contains definitions of exceptions.</description>
+
+    <dependencies>
+        <!-- Tests. -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

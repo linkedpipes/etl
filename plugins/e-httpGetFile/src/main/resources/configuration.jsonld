@@ -2,7 +2,7 @@
     "@graph": [
         {
             "@id": "http://localhost/resources/configuration",
-            "@type" : ["http://plugins.linkedpipes.com/ontology/e-httpGet#Configuration"]
+            "@type" : ["http://plugins.linkedpipes.com/ontology/e-httpGetFile#Configuration"]
         }
     ]
 }

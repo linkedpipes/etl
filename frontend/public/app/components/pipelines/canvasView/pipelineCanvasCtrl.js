@@ -39,9 +39,12 @@ define([
             pipelineService,
             executionModel,
             pipelineCanvas,
-            executionCanvas
+            executionCanvas,
+            indexPage
             // TODO Update names, check for factories and service.
             ) {
+
+        console.log('components.pipeline.canvas.view : ctrl');
 
         $scope.canvas = {};
 
@@ -53,7 +56,9 @@ define([
              * Type of visible tools.
              */
             'tools': {
+                // If true we are in edit mode else we are in executino mode.
                 'edit': false,
+                // True when execution is finished.
                 'execFinished': false
             }
         };
@@ -244,19 +249,34 @@ define([
                     });
         }
 
+        // Switch to edit mode.
         function editMode() {
             $scope.data.tools.edit = true;
-            $scope.data.tools.execFinished = false;
             //
             $scope.canvas.setInteractive(true);
             executionCanvas.setEnabled(false);
             $scope.pipelineEdit.setEnabled(true);
+            // Update color.
+            indexPage.color = '#2196F3';
+        }
+
+        function executionMode() {
+            $scope.data.tools.edit = false;
+            // For begginign we assume pipeline is running.
+            $scope.data.tools.execFinished = false;
+            //
+            $scope.canvas.setInteractive(false);
+            executionCanvas.setEnabled(true);
+            $scope.pipelineEdit.setEnabled(false);
+            // Update color.
+            indexPage.color = '#FF9800';
         }
 
         //
         var readyComponents = 0;
 
         $scope.pipelineEdit.onLink = function () {
+            console.log('components.pipeline.canvas.view : onLink');
             $scope.pipelineEdit.bind(
                     $scope.canvas,
                     pipelineCanvas);
@@ -286,6 +306,7 @@ define([
             if (readyComponents !== 2) {
                 return;
             }
+            console.log('components.pipeline.canvas.view : initialize');
             // Set mode based on the input.
             // TODO This should each component do on it own.
             if (data.execution.iri === undefined) {
@@ -293,12 +314,7 @@ define([
                 editMode();
             } else {
                 // Execution mode "running".
-                $scope.data.tools.edit = false;
-                $scope.data.tools.execFinished = false;
-                //
-                $scope.canvas.setInteractive(false);
-                executionCanvas.setEnabled(true);
-                $scope.pipelineEdit.setEnabled(false);
+                executionMode();
             }
 
             // TODO replace with promise.
@@ -574,7 +590,8 @@ define([
         'components.pipelines.services.model',
         'models.execution',
         'canvas.pipeline',
-        'canvas.execution'
+        'canvas.execution',
+        'indexPage'
     ];
 
     return function init(app) {

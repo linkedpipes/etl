@@ -1,15 +1,15 @@
 package com.linkedpipes.etl.plugin.transformer.filedecode;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-fileDecode#Configuration")
+@RdfToPojo.Type(uri = FileDecodeVocabulary.CONFIG)
 public class FileDecodeConfiguration {
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-fileDecode#skipOnError")
+    @RdfToPojo.Property(uri = FileDecodeVocabulary.HAS_SKIP_ERROR)
     private boolean skipOnError = false;
 
     public FileDecodeConfiguration() {

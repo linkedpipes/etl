@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGeneratorReplace;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfig;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserCsvConfig;

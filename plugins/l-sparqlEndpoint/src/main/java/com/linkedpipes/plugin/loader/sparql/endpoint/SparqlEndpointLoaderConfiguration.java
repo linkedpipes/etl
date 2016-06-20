@@ -1,12 +1,12 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = SparqlEndpointLoaderVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = SparqlEndpointLoaderVocabulary.CONFIG)
 public class SparqlEndpointLoaderConfiguration {
 
     @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_ENDPOINT)
