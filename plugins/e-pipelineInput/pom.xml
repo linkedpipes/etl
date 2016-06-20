@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-dpu</artifactId>
+        <artifactId>pom-component</artifactId>
         <version>0.0.0</version>
         <relativePath>../../pom-dpu/pom.xml</relativePath>
     </parent>
