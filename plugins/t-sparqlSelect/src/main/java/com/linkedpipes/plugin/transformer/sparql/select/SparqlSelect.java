@@ -44,6 +44,17 @@ public final class SparqlSelect implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
+        if (configuration.getFileName() == null
+                || configuration.getFileName().isEmpty()) {
+            throw exceptionFactory.invalidConfigurationProperty(
+                    SparqlSelectVocabulary.HAS_FILE_NAME, "");
+        }
+        if (configuration.getQuery()== null
+                || configuration.getQuery().isEmpty()) {
+            throw exceptionFactory.invalidConfigurationProperty(
+                    SparqlSelectVocabulary.HAS_QUERY, "");
+        }
+        //
         final IRI inputGraph = inputRdf.getGraph();
         final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
         LOG.info("{} -> {}", inputGraph, outputFile);
