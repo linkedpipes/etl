@@ -1,9 +1,8 @@
 package com.linkedpipes.plugin.extractor.dcatAp11DatasetMetadata;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.Component.Sequential;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,7 +22,7 @@ import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 
-public class DcatAp11DatasetMetadata implements SimpleExecution {
+public class DcatAp11DatasetMetadata implements Sequential {
 
     @Component.OutputPort(id = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
@@ -38,7 +37,7 @@ public class DcatAp11DatasetMetadata implements SimpleExecution {
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() {
 
         // Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
