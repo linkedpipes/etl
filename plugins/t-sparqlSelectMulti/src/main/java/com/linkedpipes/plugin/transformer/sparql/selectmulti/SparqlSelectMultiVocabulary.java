@@ -4,9 +4,9 @@ package com.linkedpipes.plugin.transformer.sparql.selectmulti;
  *
  * @author Škoda Petr
  */
-final class SparqlSelectVocabulary {
+final class SparqlSelectMultiVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlSelectMultiple#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -14,6 +14,6 @@ final class SparqlSelectVocabulary {
 
     public static final String HAS_FILE_NAME = PREFIX + "fileName";
 
-    private SparqlSelectVocabulary() {
+    private SparqlSelectMultiVocabulary() {
     }
 }
