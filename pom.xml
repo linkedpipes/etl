@@ -11,7 +11,7 @@
     <modules>
         <module>build-checkstyle</module>
         <module>pom-parent</module>
-        <module>pom-dpu</module>
+        <module>pom-component</module>
         <!-- API. -->
         <module>api-executor-v1</module>
         <module>api-commons</module>
