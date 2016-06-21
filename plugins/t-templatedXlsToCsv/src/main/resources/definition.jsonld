@@ -24,7 +24,7 @@
                 "http://linkedpipes.com/ontology/Port",
                 "http://linkedpipes.com/ontology/Input"
             ],
-            "http://linkedpipes.com/ontology/binding": "xls",
+            "http://linkedpipes.com/ontology/binding": "Xls",
             "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
         },
         {
@@ -35,7 +35,7 @@
                 "http://linkedpipes.com/ontology/Port",
                 "http://linkedpipes.com/ontology/Input"
             ],
-            "http://linkedpipes.com/ontology/binding": "template",
+            "http://linkedpipes.com/ontology/binding": "Templates",
             "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
         },
         {
@@ -46,7 +46,7 @@
                 "http://linkedpipes.com/ontology/Port",
                 "http://linkedpipes.com/ontology/Output"
             ],
-            "http://linkedpipes.com/ontology/binding": "output",
+            "http://linkedpipes.com/ontology/binding": "Output",
             "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
         }
     ]

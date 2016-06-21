@@ -30,13 +30,13 @@ public class XlsToCsv implements Component.Sequential {
 
     }
 
-    @Component.InputPort(id = "xls")
+    @Component.InputPort(id = "Xls")
     public FilesDataUnit inputXls;
 
-    @Component.InputPort(id = "template")
+    @Component.InputPort(id = "Templates")
     public FilesDataUnit inputTemplates;
 
-    @Component.OutputPort(id = "output")
+    @Component.OutputPort(id = "Output")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Inject
