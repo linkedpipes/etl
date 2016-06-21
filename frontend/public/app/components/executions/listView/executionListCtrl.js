@@ -106,7 +106,8 @@ define([
                 execution.duration = '';
             }
             //
-            if (execution.progress.current === undefined) {
+            if (execution.progress.current === undefined
+                    || execution.progress.total === 0) {
                 // Start with no progress.
                 execution.progress.value = 0;
             } else {
