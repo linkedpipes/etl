@@ -406,6 +406,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-templatedXlsToCsv</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-templatedXlsToCsv/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-textHolder</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-textHolder/</outputDirectory>
@@ -634,6 +640,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-tabularUv/"/>
                                         <copy todir="${deploy.directory}/components/t-tabularUv/">
                                             <fileset dir="${plugins.directory}/t-tabularUv/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-templatedXlsToCsv/"/>
+                                        <copy todir="${deploy.directory}/components/t-templatedXlsToCsv/">
+                                            <fileset dir="${plugins.directory}/t-templatedXlsToCsv/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
