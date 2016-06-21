@@ -202,6 +202,9 @@ define([
     };
 
     service.onPointerDoubleClick = function () {
+        if (!this.enabled) {
+            return;
+        }
         // We need the item to be selected.
         this.onEditComponent();
     };
