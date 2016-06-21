@@ -5,7 +5,7 @@ define([], function () {
             'prefix': ''
         };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-templatedxlstocsv#');
+        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#');
 
         $scope.setConfiguration = function (inConfig) {
             rdf.setData(inConfig);

@@ -2,8 +2,8 @@
     "@graph": [
         {
             "@id": "http://localhost/resources/configuration",
-            "@type" : ["http://plugins.linkedpipes.com/ontology/t-templatedxlstocsv#Configuration"],
-            "http://plugins.linkedpipes.com/ontology/t-xlstocsv#prefix": "SABLONA_"
+            "@type" : ["http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#Configuration"],
+            "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#prefix": "SABLONA_"
         }
     ]
 }

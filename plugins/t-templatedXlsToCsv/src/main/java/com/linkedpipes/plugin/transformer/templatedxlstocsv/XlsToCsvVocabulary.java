@@ -7,7 +7,7 @@ package com.linkedpipes.plugin.transformer.templatedxlstocsv;
 final class XlsToCsvVocabulary {
 
     private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-templatedxlstocsv#";
+            = "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#";
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
