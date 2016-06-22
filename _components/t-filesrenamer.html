@@ -1,0 +1,43 @@
+---
+short: t-filesrenamer
+type: transformer
+color: indigo
+title: Files renamer
+description: Renames files using a regular expression.
+---
+
+<p class="flow-text">
+Transformer, allows the user to rename files by using <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" title="Pattern documentation">Java regular expressions</a>.
+</p>
+<dl class="flow-text">
+    <dt>Full file name RegExp to match</dt>
+    <dd>Regular expression to match file names</dd>
+    <dt>Replace RegExp with with</dt>
+    <dd>Regular expression to replace the file names</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">Available</a></dd>            
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the input files and renames them according to the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" title="Pattern documentation">Java regular expressions</a>.
+        You can <a href="http://regexr.com/" title="RegExr">test your regular expressions here</a>.
+        </p>
+    </div>
+</div>

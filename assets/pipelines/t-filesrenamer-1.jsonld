@@ -1,0 +1,86 @@
+{
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775",
+          "@type": [
+            "http://linkedpipes.com/ontology/Pipeline"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "File renamer demo"
+        },
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/6a500161-6a29-484c-a7c2-1a1366c10f3f",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Files renamer",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/components/t-filesRenamer"
+          },
+          "http://linkedpipes.com/ontology/x": 440,
+          "http://linkedpipes.com/ontology/y": 200,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/6a500161-6a29-484c-a7c2-1a1366c10f3f/configuration"
+          }
+        },
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/917b98ac-7dc5-45fd-8a3d-5fc9ddcf5e61",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Text holder",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/components/e-textHolder"
+          },
+          "http://linkedpipes.com/ontology/x": 240,
+          "http://linkedpipes.com/ontology/y": 200,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/917b98ac-7dc5-45fd-8a3d-5fc9ddcf5e61/configuration"
+          }
+        },
+        {
+          "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/connection/76a98393-048e-4519-a2be-443f0310db1e",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/917b98ac-7dc5-45fd-8a3d-5fc9ddcf5e61"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "FilesOutput",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/6a500161-6a29-484c-a7c2-1a1366c10f3f"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputFiles"
+        }
+      ],
+      "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": "output.txt",
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#content": "Testing file"
+        }
+      ],
+      "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/917b98ac-7dc5-45fd-8a3d-5fc9ddcf5e61/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-filesRenamer#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-filesRenamer#pattern": "([^\\.]+)\\.(.*)",
+          "http://plugins.linkedpipes.com/ontology/t-filesRenamer#replaceWith": "$1\\.renamed\\.$2"
+        }
+      ],
+      "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1466595634775/components/6a500161-6a29-484c-a7c2-1a1366c10f3f/configuration"
+    }
+  ]
+}
