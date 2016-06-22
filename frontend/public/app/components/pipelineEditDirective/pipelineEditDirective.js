@@ -22,6 +22,7 @@ define([
             'onAddComponent': doNothing,
             'onImportPipeline': doNothing,
             'onMapping': doNothing,
+            'onEnableDisable': doNothing,
             /**
              * Return true if mapping function is available for
              * given component.
@@ -373,6 +374,12 @@ define([
 
     service.onCopyComponent = function () {
         this.pipelineCanvas.clone(this.componentMenu.view.model.id);
+    };
+
+    service.onEnableDisable = function() {
+        var component = this.pipelineCanvas.getResource(
+                this.componentMenu.view.model.id);
+        this.API.onEnableDisable(component);
     };
 
     service.onPrerequisiteComponent = function () {

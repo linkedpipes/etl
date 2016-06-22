@@ -325,6 +325,9 @@ define([
         if (color === undefined) {
             color = template.color;
         }
+        if (componentService.isDisabled(component)) {
+            color = '#f2f2f2';
+        }
         cell.attr('rect', {'fill': color});
         cell.trigger('change:size');
     };
@@ -920,7 +923,6 @@ define([
             var templateIri = comService.getTemplateIri(component);
             var template = this.templates.getTemplate(templateIri);
             this.updateComponent(cell, component, template, comService);
-
         }.bind(this));
 
     };
