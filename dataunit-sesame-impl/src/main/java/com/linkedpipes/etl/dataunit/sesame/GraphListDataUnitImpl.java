@@ -183,7 +183,8 @@ public final class GraphListDataUnitImpl extends SesameDataUnitImpl
                 merge((GraphListDataUnitImpl) dataunit);
             } else {
                 throw ExceptionFactory.initializationFailed(
-                        "Can't merge with source data unit!");
+                        "Can't merge with source data unit: {} of {}",
+                        sourceUri, dataunit.getClass().getSimpleName());
             }
         }
         initialized = true;

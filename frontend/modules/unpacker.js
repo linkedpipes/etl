@@ -235,7 +235,7 @@ var getIri = function (object) {
     } else if (value[0]['@id']) {
         return value[0]['@id'];
     } else {
-        return value['@id'];
+        return value;
     }
 };
 
@@ -274,6 +274,21 @@ var getString = function (object, property) {
     } else {
         return getString(value);
     }
+};
+
+var getBoolean = function (object, property) {
+
+    if (!object[property]) {
+        return;
+    }
+    var value = object[property];
+    if (typeof value['@value'] === 'undefined') {
+        // The value is storedin value.
+    } else {
+        value = value['@value'];
+    }
+
+    return !(value === 'false' || !value);
 };
 
 var iterateGraphs = function (data, callback) {
@@ -331,7 +346,7 @@ var iterateObjects = function (data, callback) {
  *
  * configuration
  *   .execute_to - Debug to IRI.
-  *   .mapping
+ *   .mapping
  *     .execution - URI of execution.
  *     .componets - Object with component to component mapping.
  *
@@ -344,13 +359,18 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
     var sequenceExecution = new SequenceExecution();
 
     sequenceExecution.data = {
-        'pipeline': {},
-        'metadata': {},
-        'templates': {},
-        'execution': {// Store execution realated data.
-            'components': {} // A mimicked set of component to execute.
-        },
-        'executions': {} // List of mentioned executions.
+        'pipeline': {}
+        , 'metadata': {}
+        , 'templates': {}
+        // Store execution realated data.
+        , 'execution': {
+            // A mimicked set of component to execute.
+            'components': {}
+        }
+        // List of mentioned executions.
+        , 'executions': {}
+        // List of disabled components IRI.
+        , 'disabled': {}
     };
 
     if (configuration === undefined) {
@@ -410,6 +430,23 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
         //
         next();
     }).add(function (data, next) {
+        // Build list of disabled componenents.
+        // This list is used when assigning execution type to componenets
+        // and when connecting data units, as we must not
+        // use data units of disabled component.
+        data.metadata.definition.graph['@graph'].forEach(function (resource) {
+            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') > -1) {
+                var disabled = getBoolean(resource,
+                        'http://linkedpipes.com/ontology/disabled');
+                if (disabled) {
+                    console.log(getIri(resource), '->', resource['@id']);
+                    data.disabled[getIri(resource)] = true;
+                }
+            }
+        });
+        console.log('disabled: ', data.disabled);
+        next();
+    }).add(function (data, next) {
         // Here we need to add sources to components based on the connections, for this we need
         // to build list of components's with their ports.
 
@@ -444,6 +481,12 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
                 if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Connection') > -1) {
                     var source = getReference(resource, 'http://linkedpipes.com/ontology/sourceComponent');
                     var target = getReference(resource, 'http://linkedpipes.com/ontology/targetComponent');
+                    // If a component is in data.disabled we will ignore
+                    // all connections related to such conneciton.
+                    if (data.disabled[source] ||  data.disabled[target]) {
+                        return;
+                    }
+                    //
                     var sourcePort = portsByOwnerAndBinding[source][
                             getString(resource, 'http://linkedpipes.com/ontology/sourceBinding')];
                     var targetPort = portsByOwnerAndBinding[target][
@@ -705,16 +748,22 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
                 // Do not execute.
                 component['http://linkedpipes.com/ontology/executionType'] =
                         'http://linkedpipes.com/resources/execution/type/skip';
+                continue;
+            }
+            if (mappedComponents[componentUri]) {
+                // Mapped component.
+                component['http://linkedpipes.com/ontology/executionType'] =
+                        'http://linkedpipes.com/resources/execution/type/mapped';
+                continue;
+            }
+            // Execute. But we still need to check if the component is
+            // disabled or not.
+            if (data.disabled[getIri(component)]) {
+                component['http://linkedpipes.com/ontology/executionType'] =
+                        'http://linkedpipes.com/resources/execution/type/skip';
             } else {
-                if (mappedComponents[componentUri]) {
-                    // Mapped component.
-                    component['http://linkedpipes.com/ontology/executionType'] =
-                            'http://linkedpipes.com/resources/execution/type/mapped';
-                } else {
-                    // Execute.
-                    component['http://linkedpipes.com/ontology/executionType'] =
-                            'http://linkedpipes.com/resources/execution/type/execute';
-                }
+                component['http://linkedpipes.com/ontology/executionType'] =
+                        'http://linkedpipes.com/resources/execution/type/execute';
             }
         }
         next();
@@ -732,7 +781,7 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
         // Construct resource with information about the execution.
         var id = pipelineResource['@id'] + '/executionInfo';
         var executionInfo = {
-            '@id' : id,
+            '@id': id,
             '@type': [
                 'http://linkedpipes.com/ontology/ExecutionMetadata'
             ]
@@ -759,7 +808,7 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
 
         // Add to the graph.
         pipelineResource['http://linkedpipes.com/ontology/executionMetadata'] = {
-            '@id' : id
+            '@id': id
         };
         data.metadata.definition.graph['@graph'].push(executionInfo);
 

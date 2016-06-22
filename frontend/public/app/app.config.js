@@ -68,7 +68,9 @@ define([], function () {
                 .icon('help_outline', 'libraries/google.design/ic_help_outline_24px.svg')
                 .icon('delete_forever', 'libraries/google.design/ic_delete_forever_24px.svg')
                 .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg')
-                .icon('ic_content_paste', 'libraries/google.design/ic_content_paste_24px.svg');
+                .icon('ic_content_paste', 'libraries/google.design/ic_content_paste_24px.svg')
+                .icon('ic_power_settings_new', 'libraries/google.design/ic_power_settings_new_24px.svg')
+                ;
 
         $mdThemingProvider.theme('default')
                 .primaryPalette('blue')

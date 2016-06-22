@@ -70,6 +70,24 @@ define([], function () {
             };
         };
 
+        service.component.setDisabled = function (component, disabled) {
+            if (disabled) {
+                component['http://linkedpipes.com/ontology/disabled'] = true;
+            } else {
+                delete component['http://linkedpipes.com/ontology/disabled'];
+            }
+        };
+
+        service.component.isDisabled = function (component) {
+            var disabled = jsonld.getBoolean(component,
+                    'http://linkedpipes.com/ontology/disabled');
+            if (disabled === undefined || disabled === false) {
+                return false;
+            } else {
+                return true;
+            }
+        };
+
         service.connection.getSource = function (connection) {
             return jsonld.getReference(connection,
                     'http://linkedpipes.com/ontology/sourceComponent');

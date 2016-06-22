@@ -89,19 +89,19 @@ public class RdfException extends LpException {
     }
 
     public static RdfException problemWithDataUnit(String binding) {
-        return new RdfException("Problem with data unit.");
+        return new RdfException("Problem with data unit: {}", binding);
     }
 
     public static RdfException problemWithDataUnit(String binding, Exception ex) {
-        return new RdfException("Problem with data unit.");
+        return new RdfException("Problem with data unit: {}", binding, ex);
     }
 
     public static RdfException initializationFailed(String message, Object... args) {
-        return new RdfException("Initialization failed.");
+        return new RdfException("Initialization failed: " + message, args);
     }
 
     public static RdfException shutdownFailed(String message, Object... args) {
-        return new RdfException("Can't save object.");
+        return new RdfException("Can't save object: " + message, args);
     }
 
 }

@@ -119,7 +119,8 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                 merge((SingleGraphDataUnitImpl) dataunit);
             } else {
                 throw ExceptionFactory.initializationFailed(
-                        "Can't merge with source data unit!");
+                        "Can't merge with source data unit: {} of {}",
+                        sourceUri, dataunit.getClass().getSimpleName());
             }
         }
         initialized = true;

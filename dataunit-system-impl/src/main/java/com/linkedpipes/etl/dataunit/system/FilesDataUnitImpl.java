@@ -107,14 +107,16 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         // Iterate over sources and add their content.
         for (String sourceUri : sources) {
             if (!dataUnits.containsKey(sourceUri)) {
-                throw ExceptionFactory.initializationFailed("Missing input!");
+                throw ExceptionFactory.initializationFailed(
+                        "Missing input: {}", sourceUri);
             }
             final ManagableDataUnit dataunit = dataUnits.get(sourceUri);
             if (dataunit instanceof FilesDataUnitImpl) {
                 merge((FilesDataUnitImpl) dataunit);
             } else {
                 throw ExceptionFactory.initializationFailed(
-                        "Can't merge with source data unit!");
+                        "Can't merge with source data unit: {} of {}",
+                        sourceUri, dataunit.getClass().getSimpleName());
             }
         }
         initialized = true;
