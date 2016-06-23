@@ -11,9 +11,16 @@ import java.util.Map;
  */
 class LoadLiteral extends LoaderToValue {
 
-    protected final PropertyDescriptor valueDescriptor;
+    private final PropertyDescriptor valueDescriptor;
 
-    protected final PropertyDescriptor languageDescriptor;
+    private final PropertyDescriptor languageDescriptor;
+
+    LoadLiteral(PropertyDescriptor valueDescriptor,
+            PropertyDescriptor languageDescriptor) {
+        super(null, null);
+        this.valueDescriptor = valueDescriptor;
+        this.languageDescriptor = languageDescriptor;
+    }
 
     LoadLiteral(PropertyDescriptor valueDescriptor,
             PropertyDescriptor languageDescriptor,
@@ -34,6 +41,13 @@ class LoadLiteral extends LoaderToValue {
             throw new CanNotDeserializeObject("Can't create object instance.",
                     ex);
         }
+        loadToObject(value, property);
+        //
+        set(object, value, property.get("value"));
+    }
+
+    protected void loadToObject(Object value, Map<String, String> property)
+            throws CanNotDeserializeObject {
         // Store values.
         if (valueDescriptor != null) {
             try {
@@ -53,8 +67,38 @@ class LoadLiteral extends LoaderToValue {
                         + field.getType().getName() + "'.", ex);
             }
         }
-        //
-        set(object, value, property.get("value"));
+    }
+
+    /**
+     * Load and return new literal object.
+     *
+     * @param type
+     * @param property
+     * @return
+     * @throws CanNotDeserializeObject
+     */
+    static Object loadNew(Class<?> type, Map<String, String> property)
+            throws CanNotDeserializeObject {
+        final LoadLiteral loader
+                = DescriptionFactory.createLiteralDescription(type);
+        // Create new instance.
+        final Object value;
+        try {
+            value = type.newInstance();
+        } catch (IllegalAccessException | InstantiationException ex) {
+            throw new CanNotDeserializeObject("Can't create object instance.",
+                    ex);
+        }
+        loader.loadToObject(value, property);
+        return value;
+    }
+
+    public void setProperty(PropertyDescriptor property) {
+        this.property = property;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
     }
 
 }

@@ -71,6 +71,9 @@ public class LoadObjectTest {
         @RdfToPojo.Property(uri = "http://localhost/ontology/list")
         private List<TestClassOne> list = new LinkedList<>();
 
+        @RdfToPojo.Property(uri = "http://localhost/ontology/listTwo")
+        private List<TestClassTwo> listTwo = new LinkedList<>();
+
         public TestClassOne getOne() {
             return one;
         }
@@ -93,6 +96,14 @@ public class LoadObjectTest {
 
         public void setList(List<TestClassOne> list) {
             this.list = list;
+        }
+
+        public List<TestClassTwo> getListTwo() {
+            return listTwo;
+        }
+
+        public void setListTwo(List<TestClassTwo> listTwo) {
+            this.listTwo = listTwo;
         }
 
     }
@@ -139,6 +150,12 @@ public class LoadObjectTest {
         data.add("http://localhost/three", "http://localhost/ontology/list",
                 vf.createIRI("http://localhost/item_1"));
 
+        data.add("http://localhost/three", "http://localhost/ontology/listTwo",
+                vf.createLiteral("anglictina", "en"));
+
+        data.add("http://localhost/three", "http://localhost/ontology/listTwo",
+                vf.createLiteral("cestina", "cs"));
+
         //
         final TestClassThree object = (TestClassThree) LoadObject.loadNew(
                 TestClassThree.class, "http://localhost/three", null, data);
@@ -152,6 +169,9 @@ public class LoadObjectTest {
 
         Assert.assertNotNull(object.list);
         Assert.assertEquals(2, object.list.size());
+
+        Assert.assertNotNull(object.listTwo);
+        Assert.assertEquals(2, object.listTwo.size());
     }
 
 }
