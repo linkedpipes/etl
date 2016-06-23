@@ -404,7 +404,14 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
             });
         }
     }).add(function (data, next, executor) {
-        // Parse pipeline.
+        // Parse pipeline - we need the pipeline be an object with @graph.
+        if (data.pipeline['@graph'] === undefined
+                && Array.isArray(data.pipeline)) {
+            // Graphs are stored directly as an array.
+            data.pipeline = {
+                '@graph' : data.pipeline
+            };
+        }
 
         // Search for the pipeline graph.
         data.metadata = prepareMetadata(data.pipeline);
