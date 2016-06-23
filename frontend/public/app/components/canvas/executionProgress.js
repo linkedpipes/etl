@@ -223,7 +223,7 @@ define([
         updateVisual(this.pipelineCanvas.getCell(iri), component,
                 this.execution, this.enabled);
         // Propagation.
-        var connections = this.pipelineModel.getConnections(
+        var connections = this.pipelineModel.getEdges(
                 this.pipelineCanvas.getPipeline());
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
@@ -246,7 +246,7 @@ define([
         updateVisual(this.pipelineCanvas.getCell(iri), component,
                 this.execution, this.enabled);
         // Propagation.
-        var connections = this.pipelineModel.getConnections(
+        var connections = this.pipelineModel.getEdges(
                 this.pipelineCanvas.getPipeline());
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
@@ -285,7 +285,7 @@ define([
                     this.execution, this.enabled);
         }
         // Propagation.
-        var connections = this.pipelineModel.getConnections(
+        var connections = this.pipelineModel.getEdges(
                 this.pipelineCanvas.getPipeline());
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
@@ -311,7 +311,7 @@ define([
             var component = this.execution.getComponents()[iri];
             if (component === undefined) {
                 // Can be a connection!
-                var connections = this.pipelineModel.getConnections(
+                var connections = this.pipelineModel.getEdges(
                         this.pipelineCanvas.getPipeline());
                 var conService = this.pipelineModel.connection;
                 // Disable mapping for all that use given
