@@ -27,4 +27,27 @@ public interface RdfToPojo {
 
     }
 
+    /**
+     * If used with class it indicates that the class represent a simple type,
+     * like typed value of string with language tag.
+     *
+     * If used in annotated class it marks the property in which the
+     * value should be loaded.
+     *
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.TYPE, ElementType.FIELD})
+    public @interface Value {
+
+    }
+
+    /**
+     * Can be used only inside class with {@link Value} annotation.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface Lang {
+
+    }
+
 }

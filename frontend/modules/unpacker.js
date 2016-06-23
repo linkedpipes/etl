@@ -386,12 +386,32 @@ gModule.unpack = function (pipelineObject, configuration, callback) {
         } else {
             // This require name resolution and fail without network connection!!
             gRequest(pipelineObject.iri, function (error, response, body) {
-                data.pipeline = JSON.parse(body);
-                next();
+                if (!error && response.statusCode === 200) {
+                    data.pipeline = JSON.parse(body);
+                    next();
+                } else {
+                    console.error('Request failed: ', pipelineObject.iri, error);
+                    console.log(response);
+                    callback(false, {
+                        'exception': {
+                            'errorMessage': error,
+                            'systemMessage': '',
+                            'userMessage': "Internal errro!",
+                            'errorCode': 'ERROR'
+                        }
+                    });
+                }
             });
         }
     }).add(function (data, next, executor) {
-        // Parse pipeline.
+        // Parse pipeline - we need the pipeline be an object with @graph.
+        if (data.pipeline['@graph'] === undefined
+                && Array.isArray(data.pipeline)) {
+            // Graphs are stored directly as an array.
+            data.pipeline = {
+                '@graph' : data.pipeline
+            };
+        }
 
         // Search for the pipeline graph.
         data.metadata = prepareMetadata(data.pipeline);
