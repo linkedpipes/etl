@@ -2,35 +2,6 @@
  * Directorive for a text label with support for multiple languages in
  * JSON-LD form.
  *
- * Dialog usage example:
- *
- *   $scope.dialog.content = rdf.getValue(resource, 'content');
- *
- *   rdf.setValue(resource, 'content', $scope.dialog.content);
- *
- * Java usage example:
- *
- *  @RdfToPojo.Type(uri = ")
- *  public class Configuration {
- *
- *   @RdfToPojo.Value
- *   public static class LocalizedString {
- *
- *     @RdfToPojo.Value
- *     private String value;
- *
- *     @RdfToPojo.Lang
- *     private String language;
- *
- *   }
- *
- *   @RdfToPojo.Property(uri = "http://www.w3.org/2004/02/skos/core#prefLabel")
- *   private List<LocalizedString> label = new LinkedList<>();
- *
- *  }
- *
- *  Appropriete getters and setters must be provided for all the properties.
- *
  */
 define([], function () {
 
