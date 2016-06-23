@@ -388,6 +388,20 @@ define([], function () {
                     }
                 };
 
+                service.getValue = function(resource, property) {
+                    property = service.prefix + property;
+                    return resource[property];
+                };
+
+                service.setValue = function(resource, property, value) {
+                    property = service.prefix + property;
+                    if (value === undefined) {
+                        delete resource[property];
+                    } else {
+                        resource[property]  = value;
+                    }
+                };
+
                 return service;
             }
         };
