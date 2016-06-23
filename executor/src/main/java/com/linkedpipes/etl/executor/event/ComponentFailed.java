@@ -52,7 +52,8 @@ class ComponentFailed extends AbstractEvent
                     rootCause.getClass().getSimpleName(), "en");
         } else {
             writer.addString(iri, LINKEDPIPES.EVENTS.HAS_ROOT_EXCEPTION_MESSAGE,
-                    rootCause.getMessage(), "en");
+                    rootCause.getClass().getSimpleName() + " : " +
+                            rootCause.getMessage(), "en");
         }
     }
 
