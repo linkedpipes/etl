@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.impl.rdf.RdfReader;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,7 +9,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.etl.component.api.impl.RdfReader.CanNotDeserializeObject;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
@@ -214,9 +214,9 @@ final class SimpleComponentImpl implements SequentialComponent {
                     RdfReader.addToObject(fieldValue, definition, graph,
                             uri);
                 }
-            } catch (CanNotDeserializeObject ex) {
-                throw RdfException.initializationFailed(
-                        "Can't load configuration from definition.", ex);
+            } catch (RdfException ex) {
+                throw RdfException.wrap(ex,
+                        "Can't load configuration from definition.");
             }
         }
         // Load runtime configuration.
@@ -224,9 +224,8 @@ final class SimpleComponentImpl implements SequentialComponent {
             if (runtimeConfig != null) {
                 RdfReader.addToObject(fieldValue, runtimeConfig, null);
             }
-        } catch (CanNotDeserializeObject ex) {
-            throw RdfException.initializationFailed(
-                    "Can't load runtime configuration.", ex);
+        } catch (RdfException ex) {
+            throw RdfException.wrap(ex, "Can't load runtime configuration.");
         }
         // Set value.
         try {

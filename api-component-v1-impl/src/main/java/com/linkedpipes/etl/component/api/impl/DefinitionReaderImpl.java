@@ -30,9 +30,7 @@ class DefinitionReaderImpl implements DefinitionReader {
 
     @Override
     public Collection<String> getProperty(String predicate) throws LpException {
-        final String query = "SELECT ?value FROM <" + graph
-                + "> WHERE { <" + componentIri
-                + "> <" + predicate + "> ?value }";
+        final String query = createQuery(graph, componentIri, predicate);
         //
         final List<Map<String, String>> queryResult;
         try {
@@ -48,6 +46,12 @@ class DefinitionReaderImpl implements DefinitionReader {
             }
         }
         return result;
+    }
+
+    private String createQuery(String graph, String resource, String predicate) {
+        return "SELECT ?value FROM <" + graph
+                + "> WHERE { <" + resource + "> <"
+                + predicate + "> ?value }";
     }
 
 }
