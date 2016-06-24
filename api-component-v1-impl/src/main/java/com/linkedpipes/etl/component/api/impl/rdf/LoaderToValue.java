@@ -12,12 +12,12 @@ abstract class LoaderToValue extends Loader {
     /**
      * Used to access getter and setter of field.
      */
-    protected final PropertyDescriptor property;
+    protected PropertyDescriptor property;
 
     /**
      * Field this descriptor describes.
      */
-    protected final Field field;
+    protected Field field;
 
     protected LoaderToValue(PropertyDescriptor property, Field field) {
         this.property = property;

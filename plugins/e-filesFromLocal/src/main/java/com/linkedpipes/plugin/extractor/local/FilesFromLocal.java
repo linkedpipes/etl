@@ -37,7 +37,12 @@ public class FilesFromLocal implements Component.Sequential {
         if (source.isDirectory()) {
             // Copy all files in a directory.
             final Path rootPath = source.toPath();
-            for (File file : source.listFiles()) {
+            final File [] files = source.listFiles();
+            if (files == null) {
+                throw exceptionFactory.failed("Method listFiles return null. "
+                        + "Please check privilages.");
+            }
+            for (File file : files) {
                 final Path relativePath = rootPath.relativize(file.toPath());
                 copy(file, relativePath.toString());
             }

@@ -50,12 +50,7 @@ class DescriptionFactory {
         final Map<String, List<Loader>> result = new HashMap<>();
 
         // List of all field.
-        final List<Field> fields = new ArrayList<>(12);
-        Class<?> currentClass = type;
-        do {
-            fields.addAll(Arrays.asList(currentClass.getDeclaredFields()));
-            currentClass = currentClass.getSuperclass();
-        } while (currentClass != null);
+        final List<Field> fields = listFields(type);
 
         // Check fields.
         for (Field field : fields) {
@@ -106,12 +101,34 @@ class DescriptionFactory {
         return result;
     }
 
+    /**
+     * List all fields in class and ancestors.
+     *
+     * @param type
+     * @return
+     */
+    private static List<Field> listFields(Class<?> type) {
+        // List of all field.
+        final List<Field> fields = new ArrayList<>(12);
+        Class<?> currentClass = type;
+        do {
+            fields.addAll(Arrays.asList(currentClass.getDeclaredFields()));
+            currentClass = currentClass.getSuperclass();
+        } while (currentClass != null);
+        return fields;
+    }
+
     private LoadLiteral createLiteralDescription(
             PropertyDescriptor targetDescriptor, Field targetField)
             throws Loader.CanNotDeserializeObject {
-        // Get object type.
-        final Class<?> type = targetField.getType();
+        final LoadLiteral descriptor = createLiteralDescription(targetField.getType());
+        descriptor.setField(targetField);
+        descriptor.setProperty(targetDescriptor);
+        return descriptor;
+    }
 
+    public static LoadLiteral createLiteralDescription(Class<?> type)
+            throws Loader.CanNotDeserializeObject {
         // Target properties.
         PropertyDescriptor valueDescriptor = null;
         PropertyDescriptor langDescriptor = null;
@@ -140,24 +157,7 @@ class DescriptionFactory {
             }
         }
 
-        return new LoadLiteral(valueDescriptor, langDescriptor,
-                targetDescriptor, targetField);
-    }
-
-    /**
-     * Return object type IRI from annotation or null if it is no specified.
-     *
-     * @param type
-     * @return
-     */
-    static String getObjectClassType(Class<?> type) {
-        final RdfToPojo.Type annotationType
-                = type.getAnnotation(RdfToPojo.Type.class);
-        if (annotationType == null) {
-            return null;
-        } else {
-            return annotationType.uri();
-        }
+        return new LoadLiteral(valueDescriptor, langDescriptor, null, null);
     }
 
     private static void append(Map<String, List<Loader>> data, String iri,

@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -41,12 +42,18 @@ class LoadCollection extends LoaderToValue {
                     + "' on class: '" + object.getClass().getCanonicalName()
                     + "'");
         }
-        // Load value.
+        // Load object - here we need to decide based on the
+        // object type.
         for (Class<?> type : types) {
-            Object value;
+            Object value = null;
             try {
-                value = LoadObject.loadNew(type, property.get("value"),
-                        graph, select);
+                if (type.getAnnotation(RdfToPojo.Type.class) != null) {
+                    value = LoadObject.loadNew(type, property.get("value"),
+                            graph, select);
+                }
+                if (type.getAnnotation(RdfToPojo.Value.class) != null) {
+                    value = LoadLiteral.loadNew(type, property);
+                }
             } catch (CanNotDeserializeObject ex) {
                 continue;
             }

@@ -369,6 +369,15 @@ define([], function () {
         };
 
         /**
+         * Return concatenation of getConnections and getRunAfter.
+         */
+        service.getEdges = function (model) {
+            var connections = service.getConnections(model);
+            var runAfter = service.getRunAfter(model);
+            return connections.concat(runAfter);
+        };
+
+        /**
          * Add given resource as it is to the pipeline model.
          *
          * @param model Pipeline model.
