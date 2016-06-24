@@ -170,7 +170,7 @@ class DescriptionFactory {
         loaders.add(newLoader);
     }
 
-    private static boolean isPrimitive(Class<?> fieldClass) {
+    static boolean isPrimitive(Class<?> fieldClass) {
         return fieldClass.isPrimitive() || WRAP_TYPES.contains(fieldClass);
     }
 
