@@ -8,12 +8,17 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Petr Škoda
  */
 class LoadCollection extends LoaderToValue {
+
+    private static final Logger LOG
+            = LoggerFactory.getLogger(LoadCollection.class);
 
     private final List<Class<?>> types;
 
@@ -50,9 +55,14 @@ class LoadCollection extends LoaderToValue {
                 if (type.getAnnotation(RdfToPojo.Type.class) != null) {
                     value = LoadObject.loadNew(type, property.get("value"),
                             graph, select);
-                }
-                if (type.getAnnotation(RdfToPojo.Value.class) != null) {
+                } else if (type.getAnnotation(RdfToPojo.Value.class) != null) {
                     value = LoadLiteral.loadNew(type, property);
+                } else if (DescriptionFactory.isPrimitive(type)) {
+                    // The type can be a primitive one.
+                    value = LoadPrimitive.loadPrimitive(type,
+                            property.get("value"));
+                } else {
+                    LOG.warn("Unknown type.");
                 }
             } catch (CanNotDeserializeObject ex) {
                 continue;

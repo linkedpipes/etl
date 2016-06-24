@@ -27,7 +27,7 @@ class LoadPrimitive extends LoaderToValue {
         set(object, value, property.get("value"));
     }
 
-    private static Object loadPrimitive(Class<?> clazz, String valueAsString)
+    static Object loadPrimitive(Class<?> clazz, String valueAsString)
             throws CanNotDeserializeObject {
         // TODO Add null check for all values.
         try {

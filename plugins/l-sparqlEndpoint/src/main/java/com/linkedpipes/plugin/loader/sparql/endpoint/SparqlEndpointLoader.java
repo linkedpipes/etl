@@ -30,6 +30,10 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
  */
 public class SparqlEndpointLoader implements Component.Sequential {
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(id = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit outputRdf;
 

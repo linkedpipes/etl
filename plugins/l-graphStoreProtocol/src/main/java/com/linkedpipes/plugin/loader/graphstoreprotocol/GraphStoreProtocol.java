@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
@@ -46,6 +47,10 @@ public class GraphStoreProtocol implements Component.Sequential {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(GraphStoreProtocol.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(id = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;

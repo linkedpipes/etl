@@ -108,6 +108,22 @@ public class LoadObjectTest {
 
     }
 
+    @RdfToPojo.Type(uri = "http://localhost/ontology/ClassFour")
+    public static class TestClassFour {
+
+        @RdfToPojo.Property(uri = "http://localhost/ontology/value")
+        private List<String> value = new LinkedList<>();
+
+        public List<String> getValue() {
+            return value;
+        }
+
+        public void setValue(List<String> value) {
+            this.value = value;
+        }
+
+    }
+
     @Test
     public void loadDescriptionTest() throws Loader.CanNotDeserializeObject {
         final RdfDataSource data = new RdfDataSource();
@@ -172,6 +188,30 @@ public class LoadObjectTest {
 
         Assert.assertNotNull(object.listTwo);
         Assert.assertEquals(2, object.listTwo.size());
+    }
+
+    @Test
+    public void loadLinkListTest() throws Loader.CanNotDeserializeObject {
+        final RdfDataSource data = new RdfDataSource();
+        final ValueFactory vf = SimpleValueFactory.getInstance();
+
+        //
+        data.add("http://localhost/four", RDF.TYPE,
+                vf.createIRI("http://localhost/ontology/ClassFour"));
+
+        data.add("http://localhost/four", "http://localhost/ontology/value",
+                vf.createIRI("http://localhost/resources/1"));
+
+        data.add("http://localhost/four", "http://localhost/ontology/value",
+                vf.createIRI("http://localhost/resources/2"));
+
+        //
+        final TestClassFour object = (TestClassFour) LoadObject.loadNew(
+                TestClassFour.class, "http://localhost/four", null, data);
+
+        Assert.assertNotNull(object.value);
+        Assert.assertEquals(2, object.value.size());
+
     }
 
 }
