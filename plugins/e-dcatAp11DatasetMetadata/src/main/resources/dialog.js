@@ -29,7 +29,7 @@ define([], function () {
 
             //Mandatory
             $scope.dialog.datasetIRI = rdf.getString(resource, 'datasetIRI');
-            $scope.dialog.titles = rdf.getValue(resource, 'title') ;
+            $scope.dialog.titles = rdf.getValue(resource, 'titles') ;
             $scope.dialog.descriptions = rdf.getValue(resource, 'descriptions') ;
             
             //Recommended
@@ -45,7 +45,8 @@ define([], function () {
             $scope.dialog.publisherTypeIRI = rdf.getString(resource, 'publisherTypeIRI') ;
             
             //Optional
-            $scope.dialog.languages = rdf.getValue(resource, 'languages') ;
+            if (rdf.getValue(resource, 'languages') == undefined) $scope.dialog.languages = [] ;
+            else $scope.dialog.languages = rdf.getValue(resource, 'languages') ;
             $scope.dialog.accrualPeriodicityIRI = rdf.getString(resource, 'accrualPeriodicityIRI') ;
             $scope.dialog.issued = rdf.getDate(resource, 'issued') ;
             $scope.dialog.modified = rdf.getDate(resource, 'modified') ;
@@ -54,6 +55,9 @@ define([], function () {
             $scope.dialog.temporalEnd = rdf.getDate(resource, 'temporalEnd') ;
             $scope.dialog.documentationIRIs = rdf.getValue(resource, 'documentationIRIs') ;
             $scope.dialog.accessRightsIRI = rdf.getString(resource, 'accessRightsIRI') ;
+            $scope.dialog.identifier = rdf.getString(resource, 'identifier') ;
+            $scope.dialog.datasetTypeIRI = rdf.getString(resource, 'datasetTypeIRI') ;
+            $scope.dialog.provenances = rdf.getValue(resource, 'provenances') ;
             
             //Relations
             $scope.dialog.sampleIRIs = rdf.getValue(resource, 'sampleIRIs') ;
@@ -74,7 +78,7 @@ define([], function () {
 
             //Mandatory
             rdf.setString(resource, 'datasetIRI', $scope.dialog.datasetIRI);
-            rdf.setValue(resource, 'title', $scope.dialog.titles);
+            rdf.setValue(resource, 'titles', $scope.dialog.titles);
             rdf.setValue(resource, 'descriptions', $scope.dialog.descriptions);
 
             //Recommended
@@ -100,7 +104,10 @@ define([], function () {
             rdf.setDate(resource, 'temporalEnd', $scope.dialog.temporalEnd);
             rdf.setValue(resource, 'documentationIRIs', $scope.dialog.documentationIRIs);
             rdf.setString(resource, 'accessRightsIRI', $scope.dialog.accessRightsIRI);
-
+            rdf.setString(resource, 'identifier', $scope.dialog.identifier);
+            rdf.setString(resource, 'datasetTypeIRI', $scope.dialog.datasetTypeIRI);
+            rdf.setValue(resource, 'provenances', $scope.dialog.provenances);
+            
             //Relations
             rdf.setValue(resource, 'sampleIRIs', $scope.dialog.sampleIRIs);
             rdf.setValue(resource, 'landingPageIRIs', $scope.dialog.landingPageIRIs);
@@ -16441,7 +16448,7 @@ define([], function () {
           return { value: chip, IRI: 'new' }
       };
       
-      $scope.selectedLanguages = [] ;
+      $scope.dialog.languages = [] ;
         
     }
     //

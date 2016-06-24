@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+
 import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -18,6 +20,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.FOAF;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryConnection;
@@ -37,7 +40,9 @@ public class DcatAp11DatasetMetadata implements Sequential {
 
     @Override
     public void execute() {
-
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     	IRI dataset = valueFactory.createIRI(configuration.getDatasetIRI());
 
     	//Mandatory
@@ -67,14 +72,59 @@ public class DcatAp11DatasetMetadata implements Sequential {
     	
     	//Optional
     	addIRIs(dataset, DCTERMS.LANGUAGE, configuration.getLanguages());
-    	addIRI(dataset, DCTERMS.ACCRUAL_PERIODICITY, configuration.getAccrualPeriodicityIRI());
-    	addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(configuration.getIssued()));
-    	addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(configuration.getModified()));
+    	for (String s : configuration.getLanguages()) addIRI(valueFactory.createIRI(s), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
+    	
+    	String periodicityIRI = configuration.getAccrualPeriodicityIRI(); 
+    	if (!isBlank(periodicityIRI)) {
+    		addIRI(dataset, DCTERMS.ACCRUAL_PERIODICITY, periodicityIRI);
+    		addIRI(valueFactory.createIRI(periodicityIRI), RDF.TYPE, DCTERMS.FREQUENCY);
+    	}
+    	
+    	addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
+    	addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
     	addIRIs(dataset, DCTERMS.SPATIAL, configuration.getSpatialIRIs());
+    	for (String s : configuration.getSpatialIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, DCTERMS.LOCATION);
+    	
     	if ((configuration.getTemporalStart() != null) || (configuration.getTemporalEnd() != null)) {
     		IRI temporal = valueFactory.createIRI(configuration.getDatasetIRI() + "/temporal");
-    		
+    		addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
+    		addValue(temporal, DcatAp11DatasetMetadataVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
+    		addValue(temporal, DcatAp11DatasetMetadataVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
     	}
+    	addIRIs(dataset, FOAF.PAGE, configuration.getDocumentationIRIs());
+    	for (String s : configuration.getDocumentationIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, FOAF.DOCUMENT);
+    	
+    	String accessRightsIRI = configuration.getAccessRightsIRI(); 
+    	if (!isBlank(accessRightsIRI)) {
+    		addIRI(dataset, DCTERMS.ACCESS_RIGHTS, accessRightsIRI);
+    		addIRI(valueFactory.createIRI(accessRightsIRI), RDF.TYPE, DCTERMS.RIGHTS_STATEMENT);
+    	}
+    	
+    	//should be 0..n - can be added
+    	addValue(dataset, DCTERMS.IDENTIFIER, configuration.getIdentifier());
+    	
+    	addIRI(dataset, DCTERMS.TYPE, configuration.getDatasetTypeIRI());
+    	
+    	//In DCAT-AP 1.1 spec this seems as an RDF Resource. However, see https://joinup.ec.europa.eu/node/150349/ 
+    	addLocalizedString(dataset, DCTERMS.PROVENANCE, configuration.getProvenance());
+    	
+    	//Maybe move somewhere else...? Like distributions
+    	addIRIs(dataset, DcatAp11DatasetMetadataVocabulary.ADMS_SAMPLE, configuration.getSampleIRIs());
+    	
+    	addIRIs(dataset, DcatAp11DatasetMetadataVocabulary.DCAT_LANDING_PAGE, configuration.getLandingPageIRIs());
+    	addIRIs(dataset, DCTERMS.RELATION, configuration.getRelatedIRIs());
+    	addIRIs(dataset, DCTERMS.CONFORMS_TO, configuration.getConfromsToIRIs());
+    	addIRIs(dataset, DCTERMS.SOURCE, configuration.getSourceIRIs());
+    	addIRIs(dataset, DCTERMS.HAS_VERSION, configuration.getHasVersionIRIs());
+    	addIRIs(dataset, DCTERMS.IS_VERSION_OF, configuration.getIsVersionOfIRIs());
+    	
+    	addValue(dataset, OWL.VERSIONINFO, configuration.getVersion());
+    	addLocalizedString(dataset, DcatAp11DatasetMetadataVocabulary.ADMS_VERSIONNOTES, configuration.getVersionNotes());
+    	
+        //TODO:
+//    	other Identifiers
+
+
     	
     	// Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {

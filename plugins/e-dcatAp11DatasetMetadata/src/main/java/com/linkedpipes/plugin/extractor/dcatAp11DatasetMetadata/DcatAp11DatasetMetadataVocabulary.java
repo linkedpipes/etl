@@ -42,6 +42,10 @@ class DcatAp11DatasetMetadataVocabulary {
 
     public static final IRI XSD_DATE;
     
+    public static final IRI ADMS_VERSIONNOTES;
+    
+    public static final IRI ADMS_SAMPLE;
+    
     static {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         DCAT_KEYWORD = valueFactory.createIRI(DCAT + "keyword");
@@ -55,6 +59,8 @@ class DcatAp11DatasetMetadataVocabulary {
         XSD_DATE = valueFactory.createIRI(XSD + "date");
         SCHEMA_ENDDATE = valueFactory.createIRI(SCHEMA + "endDate");
         SCHEMA_STARTDATE = valueFactory.createIRI(SCHEMA + "startDate");
+        ADMS_VERSIONNOTES = valueFactory.createIRI(ADMS + "versionNotes");
+        ADMS_SAMPLE = valueFactory.createIRI(ADMS + "sample");
         
     }
 

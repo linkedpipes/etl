@@ -50,10 +50,10 @@ public class DcatAp11DatasetMetadataConfig {
 	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "datasetIRI")
 	private String datasetIRI;
 
-	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "title")
+	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "titles")
 	private List<LocalizedString> titles = new LinkedList<>();
 	
-	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "description")
+	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "descriptions")
 	private List<LocalizedString> descriptions = new LinkedList<>();
 	
 	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "contactPointTypeIRI")
@@ -109,6 +109,15 @@ public class DcatAp11DatasetMetadataConfig {
 
 	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "accessRightsIRI")
 	private String accessRightsIRI;
+	
+	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "identifier")
+	private String identifier;
+
+	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "datasetTypeIRI")
+	private String datasetTypeIRI;
+	
+	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "provenances")
+	private List<LocalizedString> provenance = new LinkedList<>();
 
 	@RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "sampleIRIs")
 	private List<String> sampleIRIs = new LinkedList<>();
@@ -375,5 +384,29 @@ public class DcatAp11DatasetMetadataConfig {
 
 	public void setContactPointEmail(String contactPointEmail) {
 		this.contactPointEmail = contactPointEmail;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	public String getDatasetTypeIRI() {
+		return datasetTypeIRI;
+	}
+
+	public void setDatasetTypeIRI(String datasetTypeIRI) {
+		this.datasetTypeIRI = datasetTypeIRI;
+	}
+
+	public List<LocalizedString> getProvenance() {
+		return provenance;
+	}
+
+	public void setProvenance(List<LocalizedString> provenance) {
+		this.provenance = provenance;
 	}
 }
