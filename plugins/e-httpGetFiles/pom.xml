@@ -22,7 +22,7 @@
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-component-v1</artifactId>
         </dependency>
-                <dependency>
+        <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>dataunit-sesame</artifactId>
         </dependency>
