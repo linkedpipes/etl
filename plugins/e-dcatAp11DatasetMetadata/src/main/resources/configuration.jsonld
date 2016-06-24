@@ -2,7 +2,7 @@
     "@graph": [
         {
             "@id": "http://localhost/resources/configuration",
-            "@type" : ["http://plugins.linkedpipes.com/ontology/e-dataset11Metadata#Configuration"]
+            "@type" : ["http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/Configuration"]
         }
     ]
 }

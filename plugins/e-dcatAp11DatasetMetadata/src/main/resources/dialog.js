@@ -1,8 +1,8 @@
 define([], function () {
     function controller($scope, rdfService) {
-
+        $scope.dialog = {} ;
         
-        var rdf = rdfService.create('');
+        var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/');
 
         var listToString = function(string) {
             return string.join();
@@ -25,11 +25,95 @@ define([], function () {
 
         $scope.setConfiguration = function (inConfig) {
             rdf.setData(inConfig);
+            var resource = rdf.secureByType('Configuration');
 
+            //Mandatory
+            $scope.dialog.datasetIRI = rdf.getString(resource, 'datasetIRI');
+            $scope.dialog.titles = rdf.getValue(resource, 'title') ;
+            $scope.dialog.descriptions = rdf.getValue(resource, 'descriptions') ;
+            
+            //Recommended
+            $scope.dialog.contactPointTypeIRI = rdf.getString(resource, 'contactPointTypeIRI') ;
+            $scope.dialog.contactPointName = rdf.getString(resource, 'contactPointName') ;
+            $scope.dialog.contactPointEmail = rdf.getString(resource, 'contactPointEmail') ;
+            $scope.dialog.keywords = rdf.getValue(resource, 'keywords') ;
+            $scope.dialog.euThemeIRI = rdf.getString(resource, 'euThemeIRI') ;
+            $scope.dialog.otherThemeIRIs = rdf.getValue(resource, 'otherThemeIRIs') ;
+
+            $scope.dialog.publisherIRI = rdf.getString(resource, 'publisherIRI') ;
+            $scope.dialog.publisherNames = rdf.getValue(resource, 'publisherNames') ;
+            $scope.dialog.publisherTypeIRI = rdf.getString(resource, 'publisherTypeIRI') ;
+            
+            //Optional
+            $scope.dialog.languages = rdf.getValue(resource, 'languages') ;
+            $scope.dialog.accrualPeriodicityIRI = rdf.getString(resource, 'accrualPeriodicityIRI') ;
+            $scope.dialog.issued = rdf.getDate(resource, 'issued') ;
+            $scope.dialog.modified = rdf.getDate(resource, 'modified') ;
+            $scope.dialog.spatialIRIs = rdf.getValue(resource, 'spatialIRIs') ;
+            $scope.dialog.temporalStart = rdf.getDate(resource, 'temporalStart') ;
+            $scope.dialog.temporalEnd = rdf.getDate(resource, 'temporalEnd') ;
+            $scope.dialog.documentationIRIs = rdf.getValue(resource, 'documentationIRIs') ;
+            $scope.dialog.accessRightsIRI = rdf.getString(resource, 'accessRightsIRI') ;
+            
+            //Relations
+            $scope.dialog.sampleIRIs = rdf.getValue(resource, 'sampleIRIs') ;
+            $scope.dialog.landingPageIRIs = rdf.getValue(resource, 'landingPageIRIs') ;
+            $scope.dialog.relatedIRIs = rdf.getValue(resource, 'relatedIRIs') ;
+            $scope.dialog.confromsToIRIs = rdf.getValue(resource, 'confromsToIRIs') ;
+            $scope.dialog.sourceIRIs = rdf.getValue(resource, 'sourceIRIs') ;
+            $scope.dialog.hasVersionIRIs = rdf.getValue(resource, 'hasVersionIRIs') ;
+            $scope.dialog.isVersionOfIRIs = rdf.getValue(resource, 'isVersionOfIRIs') ;
+            
+            //Versions
+            $scope.dialog.version = rdf.getString(resource, 'version') ;
+            $scope.dialog.versionNotes = rdf.getValue(resource, 'versionNotes') ;
         };
 
         $scope.getConfiguration = function () {
- 
+         	var resource = rdf.secureByType('Configuration');
+
+            //Mandatory
+            rdf.setString(resource, 'datasetIRI', $scope.dialog.datasetIRI);
+            rdf.setValue(resource, 'title', $scope.dialog.titles);
+            rdf.setValue(resource, 'descriptions', $scope.dialog.descriptions);
+
+            //Recommended
+            rdf.setString(resource, 'contactPointTypeIRI', $scope.dialog.contactPointTypeIRI);
+            rdf.setString(resource, 'contactPointName', $scope.dialog.contactPointName);
+            rdf.setString(resource, 'contactPointEmail', $scope.dialog.contactPointEmail);
+
+            rdf.setValue(resource, 'keywords', $scope.dialog.keywords);
+            rdf.setString(resource, 'euThemeIRI', $scope.dialog.euThemeIRI);
+            rdf.setValue(resource, 'otherThemeIRIs', $scope.dialog.otherThemeIRIs);
+        
+            rdf.setString(resource, 'publisherIRI', $scope.dialog.publisherIRI);
+            rdf.setValue(resource, 'publisherNames', $scope.dialog.publisherNames);
+            rdf.setString(resource, 'publisherTypeIRI', $scope.dialog.publisherTypeIRI);
+            
+            //Optional
+            rdf.setValue(resource, 'languages', $scope.dialog.languages);
+            rdf.setString(resource, 'accrualPeriodicityIRI', $scope.dialog.accrualPeriodicityIRI);
+            rdf.setDate(resource, 'issued', $scope.dialog.issued);
+            rdf.setDate(resource, 'modified', $scope.dialog.modified);
+            rdf.setValue(resource, 'spatialIRIs', $scope.dialog.spatialIRIs);
+            rdf.setDate(resource, 'temporalStart', $scope.dialog.temporalStart);
+            rdf.setDate(resource, 'temporalEnd', $scope.dialog.temporalEnd);
+            rdf.setValue(resource, 'documentationIRIs', $scope.dialog.documentationIRIs);
+            rdf.setString(resource, 'accessRightsIRI', $scope.dialog.accessRightsIRI);
+
+            //Relations
+            rdf.setValue(resource, 'sampleIRIs', $scope.dialog.sampleIRIs);
+            rdf.setValue(resource, 'landingPageIRIs', $scope.dialog.landingPageIRIs);
+            rdf.setValue(resource, 'relatedIRIs', $scope.dialog.relatedIRIs);
+            rdf.setValue(resource, 'confromsToIRIs', $scope.dialog.confromsToIRIs);
+            rdf.setValue(resource, 'sourceIRIs', $scope.dialog.sourceIRIs);
+            rdf.setValue(resource, 'hasVersionIRIs', $scope.dialog.hasVersionIRIs);
+            rdf.setValue(resource, 'isVersionOfIRIs', $scope.dialog.isVersionOfIRIs);
+
+            //Versions
+            rdf.setString(resource, 'version', $scope.dialog.version);
+            rdf.setValue(resource, 'versionNotes', $scope.dialog.versionNotes);
+
             return rdf.getData();
         };
         

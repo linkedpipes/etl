@@ -14,6 +14,32 @@
         </div>
     </md-tab>
     <md-tab label="Recommended">
+        <md-subheader class="md-primary">Contact point</md-subheader>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Contact point type</label>
+            <md-select ng-model="dialog.contactPointTypeIRI">
+              <md-option value="http://www.w3.org/2006/vcard/ns#Individual" selected>
+                <span>Individual</span>
+              </md-option>
+              <md-option value="http://www.w3.org/2006/vcard/ns#Organization">
+                <span>Organization</span>
+              </md-option>
+              <md-option value="http://www.w3.org/2006/vcard/ns#Group">
+                <span>Group</span>
+              </md-option>
+              <md-option value="http://www.w3.org/2006/vcard/ns#Location">
+                <span>Location</span>
+              </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Contact name</label>
+            <input type="text" ng-model="dialog.contactPointName" placeholder="John Doe">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Contact email</label>
+            <input type="email" ng-model="dialog.contactPointEmail" placeholder="john@publisher.org">
+        </md-input-container>
         <md-subheader class="md-primary">Keywords and Themes</md-subheader>
         <lp-localized-text-input class="md-block" label-item="Keyword" ng-model="dialog.keywords" flex-gt-sm></lp-localized-text-input>
         <md-input-container class="md-block" flex-gt-sm>
@@ -42,7 +68,7 @@
         </md-input-container>
     </md-tab>
     <md-tab label="Optional">
-        <md-chips ng-model="selectedLanguages" md-transform-chip="transformChip($chip)" md-autocomplete-snap md-require-match="false">
+        <md-chips ng-model="dialog.languages" md-transform-chip="transformChip($chip)" md-autocomplete-snap md-require-match="false">
             <md-autocomplete placeholder="Search for language" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in langSearch(searchText)" md-item-text="item.value">
                 <span md-highlight-text="searchText">{{item.value}}</span>
             </md-autocomplete>
@@ -65,7 +91,7 @@
             <md-datepicker ng-model="dialog.issued" md-placeholder="Release date" flex-gt-sm></md-datepicker>    
             <md-datepicker ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>    
         </div>
-        <lp-iri-list label-top="Spatial coverage IRIs" label-item="Spatial coverage IRI" ng-model="dialog.sourceIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Spatial coverage IRIs" label-item="Spatial coverage IRI" ng-model="dialog.spatialIRIs"></lp-iri-list>
         <div layout-gt-sm="row">
             <md-datepicker ng-model="dialog.temporalStart" md-placeholder="Temp. cov. start" flex-gt-sm></md-datepicker>    
             <md-datepicker ng-model="dialog.temporalEnd" md-placeholder="Temp. cov. end" flex-gt-sm></md-datepicker>    
