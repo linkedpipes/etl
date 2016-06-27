@@ -46,6 +46,22 @@ public class DcatAp11DatasetMetadataConfig {
 
     }
 
+    @RdfToPojo.Type(uri = DcatAp11DatasetMetadataVocabulary.MY + "LanguageObject")
+    public static class Language {
+
+        @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "IRI")
+        private String iri;
+
+        public String getIri() {
+            return iri;
+        }
+
+        public void setIri(String iri) {
+            this.iri = iri;
+        }
+
+    }
+
     @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "datasetIRI")
     private String datasetIRI;
 
@@ -83,7 +99,7 @@ public class DcatAp11DatasetMetadataConfig {
     private String publisherTypeIRI;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "languages")
-	private List<String> languages = new LinkedList<>();
+    private List<Language> languages = new LinkedList<>();
 
     @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "accrualPeriodicityIRI")
     private String accrualPeriodicityIRI;
@@ -217,11 +233,11 @@ public class DcatAp11DatasetMetadataConfig {
         this.publisherTypeIRI = publisherTypeIRI;
     }
 
-	public List<String> getLanguages() {
+    public List<Language> getLanguages() {
         return languages;
     }
 
-	public void setLanguages(List<String> languages) {
+    public void setLanguages(List<Language> languages) {
         this.languages = languages;
     }
 

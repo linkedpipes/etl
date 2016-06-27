@@ -1,7 +1,7 @@
 define([], function () {
     function controller($scope, rdfService) {
         $scope.dialog = {} ;
-        
+
         var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/');
 
         var listToString = function(string) {
@@ -31,7 +31,7 @@ define([], function () {
             $scope.dialog.datasetIRI = rdf.getString(resource, 'datasetIRI');
             $scope.dialog.titles = rdf.getValue(resource, 'titles') ;
             $scope.dialog.descriptions = rdf.getValue(resource, 'descriptions') ;
-            
+
             //Recommended
             $scope.dialog.contactPointTypeIRI = rdf.getString(resource, 'contactPointTypeIRI') ;
             $scope.dialog.contactPointName = rdf.getString(resource, 'contactPointName') ;
@@ -43,10 +43,21 @@ define([], function () {
             $scope.dialog.publisherIRI = rdf.getString(resource, 'publisherIRI') ;
             $scope.dialog.publisherNames = rdf.getValue(resource, 'publisherNames') ;
             $scope.dialog.publisherTypeIRI = rdf.getString(resource, 'publisherTypeIRI') ;
-            
+
             //Optional
-            if (rdf.getValue(resource, 'languages') == undefined) $scope.dialog.languages = [] ;
-            else $scope.dialog.languages = rdf.getValue(resource, 'languages') ;
+            var languages = [];
+            var inputLanguages = rdf.getValue(resource, 'languages');
+            if (inputLanguages != undefined) {
+                for (var index in inputLanguages) {
+                    var item = inputLanguages[index];
+                    languages.push({
+                        'IRI' : item['@id'],
+                        'value' : item['http://www.w3.org/2004/02/skos/core#prefLabel']
+                    });
+                }
+            }
+            $scope.dialog.languages = languages;
+
             $scope.dialog.accrualPeriodicityIRI = rdf.getString(resource, 'accrualPeriodicityIRI') ;
             $scope.dialog.issued = rdf.getDate(resource, 'issued') ;
             $scope.dialog.modified = rdf.getDate(resource, 'modified') ;
@@ -58,7 +69,7 @@ define([], function () {
             $scope.dialog.identifier = rdf.getString(resource, 'identifier') ;
             $scope.dialog.datasetTypeIRI = rdf.getString(resource, 'datasetTypeIRI') ;
             $scope.dialog.provenances = rdf.getValue(resource, 'provenances') ;
-            
+
             //Relations
             $scope.dialog.sampleIRIs = rdf.getValue(resource, 'sampleIRIs') ;
             $scope.dialog.landingPageIRIs = rdf.getValue(resource, 'landingPageIRIs') ;
@@ -67,7 +78,7 @@ define([], function () {
             $scope.dialog.sourceIRIs = rdf.getValue(resource, 'sourceIRIs') ;
             $scope.dialog.hasVersionIRIs = rdf.getValue(resource, 'hasVersionIRIs') ;
             $scope.dialog.isVersionOfIRIs = rdf.getValue(resource, 'isVersionOfIRIs') ;
-            
+
             //Versions
             $scope.dialog.version = rdf.getString(resource, 'version') ;
             $scope.dialog.versionNotes = rdf.getValue(resource, 'versionNotes') ;
@@ -89,13 +100,24 @@ define([], function () {
             rdf.setValue(resource, 'keywords', $scope.dialog.keywords);
             rdf.setString(resource, 'euThemeIRI', $scope.dialog.euThemeIRI);
             rdf.setValue(resource, 'otherThemeIRIs', $scope.dialog.otherThemeIRIs);
-        
+
             rdf.setString(resource, 'publisherIRI', $scope.dialog.publisherIRI);
             rdf.setValue(resource, 'publisherNames', $scope.dialog.publisherNames);
             rdf.setString(resource, 'publisherTypeIRI', $scope.dialog.publisherTypeIRI);
-            
+
             //Optional
-            rdf.setValue(resource, 'languages', $scope.dialog.languages);
+            var languages = [];
+            for (var index in $scope.dialog.languages) {
+                var item = $scope.dialog.languages[index];
+                languages.push({
+                    '@id' : item['IRI'],
+                    '@types': ['http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/LanguageObject'],
+                    'http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/IRI' : item['IRI'],
+                    'http://www.w3.org/2004/02/skos/core#prefLabel' : item['value']
+                });
+            }
+            rdf.setValue(resource, 'languages', languages);
+
             rdf.setString(resource, 'accrualPeriodicityIRI', $scope.dialog.accrualPeriodicityIRI);
             rdf.setDate(resource, 'issued', $scope.dialog.issued);
             rdf.setDate(resource, 'modified', $scope.dialog.modified);
@@ -107,7 +129,7 @@ define([], function () {
             rdf.setString(resource, 'identifier', $scope.dialog.identifier);
             rdf.setString(resource, 'datasetTypeIRI', $scope.dialog.datasetTypeIRI);
             rdf.setValue(resource, 'provenances', $scope.dialog.provenances);
-            
+
             //Relations
             rdf.setValue(resource, 'sampleIRIs', $scope.dialog.sampleIRIs);
             rdf.setValue(resource, 'landingPageIRIs', $scope.dialog.landingPageIRIs);
@@ -123,8 +145,8 @@ define([], function () {
 
             return rdf.getData();
         };
-        
-        
+
+
         $scope.languages = [
             {"IRI":"http://publications.europa.eu/resource/authority/language/AAA","value":"ghotuo"},
             {"IRI":"http://publications.europa.eu/resource/authority/language/AAB","value":"alumu-tesu"},
@@ -11310,7 +11332,7 @@ define([], function () {
             {"IRI":"http://publications.europa.eu/resource/authority/language/ZZA","value":"zaza"},
             {"IRI":"http://publications.europa.eu/resource/authority/language/ZZJ","value":"zuojiang zhuang"}
             ];
-        
+
         $scope.publishertypes = [
             {
                 "IRI":"http://purl.org/adms/publishertype/Academia-ScientificOrganisation",
@@ -11357,7 +11379,7 @@ define([], function () {
                 "label":"Supra-national authority"
             }
         ];
-        
+
         $scope.frequencies = [
             {
               "@id": "http://publications.europa.eu/resource/authority/frequency/IRREG",
@@ -14872,7 +14894,7 @@ define([], function () {
               ]
             },
           ]
-        
+
         $scope.euThemes = [
             {
               "@id": "http://publications.europa.eu/resource/authority/data-theme/OP_DATPRO",
@@ -16426,7 +16448,7 @@ define([], function () {
               ]
             }
           ];
-     
+
        $scope.createLangFilter = function createFilterFor(query) {
           var lowercaseQuery = angular.lowercase(query);
           return function filterFn(language) {
@@ -16438,7 +16460,7 @@ define([], function () {
           var results = query ? $scope.languages.filter( $scope.createLangFilter(query) ) : $scope.languages;
             return results;
         };
-        
+
       $scope.transformChip = function(chip) {
           // If it is an object, it's already a known chip
           if (angular.isObject(chip)) {
@@ -16447,13 +16469,13 @@ define([], function () {
           // Otherwise, create a new one
           return { value: chip, IRI: 'new' }
       };
-      
+
       $scope.dialog.languages = [] ;
-        
+
     }
     //
-    
-    
+
+
     controller.$inject = ['$scope', 'services.rdf.0.0.0'];
     return controller;
 });

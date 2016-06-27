@@ -71,10 +71,12 @@ public class DcatAp11DatasetMetadata implements Sequential {
     	}
     	
     	//Optional
-    	addIRIs(dataset, DCTERMS.LANGUAGE, configuration.getLanguages());
-    	for (String s : configuration.getLanguages()) addIRI(valueFactory.createIRI(s), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
-    	
-    	String periodicityIRI = configuration.getAccrualPeriodicityIRI(); 
+    	for (DcatAp11DatasetMetadataConfig.Language l : configuration.getLanguages()) {
+            addIRI(dataset, DCTERMS.LANGUAGE, valueFactory.createIRI(l.getIri()));
+            addIRI(valueFactory.createIRI(l.getIri()), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
+        }
+
+    	String periodicityIRI = configuration.getAccrualPeriodicityIRI();
     	if (!isBlank(periodicityIRI)) {
     		addIRI(dataset, DCTERMS.ACCRUAL_PERIODICITY, periodicityIRI);
     		addIRI(valueFactory.createIRI(periodicityIRI), RDF.TYPE, DCTERMS.FREQUENCY);
