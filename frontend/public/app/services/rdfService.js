@@ -347,7 +347,17 @@ define([], function () {
                     if (typeof value === 'undefined' || value === null || value === '') {
                         delete resource[property];
                     } else {
-                        resource[property] = value;
+                        var valueAsString = value.getFullYear() + '-';
+                        if (value.getMonth() + 1 < 10) {
+                            valueAsString += '0';
+                        }
+                        // getMonth return 0 - 11
+                        valueAsString += (value.getMonth() + 1) + '-';
+                        if (value.getDate() < 10) {
+                            valueAsString += '0';
+                        }
+                        valueAsString += value.getDate();
+                        resource[property] = valueAsString;
                     }
                 };
 
