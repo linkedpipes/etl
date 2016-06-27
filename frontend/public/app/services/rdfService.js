@@ -254,7 +254,7 @@ define([], function () {
                  * @param resource
                  * @param property
                  * @param objects
-                 * @param addNew True if new objects should not be added.
+                 * @param addNew True if new objects should be added.
                  */
                 service.updateObjects = function (resource, property, objects, addNew) {
                     // Get IDs of existing objects.
@@ -398,17 +398,17 @@ define([], function () {
                     }
                 };
 
-                service.getValue = function(resource, property) {
+                service.getValue = function (resource, property) {
                     property = service.prefix + property;
                     return resource[property];
                 };
 
-                service.setValue = function(resource, property, value) {
+                service.setValue = function (resource, property, value) {
                     property = service.prefix + property;
                     if (value === undefined) {
                         delete resource[property];
                     } else {
-                        resource[property]  = value;
+                        resource[property] = value;
                     }
                 };
 
