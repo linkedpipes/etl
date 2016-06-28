@@ -45,6 +45,7 @@
         <module>t-sparqlSelectMulti</module>
         <module>t-filesRenamer</module>
         <module>t-templatedXlsToCsv</module>
+        <module>t-fileHasher</module>
     </modules>
 
 </project>
