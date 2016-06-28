@@ -3,17 +3,22 @@ package com.linkedpipes.etl.component.api.impl.rdf;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Petr Škoda
  */
 class LoadPrimitive extends LoaderToValue {
+
+    private static final Logger LOG
+            = LoggerFactory.getLogger(LoadPrimitive.class);
 
     LoadPrimitive(PropertyDescriptor property, Field field) {
         super(property, field);
@@ -48,13 +53,17 @@ class LoadPrimitive extends LoaderToValue {
             } else if (clazz == double.class || clazz == Double.class) {
                 return Double.parseDouble(valueAsString);
             } else if (clazz == Date.class) {
-                return Date.from(LocalDateTime.parse(valueAsString,
-                        DateTimeFormatter.ISO_DATE_TIME).
-                        atZone(ZoneId.systemDefault()).toInstant());
+                // We expect XSD date yyyy-MM-dd
+                final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                // We use GMT time zone as default, to have the same
+                // settings on different systems.
+                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                return dateFormat.parse(valueAsString);
             } else {
                 return null;
             }
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
+            LOG.info("Can't parse value: {}", valueAsString, ex);
             throw new CanNotDeserializeObject(
                     "Can't deserialize RDF value: '"
                     + valueAsString + "' into class '"
