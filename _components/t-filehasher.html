@@ -1,0 +1,52 @@
+---
+short: t-filehasher
+type: transformer
+color: indigo
+title: File hasher
+description: Computes SHA-1 hash of the input files
+---
+
+<p class="flow-text">
+Transformer, which computes <a href="https://en.wikipedia.org/wiki/SHA-1" title="SHA-1">SHA-1</a> hash for each input file.
+The hash can be verified e.g. by the <a href="http://onlinemd5.com/" title="Online MD5 calculator">online calculator</a>.
+</p>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes input files and for each one produces an SHA-1 hash.
+        </p>
+    </div>
+</div>
+<div class="row" id="sampleoutput">
+<h3 class="orange-text center">Output sample</h3>
+<p class="flow-text">Below you can see sample output for this component.
+</p>
+{% highlight turtle %}
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix spdx: <http://spdx.org/rdf/terms#> .
+@prefix fh: <http://plugins.linkedpipes.com/ontology/t-filehash#> .
+
+[] fh:fileName "test.txt" ; 
+   spdx:checksum [
+     a spdx:Checksum ;
+     spdx:algorithm spdx:checksumAlgorithm_sha1 ;
+     spdx:checksumValue "1234567890abcdef"^^xsd:hexBinary 
+   ] .
+{% endhighlight %}
+</div>
