@@ -248,6 +248,9 @@ order: 3
                     When a component is clicked in the pipeline, its controls show up.
                     The <i class="material-icons">autorenew</i> control invalidates the old and fresh components and all components following it in the execution order.
                     The <i class="material-icons">keyboard_tab</i> control runs the pipeline up to that component and then stops. 
+                    The <i class="material-icons">power_settings_new</i> control disables the component.
+                    A disabled component behaves as if it is not in the pipeline when a pipeline is executed.
+                    However, it keeps all the configuration and can be enabled again at any time.
                     This is useful for debugging queries and configurations of a single component.
                 </p>
             </div>
