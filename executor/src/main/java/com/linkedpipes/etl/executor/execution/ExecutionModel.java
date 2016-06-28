@@ -15,8 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,8 +102,6 @@ public final class ExecutionModel implements EventManager.EventListener {
 
         private String dataPath;
 
-        private List<String> debugPaths;
-
     };
 
     public static class DataUnit {
@@ -121,21 +117,10 @@ public final class ExecutionModel implements EventManager.EventListener {
 
         /**
          * Can be null if component is mapped. In such case the loadPath
-         * should be used as a save path.
+         * should be used as a dataPath and the data unit is not saved,
+         * ie. the existing data are reused.
          */
-        private File savePath;
-
-        /**
-         * Path where to store debug data.
-         */
-        private File debugPath;
-
-        /**
-         * List of used debugging directories as the data unit can save
-         * used multiple debug directories. Content of this values
-         * should be set
-         */
-        private Collection<File> debugPaths;
+        private File dataPath;
 
         /**
          * If true content of this data unit should be loaded not computed.
@@ -170,20 +155,12 @@ public final class ExecutionModel implements EventManager.EventListener {
             return loadPath;
         }
 
-        public File getSavePath() {
-            return savePath;
+        public File getDataPath() {
+            return dataPath;
         }
 
-        public File getDebugPath() {
-            return debugPath;
-        }
-
-        public Collection<File> getDebugPaths() {
-            return debugPaths;
-        }
-
-        public void setDebugPaths(Collection<File> debugPaths) {
-            this.debugPaths = debugPaths;
+        public void setDataPath(File dataPath) {
+            this.dataPath = dataPath;
         }
 
         public boolean isMapped() {
@@ -527,43 +504,28 @@ public final class ExecutionModel implements EventManager.EventListener {
                         vf.createIRI("http://etl.linkedpipes.com/ontology/binding"),
                         vf.createLiteral(dataUnit.binding), graph));
                 //
-                if (dataUnit.source == null || dataUnit.usedForExecution) {
-                    // Path suffix used to acess debug data.
+                if (dataUnit.mapped) {
+                    // Mapped data unit.
                     handler.handleStatement(vf.createStatement(dataUnitResource,
                             vf.createIRI("http://etl.linkedpipes.com/ontology/debug"),
                             vf.createLiteral(String.format("%03d", ++counter)),
                             graph));
                     handler.handleStatement(vf.createStatement(dataUnitResource,
                             vf.createIRI("http://etl.linkedpipes.com/ontology/dataPath"),
-                            vf.createLiteral(resources.relativize(dataUnit.savePath)),
-                            graph));
-                    for (File path : dataUnit.debugPaths) {
-                        handler.handleStatement(vf.createStatement(dataUnitResource,
-                                vf.createIRI("http://etl.linkedpipes.com/ontology/debugPath"),
-                                vf.createLiteral(resources.relativize(path)),
-                                graph));
-                    }
-                } else {
-                    // Store mapped data unit.
-                    handler.handleStatement(vf.createStatement(dataUnitResource,
-                            vf.createIRI("http://etl.linkedpipes.com/ontology/debug"),
-                            vf.createLiteral(String.format("%03d", ++counter)),
-                            graph));
-                    handler.handleStatement(vf.createStatement(dataUnitResource,
-                            vf.createIRI("http://etl.linkedpipes.com/ontology/dataPath"),
-                            vf.createLiteral(dataUnit.source.dataPath),
-                            graph));
-                    //
-                    for (String path : dataUnit.source.debugPaths) {
-                        handler.handleStatement(vf.createStatement(dataUnitResource,
-                                vf.createIRI("http://etl.linkedpipes.com/ontology/debugPath"),
-                                vf.createLiteral(path),
-                                graph));
-                    }
+                            vf.createLiteral(dataUnit.source.dataPath), graph));
                     handler.handleStatement(vf.createStatement(dataUnitResource,
                             vf.createIRI("http://etl.linkedpipes.com/ontology/execution"),
-                            vf.createIRI(dataUnit.source.execution),
+                            vf.createIRI(dataUnit.source.execution), graph));
+                } else {
+                    // Used data unit.
+                    handler.handleStatement(vf.createStatement(dataUnitResource,
+                            vf.createIRI("http://etl.linkedpipes.com/ontology/debug"),
+                            vf.createLiteral(String.format("%03d", ++counter)),
                             graph));
+                    final String path = resources.relativize(dataUnit.dataPath);
+                    handler.handleStatement(vf.createStatement(dataUnitResource,
+                            vf.createIRI("http://etl.linkedpipes.com/ontology/dataPath"),
+                            vf.createLiteral(path), graph));
                 }
             }
         }
@@ -603,39 +565,33 @@ public final class ExecutionModel implements EventManager.EventListener {
             //
             final PipelineModel.DataSource source = dataUnit.getDataSource();
             if (source != null) {
-                executionDataUnit.usedForExecution = isDataUnitUsed(pipeline,
-                        dataUnit.getIri());
+                // It's mapped - check if we need to load it.
+                executionDataUnit.mapped = true;
+                // Store reference to used source execution.
+                final DataUnitSource dataUnitSource = new DataUnitSource();
+                dataUnitSource.dataPath = source.getLoadPath();
+                dataUnitSource.execution = source.getExecution();
+                executionDataUnit.source = dataUnitSource;
+                //
+                executionDataUnit.usedForExecution
+                        = isDataUnitUsed(pipeline, dataUnit.getIri());
                 if (executionDataUnit.usedForExecution) {
                     // We just use load path from other execution.
                     executionDataUnit.loadPath = resources.resolveExecutionPath(
                             source.getExecution(), source.getLoadPath());
                     // The rest is as in non-mapped case.
-                    executionDataUnit.debugPath = resources.getWorkingDirectory(
-                            "debug");
-                    executionDataUnit.debugPaths = Collections.EMPTY_LIST;
-                    executionDataUnit.mapped = true;
-                    executionDataUnit.savePath
-                            = resources.getWorkingDirectory("save");
-
+                    executionDataUnit.dataPath = null;
                 } else {
-                    // We need to store paths to the other execution.
-                    final DataUnitSource dataUnitSource = new DataUnitSource();
-                    dataUnitSource.debugPaths = source.getDebugPaths();
-                    dataUnitSource.dataPath = source.getLoadPath();
-                    dataUnitSource.execution = source.getExecution();
                     //
-                    executionDataUnit.source = dataUnitSource;
-                    executionDataUnit.mapped = true;
+                    executionDataUnit.loadPath = null;
+                    executionDataUnit.dataPath = null;
                 }
             } else {
                 // Not mapped.
                 executionDataUnit.loadPath = null;
-                executionDataUnit.debugPath = resources.getWorkingDirectory(
-                        "debug");
-                executionDataUnit.debugPaths = Collections.EMPTY_LIST;
                 executionDataUnit.mapped = false;
-                executionDataUnit.savePath
-                        = resources.getWorkingDirectory("save");
+                executionDataUnit.dataPath
+                        = resources.getWorkingDirectory("data");
                 executionDataUnit.usedForExecution = true;
             }
             //
