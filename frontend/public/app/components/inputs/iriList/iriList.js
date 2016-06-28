@@ -35,7 +35,6 @@ define([], function () {
                     if ($.isArray(ngModel.$modelValue)) {
                         $scope.data = ngModel.$modelValue;
                     } else {
-                        console.log('Empty init');
                         $scope.data = [{'@id': ngModel.$modelValue}];
                     }
                 };
