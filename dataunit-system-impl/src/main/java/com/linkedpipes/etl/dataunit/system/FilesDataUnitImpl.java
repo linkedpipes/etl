@@ -14,6 +14,9 @@ import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.IOException;
+import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -61,7 +64,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     /**
      * Directories with content of this data unit.
      */
-    private List<File> readRootDirectories = new LinkedList<>();
+    private final List<File> readRootDirectories = new LinkedList<>();
 
     /**
      * List of source data units IRI.
@@ -88,12 +91,16 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         final ObjectMapper mapper = new ObjectMapper();
         final File inputFile = new File(directory, "data.json");
         final JavaType type = mapper.getTypeFactory().constructCollectionType(
-                List.class, File.class);
+                List.class, String.class);
+        final List<String> relativePaths;
         try {
-            readRootDirectories = mapper.readValue(inputFile, type);
+            relativePaths = mapper.readValue(inputFile, type);
         } catch (IOException ex) {
             throw ExceptionFactory.initializationFailed(
                     "Can't load directory list.", ex);
+        }
+        for (String path : relativePaths) {
+            readRootDirectories.add(new File(directory, path));
         }
     }
 
@@ -122,21 +129,29 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         initialized = true;
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(FilesDataUnitImpl.class);
+
     @Override
-    public void save(File directory) throws LpException {
+    public List<File> save(File directory) throws LpException {
+        // We store store paths to execution directories as relative paths
+        // to given directory.
         final ObjectMapper mapper = new ObjectMapper();
         final File outputFile = new File(directory, "data.json");
-        // Load read directories.
+        final List<String> relativeDirectories = new ArrayList<>(
+                readRootDirectories.size());
+        for (File file : readRootDirectories) {
+            relativeDirectories.add(directory.toPath().relativize(
+                    file.toPath()).toString());
+            LOG.info("\n{} -> {}", file, directory.toPath().relativize(
+                    file.toPath()));
+        }
         try {
-            mapper.writeValue(outputFile, readRootDirectories);
+            mapper.writeValue(outputFile, relativeDirectories);
         } catch (IOException ex) {
             throw ExceptionFactory.failure(
                     "Can't save directory list.", ex);
         }
-    }
-
-    @Override
-    public List<File> dumpContent(File directory) throws LpException {
+        // Return list of data directorie.
         return readRootDirectories;
     }
 

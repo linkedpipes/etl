@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.openrdf.IsolationLevels;
@@ -127,7 +126,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
     }
 
     @Override
-    public void save(File directory) throws LpException {
+    public List<File> save(File directory) throws LpException {
         final File dataFile = new File(directory, "data.ttl");
         execute((connection) -> {
             try (FileOutputStream outputStream
@@ -140,13 +139,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                 throw ExceptionFactory.failure("Can't write data to file.", ex);
             }
         });
-    }
-
-    @Override
-    public List<File> dumpContent(File directory) throws LpException {
-        // TODO We could use the save output here as a debug.
-        save(directory);
-        return Collections.EMPTY_LIST;
+        return Arrays.asList(directory);
     }
 
     @Override

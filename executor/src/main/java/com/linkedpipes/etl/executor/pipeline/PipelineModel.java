@@ -51,11 +51,6 @@ public class PipelineModel implements EntityLoader.Loadable {
         private String loadPath;
 
         /**
-         * Path to debug directory.
-         */
-        private final List<String> debugPaths = new LinkedList<>();
-
-        /**
          * IRI of execution from which load data.
          */
         private String execution;
@@ -69,10 +64,6 @@ public class PipelineModel implements EntityLoader.Loadable {
 
         public String getLoadPath() {
             return loadPath;
-        }
-
-        public List<String> getDebugPaths() {
-            return debugPaths;
         }
 
         public String getExecution() {
@@ -89,8 +80,6 @@ public class PipelineModel implements EntityLoader.Loadable {
                 case LINKEDPIPES.HAS_LOAD_PATH:
                     this.loadPath = object.stringValue();
                     break;
-                case LINKEDPIPES.HAS_DEBUG_PATH:
-                    this.debugPaths.add(object.stringValue());
                 case LINKEDPIPES.HAS_EXECUTION:
                     this.execution = object.stringValue();
                 default:

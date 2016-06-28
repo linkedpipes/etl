@@ -35,31 +35,20 @@ public interface ManagableDataUnit extends DataUnit {
      * Save content of data unit into a directory so it can be later loaded
      * by the {@link #initialize(java.io.File)}.
      *
+     * This method can be called multiple times.
+     *
+     * The method must return list of directories that contains data that
+     * can be shown to user as a content of this data unit. The returned
+     * paths must be in scope of the execution.
+     *
+     * If given directory contains the data that should be visible
+     * as a content of data unit than it should also be returned.
+     *
      * @param directory
+     * @return Optionally additional directories that contains data.
      * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public void save(File directory) throws LpException;
-
-    /**
-     * Called just once before close. This method should store any data or
-     * information. Output of this call should store the content in format
-     * ready for user browse interaction.
-     *
-     * The reason for separation of this functionality aside of
-     * {@link #close()} is to provide better exception handling and reporting.
-     *
-     * It's consider save to just link working directories of data units as
-     * they are not deleted if debug is used.
-     *
-     * The optionally returned additional directories must be working
-     * directories assigned by the core. Utilisation of any other directory
-     * is forbidden.
-     *
-     * @param directory Directory where to store debug dump.
-     * @return Optionally additional directories that contains debug data.
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
-     */
-    public List<File> dumpContent(File directory) throws LpException;
+    public List<File> save(File directory) throws LpException;
 
     /**
      * Close given data unit. After this call no other method is called.
