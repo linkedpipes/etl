@@ -430,6 +430,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-fileHasher</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-fileHasher/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesBase64Decode</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesBase64Decode/</outputDirectory>
@@ -664,6 +670,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-excelToCsv/"/>
                                         <copy todir="${deploy.directory}/components/t-excelToCsv/">
                                             <fileset dir="${plugins.directory}/t-excelToCsv/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-fileHasher/"/>
+                                        <copy todir="${deploy.directory}/components/t-fileHasher/">
+                                            <fileset dir="${plugins.directory}/t-fileHasher/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
