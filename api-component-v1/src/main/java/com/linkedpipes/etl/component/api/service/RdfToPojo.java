@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * For the {@link java.util.Date} the GMT time zone is used.
  *
  * @author Škoda Petr
  */
