@@ -13,6 +13,7 @@
         <module>t-filesFilter</module>
         <module>l-filesToScp</module>
         <module>e-datasetMetadata</module>
+        <module>e-dcatAp11Dataset</module>
         <module>e-distributionMetadata</module>
         <module>t-filesToRdf</module>
         <module>t-filesToStatements</module>
