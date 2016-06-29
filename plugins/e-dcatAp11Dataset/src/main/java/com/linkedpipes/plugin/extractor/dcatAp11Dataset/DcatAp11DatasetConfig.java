@@ -113,19 +113,19 @@ public class DcatAp11DatasetConfig {
     private String accrualPeriodicityIRI;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "issued")
-	private Date issued = new Date() ;
+	private Date issued ;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "modified")
-	private Date modified = new Date() ;
+	private Date modified ;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "spatialIRIs")
     private List<String> spatialIRIs = new LinkedList<>();
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "temporalStart")
-	private Date temporalStart = new Date() ;
+	private Date temporalStart ;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "temporalEnd")
-	private Date temporalEnd = new Date() ;
+	private Date temporalEnd ;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "documentationIRIs")
     private List<String> documentationIRIs = new LinkedList<>();

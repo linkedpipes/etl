@@ -78,16 +78,16 @@ public class DcatAp11Dataset implements Sequential {
     		addIRI(valueFactory.createIRI(periodicityIRI), RDF.TYPE, DCTERMS.FREQUENCY);
     	}
     	
-    	addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetVocabulary.XSD_DATE));
-    	addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
+    	if (configuration.getIssued() != null) addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetVocabulary.XSD_DATE));
+		if (configuration.getModified() != null) addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
     	addIRIs(dataset, DCTERMS.SPATIAL, configuration.getSpatialIRIs());
     	for (String s : configuration.getSpatialIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, DCTERMS.LOCATION);
     	
     	if ((configuration.getTemporalStart() != null) || (configuration.getTemporalEnd() != null)) {
     		IRI temporal = valueFactory.createIRI(configuration.getDatasetIRI() + "/temporal");
     		addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
-    		addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetVocabulary.XSD_DATE));
-    		addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetVocabulary.XSD_DATE));
+			if (configuration.getTemporalStart() != null) addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetVocabulary.XSD_DATE));
+			if (configuration.getTemporalEnd() != null) addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetVocabulary.XSD_DATE));
     	}
     	addIRIs(dataset, FOAF.PAGE, configuration.getDocumentationIRIs());
     	for (String s : configuration.getDocumentationIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, FOAF.DOCUMENT);
@@ -167,7 +167,7 @@ public class DcatAp11Dataset implements Sequential {
     	if (value != null) statements.add(valueFactory.createStatement(subject, predicate, value));
     }
     private void addValue(IRI subject, IRI predicate, String value) {
-    	if (value != null) statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(value)));
+    	if (!isBlank(value)) statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(value)));
     }
 
     private void addIRI(IRI subject, IRI predicate, String stringIRI) {
