@@ -322,6 +322,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-dcatAp11Dataset</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-dcatAp11Dataset/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-distributionMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-distributionMetadata/</outputDirectory>
@@ -556,6 +562,12 @@
                                         <mkdir dir="${deploy.directory}/components/l-sparqlEndpoint/"/>
                                         <copy todir="${deploy.directory}/components/l-sparqlEndpoint/">
                                             <fileset dir="${plugins.directory}/l-sparqlEndpoint/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-dcatAp11Dataset/"/>
+                                        <copy todir="${deploy.directory}/components/e-dcatAp11Dataset/">
+                                            <fileset dir="${plugins.directory}/e-dcatAp11Dataset/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
