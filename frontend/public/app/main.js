@@ -7,6 +7,7 @@ requirejs.config({
         'angular-route': 'libraries/angularjs/1.5.5/angular-route',
         'angular-resource': 'libraries/angularjs/1.5.5/angular-resource',
         'angular-messages': 'libraries/angularjs/1.5.5/angular-messages',
+        'angular-cookies': 'libraries/angularjs/1.5.5/angular-cookies',
         // Angular Material and dependencies.
         // https://github.com/angular/material/tree/v1.0.4
         // http://stackoverflow.com/questions/27567822/angular-material-with-requirejs
@@ -49,6 +50,9 @@ requirejs.config({
             deps: ['angular']
         },
         'angular-messages': {
+            deps: ['angular']
+        },
+        'angular-cookies': {
             deps: ['angular']
         },
         'angular-animate': {

@@ -4,7 +4,7 @@ define([], function () {
 
         $scope.url = '';
         $scope.text = '';
-        $scope.pipeline = undefined;
+        $scope.pipeline = '';
         $scope.pipelineLoaded = false;
         $scope.pipelineFilter = '';
 
@@ -67,7 +67,7 @@ define([], function () {
                 return true;
             }
             // Always show selected item.
-            if (item.selected === true) {
+            if (item.iri === $scope.pipeline) {
                 return true;
             }
             // Otherwise match text.
@@ -125,13 +125,13 @@ define([], function () {
                 });
             } else if ($scope.activeTab === 2) {
                 // Import from IRI on local machine.
-                if ($scope.pipeline === undefined) {
+                if ($scope.pipeline === undefined || $scope.pipeline === '') {
                     // Do nothing as no pipeline is selected.
                     statusService.getFailed({
                         'title': "No pipeline selected for import."
                     });
                 } else {
-                    loadFromIri($scope.pipeline.iri);
+                    loadFromIri($scope.pipeline);
                 }
             } else {
                 console.error('Invalid active tab: ', $scope.activeTab);
