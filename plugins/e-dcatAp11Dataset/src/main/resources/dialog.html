@@ -46,7 +46,7 @@
             <label>Dataset EU Theme</label>
             <md-select ng-model="dialog.euThemeIRI">
               <md-option ng-repeat="euTheme in euThemes" value="{{euTheme['@id']}}">
-                <span ng-repeat="label in euTheme['skos:prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                <span ng-repeat="label in euTheme['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
               </md-option>
             </md-select>
         </md-input-container>
@@ -83,7 +83,7 @@
             <label>Update frequency</label>
             <md-select ng-model="dialog.accrualPeriodicityIRI">
               <md-option ng-repeat="frequency in frequencies" value="{{frequency['@id']}}">
-                <span ng-repeat="label in frequency['skos:prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                <span ng-repeat="label in frequency['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
               </md-option>
             </md-select>
         </md-input-container>
@@ -101,45 +101,9 @@
             <!--  see http://publications.europa.eu/mdr/resource/authority/dataset-type/html/dataset-types-eng.html -->
             <label>Dataset type</label>
             <md-select ng-model="dialog.datasetTypeIRI">
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/CODE_LIST">
-                Code list
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/CORE_COMP">
-                Core component
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/DOMAIN_MODEL">
-                Domain model
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/DSCRP_SERV">
-                Service description
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/IEPD">
-                Information exchange package description
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/MAPPING">
-                Mapping
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/NAL">
-                Name authority list
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/ONTOLOGY">
-                Ontology
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/SCHEMA">
-                Schema
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL">
-                Statistical
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/SYNTAX_ECD_SCHEME">
-                Syntax encoding scheme
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/TAXONOMY">
-                Taxonomy
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/dataset-type/THESAURUS">
-                Thesaurus
-              </md-option>
+                <md-option ng-repeat="datasetType in datasetTypes" value="{{datasetType['@id']}}">
+                    <span ng-repeat="label in datasetType['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                </md-option>
             </md-select>
         </md-input-container>
 
@@ -153,15 +117,9 @@
         <md-input-container class="md-block" flex-gt-sm>
             <label>Access rights</label>
             <md-select ng-model="dialog.accessRightsIRI">
-              <md-option value="http://publications.europa.eu/resource/authority/access-rights/public">
-                Open data
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/access-rights/restricted">
-                Restricted
-              </md-option>
-              <md-option value="http://publications.europa.eu/resource/authority/access-rights/non-public">
-                Non-public
-              </md-option>
+                <md-option ng-repeat="accessRight in accessRights" value="{{accessRight['@id']}}">
+                    <span ng-repeat="label in accessRight['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                </md-option>
             </md-select>
         </md-input-container>
         <div class="row">
