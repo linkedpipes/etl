@@ -2,7 +2,7 @@ define([], function () {
     function controller($scope, rdfService) {
         $scope.dialog = {} ;
 
-        var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/');
+        var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/');
 
         var listToString = function(string) {
             return string.join();
@@ -111,7 +111,7 @@ define([], function () {
                 var item = $scope.dialog.languages[index];
                 languages.push({
                     '@id' : item['IRI'],
-                    '@types': ['http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/LanguageObject'],
+                    '@types': ['http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/LanguageObject'],
                     'http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/IRI' : item['IRI'],
                     'http://www.w3.org/2004/02/skos/core#prefLabel' : item['value']
                 });

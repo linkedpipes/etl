@@ -1,10 +1,10 @@
-package com.linkedpipes.plugin.extractor.dcatAp11DatasetMetadata;
+package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
-class DcatAp11DatasetMetadataVocabulary {
+class DcatAp11DatasetVocabulary {
 
     public static final String SCHEMA = "http://schema.org/";
 
@@ -18,7 +18,7 @@ class DcatAp11DatasetMetadataVocabulary {
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema#";
     
-    public static final String MY = "http://etl.linkedpipes.com/resource/components/e-dcatAp11DatasetMetadata/";
+    public static final String MY = "http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/";
 
     public static final IRI VCARD_VCARD_CLASS;
 

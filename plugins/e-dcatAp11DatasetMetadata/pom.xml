@@ -7,10 +7,10 @@
         <version>0.0.0</version>
     </parent>
     <groupId>com.linkedpipes</groupId>
-    <artifactId>e-dcatAp11DatasetMetadata</artifactId>
+    <artifactId>e-dcatAp11Dataset</artifactId>
     <version>0.0.0</version>
     <packaging>bundle</packaging>
-    <name>plugin e-dcatAp11DatasetMetadata</name>
+    <name>plugin e-dcatAp11Dataset</name>
 
     <dependencies>
         <dependency>

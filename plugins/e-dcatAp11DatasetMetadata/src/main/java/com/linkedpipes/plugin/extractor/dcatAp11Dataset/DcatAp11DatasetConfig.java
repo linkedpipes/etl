@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.extractor.dcatAp11DatasetMetadata;
+package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
-@RdfToPojo.Type(uri = DcatAp11DatasetMetadataVocabulary.MY + "Configuration")
-public class DcatAp11DatasetMetadataConfig {
+@RdfToPojo.Type(uri = DcatAp11DatasetVocabulary.MY + "Configuration")
+public class DcatAp11DatasetConfig {
 
     @RdfToPojo.Value
     public static class LocalizedString {
@@ -46,11 +46,19 @@ public class DcatAp11DatasetMetadataConfig {
 
     }
 
-    @RdfToPojo.Type(uri = DcatAp11DatasetMetadataVocabulary.MY + "LanguageObject")
+    @RdfToPojo.Type(uri = DcatAp11DatasetVocabulary.MY + "LanguageObject")
     public static class Language {
 
-        @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "IRI")
+        public Language(String iri) {
+			this.iri = iri;
+		}
+
+		@RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "IRI")
         private String iri;
+        
+        public Language() {
+        	iri = null;
+        }
 
         public String getIri() {
             return iri;
@@ -62,103 +70,103 @@ public class DcatAp11DatasetMetadataConfig {
 
     }
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "datasetIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "datasetIRI")
     private String datasetIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "titles")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "titles")
     private List<LocalizedString> titles = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "descriptions")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "descriptions")
     private List<LocalizedString> descriptions = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "contactPointTypeIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "contactPointTypeIRI")
     private String contactPointTypeIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "contactPointName")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "contactPointName")
     private String contactPointName;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "contactPointEmail")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "contactPointEmail")
     private String contactPointEmail;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "keywords")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "keywords")
     private List<LocalizedString> keywords = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "euThemeIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "euThemeIRI")
     private String euThemeIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "otherThemeIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "otherThemeIRIs")
     private List<String> otherThemeIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "publisherIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "publisherIRI")
     private String publisherIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "publisherNames")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "publisherNames")
     private List<LocalizedString> publisherNames = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "publisherTypeIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "publisherTypeIRI")
     private String publisherTypeIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "languages")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "languages")
     private List<Language> languages = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "accrualPeriodicityIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "accrualPeriodicityIRI")
     private String accrualPeriodicityIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "issued")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "issued")
 	private Date issued = new Date() ;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "modified")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "modified")
 	private Date modified = new Date() ;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "spatialIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "spatialIRIs")
     private List<String> spatialIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "temporalStart")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "temporalStart")
 	private Date temporalStart = new Date() ;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "temporalEnd")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "temporalEnd")
 	private Date temporalEnd = new Date() ;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "documentationIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "documentationIRIs")
     private List<String> documentationIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "accessRightsIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "accessRightsIRI")
     private String accessRightsIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "identifier")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "identifier")
     private String identifier;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "datasetTypeIRI")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "datasetTypeIRI")
     private String datasetTypeIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "provenances")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "provenances")
     private List<LocalizedString> provenance = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "sampleIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "sampleIRIs")
     private List<String> sampleIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "landingPageIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "landingPageIRIs")
     private List<String> landingPageIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "relatedIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "relatedIRIs")
     private List<String> relatedIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "confromsToIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "confromsToIRIs")
     private List<String> confromsToIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "sourceIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "sourceIRIs")
     private List<String> sourceIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "hasVersionIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "hasVersionIRIs")
     private List<String> hasVersionIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "isVersionOfIRIs")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "isVersionOfIRIs")
     private List<String> isVersionOfIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "version")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "version")
     private String version;
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetMetadataVocabulary.MY + "versionNotes")
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "versionNotes")
     private List<LocalizedString> versionNotes = new LinkedList<>();
 
     public String getDatasetIRI() {

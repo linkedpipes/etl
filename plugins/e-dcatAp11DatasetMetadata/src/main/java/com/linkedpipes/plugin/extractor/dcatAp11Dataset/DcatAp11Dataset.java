@@ -1,19 +1,16 @@
-package com.linkedpipes.plugin.extractor.dcatAp11DatasetMetadata;
+package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.plugin.extractor.dcatAp11DatasetMetadata.DcatAp11DatasetMetadataConfig.LocalizedString;
+import com.linkedpipes.plugin.extractor.dcatAp11Dataset.DcatAp11DatasetConfig.LocalizedString;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.Component.Sequential;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
 import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
@@ -22,17 +19,16 @@ import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.FOAF;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 
-public class DcatAp11DatasetMetadata implements Sequential {
+public class DcatAp11Dataset implements Sequential {
 
     @Component.OutputPort(id = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
-    public DcatAp11DatasetMetadataConfig configuration;
+    public DcatAp11DatasetConfig configuration;
 
     private final List<Statement> statements = new ArrayList<>();
 
@@ -46,7 +42,7 @@ public class DcatAp11DatasetMetadata implements Sequential {
     	IRI dataset = valueFactory.createIRI(configuration.getDatasetIRI());
 
     	//Mandatory
-    	addIRI(dataset, RDF.TYPE, DcatAp11DatasetMetadataVocabulary.DCAT_DATASET_CLASS);
+    	addIRI(dataset, RDF.TYPE, DcatAp11DatasetVocabulary.DCAT_DATASET_CLASS);
     	addLocalizedString(dataset, DCTERMS.TITLE, configuration.getTitles());
     	addLocalizedString(dataset, DCTERMS.DESCRIPTION, configuration.getDescriptions());
     	
@@ -54,14 +50,14 @@ public class DcatAp11DatasetMetadata implements Sequential {
     	if (!isBlank(configuration.getContactPointEmail()) || !isBlank(configuration.getContactPointName()))
     	{
     		IRI contactPoint = valueFactory.createIRI(configuration.getDatasetIRI() + "/contactPoint");
-    		addIRI(dataset, DcatAp11DatasetMetadataVocabulary.DCAT_CONTACT_POINT, contactPoint);
+    		addIRI(dataset, DcatAp11DatasetVocabulary.DCAT_CONTACT_POINT, contactPoint);
     		addIRI(contactPoint, RDF.TYPE, configuration.getContactPointTypeIRI());
-    		addValue(contactPoint, DcatAp11DatasetMetadataVocabulary.VCARD_FN, configuration.getContactPointName());
-    		addValue(contactPoint, DcatAp11DatasetMetadataVocabulary.VCARD_HAS_EMAIL, configuration.getContactPointEmail());
+    		addValue(contactPoint, DcatAp11DatasetVocabulary.VCARD_FN, configuration.getContactPointName());
+    		addValue(contactPoint, DcatAp11DatasetVocabulary.VCARD_HAS_EMAIL, configuration.getContactPointEmail());
     	}
-    	addLocalizedString(dataset, DcatAp11DatasetMetadataVocabulary.DCAT_KEYWORD, configuration.getKeywords());
-    	addIRI(dataset, DcatAp11DatasetMetadataVocabulary.DCAT_THEME, configuration.getEuThemeIRI());
-    	addIRIs(dataset, DcatAp11DatasetMetadataVocabulary.DCAT_THEME, configuration.getOtherThemeIRIs());
+    	addLocalizedString(dataset, DcatAp11DatasetVocabulary.DCAT_KEYWORD, configuration.getKeywords());
+    	addIRI(dataset, DcatAp11DatasetVocabulary.DCAT_THEME, configuration.getEuThemeIRI());
+    	addIRIs(dataset, DcatAp11DatasetVocabulary.DCAT_THEME, configuration.getOtherThemeIRIs());
     	if (!isBlank(configuration.getPublisherIRI())) {
     		IRI publisher = valueFactory.createIRI(configuration.getPublisherIRI());
     		addIRI(dataset, DCTERMS.PUBLISHER, publisher);
@@ -71,7 +67,7 @@ public class DcatAp11DatasetMetadata implements Sequential {
     	}
     	
     	//Optional
-    	for (DcatAp11DatasetMetadataConfig.Language l : configuration.getLanguages()) {
+    	for (DcatAp11DatasetConfig.Language l : configuration.getLanguages()) {
             addIRI(dataset, DCTERMS.LANGUAGE, valueFactory.createIRI(l.getIri()));
             addIRI(valueFactory.createIRI(l.getIri()), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
         }
@@ -82,16 +78,16 @@ public class DcatAp11DatasetMetadata implements Sequential {
     		addIRI(valueFactory.createIRI(periodicityIRI), RDF.TYPE, DCTERMS.FREQUENCY);
     	}
     	
-    	addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
-    	addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
+    	addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetVocabulary.XSD_DATE));
+    	addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
     	addIRIs(dataset, DCTERMS.SPATIAL, configuration.getSpatialIRIs());
     	for (String s : configuration.getSpatialIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, DCTERMS.LOCATION);
     	
     	if ((configuration.getTemporalStart() != null) || (configuration.getTemporalEnd() != null)) {
     		IRI temporal = valueFactory.createIRI(configuration.getDatasetIRI() + "/temporal");
     		addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
-    		addValue(temporal, DcatAp11DatasetMetadataVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
-    		addValue(temporal, DcatAp11DatasetMetadataVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetMetadataVocabulary.XSD_DATE));
+    		addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetVocabulary.XSD_DATE));
+    		addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetVocabulary.XSD_DATE));
     	}
     	addIRIs(dataset, FOAF.PAGE, configuration.getDocumentationIRIs());
     	for (String s : configuration.getDocumentationIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, FOAF.DOCUMENT);
@@ -111,9 +107,9 @@ public class DcatAp11DatasetMetadata implements Sequential {
     	addLocalizedString(dataset, DCTERMS.PROVENANCE, configuration.getProvenance());
     	
     	//Maybe move somewhere else...? Like distributions
-    	addIRIs(dataset, DcatAp11DatasetMetadataVocabulary.ADMS_SAMPLE, configuration.getSampleIRIs());
+    	addIRIs(dataset, DcatAp11DatasetVocabulary.ADMS_SAMPLE, configuration.getSampleIRIs());
     	
-    	addIRIs(dataset, DcatAp11DatasetMetadataVocabulary.DCAT_LANDING_PAGE, configuration.getLandingPageIRIs());
+    	addIRIs(dataset, DcatAp11DatasetVocabulary.DCAT_LANDING_PAGE, configuration.getLandingPageIRIs());
     	addIRIs(dataset, DCTERMS.RELATION, configuration.getRelatedIRIs());
     	addIRIs(dataset, DCTERMS.CONFORMS_TO, configuration.getConfromsToIRIs());
     	addIRIs(dataset, DCTERMS.SOURCE, configuration.getSourceIRIs());
@@ -121,7 +117,7 @@ public class DcatAp11DatasetMetadata implements Sequential {
     	addIRIs(dataset, DCTERMS.IS_VERSION_OF, configuration.getIsVersionOfIRIs());
     	
     	addValue(dataset, OWL.VERSIONINFO, configuration.getVersion());
-    	addLocalizedString(dataset, DcatAp11DatasetMetadataVocabulary.ADMS_VERSIONNOTES, configuration.getVersionNotes());
+    	addLocalizedString(dataset, DcatAp11DatasetVocabulary.ADMS_VERSIONNOTES, configuration.getVersionNotes());
     	
         //TODO:
 //    	other Identifiers
