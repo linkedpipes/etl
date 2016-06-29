@@ -4,7 +4,7 @@ import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
-class DcatAp11DatasetVocabulary {
+final class DcatAp11DatasetVocabulary {
 
     public static final String SCHEMA = "http://schema.org/";
 
@@ -17,7 +17,7 @@ class DcatAp11DatasetVocabulary {
     public static final String VCARD = "http://www.w3.org/2006/vcard/ns#";
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema#";
-    
+
     public static final String MY = "http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/";
 
     public static final IRI VCARD_VCARD_CLASS;
@@ -41,11 +41,11 @@ class DcatAp11DatasetVocabulary {
     public static final IRI DCAT_CONTACT_POINT;
 
     public static final IRI XSD_DATE;
-    
+
     public static final IRI ADMS_VERSIONNOTES;
-    
+
     public static final IRI ADMS_SAMPLE;
-    
+
     static {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         DCAT_KEYWORD = valueFactory.createIRI(DCAT + "keyword");
@@ -61,7 +61,9 @@ class DcatAp11DatasetVocabulary {
         SCHEMA_STARTDATE = valueFactory.createIRI(SCHEMA + "startDate");
         ADMS_VERSIONNOTES = valueFactory.createIRI(ADMS + "versionNotes");
         ADMS_SAMPLE = valueFactory.createIRI(ADMS + "sample");
-        
+    }
+
+    private DcatAp11DatasetVocabulary() {
     }
 
 }

@@ -36,17 +36,17 @@ public class DcatAp11Dataset implements Sequential {
 
     @Override
     public void execute() {
-    	
+
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     	IRI dataset = valueFactory.createIRI(configuration.getDatasetIRI());
 
-    	//Mandatory
+    	// Mandatory
     	addIRI(dataset, RDF.TYPE, DcatAp11DatasetVocabulary.DCAT_DATASET_CLASS);
     	addLocalizedString(dataset, DCTERMS.TITLE, configuration.getTitles());
     	addLocalizedString(dataset, DCTERMS.DESCRIPTION, configuration.getDescriptions());
-    	
-    	//Recommended
+
+    	// Recommended
     	if (!isBlank(configuration.getContactPointEmail()) || !isBlank(configuration.getContactPointName()))
     	{
     		IRI contactPoint = valueFactory.createIRI(configuration.getDatasetIRI() + "/contactPoint");
@@ -65,8 +65,8 @@ public class DcatAp11Dataset implements Sequential {
     		addLocalizedString(publisher, FOAF.NAME, configuration.getPublisherNames());
     		addIRI(publisher, DCTERMS.TYPE, configuration.getPublisherTypeIRI());
     	}
-    	
-    	//Optional
+
+    	// Optional
     	for (DcatAp11DatasetConfig.Language l : configuration.getLanguages()) {
             addIRI(dataset, DCTERMS.LANGUAGE, valueFactory.createIRI(l.getIri()));
             addIRI(valueFactory.createIRI(l.getIri()), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
@@ -77,53 +77,63 @@ public class DcatAp11Dataset implements Sequential {
     		addIRI(dataset, DCTERMS.ACCRUAL_PERIODICITY, periodicityIRI);
     		addIRI(valueFactory.createIRI(periodicityIRI), RDF.TYPE, DCTERMS.FREQUENCY);
     	}
-    	
-    	if (configuration.getIssued() != null) addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetVocabulary.XSD_DATE));
-		if (configuration.getModified() != null) addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
+
+    	if (configuration.getIssued() != null) {
+            addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetVocabulary.XSD_DATE));
+        }
+		if (configuration.getModified() != null) {
+            addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
+        }
     	addIRIs(dataset, DCTERMS.SPATIAL, configuration.getSpatialIRIs());
-    	for (String s : configuration.getSpatialIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, DCTERMS.LOCATION);
-    	
+    	for (String s : configuration.getSpatialIRIs()) {
+            addIRI(valueFactory.createIRI(s), RDF.TYPE, DCTERMS.LOCATION);
+        }
+
     	if ((configuration.getTemporalStart() != null) || (configuration.getTemporalEnd() != null)) {
     		IRI temporal = valueFactory.createIRI(configuration.getDatasetIRI() + "/temporal");
     		addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
-			if (configuration.getTemporalStart() != null) addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetVocabulary.XSD_DATE));
-			if (configuration.getTemporalEnd() != null) addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetVocabulary.XSD_DATE));
+			if (configuration.getTemporalStart() != null) {
+                addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetVocabulary.XSD_DATE));
+            }
+			if (configuration.getTemporalEnd() != null) {
+                addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetVocabulary.XSD_DATE));
+            }
     	}
     	addIRIs(dataset, FOAF.PAGE, configuration.getDocumentationIRIs());
-    	for (String s : configuration.getDocumentationIRIs()) addIRI(valueFactory.createIRI(s), RDF.TYPE, FOAF.DOCUMENT);
-    	
-    	String accessRightsIRI = configuration.getAccessRightsIRI(); 
+    	for (String s : configuration.getDocumentationIRIs()) {
+            addIRI(valueFactory.createIRI(s), RDF.TYPE, FOAF.DOCUMENT);
+        }
+
+    	String accessRightsIRI = configuration.getAccessRightsIRI();
     	if (!isBlank(accessRightsIRI)) {
     		addIRI(dataset, DCTERMS.ACCESS_RIGHTS, accessRightsIRI);
     		addIRI(valueFactory.createIRI(accessRightsIRI), RDF.TYPE, DCTERMS.RIGHTS_STATEMENT);
     	}
-    	
-    	//should be 0..n - can be added
+
+    	// should be 0..n - can be added
     	addValue(dataset, DCTERMS.IDENTIFIER, configuration.getIdentifier());
-    	
+
     	addIRI(dataset, DCTERMS.TYPE, configuration.getDatasetTypeIRI());
-    	
-    	//In DCAT-AP 1.1 spec this seems as an RDF Resource. However, see https://joinup.ec.europa.eu/node/150349/ 
+
+    	// In DCAT-AP 1.1 spec this seems as an RDF Resource. However, see https://joinup.ec.europa.eu/node/150349/
     	addLocalizedString(dataset, DCTERMS.PROVENANCE, configuration.getProvenance());
-    	
-    	//Maybe move somewhere else...? Like distributions
+
+    	// Maybe move somewhere else...? Like distributions
     	addIRIs(dataset, DcatAp11DatasetVocabulary.ADMS_SAMPLE, configuration.getSampleIRIs());
-    	
+
     	addIRIs(dataset, DcatAp11DatasetVocabulary.DCAT_LANDING_PAGE, configuration.getLandingPageIRIs());
     	addIRIs(dataset, DCTERMS.RELATION, configuration.getRelatedIRIs());
     	addIRIs(dataset, DCTERMS.CONFORMS_TO, configuration.getConfromsToIRIs());
     	addIRIs(dataset, DCTERMS.SOURCE, configuration.getSourceIRIs());
     	addIRIs(dataset, DCTERMS.HAS_VERSION, configuration.getHasVersionIRIs());
     	addIRIs(dataset, DCTERMS.IS_VERSION_OF, configuration.getIsVersionOfIRIs());
-    	
+
     	addValue(dataset, OWL.VERSIONINFO, configuration.getVersion());
     	addLocalizedString(dataset, DcatAp11DatasetVocabulary.ADMS_VERSIONNOTES, configuration.getVersionNotes());
-    	
-        //TODO:
-//    	other Identifiers
 
+        // TODO:
+    	// other Identifiers
 
-    	
     	// Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
             connection.add(statements, outputRdf.getGraph());
@@ -162,17 +172,24 @@ public class DcatAp11Dataset implements Sequential {
         	statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(s)));
         }
     }
-    
+
     private void addValue(IRI subject, IRI predicate, Value value) {
-    	if (value != null) statements.add(valueFactory.createStatement(subject, predicate, value));
+    	if (value != null) {
+            statements.add(valueFactory.createStatement(subject, predicate, value));
+        }
     }
     private void addValue(IRI subject, IRI predicate, String value) {
-    	if (!isBlank(value)) statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(value)));
+    	if (!isBlank(value)) {
+            statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(value)));
+        }
     }
 
     private void addIRI(IRI subject, IRI predicate, String stringIRI) {
-    	if (!isBlank(stringIRI)) statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(stringIRI)));
+    	if (!isBlank(stringIRI)) {
+            statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(stringIRI)));
+        }
     }
+    
     private void addIRI(IRI subject, IRI predicate, IRI object) {
     	statements.add(valueFactory.createStatement(subject, predicate, object));
     }

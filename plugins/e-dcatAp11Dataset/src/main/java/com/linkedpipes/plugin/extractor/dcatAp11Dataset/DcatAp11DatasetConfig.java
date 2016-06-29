@@ -50,14 +50,14 @@ public class DcatAp11DatasetConfig {
     public static class Language {
 
         public Language(String iri) {
-			this.iri = iri;
-		}
+            this.iri = iri;
+        }
 
-		@RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "IRI")
+        @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "IRI")
         private String iri;
-        
+
         public Language() {
-        	iri = null;
+            iri = null;
         }
 
         public String getIri() {
@@ -113,19 +113,19 @@ public class DcatAp11DatasetConfig {
     private String accrualPeriodicityIRI;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "issued")
-	private Date issued ;
+    private Date issued;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "modified")
-	private Date modified ;
+    private Date modified;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "spatialIRIs")
     private List<String> spatialIRIs = new LinkedList<>();
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "temporalStart")
-	private Date temporalStart ;
+    private Date temporalStart;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "temporalEnd")
-	private Date temporalEnd ;
+    private Date temporalEnd;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "documentationIRIs")
     private List<String> documentationIRIs = new LinkedList<>();
