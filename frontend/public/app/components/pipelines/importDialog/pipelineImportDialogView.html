@@ -34,14 +34,11 @@
                             <img src="app/components/pipelines/listView/assets/img/loading.gif" class="center-block" title="Loading..."
                                  style="padding-top: 1em"/>
                         </div>
-                        <md-list ng-show="repository.loaded">
-                            <md-list-item ng-repeat="item in repository.data| filter:filterPipelines" class="md-1-line" >
-                                <md-checkbox ng-model="item.selected" ng-change="onPipelineChange(item)" aria-label="select"></md-checkbox>
-                                <div class="md-list-item-text">
-                                    <div class="lp-font-list-label">{{::item.label}}</div>
-                                </div>
-                            </md-list-item>
-                        </md-list>
+                        <md-radio-group ng-model="pipeline" ng-show="repository.loaded">
+                            <md-radio-button ng-repeat="item in repository.data| filter:filterPipelines" ng-value="item.iri">
+                                {{::item.label}}
+                            </md-radio-button>
+                        </md-radio-group>
                     </md-tab>
                 </md-tabs>
                 <div ng-show="importing">
@@ -52,10 +49,10 @@
         </md-dialog-content>
         <md-dialog-actions layout="row">
             <span flex></span>
-            <md-button ng-click="onCancel()">
+            <md-button ng-click="onCancel()" class="md-raised">
                 Don't import anything
             </md-button>
-            <md-button ng-click="onImport()" ng-disabled="loading">
+            <md-button ng-click="onImport()" ng-disabled="loading" class="md-raised md-primary">
                 Import pipeline
             </md-button>
         </md-dialog-actions>
