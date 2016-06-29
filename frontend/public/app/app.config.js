@@ -1,6 +1,13 @@
 define([], function () {
     function config($routeProvider, $mdIconProvider, $mdThemingProvider) {
         $routeProvider
+                .when('/personalization', {
+                    'templateUrl': 'app/components/personalizationView/personalizationView.html',
+                    'controller': 'personalization',
+                    'activeView': 'personalization',
+                    'pageTitle': 'Personalization - LinkedPipes ETL',
+                    'color': '#999999'
+                })
                 .when('/executions', {
                     'templateUrl': 'app/components/executions/listView/executionListView.html',
                     'controller': 'components.executions.list',

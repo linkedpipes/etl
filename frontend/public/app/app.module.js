@@ -8,6 +8,7 @@ define([
     'app/components/executions/listView/executionListCtrl',
     'app/components/executions/detailView/executionDetailCtrl',
     'app/components/componentExecutionDetail/componentExecutionDetailCtrl',
+    'app/components/personalizationView/personalizationCtrl',
     'app/services/rdfService',
     'app/services/refreshService',
     'app/services/repositoryService',
@@ -20,6 +21,7 @@ define([
     'angular-route',
     'angular-resource',
     'angular-messages',
+    'angular-cookies',
     'angular-material',
     'angular-file-upload',
     'angular-ui-notification',
@@ -34,6 +36,7 @@ define([
         executionListCtrlInit,
         executionDetailCtrlInit,
         componentExecutionDetailCtrl,
+        personalizationCtrl,
         rdfService,
         refreshService,
         repositoryService,
@@ -50,6 +53,7 @@ define([
         'ngMaterial',
         'ngMessages', // Support for ng-messages directive used in dialogs.
         'ngFileUpload',
+        'ngCookies',
         'ui-notification', // Notification
         'angular-clipboard'
     ]);
@@ -72,6 +76,7 @@ define([
     executionListCtrlInit(app);
     executionDetailCtrlInit(app);
     componentExecutionDetailCtrl(app);
+    personalizationCtrl(app);
     //
     app.bootstrap = function () {
         angular.bootstrap(document, ['angularApp']);
@@ -104,20 +109,38 @@ define([
             $mdSidenav(sidenavId).toggle();
         };
 
-        $scope.closeSidenav = function() {
+        $scope.closeSidenav = function () {
             $mdSidenav(sidenavId).close();
         };
 
-        $scope.onPipelines = function() {
+        $scope.onPipelines = function () {
             $scope.closeSidenav();
             $location.path('/pipelines').search({});
         };
 
-        $scope.onExecutions = function() {
+        $scope.onExecutions = function () {
             $scope.closeSidenav();
             $location.path('/executions').search({});
         };
 
+        $scope.onPersonalization = function () {
+            $scope.closeSidenav();
+            $location.path('/personalization').search({});
+        };
+
+    });
+    // Execute after the application is loaded, we can take care about
+    // some initialization: redirect
+    app.run(function ($location, $cookies) {
+        // If user acess the 'root' page redirect to the
+        // configured landing page.
+        if ($location.path() === '') {
+            var landingPage = $cookies.get('lp-landing');
+            if (landingPage === undefined || landingPage === '') {
+                landingPage = '/executions';
+            }
+            $location.path(landingPage);
+        }
     });
     //
     return app;
