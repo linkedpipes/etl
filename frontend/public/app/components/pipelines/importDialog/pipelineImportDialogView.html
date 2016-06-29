@@ -10,26 +10,43 @@
             </div>
         </md-toolbar>
         <md-dialog-content style="min-width:400px;">
-            <div class="md-dialog-content" layout="column">
-                <md-radio-group ng-model="type" ng-show="!loading">
-                    <md-radio-button value="URL">From URL</md-radio-button>
-                    <md-radio-button value="Text">Direct input (JSON-LD)</md-radio-button>
-                </md-radio-group>
-                <div ng-show="type === 'URL'">
-                    <md-input-container class="md-block">
-                        <label>URL (must start with http://)</label>
-                        <input ng-model="url" ng-disabled="loading">
-                    </md-input-container>
-                    <div ng-show="loading">
-                        <div>Loading ...</div><br/>
-                        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-                    </div>
-                </div>
-                <div ng-show="type === 'Text'">
-                    <md-input-container class="md-block">
-                        <label>Pipeline</label>
-                        <textarea ng-model="text"></textarea>
-                    </md-input-container>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom md-selected="activeTab" ng-show="!importing">
+                    <md-tab label="From URL">
+                        <md-input-container class="md-block">
+                            <label>URL (must start with http://)</label>
+                            <input ng-model="url" ng-disabled="loading">
+                        </md-input-container>
+                    </md-tab>
+                    <md-tab label="Direct Input">
+                        <md-input-container class="md-block">
+                            <label>Pipeline</label>
+                            <textarea ng-model="text"></textarea>
+                        </md-input-container>
+                    </md-tab>
+                    <md-tab label="Local Pipeline" md-on-select="onPipelineTab()" layout="column">
+                        <md-input-container class="md-block">
+                            <label>Filter</label>
+                            <input ng-model="pipelineFilter"/>
+                        </md-input-container>
+                        <div ng-show="!repository.loaded" layout="row">
+                            <span flex="50"/>
+                            <img src="app/components/pipelines/listView/assets/img/loading.gif" class="center-block" title="Loading..."
+                                 style="padding-top: 1em"/>
+                        </div>
+                        <md-list ng-show="repository.loaded">
+                            <md-list-item ng-repeat="item in repository.data| filter:filterPipelines" class="md-1-line" >
+                                <md-checkbox ng-model="item.selected" ng-change="onPipelineChange(item)" aria-label="select"></md-checkbox>
+                                <div class="md-list-item-text">
+                                    <div class="lp-font-list-label">{{::item.label}}</div>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </md-tab>
+                </md-tabs>
+                <div ng-show="importing">
+                    <div>Importing pipeline ...</div><br/>
+                    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
                 </div>
             </div>
         </md-dialog-content>
