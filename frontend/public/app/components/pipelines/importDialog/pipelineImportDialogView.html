@@ -15,14 +15,25 @@
                     <md-tab label="From URL">
                         <md-input-container class="md-block">
                             <label>URL (must start with http://)</label>
-                            <input ng-model="url" ng-disabled="loading">
+                            <input ng-model="url">
                         </md-input-container>
                     </md-tab>
-                    <md-tab label="Direct Input">
-                        <md-input-container class="md-block">
-                            <label>Pipeline</label>
-                            <textarea ng-model="text"></textarea>
-                        </md-input-container>
+                    <md-tab label="From File">
+                        <div>
+                            <md-input-container class="md-block">
+                                <label>Selected file</label>
+                                <input ng-model="file.name" ng-readonly="true">
+                            </md-input-container>
+                        </div>
+                        <div>
+                            <md-input-container>
+                                <label>File encoding</label>
+                                <input ng-model="encoding">
+                            </md-input-container>
+                        </div>
+                        <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised" ng-disable="uploading">
+                            Select File
+                        </md-button>
                     </md-tab>
                     <md-tab label="Local Pipeline" md-on-select="onPipelineTab()" layout="column">
                         <md-input-container class="md-block">

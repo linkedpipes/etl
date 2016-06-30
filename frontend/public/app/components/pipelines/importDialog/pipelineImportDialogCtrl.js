@@ -2,8 +2,10 @@ define([], function () {
     function controler($scope, $mdDialog, $http,
             statusService, jsonldService) {
 
+        // Fragment sources.
         $scope.url = '';
-        $scope.text = '';
+        $scope.file = undefined;
+        $scope.encoding = 'UTF-8';
         $scope.pipeline = '';
         $scope.pipelineLoaded = false;
         $scope.pipelineFilter = '';
@@ -11,7 +13,6 @@ define([], function () {
         $scope.activeTab = 0;
 
         $scope.importing = false;
-
 
         var template = {
             'iri': {
@@ -43,6 +44,28 @@ define([], function () {
             });
         }
 
+        /**
+         * Import from local file.
+         */
+        function importFile() {
+            $scope.importing = true;
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var fragment;
+                try {
+                    fragment = JSON.parse(reader.result);
+                } catch (error) {
+                    statusService.getFailed({
+                        'title': "Given file is not a valid JSON."
+                    });
+                    $mdDialog.cancel();
+                }
+                $mdDialog.hide({
+                    'pipeline': fragment
+                });
+            };
+            reader.readAsText($scope.file, $scope.encoding);
+        }
 
         $scope.repository = jsonldService.createRepository({
             'template': template,
@@ -119,10 +142,7 @@ define([], function () {
                 // Import from IRI.
                 loadFromIri('/api/v1/proxy?url=' + $scope.url);
             } else if ($scope.activeTab === 1) {
-                // Direct input.
-                $mdDialog.hide({
-                    'pipeline': JSON.parse($scope.text)
-                });
+                importFile();
             } else if ($scope.activeTab === 2) {
                 // Import from IRI on local machine.
                 if ($scope.pipeline === undefined || $scope.pipeline === '') {
