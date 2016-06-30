@@ -1,0 +1,161 @@
+{
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430",
+          "@type": [
+            "http://linkedpipes.com/ontology/Pipeline"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL endpoint loader runtime configuration demo"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/788c1f33-4030-4fb6-bbe7-728238690695",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Text holder",
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://localhost:8080/resources/components/e-textHolder"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": 600,
+          "http://linkedpipes.com/ontology/y": 200,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/788c1f33-4030-4fb6-bbe7-728238690695/configuration"
+          }
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/a513f0b1-53dc-4d44-b9e4-86d15d3712c4",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Files to RDF",
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://localhost:8080/resources/components/t-filesToRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": 780,
+          "http://linkedpipes.com/ontology/y": 200
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/connection/0aea2c12-8502-4a94-9eb3-46427af04737",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/788c1f33-4030-4fb6-bbe7-728238690695"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "FilesOutput",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/a513f0b1-53dc-4d44-b9e4-86d15d3712c4"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputFiles"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/7141a3f8-8c6f-4e91-a885-56875419b67c",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Graph merger",
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://localhost:8080/resources/components/t-graphMerger"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": 980,
+          "http://linkedpipes.com/ontology/y": 200
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/connection/6ed7efe5-4d61-44b9-80d5-9fcac526f6f3",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/a513f0b1-53dc-4d44-b9e4-86d15d3712c4"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "OutputRdf",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/7141a3f8-8c6f-4e91-a885-56875419b67c"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputRdf"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/4d8c212e-ef52-4e2b-93dc-c10a45715f93",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL update endpoint",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://localhost:8080/resources/components/l-sparqlEndpoint"
+          },
+          "http://linkedpipes.com/ontology/x": 1280,
+          "http://linkedpipes.com/ontology/y": 200,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/4d8c212e-ef52-4e2b-93dc-c10a45715f93/configuration"
+          }
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/connection/6610d274-8d95-436d-bf4a-66ead6be03b5",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/7141a3f8-8c6f-4e91-a885-56875419b67c"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "OutputRdf",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/4d8c212e-ef52-4e2b-93dc-c10a45715f93"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "Configuration"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/connection/e808dc21-0c59-4ffa-8282-fc1281d34d51",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/7141a3f8-8c6f-4e91-a885-56875419b67c"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "OutputRdf",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/4d8c212e-ef52-4e2b-93dc-c10a45715f93"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputRdf"
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1467286309430"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": "test.ttl",
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#content": "@prefix lse: <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xml: <http://www.w3.org/XML/1998/namespace> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n<http://localhost/resources/configuration> a lse:Configuration ;\n    lse:clearGraph true ;\n    lse:endpoint \"http://localhost:3030/fuseki/update\" ;\n    lse:password \"\" ;\n    lse:targetGraphURI \"http://localhost/test/graph\" ;\n    lse:userName \"\" ."
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/788c1f33-4030-4fb6-bbe7-728238690695/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#endpoint": "",
+          "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#targetGraphURI": "",
+          "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraph": false,
+          "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userName": "",
+          "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#password": ""
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1467286309430/components/4d8c212e-ef52-4e2b-93dc-c10a45715f93/configuration"
+    }
+  ]
+}
