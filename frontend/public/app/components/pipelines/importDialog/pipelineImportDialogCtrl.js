@@ -5,7 +5,6 @@ define([], function () {
         // Fragment sources.
         $scope.url = '';
         $scope.file = undefined;
-        $scope.encoding = 'UTF-8';
         $scope.pipeline = '';
         $scope.pipelineLoaded = false;
         $scope.pipelineFilter = '';
@@ -64,7 +63,7 @@ define([], function () {
                     'pipeline': fragment
                 });
             };
-            reader.readAsText($scope.file, $scope.encoding);
+            reader.readAsText($scope.file, 'UTF-8');
         }
 
         $scope.repository = jsonldService.createRepository({
