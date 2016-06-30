@@ -281,7 +281,92 @@ order: 3
                 </p>
             </div>
             <div class="col s12 m5">
-               <p class="center"><img src="../assets/debug.png" alt="Debug view" class="responsive-img"/></p>
+               <p class="center"><img src="../assets/snippets/debug.png" alt="Debug view" class="responsive-img"/></p>
+            </div>
+        </div>
+    </div>
+	<div class="row scrollspy" id="sharing">
+        <h3 class="header center orange-text">Sharing options</h3>
+        <div class="row">
+            <div class="col s12">
+                <p class="flow-text">
+                    Pipelines can be shared among colleagues and LP-ETL instances easily.
+                    They can be downloaded from one instance, shared as files on the web and finally imported to another instance either as a whole pipeline or as a pipeline fragment.
+                </p>
+            </div>
+        </div>	
+        <h4 class="header center orange-text">Pipeline download</h4>
+        <div class="row">
+            <div class="col s12 m6">
+                <p class="flow-text">
+                    You can download a pipeline as a JSON-LD file from the pipeline list by clicking on the <i class="material-icons">more_vert</i> menu.
+                    There, you can select either Download or Download wihtout credentials, which removes all potentially sensitive information such as user names, passwords, host names and ports from the downloaded pipeline, so that it can be shared safely.
+                    In addition, you can copy the selected pipeline IRI to the clipboard and send the link to someone who can use it do import the pipeline to his LP-ETL instance without the need to download and upload the pipeline files.
+                </p>
+            </div>
+            <div class="col s12 m6">
+               <p class="center"><img src="../assets/snippets/download1.png" alt="Download pipeline" class="responsive-img"/></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6">
+               <p class="center"><img src="../assets/snippets/download2.png" alt="Download pipeline" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m6">
+                <p class="flow-text">
+                    The same options for downloading a pipeline are also available from the pipeline editor, again in the <i class="material-icons">more_vert</i> menu.
+                    The pipeline IRI is available in the pipeline detail dialog.
+                </p>
+            </div>
+        </div>
+        <h4 class="header center orange-text">Pipeline import</h4>
+        <div class="row">
+            <div class="col s12 m6">
+                <p class="flow-text">
+                    Once you get a link to a pipeline or the pipeline itself in the form of a JSON-LD file, you can import it in an LP-ETL instance either as a whole new pipeline, or as a pipeline fragment into an existing pipeline.
+                    To import the pipeline as a new pipeline, click on the <i class="material-icons">menu</i> menu and select the <i class="material-icons">file_upload</i> item.
+                </p>
+            </div>
+            <div class="col s12 m6">
+               <p class="center"><img src="../assets/snippets/pipeline-menu.png" alt="Import pipeline menu item" class="responsive-img"/></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6">
+               <p class="center"><img src="../assets/snippets/pipeline-import.png" alt="Import pipeline" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m6">
+                <p class="flow-text">
+                    In the pipeline import dialog, you can either upload the pipeline in a JSON-LD file, or provide a URL of an existing pipeline, which can be both uploaded somewhere on the web, or it can be the pipeline IRI from another LP-ETL instance.
+                </p>
+            </div>
+        </div>
+        <h4 class="header center orange-text">Pipeline fragments</h4>
+        <div class="row">
+            <div class="col s12 m6">
+                <p class="flow-text">
+                    A more interesting use case for pipeline sharing is to provide a reusable piece of a pipeline to be used in other pipelines.
+                    This is what we call pipeline fragments and you can see them as sample pipelines in documentation of some of our components, such as <a href="/components/t-sparqlconstruct" title="SPARQL construct">SPARQL construct</a>.
+                    In fact, any pipeline can be imported into another existing pipeline as a pipeline fragment.
+                    To import a pipeline fragment, click in the pipeline editor as if adding a new component and select the <i class="material-icons">timeline</i> icon.
+                </p>
+            </div>
+            <div class="col s12 m6">
+               <p class="center"><img src="../assets/snippets/pipeline-fragment-icon.png" alt="Pipeline fragment icon" class="responsive-img"/></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6">
+               <p class="center"><img src="../assets/snippets/pipeline-fragment-import.png" alt="Pipeline fragment icon" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m6">
+                <p class="flow-text">
+                    In the pipeline fragment import dialog, there are several options of providing the fragment.
+                    The first two are the same as for pipeline import.
+                    You can provide a URL of a pipeline in an LP-ETL instance or on the web, you can upload a pipeline in a JSON-LD file.
+                    In addition, you can import a local pipeline from the local LP-ETL instance as a pipeline fragment into another pipeline.
+                    The list of pipelines in the Local pipeline tab can be filtered by the pipeline name.
+                </p>
             </div>
         </div>
     </div>
@@ -293,7 +378,8 @@ order: 3
             <li><a href="#workflow">Pipeline development workflow</a></li>
             <li><a href="#debug">Debugging support</a></li>
             <li><a href="#detail">Execution detail</a></li>
+            <li><a href="#sharing">Sharing options</a></li>
         </ul>
-    <div>
+    </div>
   </div>
 </div>
