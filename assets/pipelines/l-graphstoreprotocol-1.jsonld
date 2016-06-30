@@ -1,0 +1,158 @@
+{
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982",
+          "@type": [
+            "http://linkedpipes.com/ontology/Pipeline"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Graph store protocol runtime configuration demo"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/788c1f33-4030-4fb6-bbe7-728238690695",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Text holder",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://localhost:8080/resources/components/e-textHolder"
+          },
+          "http://linkedpipes.com/ontology/x": 600,
+          "http://linkedpipes.com/ontology/y": 200,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/788c1f33-4030-4fb6-bbe7-728238690695/configuration"
+          }
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/6373e362-e62f-4930-8d01-8114861a5bd3",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Graph store protocol",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://localhost:8080/resources/components/l-graphStoreProtocol"
+          },
+          "http://linkedpipes.com/ontology/x": 1080,
+          "http://linkedpipes.com/ontology/y": 180,
+          "http://linkedpipes.com/ontology/configurationGraph": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/6373e362-e62f-4930-8d01-8114861a5bd3/configuration"
+          }
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/connection/89c63c9e-b772-433c-b81c-1dc1fc30e5b4",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/788c1f33-4030-4fb6-bbe7-728238690695"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "FilesOutput",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/6373e362-e62f-4930-8d01-8114861a5bd3"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputFiles"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/a513f0b1-53dc-4d44-b9e4-86d15d3712c4",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Files to RDF",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://localhost:8080/resources/components/t-filesToRdf"
+          },
+          "http://linkedpipes.com/ontology/x": 720,
+          "http://linkedpipes.com/ontology/y": 100
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/connection/0aea2c12-8502-4a94-9eb3-46427af04737",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/788c1f33-4030-4fb6-bbe7-728238690695"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "FilesOutput",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/a513f0b1-53dc-4d44-b9e4-86d15d3712c4"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputFiles"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/7141a3f8-8c6f-4e91-a885-56875419b67c",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "Graph merger",
+          "http://linkedpipes.com/ontology/template": {
+            "@id": "http://localhost:8080/resources/components/t-graphMerger"
+          },
+          "http://linkedpipes.com/ontology/x": 900,
+          "http://linkedpipes.com/ontology/y": 100
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/connection/6ed7efe5-4d61-44b9-80d5-9fcac526f6f3",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/a513f0b1-53dc-4d44-b9e4-86d15d3712c4"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "OutputRdf",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/7141a3f8-8c6f-4e91-a885-56875419b67c"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "InputRdf"
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/connection/8068d977-a96c-473b-8263-e32c4eb83335",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/7141a3f8-8c6f-4e91-a885-56875419b67c"
+          },
+          "http://linkedpipes.com/ontology/sourceBinding": "OutputRdf",
+          "http://linkedpipes.com/ontology/targetComponent": {
+            "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/6373e362-e62f-4930-8d01-8114861a5bd3"
+          },
+          "http://linkedpipes.com/ontology/targetBinding": "Configuration"
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1467272588982"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": "test.ttl",
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#content": "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xml: <http://www.w3.org/XML/1998/namespace> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n@prefix gsp: <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#> .\n\n<http://localhost/resources/configuration> a gsp:Configuration ;\n    gsp:checkSize true ;\n    gsp:endpoint \"http://localhost:3030/fuseki/data\" ;\n    gsp:endpointSelect \"http://localhost:3030/fuseki/query\" ;\n    gsp:graph \"http://localhost/test/graph\" ;\n    gsp:password \"\" ;\n    gsp:replace true ;\n    gsp:repository \"FUSEKI\" ;\n    gsp:user \"\" ."
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/788c1f33-4030-4fb6-bbe7-728238690695/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost/resources/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#graph": "",
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#repository": "FUSEKI",
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#user": "",
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#password": "",
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointSelect": "http://localhost:3030/fuseki/query",
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpoint": "",
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#replace": false,
+          "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#checkSize": false
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1467272588982/components/6373e362-e62f-4930-8d01-8114861a5bd3/configuration"
+    }
+  ]
+}

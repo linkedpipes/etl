@@ -35,9 +35,12 @@ Loader, allows the user to store RDF triples in a SPARQL endpoint using the <a h
             <dt>Type</dt>
             <dd>{{ page.type }}</dd>
             <dt>Inputs</dt>
-            <dd>RDF single graph</dd>
+            <dd>RDF single graph - Input</dd>
+            <dd>RDF single graph - Configuration</dd>
             <dt>Look in pipeline</dt>
             <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">available</a></dd>            
         </dl>
     </div>
     <div class="col s12 l6">
@@ -46,4 +49,29 @@ Loader, allows the user to store RDF triples in a SPARQL endpoint using the <a h
         Unfortunately, the implementation of this standard varies throughtout triplestores, this is why you need to choose the target implementation and why this component will probably not work with any other implememtation.
         </p>
     </div>
+</div>
+<div class="row" id="runtimeconfig">
+<h3 class="orange-text center">Runtime configuration</h3>
+<p class="flow-text">Below you can see sample runtime configuration for the component.
+You can also import a <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a>.
+Note that <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes" title="Blank nodes">RDF blank nodes</a> are not allowed in runtime configurations.
+</p>
+{% highlight turtle %}
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix gsp: <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#> .
+
+<http://localhost/resources/configuration> a gsp:Configuration ;
+    gsp:checkSize true ;
+    gsp:endpoint "http://localhost:3030/fuseki/data" ;
+    gsp:endpointSelect "http://localhost:3030/fuseki/query" ;
+    gsp:graph "http://localhost/test/graph" ;
+    gsp:password "" ;
+    gsp:replace true ;
+    gsp:repository "FUSEKI" ;
+    gsp:user "" .
+{% endhighlight %}
 </div>
