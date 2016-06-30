@@ -51,8 +51,14 @@ define([
             this.paper = this.options.paper;
             this.positionX = 0;
             this.positionY = 0;
+            // The low sensitivity area should be used on devices
+            // with lowered precission (touch). It will ignore small
+            // movements.
+            this.lowSensitivity = 0;
         },
         'startPanning': function (event) {
+            // Check if the event is touch based.
+            this.lowSensitivity = (event.type === 'touchstart');
             // Store initial position.
             event = joint.util.normalizeEvent(event);
             this._clientX = event.clientX;
@@ -67,8 +73,27 @@ define([
             event = joint.util.normalizeEvent(event);
             var x = event.clientX - this._clientX;
             var y = event.clientY - this._clientY;
+            // Check if there was a movement, we need a special attention
+            // for touch devices.
             if (x === 0 && y === 0) {
                 return;
+            }
+            if (this.lowSensitivity) {
+                // In touch mode ignore some minor movement.
+                // TODO The values should be part of the personification !
+                if (Math.abs(x) < 16 && Math.abs(y) < 16) {
+                    // Use is in low sensitivity area from the starting
+                    // point.
+                    return;
+                } else {
+                    // Disable for and discard the initial movement, se
+                    // there is no jump once user leave the low
+                    // sensitivity area.
+                    this.lowSensitivity = false;
+                    this._clientX = event.clientX;
+                    this._clientY = event.clientY;
+                    return;
+                }
             }
             this.positionX += x;
             this.positionY += y;
