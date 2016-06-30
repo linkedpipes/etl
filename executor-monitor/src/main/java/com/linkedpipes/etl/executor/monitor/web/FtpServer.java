@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.monitor.web;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.debug.ftp.VirtualFileSystem;
 import org.apache.ftpserver.ConnectionConfigFactory;
+import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.User;
@@ -43,8 +44,16 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
     private org.apache.ftpserver.FtpServer server = null;
 
     protected void start() {
-        final ListenerFactory factory = new ListenerFactory();
-        factory.setPort(configuration.getFtpServerPort());
+        final DataConnectionConfigurationFactory dataFactory
+                = new DataConnectionConfigurationFactory();
+
+        dataFactory.setActiveEnabled(false);
+        dataFactory.setPassivePorts(configuration.getFtpDataPort());
+
+        final ListenerFactory listenerFactory = new ListenerFactory();
+        listenerFactory.setPort(configuration.getFtpCommandPort());
+        listenerFactory.setDataConnectionConfiguration(
+                dataFactory.createDataConnectionConfiguration());
 
         final ConnectionConfigFactory connectionConfigFactory
                 = new ConnectionConfigFactory();
@@ -67,7 +76,7 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
         }
 
         final FtpServerFactory serverFactory = new FtpServerFactory();
-        serverFactory.addListener("default", factory.createListener());
+        serverFactory.addListener("default", listenerFactory.createListener());
         serverFactory.setConnectionConfig(
                 connectionConfigFactory.createConnectionConfig());
         serverFactory.setUserManager(userManager);

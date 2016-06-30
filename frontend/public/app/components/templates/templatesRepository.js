@@ -127,6 +127,12 @@ define(['jquery'], function (jQuery) {
                     });
                     template['inputs'] = inputs;
                     template['outputs'] = outputs;
+                    // Check dialog - remove the option if we do not have full
+                    // dialog (ie. JavaScript and HTML).
+                    if (template['dialog']['js'] === undefined ||
+                            template['dialog']['html'] === undefined) {
+                        delete template['dialog'];
+                    }
                     // Store.
                     templates.map[template['id']] = template;
                     templates.list.push(template);

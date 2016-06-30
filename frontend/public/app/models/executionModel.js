@@ -101,6 +101,8 @@ define([
                 'http://linkedpipes.com/ontology/events/created');
         // Object with description of failed cause.
         component.failed = {
+            'cause': jsonld.getString(resource,
+                    'http://linkedpipes.com/ontology/events/reason'),
             'rootCause': jsonld.getString(resource,
                     'http://linkedpipes.com/ontology/events/rootException')
         };

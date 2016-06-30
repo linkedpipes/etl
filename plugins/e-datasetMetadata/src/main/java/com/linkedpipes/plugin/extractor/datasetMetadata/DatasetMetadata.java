@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.extractor.datasetMetadata;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,14 +18,14 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
  * @author Petr Škoda
  */
-public class DatasetMetadata implements SimpleExecution {
+public class DatasetMetadata implements Component.Sequential {
 
     @Component.OutputPort(id = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
@@ -41,7 +40,7 @@ public class DatasetMetadata implements SimpleExecution {
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
         dataset = valueFactory.createIRI(configuration.getDatasetURI());
         addValue(RDF.TYPE, DatasetMetadataVocabulary.DCAT_DATASET_CLASS);
         //

@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -9,7 +8,8 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  * https://www.w3.org/TR/2015/REC-csv2rdf-20151217/#bib-tabular-data-model
@@ -73,6 +73,8 @@ class Mapper {
 
     private String tableResource;
 
+    private final ExceptionFactory exceptionFactory;
+
     /**
      * Does not call any other method on {@link StatementConsumer} than onRowStart, onRowEnd and submit for new
      * statement.
@@ -81,7 +83,7 @@ class Mapper {
      * @param configuration
      * @param columns
      */
-    public Mapper(StatementConsumer consumer, TabularConfiguration configuration, List<ColumnAbstract> columns) {
+    public Mapper(StatementConsumer consumer, TabularConfiguration configuration, List<ColumnAbstract> columns, ExceptionFactory exceptionFactory) {
         this.consumer = consumer;
         this.configuration = configuration;
         this.columns = columns;
@@ -90,6 +92,7 @@ class Mapper {
         } else {
             this.outputMode = Mode.MINIMAL;
         }
+        this.exceptionFactory = exceptionFactory;
     }
 
     /**
@@ -97,7 +100,7 @@ class Mapper {
      * @param outputMode
      * @param tableGroupUri If null then blank node is used.
      */
-    public void initialize(String tableGroupUri) throws NonRecoverableException {
+    public void initialize(String tableGroupUri) throws LpException {
         if (this.outputMode == Mode.STANDARD) {
             // 1
             if (tableGroupUri == null) {
@@ -121,7 +124,7 @@ class Mapper {
      * @param tableUri Source table URI.
      * @return
      */
-    public boolean onTableStart(String tableResource, String tableUri) throws NonRecoverableException {
+    public boolean onTableStart(String tableResource, String tableUri) throws LpException {
         this.tableResource = tableResource;
         // Rest row number.
         rowNumber = 0;
@@ -156,10 +159,10 @@ class Mapper {
      *
      * @param header Null if there is no header.
      */
-    public void onHeader(List<String> header) throws MissingNameInHeader, InvalidTemplate, Component.ExecutionFailed {
+    public void onHeader(List<String> header) throws MissingNameInHeader, InvalidTemplate, LpException {
         usedColumns = new ArrayList<>(columns.size());
         if (configuration.isFullMapping()) {
-            usedColumns.addAll(ColumnFactory.createColumList(configuration, header));
+            usedColumns.addAll(ColumnFactory.createColumList(configuration, header, exceptionFactory));
         } else {
             // Use user given.
             usedColumns.addAll(columns);
@@ -174,7 +177,7 @@ class Mapper {
      * @param row Row from the CSV file.
      * @return True if next line should be processed if it exists.
      */
-    public boolean onRow(List<String> row) throws UnsupportedEncodingException, NonRecoverableException {
+    public boolean onRow(List<String> row) throws UnsupportedEncodingException, LpException, ColumnAbstract.MissingColumnValue {
         consumer.onRowStart();
         rowNumber++;
         if (rowNumber <= configuration.getDialect().getSkipRows()) {

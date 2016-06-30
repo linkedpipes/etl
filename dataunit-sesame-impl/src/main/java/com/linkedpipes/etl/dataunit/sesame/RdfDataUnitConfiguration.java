@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.sesame;
 
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -60,7 +61,7 @@ public final class RdfDataUnitConfiguration implements EntityLoader.Loadable {
 
     @Override
     public EntityLoader.Loadable load(String predicate, String value)
-            throws EntityLoader.LoadingFailed {
+            throws RdfException {
         switch (predicate) {
             case LINKEDPIPES.HAS_BINDING:
                 binding = value;
@@ -77,7 +78,7 @@ public final class RdfDataUnitConfiguration implements EntityLoader.Loadable {
     }
 
     @Override
-    public void validate() throws EntityLoader.LoadingFailed {
+    public void validate() throws RdfException {
         // No operation here.
     }
 

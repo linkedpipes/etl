@@ -4,12 +4,16 @@ package com.linkedpipes.plugin.transformer.sparql.construct;
  *
  * @author Škoda Petr
  */
-public class SparqlConstructVocabulary {
+final class SparqlConstructVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#";
+    private static final String PREFIX
+            = "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#";
 
-    public static final String CONFIG_CLASS = PREFIX + "Configuration";
+    public static final String CONFIG = PREFIX + "Configuration";
 
-    public static final String CONFIG_SPARQL = PREFIX + "query";
+    public static final String HAS_QUERY = PREFIX + "query";
+
+    private SparqlConstructVocabulary() {
+    }
 
 }

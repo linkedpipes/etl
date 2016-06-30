@@ -223,7 +223,7 @@ define([
         updateVisual(this.pipelineCanvas.getCell(iri), component,
                 this.execution, this.enabled);
         // Propagation.
-        var connections = this.pipelineModel.getConnections(
+        var connections = this.pipelineModel.getEdges(
                 this.pipelineCanvas.getPipeline());
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
@@ -246,7 +246,7 @@ define([
         updateVisual(this.pipelineCanvas.getCell(iri), component,
                 this.execution, this.enabled);
         // Propagation.
-        var connections = this.pipelineModel.getConnections(
+        var connections = this.pipelineModel.getEdges(
                 this.pipelineCanvas.getPipeline());
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
@@ -260,17 +260,32 @@ define([
         console.log('onChangeComponent' , iri);
         var component = this.execution.getComponents()[iri];
         if (component === undefined) {
-            return;
+            // This may happen if a component that was not executed,
+            // (as it was disabled) was enabled.
+
+            // TODO: If we disable or change component, we propagate
+            // the change. However we could stop the propagation at the
+            // disabled component as for execution it was like if the
+            // component was not executed --> we can stop on component that
+            // were not executed ?
+            // TEST: Line, with disabled component in the middle.
+            // Change a configuraiton of the first component,
+            // it would invalidata ll of them, instead we can invalidate
+            // only to the disabled component.
+
+        } else {
+            // Check if component is not already disabled.
+            if (this.execution.mapping.isChanged(component)) {
+                return;
+            }
+            // Change record in the execution model.
+            this.execution.mapping.onChange(component);
+            // Update visual.
+            updateVisual(this.pipelineCanvas.getCell(iri), component,
+                    this.execution, this.enabled);
         }
-        if (this.execution.mapping.isChanged(component)) {
-            return;
-        }
-        this.execution.mapping.onChange(component);
-        // Update visual.
-        updateVisual(this.pipelineCanvas.getCell(iri), component,
-                this.execution, this.enabled);
         // Propagation.
-        var connections = this.pipelineModel.getConnections(
+        var connections = this.pipelineModel.getEdges(
                 this.pipelineCanvas.getPipeline());
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
@@ -296,7 +311,7 @@ define([
             var component = this.execution.getComponents()[iri];
             if (component === undefined) {
                 // Can be a connection!
-                var connections = this.pipelineModel.getConnections(
+                var connections = this.pipelineModel.getEdges(
                         this.pipelineCanvas.getPipeline());
                 var conService = this.pipelineModel.connection;
                 // Disable mapping for all that use given

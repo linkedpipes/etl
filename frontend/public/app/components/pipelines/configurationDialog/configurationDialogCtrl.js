@@ -4,6 +4,15 @@ define(['app/components/configuration/configurationHolderDirective'], function (
 
         var jsonld = jsonldService.jsonld();
 
+        // Required configuration dialog component API.
+        $scope.dialogs = {
+            'api': {},
+            'loaded': false
+        };
+
+        // Determine if we should display a configuraiton tab or not.
+        $scope.hasDialog = template['dialog'] !== undefined;
+
         /**
          * Load $scope.general object.
          */
@@ -15,9 +24,10 @@ define(['app/components/configuration/configurationHolderDirective'], function (
             };
             if ($scope.general.color) {
                 $scope.general.templateColor = false;
-                $scope.general.color = template['color'];
+                $scope.general.color = component['http://linkedpipes.com/ontology/color'];
             } else {
                 $scope.general.templateColor = true;
+                $scope.general.color = template['color'];
             }
         };
 
@@ -39,7 +49,7 @@ define(['app/components/configuration/configurationHolderDirective'], function (
          */
         var loadConfiguration = function () {
             var configGraphIri = jsonld.getReference(component,
-                'http://linkedpipes.com/ontology/configurationGraph');
+                    'http://linkedpipes.com/ontology/configurationGraph');
             if (configGraphIri) {
                 $scope.configuration = {
                     'uri': configGraphIri,
@@ -54,12 +64,8 @@ define(['app/components/configuration/configurationHolderDirective'], function (
         };
 
         var loadDialogs = function () {
-            $scope.dialogs = {
-                'api': {},
-                'loaded': false
-            };
             // Dialog is an obligatory dialog component.
-            if (!template['dialog']) {
+            if (!$scope.hasDialog) {
                 return;
             }
             //
@@ -83,7 +89,7 @@ define(['app/components/configuration/configurationHolderDirective'], function (
                 return;
             }
             var configurationObject = $scope.dialogs.api.getConfiguration();
-            if (typeof(configurationObject) !== 'undefined') {
+            if (typeof (configurationObject) !== 'undefined') {
                 component['http://linkedpipes.com/ontology/configurationGraph'] = {
                     '@id': $scope.configuration.uri
                 };

@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = ExcelToCsvVocabulary.CONFIGURATION)
+@RdfToPojo.Type(uri = ExcelToCsvVocabulary.CONFIG)
 public class ExcelToCsvConfiguration {
 
     public static final String FILE_HOLDER = "{FILE}";
@@ -96,7 +96,8 @@ public class ExcelToCsvConfiguration {
     private int rowsEnd = -1;
 
     /**
-     * Should be set, it -1 then the number of rows is determined by the header size.
+     * Should be set, it -1 then the number of rows is determined by the
+     * header size.
      */
     @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN_END)
     private int columnsEnd = -1;

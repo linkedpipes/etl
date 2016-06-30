@@ -10,26 +10,45 @@
             </div>
         </md-toolbar>
         <md-dialog-content style="min-width:400px;">
-            <div class="md-dialog-content" layout="column">
-                <md-radio-group ng-model="type" ng-show="!loading">
-                    <md-radio-button value="URL">From URL</md-radio-button>
-                    <md-radio-button value="Text">Direct input (JSON-LD)</md-radio-button>
-                </md-radio-group>
-                <div ng-show="type === 'URL'">
-                    <md-input-container class="md-block">
-                        <label>URL (must start with http://)</label>
-                        <input ng-model="url" ng-disabled="loading">
-                    </md-input-container>
-                    <div ng-show="loading">
-                        <div>Loading ...</div><br/>
-                        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-                    </div>
-                </div>
-                <div ng-show="type === 'Text'">
-                    <md-input-container class="md-block">
-                        <label>Pipeline</label>
-                        <textarea ng-model="text"></textarea>
-                    </md-input-container>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom md-selected="activeTab" ng-show="!importing">
+                    <md-tab label="From URL">
+                        <md-input-container class="md-block">
+                            <label>URL (must start with http://)</label>
+                            <input ng-model="url">
+                        </md-input-container>
+                    </md-tab>
+                    <md-tab label="From File">
+                        <div>
+                            <md-input-container class="md-block">
+                                <label>Selected file</label>
+                                <input ng-model="file.name" ng-readonly="true">
+                            </md-input-container>
+                        </div>
+                        <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised" ng-disable="uploading">
+                            Select File
+                        </md-button>
+                    </md-tab>
+                    <md-tab label="Local Pipeline" md-on-select="onPipelineTab()" layout="column">
+                        <md-input-container class="md-block">
+                            <label>Filter</label>
+                            <input ng-model="pipelineFilter"/>
+                        </md-input-container>
+                        <div ng-show="!repository.loaded" layout="row">
+                            <span flex="50"/>
+                            <img src="app/components/pipelines/listView/assets/img/loading.gif" class="center-block" title="Loading..."
+                                 style="padding-top: 1em"/>
+                        </div>
+                        <md-radio-group ng-model="pipeline" ng-show="repository.loaded">
+                            <md-radio-button ng-repeat="item in repository.data| filter:filterPipelines" ng-value="item.iri">
+                                {{::item.label}}
+                            </md-radio-button>
+                        </md-radio-group>
+                    </md-tab>
+                </md-tabs>
+                <div ng-show="importing">
+                    <div>Importing pipeline ...</div><br/>
+                    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
                 </div>
             </div>
         </md-dialog-content>
@@ -38,7 +57,7 @@
             <md-button ng-click="onCancel()">
                 Don't import anything
             </md-button>
-            <md-button ng-click="onImport()" ng-disabled="loading">
+            <md-button ng-click="onImport()" ng-disabled="loading" class="md-primary">
                 Import pipeline
             </md-button>
         </md-dialog-actions>

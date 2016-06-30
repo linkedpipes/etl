@@ -65,9 +65,12 @@ executor-monitor.log.core.level = INFO
 
 # FTP Port for executor-monitor.
 # The FTP server is used to browse debug content of an execution.
-executor-monitor.ftp.port = 2221
+executor-monitor.ftp.command_port = 2221
+executor-monitor.ftp.data_ports_interval.start = 2222
+executor-monitor.ftp.data_ports_interval.end = 2225
 
 # External URL that should be used to access debug FTP server from outside.
+# This must point to the FTP server instance command port.
 # Must NOT end on '/'.
 executor-monitor.ftp.uri = ftp://localhost:2221
 

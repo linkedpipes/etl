@@ -5,10 +5,10 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.dpu.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Petr Škoda
  */
-public final class MustacheComponent implements SimpleExecution {
+public final class MustacheComponent implements Component.Sequential {
 
     /**
      * Used to hold metadata about loaded objects.
@@ -64,7 +64,8 @@ public final class MustacheComponent implements SimpleExecution {
 
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(MustacheComponent.class);
+    private static final Logger LOG
+            = LoggerFactory.getLogger(MustacheComponent.class);
 
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit input;
@@ -78,8 +79,11 @@ public final class MustacheComponent implements SimpleExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
         // Prepare template
         final String template
                 = UpdateQuery.expandPrefixes(configuration.getTemplate());
@@ -113,7 +117,7 @@ public final class MustacheComponent implements SimpleExecution {
                     new FileOutputStream(outputFile), "UTF8")) {
                 mustache.execute(outputStream, object.data).flush();
             } catch (IOException ex) {
-                throw new ExecutionFailed("Can't write output file.", ex);
+                throw exceptionFactory.failed("Can't write output file.", ex);
             }
             progressReport.entryProcessed();
         }
@@ -126,8 +130,7 @@ public final class MustacheComponent implements SimpleExecution {
      * @return
      * @throws NonRecoverableException
      */
-    private Collection<ObjectMetadata> loadData()
-            throws NonRecoverableException {
+    private Collection<ObjectMetadata> loadData() throws LpException {
         final Map<Resource, ObjectMetadata> objectsInfo = new HashMap<>();
         final Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
         // Load basic informations about objects.

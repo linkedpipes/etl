@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.event;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 
 import java.text.DateFormat;
@@ -60,7 +59,7 @@ abstract class AbstractEvent implements Event {
     }
 
     @Override
-    public void write(StatementWriter writer) {
+    public void serialize(Writer writer) {
         writer.addUri(iri,
                 "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                 type);

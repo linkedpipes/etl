@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -121,7 +120,7 @@ public class VirtualFileSystem {
             for (DebugData.DataUnit dataUnit
                     : execution.getDataUnits().values()) {
                 result.add(new DataUnitDirectory(execution, dataUnit,
-                        ftpPath + "/" + dataUnit.getDebug()));
+                        ftpPath + "/" + dataUnit.getDebugName()));
             }
             return result;
         }
@@ -130,41 +129,39 @@ public class VirtualFileSystem {
 
     private class DataUnitDirectory extends AbstractFtpDirectory {
 
-        private final File executionDirectory;
-
         private final DebugData.DataUnit dataUnit;
 
         DataUnitDirectory(DebugData debugData, DebugData.DataUnit dataUnit,
                 String ftpPath) {
             super(ftpPath);
-            if (dataUnit.getExecutionId() == null
-                    || debugData.getExecution().equals(dataUnit.getExecutionId())) {
-                this.executionDirectory = debugData.getDirectory();
+            this.dataUnit = dataUnit;
+            // We need the exeecution directory, but if we use data
+            // from this execution we can not get it from
+            // {@link #executions} as it has not been yet loaded.
+            if (dataUnit.getExecutionId() == null || debugData.getExecution()
+                    .equals(dataUnit.getExecutionId())) {
+                // We use data from this execution.
+                dataUnit.loadDebugDirectories(debugData.getDirectory());
             } else {
                 final Execution execution = executions.getExecution(
                         dataUnit.getExecutionId());
                 if (execution == null) {
-                    LOG.warn("Missing execution for: {}",
+                    LOG.warn("Missing referenced execution: {}",
                             dataUnit.getExecutionId());
-                    this.executionDirectory = null;
                 } else {
-                    this.executionDirectory = execution.getDirectory();
+                    // Load directories.
+                    dataUnit.loadDebugDirectories(execution.getDirectory());
                 }
+
             }
-            this.dataUnit = dataUnit;
         }
 
         @Override
         public List<FtpFile> listFiles() {
-            if (this.executionDirectory == null) {
-                return Collections.EMPTY_LIST;
-            }
             // List content of debug directories, without the debug directories.
             final List<FtpFile> result = new ArrayList<>();
-            for (String directory : dataUnit.getDebugDirectories()) {
-                final File debugDirectory = new File(executionDirectory,
-                        directory);
-                for (File file : debugDirectory.listFiles()) {
+            for (File directory : dataUnit.getDebugDirectories()) {
+                for (File file : directory.listFiles()) {
                     result.add(new ReadonlyFtpFile(
                             ftpPath + "/" + file.getName(), file));
                 }
@@ -229,10 +226,8 @@ public class VirtualFileSystem {
         }
         // Search for a directory in the data unit. The file
         // can be in any of the debugging directories.
-        for (String directory : dataUnit.getDebugDirectories()) {
-            final String filePath = execution.getDirectory() + "/"
-                    + directory + "/" + joinPath(parsedPath);
-            final File file = new File(filePath);
+        for (File directory : dataUnit.getDebugDirectories()) {
+            final File file = new File(directory, joinPath(parsedPath));
             if (file.exists()) {
                 return new Path(ftpPath, false, file, null, null);
             }

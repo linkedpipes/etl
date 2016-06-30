@@ -12,6 +12,10 @@
             <md-tooltip md-direction="top">Copy</md-tooltip>
             <md-icon md-menu-origin md-svg-src="copy"></md-icon>
         </md-button>
+        <md-button class="md-fab md-mini" style="position:absolute;left:120px;" aria-label="Enable Disable" ng-click="api.onEnableDisable()">
+            <md-tooltip md-direction="top">Enable/disable component</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="ic_power_settings_new"></md-icon>
+        </md-button>
     </span>
     <span id="bottomBar" style="position:relative;">
         <md-button class="md-fab md-mini" style="position:absolute;left:-30px;top:55px;" aria-label="Prerequisity" ng-click="api.onPrerequisiteComponent()">

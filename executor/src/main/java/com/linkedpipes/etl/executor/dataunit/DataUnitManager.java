@@ -1,7 +1,8 @@
 package com.linkedpipes.etl.executor.dataunit;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit.DataUnitException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.event.EventFactory;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.execution.ExecutionModel;
@@ -9,7 +10,9 @@ import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.module.ModuleFacade.ModuleException;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,8 @@ public class DataUnitManager {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(DataUnitManager.class);
+
+    private static final String DATA_DIRECTORY = "data";
 
     /**
      * Store all used data units.
@@ -107,8 +112,9 @@ public class DataUnitManager {
             LOG.info("Loading data unit: {} : {}",
                     dataUnit.getBinding(), dataUnit.getIri());
             try {
-                instance.initialize(dataUnit.getLoadPath());
-            } catch (DataUnitException ex) {
+                instance.initialize(new File(dataUnit.getLoadPath(),
+                        DATA_DIRECTORY));
+            } catch (LpException ex) {
                 throw new CantInitializeDataUnit("Can't load: "
                         + dataUnit.getIri(), ex);
             }
@@ -119,7 +125,7 @@ public class DataUnitManager {
                     dataUnit.getBinding(), dataUnit.getIri());
             try {
                 instance.initialize(dataUnits);
-            } catch (DataUnitException ex) {
+            } catch (LpException ex) {
                 throw new CantInitializeDataUnit("Can't initialize: "
                         + dataUnit.getIri(), ex);
             }
@@ -128,6 +134,7 @@ public class DataUnitManager {
 
     /**
      * Close and save all opened data units.
+     *
      * @param events
      */
     public void close(EventManager events) {
@@ -157,29 +164,43 @@ public class DataUnitManager {
         if (instance == null) {
             return true;
         }
-        boolean result = true;
-        try {
-            instance.save(dataUnit.getSavePath());
-        } catch (Throwable ex) {
-            result = false;
-            LOG.error("Can't save data unit.", ex);
-        }
-        try {
-            final List<File> debugPaths = new ArrayList<>(2);
-            debugPaths.add(dataUnit.getDebugPath());
-            debugPaths.addAll(instance.dumpContent(dataUnit.getDebugPath()));
-            dataUnit.setDebugPaths(debugPaths);
-        } catch (Throwable ex) {
-            result = false;
-            LOG.error("Can't save data unit.", ex);
+        boolean success = true;
+        // Save the content.
+        final File dataFile = dataUnit.getDataPath();
+        if (dataFile != null) {
+            List<File> debugPaths = Collections.EMPTY_LIST;
+            try {
+                final File dataDirectory = new File(dataFile,
+                        DATA_DIRECTORY);
+                dataDirectory.mkdirs();
+                debugPaths = instance.save(dataDirectory);
+            } catch (Throwable ex) {
+                success = false;
+                LOG.error("Can't save data unit.", ex);
+            }
+            // Save debug paths relative to file we store data it.
+            final ObjectMapper mapper = new ObjectMapper();
+            final File debugFile = new File(dataFile, "/debug.json");
+            final List<String> relativeDebugPaths
+                    = new ArrayList<>(debugPaths.size());
+            for (File file : debugPaths) {
+                relativeDebugPaths.add(dataFile.toPath().relativize(
+                        file.toPath()).toString());
+            }
+            try {
+                mapper.writeValue(debugFile, relativeDebugPaths);
+            } catch (IOException ex) {
+                success = false;
+                LOG.error("Can't save data debug paths.", ex);
+            }
         }
         try {
             instance.close();
-        } catch (DataUnitException ex) {
-            result = false;
+        } catch (LpException ex) {
+            success = false;
             LOG.error("Can't close data unit.", ex);
         }
-        return result;
+        return success;
     }
 
 }

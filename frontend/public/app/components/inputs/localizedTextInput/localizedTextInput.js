@@ -1,6 +1,7 @@
 /**
  * Directorive for a text label with support for multiple languages in
  * JSON-LD form.
+ *
  */
 define([], function () {
 

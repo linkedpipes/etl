@@ -193,6 +193,13 @@
                 <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
                 <version>1.2.8</version>
             </dependency>
+            <!-- Tests. -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

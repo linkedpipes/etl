@@ -283,22 +283,15 @@ define([
             componentService) {
         // Construct label.
         var label = componentService.getLabel(component);
+        // Use empty string instead of undefined.
+        if (label === undefined) {
+            label = '';
+        }
         var description = componentService.getDescription(component);
         if (description !== undefined) {
             label += '\n';
             label += description;
         }
-        // Calculate size.
-        var portCount = Math.max(
-                cell.attributes.inPorts.length,
-                cell.attributes.outPorts.length, 1);
-        var labelSplit = label.split('\n');
-        var height = Math.max(portCount * 25 + 10, labelSplit.length * 23);
-        var width = 0;
-        labelSplit.forEach(function (line) {
-            width = Math.max(width, line.length * 8);
-        });
-        width += 20;
         // Set properties.
         if (description === undefined) {
             cell.attr('.label', {
@@ -315,11 +308,72 @@ define([
                 'x-alignment': 'left'
             });
         }
-        cell.resize(width, height);
+        // Calculate size.
+        var portCount = Math.max(
+                cell.attributes.inPorts.length,
+                cell.attributes.outPorts.length, 1);
+        var labelSplit = label.split('\n');
+        var height = Math.max(portCount * 25 + 10, labelSplit.length * 23);
+        /**
+         * Compute approximation of string width.
+         */
+        function stringWidth(string) {
+            var width = 0;
+            for (var index in string) {
+                var character = string[index];
+                if (character > '0' && character < '9') {
+                    width += 8.2;
+                    continue;
+                }
+                switch (character) {
+                    case ' ':
+                        width += 3;
+                        break;
+                    case 'i':
+                    case 'j':
+                    case 'l':
+                    case 't':
+                        width += 5;
+                        break;
+                    case 'f':
+                    case 'r':
+                        width += 5;
+                        break;
+                    case 's':
+                        width += 7;
+                        break;
+                    case 'w':
+                        width += 12;
+                        break;
+                    case 'm':
+                        width += 13;
+                        break;
+                    default:
+                        width += 8.5;
+                        break;
+                }
+                if (character !== ' ' && character === character.toUpperCase()) {
+                    width += 4;
+                }
+            }
+            return width;
+        }
+        var maxLineLen = 0;
+        labelSplit.forEach(function (line) {
+            var lineLen = stringWidth(line);
+            if (lineLen > maxLineLen) {
+                maxLineLen = lineLen;
+            }
+        });
+        // Add 30 for ports and as a basic size.
+        cell.resize(30 + maxLineLen, height);
         // Color.
         var color = componentService.getColor(component);
         if (color === undefined) {
             color = template.color;
+        }
+        if (componentService.isDisabled(component)) {
+            color = '#f2f2f2';
         }
         cell.attr('rect', {'fill': color});
         cell.trigger('change:size');
@@ -916,7 +970,6 @@ define([
             var templateIri = comService.getTemplateIri(component);
             var template = this.templates.getTemplate(templateIri);
             this.updateComponent(cell, component, template, comService);
-
         }.bind(this));
 
     };

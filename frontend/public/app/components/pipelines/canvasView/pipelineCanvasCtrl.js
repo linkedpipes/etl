@@ -176,6 +176,18 @@ define([
             });
         }
 
+        function onEnableDisable(component) {
+            var comFacade = pipelineService.component;
+            if (comFacade.isDisabled(component)) {
+                comFacade.setDisabled(component, false);
+            } else {
+                comFacade.setDisabled(component, true);
+            }
+            // Notify all about change in the component.
+            $scope.canvas.getPaper().trigger('lp:component:changed',
+                            component['@id'], component);
+        };
+
         /**
          * Load pipeline name from definition.
          */
@@ -289,6 +301,7 @@ define([
             $scope.pipelineEdit.API.onMapping = function (component) {
                 return executionCanvas.switchMapping(component['@id']);
             };
+            $scope.pipelineEdit.API.onEnableDisable = onEnableDisable;
             $scope.pipelineEdit.API.mappingAvailable = function (component) {
                 if (data.execution.iri === undefined) {
                     return;

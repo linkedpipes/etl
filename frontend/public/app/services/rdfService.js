@@ -254,7 +254,7 @@ define([], function () {
                  * @param resource
                  * @param property
                  * @param objects
-                 * @param addNew True if new objects should not be added.
+                 * @param addNew True if new objects should be added.
                  */
                 service.updateObjects = function (resource, property, objects, addNew) {
                     // Get IDs of existing objects.
@@ -347,7 +347,17 @@ define([], function () {
                     if (typeof value === 'undefined' || value === null || value === '') {
                         delete resource[property];
                     } else {
-                        resource[property] = value;
+                        var valueAsString = value.getFullYear() + '-';
+                        if (value.getMonth() + 1 < 10) {
+                            valueAsString += '0';
+                        }
+                        // getMonth return 0 - 11
+                        valueAsString += (value.getMonth() + 1) + '-';
+                        if (value.getDate() < 10) {
+                            valueAsString += '0';
+                        }
+                        valueAsString += value.getDate();
+                        resource[property] = valueAsString;
                     }
                 };
 
@@ -382,6 +392,20 @@ define([], function () {
                 service.setList = function (resource, property, value) {
                     property = service.prefix + property;
                     if (typeof value === 'undefined' || !$.isArray(value) || value.length === 0) {
+                        delete resource[property];
+                    } else {
+                        resource[property] = value;
+                    }
+                };
+
+                service.getValue = function (resource, property) {
+                    property = service.prefix + property;
+                    return resource[property];
+                };
+
+                service.setValue = function (resource, property, value) {
+                    property = service.prefix + property;
+                    if (value === undefined) {
                         delete resource[property];
                     } else {
                         resource[property] = value;

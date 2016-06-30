@@ -13,6 +13,7 @@
         <module>t-filesFilter</module>
         <module>l-filesToScp</module>
         <module>e-datasetMetadata</module>
+        <module>e-dcatAp11Dataset</module>
         <module>e-distributionMetadata</module>
         <module>t-filesToRdf</module>
         <module>t-filesToStatements</module>
@@ -42,6 +43,10 @@
         <module>t-singleGraphUnion</module>
         <module>e-httpGetFiles</module>
         <module>e-pipelineInput</module>
+        <module>t-sparqlSelectMulti</module>
+        <module>t-filesRenamer</module>
+        <module>t-templatedXlsToCsv</module>
+        <module>t-fileHasher</module>
     </modules>
 
 </project>

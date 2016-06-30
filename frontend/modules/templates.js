@@ -216,6 +216,10 @@ var rebuilFollowUp = function () {
 (function initialize() {
     console.time('templates.initialize');
     var componentDirectory = gConfiguration.storage.components;
+    // Make sure the component directory exists.
+    if (!gFs.existsSync(componentDirectory)) {
+        gFs.mkdirSync(componentDirectory);
+    }
     // We use sych call here as we want this to be processed before
     // the code will continue.
     var componentFiles = gFs.readdirSync(componentDirectory);
@@ -225,6 +229,10 @@ var rebuilFollowUp = function () {
     });
     // Scan pipelines.
     var pipelineDirectory = gConfiguration.storage.pipelines;
+    // Make sure the component directory exists.
+    if (!gFs.existsSync(pipelineDirectory)) {
+        gFs.mkdirSync(pipelineDirectory);
+    }
     var pipelineFiles = gFs.readdirSync(pipelineDirectory);
     pipelineFiles.forEach(function (fileName) {
         var path = pipelineDirectory + '/' + fileName;

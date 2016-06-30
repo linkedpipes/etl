@@ -1,12 +1,12 @@
 package com.linkedpipes.plugin.quality.sparql.ask;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = SparqlAskVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = SparqlAskVocabulary.CONFIG)
 public class SparqlAskConfiguration {
 
     @RdfToPojo.Property(uri = SparqlAskVocabulary.HAS_SPARQL)

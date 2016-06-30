@@ -1,8 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.dpu.api.Component;
-import com.linkedpipes.etl.dpu.api.Component.ExecutionFailed;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnType;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.NamedCell_V1;
 import java.io.File;
@@ -45,19 +43,15 @@ public class ParserXls implements Parser {
 
     private final TableToRdf tableToRdf;
 
-    private final Component.Context context;
-
     private int rowNumber = 0;
 
-    public ParserXls(ParserXlsConfig config, TableToRdf tableToRdf,
-            Component.Context context) {
+    public ParserXls(ParserXlsConfig config, TableToRdf tableToRdf) {
         this.config = config;
         this.tableToRdf = tableToRdf;
-        this.context = context;
     }
 
     @Override
-    public void parse(File inFile) throws ParseFailed, NonRecoverableException {
+    public void parse(File inFile) throws LpException, ParseFailed {
         final Workbook wb;
         try {
             wb = WorkbookFactory.create(inFile);
@@ -75,9 +69,6 @@ public class ParserXls implements Parser {
         }
         // process selected sheets
         for (Integer sheetIndex : toProcess) {
-            if (context.canceled()) {
-                break;
-            }
             parseSheet(wb, sheetIndex);
         }
     }
@@ -88,10 +79,10 @@ public class ParserXls implements Parser {
      * @param wb
      * @param sheetIndex
      * @throws com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed
+     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public void parseSheet(Workbook wb, Integer sheetIndex) throws ParseFailed,
-            ExecutionFailed,
-            NonRecoverableException {
+    public void parseSheet(Workbook wb, Integer sheetIndex)
+            throws ParseFailed, LpException {
 
         LOG.debug("parseSheet({}, {})", wb.getSheetName(sheetIndex), sheetIndex);
 
@@ -201,9 +192,6 @@ public class ParserXls implements Parser {
         int skippedLinesCounter = 0;
         for (Integer rowNumPerFile = startRow; rowNumPerFile < dataEndAtRow;
                 ++rowNumber, ++rowNumPerFile) {
-            if (context.canceled()) {
-                break;
-            }
             // skip till data
             if (rowNumPerFile < config.numberOfStartLinesToIgnore) {
                 continue;

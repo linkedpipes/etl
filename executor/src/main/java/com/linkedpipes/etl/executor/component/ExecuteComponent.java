@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import com.linkedpipes.etl.executor.api.v1.component.SimpleComponent;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
 
 /**
  * Execute component with "EXECUTE" execution type.
@@ -28,7 +28,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
     /**
      * Instance of component to execute.
      */
-    private final SimpleComponent componentInstance;
+    private final SequentialComponent componentInstance;
 
     /**
      * Definition of component to execute.
@@ -47,12 +47,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
      */
     private boolean unexpectedTermination = true;
 
-    /**
-     * Execution context for the component.
-     */
-    private final ComponentContext executionContext;
-
-    ExecuteComponent(SimpleComponent componentInstance,
+    ExecuteComponent(SequentialComponent componentInstance,
             ExecutionModel.Component componentExecution,
             PipelineModel.Component componentDefinition,
             DataUnitManager dataUnitManager,
@@ -62,7 +57,6 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
         this.componentDefinition = componentDefinition;
         this.dataUnitManager = dataUnitManager;
         this.eventManager = eventManager;
-        this.executionContext = new ComponentContext(eventManager);
     }
 
     /**
@@ -99,7 +93,8 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
 
     @Override
     public void cancel() {
-        executionContext.cancell();
+        // TODO Provide implementation.
+        LOG.error("Cancel is not supported!");
     }
 
     @Override
@@ -125,7 +120,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
         }
         // Prepare component.
         try {
-            componentInstance.initialize((Map) dataUnits, executionContext);
+            componentInstance.initialize((Map) dataUnits);
         } catch (Throwable t) {
             eventManager.publish(EventFactory.executionFailed(
                     "Can't initialize component.", t));

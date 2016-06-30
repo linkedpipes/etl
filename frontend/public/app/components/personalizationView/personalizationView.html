@@ -1,0 +1,20 @@
+<div layout="row" layout-align="space-around">
+    <md-content flex layout-padding style="max-width: 66em;">
+        <md-input-container class="md-block" style="max-width: 400px">
+            <label>Default landing page</label>
+            <md-select ng-model="landingPage">
+                <md-option value="/executions">Executions</md-option>
+                <md-option value="/pipelines">Pipelines</md-option>
+            </md-select>
+        </md-input-container>
+        <div layout="row">
+            <span flex></span>
+            <md-button ng-click="onDiscard()">
+                Discard changes
+            </md-button>
+            <md-button ng-click="onSave()" class="md-primary">
+                Save changes
+            </md-button>
+        </div>
+    </md-content>
+</div>

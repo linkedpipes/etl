@@ -22,6 +22,7 @@ define([
             'onAddComponent': doNothing,
             'onImportPipeline': doNothing,
             'onMapping': doNothing,
+            'onEnableDisable': doNothing,
             /**
              * Return true if mapping function is available for
              * given component.
@@ -79,7 +80,7 @@ define([
          */
         'selection': [],
         /**
-         * Used to monitor run before edge addition.
+         * Used to monitor add "run before" connection actions.
          */
         'prerequisite': {
             'active': false,
@@ -202,6 +203,9 @@ define([
     };
 
     service.onPointerDoubleClick = function () {
+        if (!this.enabled) {
+            return;
+        }
         // We need the item to be selected.
         this.onEditComponent();
     };
@@ -370,6 +374,12 @@ define([
 
     service.onCopyComponent = function () {
         this.pipelineCanvas.clone(this.componentMenu.view.model.id);
+    };
+
+    service.onEnableDisable = function() {
+        var component = this.pipelineCanvas.getResource(
+                this.componentMenu.view.model.id);
+        this.API.onEnableDisable(component);
     };
 
     service.onPrerequisiteComponent = function () {

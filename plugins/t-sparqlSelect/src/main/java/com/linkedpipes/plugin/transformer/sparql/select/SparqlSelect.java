@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.sparql.select;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,14 +14,15 @@ import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class SparqlSelect implements SimpleExecution {
+public final class SparqlSelect implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlSelect.class);
 
@@ -39,9 +39,22 @@ public final class SparqlSelect implements SimpleExecution {
     @Component.Configuration
     public SparqlSelectConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context) throws NonRecoverableException {
-        // For each graph.
+    public void execute() throws LpException {
+        if (configuration.getFileName() == null
+                || configuration.getFileName().isEmpty()) {
+            throw exceptionFactory.invalidConfigurationProperty(
+                    SparqlSelectVocabulary.HAS_FILE_NAME, "");
+        }
+        if (configuration.getQuery()== null
+                || configuration.getQuery().isEmpty()) {
+            throw exceptionFactory.invalidConfigurationProperty(
+                    SparqlSelectVocabulary.HAS_QUERY, "");
+        }
+        //
         final IRI inputGraph = inputRdf.getGraph();
         final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
         LOG.info("{} -> {}", inputGraph, outputFile);
@@ -59,7 +72,7 @@ public final class SparqlSelect implements SimpleExecution {
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw new Component.ExecutionFailed("Exception.", ex);
+                throw exceptionFactory.failed("Exception.", ex);
             }
         });
     }

@@ -10,10 +10,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.linkedpipes.etl.dataunit.system.api.SystemDataUnitException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.io.IOException;
+import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -61,7 +64,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     /**
      * Directories with content of this data unit.
      */
-    private List<File> readRootDirectories = new LinkedList<>();
+    private final List<File> readRootDirectories = new LinkedList<>();
 
     /**
      * List of source data units IRI.
@@ -79,62 +82,81 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         }
     }
 
-    private void merge(FilesDataUnitImpl source) throws DataUnitException {
+    private void merge(FilesDataUnitImpl source) {
         readRootDirectories.addAll(source.readRootDirectories);
     }
 
     @Override
-    public void initialize(File directory) throws DataUnitException {
+    public void initialize(File directory) throws LpException {
         final ObjectMapper mapper = new ObjectMapper();
         final File inputFile = new File(directory, "data.json");
         final JavaType type = mapper.getTypeFactory().constructCollectionType(
-                List.class, File.class);
+                List.class, String.class);
+        final List<String> relativePaths;
         try {
-            readRootDirectories = mapper.readValue(inputFile, type);
+            relativePaths = mapper.readValue(inputFile, type);
         } catch (IOException ex) {
-            throw new DataUnitException("Can't load directory list.", ex);
+            throw ExceptionFactory.initializationFailed(
+                    "Can't load directory list.", ex);
+        }
+        for (String path : relativePaths) {
+            readRootDirectories.add(new File(directory, path));
         }
     }
 
     @Override
     public void initialize(Map<String, ManagableDataUnit> dataUnits)
-            throws DataUnitException {
-        initialized = true;
+            throws LpException {
+        if (rootDirectory == null) {
+            throw ExceptionFactory.initializationFailed(
+                    "Root directory is not set!");
+        }
         // Iterate over sources and add their content.
         for (String sourceUri : sources) {
             if (!dataUnits.containsKey(sourceUri)) {
-                throw new DataUnitException("Missing input!");
+                throw ExceptionFactory.initializationFailed(
+                        "Missing input: {}", sourceUri);
             }
             final ManagableDataUnit dataunit = dataUnits.get(sourceUri);
             if (dataunit instanceof FilesDataUnitImpl) {
                 merge((FilesDataUnitImpl) dataunit);
             } else {
-                throw new DataUnitException(
-                        "Can't merge with source data unit!");
+                throw ExceptionFactory.initializationFailed(
+                        "Can't merge with source data unit: {} of {}",
+                        sourceUri, dataunit.getClass().getSimpleName());
             }
         }
         initialized = true;
     }
 
-    @Override
-    public void save(File directory) throws DataUnitException {
-        final ObjectMapper mapper = new ObjectMapper();
-        final File outputFile = new File(directory, "data.json");
-        // Load read directories.
-        try {
-            mapper.writeValue(outputFile, readRootDirectories);
-        } catch (IOException ex) {
-            throw new DataUnitException("Can't save directory list.", ex);
-        }
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(FilesDataUnitImpl.class);
 
     @Override
-    public List<File> dumpContent(File directory) throws DataUnitException {
+    public List<File> save(File directory) throws LpException {
+        // We store store paths to execution directories as relative paths
+        // to given directory.
+        final ObjectMapper mapper = new ObjectMapper();
+        final File outputFile = new File(directory, "data.json");
+        final List<String> relativeDirectories = new ArrayList<>(
+                readRootDirectories.size());
+        for (File file : readRootDirectories) {
+            relativeDirectories.add(directory.toPath().relativize(
+                    file.toPath()).toString());
+            LOG.info("\n{} -> {}", file, directory.toPath().relativize(
+                    file.toPath()));
+        }
+        try {
+            mapper.writeValue(outputFile, relativeDirectories);
+        } catch (IOException ex) {
+            throw ExceptionFactory.failure(
+                    "Can't save directory list.", ex);
+        }
+        // Return list of data directorie.
         return readRootDirectories;
     }
 
     @Override
-    public void close() throws DataUnitException {
+    public void close() throws LpException {
         // No operation here.
     }
 
@@ -154,10 +176,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     }
 
     @Override
-    public Entry createFile(String fileName) throws SystemDataUnitException {
-        if (rootDirectory == null) {
-            throw new SystemDataUnitException("Root directory is not set!");
-        }
+    public FilesDataUnit.Entry createFile(String fileName) throws LpException {
         final File output = new File(rootDirectory, fileName);
         output.getParentFile().mkdirs();
         return new Entry(output, rootDirectory);
@@ -186,7 +205,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     public long size() {
         // TODO We should use better approeach here.
         long size = 0;
-        for (com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry item : this) {
+        for (FilesDataUnit.Entry item : this) {
             ++size;
         }
         return size;

@@ -6,10 +6,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import com.linkedpipes.etl.executor.api.v1.exception.RecoverableException;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dpu.api.service.AfterExecution;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,8 +15,10 @@ import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -31,7 +30,7 @@ import com.linkedpipes.etl.dpu.api.Component;
  *
  * @author Petr Škoda
  */
-public final class LoaderScp implements SimpleExecution {
+public final class LoaderScp implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(LoaderScp.class);
 
@@ -44,34 +43,51 @@ public final class LoaderScp implements SimpleExecution {
     @Component.Inject
     public AfterExecution cleanUp;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Component.Context context)
-            throws NonRecoverableException {
+    public void execute() throws LpException {
         final String user = configuration.getUserName();
         final String password = configuration.getPassword();
         final String host = configuration.getHost();
         final int port = configuration.getPort();
         final String targetFile = configuration.getTargetDirectory();
-
+        if (user == null || user.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_USERNAME);
+        }
+        if (password == null || password.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_PASSWORD);
+        }
+        if (host == null || host.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_HOST);
+        }
+        if (targetFile == null || targetFile.isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    LoaderScpVocabulary.HAS_TARGET_DIRECTORY);
+        }
+        //
         final JSch jsch = new JSch();
-
         // Create session.
         final Session session;
         try {
             session = jsch.getSession(user, host, port);
             session.setPassword(password);
         } catch (JSchException ex) {
-            throw new ExecutionFailed("Can't create session.", ex);
+            throw exceptionFactory.failed("Can't create session.", ex);
         }
-
-        // Enable connection to machines with unknown host key - this is potential secutiry risk!
+        // Enable connection to machines with unknown host
+        // key - this is potential secutiry risk!
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);
         try {
             session.connect();
         } catch (JSchException ex) {
-
+            throw exceptionFactory.failed("Can't connect to host", ex);
         }
         cleanUp.addAction(() -> session.disconnect());
 
@@ -79,7 +95,7 @@ public final class LoaderScp implements SimpleExecution {
             try {
                 secureCreateDirectory(session, targetFile);
             } catch (JSchException | SftpException | IOException ex) {
-                throw new ExecutionFailed("Can't create directory.", ex);
+                throw exceptionFactory.failed("Can't create directory.", ex);
             }
         }
 
@@ -88,7 +104,7 @@ public final class LoaderScp implements SimpleExecution {
         try {
             channel = session.openChannel("exec");
         } catch (JSchException ex) {
-            throw new ExecutionFailed("Can't create session.", ex);
+            throw exceptionFactory.failed("Can't create session.", ex);
         }
         // File transfer.
         // -r - enable copy of empty directory
@@ -104,8 +120,8 @@ public final class LoaderScp implements SimpleExecution {
             for (File rootDirectory : input.getReadRootDirectories()) {
                 sendDirectoryContent(remoteOut, remoteIn, rootDirectory);
             }
-        } catch (IOException | JSchException | RecoverableException ex) {
-            throw new Component.ExecutionFailed(
+        } catch (IOException | JSchException | LpException ex) {
+            throw exceptionFactory.failed(
                     "Can't upload data!", ex);
         } finally {
             if (channel.isConnected()) {
@@ -144,13 +160,11 @@ public final class LoaderScp implements SimpleExecution {
      * @param remoteIn
      * @param sourceDirectory
      * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws RecoverableException
+     * @throws LpException
      */
-    private static void sendDirectoryContent(OutputStream remoteOut,
+    private void sendDirectoryContent(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory)
-            throws IOException, Component.ExecutionFailed,
-            RecoverableException {
+            throws IOException, LpException {
         // Scan for files.
         for (final File file : sourceDirectory.listFiles()) {
             if (file.isDirectory()) {
@@ -170,13 +184,11 @@ public final class LoaderScp implements SimpleExecution {
      * @param sourceDirectory
      * @param directoryName
      * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws RecoverableException
+     * @throws LpException
      */
-    private static void sendDirectory(OutputStream remoteOut,
+    private void sendDirectory(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory, String directoryName)
-            throws IOException, Component.ExecutionFailed,
-            RecoverableException {
+            throws IOException, LpException {
         LOG.debug("Sending directory: {} ... ", directoryName);
         // Send command.
         String command = "D0755 0 " + directoryName + "\n";
@@ -205,12 +217,10 @@ public final class LoaderScp implements SimpleExecution {
      * @param sourceFile
      * @param fileName Must not include '/'.
      * @throws java.io.IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.RecoverableException
+     * @throws LpException
      */
-    private static void sendFile(OutputStream remoteOut, InputStream remoteIn,
-            File sourceFile, String fileName) throws IOException,
-            Component.ExecutionFailed, RecoverableException {
+    private void sendFile(OutputStream remoteOut, InputStream remoteIn,
+            File sourceFile, String fileName) throws IOException, LpException {
         LOG.debug("Sending file: {} ... ", fileName);
         if (fileName.indexOf('/') > 0) {
             throw new IllegalArgumentException("File name '" + fileName + "'");
@@ -240,26 +250,24 @@ public final class LoaderScp implements SimpleExecution {
      *
      * @param stream
      * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.RecoverableException
+     * @throws LpException
      */
-    private static void resonseCheck(InputStream stream) throws IOException,
-            Component.ExecutionFailed, RecoverableException {
+    private void resonseCheck(InputStream stream) throws IOException, LpException{
         final int response = stream.read();
         switch (response) {
             case -1: // No response from server.
-                throw new Component.ExecutionFailed(
+                throw exceptionFactory.failed(
                         "No response from server!");
             case 0: // Success.
                 break;
             case 1:
-                throw new Component.ExecutionFailed("Error: {}",
+                throw exceptionFactory.failed("Error: {}",
                         readResponseLine(stream));
             case 2:
-                throw new Component.ExecutionFailed("Fatal error: {}",
+                throw exceptionFactory.failed("Fatal error: {}",
                         readResponseLine(stream));
             default:
-                throw new Component.ExecutionFailed(
+                throw exceptionFactory.failed(
                         "Invalid reponse: {}", response);
         }
     }

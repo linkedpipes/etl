@@ -11,21 +11,19 @@
     <modules>
         <module>build-checkstyle</module>
         <module>pom-parent</module>
-        <module>pom-dpu</module>
+        <module>pom-component</module>
         <!-- API. -->
         <module>api-executor-v1</module>
         <module>api-commons</module>
-        <module>api-dpu-v1</module>
+        <module>api-component-v1</module>
         <module>dataunit-sesame</module>
         <module>dataunit-system</module>
         <!-- Implementation. -->
         <module>utils-core</module>
-        <module>api-dpu-v1-impl</module>
+        <module>api-component-v1-impl</module>
         <module>dataunit-sesame-impl</module>
         <module>dataunit-system-impl</module>
         <!-- Applications. -->
-        <module>commons-code</module>
-        <module>commons-entities</module>
         <module>executor</module>
         <module>executor-monitor</module>
         <!-- Plugins. -->

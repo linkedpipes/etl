@@ -4,12 +4,16 @@ package com.linkedpipes.plugin.transformer.packzip;
  *
  * @author Škoda Petr
  */
-public class PackZipVocabulary {
+final class PackZipVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-packZip#";
+    private static final String PREFIX
+            = "http://plugins.linkedpipes.com/ontology/t-packZip#";
 
-    public static final String CONFIG_CLASS = PREFIX + "Configuration";
+    public static final String CONFIG = PREFIX + "Configuration";
 
-    public static final String CONFIG_FILE_NAME = PREFIX + "fileName";
+    public static final String HAS_FILE_NAME = PREFIX + "fileName";
+
+    private PackZipVocabulary() {
+    }
 
 }

@@ -1,10 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.component;
 
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
-import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.api.v1.exception.LocalizedException;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -14,6 +11,9 @@ import java.util.Map;
  */
 public interface BaseComponent {
 
+    /**
+     * Represent a list of headers that component should implement.
+     */
     public final class Headers {
 
         private Headers() {
@@ -29,50 +29,12 @@ public interface BaseComponent {
     }
 
     /**
-     * Report component initialization failure.
-     */
-    public class InitializationFailed extends NonRecoverableException {
-
-        public InitializationFailed(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedException.LocalizedString(
-                    messages, "en")), args);
-        }
-
-    }
-
-    /**
-     * Report component execution failure.
-     */
-    public static class ComponentFailed extends NonRecoverableException {
-
-        public ComponentFailed(String messages, Object... args) {
-            super(Arrays.asList(new LocalizedException.LocalizedString(
-                    messages, "en")), args);
-        }
-
-    }
-
-    public interface Context {
-
-        public void sendMessage(Event message);
-
-        /**
-         *
-         * @return True if component should stop (fail) as soon as possible.
-         */
-        public boolean canceled();
-
-    }
-
-    /**
      * Initialize component before execution.
      *
      * @param dataUnits
-     * @param context
-     * @throws BaseComponent.InitializationFailed
+     * @throws com.linkedpipes.etl.executor.api.v1.RdfException
      */
-    public void initialize(Map<String, DataUnit> dataUnits, Context context)
-            throws InitializationFailed;
+    public void initialize(Map<String, DataUnit> dataUnits) throws RdfException;
 
     /**
      *

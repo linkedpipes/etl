@@ -1,11 +1,11 @@
 package com.linkedpipes.etl.executor.module;
 
 import com.linkedpipes.etl.executor.api.v1.Plugin;
-import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 import java.util.Collection;
 
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
+import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 
 /**
  *
@@ -48,11 +48,12 @@ public interface ModuleFacade {
      *
      * @param definition
      * @param subject
+     * @param context Context given to new component.
      * @return Never null.
      * @throws ModuleException
      */
     public BaseComponent getComponent(PipelineDefinition definition,
-            String subject) throws ModuleException;
+            String subject, Plugin.Context context) throws ModuleException;
 
     /**
      * Create and return manageable data unit that matches given specification.

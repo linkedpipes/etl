@@ -14,6 +14,9 @@ define([], function () {
 
             $scope.dialog.commitSize = rdf.getInteger(resource, 'commitSize');
             $scope.dialog.mimeType = rdf.getString(resource, 'mimeType');
+            if ($scope.dialog.mimeType === undefined) {
+                $scope.dialog.mimeType = "";
+            }
         };
 
         $scope.getConfiguration = function () {

@@ -1,15 +1,15 @@
 package com.linkedpipes.plugin.transformer.packzip;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
  * @author Škoda Petr
  */
-@RdfToPojo.Type(uri = PackZipVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = PackZipVocabulary.CONFIG)
 public class PackZipConfiguration {
 
-    @RdfToPojo.Property(uri = PackZipVocabulary.CONFIG_FILE_NAME)
+    @RdfToPojo.Property(uri = PackZipVocabulary.HAS_FILE_NAME)
     private String fileName;
 
     public PackZipConfiguration() {

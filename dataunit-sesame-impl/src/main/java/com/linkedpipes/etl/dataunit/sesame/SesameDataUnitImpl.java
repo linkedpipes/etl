@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.openrdf.repository.Repository;
 
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -13,6 +14,9 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
  */
 abstract class SesameDataUnitImpl implements SesameDataUnit, ManagableDataUnit {
 
+    /**
+     * Binding.
+     */
     private final String id;
 
     private final String resourceUri;
@@ -56,19 +60,17 @@ abstract class SesameDataUnitImpl implements SesameDataUnit, ManagableDataUnit {
     }
 
     @Override
-    public void execute(RepositoryProcedure action)
-            throws RepositoryActionFailed {
+    public void execute(RepositoryProcedure action) throws LpException {
         ActionExecutor.execute(repository, action);
     }
 
     @Override
-    public <T> T execute(RepositoryFunction<T> action)
-            throws RepositoryActionFailed {
+    public <T> T execute(RepositoryFunction<T> action) throws LpException {
         return ActionExecutor.execute(repository, action);
     }
 
     @Override
-    public void execute(Procedure action) throws RepositoryActionFailed {
+    public void execute(Procedure action) throws LpException {
         ActionExecutor.execute(repository, action);
     }
 

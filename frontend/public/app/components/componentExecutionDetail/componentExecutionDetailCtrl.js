@@ -45,6 +45,7 @@ define([], function () {
             $scope.status = statusToMessage(execution.status);
             if (execution.failed !== undefined) {
                 $scope.failed = true;
+                $scope.cause = execution.failed.cause;
                 $scope.rootCause = execution.failed.rootCause;
             }
         })();

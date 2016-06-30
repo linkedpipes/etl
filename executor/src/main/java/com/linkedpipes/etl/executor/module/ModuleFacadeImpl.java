@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.module;
 
 import com.linkedpipes.etl.executor.Configuration;
 import com.linkedpipes.etl.executor.api.v1.Plugin;
-import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
+import com.linkedpipes.etl.executor.api.v1.RdfException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,12 +33,12 @@ import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect.QueryException;
 import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
+import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 
 /**
  *
@@ -74,6 +74,7 @@ class ModuleFacadeImpl implements ModuleFacade,
             + "org.apache.log4j.api;version=\"1.7.12\","
             + "org.apache.log4j.xml;version=\"1.7.12\","
             + "" // core API
+            + "com.linkedpipes.etl.executor.api.v1.exception,"
             + "com.linkedpipes.etl.executor.api.v1,"
             + "com.linkedpipes.etl.executor.api.v1.component,"
             + "com.linkedpipes.etl.executor.api.v1.dataunit,"
@@ -186,24 +187,19 @@ class ModuleFacadeImpl implements ModuleFacade,
 
     @Override
     public BaseComponent getComponent(PipelineDefinition definition,
-            String resource) throws ModuleException {
+            String resource, Plugin.Context context) throws ModuleException {
         // We need to get path to jar file first.
         final Map<String, String> componentInfo;
-        try {
-            final List<Map<String, String>> resultList
-                    = definition.executeSelect(
-                            "SELECT ?path WHERE {\n"
-                            + "  <" + resource + "> <"
-                            + LINKEDPIPES.HAS_JAR_URI + "> ?path .\n"
-                            + "}");
-            if (resultList.size() != 1) {
-                throw new ModuleException("Invalid number query results!");
-            }
-            componentInfo = resultList.get(0);
-        } catch (QueryException ex) {
-            throw new ModuleException(
-                    "Can't load information about componenet.", ex);
+        final List<Map<String, String>> resultList
+                = definition.executeSelect(
+                        "SELECT ?path WHERE {\n"
+                        + "  <" + resource + "> <"
+                        + LINKEDPIPES.HAS_JAR_URI + "> ?path .\n"
+                        + "}");
+        if (resultList.size() != 1) {
+            throw new ModuleException("Invalid number query results!");
         }
+        componentInfo = resultList.get(0);
         // Then we need to load or get the bundle.
         final String jarFileUri = componentInfo.get("path");
         if (!components.containsKey(jarFileUri)) {
@@ -229,8 +225,8 @@ class ModuleFacadeImpl implements ModuleFacade,
             try {
                 return factory.create(definition, resource,
                         definition.getDefinitionGraph(),
-                        componenetContext);
-            } catch (ComponentFactory.CreationFailed ex) {
+                        componenetContext, context);
+            } catch (RdfException ex) {
                 throw new ModuleException("Invalid bundle detected!", ex);
             }
         }
@@ -249,7 +245,7 @@ class ModuleFacadeImpl implements ModuleFacade,
                 if (dataUnit != null) {
                     return dataUnit;
                 }
-            } catch (DataUnitFactory.CreationFailed ex) {
+            } catch (RdfException ex) {
                 LOG.error("Can't create data unit.", ex);
             }
         }

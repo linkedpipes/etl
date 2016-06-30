@@ -1,8 +1,6 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dpu.api.service.AfterExecution;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +19,20 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sparql.SPARQLRepository;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
  * @author Petr Škoda
  */
-public class SparqlEndpointLoader implements SimpleExecution {
+public class SparqlEndpointLoader implements Component.Sequential {
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(id = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit outputRdf;
@@ -39,13 +43,21 @@ public class SparqlEndpointLoader implements SimpleExecution {
     @Component.Inject
     public AfterExecution afterExecution;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
         // Create repository.
         final SPARQLRepository sparqlRepository = new SPARQLRepository(
                 configuration.getEndpoint());
         // No action here.
-        sparqlRepository.initialize();
+        try {
+            sparqlRepository.initialize();
+        } catch (Throwable t) {
+            throw exceptionFactory.failed(
+                    "Can't connect to remote SPARQL.", t);
+        }
         //
         afterExecution.addAction(() -> {
             sparqlRepository.shutDown();
@@ -58,13 +70,13 @@ public class SparqlEndpointLoader implements SimpleExecution {
                         configuration.getTargetGraphName());
             }
         } catch (IOException ex) {
-            throw new ExecutionFailed("Can't clear data.", ex);
+            throw exceptionFactory.failed("Can't clear data.", ex);
         }
         try (final CloseableHttpClient httpclient = getHttpClient()) {
             sparqlRepository.setHttpClient(httpclient);
             loadData(sparqlRepository);
         } catch (IOException ex) {
-            throw new ExecutionFailed("Can't load data.", ex);
+            throw exceptionFactory.failed("Can't load data.", ex);
         }
     }
 

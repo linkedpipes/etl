@@ -22,6 +22,18 @@
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${deploy.directory}/osgi/core</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <version>2.7</version>
@@ -201,19 +213,13 @@
                                         <!-- Core libraries -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-commons</artifactId>
+                                            <artifactId>api-component-v1</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-dpu-v1</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-dpu-v1-impl</artifactId>
+                                            <artifactId>api-component-v1-impl</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
@@ -316,6 +322,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-dcatAp11Dataset</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-dcatAp11Dataset/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-distributionMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-distributionMetadata/</outputDirectory>
@@ -376,6 +388,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlSelectMulti</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-sparqlSelectMulti/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlUpdate</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-sparqlUpdate/</outputDirectory>
@@ -391,6 +409,12 @@
                                             <artifactId>t-tabularUv</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-tabularUv/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-templatedXlsToCsv</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-templatedXlsToCsv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -412,9 +436,21 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-fileHasher</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-fileHasher/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesBase64Decode</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesBase64Decode/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesRenamer</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesRenamer/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -529,6 +565,12 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-dcatAp11Dataset/"/>
+                                        <copy todir="${deploy.directory}/components/e-dcatAp11Dataset/">
+                                            <fileset dir="${plugins.directory}/e-dcatAp11Dataset/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/e-datasetMetadata/"/>
                                         <copy todir="${deploy.directory}/components/e-datasetMetadata/">
                                             <fileset dir="${plugins.directory}/e-datasetMetadata/target/classes">
@@ -595,6 +637,12 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-sparqlSelectMulti/"/>
+                                        <copy todir="${deploy.directory}/components/t-sparqlSelectMulti/">
+                                            <fileset dir="${plugins.directory}/t-sparqlSelectMulti/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/t-sparqlUpdate/"/>
                                         <copy todir="${deploy.directory}/components/t-sparqlUpdate/">
                                             <fileset dir="${plugins.directory}/t-sparqlUpdate/target/classes">
@@ -610,6 +658,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-tabularUv/"/>
                                         <copy todir="${deploy.directory}/components/t-tabularUv/">
                                             <fileset dir="${plugins.directory}/t-tabularUv/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-templatedXlsToCsv/"/>
+                                        <copy todir="${deploy.directory}/components/t-templatedXlsToCsv/">
+                                            <fileset dir="${plugins.directory}/t-templatedXlsToCsv/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
@@ -631,9 +685,21 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-fileHasher/"/>
+                                        <copy todir="${deploy.directory}/components/t-fileHasher/">
+                                            <fileset dir="${plugins.directory}/t-fileHasher/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/t-filesBase64Decode/"/>
                                         <copy todir="${deploy.directory}/components/t-filesBase64Decode/">
                                             <fileset dir="${plugins.directory}/t-filesBase64Decode/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesRenamer/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesRenamer/">
+                                            <fileset dir="${plugins.directory}/t-filesRenamer/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

@@ -1,22 +1,21 @@
 package com.linkedpipes.plugin.transformer.sparql.update;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit.SesameDataUnitException;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import org.openrdf.model.IRI;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
-import org.openrdf.query.impl.DatasetImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.openrdf.query.impl.SimpleDataset;
 
 /**
  *
  * @author Škoda Petr
  */
-public final class SparqlUpdate implements SimpleExecution {
+public final class SparqlUpdate implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(SparqlUpdate.class);
 
@@ -34,8 +33,7 @@ public final class SparqlUpdate implements SimpleExecution {
     public SparqlUpdateConfiguration configuration;
 
     @Override
-    public void execute(Component.Context context)
-            throws Component.ExecutionFailed, SesameDataUnitException {
+    public void execute() throws LpException {
         final IRI inputGraph = inputRdf.getGraph();
         final IRI outputGraph = outputRdf.getGraph();
         LOG.info("Update: {} -> {}", inputGraph, outputGraph);
@@ -48,7 +46,7 @@ public final class SparqlUpdate implements SimpleExecution {
         // Perform update.
         inputRdf.execute((connection) -> {
             final Update update = connection.prepareUpdate(QueryLanguage.SPARQL, configuration.getQuery());
-            final DatasetImpl dataset = new DatasetImpl();
+            final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(outputGraph);
             dataset.addDefaultRemoveGraph(outputGraph);
             dataset.setDefaultInsertGraph(outputGraph);

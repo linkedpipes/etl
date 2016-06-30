@@ -1,12 +1,12 @@
 package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
-import com.linkedpipes.etl.dpu.api.service.RdfToPojo;
+import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
  * @author Petr Škoda
  */
-@RdfToPojo.Type(uri = GraphStoreProtocolVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(uri = GraphStoreProtocolVocabulary.CONFIG)
 public class GraphStoreProtocolConfiguration {
 
     public static enum RepositoryType {

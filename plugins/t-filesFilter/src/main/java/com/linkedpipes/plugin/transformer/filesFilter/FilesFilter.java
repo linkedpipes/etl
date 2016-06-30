@@ -2,20 +2,20 @@ package com.linkedpipes.plugin.transformer.filesFilter;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.dpu.api.executable.SimpleExecution;
-import com.linkedpipes.etl.dpu.api.Component;
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
  * @author Petr Škoda
  */
-public class FilesFilter implements SimpleExecution {
+public class FilesFilter implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(FilesFilter.class);
 
@@ -25,22 +25,33 @@ public class FilesFilter implements SimpleExecution {
     @Component.InputPort(id = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
-    @Configuration
+    @Component.Configuration
     public FilesFilterConfiguration configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     @Override
-    public void execute(Context context) throws NonRecoverableException {
+    public void execute() throws LpException {
+        if (configuration.getFileNamePattern() == null
+                || configuration.getFileNamePattern().isEmpty()) {
+            throw exceptionFactory.missingConfigurationProperty(
+                    FilesFilterVocabulary.HAS_PATTERN);
+        }
+        //
         final String pattern = configuration.getFileNamePattern();
         LOG.debug("Pattern: {}", pattern);
         for (FilesDataUnit.Entry entry : inputFiles) {
             final boolean matches = entry.getFileName().matches(pattern);
             LOG.debug("Entry: {} : {}", entry.getFileName(), matches);
             if (matches) {
-                final File outputFile = outputFiles.createFile(entry.getFileName()).toFile();
+                final File outputFile = outputFiles.createFile(
+                        entry.getFileName()).toFile();
                 try {
                     Files.copy(entry.toFile().toPath(), outputFile.toPath());
                 } catch (IOException ex) {
-                    throw new Component.ExecutionFailed("Can't copy file: {}", entry.getFileName(), ex);
+                    throw exceptionFactory.failed("Can't copy file: {}",
+                            entry.getFileName(), ex);
                 }
             }
         }

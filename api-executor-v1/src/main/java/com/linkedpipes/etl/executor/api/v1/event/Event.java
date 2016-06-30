@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.event;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
+import com.linkedpipes.etl.executor.api.v1.rdf.SerializableToRdf;
 
 /**
  * Used to communicate state of the execution as well as user informations
@@ -8,23 +8,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.StatementWriter;
  *
  * @author Škoda Petr
  */
-public interface Event {
-
-    /**
-     * Set event IRI.
-     * 
-     * @param iri
-     */
-    public void setResource(String iri);
-
-    /**
-     * The IRI that should be referenced from execution. Is not
-     * called before {@link #setResource(java.lang.String)}.
-     *
-     * @return Resource IRI.
-     */
-    public String getResource();
-
-    public void write(StatementWriter writer);
+public interface Event extends SerializableToRdf {
 
 }

@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.executor.api.v1.exception.NonRecoverableException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
@@ -14,12 +14,12 @@ public interface StatementConsumer {
 
     public void onRowStart();
 
-    public void onRowEnd() throws NonRecoverableException;
+    public void onRowEnd() throws LpException;
 
-    public void onFileStart() throws NonRecoverableException;
+    public void onFileStart() throws LpException;
 
-    public void onFileEnd() throws NonRecoverableException;
+    public void onFileEnd() throws LpException;
 
-    public void submit(Resource subject, IRI predicate, Value object) throws NonRecoverableException;
+    public void submit(Resource subject, IRI predicate, Value object) throws LpException;
 
 }
