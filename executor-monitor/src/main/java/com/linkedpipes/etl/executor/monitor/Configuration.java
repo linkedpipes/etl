@@ -37,7 +37,9 @@ public class Configuration {
 
     private String externalWorkingDirectoryPath;
 
-    private int ftpServerPort;
+    private int ftpCommandPort;
+
+    private String ftpDataPort;
 
     private int processPortStart;
 
@@ -74,10 +76,16 @@ public class Configuration {
         logFilter = getProperty("executor-monitor.log.core.level");
         fusekiPath = getProperty("external.fuseki.path");
         externalWorkingDirectoryPath = getProperty("external.working");
-        ftpServerPort = getPropertyInteger("executor-monitor.ftp.port");
+        ftpCommandPort = getPropertyInteger("executor-monitor.ftp.command_port");
         processPortStart = getPropertyInteger("external.port.start");
         processPortEnd = getPropertyInteger("external.port.end");
         executionPrefix = getProperty("executor.execution.uriPrefix");
+        //
+        final Integer ftpDataPortsStart = getPropertyInteger(
+                "executor-monitor.ftp.data_ports_interval.start");
+        final Integer ftpDataPortsEnd = getPropertyInteger(
+                "executor-monitor.ftp.data_ports_interval.end");
+        ftpDataPort = ftpDataPortsStart + "-" + ftpDataPortsEnd;
         //
         validateUri(executorUri, "executor.execution.working_directory");
         validateDirectory(workingDirectoryPath);
@@ -124,8 +132,12 @@ public class Configuration {
         return result;
     }
 
-    public int getFtpServerPort() {
-        return ftpServerPort;
+    public int getFtpCommandPort() {
+        return ftpCommandPort;
+    }
+
+    public String getFtpDataPort() {
+        return ftpDataPort;
     }
 
     public int getProcessPortStart() {
