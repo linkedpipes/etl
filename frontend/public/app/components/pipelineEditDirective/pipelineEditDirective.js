@@ -80,7 +80,7 @@ define([
          */
         'selection': [],
         /**
-         * Used to monitor run before edge addition.
+         * Used to monitor add "run before" connection actions.
          */
         'prerequisite': {
             'active': false,
