@@ -107,8 +107,13 @@ public class DataUnitManager {
             final DataUnitContainer container = dataUnits.get(dataUnit.getIri());
             initialize(container);
             usedDataUnits.put(dataUnit.getIri(), container.getInstance());
+            // If the data unit is input, we want to save the
+            // data here. So the used can see input of a running
+            // component.
+            if (dataUnit.isInput()) {
+                save(container);
+            }
         }
-
         return usedDataUnits;
     }
 
@@ -207,6 +212,9 @@ public class DataUnitManager {
         }
         //
         final File dataFile = container.getMetadata().getDataPath();
+        final ExecutionModel.DataUnit dataUnit = container.getMetadata();
+        LOG.info("Saving data unit: {} : {} ... ",
+                dataUnit.getBinding(), dataUnit.getIri());
         if (dataFile != null) {
             List<File> debugPaths = Collections.EMPTY_LIST;
             try {
@@ -233,6 +241,8 @@ public class DataUnitManager {
                 LOG.error("Can't save data debug paths.", ex);
             }
         }
+        LOG.info("Saving data unit: {} : {} ... done",
+                dataUnit.getBinding(), dataUnit.getIri());
         // Update container status.
         container.onSave();
     }
@@ -243,12 +253,17 @@ public class DataUnitManager {
                 // Already closed.
                 return;
         }
+        final ExecutionModel.DataUnit dataUnit = container.getMetadata();
+        LOG.info("Closing data unit: {} : {} ... ",
+                dataUnit.getBinding(), dataUnit.getIri());
         try {
             container.getInstance().close();
         } catch (LpException ex) {
             throw new DataUnitException(("Can't close data unit : {}"),
                     container.getMetadata().getIri(), ex);
         }
+        LOG.info("Closing data unit: {} : {} ... done",
+                dataUnit.getBinding(), dataUnit.getIri());
     }
 
 }
