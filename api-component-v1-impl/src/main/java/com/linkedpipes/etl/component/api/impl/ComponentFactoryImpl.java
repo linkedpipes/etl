@@ -15,7 +15,7 @@ import org.osgi.framework.wiring.BundleWiring;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
-import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
 import org.osgi.framework.BundleContext;
 import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
 

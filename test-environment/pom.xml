@@ -62,12 +62,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>utils-core</artifactId>
-            <version>0.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>compile</scope>

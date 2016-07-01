@@ -1,17 +1,16 @@
-package com.linkedpipes.etl.utils.core.event;
+package com.linkedpipes.etl.component.api.impl;
 
+import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.linkedpipes.etl.executor.api.v1.event.Event;
-
 /**
  *
  * @author Škoda Petr
  */
-public abstract class AbstractEvent implements Event {
+abstract class AbstractEvent implements Event {
 
     /**
      * Message URI.
@@ -35,14 +34,14 @@ public abstract class AbstractEvent implements Event {
     protected final static DateFormat TIME_FORMAT
             = new SimpleDateFormat("HH:mm:ss.SSS");
 
-    public AbstractEvent(String type) {
+    protected AbstractEvent(String type) {
         this.created = new Date();
         this.type = type;
         this.label = null;
         this.labelLanguage = null;
     }
 
-    public AbstractEvent(String type, String label, String labelLanguage) {
+    protected AbstractEvent(String type, String label, String labelLanguage) {
         this.created = new Date();
         this.type = type;
         this.label = label;

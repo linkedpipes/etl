@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.Plugin;
 import java.util.Collection;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.utils.core.event.AbstractEvent;
 
 /**
  *

@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
-import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
 import org.osgi.service.component.annotations.Component;
 
 /**

@@ -6,7 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
 import java.io.File;
 import java.util.List;
 import java.util.Map;

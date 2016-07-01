@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
 
 /**
  * Describe common configuration of sesame data unit.

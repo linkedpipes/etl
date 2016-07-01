@@ -225,12 +225,6 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>utils-core</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>dataunit-sesame</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
