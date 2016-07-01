@@ -35,6 +35,11 @@ class ColumnFactory {
         final List<ColumnAbstract> result = new ArrayList<>(configuration.getTableSchema().getColumns().size());
         final TabularConfiguration.Schema schema = configuration.getTableSchema();
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        // The configuration can contains user mapping, but if the full
+        // mapping is used all user options are ignored.
+        if (configuration.isFullMapping()) {
+            return Collections.EMPTY_LIST;
+        }
 
         final ResourceTemplate defaultAboutUrl = new ResourceTemplate(schema.getAboutUrl());
 
