@@ -127,6 +127,8 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
         MDC.put(LoggerFacade.COMPONENT_MDC, null);
         try {
             componentInstance.execute();
+            eventManager.publish(EventFactory.componentFinished(
+                    componentDefinition));
         } catch (Throwable t) {
             eventManager.publish(EventFactory.componentFailed(
                     componentDefinition, t));
@@ -134,12 +136,9 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
                     "Component execution failed."));
         }
         // Clean up.
-        eventManager.publish(EventFactory.componentFinished(
-                componentDefinition));
         dataUnitManager.onComponentEnd(componentExecution);
         MDC.remove(LoggerFacade.COMPONENT_MDC);
         unexpectedTermination = false;
-
     }
 
 }
