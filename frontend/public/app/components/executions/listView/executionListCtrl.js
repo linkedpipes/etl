@@ -105,14 +105,16 @@ define([
             } else {
                 execution.duration = '';
             }
-            //
-            if (execution.progress.current === undefined
-                    || execution.progress.total === 0) {
+            // The information about progress may not be available at the
+            // start of the execution.
+            var current = execution.progress.current;
+            var total = execution.progress.total;
+            if (current === undefined || total === undefined ||
+                    parseInt(total) === 0) {
                 // Start with no progress.
                 execution.progress.value = 0;
             } else {
-                execution.progress.value = 100 *
-                        (execution.progress.current / execution.progress.total);
+                execution.progress.value = 100 * (current / total);
             }
             // Determine detail and icon type.
             switch (execution.status) {
