@@ -45,10 +45,15 @@ public final class ResourceManager {
         return new File(executionRoot, "input");
     }
 
+    /**
+     *
+     * @param name
+     * @return Path to working directory, the directory may not exist.
+     */
     public File getWorkingDirectory(String name) {
         counter += 1;
-        final File working = new File(executionRoot, "working/" + name + "-" + counter);
-        working.mkdirs();
+        final File working = new File(executionRoot,
+                "working/" + name + "-" + counter);
         return working;
     }
 
