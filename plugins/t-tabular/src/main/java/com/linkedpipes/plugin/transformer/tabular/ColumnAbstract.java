@@ -7,7 +7,8 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
- * Default predicate: valueFactory.createIRI(configuration.url + "#" + URLEncoder.encode(column.name, "UTF-8"));
+ * Default predicate: configuration.url + "#"
+ * + URLEncoder.encode(column.name, "UTF-8"));
  *
  *
  * @author Petr Škoda
@@ -20,7 +21,8 @@ abstract class ColumnAbstract {
     public static class MissingColumnValue extends Exception {
 
         public MissingColumnValue(String name, int rowNumber) {
-            super("Missing value for required column: '" + name + "' on row " + Integer.toString(rowNumber));
+            super("Missing value for required column: '" + name + "' on row "
+                    + Integer.toString(rowNumber));
         }
 
     }
@@ -33,7 +35,8 @@ abstract class ColumnAbstract {
 
     }
 
-    protected static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
+    protected static final ValueFactory VALUE_FACTORY
+            = SimpleValueFactory.getInstance();
 
     protected final String name;
 
@@ -45,7 +48,8 @@ abstract class ColumnAbstract {
 
     private int valueIndex;
 
-    public ColumnAbstract(String name, boolean required, ResourceTemplate aboutUrl, UrlTemplate predicate) {
+    ColumnAbstract(String name, boolean required, ResourceTemplate aboutUrl,
+            UrlTemplate predicate) {
         this.name = name;
         this.required = required;
         this.aboutUrl = aboutUrl;
@@ -58,7 +62,8 @@ abstract class ColumnAbstract {
      * @param tableUri
      * @param header
      */
-    public void initialize(String tableUri, List<String> header) throws MissingNameInHeader, InvalidTemplate {
+    public void initialize(String tableUri, List<String> header)
+            throws MissingNameInHeader, InvalidTemplate {
         aboutUrl.initialize(tableUri, header);
         predicate.initialize(tableUri, header);
         valueIndex = header.indexOf(name);
@@ -75,7 +80,8 @@ abstract class ColumnAbstract {
      * @return Must not return null.
      * @throws NonRecoverableException
      */
-    public abstract List<Resource> emit(StatementConsumer outputConsumer, List<String> row, int rowNumber)
+    public abstract List<Resource> emit(StatementConsumer outputConsumer,
+            List<String> row, int rowNumber)
             throws LpException, MissingColumnValue;
 
     /**
@@ -84,9 +90,10 @@ abstract class ColumnAbstract {
      * @param row
      * @param rowNumber
      * @return
-     * @throws com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingColumnValue
+     * @throws MissingColumnValue
      */
-    protected String getValue(List<String> row, int rowNumber) throws MissingColumnValue {
+    protected String getValue(List<String> row, int rowNumber)
+            throws MissingColumnValue {
         if (row.size() <= valueIndex) {
             throw new MissingColumnValue(this.name, rowNumber);
         } else {

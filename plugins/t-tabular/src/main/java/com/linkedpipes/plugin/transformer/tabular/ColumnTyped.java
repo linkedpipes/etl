@@ -9,6 +9,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 /**
+ * Represent a column with a type.
  *
  * @author Petr Škoda
  */
@@ -21,15 +22,16 @@ class ColumnTyped extends ColumnAbstract {
      */
     private final String language;
 
-    public ColumnTyped(IRI type, String language, String name, boolean required, ResourceTemplate aboutUrl,
-            UrlTemplate predicate) {
+    ColumnTyped(IRI type, String language, String name, boolean required,
+            ResourceTemplate aboutUrl, UrlTemplate predicate) {
         super(name, required, aboutUrl, predicate);
         this.type = type;
         this.language = language;
     }
 
     @Override
-    public List<Resource> emit(StatementConsumer outputConsumer, List<String> row, int rowNumber)
+    public List<Resource> emit(StatementConsumer outputConsumer,
+            List<String> row, int rowNumber)
             throws LpException, MissingColumnValue {
         final Resource s = aboutUrl.getResource(row, rowNumber);
         if (s == null) {

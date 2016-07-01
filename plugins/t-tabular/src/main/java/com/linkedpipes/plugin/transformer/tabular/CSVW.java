@@ -5,6 +5,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
+ * Holds vocabulary for CSV on the Web.
  *
  * @author Petr Škoda
  */
@@ -40,6 +41,9 @@ public class CSVW {
         HAS_ROWNUM = valueFactory.createIRI(prefix + "rownum");
         HAS_TITLE = valueFactory.createIRI(prefix + "title");
         HAS_DESCRIBES = valueFactory.createIRI(prefix + "describes");
+    }
+
+    private CSVW() {
     }
 
 }

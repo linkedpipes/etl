@@ -12,7 +12,8 @@ import org.openrdf.model.impl.SimpleValueFactory;
  */
 public class ResourceTemplate {
 
-    protected static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
+    protected static final ValueFactory VALUE_FACTORY
+            = SimpleValueFactory.getInstance();
 
     private final StringTemplate template;
 
@@ -31,7 +32,8 @@ public class ResourceTemplate {
         }
     }
 
-    public void initialize(String tableUri, List<String> header) throws InvalidTemplate {
+    public void initialize(String tableUri, List<String> header)
+            throws InvalidTemplate {
         lastRowNumber = -1;
         if (template != null) {
             template.initialize(tableUri, header);
