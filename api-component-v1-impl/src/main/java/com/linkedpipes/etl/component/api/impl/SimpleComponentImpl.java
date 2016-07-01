@@ -105,7 +105,7 @@ final class SimpleComponentImpl implements SequentialComponent {
         }
         if (dataUnit == null) {
             if (!optional) {
-                LOG.info("Expected: {}", id);
+                LOG.info("Missing data unit, expected: {}", id);
                 for (DataUnit item : dataUnits.values()) {
                     LOG.info("\tFound: {}", item.getBinding());
                 }
