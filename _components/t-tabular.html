@@ -8,7 +8,7 @@ description: Transforms CSV files to RDF triples.
 
 <p class="flow-text">
 Transformer. Used to transform CSV files to RDF data according to the <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a> W3C Recommendation.
-The first set of parameters is there simply do deal with CSV files incompliant with <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a>, which specifiec a comma as a delimiter, the double-quote as a quote character and UTF-8 as the encoding.
+The first set of parameters is there simply do deal with CSV files not compliant with <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a>, which specifies a comma as a delimiter, the double-quote as a quote character, and UTF-8 as the encoding.
 </p>
 <!--more-->
 <dl class="flow-text">
@@ -26,7 +26,7 @@ The first set of parameters is there simply do deal with CSV files incompliant w
     <dt>Trim</dt>
     <dd>Removes trailing whitespaces from cells</dd>
     <dt>Default resource IRI template</dt>
-    <dd>An <a href="https://tools.ietf.org/html/rfc6570#section-2">RFC 6570</a> IRI template. E.g. <code>http://ex.org/{COLUMN_WITH_ID}</code></dd>
+    <dd>An <a href="https://tools.ietf.org/html/rfc6570#section-2">RFC 6570</a> IRI template. E.g., <code>http://ex.org/{COLUMN_WITH_ID}</code></dd>
     <dt>Rows skip</dt>
     <dd>Number of rows to be skipped during transformation</dd>
     <dt>Rows limit</dt>
