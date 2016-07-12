@@ -7,6 +7,7 @@ import com.linkedpipes.etl.component.api.Component.Sequential;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -81,8 +82,12 @@ public class DcatAp11Dataset implements Sequential {
     	if (configuration.getIssued() != null) {
             addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetVocabulary.XSD_DATE));
         }
-		if (configuration.getModified() != null) {
-            addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
+		if (configuration.getModifiedNow() != null && configuration.getModifiedNow()) {
+            addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(new Date()), DcatAp11DatasetVocabulary.XSD_DATE));
+        } else {
+            if (configuration.getModified() != null) {
+                addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
+            }
         }
     	addIRIs(dataset, DCTERMS.SPATIAL, configuration.getSpatialIRIs());
     	for (String s : configuration.getSpatialIRIs()) {
@@ -91,7 +96,8 @@ public class DcatAp11Dataset implements Sequential {
 
     	if ((configuration.getTemporalStart() != null) || (configuration.getTemporalEnd() != null)) {
     		IRI temporal = valueFactory.createIRI(configuration.getDatasetIRI() + "/temporal");
-    		addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
+    		addIRI(dataset, DCTERMS.TEMPORAL, temporal);
+            addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
 			if (configuration.getTemporalStart() != null) {
                 addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetVocabulary.XSD_DATE));
             }
@@ -121,9 +127,15 @@ public class DcatAp11Dataset implements Sequential {
     	// Maybe move somewhere else...? Like distributions
     	addIRIs(dataset, DcatAp11DatasetVocabulary.ADMS_SAMPLE, configuration.getSampleIRIs());
 
-    	addIRIs(dataset, DcatAp11DatasetVocabulary.DCAT_LANDING_PAGE, configuration.getLandingPageIRIs());
+    	if (!isBlank(configuration.getCatalogIRI())) {
+            IRI catalog = valueFactory.createIRI(configuration.getCatalogIRI());
+            addIRI(catalog, RDF.TYPE, DcatAp11DatasetVocabulary.DCAT_CATALOG_CLASS);
+            addIRI(catalog, DcatAp11DatasetVocabulary.DCAT_DATASET, dataset);
+        }
+
+        addIRIs(dataset, DcatAp11DatasetVocabulary.DCAT_LANDING_PAGE, configuration.getLandingPageIRIs());
     	addIRIs(dataset, DCTERMS.RELATION, configuration.getRelatedIRIs());
-    	addIRIs(dataset, DCTERMS.CONFORMS_TO, configuration.getConfromsToIRIs());
+    	addIRIs(dataset, DCTERMS.CONFORMS_TO, configuration.getConformsToIRIs());
     	addIRIs(dataset, DCTERMS.SOURCE, configuration.getSourceIRIs());
     	addIRIs(dataset, DCTERMS.HAS_VERSION, configuration.getHasVersionIRIs());
     	addIRIs(dataset, DCTERMS.IS_VERSION_OF, configuration.getIsVersionOfIRIs());
