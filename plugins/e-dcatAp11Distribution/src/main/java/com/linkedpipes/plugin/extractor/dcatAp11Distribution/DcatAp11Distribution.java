@@ -132,11 +132,9 @@ public class DcatAp11Distribution implements Sequential {
         String issued;
         if (configuration.getIssuedFromDataset() != null && configuration.getIssuedFromDataset()) {
             issued = querySingleResult("SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
-        } else {
+            addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
+        } else if (configuration.getIssued() != null) {
             issued = sdf.format(configuration.getIssued());
-        }
-
-        if (!isBlank(issued)) {
             addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
         }
 
@@ -161,7 +159,7 @@ public class DcatAp11Distribution implements Sequential {
                                 DcatAp11DistributionVocabulary.XSD_DATE));
             }
         }
-        else {
+        else if (configuration.getModified() != null) {
             if (configuration.getModifiedNow() != null && configuration.getModifiedNow()) {
                 addValue(distribution, DCTERMS.MODIFIED,
                         valueFactory.createLiteral(sdf.format(new Date()),
