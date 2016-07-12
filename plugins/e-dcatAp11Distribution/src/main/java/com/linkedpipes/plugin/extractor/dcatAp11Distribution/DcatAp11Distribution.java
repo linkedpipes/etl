@@ -87,6 +87,8 @@ public class DcatAp11Distribution implements Sequential {
         if (!isBlank(configuration.getLicenseIRI())) {
             addIRI(distribution, DCTERMS.LICENSE, configuration.getLicenseIRI());
             addIRI(valueFactory.createIRI(configuration.getLicenseIRI()), RDF.TYPE, DCTERMS.LICENSE_DOCUMENT);
+            addIRI(valueFactory.createIRI(configuration.getLicenseIRI()), DCTERMS.TYPE, configuration.getLicenseTypeIRI());
+            addIRI(valueFactory.createIRI(configuration.getLicenseTypeIRI()), RDF.TYPE, SKOS.CONCEPT);
         }
 
         // Optional

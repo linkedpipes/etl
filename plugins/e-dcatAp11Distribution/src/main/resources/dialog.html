@@ -28,6 +28,15 @@
             <input type="uri" ng-model="dialog.licenseIRI" placeholder="https://my.distribution.license">
         </md-input-container>
 
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>License type</label>
+            <md-select ng-model="dialog.licenseTypeIRI">
+                <md-option ng-repeat="type in licenseTypes" value="{{type['@id']}}">
+                    <span ng-repeat="label in type['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+
         <lp-localized-text-input class="md-block" label-top="Distribution description" label-item="Description" ng-model="dialog.descriptions"></lp-localized-text-input>
     </md-tab>
     <md-tab label="Download">

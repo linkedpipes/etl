@@ -37,6 +37,7 @@ define([], function () {
             //Recommended
             $scope.dialog.formatIRI = rdf.getString(resource, 'formatIRI') ;
             $scope.dialog.licenseIRI = rdf.getString(resource, 'licenseIRI') ;
+            $scope.dialog.licenseTypeIRI = rdf.getString(resource, 'licenseTypeIRI') ;
             $scope.dialog.descriptions = rdf.getValue(resource, 'descriptions') ;
 
             //Download
@@ -93,6 +94,7 @@ define([], function () {
             //Recommended
             rdf.setString(resource, 'formatIRI', $scope.dialog.formatIRI);
             rdf.setString(resource, 'licenseIRI', $scope.dialog.licenseIRI);
+            rdf.setString(resource, 'licenseTypeIRI', $scope.dialog.licenseTypeIRI);
             rdf.setValue(resource, 'descriptions', $scope.dialog.descriptions);
 
             //Download
@@ -1435,8 +1437,143 @@ define([], function () {
                ]
            }
        ];
-
-
+        $scope.licenseTypes = [
+            {
+                "@id": "http://purl.org/adms/licencetype/Attribution",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Attribution"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/PublicDomain",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Public domain"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/ViralEffect-ShareAlike",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Viral effect (a.k.a. Share-alike)"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/ShareAlike-NotCompatible",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Share-alike / copyleft - not compatible/interoperable with other copyleft licences"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/ShareAlike-Compatible",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Share-alike / copyleft on source code or with compatibility exceptions for larger work and interoperability"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/NonCommercialUseOnly",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Non-commercial use only"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/NoDerivativeWork",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "No derivative work"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/RoyaltiesRequired",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Royalties required"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/ReservedNames-Endorsement-OfficialStatus",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Reserved names / endorsement / official status"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/NominalCost",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Nominal cost"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/GrantBack",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Grant back"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/JurisdictionWithinTheEU",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Jurisdiction within the EU"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/OtherRestrictiveClauses",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Other restrictive clauses"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/KnownPatentEncumbrance",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Known patent encumbrance"
+                    }
+                ]
+            },
+            {
+                "@id": "http://purl.org/adms/licencetype/UnknownIPR",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Unknown IPR"
+                    }
+                ]
+            }
+        ];
 
        $scope.createLangFilter = function createFilterFor(query) {
           var lowercaseQuery = angular.lowercase(query);

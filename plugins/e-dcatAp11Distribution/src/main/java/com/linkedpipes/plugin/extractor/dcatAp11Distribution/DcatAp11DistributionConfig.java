@@ -226,6 +226,14 @@ public class DcatAp11DistributionConfig {
         this.getDatasetIRIFromInput = getDatasetIRIFromInput;
     }
 
+    public String getLicenseTypeIRI() {
+        return licenseTypeIRI;
+    }
+
+    public void setLicenseTypeIRI(String licenseTypeIRI) {
+        this.licenseTypeIRI = licenseTypeIRI;
+    }
+
     @RdfToPojo.Value
     public static class LocalizedString {
 
@@ -307,6 +315,9 @@ public class DcatAp11DistributionConfig {
 
     @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "licenseIRI")
     private String licenseIRI;
+
+    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "licenseTypeIRI")
+    private String licenseTypeIRI;
 
     @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "descriptions")
     private List<LocalizedString> descriptions = new LinkedList<>();
