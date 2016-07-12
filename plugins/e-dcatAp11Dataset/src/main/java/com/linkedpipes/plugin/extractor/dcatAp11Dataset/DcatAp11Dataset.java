@@ -53,7 +53,11 @@ public class DcatAp11Dataset implements Sequential {
     		IRI contactPoint = valueFactory.createIRI(configuration.getDatasetIRI() + "/contactPoint");
     		addIRI(dataset, DcatAp11DatasetVocabulary.DCAT_CONTACT_POINT, contactPoint);
     		addIRI(contactPoint, RDF.TYPE, configuration.getContactPointTypeIRI());
-    		addValue(contactPoint, DcatAp11DatasetVocabulary.VCARD_FN, configuration.getContactPointName());
+
+            // Unnecessary, to satisfy validator rule #43 http://52.50.205.146:3031/sparql-doc/rule-43.html
+            addIRI(contactPoint, RDF.TYPE, DcatAp11DatasetVocabulary.VCARD_KIND_CLASS);
+
+            addValue(contactPoint, DcatAp11DatasetVocabulary.VCARD_FN, configuration.getContactPointName());
     		addValue(contactPoint, DcatAp11DatasetVocabulary.VCARD_HAS_EMAIL, configuration.getContactPointEmail());
     	}
     	addLocalizedString(dataset, DcatAp11DatasetVocabulary.DCAT_KEYWORD, configuration.getKeywords());

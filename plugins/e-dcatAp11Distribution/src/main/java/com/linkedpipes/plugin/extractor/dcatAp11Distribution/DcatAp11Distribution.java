@@ -93,7 +93,9 @@ public class DcatAp11Distribution implements Sequential {
 
         // Optional
 
-        addValue(distribution, DcatAp11DistributionVocabulary.DCAT_BYTESIZE, valueFactory.createLiteral(configuration.getByteSize().toString(), DcatAp11DistributionVocabulary.XSD_DECIMAL));
+        if (configuration.getByteSize() != null) {
+            addValue(distribution, DcatAp11DistributionVocabulary.DCAT_BYTESIZE, valueFactory.createLiteral(configuration.getByteSize().toString(), DcatAp11DistributionVocabulary.XSD_DECIMAL));
+        }
         if (!isBlank(configuration.getChecksum())) {
             IRI checksumIRI = valueFactory.createIRI(distributionIRI + "/checksum");
             addIRI(distribution, DcatAp11DistributionVocabulary.SPDX_CHECKSUM, checksumIRI);
