@@ -3,7 +3,7 @@
         {
             "@id": "http://linkedpipes.com/resources/components/e-distributionMetadata/1.0.0",
             "@type": "http://linkedpipes.com/ontology/Component",
-            "http://www.w3.org/2004/02/skos/core#prefLabel": "Distribution metadata",
+            "http://www.w3.org/2004/02/skos/core#prefLabel": "(DEPRECATED) Distribution metadata",
             "http://linkedpipes.com/ontology/color": "#F6D8CE",
             "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Extractor"},
             "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
@@ -12,7 +12,7 @@
                 {"@id": "http://localhost:8080/resources/components/t-distributionMetadata/1.0.0/input"}
             ],
             "http://linkedpipes.com/ontology/keyword": [
-                "metadata", "distribution"
+                "metadata", "distribution", "DCAT-AP"
             ]
         },
         {
