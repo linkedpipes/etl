@@ -1,0 +1,12 @@
+
+<http://publications.europa.eu/resource/authority/frequency/ANNUAL_3> a <http://purl.org/dc/terms/Frequency> .
+
+<http://publications.europa.eu/resource/authority/language/ENG> a <http://purl.org/dc/terms/LinguisticSystem> .
+
+<http://real.dataset.iri> a <http://www.w3.org/ns/dcat#Dataset> ;
+	<http://purl.org/dc/terms/accrualPeriodicity> <http://publications.europa.eu/resource/authority/frequency/ANNUAL_3> ;
+	<http://purl.org/dc/terms/description> "Dataset description"@en ;
+	<http://purl.org/dc/terms/issued> "2016-07-12"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	<http://purl.org/dc/terms/language> <http://publications.europa.eu/resource/authority/language/ENG> ;
+	<http://purl.org/dc/terms/modified> "2016-07-26"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	<http://purl.org/dc/terms/title> "Dataset title"@en .
