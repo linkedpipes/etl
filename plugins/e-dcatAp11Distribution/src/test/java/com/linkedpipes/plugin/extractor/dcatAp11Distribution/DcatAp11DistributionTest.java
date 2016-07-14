@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.TimeZone;
 
-import com.sun.deploy.resources.ResourceManager;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
@@ -25,7 +24,7 @@ public class DcatAp11DistributionTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(DcatAp11DistributionTest.class);
 
-    @Test
+    //@Test
     public void fullMetadata() throws Exception {
         final DcatAp11Distribution component = new DcatAp11Distribution();
         component.configuration = new DcatAp11DistributionConfig();
@@ -108,5 +107,41 @@ public class DcatAp11DistributionTest {
             LOG.error("Failure", ex);
         }
     }
+
+    @Test
+	public void minMetadata() throws Exception {
+		final DcatAp11Distribution component = new DcatAp11Distribution();
+		component.configuration = new DcatAp11DistributionConfig();
+
+		try (final TestEnvironment env = TestEnvironment.create(component, TestUtils.getTempDirectory())) {
+
+			final WritableSingleGraphDataUnit metadata = env.bindSingleGraphDataUnit("Metadata");
+			final WritableSingleGraphDataUnit dataset = env.bindSingleGraphDataUnit("Dataset");
+
+			ClassLoader classLoader = getClass().getClassLoader();
+			File file = new File(classLoader.getResource("data.ttl").getFile());
+			RepositoryConnection conn = dataset.getRepository().getConnection();
+			conn.add(file, "http://should.not.exist", RDFFormat.TURTLE);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+			component.configuration.setGetDatasetIRIFromInput(true);
+			//component.configuration.setDatasetIRI("http://my.dataset.iri");
+			component.configuration.setGenDistroIRI(true);
+			//component.configuration.setDistributionIRI("http://my.distro.iri");
+			component.configuration.setAccessURLs(Arrays.asList(
+					"http://my.access.url1",
+					"http://my.access.url2"
+			));
+
+			env.execute();
+			TestUtils.store(metadata, new File("metadata.ttl"), RDFFormat.TURTLE);
+			conn.close();
+		} catch (Exception ex) {
+			LOG.error("Failure", ex);
+		}
+	}
 
 }

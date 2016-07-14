@@ -132,7 +132,7 @@ public class DcatAp11DatasetConfig {
     private Date issued;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "modifiedNow")
-    private Boolean modifiedNow;
+    private Boolean modifiedNow = true;
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "modified")
     private Date modified;
