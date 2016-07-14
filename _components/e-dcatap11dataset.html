@@ -1,0 +1,33 @@
+---
+short: e-dcatap11dataset
+type: extractor
+color: red
+title: DCAT-AP Dataset
+description: Provides a form to fill in DCAT-AP v1.1 Dataset metadata
+---
+
+<p class="flow-text">
+Extractor, provides a form to fill in DCAT-AP v1.1 Dataset metadata.
+</p>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component provides a form to fill in <a href="https://joinup.ec.europa.eu/node/146653" title="DCAT-AP v1.1">DCAT-AP v1.1</a> Dataset metadata.
+        The typical usage is in each data preparation pipeline to store and produce dataset related metadata.
+        </p>
+    </div>
+</div>
