@@ -76,11 +76,9 @@ define([
             //
             execution.id = execution.iri.substring(
                     execution.iri.lastIndexOf('executions/') + 11);
-            // Convert times.
-            execution.startTime = Date.parse(execution.start);
-            if (execution.end) {
-                execution.endTime = Date.parse(execution.end);
-            }
+            // Store time - use direct value, so we don't have to solve
+            // time zone issues.
+            execution.startTime = execution.start;
             // Get label.
             if (execution.pipeline.labels) {
                 if (execution.pipeline.labels['en']) {
@@ -93,9 +91,11 @@ define([
             } else {
                 execution.label = execution.id;
             }
-            // Compute duration.
-            if (execution.endTime) {
-                var duration = (execution.endTime - execution.startTime) / 1000;
+            // Compute duration
+            if (execution.end) {
+                var startTime = Date.parse(execution.start);
+                var endTime = Date.parse(execution.end);
+                var duration = (endTime - startTime) / 1000;
                 var seconds = Math.ceil((duration) % 60);
                 var minutes = Math.floor((duration / (60)) % 60);
                 var hours = Math.floor(duration / (60 * 60));
