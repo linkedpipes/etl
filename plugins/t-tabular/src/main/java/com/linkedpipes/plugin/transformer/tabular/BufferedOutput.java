@@ -20,7 +20,8 @@ class BufferedOutput implements StatementConsumer {
 
     private final static int BUFFER_SIZE = 50000;
 
-    private final static ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
+    private final static ValueFactory VALUE_FACTORY
+            = SimpleValueFactory.getInstance();
 
     private final WritableSingleGraphDataUnit dataUnit;
 
@@ -57,8 +58,8 @@ class BufferedOutput implements StatementConsumer {
 
     @Override
     public void submit(Resource subject, IRI predicate, Value object) {
-        buffer.add(VALUE_FACTORY.createStatement(subject, predicate, object,
-                graph));
+        buffer.add(VALUE_FACTORY.createStatement(
+                subject, predicate, object, graph));
     }
 
     private void flushBuffer() throws LpException {

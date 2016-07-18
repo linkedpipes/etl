@@ -61,8 +61,8 @@ public class TabularConfiguration {
     }
 
     /**
-     * If name and titles are missing name for the column is determined as "_col.[N]", where
-     * N is the row number.
+     * If name and titles are missing name for the column is determined as
+     * "_col.[N]", where N is the row number.
      */
     @RdfToPojo.Type(uri = TabularVocabulary.COLUMN)
     public static class Column {
@@ -100,7 +100,8 @@ public class TabularConfiguration {
         /**
          * Inherited property.
          *
-         * ! Can be string or complex type. ! For now we suppose it's just string.
+         * ! Can be string or complex type. ! For now we suppose it's just
+         * string.
          */
         @RdfToPojo.Property(uri = TabularVocabulary.HAS_SUPRESS_DATATYPE)
         private String datatype;
@@ -135,7 +136,9 @@ public class TabularConfiguration {
             datatype = "string";
         }
 
-        public Column(String name, String lang, String separator, String default_, String datatype, String aboutUrl, String propertyUrl, String valueUrl) {
+        public Column(String name, String lang, String separator,
+                String default_, String datatype, String aboutUrl,
+                String propertyUrl, String valueUrl) {
             this.name = name;
             this.lang = lang;
             this.separator = separator;

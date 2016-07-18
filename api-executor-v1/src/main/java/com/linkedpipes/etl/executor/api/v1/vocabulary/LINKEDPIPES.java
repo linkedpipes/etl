@@ -134,7 +134,8 @@ public final class LINKEDPIPES {
         public static final String HAS_TARGET_PROPERTY = PREFIX_ONTOLOGY + "target";
 
         /**
-         * Assign working directory under target predicate.
+         * Assign working directory under target predicate. The directory
+         * may not exist.
          */
         public static final String TEMP_DIRECTORY = PREFIX_ONTOLOGY + "TempDirectory";
 

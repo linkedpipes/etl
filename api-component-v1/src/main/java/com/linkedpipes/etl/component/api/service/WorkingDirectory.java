@@ -11,6 +11,8 @@ public class WorkingDirectory extends File {
 
     public WorkingDirectory(String pathname) {
         super(pathname);
+        // Create the directory.
+        super.mkdirs();
     }
 
 }

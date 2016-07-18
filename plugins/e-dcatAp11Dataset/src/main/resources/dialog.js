@@ -1,7 +1,5 @@
 define([], function () {
     function controller($scope, rdfService) {
-        $scope.dialog = {} ;
-
         var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/');
 
         var listToString = function(string) {
@@ -60,6 +58,7 @@ define([], function () {
 
             $scope.dialog.accrualPeriodicityIRI = rdf.getString(resource, 'accrualPeriodicityIRI') ;
             $scope.dialog.issued = rdf.getDate(resource, 'issued') ;
+            $scope.dialog.modifiedNow = rdf.getBoolean(resource, 'modifiedNow') ;
             $scope.dialog.modified = rdf.getDate(resource, 'modified') ;
             $scope.dialog.spatialIRIs = rdf.getValue(resource, 'spatialIRIs') ;
             $scope.dialog.temporalStart = rdf.getDate(resource, 'temporalStart') ;
@@ -71,10 +70,11 @@ define([], function () {
             $scope.dialog.provenances = rdf.getValue(resource, 'provenances') ;
 
             //Relations
+            $scope.dialog.catalogIRI = rdf.getString(resource, 'catalogIRI') ;
             $scope.dialog.sampleIRIs = rdf.getValue(resource, 'sampleIRIs') ;
             $scope.dialog.landingPageIRIs = rdf.getValue(resource, 'landingPageIRIs') ;
             $scope.dialog.relatedIRIs = rdf.getValue(resource, 'relatedIRIs') ;
-            $scope.dialog.confromsToIRIs = rdf.getValue(resource, 'confromsToIRIs') ;
+            $scope.dialog.conformsToIRIs = rdf.getValue(resource, 'conformsToIRIs') ;
             $scope.dialog.sourceIRIs = rdf.getValue(resource, 'sourceIRIs') ;
             $scope.dialog.hasVersionIRIs = rdf.getValue(resource, 'hasVersionIRIs') ;
             $scope.dialog.isVersionOfIRIs = rdf.getValue(resource, 'isVersionOfIRIs') ;
@@ -120,6 +120,7 @@ define([], function () {
 
             rdf.setString(resource, 'accrualPeriodicityIRI', $scope.dialog.accrualPeriodicityIRI);
             rdf.setDate(resource, 'issued', $scope.dialog.issued);
+            rdf.setBoolean(resource, 'modifiedNow', $scope.dialog.modifiedNow);
             rdf.setDate(resource, 'modified', $scope.dialog.modified);
             rdf.setValue(resource, 'spatialIRIs', $scope.dialog.spatialIRIs);
             rdf.setDate(resource, 'temporalStart', $scope.dialog.temporalStart);
@@ -131,10 +132,11 @@ define([], function () {
             rdf.setValue(resource, 'provenances', $scope.dialog.provenances);
 
             //Relations
+            rdf.setString(resource, 'catalogIRI', $scope.dialog.catalogIRI);
             rdf.setValue(resource, 'sampleIRIs', $scope.dialog.sampleIRIs);
             rdf.setValue(resource, 'landingPageIRIs', $scope.dialog.landingPageIRIs);
             rdf.setValue(resource, 'relatedIRIs', $scope.dialog.relatedIRIs);
-            rdf.setValue(resource, 'confromsToIRIs', $scope.dialog.confromsToIRIs);
+            rdf.setValue(resource, 'conformsToIRIs', $scope.dialog.conformsToIRIs);
             rdf.setValue(resource, 'sourceIRIs', $scope.dialog.sourceIRIs);
             rdf.setValue(resource, 'hasVersionIRIs', $scope.dialog.hasVersionIRIs);
             rdf.setValue(resource, 'isVersionOfIRIs', $scope.dialog.isVersionOfIRIs);
@@ -909,6 +911,7 @@ define([], function () {
           return { value: chip, IRI: 'new' }
       };
 
+      $scope.dialog = {} ;
       $scope.dialog.languages = [] ;
 
     }

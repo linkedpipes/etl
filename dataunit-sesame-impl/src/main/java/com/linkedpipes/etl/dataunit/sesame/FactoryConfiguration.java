@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import java.io.File;
 
-import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
 
 /**
  * Configuration class used by the RDF repository.

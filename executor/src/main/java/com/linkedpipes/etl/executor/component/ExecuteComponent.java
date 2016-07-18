@@ -2,14 +2,12 @@ package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.dataunit.DataUnitManager.CantInitializeDataUnit;
 import com.linkedpipes.etl.executor.event.EventFactory;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.execution.ExecutionModel;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -107,16 +105,14 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
         // mapped we need to store the debug data. It would be nice
         // if we could skip this step and initialize only required
         // data units.
-        final Map<String, ManagableDataUnit> dataUnits
-                = dataUnitManager.getDataUnits(componentExecution);
-        for (Entry<String, ManagableDataUnit> item : dataUnits.entrySet()) {
-            try {
-                dataUnitManager.initialize(item.getKey(), item.getValue());
-            } catch (CantInitializeDataUnit ex) {
-                eventManager.publish(EventFactory.executionFailed(
-                        "Can't initialize data units.", ex));
-                unexpectedTermination = false;
-            }
+        final Map<String, ManagableDataUnit> dataUnits;
+        try {
+            dataUnits = dataUnitManager.onComponentStart(componentExecution);
+        } catch (DataUnitManager.DataUnitException ex) {
+            eventManager.publish(EventFactory.executionFailed(
+                    "Can't initialize data units.", ex));
+            unexpectedTermination = false;
+            return;
         }
         // Prepare component.
         try {
@@ -138,10 +134,11 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
                     componentDefinition, t));
             eventManager.publish(EventFactory.executionFailed(
                     "Component execution failed."));
-        } finally {
-            MDC.remove(LoggerFacade.COMPONENT_MDC);
-            unexpectedTermination = false;
         }
+        // Clean up.
+        dataUnitManager.onComponentEnd(componentExecution);
+        MDC.remove(LoggerFacade.COMPONENT_MDC);
+        unexpectedTermination = false;
     }
 
 }

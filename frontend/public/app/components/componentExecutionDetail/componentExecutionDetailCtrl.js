@@ -39,6 +39,8 @@ define([], function () {
                 $scope.status = 'Not planed for execution';
                 return;
             }
+            // We use the time value directly thus we don't need to care about
+            // time zones.
             $scope.start = execution.start;
             $scope.end = execution.end;
             $scope.messages = execution.messages;

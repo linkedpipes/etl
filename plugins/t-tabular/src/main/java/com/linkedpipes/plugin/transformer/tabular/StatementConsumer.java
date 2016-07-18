@@ -20,6 +20,7 @@ public interface StatementConsumer {
 
     public void onFileEnd() throws LpException;
 
-    public void submit(Resource subject, IRI predicate, Value object) throws LpException;
+    public void submit(Resource subject, IRI predicate, Value object)
+            throws LpException;
 
 }

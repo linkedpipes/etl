@@ -138,9 +138,15 @@ public final class ExecutionModel implements EventManager.EventListener {
          */
         private DataUnitSource source = null;
 
-        public DataUnit(String iri, String binding) {
+        /**
+         * True if represented data unit is used as an input.
+         */
+        private final boolean input;
+
+        public DataUnit(String iri, String binding, boolean input) {
             this.iri = iri;
             this.binding = binding;
+            this.input = input;
         }
 
         public String getIri() {
@@ -169,6 +175,10 @@ public final class ExecutionModel implements EventManager.EventListener {
 
         public boolean isUsedForExecution() {
             return usedForExecution;
+        }
+
+        public boolean isInput() {
+            return input;
         }
 
     }
@@ -561,7 +571,7 @@ public final class ExecutionModel implements EventManager.EventListener {
         // Add data units.
         for (PipelineModel.DataUnit dataUnit : component.getDataUnits()) {
             final DataUnit executionDataUnit = new DataUnit(dataUnit.getIri(),
-                    dataUnit.getBinding());
+                    dataUnit.getBinding(), dataUnit.isInput());
             //
             final PipelineModel.DataSource source = dataUnit.getDataSource();
             if (source != null) {

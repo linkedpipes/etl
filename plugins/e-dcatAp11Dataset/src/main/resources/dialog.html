@@ -88,8 +88,11 @@
             </md-select>
         </md-input-container>
         <div layout-gt-sm="row">
-            <md-datepicker ng-model="dialog.issued" md-placeholder="Release date" flex-gt-sm></md-datepicker>    
-            <md-datepicker ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>    
+            <md-datepicker ng-model="dialog.issued" md-placeholder="Release date" flex-gt-sm></md-datepicker>
+        </div>
+        <div layout-gt-sm="row">
+            <md-switch ng-model="dialog.modifiedNow" ng-disabled="dialog.modifiedFromDataset" flex-gt-sm>Use current date as modified</md-switch>
+            <md-datepicker ng-disabled="dialog.modifiedNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>
         </div>
         <lp-iri-list label-top="Spatial coverage IRIs" label-item="Spatial coverage IRI" ng-model="dialog.spatialIRIs"></lp-iri-list>
         <div layout-gt-sm="row">
@@ -128,10 +131,14 @@
         <!--<div class="md-block">Identifiers</div>-->
     </md-tab>
     <md-tab label="Relations">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Catalog IRI</label>
+            <input type="text" ng-model="dialog.catalogIRI" placeholder="https://my.data.catalog.iri">
+        </md-input-container>
         <lp-iri-list label-top="Sample distribution IRIs" label-item="Sample distribution IRI" ng-model="dialog.sampleIRIs"></lp-iri-list>
         <lp-iri-list label-top="Landing page IRIs" label-item="Landing page IRI" ng-model="dialog.landingPageIRIs"></lp-iri-list>
         <lp-iri-list label-top="Related resource IRIs" label-item="Related resource IRI" ng-model="dialog.relatedIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Conforms to IRIs" label-item="Conforms to IRI" ng-model="dialog.confromsToIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Conforms to IRIs" label-item="Conforms to IRI" ng-model="dialog.conformsToIRIs"></lp-iri-list>
         <lp-iri-list label-top="Source dataset IRIs" label-item="Source dataset IRI" ng-model="dialog.sourceIRIs"></lp-iri-list>
         <lp-iri-list label-top="Has version Dataset IRIs" label-item="Has version dataset IRI" ng-model="dialog.hasVersionIRIs"></lp-iri-list>
         <lp-iri-list label-top="Is version of Dataset IRIs" label-item="Is version of IRI" ng-model="dialog.isVersionOfIRIs"></lp-iri-list>

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
@@ -69,9 +70,12 @@ public class PipelineDefinition implements SparqlSelect {
 
     private PipelineModel pipelineModel;
 
+    private File repositoryDirectory;
+
     public PipelineDefinition(File workingDir) throws RepositoryException {
         repository = new SailRepository(new NativeStore(workingDir));
         repository.initialize();
+        this.repositoryDirectory = workingDir;
     }
 
     public Repository getRepository() {
@@ -141,7 +145,22 @@ public class PipelineDefinition implements SparqlSelect {
 
     public void close() {
         try {
+            LOG.info("Saving repository ... ");
             repository.shutDown();
+            LOG.info("Saving repository ... done");
+            // Delete the directory.
+            FileUtils.deleteQuietly(repositoryDirectory);
+            while (repositoryDirectory.exists()) {
+                // It may take some time until the repository is
+                // ready to be deleted.
+                try {
+                    LOG.debug("Waiting on released of repository.");
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+
+                }
+                FileUtils.deleteQuietly(repositoryDirectory);
+            }
         } catch (RepositoryException ex) {
             LOG.error("Can't close the repository.", ex);
         }

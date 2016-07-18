@@ -76,8 +76,9 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         this.resourceUri = configuration.getResourceUri();
         this.rootDirectory = configuration.getWorkingDirectory();
         this.sources = configuration.getSourceDataUnitUris();
-        // Add root to 'read' directories.
+        // Create root directory and add it to 'read' directories.
         if (rootDirectory != null) {
+            rootDirectory.mkdirs();
             this.readRootDirectories.add(rootDirectory);
         }
     }

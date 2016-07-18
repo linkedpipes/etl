@@ -1,9 +1,7 @@
-package com.linkedpipes.etl.utils.core.entity;
+package com.linkedpipes.etl.executor.api.v1.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import java.util.Map;
-
-import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 
 /**
  * This class is meant to be used as a helper for loading class from java-RDF.

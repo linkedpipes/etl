@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.Plugin;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.dataunit.DataUnitManager.CantInitializeDataUnit;
 import com.linkedpipes.etl.executor.event.EventFactory;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.event.ExecutionFailed;
@@ -98,8 +97,7 @@ public class PipelineExecutor implements EventManager.EventListener {
         }
         execution.assignPipeline(pipeline.getPipelineModel());
         events.addListener(execution);
-        dataUnits = new DataUnitManager(pipeline, execution,
-                modules);
+        dataUnits = new DataUnitManager(pipeline, execution, events);
         //
         MDC.remove(LoggerFacade.SYSTEM_MDC);
     }
@@ -141,8 +139,8 @@ public class PipelineExecutor implements EventManager.EventListener {
         try {
             sendExecutionBeginNotification();
             componenInstances = initializeComponents();
-            dataUnits.prepareDataUnits();
-        } catch (InitializationFailure | CantInitializeDataUnit ex) {
+            dataUnits.onExecutionStart(modules);
+        } catch (InitializationFailure | DataUnitManager.DataUnitException ex) {
             events.publish(EventFactory.initializationFailed(
                     "Initialization failed.", ex));
             afterExecution();
@@ -188,7 +186,7 @@ public class PipelineExecutor implements EventManager.EventListener {
     private void afterExecution() {
         // Close data units.
         if (dataUnits != null) {
-            dataUnits.close(events);
+            dataUnits.onExecutionEnd();
         }
         // Notify plugins that we are done and they can close too.
         // Behind this point we can't work with data units.

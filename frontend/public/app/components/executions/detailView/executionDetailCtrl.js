@@ -27,13 +27,14 @@ define([
          * Update changing properties in target from source.
          */
         var updateComponent = function (target, source) {
-            target.startTime = Date.parse(source.start);
-            if (source.end) {
-                target.endTime = Date.parse(source.end);
-            }
+            // Store time - use direct value, so we don't have to solve
+            // time zone issues.
+            target.startTime = source.start;
             // Compute duration.
             if (target.endTime) {
-                var duration = (target.endTime - target.startTime) / 1000;
+                var startTime = Date.parse(source.start);
+                var endTime = Date.parse(source.end);
+                var duration = (endTime - startTime) / 1000;
                 var seconds = Math.ceil((duration) % 60);
                 var minutes = Math.floor((duration / (60)) % 60);
                 var hours = Math.floor(duration / (60 * 60));

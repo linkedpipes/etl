@@ -6,20 +6,23 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
+ * Template for IRI.
  *
  * @author Petr Škoda
  */
 class UrlTemplate {
 
-    protected static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
+    protected static final ValueFactory VALUE_FACTORY
+            = SimpleValueFactory.getInstance();
 
     private final StringTemplate template;
 
-    public UrlTemplate(String templateAsString) {
+    UrlTemplate(String templateAsString) {
         this.template = new StringTemplate(templateAsString);
     }
 
-    public void initialize(String tableUri, List<String> header) throws InvalidTemplate {
+    public void initialize(String tableUri, List<String> header)
+            throws InvalidTemplate {
         template.initialize(tableUri, header);
     }
 

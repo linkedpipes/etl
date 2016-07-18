@@ -9,6 +9,22 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
 @RdfToPojo.Type(uri = DcatAp11DatasetVocabulary.MY + "Configuration")
 public class DcatAp11DatasetConfig {
 
+    public Boolean getModifiedNow() {
+        return modifiedNow;
+    }
+
+    public void setModifiedNow(Boolean modifiedNow) {
+        this.modifiedNow = modifiedNow;
+    }
+
+    public String getCatalogIRI() {
+        return catalogIRI;
+    }
+
+    public void setCatalogIRI(String catalogIRI) {
+        this.catalogIRI = catalogIRI;
+    }
+
     @RdfToPojo.Value
     public static class LocalizedString {
 
@@ -115,6 +131,9 @@ public class DcatAp11DatasetConfig {
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "issued")
     private Date issued;
 
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "modifiedNow")
+    private Boolean modifiedNow;
+
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "modified")
     private Date modified;
 
@@ -142,6 +161,9 @@ public class DcatAp11DatasetConfig {
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "provenances")
     private List<LocalizedString> provenance = new LinkedList<>();
 
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "catalogIRI")
+    private String catalogIRI;
+
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "sampleIRIs")
     private List<String> sampleIRIs = new LinkedList<>();
 
@@ -151,8 +173,8 @@ public class DcatAp11DatasetConfig {
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "relatedIRIs")
     private List<String> relatedIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "confromsToIRIs")
-    private List<String> confromsToIRIs = new LinkedList<>();
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "conformsToIRIs")
+    private List<String> conformsToIRIs = new LinkedList<>();
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "sourceIRIs")
     private List<String> sourceIRIs = new LinkedList<>();
@@ -337,12 +359,12 @@ public class DcatAp11DatasetConfig {
         this.relatedIRIs = relatedIRIs;
     }
 
-    public List<String> getConfromsToIRIs() {
-        return confromsToIRIs;
+    public List<String> getConformsToIRIs() {
+        return conformsToIRIs;
     }
 
-    public void setConfromsToIRIs(List<String> confromsToIRIs) {
-        this.confromsToIRIs = confromsToIRIs;
+    public void setConformsToIRIs(List<String> conformsToIRIs) {
+        this.conformsToIRIs = conformsToIRIs;
     }
 
     public List<String> getSourceIRIs() {

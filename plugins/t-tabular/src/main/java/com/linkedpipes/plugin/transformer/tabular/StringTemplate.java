@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * Implement first two levels of https://tools.ietf.org/html/rfc6570#section-2
  *
- * Token {{TABLE_URI}} can be used to reference table resource uri, passed to the initialize function
- * as a fist parameter.
+ * Token {{TABLE_URI}} can be used to reference table resource uri,
+ * passed to the initialize function as a fist parameter.
  *
  * @author Petr Škoda
  */
@@ -17,7 +17,7 @@ class StringTemplate {
 
     public static String TABLE_RESOURCE_REF = "__A83N48X1_TABLE_URI__";
 
-    private static abstract class Token {
+    private static interface Token {
 
         public abstract String process(List<String> row);
 
@@ -26,11 +26,11 @@ class StringTemplate {
     /**
      * Return fixed string.
      */
-    private static class TokenString extends Token {
+    private static class TokenString implements Token {
 
         private final String string;
 
-        public TokenString(String string) {
+        private TokenString(String string) {
             this.string = string;
         }
 
@@ -45,14 +45,14 @@ class StringTemplate {
      * Level 1 template.
      * {VALUE} - string is encoded to not include URI characters.
      */
-    private static class TokenSimpleExpanstion extends Token {
+    private static class TokenSimpleExpanstion implements Token {
 
         /**
          * Index from row to pick up.
          */
         private final int index;
 
-        public TokenSimpleExpanstion(int index) {
+        private TokenSimpleExpanstion(int index) {
             this.index = index;
         }
 
@@ -71,14 +71,14 @@ class StringTemplate {
      * Level 2 template.
      * {+VALUE} - values can include reserved URI characters.
      */
-    private static class TokenReservedExpanstion extends Token {
+    private static class TokenReservedExpanstion implements Token {
 
         /**
          * Index from row to pick up.
          */
         private final int index;
 
-        public TokenReservedExpanstion(int index) {
+        private TokenReservedExpanstion(int index) {
             this.index = index;
         }
 
@@ -97,14 +97,14 @@ class StringTemplate {
      * Level 2 template.
      * {#VALUE} - as a simple but # is kept in place.
      */
-    private static class TokenFragmentExpanstion extends Token {
+    private static class TokenFragmentExpanstion implements Token {
 
         /**
          * Index from row to pick up.
          */
         private final int index;
 
-        public TokenFragmentExpanstion(int index) {
+        private TokenFragmentExpanstion(int index) {
             this.index = index;
         }
 
@@ -126,7 +126,7 @@ class StringTemplate {
      */
     private final List<Token> tokens = new LinkedList<>();
 
-    public StringTemplate(String template) {
+    StringTemplate(String template) {
         this.template = template;
     }
 
@@ -136,7 +136,8 @@ class StringTemplate {
      * @param header Names of columns headers.
      * @throws InvalidTemplate
      */
-    public void initialize(String tableUri, List<String> header) throws InvalidTemplate {
+    public void initialize(String tableUri, List<String> header)
+            throws InvalidTemplate {
         tokens.clear();
         // Parse inner template;
         String toParse = template;
@@ -156,13 +157,15 @@ class StringTemplate {
                 if (!value.isEmpty()) {
                     tokens.add(new TokenString(value));
                 } else {
-                    // It can be empty, if for example, string starts with { or there is }{ as substring
+                    // It can be empty, if for example, string starts
+                    // with { or there is }{ as substring
                 }
             } else if (left == -1 || (right != -1 && right < left)) {
                 // } --> name
                 String name = toParse.substring(0, right);
                 // Revert escaping of { } in the pattern.
-                name = name.replaceAll("\\\\\\{", "\\{").replaceAll("\\\\}", "\\}");
+                name = name.replaceAll("\\\\\\{", "\\{")
+                        .replaceAll("\\\\}", "\\}");
                 toParse = toParse.substring(right + 1);
                 // Now name contains the pattern so we can create token.
                 if (name.equals(TABLE_RESOURCE_REF)) {
@@ -187,7 +190,8 @@ class StringTemplate {
         for (Token token : tokens) {
             String newString = token.process(row);
             if (newString == null) {
-                // If anyone return null, then we do not publish - ie. we assume all to be mandatory.
+                // If anyone return null, then we do not publish - ie. we
+                // assume all to be mandatory.
                 // TODO Implement optional
                 return null;
             } else {
@@ -235,15 +239,19 @@ class StringTemplate {
      * @param template
      * @param header
      * @return
-     * @throws com.linkedpipes.plugin.transformer.tabular.StringTemplate.InvalidTemplate
+     * @throws InvalidTemplate
      */
-    private static Token createToken(String template, List<String> header) throws InvalidTemplate {
+    private static Token createToken(String template, List<String> header)
+            throws InvalidTemplate {
         if (template.startsWith("+")) {
-            return new TokenReservedExpanstion(getIndexForTemplate(template.substring(1), header));
+            return new TokenReservedExpanstion(getIndexForTemplate(
+                    template.substring(1), header));
         } else if (template.startsWith("#")) {
-            return new TokenFragmentExpanstion(getIndexForTemplate(template.substring(1), header));
+            return new TokenFragmentExpanstion(getIndexForTemplate(
+                    template.substring(1), header));
         } else {
-            return new TokenSimpleExpanstion(getIndexForTemplate(template, header));
+            return new TokenSimpleExpanstion(getIndexForTemplate(
+                    template, header));
         }
     }
 
@@ -254,10 +262,12 @@ class StringTemplate {
      * @param header
      * @return
      */
-    private static int getIndexForTemplate(String template, List<String> header) throws InvalidTemplate {
+    private static int getIndexForTemplate(String template,
+            List<String> header) throws InvalidTemplate {
         int value = header.indexOf(template);
         if (value == -1) {
-            throw new InvalidTemplate("Missing template in header '" + template + "'");
+            throw new InvalidTemplate("Missing template in header '"
+                    + template + "'");
         } else {
             return value;
         }

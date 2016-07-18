@@ -225,12 +225,6 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>utils-core</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>dataunit-sesame</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
@@ -331,6 +325,12 @@
                                             <artifactId>e-distributionMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-distributionMetadata/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-dcatAp11Distribution</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/e-dcatAp11Distribution/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -568,6 +568,12 @@
                                         <mkdir dir="${deploy.directory}/components/e-dcatAp11Dataset/"/>
                                         <copy todir="${deploy.directory}/components/e-dcatAp11Dataset/">
                                             <fileset dir="${plugins.directory}/e-dcatAp11Dataset/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/e-dcatAp11Distribution/"/>
+                                        <copy todir="${deploy.directory}/components/e-dcatAp11Distribution/">
+                                            <fileset dir="${plugins.directory}/e-dcatAp11Distribution/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

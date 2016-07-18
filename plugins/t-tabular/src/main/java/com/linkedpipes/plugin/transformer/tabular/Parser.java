@@ -32,17 +32,20 @@ class Parser {
 
     private final CsvPreference csvPreference;
 
-    private final  ExceptionFactory exceptionFactory;
+    private final ExceptionFactory exceptionFactory;
 
-    public Parser(TabularConfiguration configuration, ExceptionFactory exceptionFactory) {
+    Parser(TabularConfiguration configuration,
+            ExceptionFactory exceptionFactory) {
         this.dialect = configuration.getDialect();
         this.exceptionFactory = exceptionFactory;
         // We will use quates only if they are provided
         if (dialect.getQuoteChar() == null || dialect.getQuoteChar().isEmpty()) {
             // We do not use quates.
-            final QuoteMode customQuoteMode = (String csvColumn, CsvContext context, CsvPreference preference) -> false;
+            final QuoteMode customQuoteMode = (String csvColumn,
+                    CsvContext context, CsvPreference preference) -> false;
             // Quote char is never used.
-            csvPreference = new CsvPreference.Builder(' ', dialect.getDelimeter().charAt(0),
+            csvPreference = new CsvPreference.Builder(' ',
+                    dialect.getDelimeter().charAt(0),
                     "\\n").useQuoteMode(customQuoteMode).build();
             // Line terminators are also part of the configuration!
         } else {
@@ -54,11 +57,16 @@ class Parser {
     }
 
     public void parse(FilesDataUnit.Entry entry, Mapper mapper)
-            throws UnsupportedEncodingException, IOException, LpException, ColumnAbstract.MissingColumnValue {
-        try (FileInputStream fileInputStream = new FileInputStream(entry.toFile());
-                InputStreamReader inputStreamReader = getInputStream(fileInputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                CsvListReader csvListReader = new CsvListReader(bufferedReader, csvPreference)) {
+            throws UnsupportedEncodingException, IOException, LpException,
+            ColumnAbstract.MissingColumnValue {
+        try (final FileInputStream fileInputStream
+                = new FileInputStream(entry.toFile());
+                final InputStreamReader inputStreamReader
+                = getInputStream(fileInputStream);
+                final BufferedReader bufferedReader
+                = new BufferedReader(inputStreamReader);
+                final CsvListReader csvListReader
+                = new CsvListReader(bufferedReader, csvPreference)) {
             List<String> header;
             List<String> row;
             if (dialect.isHeader()) {
@@ -70,7 +78,8 @@ class Parser {
                 }
             } else {
                 row = csvListReader.read();
-                // We use row size to create artificial header. This is not according to specification
+                // We use row size to create artificial header.
+                // This is not according to specification
                 // where they always have header.
                 header = new ArrayList<>(row.size());
                 for (int i = 1; i <= row.size(); i++) {
@@ -80,7 +89,8 @@ class Parser {
             try {
                 mapper.onHeader(header);
             } catch (InvalidTemplate | MissingNameInHeader ex) {
-                throw exceptionFactory.failed("Can initalize on header row.", ex);
+                throw exceptionFactory.failed("Can initalize on header row.",
+                        ex);
             }
             if (row == null) {
                 LOG.info("No data found in file: {}", entry.getFileName());
@@ -110,19 +120,24 @@ class Parser {
     }
 
     /**
-     * Create {@link InputStreamReader}. If "UTF-8" as encoding is given then {@link BOMInputStream} is used
-     * as intermedian between given fileInputStream and output {@link InputStreamReader} to remove possible
+     * Create {@link InputStreamReader}. If "UTF-8" as encoding is given then
+     * {@link BOMInputStream} is used as wrap of given fileInputStream
+     * and output {@link InputStreamReader} to remove possible
      * BOM mark at the start of "UTF" files.
      *
      * @param fileInputStream
      * @return
      * @throws UnsupportedEncodingException
      */
-    private InputStreamReader getInputStream(FileInputStream fileInputStream) throws UnsupportedEncodingException {
+    private InputStreamReader getInputStream(FileInputStream fileInputStream)
+            throws UnsupportedEncodingException {
         if (dialect.getEncoding().compareToIgnoreCase("UTF-8") == 0) {
-            return new InputStreamReader(new BOMInputStream(fileInputStream, false), dialect.getEncoding());
+            return new InputStreamReader(
+                    new BOMInputStream(fileInputStream, false),
+                    dialect.getEncoding());
         } else {
-            return new InputStreamReader(fileInputStream, dialect.getEncoding());
+            return new InputStreamReader(fileInputStream,
+                    dialect.getEncoding());
         }
     }
 

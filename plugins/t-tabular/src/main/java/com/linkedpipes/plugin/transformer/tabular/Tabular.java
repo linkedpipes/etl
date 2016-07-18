@@ -34,7 +34,9 @@ public class Tabular implements Component.Sequential {
     public void execute() throws LpException {
         final BufferedOutput output = new BufferedOutput(outputRdfDataUnit);
         final Parser parser = new Parser(configuration, exceptionFactory);
-        final Mapper mapper = new Mapper(output, configuration, ColumnFactory.createColumnList(configuration, exceptionFactory), exceptionFactory);
+        final Mapper mapper = new Mapper(output, configuration,
+                ColumnFactory.createColumnList(configuration, exceptionFactory),
+                exceptionFactory);
         // TODO We could use some table group URI from user?
         mapper.initialize(null);
         for (Entry entry : inputFilesDataUnit) {
@@ -44,7 +46,8 @@ public class Tabular implements Component.Sequential {
             try {
                 parser.parse(entry, mapper);
             } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
-                throw exceptionFactory.failed("Can't process file: " + entry.getFileName(), ex);
+                throw exceptionFactory.failed("Can't process file: {}",
+                        entry.getFileName(), ex);
             }
             mapper.onTableEnd();
             output.onFileEnd();

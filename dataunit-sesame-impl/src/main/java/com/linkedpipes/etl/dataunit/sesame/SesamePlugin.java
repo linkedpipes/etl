@@ -6,9 +6,11 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.utils.core.entity.EntityLoader;
+import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.Repository;
@@ -142,7 +144,25 @@ public class SesamePlugin implements DataUnitFactory, Plugin.ExecutionListener {
         // Destroy shared repository.
         if (sharedRepository != null) {
             try {
+                LOG.info("Saving repository ... ");
                 sharedRepository.shutDown();
+                LOG.info("Saving repository ... done");
+                // Delete the directory.
+                final File workingDirectory =
+                        configuration.getWorkingDirectory();
+                FileUtils.deleteQuietly(workingDirectory);
+                while (workingDirectory.exists()) {
+                    // It may take some time until the repository is
+                    // ready to be deleted.
+                    try {
+                        LOG.debug("Waiting on released of repository.");
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+
+                    }
+                    FileUtils.deleteQuietly(workingDirectory);
+                }
+
             } catch (RepositoryException ex) {
                 LOG.error("Can't close repository.", ex);
             }
