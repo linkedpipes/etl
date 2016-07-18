@@ -130,7 +130,7 @@ var updatePipeline = function (pipelineObject, pipelineUri) {
         var components = {};
         var connection = [];
         graph['@graph'].forEach(function (resource) {
-            if (!resource['@id']) {
+            if (!resource['@id'] || !resource['@type']) {
                 return;
             }
             if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1) {
