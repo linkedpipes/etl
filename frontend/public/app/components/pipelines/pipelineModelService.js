@@ -271,8 +271,9 @@ define([], function () {
         service.findByType = function (graph, type) {
             var resources = [];
             graph.forEach(function (resource) {
-                // We need to check for delted resoruces.
+                // We need to check for deleted resoruces.
                 if (resource !== null &&
+                        resource['@type'] &&
                         resource['@type'].indexOf(type) !== -1) {
                     resources.push(resource);
                 }
