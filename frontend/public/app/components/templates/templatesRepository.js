@@ -86,15 +86,17 @@ define(['jquery'], function (jQuery) {
                         return;
                     }
                     template['filterString'] = template.label.toLowerCase();
-                    if (jQuery.isArray(template['keyword'])) {
+                    if (template['keyword'] === undefined) {
+                        // We do not update the filter as there are no
+                        // keywords.
+                    } else if (jQuery.isArray(template['keyword'])) {
                         template['keyword'].forEach(function (word) {
                             template['filterString'] += ',' + word.toLowerCase();
                         });
                     } else {
-                        if (template['filterString']) {
-                            template['filterString'] +=
-                                    ',' + template['keyword'].toLowerCase();
-                        }
+                        // They keyword is a string.
+                        template['filterString'] +=
+                                ',' + template['keyword'].toLowerCase();
                     }
                     // Create followup
                     template['followup'] = {};
