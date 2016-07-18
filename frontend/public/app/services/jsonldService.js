@@ -356,7 +356,7 @@ define(['jquery'], function (jQuery) {
 
     jsonldService.getValue = function (object, property) {
         var value = object[property];
-        if (!value) {
+        if (value === undefined) {
             return;
         }
         if (jQuery.isArray(value)) {
