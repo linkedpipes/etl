@@ -376,8 +376,14 @@ var updateResourceUri = function (content, id) {
     objects.forEach(function (object) {
         if (Array.isArray(object)) {
             object[0]['@id'] = targetDomain + object[0]['@id'].substring(sourceDomainLength);
+        } else if(typeof object === 'object') {
+            var id = object['@id'];
+            if(typeof id === 'undefined'){
+                throw "An object with an @id attribute expected.";
+            }
+            object['@id'] = targetDomain + id.substring(sourceDomainLength);
         } else {
-            object['@id'] = targetDomain + object['@id'].substring(sourceDomainLength);
+            throw "An object expected, got " + typeof object;
         }
     });
 };
