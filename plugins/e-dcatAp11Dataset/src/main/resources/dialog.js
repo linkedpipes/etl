@@ -1,9 +1,5 @@
 define([], function () {
     function controller($scope, rdfService) {
-        $scope.dialog = {
-            'modifiedNow': true
-        } ;
-
         var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/');
 
         var listToString = function(string) {
@@ -915,6 +911,7 @@ define([], function () {
           return { value: chip, IRI: 'new' }
       };
 
+      $scope.dialog = {} ;
       $scope.dialog.languages = [] ;
 
     }

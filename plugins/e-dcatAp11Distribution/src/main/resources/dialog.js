@@ -1,12 +1,5 @@
 define([], function () {
     function controller($scope, rdfService) {
-        $scope.dialog = {
-            'genDistroIRI': true,
-            'languagesFromDataset': true,
-            'issuedFromDataset': true,
-            'modifiedFromDataset': true,
-            'modifiedNow': true
-        } ;
 
         var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/');
 
@@ -1602,6 +1595,7 @@ define([], function () {
           return { value: chip, IRI: 'new' }
       };
 
+      $scope.dialog = {} ;
       $scope.dialog.languages = [] ;
 
     }

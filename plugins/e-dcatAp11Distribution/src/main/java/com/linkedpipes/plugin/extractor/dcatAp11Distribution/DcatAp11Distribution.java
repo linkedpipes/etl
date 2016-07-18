@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Distribution;
 
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
@@ -39,6 +40,9 @@ public class DcatAp11Distribution implements Sequential {
     @Component.Configuration
     public DcatAp11DistributionConfig configuration;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
     private final List<Statement> statements = new ArrayList<>();
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -54,6 +58,10 @@ public class DcatAp11Distribution implements Sequential {
         if (configuration.getGetDatasetIRIFromInput() != null && configuration.getGetDatasetIRIFromInput()) {
             datasetIRI = querySingleResult("SELECT ?d WHERE "
                     + "{?d a <" + DcatAp11DistributionVocabulary.DCAT_DATASET_CLASS + ">}", "d");
+            if (isBlank(datasetIRI)) {
+                throw exceptionFactory.failed("Missing dataset in the input data.");
+            }
+
         } else {
             datasetIRI = configuration.getDatasetIRI();
         }
@@ -74,7 +82,11 @@ public class DcatAp11Distribution implements Sequential {
         addIRI(distribution, RDF.TYPE, DcatAp11DistributionVocabulary.DCAT_DISTRIBUTION_CLASS);
         addIRI(dataset, DcatAp11DistributionVocabulary.DCAT_DISTRIBUTION, distribution);
 
-    	addIRIs(distribution, DcatAp11DistributionVocabulary.DCAT_ACCESSURL, configuration.getAccessURLs());
+        if (configuration.getAccessURLs().isEmpty()) {
+            throw exceptionFactory.failed("Access URL is a mandatory property.");
+        } else {
+            addIRIs(distribution, DcatAp11DistributionVocabulary.DCAT_ACCESSURL, configuration.getAccessURLs());
+        }
 
         // Recommended
         addLocalizedString(distribution, DCTERMS.DESCRIPTION, configuration.getDescriptions());
@@ -132,6 +144,9 @@ public class DcatAp11Distribution implements Sequential {
         String issued;
         if (configuration.getIssuedFromDataset() != null && configuration.getIssuedFromDataset()) {
             issued = querySingleResult("SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
+            if (isBlank(issued)) {
+                throw exceptionFactory.failed("Missing release date property in the input data.");
+            }
             addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
         } else if (configuration.getIssued() != null) {
             issued = sdf.format(configuration.getIssued());
