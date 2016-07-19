@@ -96,22 +96,24 @@ public class GraphStoreProtocol implements Component.Sequential {
             final String mimeType = rdfFormat.get().getDefaultMIMEType();
             //
             LOG.debug("Use repository: {}", configuration.getRepository());
-            final boolean update = !configuration.isReplace();
             switch (configuration.getRepository()) {
                 case BLAZEGRAPH:
                     uploadBlazegraph(configuration.getEndpoint(),
                             entry.toFile(), mimeType,
-                            configuration.getTargetGraph(), update);
+                            configuration.getTargetGraph(),
+                            configuration.isReplace());
                     break;
                 case FUSEKI:
                     uploadFuseki(configuration.getEndpoint(),
                             entry.toFile(), mimeType,
-                            configuration.getTargetGraph(), update);
+                            configuration.getTargetGraph(),
+                            configuration.isReplace());
                     break;
                 case VIRTUOSO:
                     uploadVirtuoso(configuration.getEndpoint(),
                             entry.toFile(), mimeType,
-                            configuration.getTargetGraph(), update);
+                            configuration.getTargetGraph(),
+                            configuration.isReplace());
                     break;
                 default:
                     throw exceptionFactory.failed("Unknown repository type!");
@@ -168,9 +170,9 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     private void uploadBlazegraph(String url, File file, String mimeType,
-            String graph, boolean update) throws LpException {
+            String graph, boolean replace) throws LpException {
         LOG.info("Blazegraph: {} {} {} {} {}", url, file.getName(), mimeType,
-                graph, update);
+                graph, replace);
         //
         try {
             url += "?context-uri=" + URLEncoder.encode(graph, "UTF-8");
@@ -179,8 +181,8 @@ public class GraphStoreProtocol implements Component.Sequential {
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
-        if (update) {
-            // Blaze graph delte statements based on provided qyeru.
+        if (replace) {
+            // Blaze graph delete statements based on provided query.
             final String query = "CONSTRUCT{ ?s ?p ?o} FROM <" + graph
                     + "> WHERE { ?s ?p ?o }";
             try {
@@ -201,9 +203,9 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     private void uploadFuseki(String url, File file, String mimeType,
-            String graph, boolean update) throws LpException {
+            String graph, boolean replace) throws LpException {
         LOG.info("Fuseki: {} {} {} {} {}", url, file.getName(), mimeType,
-                graph, update);
+                graph, replace);
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
@@ -212,7 +214,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
-        if (update) {
+        if (replace) {
             httpMethod = new HttpPut(url);
         } else {
             httpMethod = new HttpPost(url);
@@ -228,9 +230,9 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     private void uploadVirtuoso(String url, File file, String mimeType,
-            String graph, boolean update) throws LpException {
-        LOG.info("Virutoso: {} {} {} {} {}", url, file.getName(), mimeType,
-                graph, update);
+            String graph, boolean replace) throws LpException {
+        LOG.info("Virtuoso: {} {} {} {} {}", url, file.getName(), mimeType,
+                graph, replace);
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
@@ -239,7 +241,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
-        if (update) {
+        if (replace) {
             httpMethod = new HttpPut(url);
         } else {
             httpMethod = new HttpPost(url);
@@ -259,7 +261,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         if (!configuration.isUseAuthentification()) {
             httpClient = HttpClients.custom().build();
         } else {
-            // Use preemptive authentification.
+            // Use preemptive authentication.
             final CredentialsProvider creds = new BasicCredentialsProvider();
             creds.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
@@ -279,7 +281,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         // This is requires as for example Virtuoso will refuse the first
         // request and ask for authorization. However as the first request
         // can be too big - it would looks like a failure to us
-        // (as Virtuoso just close the conection before reading all the data).
+        // (as Virtuoso just close the connection before reading all the data).
         if (configuration.isUseAuthentification()) {
             final HttpEntityEnclosingRequestBase emptyRequest
                     = new HttpPut(configuration.getEndpoint());
