@@ -87,36 +87,31 @@ public class GraphStoreProtocol implements Component.Sequential {
             }
         }
         for (final Entry entry : inputFiles) {
-            final Optional<RDFFormat> optionalFormat
+            final Optional<RDFFormat> rdfFormat
                     = Rio.getParserFormatForFileName(entry.getFileName());
-            if (!optionalFormat.isPresent()) {
+            if (!rdfFormat.isPresent()) {
                 throw exceptionFactory.failed(
                         "Can't determine format for file: {}", entry);
             }
-            final String mimeType = optionalFormat.get().getDefaultMIMEType();
+            final String mimeType = rdfFormat.get().getDefaultMIMEType();
             //
             LOG.debug("Use repository: {}", configuration.getRepository());
+            final boolean update = !configuration.isReplace();
             switch (configuration.getRepository()) {
                 case BLAZEGRAPH:
                     uploadBlazegraph(configuration.getEndpoint(),
-                            entry.toFile(),
-                            mimeType,
-                            configuration.getTargetGraph(),
-                            configuration.isReplace());
+                            entry.toFile(), mimeType,
+                            configuration.getTargetGraph(), update);
                     break;
                 case FUSEKI:
                     uploadFuseki(configuration.getEndpoint(),
-                            entry.toFile(),
-                            mimeType,
-                            configuration.getTargetGraph(),
-                            configuration.isReplace());
+                            entry.toFile(), mimeType,
+                            configuration.getTargetGraph(), update);
                     break;
                 case VIRTUOSO:
                     uploadVirtuoso(configuration.getEndpoint(),
-                            entry.toFile(),
-                            mimeType,
-                            configuration.getTargetGraph(),
-                            configuration.isReplace());
+                            entry.toFile(), mimeType,
+                            configuration.getTargetGraph(), update);
                     break;
                 default:
                     throw exceptionFactory.failed("Unknown repository type!");
@@ -129,11 +124,15 @@ public class GraphStoreProtocol implements Component.Sequential {
                 }
             }
         }
-        LOG.info("Before: {} After: {}", beforeSize, afterSize);
+        if (beforeSize != null) {
+            LOG.info("Before graph size: {}", beforeSize);
+        }
+        if (afterSize != null) {
+            LOG.info("After graph size: {}", afterSize);
+        }
     }
 
     /**
-     *
      * @return Size of a remote graph.
      * @throws LpException
      * @throws IOException
@@ -170,6 +169,9 @@ public class GraphStoreProtocol implements Component.Sequential {
 
     private void uploadBlazegraph(String url, File file, String mimeType,
             String graph, boolean update) throws LpException {
+        LOG.info("Blazegraph: {} {} {} {} {}", url, file.getName(), mimeType,
+                graph, update);
+        //
         try {
             url += "?context-uri=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
@@ -200,6 +202,8 @@ public class GraphStoreProtocol implements Component.Sequential {
 
     private void uploadFuseki(String url, File file, String mimeType,
             String graph, boolean update) throws LpException {
+        LOG.info("Fuseki: {} {} {} {} {}", url, file.getName(), mimeType,
+                graph, update);
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
@@ -223,8 +227,10 @@ public class GraphStoreProtocol implements Component.Sequential {
         executeHttp(httpMethod);
     }
 
-    public void uploadVirtuoso(String url, File file, String mimeType,
+    private void uploadVirtuoso(String url, File file, String mimeType,
             String graph, boolean update) throws LpException {
+        LOG.info("Virutoso: {} {} {} {} {}", url, file.getName(), mimeType,
+                graph, update);
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
