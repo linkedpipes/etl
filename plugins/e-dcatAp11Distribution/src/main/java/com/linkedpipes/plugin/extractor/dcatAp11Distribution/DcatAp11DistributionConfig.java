@@ -234,6 +234,14 @@ public class DcatAp11DistributionConfig {
         this.licenseTypeIRI = licenseTypeIRI;
     }
 
+    public String getDistributionTypeIRI() {
+        return distributionTypeIRI;
+    }
+
+    public void setDistributionTypeIRI(String distributionTypeIRI) {
+        this.distributionTypeIRI = distributionTypeIRI;
+    }
+
     @RdfToPojo.Value
     public static class LocalizedString {
 
@@ -379,5 +387,7 @@ public class DcatAp11DistributionConfig {
     @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "temporalEnd")
     private Date temporalEnd;
 
+    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "distributionTypeIRI")
+    private String distributionTypeIRI;
 
 }

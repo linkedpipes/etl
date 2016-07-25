@@ -205,6 +205,12 @@ public class DcatAp11Distribution implements Sequential {
             }
         }
 
+        //StatDCAT-AP draft 4
+        if (!isBlank(configuration.getDistributionTypeIRI())) {
+            addIRI(distribution, DCTERMS.TYPE, configuration.getDistributionTypeIRI());
+            addIRI(valueFactory.createIRI(configuration.getDistributionTypeIRI()), RDF.TYPE, SKOS.CONCEPT);
+        }
+
         // Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
             connection.add(statements, outputRdf.getGraph());
