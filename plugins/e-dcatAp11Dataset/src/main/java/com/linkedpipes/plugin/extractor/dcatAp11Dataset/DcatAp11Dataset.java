@@ -16,10 +16,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.FOAF;
-import org.openrdf.model.vocabulary.OWL;
-import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.*;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 
@@ -149,6 +146,27 @@ public class DcatAp11Dataset implements Sequential {
 
         // TODO:
     	// other Identifiers
+
+        // StatDCAT-AP draft 4
+        addIRIs(dataset, DcatAp11DatasetVocabulary.STAT_ATTRIBUTE, configuration.getAttributeIRIs());
+        for (String s : configuration.getAttributeIRIs()) {
+            addIRI(valueFactory.createIRI(s), RDF.TYPE, DcatAp11DatasetVocabulary.QB_ATTRIBUTEPROPERTY_CLASS);
+        }
+        addIRIs(dataset, DcatAp11DatasetVocabulary.STAT_DIMENSION, configuration.getDimensionIRIs());
+        for (String s : configuration.getDimensionIRIs()) {
+            addIRI(valueFactory.createIRI(s), RDF.TYPE, DcatAp11DatasetVocabulary.QB_DIMENSIONPROPERTY_CLASS);
+        }
+        if (configuration.getNumSeries() != null) {
+            addValue(dataset, DcatAp11DatasetVocabulary.STAT_NUMSERIES, valueFactory.createLiteral(configuration.getNumSeries().toString(), DcatAp11DatasetVocabulary.XSD_INTEGER));
+        }
+        addIRIs(dataset, DcatAp11DatasetVocabulary.DQV_HASQUALITYANNOTATION, configuration.getQualityAnnotationIRIs());
+        for (String s : configuration.getQualityAnnotationIRIs()) {
+            addIRI(valueFactory.createIRI(s), RDF.TYPE, DcatAp11DatasetVocabulary.OA_ANNOTATION_CLASS);
+        }
+        addIRIs(dataset, DcatAp11DatasetVocabulary.STAT_STATMEASURE, configuration.getUnitOfMeasurementIRIs());
+        for (String s : configuration.getUnitOfMeasurementIRIs()) {
+            addIRI(valueFactory.createIRI(s), RDF.TYPE, SKOS.CONCEPT);
+        }
 
     	// Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {

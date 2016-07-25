@@ -118,4 +118,17 @@
         </div>
         
     </md-tab>
+    <md-tab label="StatDCAT-AP">
+        <md-input-container class="md-block" flex-gt-sm>
+            See <a href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4" target="_blank">StatDCAT-AP draft 4</a>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Distribution type</label>
+            <md-select ng-model="dialog.distributionTypeIRI">
+                <md-option ng-repeat="dtype in distributionTypes" value="{{dtype['@id']}}">
+                    <span ng-repeat="label in dtype['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </md-tab>
 </md-tabs>

@@ -78,6 +78,9 @@ define([], function () {
             $scope.dialog.temporalStart = rdf.getDate(resource, 'temporalStart') ;
             $scope.dialog.temporalEnd = rdf.getDate(resource, 'temporalEnd') ;
 
+            //StatDCAT-AP draft 4
+            $scope.dialog.distributionTypeIRI = rdf.getValue(resource, 'distributionTypeIRI') ;
+
         };
 
         $scope.getConfiguration = function () {
@@ -134,6 +137,9 @@ define([], function () {
             rdf.setValue(resource, 'spatialIRIs', $scope.dialog.spatialIRIs);
             rdf.setDate(resource, 'temporalStart', $scope.dialog.temporalStart);
             rdf.setDate(resource, 'temporalEnd', $scope.dialog.temporalEnd);
+
+            //StatDCAT-AP draft 4
+            rdf.setValue(resource, 'distributionTypeIRI', $scope.dialog.distributionTypeIRI);
 
             return rdf.getData();
         };
@@ -1573,7 +1579,42 @@ define([], function () {
                 ]
             }
         ];
-
+        $scope.distributionTypes = [
+            {
+                "@id": "http://publications.europa.eu/resource/authority/distribution-type/FEED_INFO",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Information feed"
+                    }
+                ]
+            },
+            {
+                "@id": "http://publications.europa.eu/resource/authority/distribution-type/WEB_SERVICE",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Web service"
+                    }
+                ]
+            },{
+                "@id": "http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Downloadable file"
+                    }
+                ]
+            },{
+                "@id": "http://publications.europa.eu/resource/authority/documentation-type/VISUALIZATION",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                    {
+                        "@language": "en",
+                        "@value": "Visualization"
+                    }
+                ]
+            }
+        ];
        $scope.createLangFilter = function createFilterFor(query) {
           var lowercaseQuery = angular.lowercase(query);
           return function filterFn(language) {

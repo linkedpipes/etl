@@ -2,11 +2,13 @@ package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Optional;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
@@ -38,9 +40,10 @@ import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.protocol.HttpClientContext;
 
 /**
- *
  * @author Petr Škoda
  */
 public class GraphStoreProtocol implements Component.Sequential {
@@ -84,34 +87,31 @@ public class GraphStoreProtocol implements Component.Sequential {
             }
         }
         for (final Entry entry : inputFiles) {
-            final Optional<RDFFormat> optionalFormat
+            final Optional<RDFFormat> rdfFormat
                     = Rio.getParserFormatForFileName(entry.getFileName());
-            if (!optionalFormat.isPresent()) {
+            if (!rdfFormat.isPresent()) {
                 throw exceptionFactory.failed(
                         "Can't determine format for file: {}", entry);
             }
-            final String mimeType = optionalFormat.get().getDefaultMIMEType();
+            final String mimeType = rdfFormat.get().getDefaultMIMEType();
             //
             LOG.debug("Use repository: {}", configuration.getRepository());
             switch (configuration.getRepository()) {
                 case BLAZEGRAPH:
                     uploadBlazegraph(configuration.getEndpoint(),
-                            entry.toFile(),
-                            mimeType,
+                            entry.toFile(), mimeType,
                             configuration.getTargetGraph(),
                             configuration.isReplace());
                     break;
                 case FUSEKI:
                     uploadFuseki(configuration.getEndpoint(),
-                            entry.toFile(),
-                            mimeType,
+                            entry.toFile(), mimeType,
                             configuration.getTargetGraph(),
                             configuration.isReplace());
                     break;
                 case VIRTUOSO:
                     uploadVirtuoso(configuration.getEndpoint(),
-                            entry.toFile(),
-                            mimeType,
+                            entry.toFile(), mimeType,
                             configuration.getTargetGraph(),
                             configuration.isReplace());
                     break;
@@ -126,11 +126,15 @@ public class GraphStoreProtocol implements Component.Sequential {
                 }
             }
         }
-        LOG.info("Before: {} After: {}", beforeSize, afterSize);
+        if (beforeSize != null) {
+            LOG.info("Before graph size: {}", beforeSize);
+        }
+        if (afterSize != null) {
+            LOG.info("After graph size: {}", afterSize);
+        }
     }
 
     /**
-     *
      * @return Size of a remote graph.
      * @throws LpException
      * @throws IOException
@@ -142,7 +146,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         repository.initialize();
         //
         long size;
-        try (final CloseableHttpClient httpclient = getHttpClient()) {
+        try (final CloseableHttpClient httpclient = getNonAuthHttpClient()) {
             repository.setHttpClient(httpclient);
             try (RepositoryConnection connection = repository.getConnection()) {
                 final String query = "SELECT (count(*) as ?count) WHERE { "
@@ -166,7 +170,10 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     private void uploadBlazegraph(String url, File file, String mimeType,
-            String graph, boolean update) throws LpException {
+            String graph, boolean replace) throws LpException {
+        LOG.info("Blazegraph: {} {} {} {} {}", url, file.getName(), mimeType,
+                graph, replace);
+        //
         try {
             url += "?context-uri=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
@@ -174,8 +181,8 @@ public class GraphStoreProtocol implements Component.Sequential {
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
-        if (update) {
-            // Blaze graph delte statements based on provided qyeru.
+        if (replace) {
+            // Blaze graph delete statements based on provided query.
             final String query = "CONSTRUCT{ ?s ?p ?o} FROM <" + graph
                     + "> WHERE { ?s ?p ?o }";
             try {
@@ -196,7 +203,9 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     private void uploadFuseki(String url, File file, String mimeType,
-            String graph, boolean update) throws LpException {
+            String graph, boolean replace) throws LpException {
+        LOG.info("Fuseki: {} {} {} {} {}", url, file.getName(), mimeType,
+                graph, replace);
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
@@ -205,7 +214,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
-        if (update) {
+        if (replace) {
             httpMethod = new HttpPut(url);
         } else {
             httpMethod = new HttpPost(url);
@@ -220,8 +229,10 @@ public class GraphStoreProtocol implements Component.Sequential {
         executeHttp(httpMethod);
     }
 
-    public void uploadVirtuoso(String url, File file, String mimeType,
-            String graph, boolean update) throws LpException {
+    private void uploadVirtuoso(String url, File file, String mimeType,
+            String graph, boolean replace) throws LpException {
+        LOG.info("Virtuoso: {} {} {} {} {}", url, file.getName(), mimeType,
+                graph, replace);
         //
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
@@ -230,7 +241,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
-        if (update) {
+        if (replace) {
             httpMethod = new HttpPut(url);
         } else {
             httpMethod = new HttpPost(url);
@@ -244,27 +255,68 @@ public class GraphStoreProtocol implements Component.Sequential {
 
     private void executeHttp(HttpEntityEnclosingRequestBase httpMethod)
             throws LpException {
-        try (final CloseableHttpClient httpclient = getHttpClient()) {
+        final CloseableHttpClient httpClient;
+        // We use shared context.
+        final HttpClientContext context = HttpClientContext.create();
+        if (!configuration.isUseAuthentification()) {
+            httpClient = HttpClients.custom().build();
+        } else {
+            // Use preemptive authentication.
+            final CredentialsProvider creds = new BasicCredentialsProvider();
+            creds.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            configuration.getUserName(),
+                            configuration.getPassword()));
+            //
+            final RequestConfig requestConfig = RequestConfig.custom()
+                    .setAuthenticationEnabled(true).build();
+            //
+            httpClient = HttpClients.custom()
+                    .setDefaultRequestConfig(requestConfig)
+                    .setDefaultCredentialsProvider(creds)
+                    .build();
+        }
+        // Do an empty request just to get the validation into a cache.
+        // This is requires as for example Virtuoso will refuse the first
+        // request and ask for authorization. However as the first request
+        // can be too big - it would looks like a failure to us
+        // (as Virtuoso just close the connection before reading all the data).
+        if (configuration.isUseAuthentification()) {
+            final HttpEntityEnclosingRequestBase emptyRequest
+                    = new HttpPut(configuration.getEndpoint());
             try (final CloseableHttpResponse response
-                    = httpclient.execute(httpMethod)) {
-                try {
-                    LOG.debug("Response:\n {} ",
-                            EntityUtils.toString(response.getEntity()));
-                } catch (java.net.SocketException ex) {
-                    LOG.error("Can't read response.", ex);
-                }
-                LOG.info("Response code: {} phrase: {}",
-                        response.getStatusLine().getStatusCode(),
+                    = httpClient.execute(emptyRequest, context)) {
+            } catch (Exception ex) {
+                LOG.info("Exception during first empty request:", ex);
+            }
+        }
+        //
+        try (final CloseableHttpResponse response
+                = httpClient.execute(httpMethod, context)) {
+            try {
+                LOG.debug("Response:\n {} ",
+                        EntityUtils.toString(response.getEntity()));
+            } catch (java.net.SocketException ex) {
+                LOG.error("Can't read response.", ex);
+            }
+            LOG.info("Response code: {} phrase: {}",
+                    response.getStatusLine().getStatusCode(),
+                    response.getStatusLine().getReasonPhrase());
+            final int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode < 200 && statusCode >= 300) {
+                throw exceptionFactory.failed(
+                        "Can't upload data, reason: {}",
                         response.getStatusLine().getReasonPhrase());
-                final int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode < 200 && statusCode >= 300) {
-                    throw exceptionFactory.failed(
-                            "Can't upload data, reason: {}",
-                            response.getStatusLine().getReasonPhrase());
-                }
             }
         } catch (IOException | ParseException ex) {
             throw exceptionFactory.failed("Can't execute request.", ex);
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException ex) {
+                throw exceptionFactory.failed("Can't close request.", ex);
+            }
         }
     }
 
@@ -272,17 +324,8 @@ public class GraphStoreProtocol implements Component.Sequential {
      *
      * @return Must be closed after use.
      */
-    private CloseableHttpClient getHttpClient() {
-        final CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        if (configuration.isUseAuthentification()) {
-            credsProvider.setCredentials(
-                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUserName(),
-                            configuration.getPassword()));
-        }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(credsProvider).build();
+    private CloseableHttpClient getNonAuthHttpClient() {
+        return HttpClients.custom().build();
     }
 
 }

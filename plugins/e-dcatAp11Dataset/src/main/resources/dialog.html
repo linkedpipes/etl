@@ -152,4 +152,17 @@
             <lp-localized-text-input class="md-block" label-top="Version notes" label-item="Version notes" ng-model="dialog.versionNotes" flex-gt-sm></lp-localized-text-input>
         </div>    
     </md-tab>
+    <md-tab label="StatDCAT-AP">
+        <md-input-container class="md-block" flex-gt-sm>
+            See <a href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4" target="_blank">StatDCAT-AP draft 4</a>
+        </md-input-container>
+        <lp-iri-list label-top="Attribute IRIs" label-item="Attribute IRI" ng-model="dialog.attributeIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Dimension IRIs" label-item="Dimension IRI" ng-model="dialog.dimensionIRIs"></lp-iri-list>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Number of data series</label>
+            <input ng-model="dialog.numSeries" placeholder="3" step="1" min="1">
+        </md-input-container>
+        <lp-iri-list label-top="Quality annotation IRIs" label-item="Quality annotation IRI" ng-model="dialog.qualityAnnotationIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Unit of measurement IRIs" label-item="Unit of measurement IRI" ng-model="dialog.unitOfMeasurementIRIs"></lp-iri-list>
+    </md-tab>
 </md-tabs>
