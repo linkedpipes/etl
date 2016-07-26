@@ -17,6 +17,8 @@ final class SparqlEndpointVocabulary {
 
     public static final String HAS_DEFAULT_GRAPH = PREFIX + "defaultGraph";
 
+    public static final String HAS_HEADER_ACCEPT = PREFIX + "headerAccept";
+
     private SparqlEndpointVocabulary() {
     }
 

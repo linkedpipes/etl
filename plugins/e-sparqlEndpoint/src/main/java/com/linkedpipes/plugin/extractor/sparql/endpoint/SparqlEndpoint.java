@@ -19,6 +19,9 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.query.impl.SimpleDataset;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Škoda Petr
@@ -58,6 +61,14 @@ public final class SparqlEndpoint implements Component.Sequential {
         //
         final SPARQLRepository repository
                 = new SPARQLRepository(configuration.getEndpoint());
+        // Customize repository.
+        final Map<String, String> headers = new HashMap<>();
+        headers.putAll(repository.getAdditionalHttpHeaders());
+        if (configuration.getTransferMimeType() != null) {
+            headers.put("Accept", configuration.getTransferMimeType());
+        }
+        repository.setAdditionalHttpHeaders(headers);
+        //
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
