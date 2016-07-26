@@ -25,6 +25,46 @@ public class DcatAp11DatasetConfig {
         this.catalogIRI = catalogIRI;
     }
 
+    public List<String> getAttributeIRIs() {
+        return attributeIRIs;
+    }
+
+    public void setAttributeIRIs(List<String> attributeIRIs) {
+        this.attributeIRIs = attributeIRIs;
+    }
+
+    public List<String> getDimensionIRIs() {
+        return dimensionIRIs;
+    }
+
+    public void setDimensionIRIs(List<String> dimensionIRIs) {
+        this.dimensionIRIs = dimensionIRIs;
+    }
+
+    public Integer getNumSeries() {
+        return numSeries;
+    }
+
+    public void setNumSeries(Integer numSeries) {
+        this.numSeries = numSeries;
+    }
+
+    public List<String> getQualityAnnotationIRIs() {
+        return qualityAnnotationIRIs;
+    }
+
+    public void setQualityAnnotationIRIs(List<String> qualityAnnotationIRIs) {
+        this.qualityAnnotationIRIs = qualityAnnotationIRIs;
+    }
+
+    public List<String> getUnitOfMeasurementIRIs() {
+        return unitOfMeasurementIRIs;
+    }
+
+    public void setUnitOfMeasurementIRIs(List<String> unitOfMeasurementIRIs) {
+        this.unitOfMeasurementIRIs = unitOfMeasurementIRIs;
+    }
+
     @RdfToPojo.Value
     public static class LocalizedString {
 
@@ -190,6 +230,22 @@ public class DcatAp11DatasetConfig {
 
     @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "versionNotes")
     private List<LocalizedString> versionNotes = new LinkedList<>();
+
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "attributeIRIs")
+    private List<String> attributeIRIs = new LinkedList<>();
+
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "dimensionIRIs")
+    private List<String> dimensionIRIs = new LinkedList<>();
+
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "numSeries")
+    private Integer numSeries;
+
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "qualityAnnotationIRIs")
+    private List<String> qualityAnnotationIRIs = new LinkedList<>();
+
+    @RdfToPojo.Property(uri = DcatAp11DatasetVocabulary.MY + "unitOfMeasurementIRIs")
+    private List<String> unitOfMeasurementIRIs = new LinkedList<>();
+
 
     public String getDatasetIRI() {
         return datasetIRI;

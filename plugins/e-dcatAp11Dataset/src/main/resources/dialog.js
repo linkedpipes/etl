@@ -82,6 +82,13 @@ define([], function () {
             //Versions
             $scope.dialog.version = rdf.getString(resource, 'version') ;
             $scope.dialog.versionNotes = rdf.getValue(resource, 'versionNotes') ;
+
+            //StatDCAT-AP draft 4
+            $scope.dialog.attributeIRIs = rdf.getValue(resource, 'attributeIRIs') ;
+            $scope.dialog.dimensionIRIs = rdf.getValue(resource, 'dimensionIRIs') ;
+            $scope.dialog.numSeries = rdf.getInteger(resource, 'numSeries') ;
+            $scope.dialog.qualityAnnotationIRIs = rdf.getValue(resource, 'qualityAnnotationIRIs') ;
+            $scope.dialog.unitOfMeasurementIRIs = rdf.getValue(resource, 'unitOfMeasurementIRIs') ;
         };
 
         $scope.getConfiguration = function () {
@@ -144,6 +151,13 @@ define([], function () {
             //Versions
             rdf.setString(resource, 'version', $scope.dialog.version);
             rdf.setValue(resource, 'versionNotes', $scope.dialog.versionNotes);
+
+            //StatDCAT-AP draft 4
+            rdf.setValue(resource, 'attributeIRIs', $scope.dialog.attributeIRIs);
+            rdf.setValue(resource, 'dimensionIRIs', $scope.dialog.dimensionIRIs);
+            rdf.setInteger(resource, 'numSeries', $scope.dialog.numSeries);
+            rdf.setValue(resource, 'qualityAnnotationIRIs', $scope.dialog.qualityAnnotationIRIs);
+            rdf.setValue(resource, 'unitOfMeasurementIRIs', $scope.dialog.unitOfMeasurementIRIs);
 
             return rdf.getData();
         };

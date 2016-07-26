@@ -18,6 +18,14 @@ final class DcatAp11DatasetVocabulary {
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema#";
 
+    public static final String OA = "http://www.w3.org/ns/oa#";
+
+    public static final String DQV = "http://www.w3.org/ns/dqv#";
+
+    public static final String QB = "http://purl.org/linked-data/cube#";
+
+    public static final String STAT = "http://data.europa.eu/(xyz)/statdcat-ap/";
+
     public static final String MY = "http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/";
 
     public static final IRI VCARD_VCARD_CLASS;
@@ -48,9 +56,27 @@ final class DcatAp11DatasetVocabulary {
 
     public static final IRI XSD_DATE;
 
+    public static final IRI XSD_INTEGER;
+
     public static final IRI ADMS_VERSIONNOTES;
 
     public static final IRI ADMS_SAMPLE;
+
+    public static final IRI OA_ANNOTATION_CLASS;
+
+    public static final IRI DQV_HASQUALITYANNOTATION;
+
+    public static final IRI QB_ATTRIBUTEPROPERTY_CLASS;
+
+    public static final IRI QB_DIMENSIONPROPERTY_CLASS;
+
+    public static final IRI STAT_NUMSERIES;
+
+    public static final IRI STAT_STATMEASURE;
+
+    public static final IRI STAT_DIMENSION;
+
+    public static final IRI STAT_ATTRIBUTE;
 
     static {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -70,6 +96,15 @@ final class DcatAp11DatasetVocabulary {
         SCHEMA_STARTDATE = valueFactory.createIRI(SCHEMA + "startDate");
         ADMS_VERSIONNOTES = valueFactory.createIRI(ADMS + "versionNotes");
         ADMS_SAMPLE = valueFactory.createIRI(ADMS + "sample");
+        OA_ANNOTATION_CLASS = valueFactory.createIRI(OA + "Annotation");
+        DQV_HASQUALITYANNOTATION = valueFactory.createIRI(DQV + "hasQualityAnnotation");
+        QB_ATTRIBUTEPROPERTY_CLASS = valueFactory.createIRI(QB + "AttributeProperty");
+        QB_DIMENSIONPROPERTY_CLASS = valueFactory.createIRI(QB + "DimentsionProperty");
+        STAT_NUMSERIES = valueFactory.createIRI(STAT + "numSeries");
+        STAT_STATMEASURE = valueFactory.createIRI(STAT + "statMeasure");
+        STAT_DIMENSION = valueFactory.createIRI(STAT + "dimension");
+        STAT_ATTRIBUTE = valueFactory.createIRI(STAT + "attribute");
+        XSD_INTEGER = valueFactory.createIRI(XSD + "integer");
     }
 
     private DcatAp11DatasetVocabulary() {
