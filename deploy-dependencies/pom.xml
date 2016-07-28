@@ -583,9 +583,9 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
-                                        <mkdir dir="${deploy.directory}/components/l-dcatAp11toCkan/"/>
-                                        <copy todir="${deploy.directory}/components/l-dcatAp11toCkan/">
-                                            <fileset dir="${plugins.directory}/l-dcatAp11toCkan/target/classes">
+                                        <mkdir dir="${deploy.directory}/components/l-dcatAp11ToCkan/"/>
+                                        <copy todir="${deploy.directory}/components/l-dcatAp11ToCkan/">
+                                            <fileset dir="${plugins.directory}/l-dcatAp11ToCkan/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
