@@ -1,34 +1,30 @@
-<md-tabs md-dynamic-height md-border-bottom>
-    <md-tab label="CKAN">
-        <div layout-gt-sm="row">
-            <md-input-container class="md-block" flex-gt-sm>
-                <label>CKAN Action API URL</label>
-                <input type="url" ng-model="dialog.apiUrl" required placeholder="http://localhost/api/3/action">
-            </md-input-container>
-            <md-input-container class="md-block" flex-gt-sm>
-                <label>CKAN API Key</label>
-                <input ng-model="dialog.apiKey" required placeholder="00000000-0000-0000-0000-000000000000">
-            </md-input-container>
-        </div>
-        <div layout-gt-sm="row">
-            <md-input-container class="md-block" flex-gt-sm>
-                <label>CKAN dataset ID</label>
-                <input ng-model="dialog.datasetID" required placeholder="my-dataset">
-            </md-input-container>
-        </div>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Load language RDF language tag</label>
-            <input ng-model="dialog.loadLanguage" required placeholder="en">
-        </md-input-container>
-        <div layout-gt-sm="row">
-            <md-switch ng-model="dialog.createCkanOrg">Create/Use CKAN organization from dataset publisher</md-switch>
-        </div>
-        <div layout-gt-sm="row">
-            <md-input-container class="md-block" flex-gt-sm>
-                <label>Dataset owner organization ID</label>
-                <input ng-model="dialog.orgID" ng-disabled="dialog.createCkanOrg" placeholder="00000000-0000-0000-0000-000000000000">
-            </md-input-container>
-        </div>
-        <md-switch ng-model="dialog.overwrite">Overwrite target CKAN record</md-switch>
-    </md-tab>
-</md-tabs>
+<div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>CKAN Action API URL</label>
+        <input type="url" ng-model="dialog.apiUrl" required placeholder="http://localhost/api/3/action">
+    </md-input-container>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>CKAN API Key</label>
+        <input ng-model="dialog.apiKey" required placeholder="00000000-0000-0000-0000-000000000000">
+    </md-input-container>
+</div>
+<div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>CKAN dataset ID</label>
+        <input ng-model="dialog.datasetID" required placeholder="my-dataset">
+    </md-input-container>
+</div>
+<md-input-container class="md-block" flex-gt-sm>
+    <label>Load language RDF language tag</label>
+    <input ng-model="dialog.loadLanguage" required placeholder="en">
+</md-input-container>
+<div layout-gt-sm="row">
+    <md-switch ng-model="dialog.createCkanOrg">Create/Use CKAN organization from dataset publisher</md-switch>
+</div>
+<div layout-gt-sm="row">
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Dataset owner organization ID</label>
+        <input ng-model="dialog.orgID" ng-disabled="dialog.createCkanOrg" placeholder="00000000-0000-0000-0000-000000000000">
+    </md-input-container>
+</div>
+<md-switch ng-model="dialog.overwrite">Overwrite target CKAN record</md-switch>
