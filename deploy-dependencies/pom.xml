@@ -322,6 +322,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-dcatAp11ToCkan</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-dcatAp11ToCkan/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-distributionMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-distributionMetadata/</outputDirectory>
@@ -574,6 +580,12 @@
                                         <mkdir dir="${deploy.directory}/components/e-dcatAp11Distribution/"/>
                                         <copy todir="${deploy.directory}/components/e-dcatAp11Distribution/">
                                             <fileset dir="${plugins.directory}/e-dcatAp11Distribution/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-dcatAp11ToCkan/"/>
+                                        <copy todir="${deploy.directory}/components/l-dcatAp11ToCkan/">
+                                            <fileset dir="${plugins.directory}/l-dcatAp11ToCkan/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
