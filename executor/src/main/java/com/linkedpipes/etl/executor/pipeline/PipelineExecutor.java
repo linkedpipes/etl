@@ -94,6 +94,7 @@ public class PipelineExecutor implements EventManager.EventListener {
                     "Can't load pipeline definition.", ex));
             afterExecution();
             MDC.remove(LoggerFacade.SYSTEM_MDC);
+            return;
         }
         execution.assignPipeline(pipeline.getPipelineModel());
         events.addListener(execution);
