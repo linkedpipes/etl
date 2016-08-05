@@ -261,9 +261,13 @@ public class PipelineModel implements EntityLoader.Loadable {
 
         @Override
         public void afterLoad() throws LpException {
-            if (executionOrder == null || executionType == null) {
+            if (executionOrder == null) {
                 throw RdfException.invalidProperty(iri, null,
-                        "Incomplete definition.");
+                        "Incomplete definition - missing executionOrder.");
+            }
+            if (executionType == null) {
+                throw RdfException.invalidProperty(iri, null,
+                        "Incomplete definition - missing executionType.");
             }
         }
 
