@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:mvc="http://www.springframework.org/schema/mvc"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Configures the @Controller programming model. -->
+    <mvc:annotation-driven />
+
+    <!-- Configure plugin JSON as request and response in method handler. -->
+    <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <beans:property name="messageConverters">
+            <beans:list>
+                <beans:ref bean="jsonMessageConverter"/>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+
+    <!-- Configure bean to convert JSON to POJO and vice versa. -->
+    <beans:bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
+    <context:component-scan base-package="com.linkedpipes.etl.storage.web.servlet" />
+
+    <!-- Support for multipart file upload - custom class for support in PUT requests.
+    We do not need to define a filter in web.xml as DispatcherServlet can handle it automatically. -->
+    <beans:bean id="multipartResolver" class="com.linkedpipes.etl.storage.web.MultipartResolver">
+        <!-- Files with size below this value are stored in memory, otherwise they will be stored in disk directly. -->
+        <beans:property name="maxInMemorySize" value="16777216" /> <!-- 16MB -->
+    </beans:bean>
+
+</beans:beans>
