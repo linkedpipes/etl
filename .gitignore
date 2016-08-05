@@ -28,3 +28,6 @@ configuration.properties
 
 # Deploy directory.
 /deploy
+
+# Intellij IDEA
+*.iml
