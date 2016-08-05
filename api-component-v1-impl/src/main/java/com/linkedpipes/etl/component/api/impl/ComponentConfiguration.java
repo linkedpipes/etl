@@ -114,6 +114,11 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
         return new File(java.net.URI.create(workingDirectory));
     }
 
+    /**
+     * Ordered list of configurations as they should be loaded.
+     *
+     * @return
+     */
     public List<Configuration> getConfigurations() {
         return configurations;
     }

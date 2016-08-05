@@ -275,7 +275,7 @@ class ExecutionStorage {
         try {
             PipelineLoader.loadPipeline(execution);
         } catch (OperationFailed | IOException ex) {
-            throw new OperationFailed("Can't load pipeline.", ex);
+            throw new OperationFailed("Can't create an execution.", ex);
         }
         return execution;
     }
