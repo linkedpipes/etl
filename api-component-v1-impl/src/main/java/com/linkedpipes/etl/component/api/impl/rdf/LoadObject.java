@@ -3,31 +3,37 @@ package com.linkedpipes.etl.component.api.impl.rdf;
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Petr Škoda
  */
 class LoadObject extends LoaderToValue {
 
-    LoadObject(PropertyDescriptor property, Field field) {
+    private final RdfReader.MergeOptionsFactory optionsFactory;
+
+    LoadObject(PropertyDescriptor property, Field field,
+            RdfReader.MergeOptionsFactory optionsFactory) {
         super(property, field);
+        this.optionsFactory = optionsFactory;
     }
+
 
     @Override
     public void load(Object object, Map<String, String> property,
-            String graph, SparqlSelect select) throws CanNotDeserializeObject {
+            String graph, SparqlSelect select)
+            throws CanNotDeserializeObject {
         // Check object type.
         if (!checkType(field.getType(), select, property.get("value"), graph)) {
             throw new CanNotDeserializeObject("Type missmatch.");
         }
         // Create and set a new object.
         final Object value = loadNew(field.getType(), property.get("value"),
-                graph, select);
+                graph, select, optionsFactory);
         set(object, value, property.get("iri"));
     }
 
@@ -38,12 +44,14 @@ class LoadObject extends LoaderToValue {
      * @param iri
      * @param graph
      * @param select
+     * @param optionsFactory
      * @return Null if object of given type can't be created.
      * @throws CanNotDeserializeObject
      */
     static Object loadNew(Class<?> type, String iri, String graph,
-            SparqlSelect select) throws CanNotDeserializeObject {
-        // Craete a new instance.
+            SparqlSelect select, RdfReader.MergeOptionsFactory optionsFactory
+    ) throws CanNotDeserializeObject {
+        // Create a new instance.
         final Object value;
         try {
             value = type.newInstance();
@@ -52,12 +60,21 @@ class LoadObject extends LoaderToValue {
                     ex);
         }
         // Load to instance and return it.
-        loadToObject(value, iri, graph, select);
+        loadToObject(value, iri, graph, select, optionsFactory);
         return value;
     }
 
-    static void loadToObject(Object value, String iri, String graph,
-            SparqlSelect select) throws CanNotDeserializeObject {
+    /**
+     * @param object         Object to load data into.
+     * @param iri            Resource of an object to load.
+     * @param graph          Graph that should be used to load the object from.
+     * @param select         RDF source.
+     * @param optionsFactory
+     * @throws CanNotDeserializeObject
+     */
+    static void loadToObject(Object object, String iri, String graph,
+            SparqlSelect select, RdfReader.MergeOptionsFactory optionsFactory)
+            throws CanNotDeserializeObject {
         // Load properties.
         final List<Map<String, String>> results;
         try {
@@ -69,17 +86,30 @@ class LoadObject extends LoaderToValue {
         // Generate description.
         final DescriptionFactory descFactory = new DescriptionFactory();
         final Map<String, List<Loader>> loaders
-                = descFactory.createDescription(value.getClass());
+                = descFactory.createDescription(object.getClass(),
+                optionsFactory);
         //
+        final RdfReader.MergeOptions mergeOptions;
+        try {
+            mergeOptions = optionsFactory.create(iri, graph);
+        } catch (RdfException ex) {
+            throw new CanNotDeserializeObject(
+                    "Can't load configuration description.", ex);
+        }
         // Load data - for each property.
         for (Map<String, String> item : results) {
+            // Check if we can load the predicate.
             if (!loaders.containsKey(item.get("iri"))) {
+                continue;
+            }
+            // Check if we should load the predicate.
+            if (!mergeOptions.load(item.get("iri"))) {
                 continue;
             }
             // Test all loaders.
             for (Loader loader : loaders.get(item.get("iri"))) {
                 try {
-                    loader.load(value, item, graph, select);
+                    loader.load(object, item, graph, select);
                     break;
                 } catch (CanNotDeserializeObject ex) {
                     // This loader can not be used to load the object.

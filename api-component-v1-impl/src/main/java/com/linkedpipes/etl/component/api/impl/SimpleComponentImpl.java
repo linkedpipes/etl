@@ -174,9 +174,12 @@ final class SimpleComponentImpl implements SequentialComponent {
      */
     protected void loadConfigurations(SparqlSelect runtimeConfig)
             throws RdfException {
+        final ConfigurationController configController
+                = new ConfigurationController(definition);
         for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Configuration.class) != null) {
-                loadConfiguration(field, runtimeConfig);
+                loadConfigurationForField(field, runtimeConfig,
+                        configController);
             }
         }
     }
@@ -187,9 +190,11 @@ final class SimpleComponentImpl implements SequentialComponent {
      *
      * @param field
      * @param runtimeConfig
+     * @[ara, configController
      * @throws Component.InitializationFailed
      */
-    protected void loadConfiguration(Field field, SparqlSelect runtimeConfig)
+    protected void loadConfigurationForField(Field field,
+            SparqlSelect runtimeConfig,ConfigurationController configController)
             throws RdfException {
         // Create configuration object.
         final Object fieldValue;
@@ -209,10 +214,11 @@ final class SimpleComponentImpl implements SequentialComponent {
             final String uri = configRef.getConfigurationIri();
             try {
                 if (uri == null) {
-                    RdfReader.addToObject(fieldValue, definition, graph);
+                    RdfReader.addToObject(fieldValue, definition, graph,
+                            configController);
                 } else {
                     RdfReader.addToObject(fieldValue, definition, graph,
-                            uri);
+                            uri, configController);
                 }
             } catch (RdfException ex) {
                 throw RdfException.wrap(ex,
@@ -222,7 +228,8 @@ final class SimpleComponentImpl implements SequentialComponent {
         // Load runtime configuration.
         try {
             if (runtimeConfig != null) {
-                RdfReader.addToObject(fieldValue, runtimeConfig, null);
+                RdfReader.addToObject(fieldValue, runtimeConfig, null,
+                        configController);
             }
         } catch (RdfException ex) {
             throw RdfException.wrap(ex, "Can't load runtime configuration.");

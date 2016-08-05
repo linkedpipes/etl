@@ -45,7 +45,8 @@ class DescriptionFactory {
         WRAP_TYPES.add(Date.class);
     }
 
-    Map<String, List<Loader>> createDescription(Class<?> type)
+    Map<String, List<Loader>> createDescription(Class<?> type,
+            RdfReader.MergeOptionsFactory optionsFactory)
             throws Loader.CanNotDeserializeObject {
         final Map<String, List<Loader>> result = new HashMap<>();
 
@@ -74,7 +75,7 @@ class DescriptionFactory {
                 }
                 append(result, property.uri(),
                         new LoadCollection(Arrays.asList(collectionType),
-                                descriptor, field));
+                                descriptor, field, optionsFactory));
             } else if (isPrimitive(fieldType)) {
                 append(result, property.uri(),
                         new LoadPrimitive(descriptor, field));
@@ -89,7 +90,7 @@ class DescriptionFactory {
                 if (fieldType.getAnnotation(RdfToPojo.Type.class) != null) {
                     // Complex type.
                     append(result, property.uri(),
-                            new LoadObject(descriptor, field));
+                            new LoadObject(descriptor, field, optionsFactory));
                 }
                 if (fieldType.getAnnotation(RdfToPojo.Value.class) != null) {
                     // Expanded literal.

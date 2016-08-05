@@ -22,10 +22,13 @@ class LoadCollection extends LoaderToValue {
 
     private final List<Class<?>> types;
 
+    private final RdfReader.MergeOptionsFactory optionsFactory;
+
     LoadCollection(List<Class<?>> types, PropertyDescriptor property,
-            Field field) {
+            Field field, RdfReader.MergeOptionsFactory optionsFactory) {
         super(property, field);
         this.types = types;
+        this.optionsFactory = optionsFactory;
     }
 
     @Override
@@ -54,7 +57,7 @@ class LoadCollection extends LoaderToValue {
             try {
                 if (type.getAnnotation(RdfToPojo.Type.class) != null) {
                     value = LoadObject.loadNew(type, property.get("value"),
-                            graph, select);
+                            graph, select, optionsFactory);
                 } else if (type.getAnnotation(RdfToPojo.Value.class) != null) {
                     value = LoadLiteral.loadNew(type, property);
                 } else if (DescriptionFactory.isPrimitive(type)) {
