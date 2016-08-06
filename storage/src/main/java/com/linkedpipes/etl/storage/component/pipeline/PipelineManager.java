@@ -37,7 +37,7 @@ class PipelineManager {
     public void initialize() {
         final File pipelineDirectory = configuration.getPipelinesDirectory();
         if (!pipelineDirectory.exists()) {
-            pipelineDirectory.mkdir();
+            pipelineDirectory.mkdirs();
         }
         for (File item : pipelineDirectory.listFiles()) {
             if (!item.isFile()) {
