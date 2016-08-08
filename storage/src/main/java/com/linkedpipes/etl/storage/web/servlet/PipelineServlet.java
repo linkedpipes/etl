@@ -6,7 +6,6 @@ import com.linkedpipes.etl.storage.component.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.unpacker.UnpackerFacade;
 import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 
 /**
@@ -42,13 +39,7 @@ public class PipelineServlet {
     @ResponseBody
     public void getPipelines(HttpServletRequest request,
             HttpServletResponse response) throws BaseException {
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream,
-                    RdfUtils.getFormat(request, RDFFormat.TRIG),
-                    pipelines.getReferenceRdf());
-        } catch (IOException ex) {
-            throw new BaseException(ex);
-        }
+        RdfUtils.write(request, response, pipelines.getReferenceRdf());
     }
 
     /**
@@ -70,13 +61,7 @@ public class PipelineServlet {
             return;
         }
         //
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream,
-                    RdfUtils.getFormat(request, RDFFormat.TRIG),
-                    pipelines.getPipelineRdf(pipeline));
-        } catch (IOException ex) {
-            throw new BaseException(ex);
-        }
+        RdfUtils.write(request, response, pipelines.getPipelineRdf(pipeline));
     }
 
     /**
@@ -102,13 +87,7 @@ public class PipelineServlet {
         final Collection<Statement> optionsRdf = RdfUtils.read(options);
         //
         final Pipeline pipeline = pipelines.createPipeline(dataRdf, optionsRdf);
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream,
-                    RdfUtils.getFormat(request, RDFFormat.TRIG),
-                    pipelines.getReferenceRdf(pipeline));
-        } catch (IOException ex) {
-            throw new BaseException(ex);
-        }
+        RdfUtils.write(request, response, pipelines.getReferenceRdf(pipeline));
     }
 
     /**
@@ -195,13 +174,7 @@ public class PipelineServlet {
             statements = unpacker.unpack(pipelineInstance, optionsRdf);
         }
         //
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream,
-                    RdfUtils.getFormat(request, RDFFormat.TRIG),
-                    statements);
-        } catch (IOException ex) {
-            throw new BaseException(ex);
-        }
+        RdfUtils.write(request, response, statements);
     }
 
 

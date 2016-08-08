@@ -43,11 +43,8 @@ public class ComponentServlet {
     @ResponseBody
     public void getAll(HttpServletRequest request,
             HttpServletResponse response)
-            throws IOException, RdfUtils.RdfException {
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream, getFormat(request),
-                    templates.getInterface());
-        }
+            throws IOException, BaseException {
+        RdfUtils.write(request, response, templates.getInterface());
     }
 
     /**
@@ -62,7 +59,7 @@ public class ComponentServlet {
     @ResponseBody
     public void getComponentInterface(@RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, RdfUtils.RdfException {
+            throws IOException, BaseException {
         // Get component.
         final Template template = templates.getTemplate(iri);
         if (template == null) {
@@ -70,10 +67,7 @@ public class ComponentServlet {
             return;
         }
         //
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream, getFormat(request),
-                    templates.getInterface(template));
-        }
+        RdfUtils.write(request, response, templates.getInterface(template));
     }
 
     /**
@@ -88,7 +82,7 @@ public class ComponentServlet {
     @ResponseBody
     public void getDefinition(@RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, RdfUtils.RdfException {
+            throws IOException, BaseException {
         // Get component.
         final Template template = templates.getTemplate(iri);
         if (template == null) {
@@ -96,11 +90,7 @@ public class ComponentServlet {
             return;
         }
         //
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream, getFormat(request),
-                    templates.getDefinition(template));
-        }
-
+        RdfUtils.write(request, response, templates.getDefinition(template));
     }
 
     @RequestMapping(value = "/config",
@@ -108,7 +98,7 @@ public class ComponentServlet {
     @ResponseBody
     public void getConfig(@RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, RdfUtils.RdfException {
+            throws IOException, BaseException {
         // Get component.
         final Template template = templates.getTemplate(iri);
         if (template == null) {
@@ -116,10 +106,7 @@ public class ComponentServlet {
             return;
         }
         //
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream, getFormat(request),
-                    templates.getConfig(template));
-        }
+        RdfUtils.write(request, response, templates.getConfig(template));
     }
 
     @RequestMapping(value = "/configTemplate",
@@ -127,7 +114,7 @@ public class ComponentServlet {
     @ResponseBody
     public void getConfigTemplate(@RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, RdfUtils.RdfException {
+            throws IOException, BaseException {
         // Get component.
         final Template template = templates.getTemplate(iri);
         if (template == null) {
@@ -135,17 +122,15 @@ public class ComponentServlet {
             return;
         }
         //
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream, getFormat(request),
-                    templates.getConfigForInstance(template));
-        }
+        RdfUtils.write(request, response,
+                templates.getConfigForInstance(template));
     }
 
     @RequestMapping(value = "/configDescription", method = RequestMethod.GET)
     @ResponseBody
     public void getConfigDescription(@RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, RdfUtils.RdfException {
+            throws IOException, BaseException {
         // Get component.
         final Template template = templates.getTemplate(iri);
         if (template == null) {
@@ -153,10 +138,7 @@ public class ComponentServlet {
             return;
         }
         //
-        try (OutputStream stream = response.getOutputStream()) {
-            RdfUtils.write(stream, getFormat(request),
-                    templates.getConfigDesc(template));
-        }
+        RdfUtils.write(request, response, templates.getConfigDesc(template));
     }
 
     @RequestMapping(value = "/dialog",

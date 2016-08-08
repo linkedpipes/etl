@@ -12,6 +12,7 @@ import org.openrdf.rio.helpers.StatementCollector;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 
@@ -169,6 +170,9 @@ public final class RdfUtils {
     public static RDFFormat getFormat(String mimeType)
             throws RdfException {
         // BACKWARD COMPATIBILITY
+        if (mimeType == null) {
+            throw new RdfException("Missing mime type.");
+        }
         if (mimeType.equals("application/json")) {
             return RDFFormat.JSONLD;
         }
@@ -311,6 +315,26 @@ public final class RdfUtils {
             } catch (IOException ex) {
                 throw new RdfException("Can't close stream.", ex);
             }
+        }
+    }
+
+    /**
+     * TODO Move to package with servlets
+     *
+     * @param request
+     * @param response
+     * @param data
+     */
+    public static void write(HttpServletRequest request,
+            HttpServletResponse response, Collection<Statement> data)
+            throws BaseException {
+        final RDFFormat format =
+                RdfUtils.getFormat(request, RDFFormat.TRIG);
+        response.setHeader("content-type", format.getDefaultMIMEType());
+        try (OutputStream stream = response.getOutputStream()) {
+            RdfUtils.write(stream, format, data);
+        } catch (IOException ex) {
+            throw new BaseException(ex);
         }
     }
 
