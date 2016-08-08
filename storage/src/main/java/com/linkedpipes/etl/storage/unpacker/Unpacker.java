@@ -23,9 +23,9 @@ class Unpacker {
 
     private static IRI HAS_COMPONENT;
 
-    private static Resource COMPONENT;
+    private static Resource JAR_TEMPLATE;
 
-    private static Resource INSTANCE;
+    private static Resource COMPONENT;
 
     private static Resource TEMPLATE;
 
@@ -54,10 +54,10 @@ class Unpacker {
         PIPELINE = vf.createIRI("http://linkedpipes.com/ontology/Pipeline");
         HAS_COMPONENT = vf.createIRI(
                 "http://linkedpipes.com/ontology/component");
+        JAR_TEMPLATE = vf.createIRI(
+                "http://linkedpipes.com/ontology/JarTemplate");
         COMPONENT = vf.createIRI(
                 "http://linkedpipes.com/ontology/Component");
-        INSTANCE = vf.createIRI(
-                "http://linkedpipes.com/ontology/Instance");
         TEMPLATE = vf.createIRI("http://linkedpipes.com/ontology/Template");
         HAS_CONFIG_GRAPH = vf.createIRI(
                 "http://linkedpipes.com/ontology/configurationGraph");
@@ -166,7 +166,7 @@ class Unpacker {
      */
     private void expandComponents() {
         Collection<RdfObjects.Entity> toUnpack =
-                pipelineObject.getTyped(INSTANCE, TEMPLATE);
+                pipelineObject.getTyped(COMPONENT, TEMPLATE);
         while (!toUnpack.isEmpty()) {
             for (RdfObjects.Entity component : toUnpack) {
                 final Resource templateIri =
@@ -179,7 +179,7 @@ class Unpacker {
                 final RdfObjects templateObject
                         = new RdfObjects(templates.getDefinition(template));
                 // There should be only one instance.
-                templateObject.getTyped(TEMPLATE, COMPONENT).forEach((item) -> {
+                templateObject.getTyped(TEMPLATE, JAR_TEMPLATE).forEach((item) -> {
                     // Preserve type from the template,
                     // otherwise merge everything.
                     component.add(item, Collections.EMPTY_LIST,
@@ -197,12 +197,14 @@ class Unpacker {
                 // can work with the configuration.
                 if (!adddedConfigurations.contains(templateIri)) {
                     configurations.addAll(templates.getConfig(template));
-                    // TODO Do not add same description twice - under different names. Requires change in a component description.
+                    // TODO Do not add same description twice -
+                    // under different names. Requires change
+                    // in a component description.
                     configurations.addAll(templates.getConfigDesc(template));
                     adddedConfigurations.add(templateIri);
                 }
             }
-            toUnpack = pipelineObject.getTyped(INSTANCE, TEMPLATE);
+            toUnpack = pipelineObject.getTyped(COMPONENT, TEMPLATE);
         }
     }
 
@@ -210,7 +212,7 @@ class Unpacker {
         final RdfObjects.Entity pipeline =
                 pipelineObject.getTypeSingle(PIPELINE);
         final Collection<RdfObjects.Entity> components =
-                pipelineObject.getTyped(COMPONENT);
+                pipelineObject.getTyped(JAR_TEMPLATE);
         components.forEach((component) -> {
             pipeline.add(HAS_COMPONENT, component);
         });
@@ -259,7 +261,7 @@ class Unpacker {
             componentDeps.add(source);
         });
         // Add components that have no connection.
-        pipelineObject.getTyped(COMPONENT).forEach((component) -> {
+        pipelineObject.getTyped(JAR_TEMPLATE).forEach((component) -> {
             if (!dependencies.containsKey(component)) {
                 dependencies.put(component, Collections.EMPTY_SET);
             }
@@ -292,7 +294,7 @@ class Unpacker {
      */
     private void createExecutionOrder(
             Map<RdfObjects.Entity, Set<RdfObjects.Entity>> dependencies) {
-        pipelineObject.getTyped(COMPONENT).forEach((component) -> {
+        pipelineObject.getTyped(JAR_TEMPLATE).forEach((component) -> {
             if (!dependencies.containsKey(component)) {
                 dependencies.put(component, Collections.EMPTY_SET);
             }
@@ -327,7 +329,7 @@ class Unpacker {
      * Add execution type to components without the execution type.
      */
     private void fillExecutionType() {
-        pipelineObject.getTyped(COMPONENT).forEach((component) -> {
+        pipelineObject.getTyped(JAR_TEMPLATE).forEach((component) -> {
             if (component.getReferences(HAS_EXEC_TYPE).isEmpty()) {
                 component.add(HAS_EXEC_TYPE, vf.createIRI(
                         "http://linkedpipes.com/resources/execution/type/execute"));
@@ -520,7 +522,7 @@ class Unpacker {
         // but the configurations are of same instances as configurations
         // of respective templates. So the descriptions from templates
         // can be resued.
-        unpacker.configGraphToObject(INSTANCE);
+        unpacker.configGraphToObject(COMPONENT);
 
         // Expand instance and templates.
         unpacker.expandComponents();
