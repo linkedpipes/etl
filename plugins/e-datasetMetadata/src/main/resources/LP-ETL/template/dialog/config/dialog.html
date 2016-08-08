@@ -1,47 +1,3 @@
-<!--
-    'datasetURI': '',
-     NOT USED 'distributionURI': '',
-     NOT USED 'useDatasetURIfromInput': true,
-    'language_orig': '',
-    'title_cs': '',
-    'title_en': '',
-    'desc_cs': '',
-    'desc_en': '',
-                'authors': [],
-    'publisherURI': '',
-    'publisherName': '',
-                'license': '',
-                'sources': [],
-                'languages': [],
-                'keywords_orig': [],
-                'keywords_en': [],
-                'themes': [],
-    'contactPoint': '',
-    'contactPointName': '',
-    'periodicity': '',
-    'useNow': true,
-    'useNowTemporalEnd': false,
-    'useTemporal': true,
-    'modified': '',
-    'issued': '',
-    'identifier': '',
-    'landingPage': '',
-    'temporalEnd': '',
-    'temporalStart': '',
-    'spatial': '',
-    'schema': ''
-
-        licenses.add("https://creativecommons.org/licenses/by/4.0/");
-        licenses.add("https://creativecommons.org/licenses/by-sa/4.0/");
-        licenses.add("http://opendatacommons.org/licenses/pddl/1.0/");
-
-        publishers.add("http://opendata.cz");
-
-        languages.add("http://id.loc.gov/vocabulary/iso639-1/cs");
-        languages.add("http://id.loc.gov/vocabulary/iso639-1/en");
-        languages.add("http://id.loc.gov/vocabulary/iso639-1/sk");
-        languages.add("http://id.loc.gov/vocabulary/iso639-1/it");
--->
 <div>
     <md-input-container class="md-block" flex-gt-sm>
 	    <label>Dataset IRI</label>
@@ -84,7 +40,6 @@
 	<div layout-gt-sm="row">
         <md-datepicker ng-model="dialog.issued" md-placeholder="Issued" flex-gt-sm></md-datepicker>    
     </div>
-
     <!-- Keywords in original language -->
     <!-- Keywords in English -->
     <!-- Languages -->
@@ -152,7 +107,6 @@
     <!-- Sources -->
     <!-- Themes -->
     <!-- Selected authors -->
-
     <md-input-container class="md-block" flex-gt-sm>
         <label>Licenses IRIs (comma separated)</label>
         <input ng-model="dialog.license" placeholder="http://publications.europa.eu/resource/authority/language/ENG">
