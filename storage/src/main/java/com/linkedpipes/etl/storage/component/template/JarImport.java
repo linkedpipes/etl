@@ -36,19 +36,15 @@ final class JarImport {
 
         private final JarFile jar;
 
-        private final JarEntry interfaceEntry;
-
         private final JarEntry configEntry;
 
         private final JarEntry configDescEntry;
 
         private final JarEntry definitionEntry;
 
-        public JarInfo(JarFile jar, JarEntry interfaceEntry,
-                JarEntry configInstanceEntry, JarEntry configDescEntry,
-                JarEntry definitionEntry) {
+        public JarInfo(JarFile jar, JarEntry configInstanceEntry,
+                JarEntry configDescEntry, JarEntry definitionEntry) {
             this.jar = jar;
-            this.interfaceEntry = interfaceEntry;
             this.configEntry = configInstanceEntry;
             this.configDescEntry = configDescEntry;
             this.definitionEntry = definitionEntry;
@@ -69,15 +65,19 @@ final class JarImport {
         final JarInfo jarInfo = readJarFile(jarComponent.getFile(),
                 destination);
         // Load and process interface.
-        Collection<Statement> interfaceRdf = readAsRdf(jarInfo,
-                jarInfo.interfaceEntry);
-        final Resource resource = RdfUtils.find(interfaceRdf,
+        Collection<Statement> definitionRdf = readAsRdf(jarInfo,
+                jarInfo.definitionEntry);
+
+        // TODO Extract interface and definition from the
+        // loaded definition.
+
+        final Resource resource = RdfUtils.find(definitionRdf,
                 FullTemplate.TYPE);
         if (resource == null) {
             throw new BaseException("Missing template resource: {}",
                     jarComponent.getFile());
         }
-        interfaceRdf = RdfUtils.forceContext(interfaceRdf, resource);
+        definitionRdf = RdfUtils.forceContext(definitionRdf, resource);
         // Add information about dialogs into the interface.
         final File dialogRoot = new File(destination, "dialog");
         final ValueFactory vf = SimpleValueFactory.getInstance();
@@ -85,23 +85,23 @@ final class JarImport {
             if (!file.isDirectory()) {
                 continue;
             }
-            final Resource dialogResource = vf.createIRI(resource.stringValue(),
-                    "/dialog/" + file.getName());
+            final Resource dialogResource =vf.createIRI(
+                    resource.stringValue(), "/dialog/" + file.getName());
             // Reference to a dialog.
-            interfaceRdf.add(vf.createStatement(
+            definitionRdf.add(vf.createStatement(
                     resource,
                     vf.createIRI("http://linkedpipes.com/ontology/dialog"),
                     dialogResource,
                     resource
             ));
             // Dialog information.
-            interfaceRdf.add(vf.createStatement(
+            definitionRdf.add(vf.createStatement(
                     dialogResource,
                     RDF.TYPE,
                     vf.createIRI("http://linkedpipes.com/ontology/Dialog"),
                     resource
             ));
-            interfaceRdf.add(vf.createStatement(
+            definitionRdf.add(vf.createStatement(
                     dialogResource,
                     vf.createIRI("http://linkedpipes.com/ontology/name"),
                     vf.createLiteral(file.getName()),
@@ -109,7 +109,7 @@ final class JarImport {
             ));
         }
         RdfUtils.write(new File(destination, Template.INTERFACE_FILE),
-                RDFFormat.TRIG, interfaceRdf);
+                RDFFormat.TRIG, definitionRdf);
         // Save RDF configurations.
         final Resource configIri = SimpleValueFactory.getInstance().createIRI(
                 resource.stringValue() + "/configuration");
@@ -119,9 +119,6 @@ final class JarImport {
         RdfUtils.write(new File(destination, Template.CONFIG_DESC_FILE),
                 RDFFormat.TRIG, readAsRdf(jarInfo, jarInfo.configDescEntry,
                         configIri));
-        // Update definition.
-        final Collection<Statement> definitionRdf = readAsRdf(jarInfo,
-                jarInfo.definitionEntry, resource);
         // As we generate the configuration IRI for configuration we
         // need to add a reference.
         definitionRdf.add(vf.createStatement(resource,
@@ -146,9 +143,9 @@ final class JarImport {
         try (InputStream stream = jar.jar.getInputStream(entry)) {
             return RdfUtils.read(stream,
                     RdfUtils.getFormat(new File(entry.getName())));
-        } catch (IOException ex) {
+        } catch (IOException | BaseException ex) {
             throw new BaseException("Can't load definition: {}",
-                    entry.getName());
+                    entry.getName(), ex);
         }
     }
 
@@ -177,14 +174,21 @@ final class JarImport {
      * Copy the dialog and static resources to destination and return class
      * with references to entries to read.
      *
+     * Also create a component directory with 'dialog' and 'static' directory.
+     *
      * @param file
      * @param destination
      * @return
      */
     private static JarInfo readJarFile(File file, File destination)
             throws BaseException {
+        // Create output directories so they are always there
+        // even if missing in the jar file.
+        destination.mkdirs();
+        (new File(destination, "dialog")).mkdirs();
+        (new File(destination, "static")).mkdirs();
+        //
         final JarFile jar;
-        JarEntry interfaceEntry = null;
         JarEntry configEntry = null;
         JarEntry configDescEntry = null;
         JarEntry definitionEntry = null;
@@ -208,8 +212,6 @@ final class JarImport {
                     try (InputStream stream = jar.getInputStream(entry)) {
                         FileUtils.copyInputStreamToFile(stream, targetFile);
                     }
-                } else if (name.startsWith("LP-ETL/template/interface.")) {
-                    interfaceEntry = entry;
                 } else if (name.startsWith("LP-ETL/template/definition.")) {
                     definitionEntry = entry;
                 } else if (name.startsWith("LP-ETL/template/config-desc.")) {
@@ -222,12 +224,11 @@ final class JarImport {
             throw new BaseException("Can't read template: {}", file);
         }
         // Check presence of definition and configuration.
-        if (interfaceEntry == null || configEntry == null ||
-                configDescEntry == null || definitionEntry == null) {
+        if (configEntry == null || configDescEntry == null
+                || definitionEntry == null) {
             throw new BaseException("Incomplete template definition: {}", file);
         }
-        return new JarInfo(jar, interfaceEntry, configEntry,
-                configDescEntry, definitionEntry);
+        return new JarInfo(jar, configEntry, configDescEntry, definitionEntry);
     }
 
 }
