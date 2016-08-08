@@ -11,7 +11,7 @@
 executor.webserver.port = 8085
 
 # URL of the executor REST API to be used. Must NOT end with '/'.
-# This can be used for setups where execturor and executor-monitor
+# This can be used for setups where executor and executor-monitor
 # run on one machine and the frontend on another. If all components
 # run on the same machine, this is http://localhost:8085 or the
 # port from executor.webserver.port
@@ -75,21 +75,25 @@ executor-monitor.ftp.data_ports_interval.end = 2225
 executor-monitor.ftp.uri = ftp://localhost:2221
 
 ##############
-#  Frontend  #
+#  Storage   #
 ##############
 
-# Port for web server - for now used by storage.domain.
-frontend.webserver.port = 8080
+# URL of the storage REST API to be used. Must NOT end with '/'.
+# If all components run on the same machine, this is
+# http://localhost:8083 or the port from storage.port
+storage.uri = http://localhost:8083
 
-# Windows ex: C:\\Users\\Kuba\\Documents\\GitHub\\etl\\deploy\\components
-# Linux ex: /opt/lp/etl/deploy/components
-storage.components.directory =
+# Port used by storage REST API.
+storage.port = 8083
 
-# Used to construct URI with path to components file (jar file).
-# This value is platform dependent:
-# Windows ex: file:
-# Linux ex: file://
-storage.components.path.prefix =
+# Windows ex: C:\\Users\\Kuba\\Documents\\GitHub\\etl\\deploy\\jars
+# Linux ex: /opt/lp/etl/deploy/jars
+storage.jars.directory =
+
+# Storage directory for pipelines definition
+# Windows ex: C:\\Tools\\lp\\etl\\components
+# Linux ex: /data/lp/etl/components
+storage.templates.directory =
 
 # Storage directory for pipelines definition
 # Windows ex: C:\\Tools\\lp\\etl\\pipelines
@@ -100,28 +104,9 @@ storage.pipelines.directory =
 # Must NOT end with '/'.
 domain.uri = http://localhost:8080
 
-# Apache Jena Fuseki is used for debugging RDF data.
-# Currently, this is disabled due to some issues, but will be back.
-#
-# The path must contain the file fuseki-server.jar. 
-# Whenever new Fuseki instances is created
-# a copy of this directory is created.
-# From a clean Fuseki instalation (unzip) remove:
-#   bin foder
-#   fuseki-server
-#   fuseki-server.bat
-#   fuseki.war
-# Windows ex: C:\\Tools\\apache-jena-fuseki
-# Linux ex: /opt/apache-jena-fuseki
-# CURRENTLY CAN BE LEFT EMPTY
-external.fuseki.path = 
+##############
+#  Frontend  #
+##############
 
-# Temp directory used to instantiate external service like Fuseki.
-# Windows ex: C:\\Tools\\lp\\etl\\services
-# Linux ex: /data/lp/etl/services
-# CURRENTLY CAN BE LEFT EMPTY
-external.working =
-
-# Define range of ports, that are used to create external services like Fuseki.
-external.port.start = 3300
-external.port.end = 3400
+# Port for web server - for now used by storage.domain.
+frontend.webserver.port = 8080
