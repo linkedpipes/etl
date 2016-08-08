@@ -81,8 +81,13 @@ final class ReferenceFactory {
             ));
         }
 
-        // TODO Add reference to the configuration !
-        // http://linkedpipes.com/ontology/configurationGraph
+        // Add a reference to the configuration.
+        final Resource configIri = vf.createIRI(iriAsString + "/configuration");
+        definitionRdf.add(vf.createStatement(iri,
+                vf.createIRI("http://linkedpipes.com/ontology/configurationGraph"),
+                configIri,
+                iri
+        ));
 
         final BaseTemplate template = templates.getTemplates().get(templateIri);
         if (template == null) {
@@ -96,7 +101,6 @@ final class ReferenceFactory {
         RdfUtils.write(new File(destination, Template.DEFINITION_FILE),
                 RDFFormat.TRIG, definitionRdf);
         // Component configuration.
-        final Resource configIri = vf.createIRI(iriAsString + "/configuration");
         final Collection<Statement> configRdf = RdfUtils.renameResources(
                 configurationRdf, configIri.stringValue(), configIri);
         RdfUtils.write(new File(destination, Template.CONFIG_FILE),
