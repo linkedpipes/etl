@@ -38,7 +38,7 @@ public final class LINKEDPIPES {
 
     public static final String HAS_BINDING = PREFIX_ONTOLOGY + "binding";
 
-    public static final String HAS_JAR_URI = PREFIX_ONTOLOGY + "jarUri";
+    public static final String HAS_JAR = PREFIX_ONTOLOGY + "jar";
 
     public static final String HAS_CONFIGURATION = PREFIX_ONTOLOGY + "configuration";
 
