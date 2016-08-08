@@ -1,13 +1,13 @@
 define(['jquery'], function (jQuery) {
     "use strict";
 
-    const COMPONENT_SELECTOR = {
+    const JAR_TEMPLATE_SELECTOR = {
         'property': '@type',
         'operation': 'in',
-        'value': 'http://linkedpipes.com/ontology/Component'
+        'value': 'http://linkedpipes.com/ontology/JarTemplate'
     };
 
-    const COMPONENT_TEMPLATE = {
+    const JAR_TEMPLATE_TEMPLATE = {
         'id': {
             '$resource': ''
         },
@@ -88,6 +88,7 @@ define(['jquery'], function (jQuery) {
      * @param template
      */
     function updateComponent(template) {
+        console.log(template);
         template['filterString'] = template.label.toLowerCase();
         if (template['keyword'] === undefined) {
             // We do not update the filter as there are no
@@ -102,6 +103,9 @@ define(['jquery'], function (jQuery) {
                 ',' + template['keyword'].toLowerCase();
         }
         // Update dialog - we need to add references.
+        if (template['dialogs'] === undefined) {
+            template['dialogs'] = [];
+        }
         template['dialogs'].forEach(function (item) {
             item['iri'] = template['id'];
         });
@@ -115,6 +119,9 @@ define(['jquery'], function (jQuery) {
         // Check ports.
         var inputs = [];
         var outputs = [];
+        if (template['ports'] === undefined) {
+            template['ports'] = [];
+        }
         template['ports'].forEach(function (port) {
             var newPort = {
                 'label': port['label'],
@@ -156,9 +163,9 @@ define(['jquery'], function (jQuery) {
         service.load = function (onSuccess, onFailure) {
             $http.get("./resources/components").then(function (response) {
                     console.time('loading templates');
-                    // Load components.
+                    // Load jar templates/.
                     var newTemplates = jsonldService.toJson(response.data,
-                        COMPONENT_SELECTOR, COMPONENT_TEMPLATE);
+                        JAR_TEMPLATE_SELECTOR, JAR_TEMPLATE_TEMPLATE);
                     newTemplates.forEach(function (template) {
                         // Check if it's new.
                         if (templates.map[template['id']]) {
