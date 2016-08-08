@@ -137,7 +137,7 @@
     </dependencies>
 
     <build>
-        <finalName>executor-monitor</finalName>
+        <finalName>storage</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
