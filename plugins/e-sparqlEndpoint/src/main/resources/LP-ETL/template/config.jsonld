@@ -1,0 +1,7 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query": "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o} LIMIT 1000"
+    }
+]
