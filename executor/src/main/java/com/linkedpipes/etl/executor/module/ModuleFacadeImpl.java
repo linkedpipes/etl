@@ -4,6 +4,8 @@ import com.linkedpipes.etl.executor.Configuration;
 import com.linkedpipes.etl.executor.api.v1.Plugin;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -185,6 +187,15 @@ class ModuleFacadeImpl implements ModuleFacade,
         return getServices(Plugin.MessageListener.class);
     }
 
+    /**
+     * TODO This function require storage to be up and running. We should add an option how to pre-load jar files from directory.
+     *
+     * @param definition
+     * @param resource
+     * @param context Context given to new component.
+     * @return
+     * @throws ModuleException
+     */
     @Override
     public BaseComponent getComponent(PipelineDefinition definition,
             String resource, Plugin.Context context) throws ModuleException {
@@ -194,7 +205,7 @@ class ModuleFacadeImpl implements ModuleFacade,
                 = definition.executeSelect(
                         "SELECT ?path WHERE {\n"
                         + "  <" + resource + "> <"
-                        + LINKEDPIPES.HAS_JAR_URI + "> ?path .\n"
+                        + LINKEDPIPES.HAS_JAR + "> ?path .\n"
                         + "}");
         if (resultList.size() != 1) {
             throw new ModuleException("Invalid number query results!");
@@ -202,11 +213,22 @@ class ModuleFacadeImpl implements ModuleFacade,
         componentInfo = resultList.get(0);
         // Then we need to load or get the bundle.
         final String jarFileUri = componentInfo.get("path");
+        // TODO Enable reload for updated component versions?
         if (!components.containsKey(jarFileUri)) {
+            // We do not download directly from the IRI, instead
+            // we ask storage.
+            final String bundleIri;
+            try {
+                bundleIri = configuration.getStorageAddress() +
+                        "/api/v1/jars/file?iri=" +
+                        URLEncoder.encode(jarFileUri, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                throw new ModuleException("Invalid encoding!", ex);
+            }
             LOG.info("Loading jar file from: {}", jarFileUri);
             final Bundle bundle;
             try {
-                bundle = framework.getBundleContext().installBundle(jarFileUri);
+                bundle = framework.getBundleContext().installBundle(bundleIri);
             } catch (BundleException ex) {
                 throw new ModuleException(
                         "Can't load bundle from given location!", ex);

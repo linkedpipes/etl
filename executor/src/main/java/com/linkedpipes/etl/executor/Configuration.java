@@ -31,6 +31,8 @@ public class Configuration {
 
     private String osgiStorageDirectory;
 
+    private String storageAddress;
+
     private final Properties properties = new Properties();
 
     @PostConstruct
@@ -59,6 +61,7 @@ public class Configuration {
         osgiLibDirectoryPath = getProperty("executor.osgi.lib.directory");
         executionPrefix = getProperty("executor.execution.uriPrefix");
         osgiStorageDirectory = getProperty("executor.osgi.working.directory");
+        storageAddress = getProperty("storage.uri");
         //
         validateDirectory(logDirectoryPath);
         validateDirectory(osgiLibDirectoryPath);
@@ -91,7 +94,11 @@ public class Configuration {
         return osgiStorageDirectory;
     }
 
-    protected void validateDirectory(String value) {
+    public String getStorageAddress() {
+        return storageAddress;
+    }
+
+    private static  void validateDirectory(String value) {
         (new File(value)).mkdirs();
     }
 
