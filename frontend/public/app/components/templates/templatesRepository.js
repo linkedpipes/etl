@@ -88,7 +88,6 @@ define(['jquery'], function (jQuery) {
      * @param template
      */
     function updateComponent(template) {
-        console.log(template);
         template['filterString'] = template.label.toLowerCase();
         if (template['keyword'] === undefined) {
             // We do not update the filter as there are no
@@ -201,7 +200,6 @@ define(['jquery'], function (jQuery) {
                     if (onSuccess) {
                         onSuccess();
                     }
-                    console.log('Templates:', templates);
                 }, function (response) {
                     if (onFailure) {
                         onFailure(response);
