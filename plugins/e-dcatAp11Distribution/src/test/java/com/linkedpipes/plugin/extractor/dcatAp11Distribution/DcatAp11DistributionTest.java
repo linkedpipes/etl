@@ -101,7 +101,7 @@ public class DcatAp11DistributionTest {
 			component.configuration.setTemporalEnd(sdf.parse("2020-12-31"));
 
 			env.execute();
-            TestUtils.store(metadata, new File("metadata.ttl"), RDFFormat.TURTLE);
+//            TestUtils.store(metadata, new File("metadata.ttl"), RDFFormat.TURTLE);
             conn.close();
         } catch (Exception ex) {
             LOG.error("Failure", ex);
@@ -137,7 +137,7 @@ public class DcatAp11DistributionTest {
 			));
 
 			env.execute();
-			TestUtils.store(metadata, new File("metadata.ttl"), RDFFormat.TURTLE);
+//			TestUtils.store(metadata, new File("metadata.ttl"), RDFFormat.TURTLE);
 			conn.close();
 		} catch (Exception ex) {
 			LOG.error("Failure", ex);
