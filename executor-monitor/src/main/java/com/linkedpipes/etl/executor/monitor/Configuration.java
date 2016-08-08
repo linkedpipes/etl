@@ -33,17 +33,9 @@ public class Configuration {
 
     private String executorUri;
 
-    private String fusekiPath = null;
-
-    private String externalWorkingDirectoryPath;
-
     private int ftpCommandPort;
 
     private String ftpDataPort;
-
-    private int processPortStart;
-
-    private int processPortEnd;
 
     private String executionPrefix;
 
@@ -74,11 +66,7 @@ public class Configuration {
         webServerPort = getPropertyInteger("executor-monitor.webserver.port");
         logDirectoryPath = getProperty("executor-monitor.log.directory");
         logFilter = getProperty("executor-monitor.log.core.level");
-        fusekiPath = getProperty("external.fuseki.path");
-        externalWorkingDirectoryPath = getProperty("external.working");
         ftpCommandPort = getPropertyInteger("executor-monitor.ftp.command_port");
-        processPortStart = getPropertyInteger("external.port.start");
-        processPortEnd = getPropertyInteger("external.port.end");
         executionPrefix = getProperty("executor.execution.uriPrefix");
         //
         final Integer ftpDataPortsStart = getPropertyInteger(
@@ -96,12 +84,6 @@ public class Configuration {
         final File workingDirectory = new File(workingDirectoryPath + File.separator + "data");
         workingDirectory.mkdirs();
         return workingDirectory;
-    }
-
-    public File getUploadDirectory() {
-        final File uploadDirectory = new File(workingDirectoryPath + File.separator + "upload");
-        uploadDirectory.mkdirs();
-        return uploadDirectory;
     }
 
     public File getLogDirectory() {
@@ -122,16 +104,6 @@ public class Configuration {
         return executorUri;
     }
 
-    public File getFusekiPath() {
-        return new File(fusekiPath);
-    }
-
-    public File getExternalWorkingDirectoryPath() {
-        final File result = new File(externalWorkingDirectoryPath);
-        result.mkdirs();
-        return result;
-    }
-
     public int getFtpCommandPort() {
         return ftpCommandPort;
     }
@@ -140,13 +112,6 @@ public class Configuration {
         return ftpDataPort;
     }
 
-    public int getProcessPortStart() {
-        return processPortStart;
-    }
-
-    public int getProcessPortEnd() {
-        return processPortEnd;
-    }
 
     public String getExecutionPrefix() {
         return executionPrefix;
