@@ -19,7 +19,7 @@ class FullTemplate extends BaseTemplate {
 
     static {
         TYPE = SimpleValueFactory.getInstance().createIRI(
-                "http://linkedpipes.com/ontology/Component");
+                "http://linkedpipes.com/ontology/JarTemplate");
     }
 
     /**
