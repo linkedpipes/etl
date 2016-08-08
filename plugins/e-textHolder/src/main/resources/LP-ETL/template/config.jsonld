@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": "",
+        "http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-textHolder#content": "",
+        "http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

@@ -1,0 +1,17 @@
+<div class="container-flow">
+    <div class="row">
+        <md-input-container class="md-block" flex
+                            ng-hide="control.fileName.forced">
+            <label>File name</label>
+            <input ng-model="dialog.fileName" placeholder="file.ttl"
+                   ng-disabled="control.fileName.inherit">
+        </md-input-container>
+        <md-input-container class="md-block" flex
+                            ng-hide="control.content.forced">
+            <label>File content</label>
+            <textarea id="query" ng-model="dialog.content"
+                      placeholder="@prefix  rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; ."
+                      ng-disabled="control.content.inherit" />
+        </md-input-container>
+    </div>
+</div>
