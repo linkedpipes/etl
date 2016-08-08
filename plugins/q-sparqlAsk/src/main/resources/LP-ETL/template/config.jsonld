@@ -1,0 +1,8 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/q-sparqlAsk#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/q-sparqlAsk#query": "ASK { ?s ?p ?o }",
+        "http://plugins.linkedpipes.com/ontology/q-sparqlAsk#failOnTrue": true
+    }
+]
