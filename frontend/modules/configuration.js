@@ -15,10 +15,8 @@ module.exports = {
         'port': properties.get('frontend.webserver.port')
     },
     'storage': {
-        'pipelines': properties.get('storage.pipelines.directory').replace('\\:', ':'),
-        'components': properties.get('storage.components.directory').replace('\\:', ':'),
-        'domain': properties.get('domain.uri'),
-        'jarPathPrefix' : properties.get('storage.components.path.prefix')
+        'url' : properties.get('storage.uri'),
+        'domain': properties.get('domain.uri')
     },
     'executor': {
         'monitor': {

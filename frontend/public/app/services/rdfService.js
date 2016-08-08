@@ -412,6 +412,22 @@ define([], function () {
                     }
                 };
 
+                service.getIri = function(resource, property) {
+                    property = service.prefix + property;
+                    return jsonld.getReference(resource, property);
+                };
+
+                service.setIri = function(resource, property, value) {
+                    if (value === undefined) {
+                        delete resource[property];
+                        return;
+                    }
+                    property = service.prefix + property;
+                    resource[property] = {
+                        '@id' : value
+                    }
+                };
+
                 return service;
             }
         };

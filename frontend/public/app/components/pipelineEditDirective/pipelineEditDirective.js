@@ -419,6 +419,14 @@ define([
         });
     };
 
+    service.onCreateTemplate = function() {
+        var component = this.pipelineCanvas.getResource(
+            this.componentMenu.view.model.id);
+        var cell = this.canvas.API.getGraph().getCell(
+            this.componentMenu.view.model.id);
+        this.API.onCreateComponent(cell, component);
+    }
+
     function directiveFactory() {
         // Used to store directive data outstide the scope.
         var instance;

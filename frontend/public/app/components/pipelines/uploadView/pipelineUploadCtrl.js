@@ -20,7 +20,6 @@ define([], function () {
             file.upload = Upload.http({
                 url: uri,
                 method: 'PUT',
-                fields: {'Content-Type': 'application/json'},
                 data: file
             });
 
@@ -41,7 +40,6 @@ define([], function () {
                 $scope.progress = percentage;
             });
         };
-
 
         /**
          * Create a new pipeline with given ID.

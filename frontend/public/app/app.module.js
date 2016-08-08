@@ -17,6 +17,7 @@ define([
     'app/services/infoService',
     'app/components/inputs/localizedTextInput/localizedTextInput',
     'app/components/inputs/iriList/iriList',
+    'app/components/templateDetailDialog/templateDetailDialogCtrl',
     'angular',
     'angular-route',
     'angular-resource',
@@ -45,6 +46,7 @@ define([
         infoService,
         localizedTextInputInit,
         iriListInit,
+        templateDetailDialogCtrl,
         angular
         ) {
     var app = angular.module('angularApp', [
@@ -67,6 +69,7 @@ define([
     infoService(app);
     localizedTextInputInit(app);
     iriListInit(app);
+    templateDetailDialogCtrl(app);
     //
     executionModel(app);
     pipelineListCtrlInit(app);

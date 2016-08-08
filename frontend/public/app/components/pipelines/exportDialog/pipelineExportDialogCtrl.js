@@ -1,7 +1,3 @@
-/**
- * Given 'data' must contains IRI of a pipeline to export or
- * loaded pipeline.
- */
 define(['file-saver'], function (saveAs) {
     function controler($scope, $http, $mdDialog, data, jsonldService) {
 
@@ -39,13 +35,13 @@ define(['file-saver'], function (saveAs) {
         };
 
         /**
-         * Search for componenets in the pipeline.
+         * Search for components in the pipeline.
          */
         var parsePipeline = function (onSucess) {
             console.time('parsePipeline');
             data.model = {
                 'graphs': {},
-                'componenets': [],
+                'components': [],
                 /**
                  * Key is the template IRI value is null as the template
                  * is not yet loaded.
@@ -63,7 +59,7 @@ define(['file-saver'], function (saveAs) {
                     return;
                 }
                 if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1) {
-                    data.model.componenets.push(resource);
+                    data.model.components.push(resource);
                     var templateIri = jsonld.getReference(resource,
                             'http://linkedpipes.com/ontology/template');
                     data.model.templates[templateIri] = null;
@@ -89,10 +85,14 @@ define(['file-saver'], function (saveAs) {
             };
 
             // We need to download all templates and then continue.
-
             var downloadedTotal = 0;
             for (var iri in data.model.templates) {
                 downloadedTotal += 1;
+            }
+
+            // There are no templates.
+            if (downloadedTotal == 0) {
+                onSucess();
             }
 
             /**
@@ -117,8 +117,8 @@ define(['file-saver'], function (saveAs) {
          * Remove private properties from the configuration.
          */
         var removePrivateConfiguration = function () {
-            for (var index in data.model.componenets) {
-                var component = data.model.componenets[index];
+            for (var index in data.model.components) {
+                var component = data.model.components[index];
                 // Get template and configuration graph.
                 var configIri = jsonld.getReference(component,
                         'http://linkedpipes.com/ontology/configurationGraph');

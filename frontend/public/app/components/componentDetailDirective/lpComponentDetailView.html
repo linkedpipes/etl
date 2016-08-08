@@ -1,0 +1,35 @@
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab ng-repeat="item in dialogs" label="{{item.label}}">
+        <lp-component-reference class="md-padding"
+                                js="item.js"
+                                html="item.html"
+                                scope="item.scope"
+                                locals="item.locals">
+        </lp-component-reference>
+    </md-tab>
+    <md-tab label="General">
+        <md-content class="md-padding">
+            <form name="generalForm">
+                <md-input-container class="md-block" flex>
+                    <label>Component label</label>
+                    <input ng-model="general.label">
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label>Description</label>
+                    <textarea ng-model="general.description"/>
+                </md-input-container>
+                <div layou="column">
+                    <md-switch ng-model="general.templateColor">
+                        Use template color
+                    </md-switch>
+                    <div ng-hide="general.templateColor">
+                        <!-- We can use: https://github.com/brianpkelley/md-color-picker -->
+                        Component color: <input type="color"
+                                                ng-model="general.color"
+                                                style="width:5em;"/>
+                    </div>
+                </div>
+            </form>
+        </md-content>
+    </md-tab>
+</md-tabs>

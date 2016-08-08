@@ -1,6 +1,6 @@
 define([], function () {
     function controler($scope, $location, $http, $timeout, $mdDialog, $mdMedia,
-            refreshService, statusService, jsonldService, clipboard) {
+                       refreshService, statusService, jsonldService, clipboard) {
 
         var template = {
             'iri': {
@@ -15,7 +15,7 @@ define([], function () {
         };
 
         $scope.info = {
-            'clipboard' : clipboard.supported
+            'clipboard': clipboard.supported
         };
 
         $scope.repository = jsonldService.createRepository({
@@ -32,7 +32,8 @@ define([], function () {
                     'value': 'http://etl.linkedpipes.com/ontology/Deleted'
                 }
             },
-            'decorator': function () {},
+            'decorator': function () {
+            },
             'url': '/resources/pipelines'
         });
 
@@ -44,14 +45,14 @@ define([], function () {
 
         $scope.onExecute = function (pipeline) {
             $http.post('/resources/executions?pipeline=' + pipeline.iri)
-                    .then(function (response) {
-                        $location.path('/executions').search({});
-                    }, function (response) {
-                        statusService.postFailed({
-                            'title': "Can't start the execution.",
-                            'response': response
-                        });
+                .then(function (response) {
+                    $location.path('/executions').search({});
+                }, function (response) {
+                    statusService.postFailed({
+                        'title': "Can't start the execution.",
+                        'response': response
                     });
+                });
         };
 
         $scope.onExport = function (pipeline, $event) {
@@ -73,20 +74,40 @@ define([], function () {
         };
 
         $scope.onCreate = function () {
-            // Create pipeline.
-            var id = $scope.id = 'created-' + (new Date()).getTime();
-            $http.post('/resources/pipelines/' + id).then(function (response) {
-                $location.path('/pipelines/edit/canvas').search({
-                    'pipeline': response.data.uri
+            var data = new FormData();
+            // Use empty options.
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions'
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            }
+            $http.post('/resources/pipelines/', data, config).then(
+                function (response) {
+                    // The response is a reference.
+                    // TODO Use JSONLD service to get the value !!
+                    var newPipelineUri = response.data[0]['@graph'][0]
+                        ['http://linkedpipes.com/ontology/pipeline'][0]['@id'];
+                    //
+                    $location.path('/pipelines/edit/canvas').search({
+                        'pipeline': newPipelineUri
+                    });
+                }, function (response) {
+                    statusService.postFailed({
+                        'title': "Can't create the pipeline.",
+                        'response': response
+                    });
                 });
-            }, function (response) {
-                statusService.postFailed({
-                    'title': "Can't create the pipeline.",
-                    'response': response
-                });
-            });
-            // TODO We may try a few time here, although the chance that
-            // two users click in the exactly same unix time is rather small.
         };
 
         $scope.onUpload = function () {
@@ -98,10 +119,28 @@ define([], function () {
         };
 
         $scope.onCopy = function (pipeline) {
-            var id = 'created-' + (new Date()).getTime();
-            var url = '/resources/pipelines/' + id + '?pipeline='
-                    + pipeline.iri;
-            $http.post(url).then(function (response) {
+            var data = new FormData();
+            //
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/import': true
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            }
+            var url = '/resources/pipelines?pipeline='
+                + pipeline.iri;
+            $http.post(url, data, config).then(function (response) {
                 statusService.success({
                     'title': 'Pipeline has been successfully copied.'
                 });
@@ -115,18 +154,18 @@ define([], function () {
             });
         };
 
-        $scope.onCopyIri = function(pipeline) {
+        $scope.onCopyIri = function (pipeline) {
             clipboard.copyText(pipeline.iri);
         };
 
         $scope.onDelete = function (pipeline, event) {
             var confirm = $mdDialog.confirm()
-                    .title('Would you like to delete pipeline "'
-                            + pipeline.label + '"?')
-                    .ariaLabel('Delete pipeline.')
-                    .targetEvent(event)
-                    .ok('Delete pipeline')
-                    .cancel('Cancel');
+                .title('Would you like to delete pipeline "'
+                    + pipeline.label + '"?')
+                .ariaLabel('Delete pipeline.')
+                .targetEvent(event)
+                .ok('Delete pipeline')
+                .cancel('Cancel');
             $mdDialog.show(confirm).then(function () {
                 $scope.repository.delete(pipeline);
                 // TODO Do not force reload here, use update.
@@ -135,13 +174,14 @@ define([], function () {
         };
 
         var initialize = function () {
-            $scope.repository.load(function () { },
-                    function (response) {
-                        statusService.getFailed({
-                            'title': "Can't load data.",
-                            'response': response
-                        });
+            $scope.repository.load(function () {
+                },
+                function (response) {
+                    statusService.getFailed({
+                        'title': "Can't load data.",
+                        'response': response
                     });
+                });
 
             refreshService.set(function () {
                 // TODO Enable update once the server has
@@ -151,6 +191,7 @@ define([], function () {
         };
         $timeout(initialize, 0);
     }
+
     //
     controler.$inject = ['$scope', '$location', '$http', '$timeout',
         '$mdDialog', '$mdMedia', 'service.refresh',
@@ -159,5 +200,6 @@ define([], function () {
     function init(app) {
         app.controller('components.pipelines.list', controler);
     }
+
     return init;
 });
