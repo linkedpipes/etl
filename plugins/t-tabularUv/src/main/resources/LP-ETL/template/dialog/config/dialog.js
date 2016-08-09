@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'keyColumn': '',
@@ -34,8 +34,8 @@ define([], function () {
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-tabularUv#');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var table = rdf.secureByType('Configuration');
 
             $scope.dialog.keyColumn = rdf.getString(table, 'keyColumn');
@@ -108,7 +108,7 @@ define([], function () {
 
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var table = rdf.secureByType('Configuration');
 
             rdf.setString(table, 'keyColumn', $scope.dialog.keyColumn);
@@ -231,8 +231,16 @@ define([], function () {
         $scope.onDelete = function (data, index) {
             data.splice(index, 1);
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

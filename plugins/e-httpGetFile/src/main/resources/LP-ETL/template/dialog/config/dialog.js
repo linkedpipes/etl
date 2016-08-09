@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'fileUri': '',
@@ -9,8 +9,8 @@ define([], function () {
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/e-httpGetFile#');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
 
             $scope.dialog.uri = rdf.getString(resource, 'fileUri');
@@ -18,7 +18,7 @@ define([], function () {
             $scope.dialog.hardRedirect = rdf.getBoolean(resource, 'hardRedirect');
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var resource = rdf.secureByType('Configuration');
 
             rdf.setString(resource, 'fileUri', $scope.dialog.uri);
@@ -27,8 +27,17 @@ define([], function () {
 
             return rdf.getData();
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
+
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

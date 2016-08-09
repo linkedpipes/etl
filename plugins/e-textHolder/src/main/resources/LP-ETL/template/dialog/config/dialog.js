@@ -120,7 +120,7 @@ define([], function () {
         loadTemplate();
 
     }
-
+    //
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

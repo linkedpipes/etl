@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'graph': '',
@@ -15,8 +15,8 @@ define([], function () {
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
             $scope.dialog.graph = rdf.getString(resource, 'graph');
             $scope.dialog.repository = rdf.getString(resource, 'repository');
@@ -29,7 +29,7 @@ define([], function () {
             $scope.dialog.replace = rdf.getBoolean(resource, 'replace');
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var resource = rdf.secureByType('Configuration');
             rdf.setString(resource, 'graph', $scope.dialog.graph);
             rdf.setString(resource, 'repository', $scope.dialog.repository);
@@ -42,8 +42,16 @@ define([], function () {
             rdf.setBoolean(resource, 'replace', $scope.dialog.replace);
             return rdf.getData();
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

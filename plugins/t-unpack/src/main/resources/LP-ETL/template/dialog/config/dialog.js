@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'usePrefix': false,
@@ -8,15 +8,15 @@ define([], function () {
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-unpack#');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
 
             $scope.dialog.usePrefix = rdf.getBoolean(resource, 'usePrefix');
             $scope.dialog.format = rdf.getString(resource, 'format');
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var resource = rdf.secureByType('Configuration');
 
             rdf.setBoolean(resource, 'usePrefix', $scope.dialog.usePrefix);
@@ -24,8 +24,16 @@ define([], function () {
 
             return rdf.getData();
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

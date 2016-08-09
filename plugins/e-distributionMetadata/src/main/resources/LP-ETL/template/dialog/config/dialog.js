@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'datasetURI': '',
@@ -56,8 +56,8 @@ define([], function () {
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/e-distributionMetadata#');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
 
             $scope.dialog.datasetURI = rdf.getString(resource, 'datasetURI');
@@ -95,10 +95,10 @@ define([], function () {
             $scope.dialog.useNowTemporalEnd = rdf.getBoolean(resource, 'useNowTemporalEnd');
             $scope.dialog.temporalFromDataset = rdf.getBoolean(resource, 'temporalFromDataset');
 
-            $scope.dialog.exampleResources = listToString(rdf.getList(resource, 'exampleResources'));
+            $scope.dialog.exampleResources = listToString(rdf.getValueList(resource, 'exampleResources'));
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var resource = rdf.secureByType('Configuration');
 
             rdf.setString(resource, 'datasetURI', $scope.dialog.datasetURI);
@@ -135,12 +135,20 @@ define([], function () {
             rdf.setBoolean(resource, 'useNowTemporalEnd', $scope.dialog.useNowTemporalEnd);
             rdf.setBoolean(resource, 'temporalFromDataset', $scope.dialog.temporalFromDataset);
 
-            rdf.setList(resource, 'exampleResources', stringToList($scope.dialog.exampleResources));
+            rdf.setValueList(resource, 'exampleResources', stringToList($scope.dialog.exampleResources));
 
             return rdf.getData();
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

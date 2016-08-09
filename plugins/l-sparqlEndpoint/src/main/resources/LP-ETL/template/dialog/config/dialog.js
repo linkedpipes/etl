@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'endpoint': '',
@@ -13,8 +13,8 @@ define([], function () {
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
             $scope.dialog.endpoint = rdf.getString(resource, 'endpoint');
             $scope.dialog.targetGraphURI = rdf.getString(resource, 'targetGraphURI');
@@ -25,7 +25,7 @@ define([], function () {
             $scope.dialog.password = rdf.getString(resource, 'password');
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var resource = rdf.secureByType('Configuration');
             rdf.setString(resource, 'endpoint', $scope.dialog.endpoint);
             rdf.setString(resource, 'targetGraphURI', $scope.dialog.targetGraphURI);
@@ -36,8 +36,16 @@ define([], function () {
             rdf.setString(resource, 'password', $scope.dialog.password);
             return rdf.getData();
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

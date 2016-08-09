@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
         var rdf = rdfService.create('http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/');
 
         var listToString = function(string) {
@@ -21,8 +21,8 @@ define([], function () {
             }
         };
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
 
             //Mandatory
@@ -91,7 +91,7 @@ define([], function () {
             $scope.dialog.unitOfMeasurementIRIs = rdf.getValue(resource, 'unitOfMeasurementIRIs') ;
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
          	var resource = rdf.secureByType('Configuration');
 
             //Mandatory
@@ -928,10 +928,18 @@ define([], function () {
       $scope.dialog = {} ;
       $scope.dialog.languages = [] ;
 
+      // Define the save function.
+      $service.onStore = function () {
+          saveDialog();
+      }
+
+      // Load data.
+      loadDialog();
+
     }
     //
 
 
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'delimeter': '',
@@ -57,8 +57,8 @@ define([], function () {
 
         var rdf = rdfService.create('');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var table = rdf.secureByType(prefix.csvw + 'Table');
             $scope.dialog.normalOutput = rdf.getBoolean(table, prefix.tabular + 'normalOutput');
             $scope.dialog.fullMapping = rdf.getBoolean(table, prefix.tabular + 'fullMapping');
@@ -98,7 +98,7 @@ define([], function () {
             });
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var table = rdf.secureByType(prefix.csvw + 'Table');
 
             rdf.setBoolean(table, prefix.tabular + 'normalOutput', $scope.dialog.normalOutput);
@@ -161,8 +161,16 @@ define([], function () {
         $scope.onDelete = function (index) {
             $scope.dialog.columns.splice(index, 1);
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

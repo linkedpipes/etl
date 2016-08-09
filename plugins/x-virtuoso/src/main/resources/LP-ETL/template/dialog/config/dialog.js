@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'host': '',
@@ -15,8 +15,8 @@ define([], function () {
 
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/x-virtuoso#');
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
 
             $scope.dialog.host = rdf.getString(resource, 'uri');
@@ -30,7 +30,7 @@ define([], function () {
             $scope.dialog.statusUpdate = rdf.getInteger(resource, 'updateInterval');
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var resource = rdf.secureByType('Configuration');
 
             rdf.setString(resource, 'uri', $scope.dialog.host);
@@ -45,8 +45,16 @@ define([], function () {
 
             return rdf.getData();
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', '', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

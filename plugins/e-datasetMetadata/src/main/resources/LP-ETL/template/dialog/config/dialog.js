@@ -1,5 +1,5 @@
 define([], function () {
-    function controller($scope, rdfService) {
+    function controller($scope, $service, rdfService) {
 
         $scope.dialog = {
             'datasetURI': '',
@@ -54,8 +54,8 @@ define([], function () {
             }
         };
 
-        $scope.setConfiguration = function (inConfig) {
-            rdf.setData(inConfig);
+        function loadDialog() {
+            rdf.setData($service.config.instance);
             var resource = rdf.secureByType('Configuration');
 
             $scope.dialog.datasetURI = rdf.getString(resource, 'datasetURI');
@@ -83,15 +83,15 @@ define([], function () {
             $scope.dialog.useNowTemporalEnd = rdf.getBoolean(resource, 'useNowTemporalEnd');
             $scope.dialog.useTemporal = rdf.getBoolean(resource, 'useTemporal');
 
-            $scope.dialog.authors = listToString(rdf.getList(resource, 'authors'));
-            $scope.dialog.sources = listToString(rdf.getList(resource, 'sources'));
-            $scope.dialog.languages = listToString(rdf.getList(resource, 'languages'));
-            $scope.dialog.keywords_orig = listToString(rdf.getList(resource, 'keywords_orig'));
-            $scope.dialog.keywords_en = listToString(rdf.getList(resource, 'keywords_en'));
-            $scope.dialog.themes = listToString(rdf.getList(resource, 'themes'));
+            $scope.dialog.authors = listToString(rdf.getValueList(resource, 'authors'));
+            $scope.dialog.sources = listToString(rdf.getValueList(resource, 'sources'));
+            $scope.dialog.languages = listToString(rdf.getValueList(resource, 'languages'));
+            $scope.dialog.keywords_orig = listToString(rdf.getValueList(resource, 'keywords_orig'));
+            $scope.dialog.keywords_en = listToString(rdf.getValueList(resource, 'keywords_en'));
+            $scope.dialog.themes = listToString(rdf.getValueList(resource, 'themes'));
         };
 
-        $scope.getConfiguration = function () {
+        function saveDialog() {
             var resource = rdf.secureByType('Configuration');
 
             rdf.setString(resource, 'datasetURI', $scope.dialog.datasetURI);
@@ -119,17 +119,25 @@ define([], function () {
             rdf.setBoolean(resource, 'useNowTemporalEnd', $scope.dialog.useNowTemporalEnd);
             rdf.setBoolean(resource, 'useTemporal', $scope.dialog.useTemporal);
 
-            rdf.setList(resource, 'authors', stringToList($scope.dialog.authors));
-            rdf.setList(resource, 'sources', stringToList($scope.dialog.sources));
-            rdf.setList(resource, 'languages', stringToList($scope.dialog.languages));
-            rdf.setList(resource, 'keywords_orig', stringToList($scope.dialog.keywords_orig));
-            rdf.setList(resource, 'keywords_en', stringToList($scope.dialog.keywords_en));
-            rdf.setList(resource, 'themes', stringToList($scope.dialog.themes));
+            rdf.setValueList(resource, 'authors', stringToList($scope.dialog.authors));
+            rdf.setValueList(resource, 'sources', stringToList($scope.dialog.sources));
+            rdf.setValueList(resource, 'languages', stringToList($scope.dialog.languages));
+            rdf.setValueList(resource, 'keywords_orig', stringToList($scope.dialog.keywords_orig));
+            rdf.setValueList(resource, 'keywords_en', stringToList($scope.dialog.keywords_en));
+            rdf.setValueList(resource, 'themes', stringToList($scope.dialog.themes));
 
             return rdf.getData();
         };
+
+        // Define the save function.
+        $service.onStore = function () {
+            saveDialog();
+        }
+
+        // Load data.
+        loadDialog();
     }
     //
-    controller.$inject = ['$scope', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });
