@@ -380,21 +380,44 @@ define([], function () {
                     }
                 };
 
-                service.getList = function (resource, property) {
+                service.getValueList = function (resource, property) {
                     property = service.prefix + property;
-                    if (typeof resource[property] === 'undefined') {
+                    //
+                    if (!resource[property]) {
                         return [];
-                    } else {
-                        return resource[property];
                     }
+                    var value = resource[property];
+                    if (jQuery.isArray(value)) {
+                        var result = [];
+                        value.forEach(function (item) {
+                            if (item['@value']) {
+                                result.push(item['@value']);
+                            } else {
+                                result.push(item);
+                            }
+                        });
+                        return result;
+                    } else {
+                        if ('@value' in value) {
+                            return [value['@value']];
+                        } else {
+                            return [value];
+                        }
+                    }
+                    return [];
                 };
 
-                service.setList = function (resource, property, value) {
+                service.setValueList = function (resource, property, value) {
                     property = service.prefix + property;
-                    if (typeof value === 'undefined' || !$.isArray(value) || value.length === 0) {
+                    if (typeof value === 'undefined' || !$.isArray(value) ||
+                        value.length === 0) {
                         delete resource[property];
                     } else {
-                        resource[property] = value;
+                        var list = []
+                        value.forEach(function (iri) {
+                            list.push({'@value' : iri});
+                        });
+                        resource[property] = list;
                     }
                 };
 
