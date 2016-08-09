@@ -1,6 +1,6 @@
 [
     {
-        "@id": "http://linkedpipes.com/resources/components/e-filesFromLocal/0.0.0",
+        "@id": "http://etl.linkedpipes.com/resources/components/e-filesFromLocal/0.0.0",
         "@type": "http://linkedpipes.com/ontology/JarTemplate",
         "http://www.w3.org/2004/02/skos/core#prefLabel": "Files from local",
         "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/e-filesFromLocal/0.0.0"},
@@ -8,14 +8,14 @@
         "http://linkedpipes.com/ontology/color": "#F6D8CE",
         "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Extractor"},
         "http://linkedpipes.com/ontology/port": [
-            {"@id": "http://localhost:8080/resources/components/e-filesFromLocal/0.0.0/output"}
+            {"@id": "http://etl.linkedpipes.com/resources/components/e-filesFromLocal/0.0.0/output"}
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "local", ""
         ]
     },
     {
-        "@id": "http://localhost:8080/resources/components/e-filesFromLocal/0.0.0/output",
+        "@id": "http://etl.linkedpipes.com/resources/components/e-filesFromLocal/0.0.0/output",
         "http://www.w3.org/2004/02/skos/core#prefLabel": "Output",
         "@type": [
             "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",

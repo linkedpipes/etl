@@ -1,6 +1,6 @@
 [
     {
-        "@id": "http://localhost:8080/resources/components/x-virtuoso/0.0.0",
+        "@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0",
         "@type": "http://linkedpipes.com/ontology/JarTemplate",
         "http://www.w3.org/2004/02/skos/core#prefLabel": "Virtuoso",
         "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/x-virtuoso/0.0.0"},
@@ -12,11 +12,11 @@
             "virtuoso"
         ],
         "http://linkedpipes.com/ontology/configurationDescription": [
-            {"@id": "http://localhost:8080/resources/components/x-virtuoso/0.0.0/configurationDescription"}
+            {"@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0/configurationDescription"}
         ]
     },
     {
-        "@id": "http://localhost:8080/resources/components/x-virtuoso/0.0.0/configurationDescription",
+        "@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0/configurationDescription",
         "@type": [
             "http://linkedpipes.com/ontology/ConfigurationDescription"
         ],
