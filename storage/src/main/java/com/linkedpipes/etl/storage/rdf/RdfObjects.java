@@ -89,7 +89,8 @@ public class RdfObjects {
          * @return
          */
         public Value getProperty(IRI property) {
-            final List<Value> objects = properties.get(property);
+            final List<Value> objects = properties.getOrDefault(property,
+                    Collections.EMPTY_LIST);
             if (objects.size() == 1) {
                 return objects.get(0);
             } else {
@@ -114,6 +115,10 @@ public class RdfObjects {
 
         public void add(Statement statement) {
             add(statement.getPredicate(), statement.getObject());
+        }
+
+        public void add(IRI property, int value) {
+            add(property, valueFactory.createLiteral(value));
         }
 
         public void add(IRI property, Value value) {
