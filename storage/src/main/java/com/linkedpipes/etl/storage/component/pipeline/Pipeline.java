@@ -16,7 +16,7 @@ public class Pipeline {
 
     public static final IRI TYPE;
 
-    public static final IRI VERSION;
+    public static final IRI HAS_VERSION;
 
     /**
      * Current pipeline version.
@@ -26,7 +26,7 @@ public class Pipeline {
     static {
         TYPE = SimpleValueFactory.getInstance().createIRI(
                 "http://linkedpipes.com/ontology/Pipeline");
-        VERSION = SimpleValueFactory.getInstance().createIRI(
+        HAS_VERSION = SimpleValueFactory.getInstance().createIRI(
             "http://etl.linkedpipes.com/ontology/version");
     }
 
@@ -171,7 +171,7 @@ public class Pipeline {
         pipeline.add(vf.createStatement(iri, SKOS.PREF_LABEL,
                 vf.createLiteral(iriAsString), iri));
 
-        pipeline.add(vf.createStatement(iri, VERSION,
+        pipeline.add(vf.createStatement(iri, HAS_VERSION,
                 vf.createLiteral(VERSION_NUMBER), iri));
 
         return pipeline;

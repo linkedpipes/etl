@@ -2,6 +2,7 @@ package com.linkedpipes.etl.storage.component.pipeline;
 
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.migration.MigrationFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.openrdf.model.Statement;
@@ -42,6 +43,17 @@ class PipelineManager {
         for (File item : pipelineDirectory.listFiles()) {
             if (!item.isFile()) {
                 continue;
+            }
+            if (item.getName().toLowerCase().endsWith(".backup")) {
+                // Ignore back up files.
+                continue;
+            }
+            // Check for migration from JSON version.
+            if (item.getName().toLowerCase().endsWith(".json")) {
+                item = MigrationFacade.migrateJsonPipeline(item);
+                if (item == null) {
+                    continue;
+                }
             }
             // Load the pipeline.
             try {
