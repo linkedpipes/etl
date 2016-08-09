@@ -219,18 +219,6 @@ public class RdfObjects {
             values.add(object);
         }
 
-        /**
-         * Same as calling {@link #add(IRI, Entity)} multiple times.
-         *
-         * @param property
-         * @param objects
-         */
-        public void addAll(IRI property, Collection<Entity> objects) {
-            for (Entity item : objects) {
-                add(property, item);
-            }
-        }
-
         @Override
         public int compareTo(java.lang.Object value) {
             if (value instanceof Entity) {

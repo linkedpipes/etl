@@ -157,7 +157,7 @@ class Unpacker {
         });
         //
         instance.deleteReferences(HAS_CONFIG_GRAPH);
-        instance.addAll(CONFIG, result);
+        result.forEach((e) -> instance.add(CONFIG, e));
     }
 
     /**
