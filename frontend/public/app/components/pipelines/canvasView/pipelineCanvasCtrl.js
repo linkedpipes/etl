@@ -451,7 +451,7 @@ define([
             // Create object with mapping and reference it from
             // the configuration.
             var execution = {
-                '@id': '',
+                //'@id': '',
                 'http://etl.linkedpipes.com/ontology/execution': {'@id': data.execution.iri},
                 'http://etl.linkedpipes.com/ontology/mapping': []
             };
@@ -469,9 +469,9 @@ define([
                 // Make sure we should (and can) use mapping and if so use it.
                 if (data.execution.model.mapping.isUsedForExecution(component)) {
                     execution['http://etl.linkedpipes.com/ontology/mapping'].push({
-                        '@id': '',
+                        //'@id': '',
                         'http://etl.linkedpipes.com/ontology/mappingSource': {'@id': iri},
-                        'http://etl.linkedpipes.com/ontology/mappingTarget': {'@id': component[iri]}
+                        'http://etl.linkedpipes.com/ontology/mappingTarget': {'@id': component['iri']}
                     });
                 }
             }
