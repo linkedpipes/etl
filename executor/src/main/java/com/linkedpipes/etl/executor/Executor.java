@@ -32,12 +32,11 @@ public class Executor {
     private static Appender<ILoggingEvent> createRollingFileAppender(
             File logDirectory, String logFileName, LoggerContext loggerContext,
             String levelFilter) {
-        final File coreLogDirectory = new File(logDirectory, "core");
-        coreLogDirectory.mkdirs();
+        logDirectory.mkdirs();
 
         final RollingFileAppender newAppender = new RollingFileAppender();
         newAppender.setContext(loggerContext);
-        newAppender.setFile(coreLogDirectory.getPath() + File.separator
+        newAppender.setFile(logDirectory.getPath() + File.separator
                 + logFileName + ".log");
         {
             final TimeBasedRollingPolicy rollingPolicy
@@ -47,7 +46,7 @@ public class Executor {
             // it's one of the rare cases, where a sub-component
             // knows about its parent.
             rollingPolicy.setParent(newAppender);
-            rollingPolicy.setFileNamePattern(coreLogDirectory.getPath()
+            rollingPolicy.setFileNamePattern(logDirectory.getPath()
                     + File.separator
                     + logFileName + ".%d{yyyy-MM-dd}.%i.log");
             rollingPolicy.setMaxHistory(7);
@@ -99,7 +98,7 @@ public class Executor {
         //
         logbackLogger.addAppender(createRollingFileAppender(
                 new File(logDirectory, "executor"),
-                "core",
+                "executor",
                 loggerContext,
                 configuration.getLogCoreFilter()));
     }

@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- *
  * @author Petr Škoda
  */
 @Service
@@ -22,6 +21,11 @@ public class Configuration {
             = LoggerFactory.getLogger(Configuration.class);
 
     private int storagePort;
+
+    private String logDirectoryPath;
+
+    private String logCoreFilter;
+
 
     private String jarDirectory;
 
@@ -43,7 +47,8 @@ public class Configuration {
         }
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
-        try (InputStream stream = new FileInputStream(new File(propertiesFile))) {
+        try (InputStream stream = new FileInputStream(
+                new File(propertiesFile))) {
             properties.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("Can't load configuration file.", ex);
@@ -54,6 +59,9 @@ public class Configuration {
 
     protected void loadProperties() {
         storagePort = getPropertyInteger("storage.port");
+        logDirectoryPath = getProperty("storage.log.directory");
+        logCoreFilter = getProperty("storage.log.core.level");
+
         jarDirectory = getProperty("storage.jars.directory");
         templatesDirectory = getProperty("storage.templates.directory");
         pipelinesDirectory = getProperty("storage.pipelines.directory");
@@ -63,6 +71,17 @@ public class Configuration {
     public int getStoragePort() {
         return storagePort;
     }
+
+    public File getLogDirectory() {
+        final File logDirectory = new File(logDirectoryPath);
+        logDirectory.mkdirs();
+        return logDirectory;
+    }
+
+    public String getLogCoreFilter() {
+        return logCoreFilter;
+    }
+
 
     public File getJarDirectory() {
         return new File(jarDirectory);
