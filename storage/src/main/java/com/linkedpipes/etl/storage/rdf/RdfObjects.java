@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class RdfObjects {
 
-    public class Entity implements Comparable {
+    public static class Entity implements Comparable {
 
         private Resource resource;
 
@@ -23,29 +23,16 @@ public class RdfObjects {
 
         private final Map<IRI, List<Entity>> references = new HashMap<>();
 
-        protected Entity() {
+        private final RdfObjects owner;
+
+        protected Entity(RdfObjects owner) {
             this.resource = null;
+            this.owner = owner;
         }
 
-        protected Entity(Resource resource) {
+        protected Entity(Resource resource, RdfObjects owner) {
             this.resource = resource;
-        }
-
-        /**
-         * Create a deep copy of given object.
-         *
-         * @param object
-         */
-        protected Entity(Entity object) {
-            this.resource = object.resource;
-            object.properties.entrySet().forEach((entry) -> {
-                properties.put(entry.getKey(),
-                        new LinkedList<>(entry.getValue()));
-            });
-            object.references.entrySet().forEach((entry) -> {
-                references.put(entry.getKey(),
-                        new LinkedList<>(entry.getValue()));
-            });
+            this.owner = owner;
         }
 
         public Resource getResource() {
@@ -85,6 +72,8 @@ public class RdfObjects {
          * Return a single property, if it is missing ot here is more then one
          * then throw an exception.
          *
+         * TODO Add method that return one or none !
+         *
          * @param property
          * @return
          */
@@ -118,7 +107,7 @@ public class RdfObjects {
         }
 
         public void add(IRI property, int value) {
-            add(property, valueFactory.createLiteral(value));
+            add(property, owner.valueFactory.createLiteral(value));
         }
 
         public void add(IRI property, Value value) {
@@ -137,10 +126,10 @@ public class RdfObjects {
         }
 
         public void add(IRI property, Resource resource) {
-            Entity objectToAdd = resources.get(resource);
+            Entity objectToAdd = owner.resources.get(resource);
             if (objectToAdd == null) {
-                objectToAdd = new Entity(resource);
-                resources.put(resource, objectToAdd);
+                objectToAdd = new Entity(resource, owner);
+                owner.resources.put(resource, objectToAdd);
             }
             //
             List<Entity> values = references.get(property);
@@ -151,9 +140,16 @@ public class RdfObjects {
             values.add(objectToAdd);
         }
 
+        /**
+         * Here we could be merging with entity from another object.
+         *
+         * @param object
+         * @param preserve
+         * @param overwrite
+         */
         public void add(Entity object, Collection<IRI> preserve,
                 Collection<IRI> overwrite) {
-            // Merge properties.
+            // Merge properties - this is simple, there are no references.
             for (Map.Entry<IRI, List<Value>> entry
                     : object.properties.entrySet()) {
                 if (preserve.contains(entry.getKey())) {
@@ -173,18 +169,28 @@ public class RdfObjects {
             // Merge references.
             for (Map.Entry<IRI, List<Entity>> entry
                     : object.references.entrySet()) {
+                // Skip those who should be preserved on target.
                 if (preserve.contains(entry.getKey())) {
                     continue;
                 }
+                // If we should overwrite current values, just delete
+                // the old values.
                 if (overwrite.contains(entry.getKey())) {
                     List<Entity> thisValues = references.get(entry.getKey());
                     if (thisValues != null) {
                         thisValues.clear();
                     }
                 }
+                // Add objects.
                 for (Entity value : entry.getValue()) {
+                    // Create new entity.
+                    Entity newValue = (new Builder(owner)).create();
+                    newValue.resource = value.resource;
+                    // TODO Check for cycle dependencies.
+                    newValue.add(value, Collections.EMPTY_LIST,
+                            Collections.EMPTY_LIST);
                     // TODO Add should check for duplicities!
-                    add(entry.getKey(), value);
+                    add(entry.getKey(), newValue);
                 }
             }
         }
@@ -199,10 +205,10 @@ public class RdfObjects {
          */
         public void add(IRI property, Entity object) {
             // Check if the object is new.
-            if (resources.containsKey(object.getResource())) {
+            if (owner.resources.containsKey(object.getResource())) {
                 // Check if the resources are the same by reference.
                 final Entity currentObject =
-                        resources.get(object.getResource());
+                        owner.resources.get(object.getResource());
                 if (currentObject == object) {
                     // The are the same we can continue.
                 } else {
@@ -213,7 +219,7 @@ public class RdfObjects {
                 }
             } else {
                 // Add.
-                resources.put(object.getResource(), object);
+                owner.resources.put(object.getResource(), object);
             }
             //
             List<Entity> values = references.get(property);
@@ -249,7 +255,7 @@ public class RdfObjects {
         private final Entity object;
 
         public Builder(RdfObjects graph) {
-            this.object = graph.new Entity();
+            this.object = new Entity(graph);
             this.valueFactory = graph.valueFactory;
         }
 
@@ -284,6 +290,10 @@ public class RdfObjects {
 
     }
 
+    private static int counter = 0;
+
+    private int id = ++counter;
+
     /**
      * List of all stored resources.
      */
@@ -295,7 +305,7 @@ public class RdfObjects {
         for (Statement statement : statements) {
             Entity object = resources.get(statement.getSubject());
             if (object == null) {
-                object = new Entity(statement.getSubject());
+                object = new Entity(statement.getSubject(), this);
                 resources.put(statement.getSubject(), object);
             }
             // Check for resources referred as object.
@@ -303,7 +313,7 @@ public class RdfObjects {
                 final Resource resource = (Resource) statement.getObject();
                 Entity reference = resources.get(resource);
                 if (reference == null) {
-                    reference = new Entity(resource);
+                    reference = new Entity(resource, this);
                     resources.put(resource, reference);
                 }
                 // Add a reference to the resource.
@@ -318,7 +328,7 @@ public class RdfObjects {
     public void add(Statement statement) {
         Entity entity = resources.get(statement.getSubject());
         if (entity == null) {
-            entity = new Entity(statement.getSubject());
+            entity = new Entity(statement.getSubject(), this);
             resources.put(statement.getSubject(), entity);
         }
         entity.add(statement);
@@ -349,6 +359,10 @@ public class RdfObjects {
             });
         }
         return result;
+    }
+
+    public Entity getByIri(String iri) {
+        return resources.get(valueFactory.createIRI(iri));
     }
 
     /**
