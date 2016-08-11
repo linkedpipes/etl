@@ -104,6 +104,14 @@ storage.pipelines.directory =
 # Must NOT end with '/'.
 domain.uri = http://localhost:8080
 
+# Directory used for logs.
+# Windows ex: C:\\Tools\\lp\\etl\\log
+# Linux ex: /data/lp/etl/log
+storage.log.directory =
+
+# TRACE, DEBUG, INFO, WARN, ERROR
+storage.log.core.level = INFO
+
 ##############
 #  Frontend  #
 ##############
