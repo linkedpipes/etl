@@ -379,10 +379,6 @@ function unpack(pipelineObject, optionsAsString, callback) {
     console.time('  [POST] /unpack');
     gRequest.post({'url': url, 'formData': formData, 'headers': headers},
         function optionalCallback(error, httpResponse, body) {
-            console.timeEnd('  [POST] /unpack');
-            callback(false, '');
-            return;
-
             if (error) {
                 callback(false, body);
             } else {
