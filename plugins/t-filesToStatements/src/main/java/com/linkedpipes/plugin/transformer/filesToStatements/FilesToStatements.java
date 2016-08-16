@@ -48,7 +48,7 @@ public final class FilesToStatements implements Component.Sequential {
             predicate = valueFactory.createIRI(
                     configuration.getPredicate());
         } catch (Throwable t) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.invalidRdfProperty(
                     FilesToStatementsVocabulary.PREDICATE,
                     "Invalid predicate.", t);
         }
@@ -60,7 +60,7 @@ public final class FilesToStatements implements Component.Sequential {
             try {
                 content = FileUtils.readFileToString(file.toFile());
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't read file: {}", file, ex);
+                throw exceptionFactory.failure("Can't read file: {}", file, ex);
             }
             // Add to output.
             final IRI outputGraph = outputRdf.createGraph();

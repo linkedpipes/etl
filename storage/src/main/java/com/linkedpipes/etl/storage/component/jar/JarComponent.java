@@ -7,7 +7,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 import java.io.File;
 
 /**
- *
  * @author Petr Škoda
  */
 public class JarComponent implements PojoLoader.Loadable {

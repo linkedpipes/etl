@@ -1,26 +1,17 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
 
 /**
- *
  * @author Petr Škoda
  */
 class DescriptionFactory {
@@ -71,7 +62,7 @@ class DescriptionFactory {
                 if (collectionType == null) {
                     throw new Loader.CanNotDeserializeObject(
                             "Can't get type of Collection for: '"
-                            + field.getName() + "'");
+                                    + field.getName() + "'");
                 }
                 append(result, property.uri(),
                         new LoadCollection(Arrays.asList(collectionType),
@@ -122,7 +113,8 @@ class DescriptionFactory {
     private LoadLiteral createLiteralDescription(
             PropertyDescriptor targetDescriptor, Field targetField)
             throws Loader.CanNotDeserializeObject {
-        final LoadLiteral descriptor = createLiteralDescription(targetField.getType());
+        final LoadLiteral descriptor =
+                createLiteralDescription(targetField.getType());
         descriptor.setField(targetField);
         descriptor.setProperty(targetDescriptor);
         return descriptor;
@@ -186,7 +178,8 @@ class DescriptionFactory {
             LOG.warn("Superclass it not ParameterizedType");
             return null;
         }
-        final Type[] params = ((ParameterizedType) type).getActualTypeArguments();
+        final Type[] params =
+                ((ParameterizedType) type).getActualTypeArguments();
         // We know there should be just one for Collection.
         if (params.length != 1) {
             LOG.warn("Unexpected number of generic types: {} (1 expected)",
@@ -207,8 +200,8 @@ class DescriptionFactory {
         } catch (IntrospectionException ex) {
             throw new Loader.CanNotDeserializeObject(
                     "Can't get property descriptor for: '" + field.getName()
-                    + "' and class: '" + field.getType().getSimpleName()
-                    + "' (missing getter/setter?).", ex);
+                            + "' and class: '" + field.getType().getSimpleName()
+                            + "' (missing getter/setter?).", ex);
         }
     }
 

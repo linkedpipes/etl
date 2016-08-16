@@ -1,18 +1,17 @@
 package com.linkedpipes.etl.dataunit.sesame;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SesameDataUnit;
-import java.util.Collection;
-
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.repository.Repository;
 
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import java.util.Collection;
 
 /**
- *
  * @author Škoda Petr
  */
-abstract class SesameDataUnitImpl implements SesameDataUnit, ManagableDataUnit {
+abstract class SesameDataUnitImpl implements SesameDataUnit,
+        ManageableDataUnit {
 
     /**
      * Binding.
@@ -32,7 +31,7 @@ abstract class SesameDataUnitImpl implements SesameDataUnit, ManagableDataUnit {
     protected final Repository repository;
 
     /**
-     * List of source data unit URIs.
+     * List of source data unit IRIs.
      */
     protected final Collection<String> sources;
 
@@ -71,7 +70,7 @@ abstract class SesameDataUnitImpl implements SesameDataUnit, ManagableDataUnit {
 
     @Override
     public void execute(Procedure action) throws LpException {
-        ActionExecutor.execute(repository, action);
+        ActionExecutor.execute(action);
     }
 
     @Override

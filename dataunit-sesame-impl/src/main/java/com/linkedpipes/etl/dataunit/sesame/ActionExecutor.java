@@ -8,7 +8,7 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 
 /**
- * Should make handling common connection logic easier.
+ * Provide save way to execute operations with the RDF.
  *
  * @author Škoda Petr
  */
@@ -18,9 +18,9 @@ final class ActionExecutor {
     }
 
     public static void execute(Repository repository,
-            RepositoryProcedure function) throws LpException {
+            RepositoryProcedure procedure) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
-            function.accept(connection);
+            procedure.accept(connection);
         } catch (Exception ex) {
             if (ex instanceof LpException) {
                 throw (LpException) ex;
@@ -43,10 +43,9 @@ final class ActionExecutor {
         }
     }
 
-    public static void execute(Repository repository, Procedure function)
-            throws LpException {
+    public static void execute(Procedure procedure) throws LpException {
         try {
-            function.accept();
+            procedure.accept();
         } catch (Exception ex) {
             if (ex instanceof LpException) {
                 throw (LpException) ex;
@@ -55,5 +54,6 @@ final class ActionExecutor {
                     "Can't execute repository action.", ex);
         }
     }
+
 
 }

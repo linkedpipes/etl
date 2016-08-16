@@ -46,12 +46,12 @@ public final class SparqlSelect implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.invalidRdfProperty(
                     SparqlSelectVocabulary.HAS_FILE_NAME, "");
         }
         if (configuration.getQuery()== null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.invalidRdfProperty(
                     SparqlSelectVocabulary.HAS_QUERY, "");
         }
         //
@@ -72,7 +72,7 @@ public final class SparqlSelect implements Component.Sequential {
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Exception.", ex);
+                throw exceptionFactory.failure("Exception.", ex);
             }
         });
     }

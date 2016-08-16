@@ -68,7 +68,7 @@ public class Tabular implements Component.Sequential {
                         tableToRdf);
                 break;
             default:
-                throw exceptionFactory.failed("Unknown table type: {}",
+                throw exceptionFactory.failure("Unknown table type: {}",
                         configuration.getTableType());
         }
         progressReport.start(inputFiles.size());
@@ -90,7 +90,7 @@ public class Tabular implements Component.Sequential {
             try {
                 parser.parse(entry.toFile());
             } catch (ParseFailed ex) {
-                throw exceptionFactory.failed("Can't parse file: {}",
+                throw exceptionFactory.failure("Can't parse file: {}",
                         entry.getFileName(), ex);
             }
             progressReport.entryProcessed();

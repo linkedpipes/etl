@@ -50,12 +50,12 @@ public final class SparqlEndpoint implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getEndpoint() == null
                 || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     SparqlEndpointVocabulary.HAS_ENDPOINT);
         }
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     SparqlEndpointVocabulary.HAS_QUERY);
         }
         //
@@ -72,13 +72,13 @@ public final class SparqlEndpoint implements Component.Sequential {
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
-            throw exceptionFactory.failed("Can't connnect to endpoint.", ex);
+            throw exceptionFactory.failure("Can't connnect to endpoint.", ex);
         }
         //
         try {
             queryRemote(repository);
         } catch (Throwable t) {
-            throw exceptionFactory.failed("Can't query remote SPARQL.", t);
+            throw exceptionFactory.failure("Can't query remote SPARQL.", t);
         } finally {
             try {
                 repository.shutDown();

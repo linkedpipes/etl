@@ -51,7 +51,6 @@ public class PipelineFacade {
      *
      * @param pipeline
      * @return
-     * @throws BaseException
      */
     public Collection<Statement> getPipelineRdf(Pipeline pipeline)
             throws OperationFailed {
@@ -68,7 +67,6 @@ public class PipelineFacade {
      * @param pipelineRdf If empty an "empty pipeline" is used instead.
      * @param optionsRdf
      * @return
-     * @throws OperationFailed
      */
     public Pipeline createPipeline(
             Collection<Statement> pipelineRdf,
@@ -103,7 +101,6 @@ public class PipelineFacade {
      *
      * @param pipeline
      * @param pipelineRdf
-     * @throws OperationFailed
      */
     public void updatePipeline(Pipeline pipeline,
             Collection<Statement> pipelineRdf) throws OperationFailed {

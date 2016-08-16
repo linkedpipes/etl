@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author Petr Škoda
  */
-final class  PipelineLoader {
+final class PipelineLoader {
 
 
     private PipelineLoader() {

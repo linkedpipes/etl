@@ -5,7 +5,6 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 
 /**
- *
  * @author Škoda Petr
  */
 public interface SesameDataUnit {

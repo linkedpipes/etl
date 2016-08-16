@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -19,7 +20,7 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-executor-v1</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>compile</scope>
         </dependency>
         <!-- Spring -->
@@ -147,7 +148,8 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.linkedpipes.etl.executor.Executor</mainClass>
+                            <mainClass>com.linkedpipes.etl.executor.Executor
+                            </mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
@@ -165,7 +167,8 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <outputDirectory>${project.build.directory}/lib
+                            </outputDirectory>
                             <!-- The two lines below tell Maven not to include test scoped dependencies. -->
                             <includeScope>runtime</includeScope>
                             <excludeScope>provided</excludeScope>
@@ -199,20 +202,24 @@
                                     <target>
                                         <mkdir dir="${deploy.directory}"/>
                                         <copy todir="${deploy.directory}/..">
-                                            <fileset dir="{project.build.directory}/../deploy">
+                                            <fileset
+                                                    dir="{project.build.directory}/../deploy">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
                                         <copy todir="${deploy.directory}">
-                                            <fileset dir="${project.build.directory}">
+                                            <fileset
+                                                    dir="${project.build.directory}">
                                                 <include name="executor.jar"/>
                                             </fileset>
                                         </copy>
                                         <mkdir dir="${deploy.directory}/lib"/>
                                         <copy todir="${deploy.directory}/lib">
-                                            <fileset dir="${project.build.directory}/lib" />
+                                            <fileset
+                                                    dir="${project.build.directory}/lib"/>
                                         </copy>
-                                        <chmod perm="u+x" file="${deploy.directory}/../executor.sh" />
+                                        <chmod perm="u+x"
+                                               file="${deploy.directory}/../executor.sh"/>
                                     </target>
                                 </configuration>
                             </execution>

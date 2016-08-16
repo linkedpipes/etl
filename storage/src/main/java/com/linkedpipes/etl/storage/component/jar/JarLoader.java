@@ -44,7 +44,7 @@ final class JarLoader {
         }
         // We need to load jar/info.* file.
         for (Enumeration<JarEntry> enums = jar.entries();
-                enums.hasMoreElements();) {
+                enums.hasMoreElements(); ) {
             final JarEntry entry = enums.nextElement();
             final String name = entry.getName();
             if (name.startsWith("LP-ETL/jar/definition")) {

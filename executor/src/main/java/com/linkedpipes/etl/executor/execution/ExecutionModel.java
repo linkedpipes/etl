@@ -1,25 +1,9 @@
 package com.linkedpipes.etl.executor.execution;
 
-import com.linkedpipes.etl.executor.api.v1.event.ComponentBegin;
-import com.linkedpipes.etl.executor.api.v1.event.ComponentFailed;
-import com.linkedpipes.etl.executor.api.v1.event.ComponentFinished;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.event.EventManager;
-import com.linkedpipes.etl.executor.event.ExecutionBegin;
-import com.linkedpipes.etl.executor.event.ExecutionFailed;
-import com.linkedpipes.etl.executor.event.ExecutionFinished;
+import com.linkedpipes.etl.executor.event.*;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.Statement;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -33,6 +17,15 @@ import org.openrdf.rio.helpers.JSONLDSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * TODO: Extract runtime information from pipeline
  *
@@ -40,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ExecutionModel implements EventManager.EventListener {
 
-    static enum ExecutionStatus {
+    enum ExecutionStatus {
         MAPPED("http://etl.linkedpipes.com/resources/status/mapped"),
         QUEUED("http://etl.linkedpipes.com/resources/status/queued"),
         INITIALIZING("http://etl.linkedpipes.com/resources/status/initializing"),
@@ -50,7 +43,7 @@ public final class ExecutionModel implements EventManager.EventListener {
 
         private final String iri;
 
-        private ExecutionStatus(String iri) {
+        ExecutionStatus(String iri) {
             this.iri = iri;
         }
 
@@ -58,7 +51,7 @@ public final class ExecutionModel implements EventManager.EventListener {
             return iri;
         }
 
-    };
+    }
 
     /**
      * Represent an event created during execution.
@@ -79,19 +72,7 @@ public final class ExecutionModel implements EventManager.EventListener {
             this.statements = statements;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public Date getCreated() {
-            return created;
-        }
-
-        public List<Statement> getStatements() {
-            return statements;
-        }
-
-    };
+    }
 
     /**
      * Represent a source of mapped data unit that is not used in the execution.
@@ -102,7 +83,7 @@ public final class ExecutionModel implements EventManager.EventListener {
 
         private String dataPath;
 
-    };
+    }
 
     public static class DataUnit {
 
@@ -303,22 +284,6 @@ public final class ExecutionModel implements EventManager.EventListener {
     }
 
     /**
-     *
-     * @param iri
-     * @return
-     */
-    public DataUnit getDataUnit(String iri) {
-        for (Component component : components) {
-            for (DataUnit dataUnit : component.dataUnits) {
-                if (dataUnit.iri.equals(iri)) {
-                    return dataUnit;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Save execution into a file.
      */
     public void save() {
@@ -463,7 +428,6 @@ public final class ExecutionModel implements EventManager.EventListener {
      * responsibility of called to call {@link RDFHandler#startRDF()}
      * and {@link RDFHandler#endRDF()} methods.
      *
-     *
      * @param handler
      */
     private void writeModel(RDFHandler handler) {
@@ -476,7 +440,8 @@ public final class ExecutionModel implements EventManager.EventListener {
                 graph));
         if (pipeline != null) {
             handler.handleStatement(vf.createStatement(executionResource,
-                    vf.createIRI("http://etl.linkedpipes.com/ontology/pipeline"),
+                    vf.createIRI(
+                            "http://etl.linkedpipes.com/ontology/pipeline"),
                     vf.createIRI(pipeline), graph));
         }
         handler.handleStatement(vf.createStatement(executionResource,
@@ -503,38 +468,47 @@ public final class ExecutionModel implements EventManager.EventListener {
             // Save data units.
             for (DataUnit dataUnit : component.dataUnits) {
                 final IRI dataUnitResource = vf.createIRI(dataUnit.iri);
-                handler.handleStatement(vf.createStatement(dataUnitResource, RDF.TYPE,
-                        vf.createIRI("http://etl.linkedpipes.com/ontology/DataUnit"),
-                        graph));
+                handler.handleStatement(
+                        vf.createStatement(dataUnitResource, RDF.TYPE,
+                                vf.createIRI(
+                                        "http://etl.linkedpipes.com/ontology/DataUnit"),
+                                graph));
                 handler.handleStatement(vf.createStatement(componentResource,
-                        vf.createIRI("http://etl.linkedpipes.com/ontology/dataUnit"),
+                        vf.createIRI(
+                                "http://etl.linkedpipes.com/ontology/dataUnit"),
                         dataUnitResource, graph));
                 //
                 handler.handleStatement(vf.createStatement(dataUnitResource,
-                        vf.createIRI("http://etl.linkedpipes.com/ontology/binding"),
+                        vf.createIRI(
+                                "http://etl.linkedpipes.com/ontology/binding"),
                         vf.createLiteral(dataUnit.binding), graph));
                 //
                 if (dataUnit.mapped) {
                     // Mapped data unit.
                     handler.handleStatement(vf.createStatement(dataUnitResource,
-                            vf.createIRI("http://etl.linkedpipes.com/ontology/debug"),
+                            vf.createIRI(
+                                    "http://etl.linkedpipes.com/ontology/debug"),
                             vf.createLiteral(String.format("%03d", ++counter)),
                             graph));
                     handler.handleStatement(vf.createStatement(dataUnitResource,
-                            vf.createIRI("http://etl.linkedpipes.com/ontology/dataPath"),
+                            vf.createIRI(
+                                    "http://etl.linkedpipes.com/ontology/dataPath"),
                             vf.createLiteral(dataUnit.source.dataPath), graph));
                     handler.handleStatement(vf.createStatement(dataUnitResource,
-                            vf.createIRI("http://etl.linkedpipes.com/ontology/execution"),
+                            vf.createIRI(
+                                    "http://etl.linkedpipes.com/ontology/execution"),
                             vf.createIRI(dataUnit.source.execution), graph));
                 } else {
                     // Used data unit.
                     handler.handleStatement(vf.createStatement(dataUnitResource,
-                            vf.createIRI("http://etl.linkedpipes.com/ontology/debug"),
+                            vf.createIRI(
+                                    "http://etl.linkedpipes.com/ontology/debug"),
                             vf.createLiteral(String.format("%03d", ++counter)),
                             graph));
-                    final String path = resources.relativize(dataUnit.dataPath);
+                    final String path = resources.relative(dataUnit.dataPath);
                     handler.handleStatement(vf.createStatement(dataUnitResource,
-                            vf.createIRI("http://etl.linkedpipes.com/ontology/dataPath"),
+                            vf.createIRI(
+                                    "http://etl.linkedpipes.com/ontology/dataPath"),
                             vf.createLiteral(path), graph));
                 }
             }
@@ -613,7 +587,6 @@ public final class ExecutionModel implements EventManager.EventListener {
     }
 
     /**
-     *
      * @param iri
      * @return True if data unit is used during the execution.
      */
@@ -621,7 +594,8 @@ public final class ExecutionModel implements EventManager.EventListener {
         // Component must be used by executing component or be sourceData
         // for such component.
         for (PipelineModel.Component comp : pipeline.getComponents()) {
-            if (comp.getExecutionType() != PipelineModel.ExecutionType.EXECUTE) {
+            if (comp.getExecutionType() !=
+                    PipelineModel.ExecutionType.EXECUTE) {
                 continue;
             }
             for (PipelineModel.DataUnit du : comp.getDataUnits()) {

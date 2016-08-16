@@ -36,12 +36,12 @@ public class PipelineInput implements Component.Sequential {
         try {
             values = definition.getProperty(HAS_INPUT_DIRECTORY);
         } catch (LpException ex) {
-            throw exceptionFactory.failed("Can't read property.", ex);
+            throw exceptionFactory.failure("Can't read property.", ex);
         }
         //
         final File directory;
         if (values.size() != 1) {
-            throw exceptionFactory.failed("Missing directory.");
+            throw exceptionFactory.failure("Missing directory.");
         }
         directory = new File(URI.create(values.iterator().next()));
         if (!directory.isDirectory()) {
@@ -52,7 +52,7 @@ public class PipelineInput implements Component.Sequential {
             //
             FileUtils.copyDirectory(directory, output.getRootDirectory());
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't copy data.", ex);
+            throw exceptionFactory.failure("Can't copy data.", ex);
         }
     }
 

@@ -15,7 +15,6 @@ public interface SerializableToRdf {
         public void addUri(String subject, String predicate, String object);
 
         /**
-         *
          * @param subject
          * @param predicate
          * @param object

@@ -1,26 +1,26 @@
 package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.rdf.PojoLoader;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import java.io.File;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
+import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Describes informations stored in RDF that are used for execution
+ * Describes information stored in RDF that are used for execution
  * of a component.
  *
  * @author Škoda Petr
  */
-final class ComponentConfiguration implements EntityLoader.Loadable {
+final class ComponentConfiguration implements PojoLoader.Loadable {
 
     /**
      * Represent a resource that holds the configuration.
      */
-    static class Configuration implements EntityLoader.Loadable {
+    static class Configuration implements PojoLoader.Loadable {
 
         private final String iri;
 
@@ -45,7 +45,7 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
         }
 
         @Override
-        public EntityLoader.Loadable load(String predicate, String value)
+        public PojoLoader.Loadable load(String predicate, String value)
                 throws RdfException {
             switch (predicate) {
                 case LINKEDPIPES.CONFIGURATION.HAS_ORDER:
@@ -54,7 +54,7 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
                     } catch (NumberFormatException ex) {
                         throw RdfException.invalidProperty(iri,
                                 LINKEDPIPES.CONFIGURATION.HAS_ORDER,
-                                "Must be a string.", ex);
+                                "Must be a string.");
                     }
                     return null;
                 case LINKEDPIPES.CONFIGURATION.HAS_RESOURCE:
@@ -124,7 +124,7 @@ final class ComponentConfiguration implements EntityLoader.Loadable {
     }
 
     @Override
-    public EntityLoader.Loadable load(String predicate, String value)
+    public PojoLoader.Loadable load(String predicate, String value)
             throws RdfException {
         switch (predicate) {
             case LINKEDPIPES.HAS_WORKING_DIRECTORY:

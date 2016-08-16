@@ -3,24 +3,13 @@ package com.linkedpipes.etl.executor.module;
 import com.linkedpipes.etl.executor.Configuration;
 import com.linkedpipes.etl.executor.api.v1.Plugin;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.function.Consumer;
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
+import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
+import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
+import org.osgi.framework.*;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.slf4j.Logger;
@@ -35,15 +24,13 @@ import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
-import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
-import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
- *
  * @author Škoda Petr
  */
 @Service
@@ -133,6 +120,7 @@ class ModuleFacadeImpl implements ModuleFacade,
                 }
             }
         });
+
         // Start library bundles.
         libraries.forEach((bundle) -> {
             try {
@@ -169,22 +157,16 @@ class ModuleFacadeImpl implements ModuleFacade,
         } else if (event instanceof ContextStoppedEvent) {
             // This is Felix dependant:
             // FelixDispatchQueue is thread used by felix, it's created as non
-            // deamon. For this reason we need to manualy stop the framework
+            // daemon. For this reason we need to manually stop the framework
             // and not wait on OnDestroy call.
             stop();
         }
     }
 
     @Override
-    public Collection<Plugin.ExecutionListener> getExecutionListeners()
+    public Collection<Plugin.PipelineListener> getPipelineListeners()
             throws ModuleException {
-        return getServices(Plugin.ExecutionListener.class);
-    }
-
-    @Override
-    public Collection<Plugin.MessageListener> getMessageListeners()
-            throws ModuleException {
-        return getServices(Plugin.MessageListener.class);
+        return getServices(Plugin.PipelineListener.class);
     }
 
     /**
@@ -194,16 +176,16 @@ class ModuleFacadeImpl implements ModuleFacade,
      * @param resource
      * @param context Context given to new component.
      * @return
-     * @throws ModuleException
      */
     @Override
-    public BaseComponent getComponent(PipelineDefinition definition,
-            String resource, Plugin.Context context) throws ModuleException {
+    public Component getComponent(PipelineDefinition definition,
+            String resource, Component.Context context)
+            throws ModuleException {
         // We need to get path to jar file first.
         final Map<String, String> componentInfo;
         final List<Map<String, String>> resultList
                 = definition.executeSelect(
-                        "SELECT ?path WHERE {\n"
+                "SELECT ?path WHERE {\n"
                         + "  <" + resource + "> <"
                         + LINKEDPIPES.HAS_JAR + "> ?path .\n"
                         + "}");
@@ -240,14 +222,14 @@ class ModuleFacadeImpl implements ModuleFacade,
             }
             components.put(jarFileUri, bundle);
         }
-        final BundleContext componenetContext
+        final BundleContext componentContext
                 = components.get(jarFileUri).getBundleContext();
         // Use manager to get the component representation.
         for (ComponentFactory factory : getServices(ComponentFactory.class)) {
             try {
                 return factory.create(definition, resource,
                         definition.getDefinitionGraph(),
-                        componenetContext, context);
+                        componentContext, context);
             } catch (RdfException ex) {
                 throw new ModuleException("Invalid bundle detected!", ex);
             }
@@ -257,12 +239,12 @@ class ModuleFacadeImpl implements ModuleFacade,
     }
 
     @Override
-    public ManagableDataUnit getDataUnit(PipelineDefinition definition,
+    public ManageableDataUnit getDataUnit(PipelineDefinition definition,
             String subject)
             throws ModuleException {
         for (DataUnitFactory factory : getServices(DataUnitFactory.class)) {
             try {
-                final ManagableDataUnit dataUnit = factory.create(definition,
+                final ManageableDataUnit dataUnit = factory.create(definition,
                         subject, definition.getDefinitionGraph());
                 if (dataUnit != null) {
                     return dataUnit;
@@ -290,11 +272,9 @@ class ModuleFacadeImpl implements ModuleFacade,
     }
 
     /**
-     *
      * @param <T>
      * @param clazz
      * @return Services of given interface.
-     * @throws ModuleException
      */
     public <T> Collection<T> getServices(Class<T> clazz)
             throws ModuleException {

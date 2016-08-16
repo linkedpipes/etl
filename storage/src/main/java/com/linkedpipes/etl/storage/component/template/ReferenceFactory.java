@@ -9,8 +9,6 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,9 +21,6 @@ import java.util.Collection;
  */
 final class ReferenceFactory {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(ReferenceFactory.class);
-
     private ReferenceFactory() {
     }
 
@@ -37,7 +32,6 @@ final class ReferenceFactory {
      * @param destination
      * @param iriAsString
      * @param templates
-     * @throws BaseException
      */
     public static void create(Collection<Statement> templateRdf,
             Collection<Statement> configurationRdf, File destination,
@@ -83,11 +77,9 @@ final class ReferenceFactory {
 
         // Add a reference to the configuration.
         final Resource configIri = vf.createIRI(iriAsString + "/configuration");
-        definitionRdf.add(vf.createStatement(iri,
-                vf.createIRI("http://linkedpipes.com/ontology/configurationGraph"),
-                configIri,
-                iri
-        ));
+        definitionRdf.add(vf.createStatement(iri, vf.createIRI(
+                "http://linkedpipes.com/ontology/configurationGraph"),
+                configIri, iri));
 
         final BaseTemplate template = templates.getTemplates().get(templateIri);
         if (template == null) {

@@ -2,9 +2,6 @@ package com.linkedpipes.etl.executor.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.util.ArrayList;
-
-import java.util.List;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
@@ -14,16 +11,27 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.util.Repositories;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- *
  * @author Petr Škoda
  */
-public class EntityLoader {
+public class PojoLoader {
 
     /**
      * Interface for loadable entities.
      */
     public static interface Loadable {
+
+        /**
+         * Report load of the resource IRI.
+         *
+         * @param iri
+         */
+        public default void load(String iri) {
+            // No operation.
+        }
 
         /**
          * Process given predicate and object. If new object is created and
@@ -33,20 +41,16 @@ public class EntityLoader {
          * @param predicate
          * @param object
          * @return Null no new object was created.
-         * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
          */
         public Loadable load(String predicate, Value object) throws LpException;
 
         /**
          * Called when the object is loaded. Can be used to finalise loading
          * or perform validation.
-         *
-         * @throws LpException
          */
         public default void afterLoad() throws LpException {
             // No operation.
         }
-    ;
 
     }
 
@@ -74,20 +78,19 @@ public class EntityLoader {
 
     }
 
-    private EntityLoader() {
+    private PojoLoader() {
     }
 
     /**
-     *
      * @param repository
      * @param resource URI of resource to load.
      * @param graph
      * @param instance Instance to load.
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public static void load(Repository repository, String resource,
             String graph, Loadable instance) throws LpException {
         // Load statements.
+        instance.load(resource);
         final List<PredicateObject> records = new ArrayList<>(64);
         try {
             Repositories.consume(repository, (connection) -> {
@@ -95,9 +98,9 @@ public class EntityLoader {
                         = SimpleValueFactory.getInstance();
                 final RepositoryResult<Statement> statements
                         = connection.getStatements(
-                                valueFactory.createIRI(resource),
-                                null, null, false,
-                                valueFactory.createIRI(graph));
+                        valueFactory.createIRI(resource),
+                        null, null, false,
+                        valueFactory.createIRI(graph));
                 while (statements.hasNext()) {
                     final Statement st = statements.next();
                     records.add(new PredicateObject(

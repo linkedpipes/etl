@@ -58,7 +58,6 @@ class PipelineUpdater {
      * Load pipeline from given statements.
      *
      * @param pipelineRdf
-     * @throws OperationFailed
      */
     private void loadPipeline(Collection<Statement> pipelineRdf)
             throws OperationFailed {
@@ -95,8 +94,6 @@ class PipelineUpdater {
 
     /**
      * Extract information about pipeline resource.
-     *
-     * @throws OperationFailed
      */
     private void extractPipeline() throws OperationFailed {
         // Get pipeline resource.
@@ -137,8 +134,6 @@ class PipelineUpdater {
 
     /**
      * Perform migration.
-     *
-     * @throws OperationFailed
      */
     private void migrate() throws OperationFailed {
         switch (version) {
@@ -180,7 +175,6 @@ class PipelineUpdater {
      * Perform updates based on the given options.
      *
      * @param options
-     * @throws OperationFailed
      */
     private void update(UpdateOptions options) throws OperationFailed {
         if (!options.getLabels().isEmpty()) {
@@ -195,7 +189,6 @@ class PipelineUpdater {
      * Based on given options update pipeline labels.
      *
      * @param options
-     * @throws OperationFailed
      */
     private void update_label(UpdateOptions options) throws OperationFailed {
         final List<Statement> pipelineInstance = objects.get(pipelineResource);
@@ -315,7 +308,6 @@ class PipelineUpdater {
      * @param options
      * @param pipelineRdf
      * @return
-     * @throws OperationFailed
      */
     public static Collection<Statement> update(Pipeline pipeline,
             UpdateOptions options, Collection<Statement> pipelineRdf)

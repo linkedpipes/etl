@@ -3,7 +3,6 @@ package com.linkedpipes.etl.dataunit.system;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 
 /**
- *
  * @author Petr Škoda
  */
 final class ExceptionFactory {

@@ -37,7 +37,7 @@ public final class LoaderLocal implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getPath() == null
                 || configuration.getPath().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     LoaderLocalVocabulary.HAS_PATH);
         }
         //
@@ -54,7 +54,7 @@ public final class LoaderLocal implements Component.Sequential {
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
                 LOG.error("{} -> {}", inputFile, outputFile);
-                throw exceptionFactory.failed("Can't copy files.", ex);
+                throw exceptionFactory.failure("Can't copy files.", ex);
             }
             //
             progress.entryProcessed();

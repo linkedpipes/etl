@@ -52,7 +52,6 @@ public class RdfReader {
      * @param source
      * @param graph
      * @param optionsFactory
-     * @throws RdfException
      */
     public static void addToObject(Object object, SparqlSelect source,
             String graph, MergeOptionsFactory optionsFactory)
@@ -69,7 +68,7 @@ public class RdfReader {
         for (Map<String, String> configPair : source.executeSelect(query)) {
             if (graph == null) {
                 addToObject(object, source, configPair.get("g"),
-                        configPair.get("s"),optionsFactory);
+                        configPair.get("s"), optionsFactory);
             } else {
                 addToObject(object, source, graph, configPair.get("s"),
                         optionsFactory);
@@ -85,7 +84,6 @@ public class RdfReader {
      * @param graph
      * @param resourceIri
      * @param optionsFactory
-     * @throws RdfException
      */
     public static void addToObject(Object object, SparqlSelect source,
             String graph, String resourceIri,

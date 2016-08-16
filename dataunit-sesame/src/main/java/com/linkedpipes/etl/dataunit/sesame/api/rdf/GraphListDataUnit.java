@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.dataunit.sesame.api.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
 import java.util.Collection;
 
 import org.openrdf.model.IRI;

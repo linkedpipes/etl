@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *
  * @author Petr Škoda
  */
 abstract class AbstractEvent implements Event {
@@ -35,12 +34,6 @@ abstract class AbstractEvent implements Event {
      * Label in English.
      */
     protected String label;
-
-    AbstractEvent(String type) {
-        this.created = new Date();
-        this.type = type;
-        this.label = null;
-    }
 
     AbstractEvent(String type, String label) {
         this.created = new Date();
@@ -69,15 +62,15 @@ abstract class AbstractEvent implements Event {
                     label,
                     "en");
         }
-
+        // Store time of creation.
         final StringBuilder createdAsString = new StringBuilder(25);
         createdAsString.append(DATE_FORMAT.format(created));
         createdAsString.append("T");
         createdAsString.append(TIME_FORMAT.format(created));
-
         writer.add(iri,
                 LINKEDPIPES.EVENTS.HAS_CREATED,
                 createdAsString.toString(),
                 "http://www.w3.org/2001/XMLSchema#datetime");
     }
+
 }

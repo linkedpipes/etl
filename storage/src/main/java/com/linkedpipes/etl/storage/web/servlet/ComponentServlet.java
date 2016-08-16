@@ -37,7 +37,6 @@ public class ComponentServlet {
      *
      * @param request
      * @param response
-     * @throws IOException
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -53,7 +52,6 @@ public class ComponentServlet {
      * @param iri
      * @param request
      * @param response
-     * @throws IOException
      */
     @RequestMapping(value = "/interface", method = RequestMethod.GET)
     @ResponseBody
@@ -76,7 +74,6 @@ public class ComponentServlet {
      * @param iri
      * @param request
      * @param response
-     * @throws IOException
      */
     @RequestMapping(value = "/definition", method = RequestMethod.GET)
     @ResponseBody

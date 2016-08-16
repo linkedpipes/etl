@@ -20,7 +20,6 @@ import java.util.*;
 import static com.linkedpipes.etl.storage.rdf.RdfUtils.write;
 
 /**
- *
  * @author Petr Škoda
  */
 @Service
@@ -66,7 +65,6 @@ class PipelineManager {
     }
 
     /**
-     *
      * @return A map of all pipelines.
      */
     public Map<String, Pipeline> getPipelines() {
@@ -77,11 +75,10 @@ class PipelineManager {
      * Create and return an empty pipeline.
      *
      * @return
-     * @throws IOException
      */
     public synchronized Pipeline createPipeline()
             throws IOException, BaseException {
-        // Create uniq identifier.
+        // Create unique identifier.
         String name;
         String iriAsStr;
         do {
@@ -94,7 +91,8 @@ class PipelineManager {
                 name + ".jsonld");
         final Pipeline pipeline = new Pipeline(file);
         // Load pipeline from an empty definition.
-        final Collection<Statement> pipelineRdf = Pipeline.createEmpty(iriAsStr);
+        final Collection<Statement> pipelineRdf =
+                Pipeline.createEmpty(iriAsStr);
         pipeline.setInfo(PipelineLoader.getInfo(pipelineRdf));
         PipelineLoader.updadeReference(pipeline, pipeline.getInfo());
         // Save pipeline to a file.
@@ -109,8 +107,6 @@ class PipelineManager {
      *
      * @param pipeline
      * @param pipelineRdf
-     * @throws IOException
-     * @throws com.linkedpipes.etl.storage.rdf.RdfUtils.RdfException
      */
     public void updatePipeline(Pipeline pipeline,
             Collection<Statement> pipelineRdf) throws IOException,
@@ -142,9 +138,6 @@ class PipelineManager {
      *
      * @param file
      * @return
-     * @throws IOException
-     * @throws PojoLoader.CantLoadException
-     * @throws com.linkedpipes.etl.storage.rdf.RdfUtils.RdfException
      */
     private static Pipeline loadPipeline(File file)
             throws IOException, PojoLoader.CantLoadException,

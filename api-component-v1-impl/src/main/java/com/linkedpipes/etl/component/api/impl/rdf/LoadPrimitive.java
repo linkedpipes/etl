@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -8,11 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Petr Škoda
  */
 class LoadPrimitive extends LoaderToValue {
@@ -54,7 +55,8 @@ class LoadPrimitive extends LoaderToValue {
                 return Double.parseDouble(valueAsString);
             } else if (clazz == Date.class) {
                 // We expect XSD date yyyy-MM-dd
-                final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                final DateFormat dateFormat =
+                        new SimpleDateFormat("yyyy-MM-dd");
                 // We use GMT time zone as default, to have the same
                 // settings on different systems.
                 dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -66,8 +68,8 @@ class LoadPrimitive extends LoaderToValue {
             LOG.info("Can't parse value: {}", valueAsString, ex);
             throw new CanNotDeserializeObject(
                     "Can't deserialize RDF value: '"
-                    + valueAsString + "' into class '"
-                    + clazz.getSimpleName() + "'", ex);
+                            + valueAsString + "' into class '"
+                            + clazz.getSimpleName() + "'", ex);
         }
     }
 

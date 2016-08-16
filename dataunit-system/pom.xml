@@ -16,19 +16,19 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-component-v1</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-executor-v1</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-commons</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

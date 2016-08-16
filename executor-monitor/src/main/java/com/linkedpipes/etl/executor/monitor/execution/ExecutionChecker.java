@@ -3,21 +3,9 @@ package com.linkedpipes.etl.executor.monitor.execution;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.ExecutionMismatch;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.OperationFailed;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFFormat;
@@ -27,6 +15,14 @@ import org.openrdf.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * This class apply defensive approach ie. if an exception
  * is thrown by any operation the given parameter object should
@@ -35,18 +31,6 @@ import org.slf4j.LoggerFactory;
  * @author Petr Škoda
  */
 class ExecutionChecker {
-
-    /**
-     * Used to report that file from which should the data be loaded is
-     * missing.
-     */
-    static class MissingFile extends Exception {
-
-        MissingFile(String message) {
-            super(message);
-        }
-
-    }
 
     private static final Logger LOG
             = LoggerFactory.getLogger(ExecutionChecker.class);
@@ -255,9 +239,9 @@ class ExecutionChecker {
         // Update debug data.
         execution.setDebugData(new DebugData(executionStatements, execution));
 
-        // Update execution status on discovered informations.
+        // Update execution status on discovered information.
         if (execution.getStatus() == null) {
-            // We are loading new execution, so we have to assign a staus.
+            // We are loading new execution, so we have to assign a status.
             if (startEvent == null) {
                 execution.setStatus(Execution.StatusType.QUEUED);
             } else if (endEvent == null) {

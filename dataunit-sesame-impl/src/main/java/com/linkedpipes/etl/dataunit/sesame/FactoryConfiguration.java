@@ -1,17 +1,17 @@
 package com.linkedpipes.etl.dataunit.sesame;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.rdf.PojoLoader;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import java.io.File;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
+import java.io.File;
 
 /**
  * Configuration class used by the RDF repository.
  *
  * @author Škoda Petr
  */
-final class FactoryConfiguration implements EntityLoader.Loadable {
+final class FactoryConfiguration implements PojoLoader.Loadable {
 
     private String workingDirectory;
 
@@ -27,7 +27,7 @@ final class FactoryConfiguration implements EntityLoader.Loadable {
     }
 
     @Override
-    public EntityLoader.Loadable load(String predicate, String value)
+    public PojoLoader.Loadable load(String predicate, String value)
             throws RdfException {
         switch (predicate) {
             case LINKEDPIPES.HAS_WORKING_DIRECTORY:
@@ -41,7 +41,6 @@ final class FactoryConfiguration implements EntityLoader.Loadable {
     @Override
     public void validate() throws RdfException {
         if (workingDirectory == null) {
-            // TODO Use property exception.
             throw ExceptionFactory.failure("Working directory must be set!");
         }
     }

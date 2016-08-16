@@ -5,8 +5,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 /**
  *
  */
-class ComponentBegin extends AbstractEvent
-        implements com.linkedpipes.etl.executor.api.v1.event.ComponentBegin {
+public class ComponentBegin extends AbstractEvent {
 
     private final String componentIri;
 
@@ -21,7 +20,6 @@ class ComponentBegin extends AbstractEvent
         writer.addUri(iri, LINKEDPIPES.HAS_COMPONENT, componentIri);
     }
 
-    @Override
     public String getComponentUri() {
         return componentIri;
     }

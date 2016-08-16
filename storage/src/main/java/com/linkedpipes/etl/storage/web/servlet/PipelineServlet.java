@@ -33,7 +33,6 @@ public class PipelineServlet {
      *
      * @param request
      * @param response
-     * @throws BaseException
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -48,7 +47,6 @@ public class PipelineServlet {
      * @param iri
      * @param request
      * @param response
-     * @throws BaseException
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
@@ -71,7 +69,6 @@ public class PipelineServlet {
      * @param options
      * @param request
      * @param response
-     * @throws BaseException
      */
     @RequestMapping(value = "", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -97,7 +94,6 @@ public class PipelineServlet {
      * @param data
      * @param request
      * @param response
-     * @throws BaseException
      */
     @RequestMapping(value = "", method = RequestMethod.PUT,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -123,7 +119,6 @@ public class PipelineServlet {
      * @param iri
      * @param request
      * @param response
-     * @throws BaseException
      */
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     @ResponseBody
@@ -146,12 +141,11 @@ public class PipelineServlet {
      * @param options
      * @param request
      * @param response
-     * @throws BaseException
      */
     @RequestMapping(value = "/unpack", method = RequestMethod.POST)
     @ResponseBody
     public void unpackPipeline(
-            @RequestParam(name = "iri", required= false) String iri,
+            @RequestParam(name = "iri", required = false) String iri,
             @RequestParam(value = "options", required = false)
                     MultipartFile options,
             @RequestParam(value = "pipeline", required = false)

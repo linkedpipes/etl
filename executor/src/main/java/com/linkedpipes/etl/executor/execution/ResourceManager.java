@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.execution;
 import java.io.File;
 
 /**
- *
  * @author Škoda Petr
  */
 public final class ResourceManager {
@@ -46,7 +45,6 @@ public final class ResourceManager {
     }
 
     /**
-     *
      * @param name
      * @return Path to working directory, the directory may not exist.
      */
@@ -75,7 +73,13 @@ public final class ResourceManager {
         return file;
     }
 
-    public String relativize(File path) {
+    /**
+     * Return given path as relative to the execution root directory.
+     *
+     * @param path
+     * @return
+     */
+    public String relative(File path) {
         return executionRoot.toPath().relativize(path.toPath()).toString();
     }
 

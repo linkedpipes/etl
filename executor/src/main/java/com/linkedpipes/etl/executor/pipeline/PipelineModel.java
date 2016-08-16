@@ -3,25 +3,20 @@ package com.linkedpipes.etl.executor.pipeline;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.rdf.EntityLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.linkedpipes.etl.executor.rdf.PojoLoader;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
+
+import java.util.*;
 
 /**
  * Store pipeline definition as loaded from RDF.
  *
- * TODO Support for debuggin.
- *
  * @author Petr Škoda
  */
-public class PipelineModel implements EntityLoader.Loadable {
+public class PipelineModel implements PojoLoader.Loadable {
 
-    public static enum ExecutionType {
+    public enum ExecutionType {
         /**
          * Execute component.
          */
@@ -36,9 +31,9 @@ public class PipelineModel implements EntityLoader.Loadable {
          * only the data units are loaded.
          */
         MAP
-    };
+    }
 
-    public static class DataSource implements EntityLoader.Loadable {
+    public static class DataSource implements PojoLoader.Loadable {
 
         /**
          * Debug suffix.
@@ -71,7 +66,7 @@ public class PipelineModel implements EntityLoader.Loadable {
         }
 
         @Override
-        public EntityLoader.Loadable load(String predicate, Value object)
+        public PojoLoader.Loadable load(String predicate, Value object)
                 throws LpException {
             switch (predicate) {
                 case LINKEDPIPES.HAS_DEBUG:
@@ -90,7 +85,7 @@ public class PipelineModel implements EntityLoader.Loadable {
 
     }
 
-    public static class DataUnit implements EntityLoader.Loadable {
+    public static class DataUnit implements PojoLoader.Loadable {
 
         private final String iri;
 
@@ -142,7 +137,7 @@ public class PipelineModel implements EntityLoader.Loadable {
         }
 
         @Override
-        public EntityLoader.Loadable load(String predicate, Value object)
+        public PojoLoader.Loadable load(String predicate, Value object)
                 throws LpException {
             switch (predicate) {
                 case "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
@@ -163,7 +158,7 @@ public class PipelineModel implements EntityLoader.Loadable {
 
     }
 
-    public static class Component implements EntityLoader.Loadable {
+    public static class Component implements PojoLoader.Loadable {
 
         private final String iri;
 
@@ -215,7 +210,7 @@ public class PipelineModel implements EntityLoader.Loadable {
         }
 
         @Override
-        public EntityLoader.Loadable load(String predicate, Value object)
+        public PojoLoader.Loadable load(String predicate, Value object)
                 throws LpException {
             switch (predicate) {
                 case "http://www.w3.org/2004/02/skos/core#prefLabel":
@@ -229,7 +224,7 @@ public class PipelineModel implements EntityLoader.Loadable {
                     } catch (NumberFormatException ex) {
                         throw RdfException.invalidProperty(iri,
                                 LINKEDPIPES.HAS_EXECUTION_ORDER,
-                                "Must be string.", ex);
+                                "Must be an integer.");
                     }
                     return null;
                 case LINKEDPIPES.HAS_PORT:
@@ -251,7 +246,7 @@ public class PipelineModel implements EntityLoader.Loadable {
                         default:
                             throw RdfException.invalidProperty(iri,
                                     LINKEDPIPES.HAS_COMPONENT_EXECUTION_TYPE,
-                                    "Invalid value: {}", object.stringValue());
+                                    "Invalid executor type");
                     }
                     return null;
                 default:
@@ -299,7 +294,7 @@ public class PipelineModel implements EntityLoader.Loadable {
     }
 
     @Override
-    public EntityLoader.Loadable load(String predicate, Value object)
+    public PojoLoader.Loadable load(String predicate, Value object)
             throws LpException {
         switch (predicate) {
             case LINKEDPIPES.HAS_COMPONENT:

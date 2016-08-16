@@ -85,7 +85,6 @@ class TemplateManager {
      * @param templateRdf
      * @param configurationRdf
      * @return
-     * @throws BaseException
      */
     public synchronized Template createTemplate(
             Collection<Statement> templateRdf,
@@ -119,7 +118,6 @@ class TemplateManager {
      *
      * @param directory
      * @return Can't be null.
-     * @throws BaseException
      */
     private static BaseTemplate loadTemplate(File directory)
             throws BaseException {
@@ -150,7 +148,6 @@ class TemplateManager {
      * @param interfaceRdf
      * @param directory
      * @return
-     * @throws BaseException
      */
     private static BaseTemplate loadFullTemplate(Resource resource,
             Collection<Statement> interfaceRdf, File directory)
@@ -188,7 +185,6 @@ class TemplateManager {
      * @param interfaceRdf
      * @param directory
      * @return
-     * @throws BaseException
      */
     private static BaseTemplate loadReferenceTemplate(Resource resource,
             Collection<Statement> interfaceRdf, File directory)
@@ -211,7 +207,6 @@ class TemplateManager {
      *
      * @param template
      * @param directory
-     * @throws BaseException
      */
     private static void loadBaseTemplate(BaseTemplate template, File directory)
             throws BaseException {

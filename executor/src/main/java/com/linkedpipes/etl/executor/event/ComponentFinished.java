@@ -3,11 +3,9 @@ package com.linkedpipes.etl.executor.event;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 
 /**
- *
  * @author Škoda Petr
  */
-class ComponentFinished extends AbstractEvent
-        implements com.linkedpipes.etl.executor.api.v1.event.ComponentFinished {
+public class ComponentFinished extends AbstractEvent {
 
     private final String componentIri;
 
@@ -22,7 +20,6 @@ class ComponentFinished extends AbstractEvent
         writer.addUri(iri, LINKEDPIPES.HAS_COMPONENT, componentIri);
     }
 
-    @Override
     public String getComponentUri() {
         return componentIri;
     }

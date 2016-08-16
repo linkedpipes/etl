@@ -141,7 +141,7 @@ class Unpacker {
     private Set<RdfObjects.Entity> mappedComponents;
 
     /**
-     * @param statements          Pipeline definition.
+     * @param statements Pipeline definition.
      * @param pipelineIriAsString Pipeline resource.
      * @param templates
      */
@@ -166,8 +166,6 @@ class Unpacker {
 
     /**
      * Download mapped executions and store them into {@link #mappedExecutions}.
-     *
-     * @throws BaseException
      */
     private void downloadExecutions() throws BaseException {
         mappedExecutions = new HashMap<>();
@@ -217,7 +215,7 @@ class Unpacker {
 
     /**
      * @param pipelineObject
-     * @param instance       Component with {@link #HAS_CONFIG_GRAPH}.
+     * @param instance Component with {@link #HAS_CONFIG_GRAPH}.
      */
     private static void configGraphToObject(RdfObjects pipelineObject,
             RdfObjects.Entity instance, ValueFactory valueFactory) {
@@ -754,7 +752,7 @@ class Unpacker {
     /**
      * Return collection that represents the pipeline.
      *
-     * @param statements          Unmodifiable representation of pipeline.
+     * @param statements Unmodifiable representation of pipeline.
      * @param templates
      * @param pipelineIriAsString
      * @return

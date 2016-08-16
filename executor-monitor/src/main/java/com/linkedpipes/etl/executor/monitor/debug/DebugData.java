@@ -3,18 +3,15 @@ package com.linkedpipes.etl.executor.monitor.debug;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Store debugName data related to an executionId.
@@ -104,7 +101,7 @@ public class DebugData {
                 // If we fail we don't mark the data as loaded,
                 // thus next time we will try to load again.
                 // The file may not be ready in time of call of this object,
-                // but could be creted later.
+                // but could be created later.
                 loaded = true;
             } catch (IOException ex) {
                 this.debugDirectories = Collections.EMPTY_LIST;

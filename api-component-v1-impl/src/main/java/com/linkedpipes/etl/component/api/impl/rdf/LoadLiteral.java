@@ -1,12 +1,12 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- *
  * @author Petr Škoda
  */
 class LoadLiteral extends LoaderToValue {
@@ -75,7 +75,6 @@ class LoadLiteral extends LoaderToValue {
      * @param type
      * @param property
      * @return
-     * @throws CanNotDeserializeObject
      */
     static Object loadNew(Class<?> type, Map<String, String> property)
             throws CanNotDeserializeObject {

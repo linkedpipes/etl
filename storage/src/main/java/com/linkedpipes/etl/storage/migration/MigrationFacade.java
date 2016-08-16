@@ -156,8 +156,9 @@ public final class MigrationFacade {
                 pipelineObject.getTyped(COMPONENT)) {
             final List<Resource> newTemplates = new LinkedList<>();
             entity.getReferences(HAS_TEMPLATE).forEach((ref) -> {
+                // Example of conversion:
                 // http://localhost:8080/resources/components/t-tabular
-                // http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0
+                // http://etl.linkedpipes.com/resources/components/t-tabular/0.0.0
                 String template = ref.getResource().stringValue();
                 String name  = template.substring(template.lastIndexOf("/") + 1);
                 template = "http://etl.linkedpipes.com/resources/components/"
@@ -167,9 +168,6 @@ public final class MigrationFacade {
             entity.deleteReferences(HAS_TEMPLATE);
             newTemplates.forEach((e) -> entity.add(HAS_TEMPLATE, e));
         }
-        // http://linkedpipes.com/ontology/template
-        // http://localhost:8080/resources/components/t-tabular -->
-        // http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0
     }
 
 }

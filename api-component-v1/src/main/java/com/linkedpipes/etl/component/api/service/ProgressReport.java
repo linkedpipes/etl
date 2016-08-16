@@ -27,7 +27,6 @@ public interface ProgressReport {
 
     /**
      * Should be called whenever entry is processed.
-     *
      */
     public void entryProcessed();
 

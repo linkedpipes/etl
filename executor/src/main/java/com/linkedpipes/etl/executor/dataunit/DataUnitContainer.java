@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.executor.dataunit;
 
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.execution.ExecutionModel;
-import com.linkedpipes.etl.executor.rdf.EntityLoader;
+import com.linkedpipes.etl.executor.rdf.PojoLoader;
 import org.openrdf.model.Value;
 
 /**
@@ -11,9 +11,9 @@ import org.openrdf.model.Value;
  *
  * @author Petr Škoda
  */
-final class DataUnitContainer implements EntityLoader.Loadable {
+final class DataUnitContainer implements PojoLoader.Loadable {
 
-    static enum Status {
+    public enum Status {
         NEW,
         /**
          * Initialized.
@@ -29,13 +29,13 @@ final class DataUnitContainer implements EntityLoader.Loadable {
         CLOSED
     }
 
-    private final ManagableDataUnit instance;
+    private final ManageableDataUnit instance;
 
     private final ExecutionModel.DataUnit metadata;
 
     private Status status = Status.NEW;
 
-    DataUnitContainer(ManagableDataUnit instance,
+    DataUnitContainer(ManageableDataUnit instance,
             ExecutionModel.DataUnit metadata) {
         this.instance = instance;
         this.metadata = metadata;
@@ -53,7 +53,7 @@ final class DataUnitContainer implements EntityLoader.Loadable {
         status = Status.CLOSED;
     }
 
-    public ManagableDataUnit getInstance() {
+    public ManageableDataUnit getInstance() {
         return instance;
     }
 
@@ -66,7 +66,7 @@ final class DataUnitContainer implements EntityLoader.Loadable {
     }
 
     @Override
-    public EntityLoader.Loadable load(String predicate, Value object)
+    public PojoLoader.Loadable load(String predicate, Value object)
             throws LpException {
         return null;
     }

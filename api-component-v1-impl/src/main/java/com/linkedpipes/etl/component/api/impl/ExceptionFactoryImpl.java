@@ -21,19 +21,8 @@ class ExceptionFactoryImpl implements ExceptionFactory {
     }
 
     @Override
-    public LpException failed(String message, Object... args) {
+    public LpException failure(String message, Object... args) {
         return RdfException.componentFailed(message, args);
-    }
-
-    @Override
-    public LpException invalidConfigurationProperty(String propertyIri,
-            String message, Object... args) {
-        return RdfException.invalidProperty(null, propertyIri, message, args);
-    }
-
-    @Override
-    public LpException missingConfigurationProperty(String propertyIri) {
-        return RdfException.missingProperty(null, propertyIri);
     }
 
 }

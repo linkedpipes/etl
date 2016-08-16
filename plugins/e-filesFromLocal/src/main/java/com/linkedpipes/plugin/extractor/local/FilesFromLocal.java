@@ -28,7 +28,7 @@ public class FilesFromLocal implements Component.Sequential {
     public void execute() throws LpException {
         final File source = new File(configuration.getPath());
         if (!source.exists()) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.invalidRdfProperty(
                     FilesFromLocalVocabulary.HAS_PATH,
                     "Source path does not exists."
             );
@@ -39,7 +39,7 @@ public class FilesFromLocal implements Component.Sequential {
             final Path rootPath = source.toPath();
             final File [] files = source.listFiles();
             if (files == null) {
-                throw exceptionFactory.failed("Method listFiles return null. "
+                throw exceptionFactory.failure("Method listFiles return null. "
                         + "Please check privilages.");
             }
             for (File file : files) {
@@ -67,7 +67,7 @@ public class FilesFromLocal implements Component.Sequential {
                 FileUtils.copyFile(file, destination);
             }
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't copy file.", ex);
+            throw exceptionFactory.failure("Can't copy file.", ex);
         }
     }
 

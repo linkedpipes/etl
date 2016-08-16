@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
+
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Map;
  *
  * @author Škoda Petr
  */
-public final class EntityLoader {
+public final class PojoLoader {
 
     /**
      * Interface for loadable entities.
@@ -27,30 +28,27 @@ public final class EntityLoader {
          * @param predicate
          * @param value
          * @return Null no new object was created.
-         * @throws com.linkedpipes.etl.executor.api.v1.RdfException
          */
         public Loadable load(String predicate, String value)
                 throws RdfException;
 
         /**
          * Validation of loaded data can be performed here.
-         *
-         * @throws com.linkedpipes.etl.executor.api.v1.RdfException
          */
-        public void validate() throws RdfException;
+        public default void validate() throws RdfException {
+            // No action.
+        }
 
     }
 
-    private EntityLoader() {
+    private PojoLoader() {
     }
 
     /**
-     *
      * @param definition
      * @param resource
      * @param graph
      * @param instance Instance to load.
-     * @throws com.linkedpipes.etl.executor.api.v1.RdfException
      */
     public static void load(SparqlSelect definition, String resource,
             String graph, Loadable instance)
@@ -66,7 +64,8 @@ public final class EntityLoader {
                 }
             }
         } catch (RdfException ex) {
-            throw RdfException.wrap(ex, "Can't load resource: {}", resource);
+            throw RdfException.initializationFailed(
+                    "Can't load resource: {}", resource, ex);
         }
         // Validate entity.
         instance.validate();

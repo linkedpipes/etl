@@ -57,7 +57,6 @@ final class JarImport {
      *
      * @param jarComponent
      * @param destination
-     * @throws BaseException
      */
     public static void create(JarComponent jarComponent, File destination)
             throws BaseException {
@@ -136,7 +135,6 @@ final class JarImport {
      * @param jar
      * @param entry
      * @return
-     * @throws BaseException
      */
     private static Collection<Statement> readAsRdf(JarInfo jar, JarEntry entry)
             throws BaseException {
@@ -156,7 +154,6 @@ final class JarImport {
      * @param entry
      * @param graph
      * @return
-     * @throws BaseException
      */
     private static Collection<Statement> readAsRdf(JarInfo jar, JarEntry entry,
             Resource graph) throws BaseException {

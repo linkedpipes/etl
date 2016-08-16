@@ -31,7 +31,6 @@ public class JarFacade {
     }
 
     /**
-     *
      * @param component
      * @return Path to the JAR file.
      */

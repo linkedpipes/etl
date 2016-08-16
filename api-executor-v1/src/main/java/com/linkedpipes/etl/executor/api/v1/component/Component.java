@@ -2,6 +2,8 @@ package com.linkedpipes.etl.executor.api.v1.component;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.api.v1.event.Event;
+
 import java.util.Map;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Map;
  *
  * @author Petr Škoda
  */
-public interface BaseComponent {
+public interface Component {
 
     /**
      * Represent a list of headers that component should implement.
@@ -29,14 +31,23 @@ public interface BaseComponent {
     }
 
     /**
+     * Context given to components.
+     */
+    public interface Context {
+
+        public void sendMessage(Event message);
+
+    }
+
+    /**
      * Initialize component before execution.
      *
      * @param dataUnits
-     * @throws com.linkedpipes.etl.executor.api.v1.RdfException
      */
     public void initialize(Map<String, DataUnit> dataUnits) throws RdfException;
 
     /**
+     * Used to get additional information about the component.
      *
      * @param key
      * @return Stored value or null.

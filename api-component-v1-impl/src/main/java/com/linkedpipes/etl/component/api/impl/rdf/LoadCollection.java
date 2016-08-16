@@ -2,17 +2,17 @@ package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Petr Škoda
  */
 class LoadCollection extends LoaderToValue {
@@ -46,9 +46,10 @@ class LoadCollection extends LoaderToValue {
         if (collection == null) {
             throw new CanNotDeserializeObject(
                     "Collection must be initialized prior to loading."
-                    + " Collection: '" + field.getName()
-                    + "' on class: '" + object.getClass().getCanonicalName()
-                    + "'");
+                            + " Collection: '" + field.getName()
+                            + "' on class: '" +
+                            object.getClass().getCanonicalName()
+                            + "'");
         }
         // Load object - here we need to decide based on the
         // object type.

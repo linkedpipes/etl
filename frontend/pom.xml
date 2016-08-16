@@ -39,7 +39,7 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
-                                        <chmod perm="u+x" file="${deploy.directory}/../frontend.sh" />
+                                        <chmod perm="u+x" file="${deploy.directory}/../frontend.sh"/>
                                         <mkdir dir="${deploy.directory}"/>
                                         <copy todir="${deploy.directory}">
                                             <fileset dir="${project.build.directory}/..">

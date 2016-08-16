@@ -44,9 +44,9 @@ public class FileHasher implements Component.Sequential {
             try {
                 checkSum = computeChecksum(entry.toFile());
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't read file.", ex);
+                throw exceptionFactory.failure("Can't read file.", ex);
             } catch (NoSuchAlgorithmException ex) {
-                throw exceptionFactory.failed("Missing algorithm.", ex);
+                throw exceptionFactory.failure("Missing algorithm.", ex);
             }
             // Create RDF output.
             outputRdf.execute((connection) -> {

@@ -73,7 +73,7 @@ public final class FilesToRdf implements Component.Sequential {
                 final Optional<RDFFormat> optionalFormat
                         = Rio.getParserFormatForFileName(file.getFileName());
                 if (!optionalFormat.isPresent()) {
-                    throw exceptionFactory.failed(
+                    throw exceptionFactory.failure(
                             "Can't determine format for file: {}",
                             file.getFileName());
                 }
@@ -87,7 +87,7 @@ public final class FilesToRdf implements Component.Sequential {
             try (final InputStream fileStream = new FileInputStream(file.toFile())) {
                 rdfParser.parse(fileStream, "http://localhost/base/");
             } catch (IOException | RDFHandlerException | RDFParseException ex) {
-                throw exceptionFactory.failed("Can't parse file: {}", file.getFileName(), ex);
+                throw exceptionFactory.failure("Can't parse file: {}", file.getFileName(), ex);
             }
             progressReport.entryProcessed();
         }

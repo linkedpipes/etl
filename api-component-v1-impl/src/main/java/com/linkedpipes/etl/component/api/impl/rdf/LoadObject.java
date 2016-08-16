@@ -46,7 +46,6 @@ class LoadObject extends LoaderToValue {
      * @param select
      * @param optionsFactory
      * @return Null if object of given type can't be created.
-     * @throws CanNotDeserializeObject
      */
     static Object loadNew(Class<?> type, String iri, String graph,
             SparqlSelect select, RdfReader.MergeOptionsFactory optionsFactory
@@ -65,12 +64,11 @@ class LoadObject extends LoaderToValue {
     }
 
     /**
-     * @param object         Object to load data into.
-     * @param iri            Resource of an object to load.
-     * @param graph          Graph that should be used to load the object from.
-     * @param select         RDF source.
+     * @param object Object to load data into.
+     * @param iri Resource of an object to load.
+     * @param graph Graph that should be used to load the object from.
+     * @param select RDF source.
      * @param optionsFactory
-     * @throws CanNotDeserializeObject
      */
     static void loadToObject(Object object, String iri, String graph,
             SparqlSelect select, RdfReader.MergeOptionsFactory optionsFactory)

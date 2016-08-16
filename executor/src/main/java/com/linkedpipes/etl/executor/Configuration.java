@@ -1,23 +1,24 @@
 package com.linkedpipes.etl.executor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 /**
- *
  * @author Petr Škoda
  */
 @Service
 public class Configuration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
+    private static final Logger LOG
+            = LoggerFactory.getLogger(Configuration.class);
 
     private int webServerPort;
 
@@ -26,8 +27,6 @@ public class Configuration {
     private String logCoreFilter;
 
     private String osgiLibDirectoryPath;
-
-    private String executionPrefix;
 
     private String osgiStorageDirectory;
 
@@ -45,7 +44,8 @@ public class Configuration {
         }
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
-        try (InputStream stream = new FileInputStream(new File(propertiesFile))) {
+        try (InputStream stream = new FileInputStream(
+                new File(propertiesFile))) {
             properties.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("Can't load configuration file.", ex);
@@ -59,7 +59,6 @@ public class Configuration {
         logDirectoryPath = getProperty("executor.log.directory");
         logCoreFilter = getProperty("executor.log.core.level");
         osgiLibDirectoryPath = getProperty("executor.osgi.lib.directory");
-        executionPrefix = getProperty("executor.execution.uriPrefix");
         osgiStorageDirectory = getProperty("executor.osgi.working.directory");
         storageAddress = getProperty("storage.uri");
         //
@@ -86,10 +85,6 @@ public class Configuration {
         return new File(osgiLibDirectoryPath);
     }
 
-    public String getExecutionPrefix() {
-        return executionPrefix;
-    }
-
     public String getOsgiStorageDirectory() {
         return osgiStorageDirectory;
     }
@@ -98,7 +93,7 @@ public class Configuration {
         return storageAddress;
     }
 
-    private static  void validateDirectory(String value) {
+    private static void validateDirectory(String value) {
         (new File(value)).mkdirs();
     }
 

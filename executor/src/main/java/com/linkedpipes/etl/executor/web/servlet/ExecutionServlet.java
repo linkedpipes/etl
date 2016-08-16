@@ -2,11 +2,13 @@ package com.linkedpipes.etl.executor.web.servlet;
 
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineExecutor;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
 
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author Petr Škoda
  */
 @RestController
@@ -42,7 +43,9 @@ class ExecutionServlet {
          */
         public String directory;
 
-    };
+    }
+
+    ;
 
     @Autowired
     private ModuleFacade modules;

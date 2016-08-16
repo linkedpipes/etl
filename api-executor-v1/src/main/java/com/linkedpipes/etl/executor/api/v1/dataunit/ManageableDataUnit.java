@@ -1,23 +1,23 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Interface for ManagableDataUnit.
+ * Extension of DataUnit provides ways and means for management.
  *
  * @author Škoda Petr
  */
-public interface ManagableDataUnit extends DataUnit {
+public interface ManageableDataUnit extends DataUnit {
 
     /**
      * Called before data unit is used. Only one initializer method is called!
      * Content of this data unit should be loaded from given directory.
      *
      * @param directory
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public void initialize(File directory) throws LpException;
 
@@ -26,9 +26,8 @@ public interface ManagableDataUnit extends DataUnit {
      * Should prepare content of data unit from given data units.
      *
      * @param dataUnits
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
-    public void initialize(Map<String, ManagableDataUnit> dataUnits)
+    public void initialize(Map<String, ManageableDataUnit> dataUnits)
             throws LpException;
 
     /**
@@ -46,14 +45,11 @@ public interface ManagableDataUnit extends DataUnit {
      *
      * @param directory
      * @return Optionally additional directories that contains data.
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public List<File> save(File directory) throws LpException;
 
     /**
      * Close given data unit. After this call no other method is called.
-     *
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public void close() throws LpException;
 

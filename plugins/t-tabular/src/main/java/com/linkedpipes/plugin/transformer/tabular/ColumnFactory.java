@@ -63,7 +63,7 @@ class ColumnFactory {
 
             final UrlTemplate predicate;
             if (column.getPropertyUrl() == null) {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Missing predicate for column: '{}'", column.getName());
             } else {
                 predicate = new UrlTemplate(column.getPropertyUrl());
@@ -87,7 +87,7 @@ class ColumnFactory {
                 try {
                     type = valueFactory.createIRI(column.getDatatype());
                 } catch (RuntimeException ex) {
-                    throw exceptionFactory.failed(
+                    throw exceptionFactory.failure(
                             "Invalid column type '{}' for colum: '{}'",
                             column.getDatatype(), column.getName(), ex);
                 }
@@ -96,7 +96,7 @@ class ColumnFactory {
                         column.getName(), column.isRequired(),
                         aboutUrl, predicate));
             } else {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Invalid configuration for column {}", column.getName());
             }
         }
@@ -136,7 +136,7 @@ class ColumnFactory {
                     header.set(counter - 1, name);
                 } else {
                     LOG.info("Header: {}", header);
-                    throw exceptionFactory.failed(
+                    throw exceptionFactory.failure(
                             "Header must not contains null values.");
                 }
             }

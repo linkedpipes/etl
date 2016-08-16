@@ -3,13 +3,10 @@ package com.linkedpipes.etl.dataunit.sesame;
 import com.linkedpipes.etl.executor.api.v1.Plugin;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.rdf.PojoLoader;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -21,13 +18,16 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * @author Petr Škoda
  */
 @Component(immediate = true,
-        service = {DataUnitFactory.class, Plugin.ExecutionListener.class})
-public class SesamePlugin implements DataUnitFactory, Plugin.ExecutionListener {
+        service = {DataUnitFactory.class, Plugin.PipelineListener.class})
+public class SesamePlugin implements DataUnitFactory, Plugin.PipelineListener {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(SesamePlugin.class);
@@ -60,20 +60,21 @@ public class SesamePlugin implements DataUnitFactory, Plugin.ExecutionListener {
     }
 
     @Override
-    public ManagableDataUnit create(SparqlSelect definition, String resourceIri,
+    public ManageableDataUnit create(SparqlSelect definition,
+            String resourceIri,
             String graph) throws RdfException {
         if (!initialized) {
             return null;
         }
-        // Load configurattion.
+        // Load configuration.
         final RdfDataUnitConfiguration dataUnitConfiguration
                 = new RdfDataUnitConfiguration(resourceIri);
         try {
-            EntityLoader.load(definition, resourceIri, graph,
+            PojoLoader.load(definition, resourceIri, graph,
                     dataUnitConfiguration);
         } catch (RdfException ex) {
-            throw ExceptionFactory.wrap(ex, "Can't load configuration for: {}",
-                    resourceIri);
+            throw ExceptionFactory.failure("Can't load configuration for: {}",
+                    resourceIri, ex);
         }
         // Create data unit.
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -97,14 +98,14 @@ public class SesamePlugin implements DataUnitFactory, Plugin.ExecutionListener {
     }
 
     @Override
-    public void onExecutionBegin(SparqlSelect definition, String resourceIri,
+    public void onPipelineBegin(SparqlSelect definition, String resourceIri,
             String graph) throws RdfException {
         final List<Map<String, String>> resourceList;
         try {
             resourceList = definition.executeSelect(
                     QUERY_SELECT_CONFIGURATION_RESOURCE);
         } catch (RdfException ex) {
-            throw ExceptionFactory.wrap(ex, "Can't query definition.");
+            throw ExceptionFactory.failure("Can't query definition.", ex);
         }
         if (resourceList.isEmpty()) {
             // This factory is not used in this pipeline execution.
@@ -117,12 +118,13 @@ public class SesamePlugin implements DataUnitFactory, Plugin.ExecutionListener {
                     "Invalid number of results: {}", resourceList.size());
         }
         // Load configuration - defensive style (load and then set).
-        final FactoryConfiguration newConfiguration = new FactoryConfiguration();
+        final FactoryConfiguration newConfiguration =
+                new FactoryConfiguration();
         try {
-            EntityLoader.load(definition, resourceList.get(0).get("s"), graph,
+            PojoLoader.load(definition, resourceList.get(0).get("s"), graph,
                     newConfiguration);
         } catch (RdfException ex) {
-            throw ExceptionFactory.wrap(ex, "Can't load configuration for: {}",
+            throw ExceptionFactory.failure("Can't load configuration for: {}",
                     resourceList.get(0).get("s"), ex);
         }
         configuration = newConfiguration;
@@ -140,7 +142,7 @@ public class SesamePlugin implements DataUnitFactory, Plugin.ExecutionListener {
     }
 
     @Override
-    public void onExecutionEnd() {
+    public void onPipelineEnd() {
         // Destroy shared repository.
         if (sharedRepository != null) {
             try {

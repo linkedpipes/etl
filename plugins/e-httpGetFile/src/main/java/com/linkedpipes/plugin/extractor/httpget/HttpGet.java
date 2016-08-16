@@ -48,12 +48,12 @@ public final class HttpGet implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getUri() == null
                 || configuration.getUri().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     HttpGetVocabulary.HAS_URI);
         }
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     HttpGetVocabulary.HAS_NAME);
         }
         // TODO Do not use this, but be selective about certs we trust.
@@ -61,7 +61,7 @@ public final class HttpGet implements Component.Sequential {
             LOG.warn("'Trust all certs' policy used -> security risk!");
             setTrustAllCerts();
         } catch (Exception ex) {
-            throw exceptionFactory.failed(
+            throw exceptionFactory.failure(
                     "Can't set trust all certificates.", ex);
         }
         progressReport.start(1);
@@ -72,7 +72,7 @@ public final class HttpGet implements Component.Sequential {
         try {
             source = new URL(configuration.getUri());
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.invalidRdfProperty(
                     HttpGetVocabulary.HAS_URI, "{}",
                     configuration.getUri(), ex);
         }
@@ -84,7 +84,7 @@ public final class HttpGet implements Component.Sequential {
         try {
             connection = (HttpURLConnection) source.openConnection();
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't open connection.", ex);
+            throw exceptionFactory.failure("Can't open connection.", ex);
         }
         if (configuration.isForceFollowRedirect()) {
             // Check for redirect. We can hawe multiple redirects
@@ -96,14 +96,14 @@ public final class HttpGet implements Component.Sequential {
                     connection = followRedirect(oldConnection);
                 } while (connection != oldConnection);
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't resolve redirect.", ex);
+                throw exceptionFactory.failure("Can't resolve redirect.", ex);
             }
         }
         // Copy content.
         try (InputStream inputStream = connection.getInputStream()) {
             FileUtils.copyInputStreamToFile(inputStream, destination);
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't copy file.", ex);
+            throw exceptionFactory.failure("Can't copy file.", ex);
         } finally {
             connection.disconnect();
         }
@@ -169,7 +169,7 @@ public final class HttpGet implements Component.Sequential {
                 responseCode == HttpURLConnection.HTTP_SEE_OTHER ) {
             final String location = connection.getHeaderField("Location");
             if (location == null) {
-                throw exceptionFactory.failed("Missing Location for redirect.");
+                throw exceptionFactory.failure("Missing Location for redirect.");
             } else {
                 // Update based on the redirect.
                 connection.disconnect();

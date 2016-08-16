@@ -56,7 +56,7 @@ public class ParserXls implements Parser {
         try {
             wb = WorkbookFactory.create(inFile);
         } catch (IOException | InvalidFormatException ex) {
-            throw new ParseFailed("WorkbookFactory creation failed.", ex);
+            throw new ParseFailed("WorkbookFactory creation failure.", ex);
         }
         // get sheet to process
         final List<Integer> toProcess = new LinkedList<>();

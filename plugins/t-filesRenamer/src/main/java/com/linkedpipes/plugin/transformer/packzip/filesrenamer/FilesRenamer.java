@@ -35,7 +35,7 @@ public class FilesRenamer implements Component.Sequential {
         try {
             pattern = Pattern.compile(configuration.getPattern());
         } catch (PatternSyntaxException ex) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.invalidRdfProperty(
                     "",
                     "", ex);
         }
@@ -48,7 +48,7 @@ public class FilesRenamer implements Component.Sequential {
             try {
                 Files.copy(entry.toFile().toPath(), targetFile.toPath());
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't copy file.", ex);
+                throw exceptionFactory.failure("Can't copy file.", ex);
             }
         }
     }

@@ -11,7 +11,6 @@ import org.openrdf.model.IRI;
 public interface SingleGraphDataUnit extends SesameDataUnit {
 
     /**
-     *
      * @return URI of read graph.
      */
     public IRI getGraph();

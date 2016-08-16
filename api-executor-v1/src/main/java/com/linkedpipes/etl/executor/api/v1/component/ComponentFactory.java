@@ -1,19 +1,26 @@
 package com.linkedpipes.etl.executor.api.v1.component;
 
-import com.linkedpipes.etl.executor.api.v1.Plugin;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import org.osgi.framework.BundleContext;
 
 /**
- * This class is used to load {@link SimpleComponent} from bundles.
+ * Component factory. Is used to create components from OSGI bundles.
  *
  * @author Škoda Petr
  */
 public interface ComponentFactory {
 
-    public BaseComponent create(SparqlSelect definition, String resourceIri,
-            String graph, BundleContext bundleContext, Plugin.Context context)
-            throws RdfException;
+    /**
+     * @param definition
+     * @param resourceIri
+     * @param graph
+     * @param bundleContext
+     * @param context
+     * @return Null if there is no component for this factory in the bundle.
+     */
+    public Component create(SparqlSelect definition, String resourceIri,
+            String graph, BundleContext bundleContext,
+            Component.Context context) throws RdfException;
 
 }

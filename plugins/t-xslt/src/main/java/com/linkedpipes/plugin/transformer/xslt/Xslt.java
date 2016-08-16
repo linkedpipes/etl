@@ -65,7 +65,7 @@ public final class Xslt implements Component.Sequential {
             executable = compiler.compile(new StreamSource(
                     new StringReader(configuration.getXsltTemplate())));
         } catch (SaxonApiException ex) {
-            throw exceptionFactory.failed(
+            throw exceptionFactory.failure(
                     "Can't compile template.", ex);
         }
         // Load name mapping from input to output.
@@ -133,7 +133,7 @@ public final class Xslt implements Component.Sequential {
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Can't transform file.", ex);
             } finally {
                 // Clear document cache.

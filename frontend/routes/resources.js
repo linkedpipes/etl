@@ -374,8 +374,6 @@ function unpack(pipelineObject, optionsAsString, callback) {
         }
     }
     //
-    console.log('CONFIG:', JSON.stringify(JSON.parse(optionsAsString), null, 2));
-    //
     console.time('  [POST] /unpack');
     gRequest.post({'url': url, 'formData': formData, 'headers': headers},
         function optionalCallback(error, httpResponse, body) {

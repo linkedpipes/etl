@@ -27,7 +27,7 @@ public final class SparqlAsk implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     SparqlAskVocabulary.HAS_SPARQL);
         }
         //
@@ -43,11 +43,11 @@ public final class SparqlAsk implements Component.Sequential {
                 return query.evaluate();
             });
         } catch (Throwable t) {
-            throw exceptionFactory.failed("Can't evaluate SPARQL ask.", t);
+            throw exceptionFactory.failure("Can't evaluate SPARQL ask.", t);
         }
         if ((ask && configuration.isFailOnTrue())
                 || (!ask && !configuration.isFailOnTrue())) {
-            throw exceptionFactory.failed("Ask assertion failed.");
+            throw exceptionFactory.failure("Ask assertion failure.");
         }
     }
 

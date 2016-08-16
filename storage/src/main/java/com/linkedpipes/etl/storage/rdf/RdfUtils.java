@@ -165,7 +165,6 @@ public final class RdfUtils {
      *
      * @param mimeType
      * @return
-     * @throws RdfException If format can not be determined.
      */
     public static RDFFormat getFormat(String mimeType)
             throws RdfException {
@@ -187,7 +186,6 @@ public final class RdfUtils {
      *
      * @param file
      * @return
-     * @throws RdfException If format can not be determined.
      */
     public static RDFFormat getFormat(File file) throws RdfException {
         return Rio.getParserFormatForFileName(file.getName()).orElseThrow(
@@ -200,7 +198,6 @@ public final class RdfUtils {
      *
      * @param file
      * @return
-     * @throws RdfException
      */
     public static Collection<Statement> read(MultipartFile file)
             throws RdfException {
@@ -222,7 +219,6 @@ public final class RdfUtils {
      *
      * @param file
      * @return
-     * @throws RdfException
      */
     public static Collection<Statement> read(File file) throws RdfException {
         return read(file, getFormat(file));
@@ -234,7 +230,6 @@ public final class RdfUtils {
      * @param file
      * @param format
      * @return
-     * @throws RdfException
      */
     public static Collection<Statement> read(File file, RDFFormat format)
             throws RdfException {
@@ -251,7 +246,6 @@ public final class RdfUtils {
      * @param inputStream Stream is closed after usage.
      * @param format
      * @return
-     * @throws IOException
      */
     public static Collection<Statement> read(InputStream inputStream,
             RDFFormat format) throws RdfException {
@@ -281,7 +275,6 @@ public final class RdfUtils {
      * @param file
      * @param format
      * @param statements
-     * @throws RdfException
      */
     public static void write(File file, RDFFormat format,
             Collection<Statement> statements) throws RdfException {
@@ -298,7 +291,6 @@ public final class RdfUtils {
      * @param outputStream Stream is closed after usage.
      * @param format
      * @param statements
-     * @throws IOException
      */
     public static void write(OutputStream outputStream, RDFFormat format,
             Collection<Statement> statements) throws RdfException {

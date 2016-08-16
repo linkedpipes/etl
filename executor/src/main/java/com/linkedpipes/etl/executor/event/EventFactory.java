@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Petr Škoda
  */
 public final class EventFactory {
@@ -44,11 +43,6 @@ public final class EventFactory {
         return new ExecutionFinished();
     }
 
-    public static Event executionCancelled() {
-        LOG.info("executionCancelled");
-        return new ExecutionCancelled();
-    }
-
     public static Event executionFailed(String reason) {
         LOG.error("executionFailed: " + reason);
         return new ExecutionFailed(reason, null,
@@ -60,13 +54,6 @@ public final class EventFactory {
         LOG.error("executionFailed: " + reason, cause);
         return new ExecutionFailed(reason, cause,
                 LINKEDPIPES.EVENTS.EXECUTION_FAILED, "Execution failed.");
-    }
-
-    public static Event initializationFailed(String reason) {
-        LOG.error("initializationFailed: " + reason);
-        return new ExecutionFailed(reason, null,
-                LINKEDPIPES.EVENTS.INITIALIZATION_FAILED,
-                "Initialization failed.");
     }
 
     public static Event initializationFailed(String reason, Throwable cause) {

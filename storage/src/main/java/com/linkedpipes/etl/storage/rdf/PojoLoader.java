@@ -70,7 +70,6 @@ public class PojoLoader {
      * @param resource
      * @param graph
      * @param instance
-     * @throws CantLoadException
      */
     public static void loadFromResource(Collection<Statement> statements,
             Resource resource, Resource graph, Loadable instance)
@@ -96,7 +95,6 @@ public class PojoLoader {
      * @param statements
      * @param type
      * @param instance
-     * @throws CantLoadException
      */
     public static void loadOfType(Collection<Statement> statements, IRI type,
             Loadable instance) throws CantLoadException {

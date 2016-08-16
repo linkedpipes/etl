@@ -76,12 +76,12 @@ public final class Unpack implements Component.Sequential {
                     unpackBzip2(stream, targetDirectory, inputEntry);
                     break;
                 default:
-                    throw exceptionFactory.failed(
+                    throw exceptionFactory.failure(
                             "Unknown file format (" + extension + ") : " +
                             inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
-            throw exceptionFactory.failed("Extraction failed: {}",
+            throw exceptionFactory.failure("Extraction failure: {}",
                     inputEntry.getFileName(), ex);
         }
     }

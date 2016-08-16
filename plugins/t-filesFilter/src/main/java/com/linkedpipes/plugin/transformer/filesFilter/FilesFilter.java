@@ -35,7 +35,7 @@ public class FilesFilter implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileNamePattern() == null
                 || configuration.getFileNamePattern().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     FilesFilterVocabulary.HAS_PATTERN);
         }
         //
@@ -50,7 +50,7 @@ public class FilesFilter implements Component.Sequential {
                 try {
                     Files.copy(entry.toFile().toPath(), outputFile.toPath());
                 } catch (IOException ex) {
-                    throw exceptionFactory.failed("Can't copy file: {}",
+                    throw exceptionFactory.failure("Can't copy file: {}",
                             entry.getFileName(), ex);
                 }
             }

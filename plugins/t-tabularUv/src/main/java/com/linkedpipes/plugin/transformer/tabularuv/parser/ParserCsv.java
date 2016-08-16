@@ -106,7 +106,7 @@ public class ParserCsv implements Parser {
             }
         } catch (IOException ex) {
             throw new ParseFailed("Parse of '" + inFile.toString()
-                    + "' failed", ex);
+                    + "' failure", ex);
         }
     }
 

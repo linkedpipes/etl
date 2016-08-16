@@ -28,7 +28,7 @@ public final class TextHolder implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     TextHolderVocabulary.HAS_FILE_NAME);
         }
         //
@@ -39,7 +39,7 @@ public final class TextHolder implements Component.Sequential {
                     configuration.getContent().getBytes(
                             Charset.forName("UTF-8")));
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't write content to file.", ex);
+            throw exceptionFactory.failure("Can't write content to file.", ex);
         }
     }
 

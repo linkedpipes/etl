@@ -32,7 +32,7 @@ public class ExcelToCsv implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileNamePattern() == null
                 || configuration.getFileNamePattern().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.missingRdfProperty(
                     ExcelToCsvVocabulary.HAS_FILE_NAME);
         }
         //

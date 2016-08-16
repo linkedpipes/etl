@@ -3,7 +3,6 @@ package com.linkedpipes.etl.component.api.impl;
 import java.util.List;
 
 /**
- *
  * @author Petr Škoda
  */
 class BundleInformation {

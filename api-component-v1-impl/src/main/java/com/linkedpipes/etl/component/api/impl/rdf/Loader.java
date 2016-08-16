@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+
 import java.util.Map;
 
 /**
@@ -32,7 +33,6 @@ abstract class Loader {
      * @param property
      * @param graph
      * @param select
-     * @throws CanNotDeserializeObject
      */
     public abstract void load(Object object, Map<String, String> property,
             String graph, SparqlSelect select) throws CanNotDeserializeObject;

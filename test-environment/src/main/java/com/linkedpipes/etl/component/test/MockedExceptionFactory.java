@@ -23,23 +23,23 @@ public class MockedExceptionFactory implements ExceptionFactory {
             = LoggerFactory.getLogger(MockedExceptionFactory.class);
 
     @Override
-    public LpException failed(String message, Object... args) {
+    public LpException failure(String message, Object... args) {
         LOG.error("Exception: " + message, args);
-        return new MockedLpException("failed");
+        return new MockedLpException("failure");
     }
 
     @Override
-    public LpException invalidConfigurationProperty(
+    public LpException invalidRdfProperty(
             String propertyIri, String message, Object... args) {
         LOG.error("Invalid configuration property: {}", propertyIri);
-        return new MockedLpException("invalidConfigurationProperty");
+        return new MockedLpException("invalidRdfProperty");
     }
 
     @Override
-    public LpException missingConfigurationProperty(
+    public LpException missingRdfProperty(
             String propertyIri) {
         LOG.error("Missing configuration property: {}", propertyIri);
-        return new MockedLpException("missingConfigurationProperty");
+        return new MockedLpException("missingRdfProperty");
     }
 
 }

@@ -1,28 +1,13 @@
 package com.linkedpipes.etl.dataunit.sesame;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
-import java.util.List;
-import java.util.Map;
-import org.openrdf.model.IRI;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.Update;
-import org.openrdf.repository.Repository;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
 import org.openrdf.IsolationLevels;
-import org.openrdf.query.Binding;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.model.IRI;
+import org.openrdf.query.*;
 import org.openrdf.query.impl.SimpleDataset;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.util.RDFInserter;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
@@ -31,13 +16,16 @@ import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
+import java.util.*;
+
 /**
  * Store all triples in a single graph.
  *
  * @author Škoda Petr
  */
 public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
-        implements ManagableSingleGraphDataUnit {
+        implements ManageableSingleGraphDataUnit {
 
     private final static String QUERY_COPY
             = "INSERT {?s ?p ?o} WHERE {?s ?p ?o}";
@@ -68,8 +56,8 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                 update.execute();
             });
         } catch (LpException ex) {
-            throw ExceptionFactory.wrap(ex, "Can't merge with: {}",
-                    source.getResourceIri());
+            throw ExceptionFactory.failure("Can't merge with: {}",
+                    source.getResourceIri(), ex);
         }
     }
 
@@ -91,29 +79,30 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                 LOG.debug("initialize: loading ... {}", dataFile.getPath());
                 connection.begin(IsolationLevels.NONE);
                 try (final InputStream fileStream
-                        = new FileInputStream(dataFile.getPath())) {
+                             = new FileInputStream(dataFile.getPath())) {
                     rdfParser.parse(fileStream, "http://localhost/base");
                 } catch (IOException ex) {
                     throw ExceptionFactory.failure("Can't read file.", ex);
                 }
-                LOG.debug("initialize: commiting ...");
+                LOG.debug("initialize: committing ...");
                 connection.commit();
             });
         } catch (LpException ex) {
-            throw ExceptionFactory.initializationFailed("Can't initialize.", ex);
+            throw ExceptionFactory
+                    .initializationFailed("Can't initialize.", ex);
         }
         LOG.debug("initialize: done");
     }
 
     @Override
-    public void initialize(Map<String, ManagableDataUnit> dataUnits)
+    public void initialize(Map<String, ManageableDataUnit> dataUnits)
             throws LpException {
         // Merge content of other data units.
         for (String sourceUri : sources) {
             if (!dataUnits.containsKey(sourceUri)) {
                 throw ExceptionFactory.initializationFailed("Missing input!");
             }
-            final ManagableDataUnit dataunit = dataUnits.get(sourceUri);
+            final ManageableDataUnit dataunit = dataUnits.get(sourceUri);
             if (dataunit instanceof SingleGraphDataUnitImpl) {
                 merge((SingleGraphDataUnitImpl) dataunit);
             } else {
@@ -130,7 +119,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
         final File dataFile = new File(directory, "data.ttl");
         execute((connection) -> {
             try (FileOutputStream outputStream
-                    = new FileOutputStream(dataFile)) {
+                         = new FileOutputStream(dataFile)) {
                 final RDFWriter writer
                         = Rio.createWriter(RDFFormat.TURTLE, outputStream);
                 connection.export(writer,
@@ -174,7 +163,7 @@ public class SingleGraphDataUnitImpl extends SesameDataUnitImpl
                 return output;
             });
         } catch (LpException ex) {
-            throw ExceptionFactory.wrap(ex, "Can't query data.");
+            throw ExceptionFactory.failure("Can't query data.", ex);
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.Collection;
 /**
  * DataUnit can contains same file multiple times - if such file is presented
  * in multiple sources used to create this data unit.
- *
+ * <p>
  * When iterated only presented files are returned, the iteration does not
  * return directories.
  *
@@ -17,13 +17,11 @@ public interface FilesDataUnit extends Iterable<FilesDataUnit.Entry> {
     public interface Entry {
 
         /**
-         *
          * @return System path to file.
          */
         public File toFile();
 
         /**
-         *
          * @return File name of the file, ie. relative path from the root
          * of data unit.
          */
@@ -39,7 +37,6 @@ public interface FilesDataUnit extends Iterable<FilesDataUnit.Entry> {
     public Collection<File> getReadRootDirectories();
 
     /**
-     *
      * @return Undefined value.
      */
     public long size();

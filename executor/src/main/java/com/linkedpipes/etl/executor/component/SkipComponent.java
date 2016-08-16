@@ -22,14 +22,10 @@ class SkipComponent implements ComponentExecutor {
 
     @Override
     public void execute() {
-        LOG.info("Skiping starts for: {}", this.componentExecution.getIri());
-        // No operation here.
-        LOG.info("Skiping end for: {}", this.componentExecution.getIri());
-    }
-
-    @Override
-    public void cancel() {
-        // No action here.
+        LOG.info("Skipping starts for: {}", this.componentExecution.getIri());
+        // No operation here, two logs are here just to be
+        // consistent with other executors.
+        LOG.info("Skipping end for: {}", this.componentExecution.getIri());
     }
 
     @Override

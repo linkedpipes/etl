@@ -80,7 +80,6 @@ public class TemplateFacade {
      * @param template      Instance to create template from.
      * @param configuration Configuration to used for template.
      * @return
-     * @throws BaseException
      */
     public Template createTemplate(Collection<Statement> template,
             Collection<Statement> configuration) throws BaseException {

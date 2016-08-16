@@ -8,14 +8,14 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
-import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.File;
+
 /**
- *
  * @author Petr Škoda
  */
 public class Executor {
@@ -107,7 +107,7 @@ public class Executor {
         initLogger();
         final AbstractApplicationContext context
                 = new ClassPathXmlApplicationContext(
-                        "spring/context-executor.xml");
+                "spring/context-executor.xml");
         context.registerShutdownHook();
         context.start();
     }

@@ -4,17 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
-import com.linkedpipes.etl.executor.rdf.EntityLoader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.linkedpipes.etl.executor.rdf.PojoLoader;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.BindingSet;
@@ -34,6 +24,12 @@ import org.openrdf.rio.Rio;
 import org.openrdf.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Provide access to the RDF pipeline definition.
@@ -94,7 +90,6 @@ public class PipelineDefinition implements SparqlSelect {
      * Load the pipeline definition.
      *
      * @param resourceManager
-     * @throws InitializationFailed
      */
     public void initialize(ResourceManager resourceManager)
             throws InitializationFailed {
@@ -123,7 +118,7 @@ public class PipelineDefinition implements SparqlSelect {
         // Load pipeline model.
         pipelineModel = new PipelineModel(pipelineResource);
         try {
-            EntityLoader.load(repository, pipelineResource,
+            PojoLoader.load(repository, pipelineResource,
                     definitionGraph, pipelineModel);
         } catch (LpException ex) {
             throw new InitializationFailed(

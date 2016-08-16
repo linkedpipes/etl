@@ -89,7 +89,7 @@ class Parser {
             try {
                 mapper.onHeader(header);
             } catch (InvalidTemplate | MissingNameInHeader ex) {
-                throw exceptionFactory.failed("Can initalize on header row.",
+                throw exceptionFactory.failure("Can initalize on header row.",
                         ex);
             }
             if (row == null) {

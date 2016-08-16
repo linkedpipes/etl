@@ -1,14 +1,15 @@
 package com.linkedpipes.etl.executor.event;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
- * Used to report execution failure - {@link StopExecution} message is
- * automatically emitted after this message by core.
+ * Used to report that execution failed. The {@link ExecutionFinished} event
+ * is still raised.
  *
  * @author Škoda Petr
  */
@@ -37,15 +38,16 @@ public class ExecutionFailed extends AbstractEvent {
         final PrintWriter pw = new PrintWriter(sw);
         if (cause != null) {
             cause.printStackTrace(pw);
-            writer.addString(iri, LINKEDPIPES.EVENTS.HAS_EXCEPTION, sw.toString(),
-                    "en");
+            writer.addString(iri, LINKEDPIPES.EVENTS.HAS_EXCEPTION,
+                    sw.toString(), "en");
             //
             Throwable rootCause = cause;
             while (rootCause.getCause() != null) {
                 rootCause = rootCause.getCause();
             }
             if (rootCause.getMessage() != null) {
-                writer.addString(iri, LINKEDPIPES.EVENTS.HAS_ROOT_EXCEPTION_MESSAGE,
+                writer.addString(iri,
+                        LINKEDPIPES.EVENTS.HAS_ROOT_EXCEPTION_MESSAGE,
                         rootCause.getMessage(), "en");
             } else {
                 LOG.error("Missing message for ExecutionFailed.", cause);

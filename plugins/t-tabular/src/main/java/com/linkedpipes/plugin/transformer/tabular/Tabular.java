@@ -46,7 +46,7 @@ public class Tabular implements Component.Sequential {
             try {
                 parser.parse(entry, mapper);
             } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
-                throw exceptionFactory.failed("Can't process file: {}",
+                throw exceptionFactory.failure("Can't process file: {}",
                         entry.getFileName(), ex);
             }
             mapper.onTableEnd();

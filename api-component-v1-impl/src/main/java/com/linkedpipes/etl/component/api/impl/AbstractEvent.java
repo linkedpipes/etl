@@ -2,12 +2,12 @@ package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *
  * @author Škoda Petr
  */
 abstract class AbstractEvent implements Event {

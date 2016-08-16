@@ -3,7 +3,7 @@ package com.linkedpipes.etl.component.api.service;
 import java.io.File;
 
 /**
- * Provide access to working directory.
+ * Provide access to an existing working directory in form of an {@link File}.
  *
  * @author Petr Škoda
  */
@@ -11,7 +11,6 @@ public class WorkingDirectory extends File {
 
     public WorkingDirectory(String pathname) {
         super(pathname);
-        // Create the directory.
         super.mkdirs();
     }
 

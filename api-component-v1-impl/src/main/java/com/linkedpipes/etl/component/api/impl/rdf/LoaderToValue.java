@@ -4,7 +4,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
 /**
- *
  * @author Petr Škoda
  */
 abstract class LoaderToValue extends Loader {
@@ -30,7 +29,6 @@ abstract class LoaderToValue extends Loader {
      * @param object
      * @param value
      * @param valueAsString
-     * @throws CanNotDeserializeObject
      */
     protected void set(Object object, Object value, String valueAsString)
             throws CanNotDeserializeObject {
@@ -39,8 +37,8 @@ abstract class LoaderToValue extends Loader {
         } catch (Exception ex) {
             throw new CanNotDeserializeObject(
                     "Can't set propety '" + field.getName() + "'"
-                    + " (RDF deserialization) to value: "
-                    + valueAsString, ex);
+                            + " (RDF deserialization) to value: "
+                            + valueAsString, ex);
         }
     }
 

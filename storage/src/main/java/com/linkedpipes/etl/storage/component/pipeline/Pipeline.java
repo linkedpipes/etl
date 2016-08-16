@@ -27,7 +27,7 @@ public class Pipeline {
         TYPE = SimpleValueFactory.getInstance().createIRI(
                 "http://linkedpipes.com/ontology/Pipeline");
         HAS_VERSION = SimpleValueFactory.getInstance().createIRI(
-            "http://etl.linkedpipes.com/ontology/version");
+                "http://etl.linkedpipes.com/ontology/version");
     }
 
     /**
@@ -125,7 +125,6 @@ public class Pipeline {
     }
 
     /**
-     *
      * @return
      */
     public Info getInfo() {
@@ -137,7 +136,6 @@ public class Pipeline {
     }
 
     /**
-     *
      * @return Null if pipeline information has not yet been loaded.
      */
     public String getIri() {

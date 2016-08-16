@@ -81,13 +81,13 @@ public final class SparqlSelectMulti implements Component.Sequential {
         for (Configuration configuration : configurations) {
             if (configuration.fileName == null
                     || configuration.fileName.isEmpty()) {
-                throw exceptionFactory.invalidConfigurationProperty(
+                throw exceptionFactory.invalidRdfProperty(
                         SparqlSelectMultiVocabulary.HAS_FILE_NAME,
                         "Configuration resource: {}", configuration.iri);
             }
             if (configuration.fileName == null
                     || configuration.fileName.isEmpty()) {
-                throw exceptionFactory.invalidConfigurationProperty(
+                throw exceptionFactory.invalidRdfProperty(
                         SparqlSelectMultiVocabulary.HAS_FILE_NAME,
                         "Configuration resource: {}", configuration.iri);
             }
@@ -117,7 +117,7 @@ public final class SparqlSelectMulti implements Component.Sequential {
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Exception.", ex);
+                throw exceptionFactory.failure("Exception.", ex);
             }
         });
     }

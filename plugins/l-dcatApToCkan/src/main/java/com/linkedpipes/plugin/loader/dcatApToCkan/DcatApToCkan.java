@@ -473,12 +473,12 @@ public final class DcatApToCkan implements Component.Sequential {
                     } else if (response.getStatusLine().getStatusCode() == 409) {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Dataset already exists: " + ent);
-                        throw exceptionFactory.failed("Dataset already exists");
+                        throw exceptionFactory.failure("Dataset already exists");
                         //ContextUtils.sendError(context, "Dataset already exists", "Dataset already exists: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw exceptionFactory.failed("Error creating dataset");
+                        throw exceptionFactory.failure("Error creating dataset");
                         //ContextUtils.sendError(context, "Error creating dataset", "Response while creating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -492,7 +492,7 @@ public final class DcatApToCkan implements Component.Sequential {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw exceptionFactory.failed("Error creating dataset");
+                            throw exceptionFactory.failure("Error creating dataset");
                             //ContextUtils.sendError(context, "Error creating dataset", e.getLocalizedMessage());
                         }
                     }
@@ -527,7 +527,7 @@ public final class DcatApToCkan implements Component.Sequential {
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw exceptionFactory.failed("Error updating dataset");
+                        throw exceptionFactory.failure("Error updating dataset");
                         //ContextUtils.sendError(context, "Error updating dataset", "Response while updating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -541,7 +541,7 @@ public final class DcatApToCkan implements Component.Sequential {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw exceptionFactory.failed("Error updating dataset");
+                            throw exceptionFactory.failure("Error updating dataset");
 //		                	ContextUtils.sendError(context, "Error updating dataset", e.getLocalizedMessage());
                         }
                     }

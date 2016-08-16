@@ -1,11 +1,12 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
+import org.openrdf.model.Statement;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.openrdf.model.Statement;
 
 /**
  * Represents a single execution.
@@ -102,7 +103,7 @@ public class Execution {
     private Date statusChange;
 
     /**
-     * Store informations about execution debug data.
+     * Store information about execution debug data.
      */
     private DebugData debugData;
 

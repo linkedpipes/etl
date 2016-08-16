@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.executor.component;
 
+import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.execution.ExecutionModel;
-import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
 
 /**
  * Interface and factory for component execution objects.
@@ -18,11 +17,6 @@ public interface ComponentExecutor {
     public void execute();
 
     /**
-     * Request execution to stop as soon as possible.
-     */
-    public void cancel();
-
-    /**
      * If true then the pipeline execution should fail as the executor
      * thread fail to end properly.
      *
@@ -31,8 +25,6 @@ public interface ComponentExecutor {
     public boolean unexpectedTermination();
 
     /**
-     *
-     * @param module
      * @param dataunit
      * @param events
      * @param pipeline
@@ -41,10 +33,10 @@ public interface ComponentExecutor {
      * @param instance
      * @return Null if no executor for given component can be created.
      */
-    public static ComponentExecutor create(ModuleFacade module,
-            DataUnitManager dataunit, EventManager events,
-            PipelineDefinition pipeline, ExecutionModel execution,
-            String componentIri, SequentialComponent instance) {
+    public static ComponentExecutor create(DataUnitManager dataunit,
+            EventManager events, PipelineDefinition pipeline,
+            ExecutionModel execution, String componentIri,
+            SequentialComponent instance) {
         final PipelineModel.Component component
                 = pipeline.getPipelineModel().getComponent(componentIri);
         final ExecutionModel.Component executionComponent

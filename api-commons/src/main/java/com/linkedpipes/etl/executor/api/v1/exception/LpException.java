@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.exception;
 
+import org.slf4j.helpers.MessageFormatter;
+
 /**
  * LinkedPipes specific exception.
  *
@@ -7,15 +9,30 @@ package com.linkedpipes.etl.executor.api.v1.exception;
  */
 public class LpException extends Exception {
 
-    protected LpException() {
+    /**
+     * Store exception description.
+     */
+    protected final String message;
+
+    /**
+     * Store arguments for the message.
+     */
+    protected final Object[] args;
+
+    protected LpException(String messages, Object... args) {
+        // Extract cause if given.
+        if (args.length > 0) {
+            if (args[args.length - 1] instanceof Exception) {
+                this.initCause((Exception) args[args.length - 1]);
+            }
+        }
+        this.message = messages;
+        this.args = args;
     }
 
-    protected LpException(String message) {
-        super(message);
-    }
-
-    protected LpException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public String getMessage() {
+        return MessageFormatter.arrayFormat(message, args).getMessage();
     }
 
 }
