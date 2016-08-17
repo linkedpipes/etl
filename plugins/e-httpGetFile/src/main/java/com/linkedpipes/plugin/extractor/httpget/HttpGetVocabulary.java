@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.extractor.httpget;
  *
  * @author Škoda Petr
  */
-final class HttpGetVocabulary {
+public final class HttpGetVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/e-httpGetFile#";
