@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.transformer.textHolder;
 
+import com.linkedpipes.etl.component.api.Configuration;
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
@@ -7,7 +8,7 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  * @author Škoda Petr
  */
 @RdfToPojo.Type(uri = TextHolderVocabulary.CONFIG)
-public class TextHolderConfiguration {
+public class TextHolderConfiguration implements Configuration {
 
     @RdfToPojo.Property(uri = TextHolderVocabulary.HAS_FILE_NAME)
     private String fileName = "file.txt";
