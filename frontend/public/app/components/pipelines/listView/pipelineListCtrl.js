@@ -4,10 +4,7 @@ define([], function () {
 
         var template = {
             'iri': {
-                '$property': 'http://linkedpipes.com/ontology/pipeline'
-            },
-            'id': {
-                '$property': 'http://linkedpipes.com/ontology/id'
+                '$property': '@id'
             },
             'label': {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
@@ -24,12 +21,12 @@ define([], function () {
                 'data': {
                     'property': '@type',
                     'operation': 'in',
-                    'value': 'http://etl.linkedpipes.com/ontology/Reference'
+                    'value': 'http://linkedpipes.com/ontology/Pipeline'
                 },
                 'deleted': {
                     'property': '@type',
                     'operation': 'in',
-                    'value': 'http://etl.linkedpipes.com/ontology/Deleted'
+                    'value': 'http://linkedpipes.com/ontology/Tombstone'
                 }
             },
             'decorator': function () {
@@ -91,13 +88,13 @@ define([], function () {
                     'Content-Type': undefined,
                     'accept': 'application/ld+json'
                 }
-            }
+            };
             $http.post('/resources/pipelines/', data, config).then(
                 function (response) {
                     // The response is a reference.
                     // TODO Use JSONLD service to get the value !!
-                    var newPipelineUri = response.data[0]['@graph'][0]
-                        ['http://linkedpipes.com/ontology/pipeline'][0]['@id'];
+                    console.log(response.data);
+                    var newPipelineUri = response.data[0]['@graph'][0]['@id'];
                     //
                     $location.path('/pipelines/edit/canvas').search({
                         'pipeline': newPipelineUri
@@ -182,7 +179,7 @@ define([], function () {
                         'response': response
                     });
                 });
-
+            console.log($scope.repository);
             refreshService.set(function () {
                 // TODO Enable update once the server has
                 // proper support of the JSON-LD repository.
