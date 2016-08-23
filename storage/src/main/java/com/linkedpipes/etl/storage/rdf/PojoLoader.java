@@ -36,8 +36,8 @@ public class PojoLoader {
     public interface Loadable {
 
         /**
-         * Set the resource IRI. Is called before any call of the
-         * {@link #load(java.lang.String, org.openrdf.model.Value)}.
+         * Set the resource IRI. Is called before any call of the load
+         * functions.
          *
          * @param iri
          */
@@ -53,8 +53,7 @@ public class PojoLoader {
 
         default Loadable load(String predicate, Value value, Resource graph)
                 throws CantLoadException {
-            // IN default implementation call the variant that
-            // ignores the graphs.
+            // Default implementation call the variant that ignores the graphs.
             return load(predicate, value);
         }
 

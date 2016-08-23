@@ -1,7 +1,9 @@
-package com.linkedpipes.etl.storage.component.pipeline;
+package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.rdf.PojoLoader;
+import com.linkedpipes.etl.storage.pipeline.importer.ImportFacade;
+import com.linkedpipes.etl.storage.pipeline.migration.MigrationFacade;
+import com.linkedpipes.etl.storage.pipeline.updater.UpdaterFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.openrdf.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +24,34 @@ public class PipelineFacade {
      */
     public static class OperationFailed extends BaseException {
 
-        OperationFailed(Throwable cause) {
-            super(cause);
+        public OperationFailed(String message, Object... args) {
+            super(message, args);
         }
     }
 
     @Autowired
     private PipelineManager pipelines;
 
+    @Autowired
+    private ImportFacade importFacade;
+
+    @Autowired
+    private MigrationFacade migrationFacade;
+
+    @Autowired
+    private UpdaterFacade updaterFacade;
+
+    /**
+     * @param iri
+     * @return Pipeline of given IRI or null.
+     */
     public Pipeline getPipeline(String iri) {
         return pipelines.getPipelines().get(iri);
     }
 
+    /**
+     * @return RDF references to all stored pipeline.
+     */
     public Collection<Statement> getReferenceRdf() {
         final Collection<Statement> result = new LinkedList<>();
         for (Pipeline pipeline : pipelines.getPipelines().values()) {
@@ -42,15 +60,17 @@ public class PipelineFacade {
         return result;
     }
 
+    /**
+     * @param pipeline
+     * @return An RDF reference for given pipeline..
+     */
     public Collection<Statement> getReferenceRdf(Pipeline pipeline) {
         return pipeline.getReferenceRdf();
     }
 
     /**
-     * Return an RDF definition of given pipeline.
-     *
      * @param pipeline
-     * @return
+     * @return A full RDF definition of given pipeline.
      */
     public Collection<Statement> getPipelineRdf(Pipeline pipeline)
             throws OperationFailed {
@@ -59,56 +79,37 @@ public class PipelineFacade {
         try {
             return RdfUtils.read(pipelineFile);
         } catch (Exception ex) {
-            throw new OperationFailed(ex);
+            throw new OperationFailed("Can't read file.", ex);
         }
     }
 
     /**
+     * Create a new pipeline. The pipeline could be created from given RDF
+     * or if none is given empty pipeline is created.
+     *
+     * If pipeline is given in form of the RDF the migration, import and update
+     * are performed on given pipeline.
+     *
      * @param pipelineRdf If empty an "empty pipeline" is used instead.
      * @param optionsRdf
-     * @return
+     * @return Created pipeline.
      */
     public Pipeline createPipeline(
             Collection<Statement> pipelineRdf,
             Collection<Statement> optionsRdf)
             throws BaseException {
-        final Pipeline pipeline;
-        try {
-            pipeline = pipelines.createPipeline();
-        } catch (Exception ex) {
-            throw new OperationFailed(ex);
-        }
-
-        // Make sure we have the definition loaded.
-        if (pipelineRdf.isEmpty()) {
-            pipelineRdf = getPipelineRdf(pipeline);
-        }
-        // Perform modifications based on the options.
-        final UpdateOptions options = new UpdateOptions();
-        PojoLoader.loadOfType(optionsRdf, UpdateOptions.TYPE, options);
-        pipelineRdf = PipelineUpdater.update(pipeline, options, pipelineRdf);
-        // Set pipeline content.
-        try {
-            pipelines.updatePipeline(pipeline, pipelineRdf);
-        } catch (Exception ex) {
-            throw new OperationFailed(ex);
-        }
-        return pipeline;
+        return pipelines.createPipeline(pipelineRdf, optionsRdf);
     }
 
     /**
-     * Update pipeline from definition.
+     * Update pipeline from given RDF statements.
      *
      * @param pipeline
      * @param pipelineRdf
      */
     public void updatePipeline(Pipeline pipeline,
             Collection<Statement> pipelineRdf) throws OperationFailed {
-        try {
-            pipelines.updatePipeline(pipeline, pipelineRdf);
-        } catch (Exception ex) {
-            throw new OperationFailed(ex);
-        }
+        pipelines.updatePipeline(pipeline, pipelineRdf);
     }
 
     /**
@@ -118,6 +119,12 @@ public class PipelineFacade {
      */
     public void deletePipeline(Pipeline pipeline) {
         pipelines.deletePipeline(pipeline);
+    }
+
+    public Collection<Statement> localizePipeline(
+            Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
+            throws BaseException {
+        return pipelines.localizePipeline(pipelineRdf, optionsRdf);
     }
 
 }

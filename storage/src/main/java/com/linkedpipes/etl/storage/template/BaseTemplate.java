@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.component.template;
+package com.linkedpipes.etl.storage.template;
 
 import org.openrdf.model.Statement;
 

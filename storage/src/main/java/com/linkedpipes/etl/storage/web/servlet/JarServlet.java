@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
-import com.linkedpipes.etl.storage.component.jar.JarComponent;
-import com.linkedpipes.etl.storage.component.jar.JarFacade;
+import com.linkedpipes.etl.storage.jar.JarComponent;
+import com.linkedpipes.etl.storage.jar.JarFacade;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

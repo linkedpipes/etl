@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.component.jar;
+package com.linkedpipes.etl.storage.jar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.component.template.Template;
-import com.linkedpipes.etl.storage.component.template.TemplateFacade;
+import com.linkedpipes.etl.storage.template.Template;
+import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import com.linkedpipes.etl.storage.rdf.StatementsCollection;
 import org.apache.http.HttpResponse;

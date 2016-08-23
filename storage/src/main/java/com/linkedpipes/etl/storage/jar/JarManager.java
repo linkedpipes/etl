@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.component.jar;
+package com.linkedpipes.etl.storage.jar;
 
 import com.linkedpipes.etl.storage.Configuration;
 import org.slf4j.Logger;

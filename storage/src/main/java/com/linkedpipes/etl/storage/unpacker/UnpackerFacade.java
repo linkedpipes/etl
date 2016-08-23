@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.component.pipeline.Pipeline;
-import com.linkedpipes.etl.storage.component.pipeline.PipelineFacade;
-import com.linkedpipes.etl.storage.component.template.TemplateFacade;
+import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
+import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.RDF;

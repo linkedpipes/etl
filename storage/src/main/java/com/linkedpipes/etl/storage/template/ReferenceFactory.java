@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.component.template;
+package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;

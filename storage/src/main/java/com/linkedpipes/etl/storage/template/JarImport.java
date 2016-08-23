@@ -1,7 +1,7 @@
-package com.linkedpipes.etl.storage.component.template;
+package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.component.jar.JarComponent;
+import com.linkedpipes.etl.storage.jar.JarComponent;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.model.Resource;

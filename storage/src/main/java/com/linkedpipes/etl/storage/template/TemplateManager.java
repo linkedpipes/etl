@@ -1,9 +1,9 @@
-package com.linkedpipes.etl.storage.component.template;
+package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
-import com.linkedpipes.etl.storage.component.jar.JarComponent;
-import com.linkedpipes.etl.storage.component.jar.JarFacade;
+import com.linkedpipes.etl.storage.jar.JarComponent;
+import com.linkedpipes.etl.storage.jar.JarFacade;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;

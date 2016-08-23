@@ -1,15 +1,18 @@
-package com.linkedpipes.etl.storage.component.pipeline;
+package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
-import org.openrdf.model.*;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Literal;
+import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.SKOS;
 
 import java.io.File;
 import java.util.*;
 
 /**
+ * Represent a pipeline object.
+ *
  * @author Petr Škoda
  */
 public class Pipeline {
@@ -63,6 +66,10 @@ public class Pipeline {
             return iri;
         }
 
+        public int getVersion() {
+            return version;
+        }
+
         public List<Value> getLabels() {
             return Collections.unmodifiableList(labels);
         }
@@ -100,7 +107,6 @@ public class Pipeline {
 
     }
 
-
     /**
      * Path to the file that contains the pipeline.
      */
@@ -109,15 +115,18 @@ public class Pipeline {
     /**
      * Reference to the pipeline info.
      */
-    private Info info = null;
+    private Info info;
 
     /**
-     * RDF reference to the pipeline used in the pipeline list.
+     * RDF reference to this pipeline. This can be used to provide a client
+     * with reference to the pipeline where the complete
+     * pipeline definition is not required.
      */
-    private Collection<Statement> referenceRdf = new ArrayList<>(4);
+    private Collection<Statement> referenceRdf = new ArrayList<>(8);
 
-    Pipeline(File file) {
+    Pipeline(File file, Info info) {
         this.file = file;
+        this.info = info;
     }
 
     public File getFile() {
@@ -125,13 +134,13 @@ public class Pipeline {
     }
 
     /**
-     * @return
+     * @return Can be null if no information has been loaded.
      */
     public Info getInfo() {
         return info;
     }
 
-    void setInfo(Info info) {
+    public void setInfo(Info info) {
         this.info = info;
     }
 
@@ -152,27 +161,6 @@ public class Pipeline {
 
     public void setReferenceRdf(Collection<Statement> referenceRdf) {
         this.referenceRdf = referenceRdf;
-    }
-
-    /**
-     * Create and return an empty representation of a pipeline.
-     *
-     * @param iriAsString
-     * @return
-     */
-    public static Collection<Statement> createEmpty(String iriAsString) {
-        final List<Statement> pipeline = new ArrayList<>(4);
-        final ValueFactory vf = SimpleValueFactory.getInstance();
-        final IRI iri = vf.createIRI(iriAsString);
-        //
-        pipeline.add(vf.createStatement(iri, RDF.TYPE, Pipeline.TYPE, iri));
-        pipeline.add(vf.createStatement(iri, SKOS.PREF_LABEL,
-                vf.createLiteral(iriAsString), iri));
-
-        pipeline.add(vf.createStatement(iri, HAS_VERSION,
-                vf.createLiteral(VERSION_NUMBER), iri));
-
-        return pipeline;
     }
 
 }

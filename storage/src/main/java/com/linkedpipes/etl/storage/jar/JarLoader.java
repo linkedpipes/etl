@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.component.jar;
+package com.linkedpipes.etl.storage.jar;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.openrdf.model.Statement;

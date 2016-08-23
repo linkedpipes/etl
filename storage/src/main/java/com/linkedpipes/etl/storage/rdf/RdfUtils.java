@@ -169,10 +169,7 @@ public final class RdfUtils {
     public static RDFFormat getFormat(String mimeType)
             throws RdfException {
         // BACKWARD COMPATIBILITY
-        if (mimeType == null) {
-            throw new RdfException("Missing mime type.");
-        }
-        if (mimeType.equals("application/json")) {
+        if (mimeType == null || mimeType.equals("application/json")) {
             return RDFFormat.JSONLD;
         }
         //
@@ -188,6 +185,11 @@ public final class RdfUtils {
      * @return
      */
     public static RDFFormat getFormat(File file) throws RdfException {
+        // BACKWARD COMPATIBILITY
+        if (file.getName().toLowerCase().endsWith(".json")) {
+            return RDFFormat.JSONLD;
+        }
+        //
         return Rio.getParserFormatForFileName(file.getName()).orElseThrow(
                 () -> new RdfException("Invalid RDF type for file: {}",
                         file.getName()));
@@ -205,8 +207,15 @@ public final class RdfUtils {
             return Collections.EMPTY_LIST;
         } else {
             try {
-                return RdfUtils.read(file.getInputStream(),
-                        RdfUtils.getFormat(file.getContentType()));
+                RDFFormat rdfFormat;
+                try {
+                    rdfFormat = RdfUtils.getFormat(file.getContentType());
+                } catch (Exception ex) {
+                    // Use the file name.
+                    rdfFormat = RdfUtils.getFormat(
+                            new File(file.getOriginalFilename()));
+                }
+                return RdfUtils.read(file.getInputStream(), rdfFormat);
             } catch (IOException ex) {
                 throw new RdfException(ex);
             }

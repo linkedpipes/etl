@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.component.pipeline.Pipeline;
-import com.linkedpipes.etl.storage.component.pipeline.PipelineFacade;
+import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.unpacker.UnpackerFacade;
 import org.openrdf.model.Statement;
@@ -65,8 +65,8 @@ public class PipelineServlet {
     /**
      * Create a new pipeline and return a reference to it.
      *
-     * @param data
      * @param options
+     * @param pipeline
      * @param request
      * @param response
      */
@@ -74,24 +74,26 @@ public class PipelineServlet {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public void createPipeline(
-            @RequestParam(name = "pipeline", required = false)
-                    MultipartFile data,
-            @RequestParam(name = "options", required = false)
+            @RequestParam(value = "options", required = false)
                     MultipartFile options,
+            @RequestParam(value = "pipeline", required = false)
+                    MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
-        final Collection<Statement> dataRdf = RdfUtils.read(data);
         final Collection<Statement> optionsRdf = RdfUtils.read(options);
+        final Collection<Statement> pipelineRdf = RdfUtils.read(pipeline);
         //
-        final Pipeline pipeline = pipelines.createPipeline(dataRdf, optionsRdf);
-        RdfUtils.write(request, response, pipelines.getReferenceRdf(pipeline));
+        final Pipeline pipelineObject = pipelines.createPipeline(
+                pipelineRdf, optionsRdf);
+        RdfUtils.write(request, response,
+                pipelines.getReferenceRdf(pipelineObject));
     }
 
     /**
      * Update existing pipeline.
      *
      * @param iri
-     * @param data
+     * @param pipeline
      * @param request
      * @param response
      */
@@ -99,18 +101,18 @@ public class PipelineServlet {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public void updatePipeline(@RequestParam(name = "iri") String iri,
-            @RequestParam("pipeline") MultipartFile data,
+            @RequestParam(value = "pipeline") MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
-        final Collection<Statement> dataRdf = RdfUtils.read(data);
+        final Collection<Statement> pipelineRdf = RdfUtils.read(pipeline);
         //
-        final Pipeline pipeline = pipelines.getPipeline(iri);
+        final Pipeline pipelineObject = pipelines.getPipeline(iri);
         if (pipeline == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
-        pipelines.updatePipeline(pipeline, dataRdf);
+        pipelines.updatePipeline(pipelineObject, pipelineRdf);
     }
 
     /**
@@ -148,8 +150,7 @@ public class PipelineServlet {
             @RequestParam(name = "iri", required = false) String iri,
             @RequestParam(value = "options", required = false)
                     MultipartFile options,
-            @RequestParam(value = "pipeline", required = false)
-                    MultipartFile pipeline,
+            @RequestParam(value = "pipeline") MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         //
@@ -171,5 +172,30 @@ public class PipelineServlet {
         RdfUtils.write(request, response, statements);
     }
 
+    /**
+     * Given a pipeline update it so it corresponds to a pipeline of local
+     * instance. The given pipeline is also migrated to current version.
+     *
+     * @param options
+     * @param pipeline
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/localize", method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public void localizePipeline(
+            @RequestParam(value = "options", required = false)
+                    MultipartFile options,
+            @RequestParam(value = "pipeline") MultipartFile pipeline,
+            HttpServletRequest request, HttpServletResponse response)
+            throws BaseException {
+        //
+        final Collection<Statement> optionsRdf = RdfUtils.read(options);
+        Collection<Statement> pipelineRdf = RdfUtils.read(pipeline);
+        //
+        pipelineRdf = pipelines.localizePipeline(pipelineRdf, optionsRdf);
+        RdfUtils.write(request, response, pipelineRdf);
+    }
 
 }
