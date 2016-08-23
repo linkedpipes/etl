@@ -1,13 +1,14 @@
 package com.linkedpipes.plugin.extractor.local;
 
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -28,7 +29,7 @@ public class FilesFromLocal implements Component.Sequential {
     public void execute() throws LpException {
         final File source = new File(configuration.getPath());
         if (!source.exists()) {
-            throw exceptionFactory.invalidRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     FilesFromLocalVocabulary.HAS_PATH,
                     "Source path does not exists."
             );

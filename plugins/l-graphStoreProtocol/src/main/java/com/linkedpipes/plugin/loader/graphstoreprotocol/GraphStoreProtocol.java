@@ -68,7 +68,7 @@ public class GraphStoreProtocol implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getEndpoint() == null
                 || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     GraphStoreProtocolVocabulary.HAS_CRUD);
         }
         //

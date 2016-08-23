@@ -48,12 +48,12 @@ public final class HttpGet implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getUri() == null
                 || configuration.getUri().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
-                    HttpGetVocabulary.HAS_URI);
+            throw exceptionFactory.failure("Missing property: {}",
+                HttpGetVocabulary.HAS_URI);
         }
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     HttpGetVocabulary.HAS_NAME);
         }
         // TODO Do not use this, but be selective about certs we trust.
@@ -72,8 +72,8 @@ public final class HttpGet implements Component.Sequential {
         try {
             source = new URL(configuration.getUri());
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.invalidRdfProperty(
-                    HttpGetVocabulary.HAS_URI, "{}",
+            throw exceptionFactory.failure("Invalid property: {} on {}",
+                    HttpGetVocabulary.HAS_URI,
                     configuration.getUri(), ex);
         }
         // Prepare target destination.

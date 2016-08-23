@@ -50,12 +50,12 @@ public final class SparqlEndpoint implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getEndpoint() == null
                 || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     SparqlEndpointVocabulary.HAS_ENDPOINT);
         }
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     SparqlEndpointVocabulary.HAS_QUERY);
         }
         //

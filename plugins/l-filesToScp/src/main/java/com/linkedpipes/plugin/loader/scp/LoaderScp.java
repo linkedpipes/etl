@@ -1,24 +1,16 @@
 package com.linkedpipes.plugin.loader.scp;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.jcraft.jsch.*;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 /**
  *
@@ -54,19 +46,19 @@ public final class LoaderScp implements Component.Sequential {
         final int port = configuration.getPort();
         final String targetFile = configuration.getTargetDirectory();
         if (user == null || user.isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_USERNAME);
         }
         if (password == null || password.isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_PASSWORD);
         }
         if (host == null || host.isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_HOST);
         }
         if (targetFile == null || targetFile.isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_TARGET_DIRECTORY);
         }
         //

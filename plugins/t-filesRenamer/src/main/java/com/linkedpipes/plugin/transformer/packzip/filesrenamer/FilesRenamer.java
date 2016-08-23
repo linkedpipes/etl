@@ -35,9 +35,7 @@ public class FilesRenamer implements Component.Sequential {
         try {
             pattern = Pattern.compile(configuration.getPattern());
         } catch (PatternSyntaxException ex) {
-            throw exceptionFactory.invalidRdfProperty(
-                    "",
-                    "", ex);
+            throw exceptionFactory.failure("Invalid file pattern.", ex);
         }
         for (FilesDataUnit.Entry entry : inputFiles) {
             final String newName = pattern.matcher(entry.getFileName())

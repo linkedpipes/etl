@@ -1,26 +1,27 @@
 package com.linkedpipes.plugin.transformer.sparql.selectmulti;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.model.IRI;
+import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.impl.SimpleDataset;
 import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.TupleQueryResult;
 
 /**
  *
@@ -81,15 +82,9 @@ public final class SparqlSelectMulti implements Component.Sequential {
         for (Configuration configuration : configurations) {
             if (configuration.fileName == null
                     || configuration.fileName.isEmpty()) {
-                throw exceptionFactory.invalidRdfProperty(
+                throw exceptionFactory.failure("Missing property: {} on {}",
                         SparqlSelectMultiVocabulary.HAS_FILE_NAME,
-                        "Configuration resource: {}", configuration.iri);
-            }
-            if (configuration.fileName == null
-                    || configuration.fileName.isEmpty()) {
-                throw exceptionFactory.invalidRdfProperty(
-                        SparqlSelectMultiVocabulary.HAS_FILE_NAME,
-                        "Configuration resource: {}", configuration.iri);
+                        configuration.iri);
             }
             transform(configuration.query, configuration.fileName);
         }

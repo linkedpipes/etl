@@ -1,8 +1,16 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,19 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -88,12 +83,12 @@ public final class HttpGetFiles implements Component.Sequential {
             throws LpException {
         if (reference.getUri() == null
                 || reference.getUri().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     HttpGetFilesVocabulary.HAS_URI);
         }
         if (reference.getFileName() == null
                 || reference.getFileName().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     HttpGetFilesVocabulary.HAS_NAME);
         }
         LOG.info("Downloading: {} -> {}", reference.getUri(),
@@ -103,8 +98,8 @@ public final class HttpGetFiles implements Component.Sequential {
         try {
             source = new URL(reference.getUri());
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.invalidRdfProperty(
-                    HttpGetFilesVocabulary.HAS_URI, "{}",
+            throw exceptionFactory.failure("Invalid property: {} on {}",
+                    HttpGetFilesVocabulary.HAS_URI,
                     reference.getUri(), ex);
         }
         // Prepare target destination.

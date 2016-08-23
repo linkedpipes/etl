@@ -38,7 +38,7 @@ public final class PackZip implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     PackZipVocabulary.HAS_FILE_NAME);
         }
         //

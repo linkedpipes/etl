@@ -27,7 +27,7 @@ public final class SparqlAsk implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     SparqlAskVocabulary.HAS_SPARQL);
         }
         //

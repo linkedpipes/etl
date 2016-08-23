@@ -1,19 +1,20 @@
 package com.linkedpipes.plugin.transformer.filesToStatements;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import java.io.IOException;
-import org.openrdf.model.IRI;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Read content of files and save it in form of literals.
@@ -48,9 +49,8 @@ public final class FilesToStatements implements Component.Sequential {
             predicate = valueFactory.createIRI(
                     configuration.getPredicate());
         } catch (Throwable t) {
-            throw exceptionFactory.invalidRdfProperty(
-                    FilesToStatementsVocabulary.PREDICATE,
-                    "Invalid predicate.", t);
+            throw exceptionFactory.failure("Invalid predicate: {}",
+                    FilesToStatementsVocabulary.PREDICATE, t);
         }
         //
         progressReport.start(inputFiles.size() + 1);

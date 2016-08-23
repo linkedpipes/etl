@@ -1,13 +1,14 @@
 package com.linkedpipes.plugin.transformer.textHolder;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -28,7 +29,7 @@ public final class TextHolder implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     TextHolderVocabulary.HAS_FILE_NAME);
         }
         //

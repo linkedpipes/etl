@@ -40,7 +40,7 @@ public final class SparqlConstruct implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.missingRdfProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     SparqlConstructVocabulary.HAS_QUERY);
         }
         // We always perform inserts.

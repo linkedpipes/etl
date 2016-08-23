@@ -28,18 +28,4 @@ public class MockedExceptionFactory implements ExceptionFactory {
         return new MockedLpException("failure");
     }
 
-    @Override
-    public LpException invalidRdfProperty(
-            String propertyIri, String message, Object... args) {
-        LOG.error("Invalid configuration property: {}", propertyIri);
-        return new MockedLpException("invalidRdfProperty");
-    }
-
-    @Override
-    public LpException missingRdfProperty(
-            String propertyIri) {
-        LOG.error("Missing configuration property: {}", propertyIri);
-        return new MockedLpException("missingRdfProperty");
-    }
-
 }
