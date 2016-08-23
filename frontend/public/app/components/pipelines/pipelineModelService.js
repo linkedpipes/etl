@@ -543,9 +543,8 @@ define([], function () {
         };
 
         service.getComponentConfigurationUri = function (component) {
-            if (component['http://linkedpipes.com/ontology/configurationGraph']) {
-                return component['http://linkedpipes.com/ontology/configurationGraph']['@id'];
-            }
+            return jsonld.getReference(component,
+                'http://linkedpipes.com/ontology/configurationGraph');
         };
 
         service.getComponentConfigurationGraph = function (model, component) {
