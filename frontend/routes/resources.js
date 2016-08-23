@@ -76,7 +76,7 @@ gApiRouter.get('/pipelines', function (request, response) {
  * @param request
  * @param response
  */
-function postImportPipeline(request, response) {
+function postImportPipeline(request, response, url) {
     var form = new gMultiparty.Form();
     var importOptions = {
         'content': '',
@@ -93,7 +93,7 @@ function postImportPipeline(request, response) {
             part.resume();
         }
     });
-    form.on('close', function (part) {
+    form.on('close', function () {
         if (importOptions.content === '') {
             importOptions.content = JSON.stringify({
                 '@id': 'http://localhost/options',
@@ -104,8 +104,7 @@ function postImportPipeline(request, response) {
         }
         // Get pipeline.
         gRequest.get({
-            'url': gConfiguration.storage.url + '/api/v1/pipelines?iri='
-            + encodeURI(request.query.pipeline),
+            'url': request.query.pipeline,
             'headers': {
                 'Accept': 'application/ld+json'
             }
@@ -123,7 +122,7 @@ function postImportPipeline(request, response) {
             }
             // We got options and pipeline, create a pipeline.
             var options = {
-                'url': gConfiguration.storage.url + '/api/v1/pipelines',
+                'url': url,
                 'headers': {
                     'Accept': 'application/ld+json'
                 },
@@ -150,21 +149,29 @@ function postImportPipeline(request, response) {
     form.parse(request);
 }
 
-
 gApiRouter.post('/pipelines', function (request, response) {
-    // There are two options now. Either the pipeline is stored
-    // in the data stream or is given as a link (to copy from).
+    var url = gConfiguration.storage.url + '/api/v1/pipelines';
     if (request.query.pipeline) {
         // We need to parse the body, get the pipeline and append
         // the pipeline to the body.
-        postImportPipeline(request, response);
+        postImportPipeline(request, response, url);
     } else {
         // We can just pipe the content to the storage component.
-        var url = gConfiguration.storage.url + '/api/v1/pipelines';
-        gRequest.post(url, {
-            'headers' : request.headers,
-            'form': request.body
-        }).pipe(response);
+        request.pipe(gRequest.post(url)).pipe(response);
+    }
+});
+
+
+// TODO This is more part of the API.
+gApiRouter.post('/localize', function (request, response) {
+    var url = gConfiguration.storage.url + '/api/v1/pipelines/localize';
+    if (request.query.pipeline) {
+        // We need to parse the body, get the pipeline and append
+        // the pipeline to the body.
+        postImportPipeline(request, response, url);
+    } else {
+        // We can just pipe the content to the storage component.
+        request.pipe(gRequest.post(url)).pipe(response);
     }
 });
 

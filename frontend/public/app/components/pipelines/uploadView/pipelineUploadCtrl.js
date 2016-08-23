@@ -4,42 +4,7 @@ define([], function () {
         $scope.fileReady = false;
         $scope.uploading = false;
         $scope.log = '';
-        $scope.progress = 0;
         $scope.type = 'file';
-
-        /**
-         * Upload pipeline definition from user given file to the pipeline with given URI.
-         *
-         * @param uri
-         */
-        var updateFromFile = function (uri) {
-            $scope.uploading = true;
-            var file = $scope.file;
-
-            // We sent the file in the exact form we have recieved it.
-            file.upload = Upload.http({
-                url: uri,
-                method: 'PUT',
-                data: file
-            });
-
-            file.upload.then(function (response) {
-                console.log(response);
-                $timeout(function () {
-                    $location.path('/pipelines/edit/canvas').search({'pipeline': uri});
-                });
-            }, function (response) {
-                statusService.postFailed({
-                    'title': "Can't upload definition to the created pipeline.",
-                    'response': response
-                });
-            }, function(event) {
-                console.log(event);
-                var percentage = parseInt(100.0 * event.loaded / event.total);
-                console.log(percentage);
-                $scope.progress = percentage;
-            });
-        };
 
         /**
          * Create a new pipeline with given ID.
@@ -48,12 +13,35 @@ define([], function () {
          * @param onSucess Called if pipeline is sucesfully created, as parameter pipeline URI is given.
          */
         var importFile = function () {
-            var id = 'created-' + (new Date()).getTime();
-            $http.post('/resources/pipelines/' + id).then(function (response) {
-                updateFromFile(response.data.uri);
+            $scope.uploading = true;
+            var data = new FormData();
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/local' : 'false'
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            data.append('pipeline', $scope.file);
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            };
+            var uri = '/resources/pipelines';
+            $http.post(uri, data, config).then(function(response) {
+                $location.path('/pipelines/edit/canvas').search({
+                    'pipeline': response.data[0]['@graph'][0]['@id']
+                });
             }, function (response) {
+                console.log('failed:', response);
                 statusService.postFailed({
-                    'title': "Can't import the pipeline.",
+                    'title': "Can't copy pipeline.",
                     'response': response
                 });
             });
@@ -65,10 +53,30 @@ define([], function () {
          * @returns
          */
         var importUrl = function() {
-            var id = 'created-' + (new Date()).getTime();
-            var uri = '/resources/pipelines/' + id + '?pipeline=' + $scope.url;
-            $http.post(uri).then(function (response) {
-                $location.path('/pipelines/edit/canvas').search({'pipeline': response.data.uri});
+            var data = new FormData();
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/local' : 'false'
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            };
+            var uri = '/resources/pipelines?pipeline=' + $scope.url;
+            $http.post(uri, data, config).then( function(response) {
+            // $http.post(uri).then(function (response) {
+                $location.path('/pipelines/edit/canvas').search({
+                    'pipeline':  response.data[0]['@graph'][0]['@id']
+                });
             }, function (response) {
                 console.log('failed:', response);
                 statusService.postFailed({
@@ -76,7 +84,6 @@ define([], function () {
                     'response': response
                 });
             });
-
         };
 
         $scope.$watch('file', function () {
@@ -95,11 +102,12 @@ define([], function () {
         });
 
         $scope.onUpload = function() {
+            $scope.uploading = true;
             if ($scope.type === 'file') {
                 if (!$scope.fileReady) {
                     return;
                 }
-                importFile(updateFromFile);
+                importFile();
             } else if ($scope.type === 'url') {
                 importUrl();
             } else {

@@ -23,18 +23,6 @@ gApiRouter.get('/info', function (request, response) {
     });
 });
 
-gApiRouter.get('/proxy', function (request, response) {
-    gRequest.get(request.query.url).on('error', function (error) {
-        response.status(503).json({
-            'exception': {
-                'errorMessage': '',
-                'systemMessage': 'Executor-monitor is offline.',
-                'userMessage': 'Backend is offline.',
-                'errorCode': 'CONNECTION_REFUSED'
-            }});
-    }).pipe(response);
-});
-
 // Access to components.
 
 gApiRouter.get('/components/:type', function (request, response) {

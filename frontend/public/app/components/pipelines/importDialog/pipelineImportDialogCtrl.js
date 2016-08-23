@@ -1,6 +1,6 @@
 define([], function () {
     function controler($scope, $mdDialog, $http,
-            statusService, jsonldService) {
+                       statusService, jsonldService) {
 
         // Fragment sources.
         $scope.url = '';
@@ -15,7 +15,7 @@ define([], function () {
 
         var template = {
             'iri': {
-                '$property': 'http://linkedpipes.com/ontology/pipeline'
+                '$property': '@id'
             },
             'label': {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
@@ -26,9 +26,29 @@ define([], function () {
         /**
          * Load and return pipeline from given IRI.
          */
-        function loadFromIri(iri) {
+        function loadFromIri(iri, fromLocal) {
             $scope.importing = true;
-            $http.get(iri).then(function (response) {
+            //
+            var data = new FormData();
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/local': fromLocal
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            };
+            //
+            $http.post(iri, data, config).then(function (response) {
                 $scope.importing = false;
                 var pipeline = response.data;
                 $mdDialog.hide({
@@ -45,6 +65,7 @@ define([], function () {
 
         /**
          * Import from local file.
+         * TODO: Also use server to update the pipeline.
          */
         function importFile() {
             $scope.importing = true;
@@ -72,10 +93,11 @@ define([], function () {
                 'data': {
                     'property': '@type',
                     'operation': 'in',
-                    'value': 'http://etl.linkedpipes.com/ontology/Reference'
+                    'value': 'http://linkedpipes.com/ontology/Pipeline'
                 }
             },
-            'decorator': function () {},
+            'decorator': function () {
+            },
             'url': '/resources/pipelines'
         });
 
@@ -114,7 +136,6 @@ define([], function () {
 
         };
 
-
         /**
          * Load list of local pipelines on the first opening of pipelines
          * tab.
@@ -139,8 +160,9 @@ define([], function () {
         $scope.onImport = function () {
             if ($scope.activeTab === 0) {
                 // Import from IRI.
-                loadFromIri('/api/v1/proxy?url=' + $scope.url);
+                loadFromIri('/resources/localize?pipeline=' + $scope.url, false);
             } else if ($scope.activeTab === 1) {
+                // Import from a file.
                 importFile();
             } else if ($scope.activeTab === 2) {
                 // Import from IRI on local machine.
@@ -150,7 +172,20 @@ define([], function () {
                         'title': "No pipeline selected for import."
                     });
                 } else {
-                    loadFromIri($scope.pipeline);
+                    // Just get the local pipeline and return it.
+                    $http.get($scope.pipeline).then(function (response) {
+                        $scope.importing = false;
+                        var pipeline = response.data;
+                        $mdDialog.hide({
+                            'pipeline': pipeline
+                        });
+                    }, function (response) {
+                        $scope.importing = false;
+                        statusService.getFailed({
+                            'title': "Can't load the pipeline.",
+                            'response': response
+                        });
+                    });
                 }
             } else {
                 console.error('Invalid active tab: ', $scope.activeTab);
@@ -162,6 +197,7 @@ define([], function () {
         };
 
     }
+
     controler.$inject = ['$scope', '$mdDialog', '$http',
         'services.status', 'services.jsonld'];
 
