@@ -27,10 +27,10 @@ public final class FilesToRdf implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(FilesToRdf.class);
 
-    @Component.OutputPort(id = "InputFiles")
+    @Component.InputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.OutputPort(id = "OutputRdf")
     public WritableGraphListDataUnit outputRdf;
 
     @Component.Configuration
