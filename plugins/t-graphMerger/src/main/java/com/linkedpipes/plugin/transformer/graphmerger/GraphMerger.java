@@ -28,7 +28,7 @@ public final class GraphMerger implements Component.Sequential {
     @Component.InputPort(id = "InputRdf")
     public GraphListDataUnit inputRdf;
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.OutputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Inject
