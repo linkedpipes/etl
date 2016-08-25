@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.unpackzip;
  *
  * @author Škoda Petr
  */
-public class UnpackZipVocabulary {
+public final class UnpackZipVocabulary {
 
     private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-unpackZip#";
 

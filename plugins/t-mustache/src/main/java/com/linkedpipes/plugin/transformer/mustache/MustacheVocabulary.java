@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.mustache;
  *
  * @author Petr Škoda
  */
-final class MustacheVocabulary {
+public final class MustacheVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/t-mustache#";

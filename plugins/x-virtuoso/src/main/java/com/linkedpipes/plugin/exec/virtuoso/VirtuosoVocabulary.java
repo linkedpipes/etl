@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.exec.virtuoso;
  *
  * @author Škoda Petr
  */
-public class VirtuosoVocabulary {
+public final class VirtuosoVocabulary {
 
     private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/x-virtuoso#";
 

@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.filesFilter;
  *
  * @author Petr Škoda
  */
-final class FilesFilterVocabulary {
+public final class FilesFilterVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/t-filesFilter#";

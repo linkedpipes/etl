@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.loader.graphstoreprotocol;
  *
  * @author Petr Škoda
  */
-final class GraphStoreProtocolVocabulary {
+public final class GraphStoreProtocolVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#";

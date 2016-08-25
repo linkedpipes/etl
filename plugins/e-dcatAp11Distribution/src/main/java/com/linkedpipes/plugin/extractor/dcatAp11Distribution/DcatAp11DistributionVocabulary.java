@@ -4,7 +4,7 @@ import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
-final class DcatAp11DistributionVocabulary {
+public final class DcatAp11DistributionVocabulary {
 
     public static final String SCHEMA = "http://schema.org/";
 
