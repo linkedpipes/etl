@@ -16,34 +16,7 @@ var gModule = {
 };
 module.exports = gModule;
 
-/**
- *
- * @param definition
- * @return String as a pipeline label.
- */
-var getPipelineLabel = function (id, definition) {
-
-    var findLabels = function (resource) {
-        if (!resource['@type']) {
-            return;
-        }
-        var type = resource['@type'];
-        if (type.indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
-            var value = resource['http://www.w3.org/2004/02/skos/core#prefLabel'];
-            if (!value) {
-                // Pipeline does not have a name.
-                return resource['@id'];
-            }
-            // Label can be save as a direct value or in a array
-            // under the "@value" element.
-            if (value[0]['@value']) {
-                return value[0]['@value'];
-            } else {
-                return value;
-            }
-        }
-    };
-
+var getPipelineDefinition = function(definition) {
     var graphList;
     if (definition['@graph']) {
         graphList = definition['@graph'];
@@ -51,27 +24,43 @@ var getPipelineLabel = function (id, definition) {
         graphList = definition;
     }
 
-    var label;
     for (var graphIndex in graphList) {
         var graph = graphList[graphIndex];
         if (graph['@graph']) {
             // Search for pipeline object and label.
-            graph['@graph'].forEach(function (resource) {
-                if (!label) {
-                    label = findLabels(resource);
+            for (var index in graph['@graph']) {
+                var resource = graph['@graph'][index];
+                if (!resource['@type']) {
+                    continue;
                 }
-            });
-        }
-        // Break if we found the label.
-        if (label) {
-            break;
+                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Pipeline') !== -1) {
+                    return resource;
+                }
+            }
         }
     }
 
-    if (label) {
-        return label;
+    return undefined;
+}
+
+/**
+ *
+ * @param id
+ * @param resource Output of getPipelineDefinition.
+ * @returns Pipeline label to show.
+ */
+var getPipelineLabel = function (id, resource) {
+    var value = resource['http://www.w3.org/2004/02/skos/core#prefLabel'];
+    if (!value) {
+        // Pipeline does not have a name.
+        return resource['@id'];
+    }
+    // Label can be save as a direct value or in a array
+    // under the "@value" element.
+    if (value[0]['@value']) {
+        return value[0]['@value'];
     } else {
-        return id;
+        return value;
     }
 };
 
@@ -92,6 +81,9 @@ var insertPipeline = function (id, definition) {
             return;
         }
     }
+
+    var pipelineDefinition = getPipelineDefinition(definition);
+
     var pipelineIri = gConfiguration.storage.domain + '/resources/pipelines/' + id;
     var pipelineRecord = {
         '@graph': [{
@@ -101,7 +93,10 @@ var insertPipeline = function (id, definition) {
                 ],
                 'http://linkedpipes.com/ontology/pipeline': pipelineIri,
                 'http://linkedpipes.com/ontology/id': id,
-                'http://www.w3.org/2004/02/skos/core#prefLabel': getPipelineLabel(id, definition)
+                'http://www.w3.org/2004/02/skos/core#prefLabel':
+                    getPipelineLabel(id, pipelineDefinition),
+                'http://etl.linkedpipes.com/ontrology/tag' :
+                    pipelineDefinition['http://etl.linkedpipes.com/ontrology/tag']
             }],
         '@id': pipelineIri + '/graph'
     };
@@ -408,9 +403,12 @@ gModule.update = function (id, content, updateUri) {
     }
     gFs.writeFile(fileName, JSON.stringify(content, null, 2));
     // Update definition ID, pipeline record has predefined structure.
+    var pipelineDefinition = getPipelineDefinition(content);
     var pipeline = gModule.map[id].pipelineRecord;
     pipeline['@graph'][0]['http://www.w3.org/2004/02/skos/core#prefLabel']
-            = getPipelineLabel(id, content);
+            = getPipelineLabel(id, pipelineDefinition);
+    pipeline['@graph'][0]['http://etl.linkedpipes.com/ontrology/tag']
+            = pipelineDefinition['http://etl.linkedpipes.com/ontrology/tag'];
     // Update preferences.
     var pipelineIri = gConfiguration.storage.domain +
             '/resources/pipelines/' + id;

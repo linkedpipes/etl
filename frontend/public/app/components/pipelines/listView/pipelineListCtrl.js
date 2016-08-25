@@ -11,6 +11,10 @@ define([], function () {
             },
             'label': {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
+            },
+            'tags' : {
+                '$property': 'http://etl.linkedpipes.com/ontrology/tag',
+                '$type' : 'array'
             }
         };
 
@@ -32,7 +36,19 @@ define([], function () {
                     'value': 'http://etl.linkedpipes.com/ontology/Deleted'
                 }
             },
-            'decorator': function () {},
+            'decorator': function (item) {
+                if (!item['tags']) {
+                    item['tags'] = [];
+                    item['searchValue'] = '';
+                } else {
+                    var search = '';
+                    item['tags'].forEach(function (tag) {
+                        search += ' ' + tag.toLowerCase();
+                    });
+                    item['searchValue'] = search;
+                }
+                item['show'] = true;
+            },
             'url': '/resources/pipelines'
         });
 
@@ -133,6 +149,25 @@ define([], function () {
                 $scope.repository.load();
             });
         };
+
+        $scope.$watch("search", function (newValue, oldValue) {
+                if (newValue === oldValue) {
+                    return;
+                }
+                var filters = newValue.toLowerCase().split(' ');
+                $scope.repository.data.forEach(function (item) {
+                    for (var index in filters) {
+                        filter = filters[index];
+                        if (item['searchValue'].indexOf(filter) === -1) {
+                            item['show'] = false;
+                            return;
+                        }
+                    }
+                    item['show'] = true;
+                    // item['show'] = item['searchValue'].indexOf(filter) !== -1;
+                });
+            }
+        );
 
         var initialize = function () {
             $scope.repository.load(function () { },
