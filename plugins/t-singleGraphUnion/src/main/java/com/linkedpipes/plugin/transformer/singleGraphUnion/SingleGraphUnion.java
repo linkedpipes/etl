@@ -21,7 +21,7 @@ public class SingleGraphUnion implements Component.Sequential {
     @Component.InputPort(id = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.OutputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Override
