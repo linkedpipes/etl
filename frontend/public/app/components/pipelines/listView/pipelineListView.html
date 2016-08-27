@@ -6,11 +6,20 @@
                 <img src="app/components/pipelines/listView/assets/img/loading.gif" class="center-block" title="Loading..."
                      style="padding-top: 5em"/>
             </div>
-            <div ng-show="repository.loaded" style="margin: 2em 2em 0em 2em;">
-                <md-input-container class="md-block" style="maring: 0em 0em 0em 0em;">
-                    <label>Search</label>
-                    <input ng-model="search">
+            <div ng-show="repository.loaded" style="margin: 1.2em 2em 0em 1em;">
+                <md-input-container  class="md-block" style="margin: 0em 0em 0em 0em;">
+                    <label>Label search</label>
+                    <input ng-model="searchLabel">
                 </md-input-container>
+                <md-chips ng-model="searchTags" md-require-match="true" md-on-add="chipsFilter()" md-on-remove="chipsFilter()" md-autocomplete-snap>
+                    <md-autocomplete
+                            md-search-text="search.tags.searchText"
+                            md-items="item in search.tags.querySearch(search.tags.searchText)"
+                            placeholder="Search for a tags.">
+                        <span md-highlight-text="search.tags.searchText">{{item}}</span>
+                    </md-autocomplete>
+                    <md-chip-template>{{$chip}}</md-chip-template>
+                </md-chips>
             </div>
             <md-list ng-show="repository.loaded">
                 <md-list-item ng-repeat="item in repository.data" ng-click="onPipeline(item)" class="md-1-line" ng-show="item.show">
