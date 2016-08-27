@@ -352,6 +352,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesToRdfGraph</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesToRdfGraph/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-graphMerger</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-graphMerger/</outputDirectory>
@@ -610,6 +616,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-filesToRdf/"/>
                                         <copy todir="${deploy.directory}/components/t-filesToRdf/">
                                             <fileset dir="${plugins.directory}/t-filesToRdf/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesToRdfGraph/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesToRdfGraph/">
+                                            <fileset dir="${plugins.directory}/t-filesToRdfGraph/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
