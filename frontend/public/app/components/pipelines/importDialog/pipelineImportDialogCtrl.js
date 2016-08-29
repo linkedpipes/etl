@@ -50,9 +50,8 @@ define([], function () {
             //
             $http.post(iri, data, config).then(function (response) {
                 $scope.importing = false;
-                var pipeline = response.data;
                 $mdDialog.hide({
-                    'pipeline': pipeline
+                    'pipeline': response.data
                 });
             }, function (response) {
                 $scope.importing = false;
@@ -68,23 +67,43 @@ define([], function () {
          * TODO: Also use server to update the pipeline.
          */
         function importFile() {
-            $scope.importing = true;
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var fragment;
-                try {
-                    fragment = JSON.parse(reader.result);
-                } catch (error) {
-                    statusService.getFailed({
-                        'title': "Given file is not a valid JSON."
-                    });
-                    $mdDialog.cancel();
-                }
-                $mdDialog.hide({
-                    'pipeline': fragment
-                });
+            // We need to localize (update) the given pipeline file.
+            var data = new FormData();
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/local': false
             };
-            reader.readAsText($scope.file, 'UTF-8');
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            // data.append('pipeline', new Blob([reader.result], {
+            //     type: "application/ld+json"
+            // }), $scope.file.name);
+            data.append('pipeline', $scope.file);
+
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            };
+
+            $http.post('/resources/localize', data, config).then(
+                function (response) {
+                    $scope.importing = false;
+                    $mdDialog.hide({
+                        'pipeline': response.data
+                    });
+                }, function (response) {
+                    $scope.importing = false;
+                    statusService.getFailed({
+                        'title': "Can't load the pipeline.",
+                        'response': response
+                    });
+                });
         }
 
         $scope.repository = jsonldService.createRepository({
