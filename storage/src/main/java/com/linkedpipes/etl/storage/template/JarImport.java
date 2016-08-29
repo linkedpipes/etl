@@ -111,7 +111,7 @@ final class JarImport {
                 RDFFormat.TRIG, definitionRdf);
         // Save RDF configurations.
         final Resource configIri = SimpleValueFactory.getInstance().createIRI(
-                resource.stringValue() + "/configuration");
+                resource.stringValue() + "/configurationGraph");
         RdfUtils.write(new File(destination, Template.CONFIG_FILE),
                 RDFFormat.TRIG, readAsRdf(jarInfo, jarInfo.configEntry,
                         configIri));
