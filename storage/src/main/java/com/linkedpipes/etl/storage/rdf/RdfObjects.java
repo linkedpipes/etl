@@ -83,7 +83,10 @@ public class RdfObjects {
             if (objects.size() == 1) {
                 return objects.get(0);
             } else {
-                throw new RuntimeException("Invalid number of properties.");
+                throw new RuntimeException("Invalid number (" + objects.size()
+                        + ") of properties "
+                        + property.stringValue() + " on "
+                        + resource.stringValue());
             }
         }
 
