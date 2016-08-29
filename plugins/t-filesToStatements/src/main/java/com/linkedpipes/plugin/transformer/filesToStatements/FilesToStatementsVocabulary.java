@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.filesToStatements;
  *
  * @author Škoda Petr
  */
-final class FilesToStatementsVocabulary {
+public final class FilesToStatementsVocabulary {
 
     private FilesToStatementsVocabulary() {
     }

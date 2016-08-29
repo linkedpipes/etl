@@ -54,6 +54,8 @@ public class Pipeline {
          */
         private final List<Value> labels = new ArrayList<>(2);
 
+        private final List<Value> tags = new ArrayList<>(4);
+
         /**
          * List of used components and number of usage.
          */
@@ -74,6 +76,10 @@ public class Pipeline {
             return Collections.unmodifiableList(labels);
         }
 
+        public List<Value> getTags() {
+            return tags;
+        }
+
         public Map<String, Integer> getComponentUsage() {
             return componentUsage;
         }
@@ -92,6 +98,9 @@ public class Pipeline {
                     break;
                 case "http://www.w3.org/2004/02/skos/core#prefLabel":
                     labels.add(value);
+                    break;
+                case "http://etl.linkedpipes.com/ontrology/tag":
+                    tags.add(value);
                     break;
                 case "http://linkedpipes.com/ontology/template":
                     final String template = value.stringValue();

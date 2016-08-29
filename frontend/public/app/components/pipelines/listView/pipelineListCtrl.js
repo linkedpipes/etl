@@ -8,7 +8,30 @@ define([], function () {
             },
             'label': {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
+            },
+            'tags': {
+                '$property': 'http://etl.linkedpipes.com/ontrology/tag',
+                '$type': 'array'
             }
+        };
+
+        $scope.searchLabel = '';
+        $scope.searchTags = [];
+
+        $scope.search = {
+            'tags': {
+                'searchText': '',
+                // List of al tags, for filtering we use integers as tag
+                // indexes instead of strings. This value is also use
+                // to help use with filling in tags.
+                'all': []
+            },
+        };
+
+        $scope.search.tags.querySearch = function (query) {
+            return $scope.search.tags.all.filter(function (item) {
+                return item.indexOf(query) !== -1;
+            });
         };
 
         $scope.info = {
@@ -29,7 +52,30 @@ define([], function () {
                     'value': 'http://linkedpipes.com/ontology/Tombstone'
                 }
             },
-            'decorator': function () {
+            'decorator': function (item) {
+                item['searchLabel'] = item['label'].toLowerCase();
+                // Show by default.
+                item['show'] = true;
+                item['filterLabel'] = true;
+                item['filterTags'] = true;
+                // The rest is only for pipelines with tags.
+                if (!item['tags'] || item['tags'].length == 0) {
+                    item['tags'] = [];
+                    return;
+                }
+                // Get indexes of our tags.
+                // var tagIndexes = [];
+                item['tags'].forEach(function (tag) {
+                    var tagIndex = $scope.search.tags.all.indexOf(tag);
+                    if (tagIndex === -1) {
+                        // tagIndex = $scope.search.tags.all.length;
+                        $scope.search.tags.all.push(tag);
+                    }
+                    // tagIndexes.push(tagIndex);
+                });
+                // We use integers instead of strings.
+                // tagIndexes.sort();
+                // item['searchTags'] = tagIndexes;
             },
             'url': '/resources/pipelines'
         });
@@ -170,6 +216,52 @@ define([], function () {
             });
         };
 
+        $scope.$watch('searchLabel', function (newValue, oldValue) {
+            if (newValue === oldValue) {
+                return;
+            }
+            // Special care for empty query.
+            if (newValue === '') {
+                $scope.repository.data.forEach(function (item) {
+                    item['filterLabel'] = true;
+                    item['show'] = item['filterLabel'] && item['filterTags'];
+                });
+                return;
+            }
+            //
+            var query = newValue.toLowerCase();
+            $scope.repository.data.forEach(function (item) {
+                item['filterLabel'] = item['searchLabel'].indexOf(query) !== -1;
+                item['show'] = item['filterLabel'] && item['filterTags'];
+            });
+        });
+
+        $scope.chipsFilter = function () {
+            // Special for no tags.
+            if ($scope.searchTags.length === 0) {
+                $scope.repository.data.forEach(function (item) {
+                    item['filterTags'] = true;
+                    item['show'] = item['filterLabel'] && item['filterTags'];
+                });
+                return;
+            }
+            $scope.repository.data.forEach(function (item) {
+                if (item.tags.length < $scope.searchTags.length) {
+                    item['filterTags'] = false;
+                    item['show'] = item['filterLabel'] && item['filterTags'];
+                    return;
+                }
+                item['filterTags'] = true;
+                for (var index in $scope.searchTags) {
+                    if (item.tags.indexOf($scope.searchTags[index]) === -1) {
+                        item['filterTags'] = false;
+                        break;
+                    }
+                }
+                item['show'] = item['filterLabel'] && item['filterTags'];
+            });
+        };
+
         var initialize = function () {
             $scope.repository.load(function () {
                 },
@@ -179,7 +271,6 @@ define([], function () {
                         'response': response
                     });
                 });
-            console.log($scope.repository);
             refreshService.set(function () {
                 // TODO Enable update once the server has
                 // proper support of the JSON-LD repository.

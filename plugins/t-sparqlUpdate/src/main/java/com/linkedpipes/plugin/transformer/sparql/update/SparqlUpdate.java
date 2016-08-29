@@ -26,7 +26,7 @@ public final class SparqlUpdate implements Component.Sequential {
     @Component.InputPort(id = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.OutputPort(id = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration

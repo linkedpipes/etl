@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.xslt;
  *
  * @author Škoda Petr
  */
-public class XsltVocabulary {
+public final class XsltVocabulary {
 
     private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-xslt#";
 

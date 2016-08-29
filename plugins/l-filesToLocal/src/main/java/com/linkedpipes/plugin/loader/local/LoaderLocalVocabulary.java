@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.loader.local;
  *
  * @author Petr Škoda
  */
-final class LoaderLocalVocabulary {
+public final class LoaderLocalVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/l-filesToLocal#";

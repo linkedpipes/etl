@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.textHolder;
  *
  * @author Škoda Petr
  */
-final class TextHolderVocabulary {
+public final class TextHolderVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/e-textHolder#";

@@ -170,6 +170,12 @@ class PipelineManager {
             referenceRdf.add(vf.createStatement(pipelineIri, SKOS.PREF_LABEL,
                     label, pipelineIri));
         }
+        final IRI tagIri = vf.createIRI(
+                "http://etl.linkedpipes.com/ontrology/tag");
+        for (Value tag : pipeline.getInfo().getTags()) {
+            referenceRdf.add(vf.createStatement(pipelineIri, tagIri,
+                    tag, pipelineIri));
+        }
         //
         pipeline.setReferenceRdf(referenceRdf);
     }

@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.rdftofile;
  *
  * @author Škoda Petr
  */
-final class RdfToFileVocabulary {
+public final class RdfToFileVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/t-rdfToFile#";

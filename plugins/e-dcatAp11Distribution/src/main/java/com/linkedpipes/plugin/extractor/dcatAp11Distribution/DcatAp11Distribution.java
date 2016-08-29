@@ -1,22 +1,21 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Distribution;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.Component.Sequential;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.extractor.dcatAp11Distribution.DcatAp11DistributionConfig.LocalizedString;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.Component.Sequential;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.*;
+import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.FOAF;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -26,6 +25,9 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DcatAp11Distribution implements Sequential {
 
@@ -282,9 +284,15 @@ public class DcatAp11Distribution implements Sequential {
      * @param bindingName Name of property to return.
      * @return
      */
-    private String querySingleResult(final String queryAsString, String bindingName) {
-        LOG.info("querySingleResult: {}", queryAsString);
-        return Repositories.tupleQuery(inputDataset.getRepository(), queryAsString, (result) -> {
+    private String querySingleResult(final String queryAsString, String bindingName) throws LpException{
+        return inputDataset.execute((connection) -> {
+            final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
+            final SimpleDataset dataset = new SimpleDataset();
+            dataset.addDefaultGraph(inputDataset.getGraph());
+            preparedQuery.setDataset(dataset);
+            //
+            final TupleQueryResult result = preparedQuery.evaluate();
+            //
             if (!result.hasNext()) {
                 return null;
             }

@@ -57,26 +57,26 @@ define(['jquery'], function (jQuery) {
     };
 
     /**
+     * Can be used to get non referenced value.
+     */
+    var getValue = function (value) {
+        if (typeof value['@id'] !== 'undefined') {
+            // Represent an IRI.
+            return value['@id'];
+        } else if (typeof value['@value'] !== 'undefined') {
+            // TODO: We can try to use @type here to parse the value.
+            return value['@value'];
+        } else {
+            // Simple value, stored directly as value.
+            return value;
+        }
+    };
+
+    /**
      * Convert given object (value of a property) into a value
      * usable in JSON.
      */
     var convertValue = function (value) {
-
-        /**
-         * Can be used to get no n referenced value.
-         */
-        var getValue = function (value) {
-            if (typeof value['@id'] !== 'undefined') {
-                // Represent an IRI.
-                return value['@id'];
-            } else if (typeof value['@value'] !== 'undefined') {
-                // TODO: We can try to use @type here to parse the value.
-                return value['@value'];
-            } else {
-                // Simple value, stored directly as value.
-                return value;
-            }
-        };
 
         var result;
         if (jQuery.isArray(value)) {
@@ -96,6 +96,27 @@ define(['jquery'], function (jQuery) {
         }
         return result;
     };
+
+    /**
+     * Convert given object (array) into a array object usable in JSON.
+     */
+    var convertArray = function (value) {
+        if (jQuery.isArray(value)) {
+            if (value.length === 0) {
+                return [];
+            } else if (value.length === 1) {
+                return [getValue(value[0])];
+            } else {
+                var result = [];
+                for (var itemIndex in value) {
+                    result.push(getValue(value[itemIndex]));
+                }
+                return result;
+            }
+        } else {
+            return [getValue(value)];
+        }
+    }
 
     /**
      * Find and return resource in given graph with given IRI.
@@ -161,6 +182,11 @@ define(['jquery'], function (jQuery) {
                         templateItem);
             } else if (templateItem['$type'] === 'string') {
                 var value = convertString(propertyValue);
+                if (typeof value !== 'undefined') {
+                    result[key] = value;
+                }
+            } else if (templateItem['$type'] === 'array') {
+                var value = convertArray(propertyValue);
                 if (typeof value !== 'undefined') {
                     result[key] = value;
                 }
@@ -392,6 +418,51 @@ define(['jquery'], function (jQuery) {
             }
         }
     };
+
+    jsonldService.getValues = function (object, property) {
+        var value = object[property];
+        if (value === undefined) {
+            return [];
+        }
+        if (jQuery.isArray(value)) {
+            var result = [];
+            value.forEach(function (item) {
+                if (typeof (item['@value']) !== 'undefined') {
+                    return result.push(item['@value']);
+                } else {
+                    return result.push(value);
+                }
+            });
+            return result;
+        } else {
+            if (typeof (value['@value']) !== 'undefined') {
+                return [value['@value']];
+            } else {
+                return [value];
+            }
+        }
+    }
+
+    jsonldService.setValues = function (object, property, type, values) {
+        if (!values || values.length === 0) {
+            delete object[property];
+            return;
+        }
+        var value = [];
+        values.forEach(function (item) {
+            if (type === undefined) {
+                value.push({
+                    '@value': item,
+                });
+            } else {
+                value.push({
+                    '@value': item,
+                    '@type': type
+                });
+            }
+        });
+        object[property] = value;
+    }
 
     jsonldService.getBoolean = function (object, property) {
         var value = jsonldService.getValue(object, property);

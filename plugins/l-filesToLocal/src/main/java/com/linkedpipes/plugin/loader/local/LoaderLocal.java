@@ -22,7 +22,7 @@ public final class LoaderLocal implements Component.Sequential {
     private static final Logger LOG
             = LoggerFactory.getLogger(LoaderLocal.class);
 
-    @Component.OutputPort(id = "FilesInput")
+    @Component.InputPort(id = "FilesInput")
     public FilesDataUnit input;
 
     @Component.Configuration
