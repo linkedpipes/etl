@@ -36,7 +36,8 @@ define(['jquery', 'app/components/componentDetailDirective/lpComponentDetailDire
             var config = {
                 'transformRequest': angular.identity,
                 'headers': {
-                    'Content-Type': undefined
+                    'Content-Type': undefined,
+                    'Accept': 'application/ld+json'
                 }
             }
 
@@ -52,16 +53,15 @@ define(['jquery', 'app/components/componentDetailDirective/lpComponentDetailDire
 
             $http.post('./resources/components', data, config)
                 .success(function (data, status, headers) {
-                    console.log('Response:', data)
-                   onSuccess();
+                   onSuccess(data);
                 })
                 .error(function (data, status, headers) {
                     onFailed(data);
                 });
         }
 
-        function controller($scope, $http, $mdDialog, component, template, pipeline,
-                            jsonldService, statusService) {
+        function controller($scope, $http, $mdDialog, templateService, component,
+                            template, pipeline, jsonldService, statusService) {
 
             // Prepare data for this dialog.
             var JSONLD = jsonldService.jsonld();
@@ -102,17 +102,42 @@ define(['jquery', 'app/components/componentDetailDirective/lpComponentDetailDire
             $scope.onSave = function () {
                 $scope.api.onSave();
                 // Now there is much to do ...
-                createTemplate($http, $scope.instance, $scope.instanceConfig, function () {
+                createTemplate($http, $scope.instance, $scope.instanceConfig, function (template) {
+
+                        // TODO replace with promise.
+                        templateService.load(function () {
+
+                        }, function (response) {
+                            statusService.deleteFailed({
+                                'title': "Can't update templates.",
+                                'response': response
+                            });
+                        });
 
                         // Update component : change parent IRI
                         // and disconnect configuration as it was
                         // 'moved' to a template.
 
+                        component['http://linkedpipes.com/ontology/template'] = {
+                            '@id' :  template[0]['@graph'][0]['@id']
+                        };
+
+                        // Delete configuration if any as we now use the
+                        // configuration from the template.
+                        var instanceIri = JSONLD.getReference(component,
+                            'http://linkedpipes.com/ontology/configurationGraph');
+                        if (instanceIri !== undefined) {
+                            delete component['http://linkedpipes.com/ontology/configurationGraph'];
+                            delete pipeline.model['graphs'][instanceIri];
+                        }
+
+                        //
+
                         statusService.success({
                             'title': 'Template created.'
                         });
 
-                        // $mdDialog.hide();
+                        $mdDialog.hide();
 
                     }, function (response) {
                         // Can't load ..
@@ -129,7 +154,8 @@ define(['jquery', 'app/components/componentDetailDirective/lpComponentDetailDire
 
         }
 
-        controller.$inject = ['$scope', '$http', '$mdDialog', 'component',
+        controller.$inject = ['$scope', '$http', '$mdDialog',
+            'components.templates.services.repository', 'component',
             'template', 'pipeline', 'services.jsonld', 'services.status'];
 
         return (app) => {
