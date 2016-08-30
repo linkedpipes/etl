@@ -1,6 +1,6 @@
 [
     {
-        "@id": "http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/0.0.0",
+        "@id": "http://etl.linkedpipes.com/resources/components/e-dcatAp11Dataset/0.0.0",
         "@type": "http://linkedpipes.com/ontology/JarTemplate",
         "http://www.w3.org/2004/02/skos/core#prefLabel": "DCAT-AP Dataset",
         "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/e-dcatAp11Dataset/0.0.0"},
