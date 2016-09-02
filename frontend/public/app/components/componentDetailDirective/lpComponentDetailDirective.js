@@ -52,7 +52,6 @@ define(['jquery', 'app/components/configuration/lpComponentReferenceDirective'],
         dialogService.config.template = $scope.templateConfig;
     }
 
-
     function addDialogs($scope, dialogService, JSONLD, $rootScope) {
         const template = $scope.template;
         // First load configurations, so they are ready
@@ -110,7 +109,63 @@ define(['jquery', 'app/components/configuration/lpComponentReferenceDirective'],
         dialogService.onStore();
     }
 
-    function directive($rootScope, jsonldService) {
+    function iriToControl(iri) {
+        switch (iri) {
+            case "http://plugins.linkedpipes.com/resource/configuration/Inherit":
+                return {
+                    'inherit': true,
+                    'force': false,
+                    'forced': false
+                }
+            case "http://plugins.linkedpipes.com/resource/configuration/Force":
+                // This apply for templates.
+                return {
+                    'inherit': false,
+                    'force': true,
+                    'forced': false
+                }
+            case "http://plugins.linkedpipes.com/resource/configuration/InheritAndForce":
+                // This apply for templates.
+                return {
+                    'inherit': true,
+                    'force': true,
+                    'forced': false
+                }
+            case "http://plugins.linkedpipes.com/resource/configuration/Forced":
+                return {
+                    'forced': true
+                }
+            case "http://plugins.linkedpipes.com/resource/configuration/None":
+            default: // Default is the same as none.
+                return {
+                    'inherit': false,
+                    'force': false,
+                    'forced': false
+                }
+
+        }
+    }
+
+    function controlToIri(control) {
+        if (control.forced) {
+            return 'http://plugins.linkedpipes.com/resource/configuration/Forced';
+        }
+        if (control.inherit) {
+            if (control.force) {
+                return "http://plugins.linkedpipes.com/resource/configuration/InheritAndForce";
+            } else {
+                return "http://plugins.linkedpipes.com/resource/configuration/Inherit";
+            }
+        } else {
+            if (control.force) {
+                return "http://plugins.linkedpipes.com/resource/configuration/Force";
+            } else {
+                return "http://plugins.linkedpipes.com/resource/configuration/None";
+            }
+        }
+    }
+
+    function directive($rootScope, $http, jsonldService) {
 
         const JSONLD = jsonldService.jsonld();
 
@@ -133,7 +188,19 @@ define(['jquery', 'app/components/configuration/lpComponentReferenceDirective'],
                  * Upon call of this function the config.instance must
                  * be updated and ready to be saved as the configuration.
                  */
-                'onStore': undefined
+                'onStore': undefined,
+                /**
+                 * Functions related to the dialog control. The control
+                 * object has three properties:
+                 *  force - True if the value in instance should be inherited
+                 *          from this instance (tempalte).
+                 *  forced - Tru if value is inherited from the parent.
+                 *  inherit - True if value is be inherited from parent.
+                 */
+                'control': {
+                    'fromIri': iriToControl,
+                    'toIri': controlToIri
+                }
             };
 
             loadGeneralTab($scope, JSONLD);
@@ -176,7 +243,7 @@ define(['jquery', 'app/components/configuration/lpComponentReferenceDirective'],
         initialized = true;
         referenceDirective(app);
         app.directive('lpComponentDetail',
-            ['$rootScope', 'services.jsonld', directive]);
+            ['$rootScope', '$http', 'services.jsonld', directive]);
     }
 
 })

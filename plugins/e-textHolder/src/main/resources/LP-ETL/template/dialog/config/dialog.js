@@ -3,60 +3,6 @@ define([], function () {
 
     const PREFIX = 'http://plugins.linkedpipes.com/ontology/e-textHolder#';
 
-    function controlToObject(value) {
-        switch (value) {
-            case "http://plugins.linkedpipes.com/resource/configuration/None":
-                return {
-                    'inherit': false,
-                    'force': false,
-                    'forced': false
-                }
-            case "http://plugins.linkedpipes.com/resource/configuration/Inherit":
-                return {
-                    'inherit': true,
-                    'force': false,
-                    'forced': false
-                }
-            case "http://plugins.linkedpipes.com/resource/configuration/Force":
-                // This apply for templates.
-                return {
-                    'inherit': false,
-                    'force': true,
-                    'forced': false
-                }
-            case "http://plugins.linkedpipes.com/resource/configuration/InheritAndForce":
-                // This apply for templates.
-                return {
-                    'inherit': true,
-                    'force': true,
-                    'forced': false
-                }
-            case "http://plugins.linkedpipes.com/resource/configuration/Forced":
-                return {
-                    'forced': true
-                }
-        }
-    }
-
-    function objectToControl(value) {
-        if (value.forced) {
-            return 'http://plugins.linkedpipes.com/resource/configuration/Forced';
-        }
-        if (value.inherit) {
-            if (value.force) {
-                return "http://plugins.linkedpipes.com/resource/configuration/InheritAndForce";
-            } else {
-                return "http://plugins.linkedpipes.com/resource/configuration/Inherit";
-            }
-        } else {
-            if (value.force) {
-                return "http://plugins.linkedpipes.com/resource/configuration/Force";
-            } else {
-                return "http://plugins.linkedpipes.com/resource/configuration/None";
-            }
-        }
-    }
-
     function controller($scope, $service, rdfService) {
 
         // Obtain the RDF service.
@@ -81,10 +27,10 @@ define([], function () {
                 $scope.dialog.content = RDF.getString(resource,
                     PREFIX + 'content');
             //
-            $scope.control.fileName = controlToObject(RDF.getIri(resource,
-                PREFIX + 'fileNameControl'));
-            $scope.control.content = controlToObject(RDF.getIri(resource,
-                PREFIX + 'contentControl'));
+            $scope.control.fileName = $service.control.fromIri(
+                RDF.getIri(resource, PREFIX + 'fileNameControl'));
+            $scope.control.content = $service.control.fromIri(
+                RDF.getIri(resource, PREFIX + 'contentControl'));
         }
 
         function saveDialog() {
@@ -98,9 +44,9 @@ define([], function () {
             }
             //
             RDF.setIri(resource, PREFIX + 'fileNameControl',
-                objectToControl($scope.control.fileName));
+                $service.control.toIri($scope.control.fileName));
             RDF.setIri(resource, PREFIX + 'contentControl',
-                objectToControl($scope.control.content));
+                $service.control.toIri($scope.control.content));
         }
 
         function loadTemplate() {
