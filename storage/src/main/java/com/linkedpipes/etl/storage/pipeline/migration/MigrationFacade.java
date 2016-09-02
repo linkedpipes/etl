@@ -112,7 +112,7 @@ public class MigrationFacade {
         } catch (Exception ex) {
             version = 0;
         }
-        LOG.info("Migrating pipeline {} : {}", pplResource, version);
+        LOG.info("Migrating pipeline '{}' version '{}'", pplResource, version);
         // Perform update.
         switch (version) {
             case 0:
