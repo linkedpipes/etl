@@ -90,7 +90,7 @@ public class Pipeline {
                 case "http://www.w3.org/2004/02/skos/core#prefLabel":
                     labels.add(value);
                     break;
-                case "http://etl.linkedpipes.com/ontrology/tag":
+                case "http://etl.linkedpipes.com/ontology/tag":
                     tags.add(value);
                     break;
                 default:

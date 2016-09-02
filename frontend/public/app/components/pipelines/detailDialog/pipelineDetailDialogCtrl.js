@@ -6,7 +6,7 @@ define([], function () {
         $scope.detail = {
             'uri': data.definition['@id'],
             'label' : jsonld.getString(data.definition, 'http://www.w3.org/2004/02/skos/core#prefLabel'),
-            'tags' : jsonld.getValues(data.definition, 'http://etl.linkedpipes.com/ontrology/tag')
+            'tags' : jsonld.getValues(data.definition, 'http://etl.linkedpipes.com/ontology/tag')
         };
 
         $scope.onCancel = function () {
@@ -16,7 +16,7 @@ define([], function () {
         $scope.onSave = function () {
             // Save changes.
             data.definition['http://www.w3.org/2004/02/skos/core#prefLabel'] = $scope.detail.label;
-            jsonld.setValues(data.definition, 'http://etl.linkedpipes.com/ontrology/tag', undefined, $scope.detail.tags)
+            jsonld.setValues(data.definition, 'http://etl.linkedpipes.com/ontology/tag', undefined, $scope.detail.tags)
             // Close the dialog.
             $mdDialog.hide();
         };

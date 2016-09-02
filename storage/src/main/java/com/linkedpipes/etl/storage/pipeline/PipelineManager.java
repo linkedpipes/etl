@@ -184,7 +184,7 @@ class PipelineManager {
                     label, pipelineIri));
         }
         final IRI tagIri = vf.createIRI(
-                "http://etl.linkedpipes.com/ontrology/tag");
+                "http://etl.linkedpipes.com/ontology/tag");
         for (Value tag : pipeline.getInfo().getTags()) {
             referenceRdf.add(vf.createStatement(pipelineIri, tagIri,
                     tag, pipelineIri));

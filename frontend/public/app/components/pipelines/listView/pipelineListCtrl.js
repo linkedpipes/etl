@@ -10,7 +10,7 @@ define([], function () {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
             },
             'tags': {
-                '$property': 'http://etl.linkedpipes.com/ontrology/tag',
+                '$property': 'http://etl.linkedpipes.com/ontology/tag',
                 '$type': 'array'
             }
         };
