@@ -53,6 +53,9 @@ define([], function () {
                 }
             },
             'decorator': function (item) {
+                if (item['label'] === undefined) {
+                    item['label'] = item['iri'];
+                }
                 item['searchLabel'] = item['label'].toLowerCase();
                 // Show by default.
                 item['show'] = true;
