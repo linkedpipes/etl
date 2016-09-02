@@ -26,12 +26,13 @@ public class Configuration {
 
     private String logCoreFilter;
 
-
     private String jarDirectory;
 
     private String templatesDirectory;
 
     private String pipelinesDirectory;
+
+    private String knowlegeDirectory;
 
     private String domainName;
 
@@ -65,6 +66,7 @@ public class Configuration {
         jarDirectory = getProperty("storage.jars.directory");
         templatesDirectory = getProperty("storage.templates.directory");
         pipelinesDirectory = getProperty("storage.pipelines.directory");
+        knowlegeDirectory = getProperty("storage.knowledge.directory");
         domainName = getProperty("domain.uri");
     }
 
@@ -82,7 +84,6 @@ public class Configuration {
         return logCoreFilter;
     }
 
-
     public File getJarDirectory() {
         return new File(jarDirectory);
     }
@@ -93,6 +94,10 @@ public class Configuration {
 
     public File getPipelinesDirectory() {
         return new File(pipelinesDirectory);
+    }
+
+    public File getKnowlegeDirectory() {
+        return new File(knowlegeDirectory);
     }
 
     public String getDomainName() {

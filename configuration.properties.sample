@@ -100,6 +100,11 @@ storage.templates.directory =
 # Linux ex: /data/lp/etl/pipelines
 storage.pipelines.directory =
 
+# Storage directory for various knowledge
+# Windows ex: C:\\Tools\\lp\\etl\\knowledge
+# Linux ex: /data/lp/etl/knowledge
+storage.knowledge.directory =
+
 # Prefix used to create URI of templates and pipelines, should be dereferencable.
 # Must NOT end with '/'.
 domain.uri = http://localhost:8080
