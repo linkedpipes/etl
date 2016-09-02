@@ -38,6 +38,27 @@ gApiRouter.get('/components', function (request, response) {
     }).pipe(response);
 });
 
+gApiRouter.get('/components/definition', function (request, response) {
+    var options = {
+        'url': gConfiguration.storage.url +
+        '/api/v1/components/definition?iri=' + request.query.iri,
+        'headers': {
+            'Accept': 'application/ld+json'
+        }
+    }
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
+});
+
+
 gApiRouter.post('/components', function (request, response) {
     var url = gConfiguration.storage.url + '/api/v1/components/';
     request.pipe(gRequest.post(url, {
@@ -176,13 +197,26 @@ gApiRouter.post('/localize', function (request, response) {
 });
 
 gApiRouter.get('/pipelines/:id', function (request, response) {
+
+    // Parse IRI.
+    var queryIri;
+    var queryParams = '';
+    var queryIndex = request.originalUrl.indexOf('?');
+    if (queryIndex === -1) {
+        queryIri = request.originalUrl;
+    } else {
+        queryIri = request.originalUrl.substring(0, queryIndex);
+        queryParams = '&' + request.originalUrl.substring(queryIndex + 1);
+    }
+
     var options = {
         'url': gConfiguration.storage.url + '/api/v1/pipelines?iri='
-        + encodeURI(gConfiguration.storage.domain + request.originalUrl),
+        + encodeURI(gConfiguration.storage.domain + queryIri) + queryParams,
         'headers': {
             'Accept': 'application/ld+json'
         }
     }
+
     gRequest.get(options).on('error', function (error) {
         response.status(503).json({
             'exception': {

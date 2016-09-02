@@ -20,9 +20,16 @@ class ReferenceTemplate extends BaseTemplate implements PojoLoader.Loadable {
                 "http://linkedpipes.com/ontology/Template");
     }
 
+    /**
+     * Template for this template.
+     */
     private String template;
 
     public ReferenceTemplate() {
+    }
+
+    public String getTemplate() {
+        return template;
     }
 
     @Override

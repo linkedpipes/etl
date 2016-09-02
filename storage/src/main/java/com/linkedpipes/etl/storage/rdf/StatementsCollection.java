@@ -81,8 +81,16 @@ public class StatementsCollection {
      *
      * @param toRemove Statements to removeProperties.
      */
+    public void remove(Collection<Statement>  toRemove) {
+        statements.removeAll(toRemove);
+    }
+
+    /**
+     *
+     * @param toRemove Statements to removeProperties.
+     */
     public void remove(StatementsCollection toRemove) {
-        statements.removeAll(toRemove.statements);
+        remove(toRemove.statements);
     }
 
     /**

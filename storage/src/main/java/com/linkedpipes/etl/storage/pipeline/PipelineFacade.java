@@ -1,9 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.pipeline.importer.ImportFacade;
-import com.linkedpipes.etl.storage.pipeline.migration.MigrationFacade;
-import com.linkedpipes.etl.storage.pipeline.updater.UpdaterFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.openrdf.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +28,6 @@ public class PipelineFacade {
 
     @Autowired
     private PipelineManager pipelines;
-
-    @Autowired
-    private ImportFacade importFacade;
-
-    @Autowired
-    private MigrationFacade migrationFacade;
-
-    @Autowired
-    private UpdaterFacade updaterFacade;
 
     /**
      * @param iri
@@ -83,6 +71,13 @@ public class PipelineFacade {
         }
     }
 
+    public Collection<Statement> getPipelineRdf(Pipeline pipeline,
+            boolean includeTemplate, boolean includeMapping)
+            throws OperationFailed {
+        return pipelines.getPipelineRdf(pipeline, includeTemplate,
+                includeMapping);
+    }
+
     /**
      * Create a new pipeline. The pipeline could be created from given RDF
      * or if none is given empty pipeline is created.
@@ -121,6 +116,15 @@ public class PipelineFacade {
         pipelines.deletePipeline(pipeline);
     }
 
+    /**
+     * Perform pipeline modifications (migration, update) based on given
+     * options and return modified pipeline. Operations are the similar as for
+     * the {@link #createPipeline(Collection, Collection)} function.
+     *
+     * @param pipelineRdf
+     * @param optionsRdf
+     * @return
+     */
     public Collection<Statement> localizePipeline(
             Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
             throws BaseException {

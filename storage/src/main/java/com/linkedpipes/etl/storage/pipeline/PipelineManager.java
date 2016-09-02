@@ -1,11 +1,14 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.pipeline.importer.ImportFacade;
 import com.linkedpipes.etl.storage.pipeline.migration.MigrationFacade;
 import com.linkedpipes.etl.storage.pipeline.updater.UpdaterFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
+import com.linkedpipes.etl.storage.template.Template;
+import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
@@ -52,6 +55,15 @@ class PipelineManager {
     @Autowired
     private UpdaterFacade updaterFacade;
 
+    @Autowired
+    private PipelineInfoManager infoManager;
+
+    @Autowired
+    private MappingFacade mappingFacade;
+
+    @Autowired
+    private TemplateFacade templatesFacade;
+
     /**
      * Store pipelines.
      */
@@ -81,9 +93,7 @@ class PipelineManager {
             }
             // Load pipeline.
             try {
-                final Pipeline pipeline = loadPipeline(file);
-                pipelines.put(pipeline.getIri(), pipeline);
-                reserved.add(pipeline.getIri());
+                loadPipeline(file);
             } catch (Exception ex) {
                 LOG.error("Can't read pipeline: {}", file, ex);
             }
@@ -91,13 +101,13 @@ class PipelineManager {
     }
 
     /**
-     * Load pipeline from a given file. Check version and perform migrationFacade
-     * if necessary.
+     * Load pipeline from a given file. Check version, perform migration
+     * (if necessary) and add pipeline to pipelines.
      *
      * @param file
      * @return Loaded pipeline.
      */
-    protected Pipeline loadPipeline(File file)
+    protected void loadPipeline(File file)
             throws PipelineFacade.OperationFailed {
         Collection<Statement> pipelineRdf;
         Pipeline.Info info;
@@ -149,7 +159,10 @@ class PipelineManager {
         // Create pipeline record.
         final Pipeline pipeline = new Pipeline(file, info);
         createPipelineReference(pipeline);
-        return pipeline;
+        infoManager.onNew(pipeline, pipelineRdf);
+        //
+        pipelines.put(pipeline.getIri(), pipeline);
+        reserved.add(pipeline.getIri());
     }
 
     /**
@@ -244,7 +257,8 @@ class PipelineManager {
         if (pipelineRdf.isEmpty()) {
             pipelineRdf = createEmptyPipeline(options.getPipelineIri());
         }
-        // Perform import if needed.
+        // Perform import if needed - the import must be done on
+        // all data as it use mapping graph.
         if (!options.isLocal()) {
             pipelineRdf = importFacade.update(pipelineRdf, options);
         }
@@ -299,7 +313,9 @@ class PipelineManager {
             throw new PipelineFacade.OperationFailed(
                     "Can't write pipeline to {}", pipeline.getFile(), ex);
         }
-        pipelines.put(options.getPipelineIri().stringValue(), pipeline);
+        //
+        pipelines.put(pipeline.getIri(), pipeline);
+        infoManager.onUpdate(pipeline, pipelineRdf);
         return pipeline;
     }
 
@@ -330,6 +346,7 @@ class PipelineManager {
             throw new PipelineFacade.OperationFailed(
                     "Can't write pipeline: {}", pipeline.getFile(), ex);
         }
+        infoManager.onUpdate(pipeline, pipelineRdf);
         // TODO Use events to notify all about pipeline change !
     }
 
@@ -340,6 +357,7 @@ class PipelineManager {
      */
     public void deletePipeline(Pipeline pipeline) {
         // TODO Add tomb-stone
+        infoManager.onDelete(pipeline);
         pipeline.getFile().delete();
         pipelines.remove(pipeline.getIri());
         // TODO Use event to notify about changes !
@@ -351,6 +369,10 @@ class PipelineManager {
         if (pipelineRdf.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
+
+        // ??
+        //return pipelineWorker.createPipeline(pipelineRdf, optionsRdf);
+
         //
         final PipelineOptions options = new PipelineOptions();
         try {
@@ -395,5 +417,76 @@ class PipelineManager {
         }
         return pipelineRdf;
     }
+
+    /**
+     * Return RDF definition of the pipeline with optional additional
+     * information.
+     *
+     * @param pipeline
+     * @param includeTemplate
+     * @param includeMapping
+     * @return
+     */
+    public Collection<Statement> getPipelineRdf(Pipeline pipeline,
+            boolean includeTemplate, boolean includeMapping)
+            throws PipelineFacade.OperationFailed {
+        // Read pipeline.
+        final Collection<Statement> pipelineRdf;
+        try {
+            pipelineRdf = RdfUtils.read(pipeline.getFile());
+        } catch (Exception ex) {
+            throw new PipelineFacade.OperationFailed("Can't read file.", ex);
+        }
+        // Add additional data.
+        Set<Template> templates = null;
+        final Collection<Statement> additionalRdf = new LinkedList<>();
+        if (includeTemplate) {
+            if (templates == null) {
+                templates = getTemplates(pipelineRdf, pipeline.getIri());
+            }
+            //
+            for (Template template : templates) {
+                // We need to remove duplicity from definition and interface.
+                final Set<Statement> templateRdf = new HashSet<>();
+                templateRdf.addAll(templatesFacade.getInterface(template));
+                templateRdf.addAll(templatesFacade.getDefinition(template));
+                //
+                additionalRdf.addAll(templateRdf);
+                additionalRdf.addAll(templatesFacade.getConfig(template));
+            }
+        }
+        if (includeMapping) {
+            if (templates == null) {
+                templates = getTemplates(pipelineRdf, pipeline.getIri());
+            }
+            //
+            additionalRdf.addAll(mappingFacade.write(templates));
+        }
+        // Merge and return.
+        pipelineRdf.addAll(additionalRdf);
+        return pipelineRdf;
+    }
+
+    /**
+     * Return list of all templates used in the pipeline, also include
+     * transitive templates.
+     *
+     * @param pipelineRdf
+     * @return
+     */
+    private Set<Template> getTemplates(Collection<Statement> pipelineRdf,
+            String pipelineIri) {
+        final Set<Template> templates = new HashSet<>();
+        for (Statement statement : pipelineRdf) {
+            if (statement.getPredicate().stringValue().equals(
+                    "http://linkedpipes.com/ontology/template") &&
+                    statement.getContext().stringValue().equals(pipelineIri)) {
+                templates.addAll(templatesFacade.getTemplateHierarchy(
+                        statement.getObject().stringValue(), false));
+            }
+        }
+        return templates;
+    }
+
 
 }

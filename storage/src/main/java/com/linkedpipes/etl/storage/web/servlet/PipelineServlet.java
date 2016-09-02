@@ -45,12 +45,18 @@ public class PipelineServlet {
      * Return a definition of a single pipeline.
      *
      * @param iri
+     * @param includeTemplates If true include definitions of the templates.
+     * @param includeMapping If true include template mapping.
      * @param request
      * @param response
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public void getPipeline(@RequestParam(name = "iri") String iri,
+            @RequestParam(name = "templates", defaultValue = "false")
+                    boolean includeTemplates,
+            @RequestParam(name = "mappings", defaultValue = "false")
+                    boolean includeMapping,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         final Pipeline pipeline = pipelines.getPipeline(iri);
@@ -58,8 +64,8 @@ public class PipelineServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        //
-        RdfUtils.write(request, response, pipelines.getPipelineRdf(pipeline));
+        RdfUtils.write(request, response, pipelines.getPipelineRdf(pipeline,
+                includeTemplates, includeMapping));
     }
 
     /**

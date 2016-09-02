@@ -2,9 +2,9 @@ package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.jar.JarComponent;
 import com.linkedpipes.etl.storage.jar.JarFacade;
-import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.apache.commons.io.FileUtils;
@@ -80,7 +80,11 @@ class TemplateManager {
     }
 
     /**
-     * Create a new template and return it.
+     * Create a new template and return it. New name for the template
+     * is created.
+     *
+     * This function modify all resources based on the newly generated
+     * template IRI.
      *
      * @param templateRdf
      * @param configurationRdf
