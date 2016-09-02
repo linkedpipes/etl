@@ -32,7 +32,7 @@ public class Configuration {
 
     private String pipelinesDirectory;
 
-    private String knowlegeDirectory;
+    private String knowledgeDirectory;
 
     private String domainName;
 
@@ -64,10 +64,12 @@ public class Configuration {
         logCoreFilter = getProperty("storage.log.core.level");
 
         jarDirectory = getProperty("storage.jars.directory");
-        templatesDirectory = getProperty("storage.templates.directory");
-        pipelinesDirectory = getProperty("storage.pipelines.directory");
-        knowlegeDirectory = getProperty("storage.knowledge.directory");
         domainName = getProperty("domain.uri");
+
+        String storageDirectory = getProperty("storage.directory");
+        templatesDirectory = storageDirectory + File.separator + "templates";
+        pipelinesDirectory = storageDirectory + File.separator + "pipelines";
+        knowledgeDirectory = storageDirectory + File.separator + "knowledge";
     }
 
     public int getStoragePort() {
@@ -96,8 +98,8 @@ public class Configuration {
         return new File(pipelinesDirectory);
     }
 
-    public File getKnowlegeDirectory() {
-        return new File(knowlegeDirectory);
+    public File getKnowledgeDirectory() {
+        return new File(knowledgeDirectory);
     }
 
     public String getDomainName() {
@@ -118,7 +120,8 @@ public class Configuration {
         }
         if (value == null) {
             LOG.error("Missing configuration property: '{}'", name);
-            throw new RuntimeException("Missing configuration property!");
+            throw new RuntimeException("Missing configuration property:" +
+                name);
         } else {
             return value;
         }

@@ -64,14 +64,14 @@ public class MappingFacade {
     private Map<String, String> mappings = new HashMap<>();
 
     private File getMappingFile() {
-        return new File(configuration.getKnowlegeDirectory(), MAPPING_FILE);
+        return new File(configuration.getKnowledgeDirectory(), MAPPING_FILE);
     }
 
     @PostConstruct
     public void initialize() throws RdfUtils.RdfException {
         final File mappingFile = getMappingFile();
         // Make sure knowledge directory exists.
-        configuration.getKnowlegeDirectory().mkdirs();
+        configuration.getKnowledgeDirectory().mkdirs();
         if (!mappingFile.exists()) {
             return;
         }
@@ -193,7 +193,7 @@ public class MappingFacade {
             ));
         }
         // Save to file.
-        final File mappingFile = new File(configuration.getKnowlegeDirectory(),
+        final File mappingFile = new File(configuration.getKnowledgeDirectory(),
                 MAPPING_FILE);
         try {
             RdfUtils.write(mappingFile, RDFFormat.TRIG, result);
