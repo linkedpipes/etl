@@ -22,7 +22,15 @@
                     </md-input-container>
                     <md-chips ng-model="detail.tags"
                               placeholder="Enter a tag"
+                              md-require-match="False"
                               secondary-placeholder="+Tag">
+                        <md-autocomplete
+                                md-search-text="tags.searchText"
+                                md-items="item in tags.querySearch(tags.searchText)"
+                                placeholder="Search for a tags.">
+                            <span md-highlight-text="tags.searchText">{{item}}</span>
+                        </md-autocomplete>
+                        <md-chip-template>{{$chip}}</md-chip-template>
                         <md-chip-template>
                             <strong>{{$chip}}</strong>
                         </md-chip-template>

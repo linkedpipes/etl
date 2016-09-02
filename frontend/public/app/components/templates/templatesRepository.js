@@ -47,17 +47,6 @@ define(['jquery'], function (jQuery) {
                     '$property': '@type'
                 }
             }
-        },
-        'followups': {
-            '$property': 'http://linkedpipes.com/ontology/followup',
-            '$oneToMany': {
-                'id': {
-                    '$property': 'http://linkedpipes.com/ontology/reference'
-                },
-                'order': {
-                    '$property': 'http://linkedpipes.com/ontology/followUpCount'
-                }
-            }
         }
     };
 
@@ -108,13 +97,6 @@ define(['jquery'], function (jQuery) {
         template['dialogs'].forEach(function (item) {
             item['iri'] = template['id'];
         });
-        // Create followup
-        template['followup'] = {};
-        if (template['followups']) {
-            template['followups'].forEach(function (item) {
-                template['followup'][item['id']] = item['order'];
-            });
-        }
         // Check ports.
         var inputs = [];
         var outputs = [];

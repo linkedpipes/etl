@@ -196,6 +196,26 @@ gApiRouter.post('/localize', function (request, response) {
     }
 });
 
+// TODO This is more part of the API.
+gApiRouter.get('/pipelines/info', function(request, response) {
+    var options = {
+        'url': gConfiguration.storage.url + '/api/v1/pipelines/info',
+        'headers': {
+            'Accept': 'application/ld+json'
+        }
+    }
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
+});
+
 gApiRouter.get('/pipelines/:id', function (request, response) {
 
     // Parse IRI.

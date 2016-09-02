@@ -15,6 +15,7 @@ define([
     'app/services/statusService',
     'app/services/jsonldService',
     'app/services/infoService',
+    'app/services/designService',
     'app/components/inputs/localizedTextInput/localizedTextInput',
     'app/components/inputs/iriList/iriList',
     'app/components/templateDetailDialog/templateDetailDialogCtrl',
@@ -44,6 +45,7 @@ define([
         statusService,
         jsonldService,
         infoService,
+        designService,
         localizedTextInputInit,
         iriListInit,
         templateDetailDialogCtrl,
@@ -67,6 +69,7 @@ define([
     statusService(app);
     jsonldService(app);
     infoService(app);
+    designService(app);
     localizedTextInputInit(app);
     iriListInit(app);
     templateDetailDialogCtrl(app);

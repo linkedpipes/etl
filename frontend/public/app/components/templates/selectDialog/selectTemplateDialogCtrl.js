@@ -1,5 +1,6 @@
 define([], function () {
-    function controler($scope, $mdDialog, templatesRepository, filter) {
+    function controler($scope, $mdDialog, templatesRepository, filter,
+                       pipelineDesign) {
 
         // {label: search.label}
         $scope.filterItems = function (item) {
@@ -50,7 +51,7 @@ define([], function () {
             $scope.data = data;
         };
 
-        (function initialize() {
+        function initialize() {
             $scope.search = '';
             //
             if (filter.source) {
@@ -64,7 +65,7 @@ define([], function () {
                     }
                 }
                 if (!sourcePort) {
-                    console.log('Error missing sourcePort, filter: ', filter, ' tempalte: ', sourceTemplate);
+                    console.log('Error missing sourcePort, filter: ', filter, ' template: ', sourceTemplate);
                     addAllTemplates();
                     return;
                 }
@@ -73,11 +74,6 @@ define([], function () {
                 templatesRepository.getTemplates().forEach(function (component) {
                     if (component.inputs.length === 0) {
                         return;
-                    }
-                    //
-                    var order = 0;
-                    if (sourceTemplate.followup[component['id']]) {
-                        order = sourceTemplate.followup[component['id']];
                     }
                     //
                     var newObjects = [];
@@ -89,7 +85,8 @@ define([], function () {
                                 'component': component,
                                 'portBinding': port['binding'],
                                 'portLabel': port['label'],
-                                'order': order
+                                'order': pipelineDesign.getTemplatePriority(
+                                    sourceTemplate['id'], component['id'])
                             };
                             data.push(record);
                             newObjects.push(record);
@@ -104,10 +101,14 @@ define([], function () {
             } else {
                 addAllTemplates();
             }
-        })();
+        };
+
+        pipelineDesign.initialize(initialize);
 
     }
-    controler.$inject = ['$scope', '$mdDialog', 'components.templates.services.repository', 'filter'];
+    controler.$inject = ['$scope', '$mdDialog',
+        'components.templates.services.repository', 'filter',
+        'service.pipelineDesign'];
     //
     function init(app) {
         app.controller('components.templates.select.dialog', controler);

@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
 import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
@@ -27,6 +28,9 @@ public class PipelineServlet {
 
     @Autowired
     private UnpackerFacade unpacker;
+
+    @Autowired
+    private InfoFacade infoFacade;
 
     /**
      * Return a list of all pipelines references.
@@ -156,7 +160,8 @@ public class PipelineServlet {
             @RequestParam(name = "iri", required = false) String iri,
             @RequestParam(value = "options", required = false)
                     MultipartFile options,
-            @RequestParam(value = "pipeline") MultipartFile pipeline,
+            @RequestParam(value = "pipeline", required = false)
+                    MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         //
@@ -202,6 +207,13 @@ public class PipelineServlet {
         //
         pipelineRdf = pipelines.localizePipeline(pipelineRdf, optionsRdf);
         RdfUtils.write(request, response, pipelineRdf);
+    }
+
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @ResponseBody
+    public void getDesignInformation(HttpServletRequest request,
+            HttpServletResponse response) throws BaseException {
+        RdfUtils.write(request, response, infoFacade.getInformation());
     }
 
 }

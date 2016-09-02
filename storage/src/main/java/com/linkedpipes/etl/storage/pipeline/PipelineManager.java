@@ -3,6 +3,7 @@ package com.linkedpipes.etl.storage.pipeline;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.pipeline.importer.ImportFacade;
+import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
 import com.linkedpipes.etl.storage.pipeline.migration.MigrationFacade;
 import com.linkedpipes.etl.storage.pipeline.updater.UpdaterFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
@@ -56,7 +57,7 @@ class PipelineManager {
     private UpdaterFacade updaterFacade;
 
     @Autowired
-    private PipelineInfoManager infoManager;
+    private InfoFacade infoFacade;
 
     @Autowired
     private MappingFacade mappingFacade;
@@ -159,7 +160,7 @@ class PipelineManager {
         // Create pipeline record.
         final Pipeline pipeline = new Pipeline(file, info);
         createPipelineReference(pipeline);
-        infoManager.onNew(pipeline, pipelineRdf);
+        infoFacade.onPipelineCreate(pipeline, pipelineRdf);
         //
         pipelines.put(pipeline.getIri(), pipeline);
         reserved.add(pipeline.getIri());
@@ -315,7 +316,7 @@ class PipelineManager {
         }
         //
         pipelines.put(pipeline.getIri(), pipeline);
-        infoManager.onUpdate(pipeline, pipelineRdf);
+        infoFacade.onPipelineCreate(pipeline, pipelineRdf);
         return pipeline;
     }
 
@@ -346,7 +347,7 @@ class PipelineManager {
             throw new PipelineFacade.OperationFailed(
                     "Can't write pipeline: {}", pipeline.getFile(), ex);
         }
-        infoManager.onUpdate(pipeline, pipelineRdf);
+        infoFacade.onPipelineUpdate(pipeline, pipelineRdf);
         // TODO Use events to notify all about pipeline change !
     }
 
@@ -357,7 +358,7 @@ class PipelineManager {
      */
     public void deletePipeline(Pipeline pipeline) {
         // TODO Add tomb-stone
-        infoManager.onDelete(pipeline);
+        infoFacade.onPipelineDelete(pipeline);
         pipeline.getFile().delete();
         pipelines.remove(pipeline.getIri());
         // TODO Use event to notify about changes !

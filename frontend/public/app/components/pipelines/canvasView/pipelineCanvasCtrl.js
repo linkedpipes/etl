@@ -37,7 +37,8 @@ define([
                        executionModel,
                        pipelineCanvas,
                        executionCanvas,
-                       indexPage
+                       indexPage,
+                        pipelineDesign
                        // TODO Update names, check for factories and service.
     ) {
 
@@ -357,7 +358,8 @@ define([
                 // Execution mode "running".
                 executionMode();
             }
-
+            // Update pipeline design information.
+            pipelineDesign.update();
             // TODO replace with promise.
             templateService.load(function () {
                 loadData();
@@ -673,7 +675,8 @@ define([
         'models.execution',
         'canvas.pipeline',
         'canvas.execution',
-        'indexPage'
+        'indexPage',
+        'service.pipelineDesign'
     ];
 
     return function init(app) {

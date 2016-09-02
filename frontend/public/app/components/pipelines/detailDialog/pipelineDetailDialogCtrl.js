@@ -1,7 +1,17 @@
 define([], function () {
-    function controler($scope, $mdDialog, data, jsonldService) {
+    function controler($scope, $mdDialog, data, jsonldService, pipelineDesign) {
 
         var jsonld = jsonldService.jsonld();
+
+        $scope.tags = {
+            'searchText' : '',
+            'all' : [],
+            'querySearch': function(query) {
+                return $scope.tags.all.filter(function (item) {
+                    return item.indexOf(query) !== -1;
+                });
+            }
+        };
 
         $scope.detail = {
             'uri': data.definition['@id'],
@@ -21,8 +31,13 @@ define([], function () {
             $mdDialog.hide();
         };
 
+        pipelineDesign.initialize(() => {
+            $scope.tags.all = pipelineDesign.getTags();
+        });
+
     }
-    controler.$inject = ['$scope', '$mdDialog', 'data', 'services.jsonld'];
+    controler.$inject = ['$scope', '$mdDialog', 'data', 'services.jsonld',
+        'service.pipelineDesign'];
     //
     function init(app) {
         app.controller('components.pipelines.detail.dialog', controler);
