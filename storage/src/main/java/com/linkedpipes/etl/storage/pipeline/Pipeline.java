@@ -56,11 +56,6 @@ public class Pipeline {
 
         private final List<Value> tags = new ArrayList<>(4);
 
-        /**
-         * List of used components and number of usage.
-         */
-        private final Map<String, Integer> componentUsage = new HashMap<>();
-
         Info() {
         }
 
@@ -80,10 +75,6 @@ public class Pipeline {
             return tags;
         }
 
-        public Map<String, Integer> getComponentUsage() {
-            return componentUsage;
-        }
-
         @Override
         public void loadIri(String iri) {
             this.iri = iri;
@@ -101,12 +92,6 @@ public class Pipeline {
                     break;
                 case "http://etl.linkedpipes.com/ontrology/tag":
                     tags.add(value);
-                    break;
-                case "http://linkedpipes.com/ontology/template":
-                    final String template = value.stringValue();
-                    componentUsage.putIfAbsent(template, 0);
-                    componentUsage.put(template,
-                            componentUsage.get(template) + 1);
                     break;
                 default:
                     break;
