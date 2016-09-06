@@ -6,10 +6,7 @@ import com.linkedpipes.etl.storage.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.slf4j.Logger;
@@ -197,9 +194,11 @@ public class ImportFacade {
      */
     private static Collection<Statement> updateResources(
             Collection<Statement> pipelineRdf, String baseIri) {
+        // Create mapping.
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final Map<Resource, Resource> mapping = new HashMap<>();
         for (Statement s : pipelineRdf) {
+            // Create mapping for all typed resources.
             if (s.getPredicate().equals(RDF.TYPE) &&
                     !mapping.containsKey(s.getSubject())) {
                 if (s.getObject().equals(Pipeline.TYPE)) {
@@ -211,32 +210,28 @@ public class ImportFacade {
                             baseIri + "/" + (mapping.size() + 1)));
                 }
             }
+            // And for all graphs. This is needed as names
+            // of configuration graphs may not be same as the name of
+            // configuration resource.
+            if (!mapping.containsKey(s.getContext())) {
+                mapping.put(s.getContext(), valueFactory.createIRI(
+                        baseIri + "/graph/" + (mapping.size() + 1)));
+            }
         }
+        // Update statements.
         final List<Statement> result = new ArrayList<>(pipelineRdf.size());
         for (Statement s : pipelineRdf) {
+            final Resource subject = mapping.getOrDefault(
+                    s.getSubject(), s.getSubject());
+            Value object = mapping.get(s.getObject());
+            if (object == null) {
+                object = s.getObject();
+            }
             final Resource context = mapping.getOrDefault(
                     s.getContext(), s.getContext());
-            if (mapping.containsKey(s.getSubject())) {
-                if (mapping.containsKey(s.getObject())) {
-                    result.add(valueFactory.createStatement(
-                            mapping.get(s.getSubject()), s.getPredicate(),
-                            mapping.get(s.getObject()), context));
-                } else {
-                    result.add(valueFactory.createStatement(
-                            mapping.get(s.getSubject()), s.getPredicate(),
-                            s.getObject(), context));
-                }
-            } else {
-                if (mapping.containsKey(s.getObject())) {
-                    result.add(valueFactory.createStatement(
-                            s.getSubject(), s.getPredicate(),
-                            mapping.get(s.getObject()), context));
-                } else {
-                    result.add(valueFactory.createStatement(
-                            s.getSubject(), s.getPredicate(), s.getObject(),
-                            context));
-                }
-            }
+            //
+            result.add(valueFactory.createStatement(
+                    subject, s.getPredicate(), object, context));
         }
         return result;
     }
