@@ -2,10 +2,7 @@ package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.mapping.MappingFacade;
-import com.linkedpipes.etl.storage.pipeline.importer.ImportFacade;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
-import com.linkedpipes.etl.storage.pipeline.migration.MigrationFacade;
-import com.linkedpipes.etl.storage.pipeline.updater.UpdaterFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.Template;
@@ -46,15 +43,6 @@ class PipelineManager {
 
     @Autowired
     private Configuration configuration;
-
-    @Autowired
-    private ImportFacade importFacade;
-
-    @Autowired
-    private MigrationFacade migrationFacade;
-
-    @Autowired
-    private UpdaterFacade updaterFacade;
 
     @Autowired
     private InfoFacade infoFacade;
@@ -135,10 +123,11 @@ class PipelineManager {
             }
             // Perform migrationFacade of the pipeline definition.
             try {
-                pipelineRdf = migrationFacade.migrate(pipelineRdf);
+                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
+                        templatesFacade);
                 info = new Pipeline.Info();
                 PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
-            } catch (MigrationFacade.MigrationFailed |
+            } catch (PipelineUpdate.UpdateFailed |
                     PojoLoader.CantLoadException ex) {
                 throw new PipelineFacade.OperationFailed(
                         "Can't migrate pipeline: {}", file, ex);
@@ -242,26 +231,27 @@ class PipelineManager {
     public Pipeline createPipeline(Collection<Statement> pipelineRdf,
             Collection<Statement> optionsRdf)
             throws PipelineFacade.OperationFailed {
+        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        //
         final PipelineOptions options = new PipelineOptions();
         try {
             PojoLoader.loadOfType(optionsRdf, PipelineOptions.TYPE, options);
         } catch (PojoLoader.CantLoadException ex) {
             throw new PipelineFacade.OperationFailed("Can't load options.", ex);
         }
-        // Get pipeline IRI.
+        // Set pipeline IRI - ie. prepare new pipeline IRI.
         if (options.getPipelineIri() == null) {
-            final IRI iri = SimpleValueFactory.getInstance().createIRI(
-                    reservePipelineIri());
+            final IRI iri = valueFactory.createIRI(reservePipelineIri());
             options.setPipelineIri(iri);
         }
         // If we do not have pipeline take and empty one.
         if (pipelineRdf.isEmpty()) {
             pipelineRdf = createEmptyPipeline(options.getPipelineIri());
         }
-        // Perform import if needed - the import must be done on
-        // all data as it use mapping graph.
+        // If pipeline is not local we need to align/import templates.
         if (!options.isLocal()) {
-            pipelineRdf = importFacade.update(pipelineRdf, options);
+            pipelineRdf = PipelineUpdate.updateTemplates(pipelineRdf,
+                    templatesFacade, mappingFacade);
         }
         // Read pipeline info.
         Pipeline.Info info = new Pipeline.Info();
@@ -274,8 +264,9 @@ class PipelineManager {
         // Check version.
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
             try {
-                pipelineRdf = migrationFacade.migrate(pipelineRdf);
-            } catch (MigrationFacade.MigrationFailed ex) {
+                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
+                        templatesFacade);
+            } catch (PipelineUpdate.UpdateFailed ex) {
                 throw new PipelineFacade.OperationFailed(
                         "Migration failed from version: {}",
                         info.getVersion(), ex);
@@ -283,9 +274,9 @@ class PipelineManager {
         }
         // Perform updates.
         try {
-            pipelineRdf = updaterFacade.update(pipelineRdf,
-                    options.getPipelineIri(), options);
-        } catch (UpdaterFacade.UpdateFailed ex) {
+            pipelineRdf = PipelineUpdate.update(pipelineRdf,
+                    valueFactory.createIRI(info.getIri()), options);
+        } catch (PipelineUpdate.UpdateFailed ex) {
             throw new PipelineFacade.OperationFailed(
                     "Can't perform required updates.", ex);
         }
@@ -367,13 +358,11 @@ class PipelineManager {
     public Collection<Statement> localizePipeline(
             Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
             throws PipelineFacade.OperationFailed {
+        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        //
         if (pipelineRdf.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
-
-        // ??
-        //return pipelineWorker.createPipeline(pipelineRdf, optionsRdf);
-
         //
         final PipelineOptions options = new PipelineOptions();
         try {
@@ -390,14 +379,17 @@ class PipelineManager {
                     "Can't read pipeline.", ex);
         }
         // Perform import if needed.
+        // TODO: Do not import templates here!
         if (!options.isLocal()) {
-            pipelineRdf = importFacade.update(pipelineRdf, options);
+            pipelineRdf = PipelineUpdate.updateTemplates(pipelineRdf,
+                    templatesFacade, mappingFacade);
         }
         // Check version.
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
             try {
-                pipelineRdf = migrationFacade.migrate(pipelineRdf);
-            } catch (MigrationFacade.MigrationFailed ex) {
+                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
+                        templatesFacade);
+            } catch (PipelineUpdate.UpdateFailed ex) {
                 throw new PipelineFacade.OperationFailed(
                         "Migration failed from version: {}",
                         info.getVersion(), ex);
@@ -405,14 +397,13 @@ class PipelineManager {
         }
         // Get pipeline IRI.
         if (options.getPipelineIri() == null) {
-            final IRI iri = SimpleValueFactory.getInstance().createIRI(
-                    reservePipelineIri());
+            final IRI iri = valueFactory.createIRI(reservePipelineIri());
             options.setPipelineIri(iri);
         }
         try {
-            pipelineRdf = updaterFacade.update(
-                    pipelineRdf, options.getPipelineIri(), options);
-        } catch (UpdaterFacade.UpdateFailed ex) {
+            pipelineRdf = PipelineUpdate.update(pipelineRdf,
+                    valueFactory.createIRI(info.getIri()), options);
+        } catch (PipelineUpdate.UpdateFailed ex) {
             throw new PipelineFacade.OperationFailed(
                     "Can't perform required updates.", ex);
         }

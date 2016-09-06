@@ -1,7 +1,5 @@
 package com.linkedpipes.etl.storage.pipeline;
 
-import com.linkedpipes.etl.storage.pipeline.importer.ImportFacade;
-import com.linkedpipes.etl.storage.pipeline.updater.UpdaterFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
@@ -12,12 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains settings for pipeline oprations.
+ * Contains settings for pipeline operations.
  *
  * @author Petr Škoda
  */
-class PipelineOptions implements PojoLoader.Loadable, ImportFacade.Options,
-        UpdaterFacade.Options {
+class PipelineOptions implements PojoLoader.Loadable {
 
     public static final IRI TYPE;
 
@@ -33,7 +30,8 @@ class PipelineOptions implements PojoLoader.Loadable, ImportFacade.Options,
     private final List<Literal> labels = new ArrayList<>(2);
 
     /**
-     * If true pipeline is local and there is no need to update resources.
+     * If true pipeline is local and there is no need to update anything.
+     * If false the templates alignment need to be done.
      */
     private boolean local = true;
 
@@ -42,7 +40,6 @@ class PipelineOptions implements PojoLoader.Loadable, ImportFacade.Options,
      */
     private IRI pipelineIri;
 
-    @Override
     public List<Literal> getLabels() {
         return labels;
     }
@@ -51,7 +48,6 @@ class PipelineOptions implements PojoLoader.Loadable, ImportFacade.Options,
         return local;
     }
 
-    @Override
     public IRI getPipelineIri() {
         return pipelineIri;
     }

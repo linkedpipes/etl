@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.pipeline.importer;
+package com.linkedpipes.etl.storage.pipeline;
 
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Holds information about a single template. Is used for pipeline
- * import.
+ * updates.
  *
  * @author Petr Škoda
  */
