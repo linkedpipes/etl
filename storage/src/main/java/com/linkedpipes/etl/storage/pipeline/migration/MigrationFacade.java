@@ -5,10 +5,13 @@ import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.rdf.StatementsCollection;
+import com.linkedpipes.etl.storage.template.Template;
+import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -46,41 +49,8 @@ public class MigrationFacade {
                 "http://linkedpipes.com/ontology/template");
     }
 
-//    /**
-//     * Perform in place migration of given file.
-//     *
-//     * @param file
-//     * @param format
-//     * @return Path to the new version of the pipeline.
-//     */
-//    public File migrate(File file, RDFFormat format) throws MigrationFailed{
-//        Collection<Statement> pipelineRdf;
-//        try {
-//            pipelineRdf = RdfUtils.read(file, format);
-//        } catch (Exception ex) {
-//            throw new MigrationFailed("Can't read pipeline: {}", file, ex);
-//        }
-//        pipelineRdf = migrate(pipelineRdf);
-//        // Create file backup.
-//        String backupPath = file.toString() + ".backup";
-//        try {
-//            Files.copy(file.toPath(), (new File(backupPath)).toPath());
-//        } catch (IOException ex) {
-//            throw new MigrationFailed("Can't create backup for pipeline: {}",
-//                    file, ex);
-//        }
-//        // Update pipeline.
-//        String newPath = file.getName();
-//        newPath = file.getParent() +
-//                newPath.substring(newPath.lastIndexOf(".")) + ".trig";
-//        final File newFile = new File(newPath);
-//        try {
-//            RdfUtils.write(newFile, RDFFormat.TRIG, pipelineRdf);
-//        } catch (RdfUtils.RdfException ex) {
-//            throw new MigrationFailed("Can't write new pipeline.");
-//        }
-//        return newFile;
-//    }
+    @Autowired
+    private TemplateFacade templateFacade;
 
     /**
      * Return copy of given pipeline migrated to current version. The new
@@ -140,7 +110,7 @@ public class MigrationFacade {
      *
      * @param pipeline
      */
-    private static void migrateFrom_0(RdfObjects pipeline) {
+    private void migrateFrom_0(RdfObjects pipeline) {
         // Example of conversion:
         // http://localhost:8080/resources/components/t-tabular
         // http://etl.linkedpipes.com/resources/components/t-tabular/0.0.0
@@ -148,11 +118,16 @@ public class MigrationFacade {
         for (RdfObjects.Entity entity : pipeline.getTyped(COMPONENT)) {
             final List<Resource> newTemplates = new LinkedList<>();
             entity.getReferences(HAS_TEMPLATE).forEach((ref) -> {
-                String template = ref.getResource().stringValue();
-                String name = template.substring(template.lastIndexOf("/") + 1);
-                template = "http://etl.linkedpipes.com/resources/components/"
-                        + name + "/0.0.0";
-                newTemplates.add(vf.createIRI(template));
+                String templateIri = ref.getResource().stringValue();
+                String name = templateIri.substring(templateIri.lastIndexOf("/") + 1);
+                // We need to search for components to match the name.
+                for (Template template : templateFacade.getTemplates()) {
+                    if (template.getIri().contains(name)) {
+                        templateIri = template.getIri();
+                        break;
+                    }
+                }
+                newTemplates.add(vf.createIRI(templateIri));
             });
             entity.deleteReferences(HAS_TEMPLATE);
             newTemplates.forEach((e) -> entity.add(HAS_TEMPLATE, e));

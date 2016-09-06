@@ -54,6 +54,10 @@ public class TemplateFacade {
         return templates;
     }
 
+    public Collection<Template> getTemplates() {
+        return (Collection)manager.getTemplates().values();
+    }
+
     public Template getTemplate(String iri) {
         return manager.getTemplates().get(iri);
     }
