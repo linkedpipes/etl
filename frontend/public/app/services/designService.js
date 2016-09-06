@@ -55,14 +55,15 @@ define([], function () {
             data.tags = parsedResponse.tags;
             data.followup = {};
 
-            parsedResponse.followup.forEach((item) => {
-                if (data.followup[item['source']] === undefined) {
-                    data.followup[item['source']] = {};
-                }
-                data.followup[item['source']][item['target']] =
-                    item['frequency'];
-            })
-            console.log('data', data);
+            if (parsedResponse.followup) {
+                parsedResponse.followup.forEach((item) => {
+                    if (data.followup[item['source']] === undefined) {
+                        data.followup[item['source']] = {};
+                    }
+                    data.followup[item['source']][item['target']] =
+                        item['frequency'];
+                });
+            }
             //
             _status.ready = true;
             _status.loading = false;

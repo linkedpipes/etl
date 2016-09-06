@@ -144,6 +144,7 @@ public class InfoFacade {
 
     public void onPipelineDelete(Pipeline pipeline) {
         pipelineInfo.remove(pipeline.getIri());
+        regenerate();
     }
 
     /**
