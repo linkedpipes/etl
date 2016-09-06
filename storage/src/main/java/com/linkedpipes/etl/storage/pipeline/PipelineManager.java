@@ -143,7 +143,9 @@ class PipelineManager {
                         "Can't write new pipeline to file: {}", newFile, ex);
             }
             // Delete old file and switch to new file.
-            file.delete();
+            if (!file.equals(newFile)) {
+                file.delete();
+            }
             file = newFile;
         }
         // Create pipeline record.
