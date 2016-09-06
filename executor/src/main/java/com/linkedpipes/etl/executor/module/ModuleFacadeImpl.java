@@ -190,7 +190,8 @@ class ModuleFacadeImpl implements ModuleFacade,
                         + LINKEDPIPES.HAS_JAR + "> ?path .\n"
                         + "}");
         if (resultList.size() != 1) {
-            throw new ModuleException("Invalid number query results!");
+            throw new ModuleException("Invalid component definition : " +
+                    "invalid number of JAR paths: " + resultList.size());
         }
         componentInfo = resultList.get(0);
         // Then we need to load or get the bundle.
@@ -213,7 +214,7 @@ class ModuleFacadeImpl implements ModuleFacade,
                 bundle = framework.getBundleContext().installBundle(bundleIri);
             } catch (BundleException ex) {
                 throw new ModuleException(
-                        "Can't load bundle from given location!", ex);
+                        "Can't load bundle!", ex);
             }
             try {
                 bundle.start();

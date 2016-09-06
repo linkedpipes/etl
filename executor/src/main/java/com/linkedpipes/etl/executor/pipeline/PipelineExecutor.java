@@ -251,9 +251,10 @@ public class PipelineExecutor implements EventManager.EventListener {
 
                         });
             } catch (ModuleException ex) {
+                LOG.error("Component ({}) initialization failed.",
+                        component.getDefaultLabel());
                 throw new InitializationFailure(ex);
             }
-
             if (instance instanceof SequentialComponent) {
                 result.put(component.getIri(), (SequentialComponent) instance);
             } else {
