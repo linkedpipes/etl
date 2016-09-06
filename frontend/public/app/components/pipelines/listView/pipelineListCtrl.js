@@ -170,7 +170,7 @@ define([], function () {
             var options = {
                 '@id': 'http://localhost/options',
                 '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
-                'http://etl.linkedpipes.com/ontology/import': true
+                'http://etl.linkedpipes.com/ontology/local': true
             };
             data.append('options', new Blob([JSON.stringify(options)], {
                 type: "application/ld+json"

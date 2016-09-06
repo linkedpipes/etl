@@ -552,7 +552,7 @@ define([
             var options = {
                 '@id': 'http://localhost/options',
                 '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
-                'http://etl.linkedpipes.com/ontology/import': true
+                'http://etl.linkedpipes.com/ontology/local': true
             };
             data.append('options', new Blob([JSON.stringify(options)], {
                 type: "application/ld+json"
@@ -574,8 +574,7 @@ define([
                     });
                     // The response is a reference.
                     // TODO Use JSONLD service to get the value !!
-                    var newPipelineUri = data[0]['@graph'][0]
-                        ['http://linkedpipes.com/ontology/pipeline'][0]['@id'];
+                    var newPipelineUri = data[0]['@graph'][0]['@id'];
                     //
                     statusService.success({
                         'title': 'Pipeline has been successfully copied.'
