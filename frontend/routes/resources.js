@@ -408,6 +408,9 @@ gApiRouter.get('/executions', function (request, response) {
 function unpack(pipelineObject, optionsAsString, callback) {
     // pipelineObject.iri
     // pipelineObject.pipeline
+    if (optionsAsString === undefined || optionsAsString === '') {
+        optionsAsString = '{}';
+    }
     var formData = {
         'options': {
             'value': optionsAsString,
