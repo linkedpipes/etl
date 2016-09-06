@@ -73,7 +73,7 @@ final class JarImport {
         final Resource resource = RdfUtils.find(definitionRdf,
                 FullTemplate.TYPE);
         if (resource == null) {
-            throw new BaseException("Missing template resource: {}",
+            throw new BaseException("Missing resource of type JarTemplate: {}",
                     jarComponent.getFile());
         }
         definitionRdf = RdfUtils.forceContext(definitionRdf, resource);
