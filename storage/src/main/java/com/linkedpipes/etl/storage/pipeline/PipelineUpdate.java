@@ -117,7 +117,10 @@ public class PipelineUpdate {
             final List<Resource> newTemplates = new LinkedList<>();
             entity.getReferences(HAS_TEMPLATE).forEach((ref) -> {
                 String templateIri = ref.getResource().stringValue();
-                String name = templateIri.substring(templateIri.lastIndexOf("/") + 1);
+                // The extracted name is /t-tabular and we add / to the end
+                // to prevent t-tabular to match t-tabularUv.
+                String name = templateIri.substring(
+                        templateIri.lastIndexOf("/")) + "/";
                 // We need to search for components to match the name.
                 for (Template template : templateFacade.getTemplates()) {
                     if (template.getIri().contains(name)) {
