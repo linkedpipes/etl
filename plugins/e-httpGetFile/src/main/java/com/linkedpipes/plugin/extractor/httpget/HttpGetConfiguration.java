@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.httpget;
 
+import com.linkedpipes.etl.component.api.Configuration;
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
@@ -7,7 +8,7 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  * @author Škoda Petr
  */
 @RdfToPojo.Type(uri = HttpGetVocabulary.CONFIG)
-public class HttpGetConfiguration {
+public class HttpGetConfiguration implements Configuration {
 
     @RdfToPojo.Property(uri = HttpGetVocabulary.HAS_URI)
     private String uri;

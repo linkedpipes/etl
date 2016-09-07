@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv;
 
+import com.linkedpipes.etl.component.api.Configuration;
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGeneratorReplace;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfig;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author Škoda Petr
  */
 @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#Configuration")
-public class TabularConfig_V2 {
+public class TabularConfig_V2 implements Configuration {
 
     public enum ColumnType {
         String,
