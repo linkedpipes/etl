@@ -32,12 +32,6 @@ We recommend using [Cygwin] and proceeding as with Linux.
 
 ### Configuration
 Now edit the configuration file, mainly adding paths to working, storage, log and library directories. Especially:
-- `executor.execution.working_directory`
-- `executor.log.directory`
-- `executor.osgi.lib.directory` - This needs to be an absolute path to the `deploy/osgi` directory.
-- `executor-monitor.log.directory`
-- `storage.components.directory` - This needs to be an absolute path to the `deploy/components` directory.
-- `storage.pipelines.directory`
 
 ## Running LinkedPipes ETL
 To run LP-ETL, you need to run the three components it consists of. For debugging purposes, it is useful to store the console logs.
@@ -47,6 +41,7 @@ To run LP-ETL, you need to run the three components it consists of. For debuggin
 $ cd deploy
 $ ./executor.sh >> executor.log &
 $ ./executor-monitor.sh >> executor-monitor.log &
+$ ./storage.sh >> storage.log &
 $ ./frontend.sh >> frontend.log &
 ```
 
@@ -54,11 +49,12 @@ $ ./frontend.sh >> frontend.log &
 We recommend using [Cygwin] and proceeding as with Linux. Otherwise, in the ```deploy``` folder, run
  * ```executor.bat```
  * ```executor-monitor.bat```
+ * ```sotrage.bat```
  * ```frontend.bat```
 
 Unless configured otherwise, LinkedPipes ETL should now run on ```http://localhost:8080```.
-## Plugins - DPUs
-There are data processing units (DPUs) in the plugins directory. Detailed description of how to create your own coming soon.
+## Plugins - Components
+There are components in the ```jars``` directory. Detailed description of how to create your own coming soon.
 
 ## Known issues
  * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
