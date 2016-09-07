@@ -1,5 +1,7 @@
 # LinkedPipes ETL
 
+> Upgrade note: When upgrading from develop prior to feature/templates, you need to move your pipelines folder from e.g. ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
+
 > Upgrade note: When upgrading from master prior to 2016-04-07 to master after 2016-04-07, you need to delete your old execution data (e.g. in /data/lp/etl/working/data)
 
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
@@ -70,8 +72,10 @@ echo Killing Executor
 kill `ps ax | grep /executor.jar | grep -v grep | awk '{print $1}'`
 echo Killing Executor-monitor
 kill `ps ax | grep /executor-monitor.jar | grep -v grep | awk '{print $1}'`
-echo Killing Executor-view
+echo Killing Frontend
 kill `ps ax | grep node | grep -v grep | awk '{print $1}'`
+echo Killing Storage
+kill `ps ax | grep /storage.jar | grep -v grep | awk '{print $1}'`
 cd /opt/etl
 echo Git Pull
 git pull
@@ -82,7 +86,9 @@ echo Running executor
 ./executor.sh >> /data/lp/executor.log &
 echo Running executor-monitor
 ./executor-monitor.sh >> /data/lp/executor-monitor.log &
-echo Runninch executor-view
+echo Running storage
+./storage.sh >> /data/lp/etl/storage.log &
+echo Running frontend
 ./frontend.sh >> /data/lp/frontend.log &
 echo Disowning
 disown
