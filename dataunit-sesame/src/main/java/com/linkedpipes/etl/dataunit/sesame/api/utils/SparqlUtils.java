@@ -2,16 +2,17 @@ package com.linkedpipes.etl.dataunit.sesame.api.utils;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.openrdf.model.Value;
+import org.openrdf.query.Binding;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.impl.SimpleDataset;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.openrdf.model.Value;
-import org.openrdf.query.AbstractTupleQueryResultHandler;
-import org.openrdf.query.Binding;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.TupleQueryResultHandlerException;
-import org.openrdf.repository.util.Repositories;
 
 /**
  *
@@ -33,19 +34,22 @@ public final class SparqlUtils {
     public static List<Map<String, Value>> executeSelect(
             SingleGraphDataUnit dataUnit, String query) throws LpException {
         final List<Map<String, Value>> result = new LinkedList<>();
-        dataUnit.execute(() -> {
+        dataUnit.execute((connection) -> {
             result.clear();
-            Repositories.tupleQuery(dataUnit.getRepository(),
-                    query, new AbstractTupleQueryResultHandler() {
-                @Override
-                public void handleSolution(BindingSet bindingSet)
-                        throws TupleQueryResultHandlerException {
-                    final Map<String, Value> row = new HashMap<>();
-                    for (Binding binding : bindingSet) {
-                        row.put(binding.getName(), binding.getValue());
-                    }
+            // Prepare dataset.
+            final SimpleDataset dataset = new SimpleDataset();
+            dataset.addDefaultGraph(dataUnit.getGraph());
+            final TupleQuery tupleQuery = connection.prepareTupleQuery(
+                    QueryLanguage.SPARQL, query);
+            tupleQuery.setDataset(dataset);
+            final TupleQueryResult tupleResult = tupleQuery.evaluate();
+            while (tupleResult.hasNext()) {
+                final Map<String, Value> row = new HashMap<>();
+                for (Binding binding : tupleResult.next()) {
+                    row.put(binding.getName(), binding.getValue());
                 }
-            });
+                result.add(row);
+            }
         });
         return result;
     }

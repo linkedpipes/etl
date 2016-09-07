@@ -20,6 +20,13 @@
                         <label>Label</label>
                         <input ng-model="detail.label" md-autofocus>
                     </md-input-container>
+                    <md-chips ng-model="detail.tags"
+                              placeholder="Enter a tag"
+                              secondary-placeholder="+Tag">
+                        <md-chip-template>
+                            <strong>{{$chip}}</strong>
+                        </md-chip-template>
+                    </md-chips>
                 </div>
             </div>
         </md-dialog-content>

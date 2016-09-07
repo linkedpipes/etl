@@ -163,7 +163,10 @@ public final class HttpGet implements Component.Sequential {
     private HttpURLConnection followRedirect(HttpURLConnection connection)
             throws IOException, LpException {
         connection.connect();
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_SEE_OTHER) {
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+                responseCode == HttpURLConnection.HTTP_SEE_OTHER ) {
             final String location = connection.getHeaderField("Location");
             if (location == null) {
                 throw exceptionFactory.failed("Missing Location for redirect.");

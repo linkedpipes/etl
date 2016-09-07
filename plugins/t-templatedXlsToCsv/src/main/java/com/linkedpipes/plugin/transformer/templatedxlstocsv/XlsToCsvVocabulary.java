@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.templatedxlstocsv;
  *
  * @author Petr Škoda
  */
-final class XlsToCsvVocabulary {
+public final class XlsToCsvVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#";

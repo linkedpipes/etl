@@ -1,12 +1,9 @@
 package com.linkedpipes.plugin.extractor.distributionMetadata;
 
+import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
@@ -14,12 +11,20 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.impl.SimpleDataset;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.util.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -244,9 +249,16 @@ public class DistributionMetadata implements Component.Sequential {
      * @param bindingName Name of property to return.
      * @return
      */
-    private String querySingleResult(final String queryAsString, String bindingName) {
-        LOG.info("querySingleResult: {}", queryAsString);
-        return Repositories.tupleQuery(inputRdf.getRepository(), queryAsString, (result) -> {
+    private String querySingleResult(final String queryAsString, String bindingName) throws LpException{
+        return inputRdf.execute((connection) -> {
+            final TupleQuery preparedQuery = connection.prepareTupleQuery(
+                    QueryLanguage.SPARQL, queryAsString);
+            final SimpleDataset dataset = new SimpleDataset();
+            dataset.addDefaultGraph(inputRdf.getGraph());
+            preparedQuery.setDataset(dataset);
+            //
+            final TupleQueryResult result = preparedQuery.evaluate();
+            //
             if (!result.hasNext()) {
                 return null;
             }

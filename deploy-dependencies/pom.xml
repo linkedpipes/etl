@@ -322,6 +322,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-dcatAp11ToCkan</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/l-dcatAp11ToCkan/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-distributionMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/e-distributionMetadata/</outputDirectory>
@@ -343,6 +349,12 @@
                                             <artifactId>t-filesToRdf</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/components/t-filesToRdf/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesToRdfGraph</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/components/t-filesToRdfGraph/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -577,6 +589,12 @@
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
+                                        <mkdir dir="${deploy.directory}/components/l-dcatAp11ToCkan/"/>
+                                        <copy todir="${deploy.directory}/components/l-dcatAp11ToCkan/">
+                                            <fileset dir="${plugins.directory}/l-dcatAp11ToCkan/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
                                         <mkdir dir="${deploy.directory}/components/e-datasetMetadata/"/>
                                         <copy todir="${deploy.directory}/components/e-datasetMetadata/">
                                             <fileset dir="${plugins.directory}/e-datasetMetadata/target/classes">
@@ -598,6 +616,12 @@
                                         <mkdir dir="${deploy.directory}/components/t-filesToRdf/"/>
                                         <copy todir="${deploy.directory}/components/t-filesToRdf/">
                                             <fileset dir="${plugins.directory}/t-filesToRdf/target/classes">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/components/t-filesToRdfGraph/"/>
+                                        <copy todir="${deploy.directory}/components/t-filesToRdfGraph/">
+                                            <fileset dir="${plugins.directory}/t-filesToRdfGraph/target/classes">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>

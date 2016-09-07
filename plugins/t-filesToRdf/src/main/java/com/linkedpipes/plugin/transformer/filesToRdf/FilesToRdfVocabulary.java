@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.filesToRdf;
  *
  * @author Škoda Petr
  */
-final class FilesToRdfVocabulary {
+public final class FilesToRdfVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/t-filesToRdf#";

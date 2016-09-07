@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.packzip;
  *
  * @author Škoda Petr
  */
-final class PackZipVocabulary {
+public final class PackZipVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/t-packZip#";

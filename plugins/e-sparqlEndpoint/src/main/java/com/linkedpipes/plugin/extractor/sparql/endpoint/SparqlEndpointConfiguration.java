@@ -23,6 +23,12 @@ public class SparqlEndpointConfiguration {
     @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
+    /**
+     * Used as a Accept value in header.
+     */
+    @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_HEADER_ACCEPT)
+    private String transferMimeType = null;
+
     public SparqlEndpointConfiguration() {
     }
 
@@ -50,4 +56,11 @@ public class SparqlEndpointConfiguration {
         this.defaultGraphs = defaultGraphs;
     }
 
+    public String getTransferMimeType() {
+        return transferMimeType;
+    }
+
+    public void setTransferMimeType(String transferMimeType) {
+        this.transferMimeType = transferMimeType;
+    }
 }

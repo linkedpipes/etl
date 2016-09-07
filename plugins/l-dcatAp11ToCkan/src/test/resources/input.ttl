@@ -1,0 +1,98 @@
+
+<http://att1.cz> a <http://purl.org/linked-data/cube#AttributeProperty> .
+
+<http://att2.cz> a <http://purl.org/linked-data/cube#AttributeProperty> .
+
+<http://dim1.cz> a <http://purl.org/linked-data/cube#DimentsionProperty> .
+
+<http://dim2.cz> a <http://purl.org/linked-data/cube#DimentsionProperty> .
+
+<http://inch.cz> a <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http://km.cz> a <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http://my.catalog> a <http://www.w3.org/ns/dcat#Catalog> ;
+	<http://www.w3.org/ns/dcat#dataset> <http://real.dataset.iri> .
+
+<http://real.dataset.iri> a <http://www.w3.org/ns/dcat#Dataset> ;
+	<http://data.europa.eu/(xyz)/statdcat-ap/attribute> <http://att1.cz> , <http://att2.cz> ;
+	<http://data.europa.eu/(xyz)/statdcat-ap/dimension> <http://dim1.cz> , <http://dim2.cz> ;
+	<http://data.europa.eu/(xyz)/statdcat-ap/numSeries> 9 ;
+	<http://data.europa.eu/(xyz)/statdcat-ap/statMeasure> <http://inch.cz> , <http://km.cz> ;
+	<http://purl.org/dc/terms/accrualPeriodicity> <http://publications.europa.eu/resource/authority/frequency/ANNUAL_3> ;
+	<http://purl.org/dc/terms/conformsTo> <http://test.iri> ;
+	<http://purl.org/dc/terms/description> "Dataset description"@en ;
+	<http://purl.org/dc/terms/issued> "2016-07-12"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	<http://purl.org/dc/terms/language> <http://publications.europa.eu/resource/authority/language/ENG> ;
+	<http://purl.org/dc/terms/modified> "2016-07-25"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	<http://purl.org/dc/terms/publisher> <https://cssz.cz> ;
+	<http://purl.org/dc/terms/title> "Dataset title"@en ;
+	<http://www.w3.org/ns/dcat#contactPoint> <http://real.dataset.iri/contactPoint> ;
+	<http://www.w3.org/ns/dcat#keyword> "data"@en , "open"@en ;
+	<http://www.w3.org/ns/dcat#theme> <http://publications.europa.eu/resource/authority/data-theme/TECH> ;
+	<http://www.w3.org/ns/dqv#hasQualityAnnotation> <http://qann1.cz> , <http://qann2.cz> ;
+	<http://www.w3.org/ns/dcat#distribution> <http://real.dataset.iri/distribution> .
+
+<http://publications.europa.eu/resource/authority/frequency/ANNUAL_3> a <http://purl.org/dc/terms/Frequency> .
+
+<http://publications.europa.eu/resource/authority/language/ENG> a <http://purl.org/dc/terms/LinguisticSystem> .
+
+<http://qann1.cz> a <http://www.w3.org/ns/oa#Annotation> .
+
+<http://qann2.cz> a <http://www.w3.org/ns/oa#Annotation> .
+
+<https://cssz.cz> a <http://xmlns.com/foaf/0.1/Agent> ;
+	<http://purl.org/dc/terms/type> <http://purl.org/adms/publishertype/NationalAuthority> ;
+	<http://xmlns.com/foaf/0.1/name> "ČSSZ"@cs .
+
+<http://real.dataset.iri/contactPoint> a <http://www.w3.org/2006/vcard/ns#Individual> , <http://www.w3.org/2006/vcard/ns#Kind> ;
+	<http://www.w3.org/2006/vcard/ns#fn> "Ing. Šunka" ;
+	<http://www.w3.org/2006/vcard/ns#hasEmail> "opendata@cssz.cz" .
+
+<http://my.license.url> a <http://purl.org/dc/terms/LicenseDocument> ;
+	<http://purl.org/dc/terms/type> <http://purl.org/adms/licencetype/Attribution> .
+
+<http://purl.org/adms/licencetype/Attribution> a <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http://publications.europa.eu/resource/authority/documentation-type/VISUALIZATION> a <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http://publications.europa.eu/resource/authority/file-type/RDF_TRIG> a <http://purl.org/dc/terms/MediaTypeOrExtent> .
+
+<http://purl.org/adms/status/UnderDevelopment> a <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http://real.dataset.iri/distribution> a <http://www.w3.org/ns/dcat#Distribution> ;
+	<http://purl.org/dc/terms/conformsTo> <http://schema1.iri> ;
+	<http://purl.org/dc/terms/description> "Czech desc"@cs , "English desc"@en ;
+	<http://purl.org/dc/terms/issued> "2016-07-12"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	<http://purl.org/dc/terms/language> <http://publications.europa.eu/resource/authority/language/ENG> ;
+	<http://purl.org/dc/terms/modified> "2016-07-25"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	<http://purl.org/dc/terms/title> "Český titul"@cs , "English title"@en ;
+	<http://purl.org/dc/terms/type> <http://publications.europa.eu/resource/authority/documentation-type/VISUALIZATION> ;
+	<http://purl.org/dc/terms/format> <http://publications.europa.eu/resource/authority/file-type/RDF_TRIG> ;
+	<http://purl.org/dc/terms/license> <http://my.license.url> ;
+	<http://purl.org/dc/terms/rights> <http://rights.cz> ;
+	<http://purl.org/dc/terms/spatial> <http://spatialX.cz> , <http://spatialX.de> ;
+	<http://purl.org/dc/terms/temporal> <http://real.dataset.iri/distribution/temporal> ;
+	<http://spdx.org/rdf/terms#checksum> <http://real.dataset.iri/distribution/checksum> ;
+	<http://www.w3.org/ns/adms#status> <http://purl.org/adms/status/UnderDevelopment> ;
+	<http://www.w3.org/ns/dcat#accessURL> <http://my.access.url1> , <http://my.access.url2> ;
+	<http://www.w3.org/ns/dcat#byteSize> 42.0 ;
+	<http://www.w3.org/ns/dcat#downloadURL> <http://download1.cz> , <http://download2.cz> ;
+	<http://www.w3.org/ns/dcat#mediaType> <http://www.iana.org/assignments/media-types/application/trig> ;
+	<http://xmlns.com/foaf/0.1/page> <http://docu1.cz> , <http://docu2.cz> .
+
+<http://rights.cz> a <http://purl.org/dc/terms/RightsStatement> .
+
+<http://spatialX.cz> a <http://purl.org/dc/terms/Location> .
+
+<http://spatialX.de> a <http://purl.org/dc/terms/Location> .
+
+<http://real.dataset.iri/distribution/temporal> a <http://purl.org/dc/terms/PeriodOfTime> ;
+	<http://schema.org/endDate> "2016-07-16"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	<http://schema.org/startDate> "2016-07-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+
+<http://real.dataset.iri/distribution/checksum> a <http://spdx.org/rdf/terms#Checksum> ;
+	<http://spdx.org/rdf/terms#algorithm> <http://spdx.org/rdf/terms#checksumAlgorithm_sha1> ;
+	<http://spdx.org/rdf/terms#checksumValue> "deadbeef"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+
+<http://www.iana.org/assignments/media-types/application/trig> a <http://purl.org/dc/terms/MediaTypeOrExtent> .

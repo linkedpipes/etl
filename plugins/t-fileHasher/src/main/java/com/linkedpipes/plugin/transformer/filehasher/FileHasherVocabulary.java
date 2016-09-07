@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.transformer.filehasher;
  *
  * @author Petr Škoda
  */
-final class FileHasherVocabulary {
+public final class FileHasherVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/t-filehash#";

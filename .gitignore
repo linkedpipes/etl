@@ -9,6 +9,9 @@
 nbactions.xml
 nb-configuration.xml
 
+# IntelliJ IDEA files.
+*.iml
+
 # Build directories.
 target/
 bin/

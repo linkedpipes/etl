@@ -7,7 +7,7 @@ import org.openrdf.model.impl.SimpleValueFactory;
  *
  * @author Klímek Jakub
  */
-public class DcatApToCkanVocabulary {
+public final class DcatApToCkanVocabulary {
 
     public static final String SCHEMA = "http://schema.org/";
 

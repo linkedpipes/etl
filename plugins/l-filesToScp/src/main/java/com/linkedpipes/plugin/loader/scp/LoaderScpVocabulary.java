@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.loader.scp;
  *
  * @author Petr Škoda
  */
-final class LoaderScpVocabulary {
+public final class LoaderScpVocabulary {
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/l-filesToScp#";
