@@ -97,6 +97,15 @@ define(['jquery'], function (jQuery) {
         template['dialogs'].forEach(function (item) {
             item['iri'] = template['id'];
         });
+        // Sort dialogs.
+        template['dialogs'].sort(function(left, right) {
+            // Config is the left top most.
+            // TODO The dialog should provide order of the tabs.
+            if (left['name'] === 'config'){
+                return false;
+            }
+            return left['name'] > right['name'];
+        });
         // Check ports.
         var inputs = [];
         var outputs = [];
