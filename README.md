@@ -1,6 +1,6 @@
 # LinkedPipes ETL
 
-> Upgrade note: When upgrading from develop prior to feature/templates, you need to move your pipelines folder from e.g. ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
+> Upgrade note 2: When upgrading from develop prior to feature/templates, you need to move your pipelines folder from e.g. ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
 
 > Upgrade note: When upgrading from master prior to 2016-04-07 to master after 2016-04-07, you need to delete your old execution data (e.g. in /data/lp/etl/working/data)
 
@@ -64,10 +64,9 @@ There are data processing units (DPUs) in the plugins directory. Detailed descri
  * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
  
 ## Update script
-Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse if you wish. The script sets path to Java 8, kills running components (yeah, it is dirty), the repo is cloned in ```/opt/etl``` and we store the console logs in ```/data/lp/```
+Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse if you wish. The script sets path to Java 8, kills running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```
 ```sh
 #!/bin/bash
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 echo Killing Executor
 kill `ps ax | grep /executor.jar | grep -v grep | awk '{print $1}'`
 echo Killing Executor-monitor
@@ -76,20 +75,20 @@ echo Killing Frontend
 kill `ps ax | grep node | grep -v grep | awk '{print $1}'`
 echo Killing Storage
 kill `ps ax | grep /storage.jar | grep -v grep | awk '{print $1}'`
-cd /opt/etl
+cd /opt/lp/etl
 echo Git Pull
 git pull
 echo Mvn install
 mvn clean install
 cd deploy
 echo Running executor
-./executor.sh >> /data/lp/executor.log &
+./executor.sh >> /data/lp/etl/executor.log &
 echo Running executor-monitor
-./executor-monitor.sh >> /data/lp/executor-monitor.log &
+./executor-monitor.sh >> /data/lp/etl/executor-monitor.log &
 echo Running storage
 ./storage.sh >> /data/lp/etl/storage.log &
 echo Running frontend
-./frontend.sh >> /data/lp/frontend.log &
+./frontend.sh >> /data/lp/etl/frontend.log &
 echo Disowning
 disown
 ```
