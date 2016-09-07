@@ -84,7 +84,7 @@ class PipelineManager {
             try {
                 loadPipeline(file);
             } catch (Exception ex) {
-                LOG.error("Can't read pipeline: {}", file, ex);
+                throw new RuntimeException("Invalid pipeline: " + file, ex);
             }
         }
     }
@@ -110,6 +110,17 @@ class PipelineManager {
         }
         // Migration.
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
+            // Perform migrationFacade of the pipeline definition.
+            try {
+                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
+                        templatesFacade, true);
+                info = new Pipeline.Info();
+                PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
+            } catch (PipelineUpdate.UpdateFailed |
+                    PojoLoader.CantLoadException ex) {
+                throw new PipelineFacade.OperationFailed(
+                        "Can't migrate pipeline: {}", file, ex);
+            }
             // Create backup file.
             String fileName = file.getName();
             fileName = fileName.substring(0, fileName.lastIndexOf("."));
@@ -120,17 +131,6 @@ class PipelineManager {
             } catch (RdfUtils.RdfException ex) {
                 throw new PipelineFacade.OperationFailed(
                         "Can't write backup file: {}", backupFile, ex);
-            }
-            // Perform migrationFacade of the pipeline definition.
-            try {
-                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
-                        templatesFacade);
-                info = new Pipeline.Info();
-                PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
-            } catch (PipelineUpdate.UpdateFailed |
-                    PojoLoader.CantLoadException ex) {
-                throw new PipelineFacade.OperationFailed(
-                        "Can't migrate pipeline: {}", file, ex);
             }
             // We need to create backup of the pipeline file
             // and write updated pipeline to new file.
@@ -267,7 +267,7 @@ class PipelineManager {
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
             try {
                 pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
-                        templatesFacade);
+                        templatesFacade, false);
             } catch (PipelineUpdate.UpdateFailed ex) {
                 throw new PipelineFacade.OperationFailed(
                         "Migration failed from version: {}",
@@ -390,7 +390,7 @@ class PipelineManager {
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
             try {
                 pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
-                        templatesFacade);
+                        templatesFacade, false);
             } catch (PipelineUpdate.UpdateFailed ex) {
                 throw new PipelineFacade.OperationFailed(
                         "Migration failed from version: {}",

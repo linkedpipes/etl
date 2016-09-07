@@ -53,13 +53,17 @@ public class PipelineUpdate {
     /**
      * Perform changes on the pipeline related to change in version.
      *
+     * During import there might be issues with missing templates, etc .. these
+     * are not errors.
+     *
      * @param pipelineRdf
      * @param templateFacade
+     * @param throwOnWarning If true raise an exception in case of 'warning'.
      * @return Updated pipeline.
      */
     public static Collection<Statement> migrate(
-            Collection<Statement> pipelineRdf, TemplateFacade templateFacade)
-            throws UpdateFailed {
+            Collection<Statement> pipelineRdf, TemplateFacade templateFacade,
+            boolean throwOnWarning) throws UpdateFailed {
         // Split pipeline into graphs and locate pipeline resource.
         final Resource pplResource = RdfUtils.find(pipelineRdf,
                 Pipeline.TYPE);
@@ -85,7 +89,7 @@ public class PipelineUpdate {
         // Perform update.
         switch (version) {
             case 0:
-                migrateFrom_0(pplObject, templateFacade);
+                migrateFrom_0(pplObject, templateFacade, throwOnWarning);
             case 1: // Current version.
                 break;
             default:
@@ -107,29 +111,39 @@ public class PipelineUpdate {
      *
      * @param pipeline
      * @param templateFacade
+     * @param throwOnMissing If true and template is missing then throw.
      */
-    private static void migrateFrom_0(RdfObjects pipeline, TemplateFacade templateFacade) {
+    private static void migrateFrom_0(RdfObjects pipeline,
+            TemplateFacade templateFacade, boolean throwOnMissing)
+            throws UpdateFailed {
         // Example of conversion:
         // http://localhost:8080/resources/components/t-tabular
         // http://etl.linkedpipes.com/resources/components/t-tabular/0.0.0
         final ValueFactory vf = SimpleValueFactory.getInstance();
         for (RdfObjects.Entity entity : pipeline.getTyped(COMPONENT)) {
             final List<Resource> newTemplates = new LinkedList<>();
-            entity.getReferences(HAS_TEMPLATE).forEach((ref) -> {
+            for (RdfObjects.Entity ref :
+                    entity.getReferences(HAS_TEMPLATE)) {
                 String templateIri = ref.getResource().stringValue();
                 // The extracted name is /t-tabular and we add / to the end
                 // to prevent t-tabular to match t-tabularUv.
                 String name = templateIri.substring(
                         templateIri.lastIndexOf("/")) + "/";
                 // We need to search for components to match the name.
+                boolean templateFound = false;
                 for (Template template : templateFacade.getTemplates()) {
                     if (template.getIri().contains(name)) {
                         templateIri = template.getIri();
+                        templateFound = true;
                         break;
                     }
                 }
+                if (!templateFound && throwOnMissing) {
+                    // We are missing a template.
+                    throw new UpdateFailed("Missing template: {}", templateIri);
+                }
                 newTemplates.add(vf.createIRI(templateIri));
-            });
+            };
             entity.deleteReferences(HAS_TEMPLATE);
             newTemplates.forEach((e) -> entity.add(HAS_TEMPLATE, e));
         }
@@ -142,9 +156,9 @@ public class PipelineUpdate {
      * @param pipelineIri Current IRI of the given pipeline.
      * @param options
      * @return
-     * @throws UpdateFailed
      */
-    public static Collection<Statement> update(Collection<Statement> pipelineRdf,
+    public static Collection<Statement> update(
+            Collection<Statement> pipelineRdf,
             IRI pipelineIri, PipelineOptions options)
             throws UpdateFailed {
         // Update resources.
@@ -372,8 +386,6 @@ public class PipelineUpdate {
         }
         return result;
     }
-
-
 
 
 }
