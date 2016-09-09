@@ -55,6 +55,6 @@ define([], function () {
         loadDialog();
     }
     //
-    controller.$inject = ['$scope', '$service', '', '$service', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });
