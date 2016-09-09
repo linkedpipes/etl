@@ -19,6 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -93,28 +95,19 @@ public final class HttpGetFiles implements Component.Sequential {
         }
         LOG.info("Downloading: {} -> {}", reference.getUri(),
                 reference.getFileName());
-        // Prepare source URL.
-        final URL source;
-        try {
-            source = new URL(reference.getUri());
-        } catch (MalformedURLException ex) {
-            throw exceptionFactory.failure("Invalid property: {} on {}",
-                    HttpGetFilesVocabulary.HAS_URI,
-                    reference.getUri(), ex);
-        }
         // Prepare target destination.
         final File destination = output.createFile(
                 reference.getFileName()).toFile();
         // Download file.
         HttpURLConnection connection;
         try {
-            connection = (HttpURLConnection) source.openConnection();
+            connection = createConnection(reference);
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't open connection.", ex);
         }
         if (configuration.isForceFollowRedirect()) {
-            // Check for redirect. We can hawe multiple redirects
-            // so follow untill there is no one.
+            // Check for redirect. We can have multiple redirects
+            // so follow until there is no one.
             HttpURLConnection oldConnection;
             try {
                 do {
@@ -197,15 +190,73 @@ public final class HttpGetFiles implements Component.Sequential {
             } else {
                 // Update based on the redirect.
                 connection.disconnect();
-                final URL source = new URL(location);
                 LOG.debug("Follow redirect: {}", location);
-                final HttpURLConnection newConnection
-                        = (HttpURLConnection) source.openConnection();
-                return newConnection;
+                return createConnection(new URL(location), connection);
             }
         } else {
             return connection;
         }
+    }
+
+    /**
+     * Create connection for given reference.
+     *
+     * @param reference
+     * @return
+     * @throws IOException
+     * @throws LpException
+     */
+    private HttpURLConnection createConnection(
+            HttpGetFilesConfiguration.Reference reference)
+            throws IOException, LpException {
+        // Prepare target location.
+        final URL target;
+        try {
+            target = new URL(reference.getUri());
+        } catch (MalformedURLException ex) {
+            throw exceptionFactory.failure("Invalid property: {} on {}",
+                    HttpGetFilesVocabulary.HAS_URI,
+                    reference.getUri(), ex);
+        }
+        // Prepare headers.
+        final Map<String, String> headers = new HashMap<>();
+        for (HttpGetFilesConfiguration.Header header
+                : configuration.getHeaders()) {
+            headers.put(header.getKey(), header.getValue());
+        }
+        for (HttpGetFilesConfiguration.Header header
+                : reference.getHeaders()) {
+            headers.put(header.getKey(), header.getValue());
+        }
+        // Create connection.
+        final HttpURLConnection connection =
+                (HttpURLConnection) target.openConnection();
+        // Set headers.
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            connection.setRequestProperty(entry.getKey(), entry.getValue());
+        }
+        return connection;
+    }
+
+    /**
+     * Create and return connection to given destination. Copy used headers.
+     *
+     * @param target
+     * @param originalConnection
+     * @return
+     * @throws IOException
+     */
+    private HttpURLConnection createConnection(URL target,
+            HttpURLConnection originalConnection) throws IOException {
+        final HttpURLConnection connection =
+                (HttpURLConnection) target.openConnection();
+        // Copy properties.
+        originalConnection.getRequestProperties().entrySet().forEach((entry) -> {
+            entry.getValue().forEach((value) -> {
+                connection.addRequestProperty(entry.getKey(), value);
+            });
+        });
+        return connection;
     }
 
 }
