@@ -22,7 +22,7 @@ public class LpException extends Exception {
     protected LpException(String messages, Object... args) {
         // Extract cause if given.
         if (args.length > 0) {
-            if (args[args.length - 1] instanceof Exception) {
+            if (args[args.length - 1] instanceof Throwable) {
                 this.initCause((Exception) args[args.length - 1]);
             }
         }
