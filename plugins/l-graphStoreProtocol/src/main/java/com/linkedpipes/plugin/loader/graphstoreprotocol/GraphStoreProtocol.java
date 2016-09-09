@@ -93,6 +93,10 @@ public class GraphStoreProtocol implements Component.Sequential {
                 throw exceptionFactory.failure(
                         "Can't determine format for file: {}", entry);
             }
+            if (rdfFormat.get().supportsContexts()) {
+                throw exceptionFactory.failure(
+                        "Quad-based formats are not supported.");
+            }
             final String mimeType = rdfFormat.get().getDefaultMIMEType();
             //
             LOG.debug("Use repository: {}", configuration.getRepository());
