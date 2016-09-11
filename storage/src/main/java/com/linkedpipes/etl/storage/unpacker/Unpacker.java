@@ -689,7 +689,7 @@ class Unpacker {
                 pipelineIri
         ));
         final IRI pplInput = vf.createIRI(
-                "http://linkedpipes.com/resources/components/e-pipelineInput/inputDirectory");
+                "http://etl.linkedpipes.com/resources/components/e-pipelineInput/inputDirectory");
         toAdd.add(vf.createStatement(
                 pplInput, RDF.TYPE,
                 vf.createIRI(
