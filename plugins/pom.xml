@@ -52,6 +52,7 @@
         <module>t-fileHasher</module>
         <module>x-virtuosoExtractor</module>
         <module>t-valueParser</module>
+        <module>x-deleteDirectory</module>
     </modules>
 
 </project>

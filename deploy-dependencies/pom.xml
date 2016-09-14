@@ -506,6 +506,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-valueParser/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>x-deleteDirectory</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/x-deleteDirectory/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>
