@@ -1,0 +1,26 @@
+<div class="container-flow">
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Virtuoso JDBC connection string</label>
+        <input ng-model="dialog.host" required placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/">
+    </md-input-container>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Virtuoso user name</label>
+            <input ng-model="dialog.userName" required placeholder="dba">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Virtuoso password</label>
+            <input type="password" ng-model="dialog.password" required placeholder="dba">
+        </md-input-container>
+    </div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Output path</label>
+            <input ng-model="dialog.outputPath" required placeholder="">
+        </md-input-container>
+    </div>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Source graph IRI</label>
+        <input type="uri" ng-model="dialog.graph" placeholder="http://example.org/resource/graph">
+    </md-input-container>
+</div>

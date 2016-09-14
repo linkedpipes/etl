@@ -50,6 +50,7 @@
         <module>t-filesRenamer</module>
         <module>t-templatedXlsToCsv</module>
         <module>t-fileHasher</module>
+        <module>x-virtuosoExtractor</module>
     </modules>
 
 </project>
