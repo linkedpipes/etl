@@ -500,6 +500,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-singleGraphUnion/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-valueParser</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-valueParser/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>

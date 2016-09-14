@@ -51,6 +51,7 @@
         <module>t-templatedXlsToCsv</module>
         <module>t-fileHasher</module>
         <module>x-virtuosoExtractor</module>
+        <module>t-valueParser</module>
     </modules>
 
 </project>

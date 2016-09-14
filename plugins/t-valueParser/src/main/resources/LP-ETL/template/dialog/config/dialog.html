@@ -1,0 +1,28 @@
+<div class="container-flow">
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Predicate for input values</label>
+        <textarea id="source" ng-model="dialog.source" required/>
+    </md-input-container>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Regular expression with groups</label>
+        <textarea id="regexp" ng-model="dialog.regexp" required/>
+    </md-input-container>
+    <md-switch ng-model="dialog.preserveMetadata">Preserve language tag/datatype</md-switch>
+    <div>
+        <section style="margin-top: 0em;margin-bottom: -2em;" layout-gt-sm="row" ng-repeat="item in dialog.binding">
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Group</label>
+                <input ng-model="item.group">
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Predicate</label>
+                <input ng-model="item.target" placeholder="http://example.com/property">
+            </md-input-container>
+            <button hide-gt-sm ng-click="onDelete($index)" class="md-raised md-warn md-button md-ink-ripple">Remove column</button>
+            <button hide show-gt-sm ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+        </section>
+        <button hide-gt-sm ng-click="onAdd()" class="md-raised md-primary md-button md-ink-ripple">Add column</button>
+        <button hide show-gt-sm ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+    </div>
+
+</div>
