@@ -61,7 +61,7 @@ public class RdfObjects {
          */
         public Entity getReference(IRI property) {
             final List<Entity> objects = references.get(property);
-            if (objects.size() == 1) {
+            if (objects != null && objects.size() == 1) {
                 return objects.get(0);
             } else {
                 throw new RuntimeException("Invalid number of references.");

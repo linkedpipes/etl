@@ -7,6 +7,8 @@ import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
@@ -14,6 +16,9 @@ import java.util.Collection;
  * @author Petr Škoda
  */
 public class ConfigurationFacade {
+
+    private static final Logger LOG
+            = LoggerFactory.getLogger(ConfigurationFacade.class);
 
     private ConfigurationFacade() {
 
@@ -44,8 +49,16 @@ public class ConfigurationFacade {
         final ValueFactory vf = SimpleValueFactory.getInstance();
         config.getTyped(description.getType()).forEach((instance) -> {
             for (ConfigDescription.Member member : description.getMembers()) {
-                switch (instance.getReference(member.getControl()).getResource()
-                        .stringValue()) {
+
+                RdfObjects.Entity control;
+                try {
+                    control = instance.getReference(member.getControl());
+                } catch (Exception ex) {
+                    // The configuration is missing -> do nothing.
+                    continue;
+                }
+
+                switch (control.getResource().stringValue()) {
                     case "http://plugins.linkedpipes.com/resource/configuration/None":
                     case "http://plugins.linkedpipes.com/resource/configuration/Inherit":
                         // Do nothing.

@@ -113,6 +113,10 @@ public final class RdfUtils {
     public static Collection<Statement> renameResources(
             Collection<Statement> statements, String baseIri,
             Resource context) {
+        if (statements == null || statements.isEmpty()) {
+            // There is nothing to update.
+            return Collections.EMPTY_LIST;
+        }
         final ValueFactory vf = SimpleValueFactory.getInstance();
         // Create mapping of resources.
         final Map<Resource, Resource> replaceMap = new HashMap<>();
