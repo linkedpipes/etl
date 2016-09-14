@@ -72,11 +72,11 @@ define(['jquery'], function (jQuery) {
     };
 
     /**
-     * Update component after raw loading.
-     *
+     * Prepare and set filtering string for given component.
+     * 
      * @param template
      */
-    function updateComponent(template) {
+    function prepareFilterString(template) {
         template['filterString'] = template.label.toLowerCase();
         if (template['keyword'] === undefined) {
             // We do not update the filter as there are no
@@ -90,6 +90,14 @@ define(['jquery'], function (jQuery) {
             template['filterString'] +=
                 ',' + template['keyword'].toLowerCase();
         }
+    }
+
+    /**
+     * Update component after raw loading.
+     *
+     * @param template
+     */
+    function decorateJarTemplate(template) {
         // Update dialog - we need to add references.
         if (template['dialogs'] === undefined) {
             template['dialogs'] = [];
@@ -154,9 +162,9 @@ define(['jquery'], function (jQuery) {
             $http.get("./resources/components").then(function (response) {
                     console.time('loading templates');
                     // Load jar templates/.
-                    var newTemplates = jsonldService.toJson(response.data,
+                    var jarTemplates = jsonldService.toJson(response.data,
                         JAR_TEMPLATE_SELECTOR, JAR_TEMPLATE_TEMPLATE);
-                    newTemplates.forEach(function (template) {
+                    jarTemplates.forEach(function (template) {
                         // Check if it's new.
                         if (templates.map[template['id']]) {
                             // Item was already stored! This can happen on the
@@ -164,28 +172,31 @@ define(['jquery'], function (jQuery) {
                             return;
                         }
                         // Update definition.
-                        updateComponent(template);
+                        prepareFilterString(template);
+                        decorateJarTemplate(template);
                         // Store.
                         templates.map[template['id']] = template;
                         templates.list.push(template);
                     });
                     // Load templates.
-                    var newComponents = jsonldService.toJson(response.data,
+                    var refTemplates = jsonldService.toJson(response.data,
                         TEMPLATE_SELECTOR, TEMPLATE_TEMPLATE);
-                    newComponents.forEach(function (component) {
+                    refTemplates.forEach(function (template) {
                         // Check if it's new.
-                        if (templates.map[component['id']]) {
+                        if (templates.map[template['id']]) {
                             // Item was already stored! This can happen on the
                             // reload (update).
                             return;
                         }
                         //
-                        var newComponent = jQuery.extend({},
-                            templates.map[component['template']],
-                            component);
+                        var fullTemplate = jQuery.extend({},
+                            templates.map[template['template']],
+                            template);
+                        // Update definition.
+                        prepareFilterString(fullTemplate);
                         // Store.
-                        templates.map[newComponent['id']] = newComponent;
-                        templates.list.push(newComponent);
+                        templates.map[fullTemplate['id']] = fullTemplate;
+                        templates.list.push(fullTemplate);
                     });
                     console.timeEnd('loading templates');
                     if (onSuccess) {
