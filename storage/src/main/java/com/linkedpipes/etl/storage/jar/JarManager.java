@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.jar;
 
 import com.linkedpipes.etl.storage.Configuration;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,22 +39,16 @@ class JarManager {
         if (!componentDirectory.exists()) {
             componentDirectory.mkdirs();
         }
-        // Each JAR file has its directory..
-        for (File directory : componentDirectory.listFiles()) {
-            if (!directory.isDirectory()) {
-                continue;
-            }
-            // Search for JAR files - we assume there will be only
-            // one JAR file.
-            for (File file : directory.listFiles()) {
-                if (!file.isDirectory() && file.getName().endsWith(".jar")) {
-                    final JarComponent component = loader.load(file);
-                    if (component != null) {
-                        components.put(component.getIri(), component);
-                    }
+        // Each JAR file has its directory.
+        FileUtils.listFiles(componentDirectory, new String[]{"jar"}, true).forEach(
+                (file) -> {
+            if (!file.isDirectory() && file.getName().endsWith(".jar")) {
+                final JarComponent component = loader.load(file);
+                if (component != null) {
+                    components.put(component.getIri(), component);
                 }
             }
-        }
+        });
         LOG.info("Loading JAR components ... done");
     }
 
