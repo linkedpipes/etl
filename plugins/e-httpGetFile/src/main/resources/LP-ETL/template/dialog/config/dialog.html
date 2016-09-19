@@ -1,14 +1,19 @@
 <div class="container-flow">
     <div class="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.uri.forced">
             <label>File URL</label>
-            <input type="url" ng-model="dialog.uri" required placeholder="http://example.com/my.file">
+            <input type="url" ng-model="dialog.uri"
+                   placeholder="http://example.com/my.file"
+                   ng-disabled="control.uri.inherit" required>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.fileName.forced">
             <label>File name</label>
-            <input ng-model="dialog.fileName" required placeholder="my.file">
+            <input ng-model="dialog.fileName" placeholder="my.file"
+                   ng-disabled="control.fileName.inherit" required>
         </md-input-container>
-        <md-switch ng-model="dialog.hardRedirect">
+        <md-switch ng-model="dialog.hardRedirect"
+                   ng-hide="control.hardRedirect.forced"
+                   ng-disabled="control.hardRedirect.inherit">
             Force to follow redirects
             <md-tooltip>If false only redirect in scope of the same protocol
                 are followed. If true redirect to any any address is followed.
@@ -18,3 +23,5 @@
         </md-switch>
     </div>
 </div>
+
+
