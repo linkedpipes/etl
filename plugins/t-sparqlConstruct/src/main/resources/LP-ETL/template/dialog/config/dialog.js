@@ -1,36 +1,47 @@
 define([], function () {
+
+    const PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#";
+
     function controller($scope, $service, rdfService) {
 
-        $scope.dialog = {
-            'query': ''
-        };
+        $scope.dialog = {};
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#');
+        if ($scope.control === undefined) {
+            $scope.control = {};
+        }
+
+        var rdf = rdfService.create('');
 
         function loadDialog() {
             rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.query = rdf.getString(resource, 'query');
-        };
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            $scope.dialog.query = rdf.getString(resource, PREFIX + 'query');
+            //
+            $scope.control.query = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'queryControl'));
+        }
 
         function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
+            rdf.setData($service.config.instance);
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            if (!$scope.control.query.forced) {
+                rdf.setString(resource, PREFIX + 'query',
+                    $scope.dialog.query);
+            }
+            //
+            rdf.setIri(resource, PREFIX + 'queryControl',
+                $service.control.toIri($scope.control.query));
+        }
 
-            rdf.setString(resource, 'query', $scope.dialog.query);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
         $service.onStore = function () {
             saveDialog();
         }
 
-        // Load data.
         loadDialog();
     }
-    //
+
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });
