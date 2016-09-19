@@ -1,36 +1,47 @@
 define([], function () {
+
+    const PREFIX = 'http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#';
+
     function controller($scope, $service, rdfService) {
 
-        $scope.dialog = {
-            'prefix': ''
-        };
+        $scope.dialog = {};
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#');
+        if ($scope.control === undefined) {
+            $scope.control = {};
+        }
+
+        var rdf = rdfService.create();
 
         function loadDialog() {
             rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.prefix = rdf.getString(resource, 'prefix');
-        };
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            $scope.dialog.prefix = rdf.getString(resource, PREFIX + 'prefix');
+            //
+            $scope.control.prefix = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'prefixControl'));
+        }
 
         function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
+            rdf.setData($service.config.instance);
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            if (!$scope.control.prefix.forced) {
+                rdf.setString(resource, PREFIX + 'prefix',
+                    $scope.dialog.prefix);
+            }
+            //
+            rdf.setIri(resource, PREFIX + 'prefixControl',
+                $service.control.toIri($scope.control.prefix));
+        }
 
-            rdf.setString(resource, 'prefix', $scope.dialog.prefix);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
         $service.onStore = function () {
             saveDialog();
         }
 
-        // Load data.
         loadDialog();
     }
-    //
+
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

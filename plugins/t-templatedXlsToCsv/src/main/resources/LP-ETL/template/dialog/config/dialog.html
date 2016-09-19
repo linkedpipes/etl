@@ -1,6 +1,8 @@
 <div class="container-flow">
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="control.prefix.forced" flex>
         <label>Template file prefix</label>
-        <input ng-model="dialog.prefix" required>
+        <input ng-model="dialog.prefix" ng-disabled="control.prefix.inherit" required>
     </md-input-container>
 </div>
+
+
