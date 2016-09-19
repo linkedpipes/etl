@@ -14,6 +14,7 @@ define([], function () {
 
             $scope.dialog.commitSize = rdf.getInteger(resource, 'commitSize');
             $scope.dialog.mimeType = rdf.getString(resource, 'mimeType');
+            $scope.dialog.softFail = rdf.getBoolean(resource, 'softFail');
             if ($scope.dialog.mimeType === undefined) {
                 $scope.dialog.mimeType = "";
             }
@@ -24,6 +25,7 @@ define([], function () {
 
             rdf.setInteger(resource, 'commitSize', $scope.dialog.commitSize);
             rdf.setString(resource, 'mimeType', $scope.dialog.mimeType);
+            rdf.setBoolean(resource, 'softFail', $scope.dialog.softFail);
 
             return rdf.getData();
         };

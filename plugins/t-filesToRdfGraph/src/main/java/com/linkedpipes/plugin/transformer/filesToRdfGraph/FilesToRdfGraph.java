@@ -80,8 +80,12 @@ public final class FilesToRdfGraph implements Component.Sequential {
                     file.toFile())) {
                 rdfParser.parse(fileStream, "http://localhost/base/");
             } catch (IOException | RDFHandlerException | RDFParseException ex) {
-                throw exceptionFactory.failure(
-                        "Can't parse file: {}", file.getFileName(), ex);
+                if (configuration.isSkipOnFailure()) {
+                    LOG.error("Can't parse file: {}", file.getFileName(), ex);
+                } else {
+                    throw exceptionFactory.failure(
+                            "Can't parse file: {}", file.getFileName(), ex);
+                }
             }
             progressReport.entryProcessed();
         }
