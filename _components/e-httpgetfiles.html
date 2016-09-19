@@ -37,6 +37,8 @@ Extractor, allows the user to download a list of files from the web.
     <div class="col s12 l6">
         <p class="flow-text">
         The {{page.title}} component downloads a list of files given on the input, potentially following redirects, and stores them under given file names.
+        When using runtime configuration, custom HTTP headers can be set for the individual files.
+        This can be used e.g. for <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec12.html" title="HTTP Content Negotiation">HTTP Content Negotiation</a>.
         </p>
     </div>
 </div>
@@ -52,11 +54,16 @@ Note that <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes" ti
     httpList:reference <http://localhost/resource/ref/1> ;
     httpList:reference <http://localhost/resource/ref/2> .
 
-<http://localhost/resource/ref/1>  a httpList:Reference ;
+<http://localhost/resource/ref/1> a httpList:Reference ;
     httpList:fileUri "https://raw.githubusercontent.com/linkedpipes/etl/master/LICENSE" ;
-    httpList:fileName "LICENSE" .
+    httpList:fileName "LICENSE" ;
+    httpList:header <http://localhost/resource/ref/1/header/1> .
 
-<http://localhost/resource/ref/2>  a httpList:Reference ;
+<http://localhost/resource/ref/1/header/1> a httpList:Header ;
+    httpList:key "Accept" ;
+    httpList:value "text/turtle" .
+
+<http://localhost/resource/ref/2> a httpList:Reference ;
     httpList:fileUri "https://raw.githubusercontent.com/linkedpipes/etl/master/README.md" ;
     httpList:fileName "README.md" .
 {% endhighlight %}
