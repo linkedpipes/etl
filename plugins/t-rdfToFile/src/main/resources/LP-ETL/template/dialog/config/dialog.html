@@ -1,12 +1,14 @@
 <div class="container-flow">
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.fileName.forced" flex>
             <label>Output file name</label>
-            <input ng-model="dialog.fileName" required placeholder="my.ttl">
+            <input ng-model="dialog.fileName"
+                   ng-disabled="control.fileName.inherit"
+                   placeholder="my.ttl" required>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.fileType.forced" flex>
             <label>Format</label>
-            <md-select required ng-model="dialog.fileType">
+            <md-select ng-model="dialog.fileType" ng-disabled="control.fileType.inherit" required>
                 <md-option value="application/rdf+xml">RDF/XML</md-option>
                 <md-option value="application/n-triples">N-Triples</md-option>
                 <md-option value="text/turtle">Turtle</md-option>
@@ -21,8 +23,11 @@
             </md-select>
         </md-input-container>
     </div>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="control.graphUri.forced" flex>
         <label>URI of output graph (for quads)</label>
-        <input type="url" ng-model="dialog.graphUri" placeholder="http://example.com/resource/graph">
+        <input type="url" ng-model="dialog.graphUri"
+               placeholder="http://example.com/resource/graph"
+               ng-disabled="control.graphUri.inherit">
     </md-input-container>
 </div>
+

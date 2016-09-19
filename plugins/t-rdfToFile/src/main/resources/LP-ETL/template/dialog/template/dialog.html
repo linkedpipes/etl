@@ -1,0 +1,31 @@
+<div class="container-flow">
+    <div class="row">
+        <span ng-hide="control.fileName.forced">
+            Output file name
+            <md-checkbox ng-model="control.fileName.inherit">
+                Inherit from template
+            </md-checkbox>
+            <md-checkbox ng-model="control.fileName.force">
+                Overwrite in instance
+            </md-checkbox>
+        </span>
+        <span ng-hide="control.fileType.forced">
+            Format
+            <md-checkbox ng-model="control.fileType.inherit">
+                Inherit from template
+            </md-checkbox>
+            <md-checkbox ng-model="control.fileType.force">
+                Overwrite in instance
+            </md-checkbox>
+        </span>
+        <span ng-hide="control.graphUri.forced">
+            URI of output graph (for quads)
+            <md-checkbox ng-model="control.graphUri.inherit">
+                Inherit from template
+            </md-checkbox>
+            <md-checkbox ng-model="control.graphUri.force">
+                Overwrite in instance
+            </md-checkbox>
+        </span>
+    </div>
+</div>
