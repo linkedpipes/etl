@@ -41,6 +41,7 @@
         <module>t-mustache</module>
         <module>q-sparqlAsk</module>
         <module>l-filesToLocal</module>
+        <module>e-ftpFiles</module>
         <module>e-filesFromLocal</module>
         <module>t-tabularUv</module>
         <module>t-singleGraphUnion</module>
