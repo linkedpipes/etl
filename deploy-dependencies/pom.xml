@@ -530,6 +530,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-htmlCssUv/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-modifyDate</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-modifyDate/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>

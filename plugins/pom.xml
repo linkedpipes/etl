@@ -55,6 +55,7 @@
         <module>t-valueParser</module>
         <module>x-deleteDirectory</module>
         <module>t-htmlCssUv</module>
+        <module>t-modifyDate</module>
     </modules>
 
 </project>

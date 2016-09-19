@@ -1,0 +1,14 @@
+<div class="container-flow">
+    <md-input-container class="md-block" ng-hide="control.input.forced" flex>
+        <label>Input predicate</label>
+        <input ng-model="dialog.input" ng-disabled="control.input.inherit" required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="control.shiftBy.forced" flex>
+        <label>Shift date by</label>
+        <input ng-model="dialog.shiftBy" ng-disabled="control.shiftBy.inherit" required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="control.output.forced" flex>
+        <label>Output predicate</label>
+        <input ng-model="dialog.output" ng-disabled="control.output.inherit" required>
+    </md-input-container>
+</div>

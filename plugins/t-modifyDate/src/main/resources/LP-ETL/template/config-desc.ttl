@@ -1,0 +1,23 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-modifyDate/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-modifyDate#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-modifyDate/1.0.0/configuration/desc/input> ,
+        <http://linkedpipes.com/resources/components/t-modifyDate/1.0.0/configuration/desc/shiftBy> ,
+        <http://linkedpipes.com/resources/components/t-modifyDate/1.0.0/configuration/desc/output> .
+
+<http://linkedpipes.com/resources/components/t-modifyDate/1.0.0/configuration/desc/input>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-modifyDate#input> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-modifyDate#inputControl> .
+
+<http://linkedpipes.com/resources/components/t-modifyDate/1.0.0/configuration/desc/shiftBy>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-modifyDate#shiftBy> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-modifyDate#shiftByControl> .
+
+<http://linkedpipes.com/resources/components/t-modifyDate/1.0.0/configuration/desc/output>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-modifyDate#output> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-modifyDate#outputControl> .
