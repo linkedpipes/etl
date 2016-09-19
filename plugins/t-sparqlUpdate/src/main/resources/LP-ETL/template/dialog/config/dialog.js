@@ -1,36 +1,52 @@
 define([], function () {
+
+    const PREFIX = 'http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#';
+
     function controller($scope, $service, rdfService) {
 
-        $scope.dialog = {
-            'query': ''
-        };
+        $scope.dialog = {};
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#');
+        if ($scope.control === undefined) {
+            $scope.control = {};
+        }
+
+        var rdf = rdfService.create('');
 
         function loadDialog() {
             rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            $scope.dialog.query = rdf.getString(resource, PREFIX + 'query');
+            //
+            $scope.control.query = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'queryControl'));
 
-            $scope.dialog.query = rdf.getString(resource, 'query');
-        };
+            console.log('load:', resource);
+            console.log('$scope.dialog:', $scope.dialog);
+        }
 
         function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
+            rdf.setData($service.config.instance);
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            if (!$scope.control.query.forced) {
+                rdf.setString(resource, PREFIX + 'query',
+                    $scope.dialog.query);
+            }
+            //
+            rdf.setIri(resource, PREFIX + 'queryControl',
+                $service.control.toIri($scope.control.query));
 
-            rdf.setString(resource, 'query', $scope.dialog.query);
+            console.log('save:', resource)
+        }
 
-            return rdf.getData();
-        };
-
-        // Define the save function.
         $service.onStore = function () {
             saveDialog();
         }
 
-        // Load data.
         loadDialog();
     }
-    //
+
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });

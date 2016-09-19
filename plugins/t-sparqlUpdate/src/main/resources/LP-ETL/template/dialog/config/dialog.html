@@ -1,6 +1,10 @@
 <div class="container-flow">
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="control.query.forced" flex>
         <label>SPARQL Update query</label>
-        <textarea id="query" ng-model="dialog.query" required placeholder="DELETE {?s ?p ?o} INSERT {?s2 ?p2 ?o2} WHERE {?s ?p ?o}" md-select-on-focus>
+        <textarea id="query" ng-model="dialog.query"
+                  placeholder="DELETE {?s ?p ?o} INSERT {?s2 ?p2 ?o2} WHERE {?s ?p ?o}"
+                  ng-disabled="control.query.inherit"
+                  md-select-on-focus required />
     </md-input-container>
 </div>
+
