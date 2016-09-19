@@ -1,5 +1,5 @@
 <div id="componentMenu" style="position:absolute;overflow:visible;width:0px;display:none;">
-    <span class="topLine" style="position:relative;top:-60px;">
+    <div class="topLine" style="position:relative;top:-60px;">
         <md-button class="md-fab md-mini" style="position:absolute;left:-30px;" aria-label="Edit" ng-click="api.onEditComponent()">
             <md-tooltip md-direction="top">Edit</md-tooltip>
             <md-icon md-menu-origin md-svg-src="edit"></md-icon>
@@ -16,8 +16,8 @@
             <md-tooltip md-direction="top">Enable/disable component</md-tooltip>
             <md-icon md-menu-origin md-svg-src="ic_power_settings_new"></md-icon>
         </md-button>
-    </span>
-    <span id="bottomBar" style="position:relative;">
+    </div>
+    <div id="bottomBar" style="position:relative;">
         <md-button class="md-fab md-mini" style="position:absolute;left:-30px;top:55px;" aria-label="Prerequisity" ng-click="api.onPrerequisiteComponent()">
             <md-tooltip md-direction="bottom">Run before</md-tooltip>
             <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
@@ -36,11 +36,11 @@
             <!--<md-tooltip md-direction="bottom">Create template</md-tooltip>-->
             <!--<md-icon md-menu-origin md-svg-src="add"></md-icon>-->
         <!--</md-button>-->
-    </span>
+    </div>
 </div>
 
 <div id="blankMenu" style="position:absolute;overflow:visible;width:0px;display:none;">
-    <span style="position:relative;left:-25px;top:-70px;">
+    <div style="position:relative;left:-25px;top:-70px;">
         <md-button class="md-fab md-mini" style="position:absolute;left:-40px;top:-20px;" ng-click="api.onAddComponent()">
             <md-tooltip md-direction="top">Insert component</md-tooltip>
             <md-icon md-menu-origin md-svg-src="edit"></md-icon>
@@ -49,5 +49,5 @@
             <md-tooltip md-direction="top">Insert pipeline</md-tooltip>
             <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
         </md-button>
-    </span>
+    </div>
 </div>
