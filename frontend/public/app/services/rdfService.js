@@ -98,7 +98,8 @@ define([], function () {
                     type = prefix + type;
                     var resources = [];
                     service.graph.forEach(function (resource) {
-                        if (resource['@type'].indexOf(type) !== -1) {
+                        if (resource['@type'] &&
+                            resource['@type'].indexOf(type) !== -1) {
                             resources.push(resource);
                         }
                     });
