@@ -1,8 +1,10 @@
 <div class="container-flow">
     <div class="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.path.forced" flex>
             <label>Path to a local file or a directory</label>
-            <input type="text" ng-model="dialog.path" required>
+            <input type="text" ng-model="dialog.path"
+                   ng-disabled="control.path.inherit"
+                   required>
         </md-input-container>
     </div>
 </div>

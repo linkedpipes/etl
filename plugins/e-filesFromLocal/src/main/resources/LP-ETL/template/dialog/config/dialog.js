@@ -1,37 +1,48 @@
 define([], function () {
+
+    const PREFIX = 'http://plugins.linkedpipes.com/ontology/e-filesFromLocal#';
+
     function controller($scope, $service, rdfService) {
 
-        $scope.dialog = {
-            'path': ''
-        };
+        $scope.dialog = {};
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/e-filesFromLocal#');
+        if ($scope.control === undefined) {
+            $scope.control = {};
+        }
+
+        var rdf = rdfService.create('');
 
         function loadDialog() {
             rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            $scope.dialog.path = rdf.getString(resource, PREFIX + 'path');
+            //
+            $scope.control.path = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'pathControl'));
 
-            $scope.dialog.path = rdf.getString(resource, 'path');
-        };
+        }
 
         function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
+            rdf.setData($service.config.instance);
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            if (!$scope.control.query.path) {
+                rdf.setString(resource, PREFIX + 'path', $scope.dialog.path);
+            }
+            //
+            rdf.setIri(resource, PREFIX + 'pathControl',
+                $service.control.toIri($scope.control.path));
+        }
 
-            rdf.setString(resource, 'path', $scope.dialog.path);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
         $service.onStore = function () {
             saveDialog();
         }
 
-        // Load data.
         loadDialog();
 
     }
-    //
+
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });
