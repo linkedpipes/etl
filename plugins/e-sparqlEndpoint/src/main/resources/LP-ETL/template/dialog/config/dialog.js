@@ -1,40 +1,59 @@
 define([], function () {
+
+    const PREFIX = 'http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#';
+
     function controller($scope, $service, rdfService) {
 
-        $scope.dialog = {
-            'query': '',
-            'endpoint': ''
-        };
+        $scope.dialog = {};
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#');
+        if ($scope.control === undefined) {
+            $scope.control = {};
+        }
+
+        var rdf = rdfService.create('');
 
         function loadDialog() {
             rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.query = rdf.getString(resource, 'query');
-            $scope.dialog.endpoint = rdf.getString(resource, 'endpoint');
-        };
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            $scope.dialog.query = rdf.getString(resource,
+                PREFIX + 'query');
+            $scope.dialog.endpoint = rdf.getString(resource,
+                PREFIX + 'endpoint');
+            //
+            $scope.control.query = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'queryControl'));
+            $scope.control.endpoint = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'endpointControl'));
+        }
 
         function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
+            rdf.setData($service.config.instance);
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            if (!$scope.control.query.forced) {
+                rdf.setString(resource, PREFIX + 'query',
+                    $scope.dialog.query);
+            }
+            if (!$scope.control.endpoint.forced) {
+                rdf.setString(resource, PREFIX + 'endpoint',
+                    $scope.dialog.endpoint);
+            }
+            //
+            rdf.setIri(resource, PREFIX + 'queryControl',
+                $service.control.toIri($scope.control.query));
+            rdf.setIri(resource, PREFIX + 'endpointControl',
+                $service.control.toIri($scope.control.endpoint));
+        }
 
-            rdf.setString(resource, 'query', $scope.dialog.query);
-            rdf.setString(resource, 'endpoint', $scope.dialog.endpoint);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
         $service.onStore = function () {
             saveDialog();
         }
 
-        // Load data.
         loadDialog();
 
     }
-    //
+
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });
