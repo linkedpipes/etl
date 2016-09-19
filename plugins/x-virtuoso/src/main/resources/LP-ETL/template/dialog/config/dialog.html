@@ -1,36 +1,53 @@
 <div class="container-flow">
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="control.host.forced" flex>
         <label>Virtuoso JDBC connection string</label>
-        <input ng-model="dialog.host" required placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/">
+        <input ng-model="dialog.host"
+               placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/"
+               ng-disabled="control.host.inherit" required>
     </md-input-container>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.userName.forced" flex>
             <label>Virtuoso user name</label>
-            <input ng-model="dialog.userName" required placeholder="dba">
+            <input ng-model="dialog.userName" placeholder="dba"
+                   ng-disabled="control.userName.inherit" required>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.password.forced" flex>
             <label>Virtuoso password</label>
-            <input type="password" ng-model="dialog.password" required placeholder="dba">
+            <input type="password" ng-model="dialog.password" placeholder="dba"
+                   ng-disabled="control.password.inherit" required>
         </md-input-container>
     </div>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.loadDirectory.forced" flex>
             <label>Remote directory with source files</label>
-            <input ng-model="dialog.loadDirectory" required placeholder="/data/upload">
+            <input ng-model="dialog.loadDirectory" placeholder="/data/upload"
+                   ng-disabled="control.loadDirectory.inherit" required>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.fileName.forced" flex>
             <label>Filename to load</label>
-            <input ng-model="dialog.fileName" required placeholder="my.ttl">
+            <input ng-model="dialog.fileName" placeholder="my.ttl"
+                   ng-disabled="control.fileName.inherit" required>
         </md-input-container>
     </div>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="control.targetGraph.forced" flex>
         <label>Target graph IRI</label>
-        <input type="uri" ng-model="dialog.targetGraph" placeholder="http://example.org/resource/graph">
+        <input type="uri" ng-model="dialog.targetGraph"
+               placeholder="http://example.org/resource/graph"
+               ng-disabled="control.targetGraph.inherit">
     </md-input-container>
-    <md-switch ng-model="dialog.clearGraph">Clear target graph before loading</md-switch>
-    <md-switch ng-model="dialog.clearLoadList">Clear Virtuoso load list</md-switch>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-switch ng-model="dialog.clearGraph"
+               ng-hide="control.clearGraph.forced"
+               ng-disabled="control.clearGraph.inherit">Clear target graph before loading</md-switch>
+    <md-switch ng-model="dialog.clearLoadList"
+               ng-hide="control.clearLoadList.forced"
+               ng-disabled="control.clearLoadList.inherit">Clear Virtuoso load list</md-switch>
+    <md-input-container class="md-block" ng-hide="control.statusUpdate.forced" flex>
         <label>Status update interval in seconds</label>
-        <input type="number" required ng-model="dialog.statusUpdate" placeholder="5" step="1" min="1" max="60">
+        <input type="number" ng-model="dialog.statusUpdate"
+               placeholder="5" step="1" min="1" max="60"
+               ng-disabled="control.statusUpdate.inherit" required>
     </md-input-container>
 </div>
+
+
+

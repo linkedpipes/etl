@@ -1,60 +1,128 @@
 define([], function () {
+
+    const PREFIX = 'http://plugins.linkedpipes.com/ontology/x-virtuoso#';
+
     function controller($scope, $service, rdfService) {
 
-        $scope.dialog = {
-            'host': '',
-            'fileName': '',
-            'targetGraph': '',
-            'loadDirectory': '',
-            'clearGraph': true,
-            'clearLoadList': false,
-            'userName': '',
-            'password': '',
-            'statusUpdate': 10
-        };
+        $scope.dialog = {};
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/x-virtuoso#');
+        if ($scope.control === undefined) {
+            $scope.control = {};
+        }
+
+        var rdf = rdfService.create('');
 
         function loadDialog() {
             rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.host = rdf.getString(resource, 'uri');
-            $scope.dialog.fileName = rdf.getString(resource, 'fileName');
-            $scope.dialog.targetGraph = rdf.getString(resource, 'graph');
-            $scope.dialog.loadDirectory = rdf.getString(resource, 'directory');
-            $scope.dialog.clearGraph = rdf.getBoolean(resource, 'clearGraph');
-            $scope.dialog.clearLoadList = rdf.getBoolean(resource, 'clearSqlLoadTable');
-            $scope.dialog.userName = rdf.getString(resource, 'username');
-            $scope.dialog.password = rdf.getString(resource, 'password');
-            $scope.dialog.statusUpdate = rdf.getInteger(resource, 'updateInterval');
-        };
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            $scope.dialog.host = rdf.getString(resource,
+                PREFIX + 'uri');
+            $scope.dialog.fileName = rdf.getString(resource,
+                PREFIX + 'fileName');
+            $scope.dialog.targetGraph = rdf.getString(resource,
+                PREFIX + 'graph');
+            $scope.dialog.loadDirectory = rdf.getString(resource,
+                PREFIX + 'directory');
+            $scope.dialog.clearGraph = rdf.getBoolean(resource,
+                PREFIX + 'clearGraph');
+            $scope.dialog.clearLoadList = rdf.getBoolean(resource,
+                PREFIX + 'clearSqlLoadTable');
+            $scope.dialog.userName = rdf.getString(resource,
+                PREFIX + 'username');
+            $scope.dialog.password = rdf.getString(resource,
+                PREFIX + 'password');
+            $scope.dialog.statusUpdate = rdf.getInteger(resource,
+                PREFIX + 'updateInterval');
+            //
+            $scope.control.host = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'hostControl'));
+            $scope.control.fileName = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'fileNameControl'));
+            $scope.control.targetGraph = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'targetGraphControl'));
+            $scope.control.loadDirectory = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'loadDirectoryControl'));
+            $scope.control.clearGraph = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'clearGraphControl'));
+            $scope.control.clearLoadList = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'clearSqlLoadTableControl'));
+            $scope.control.userName = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'userNameControl'));
+            $scope.control.password = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'passwordControl'));
+            $scope.control.statusUpdate = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'statusUpdateControl'));
+        }
 
         function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
+            rdf.setData($service.config.instance);
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
+            //
+            if (!$scope.control.host.forced) {
+                rdf.setString(resource, PREFIX + 'uri',
+                    $scope.dialog.host);
+            }
+            if (!$scope.control.fileName.forced) {
+                rdf.setString(resource, PREFIX + 'fileName',
+                    $scope.dialog.fileName);
+            }
+            if (!$scope.control.targetGraph.forced) {
+                rdf.setString(resource, PREFIX + 'graph',
+                    $scope.dialog.targetGraph);
+            }
+            if (!$scope.control.loadDirectory.forced) {
+                rdf.setString(resource, PREFIX + 'directory',
+                    $scope.dialog.loadDirectory);
+            }
+            if (!$scope.control.clearGraph.forced) {
+                rdf.setBoolean(resource, PREFIX + 'clearGraph',
+                    $scope.dialog.clearGraph);
+            }
+            if (!$scope.control.clearLoadList.forced) {
+                rdf.setBoolean(resource, PREFIX + 'clearSqlLoadTable',
+                    $scope.dialog.clearLoadList);
+            }
+            if (!$scope.control.userName.forced) {
+                rdf.setString(resource, PREFIX + 'username',
+                    $scope.dialog.userName);
+            }
+            if (!$scope.control.password.forced) {
+                rdf.setString(resource, PREFIX + 'password',
+                    $scope.dialog.password);
+            }
+            if (!$scope.control.statusUpdate.forced) {
+                rdf.setInteger(resource, PREFIX + 'updateInterval',
+                    $scope.dialog.statusUpdate);
+            }
+            //
+            rdf.setIri(resource, PREFIX + 'hostControl',
+                $service.control.toIri($scope.control.host));
+            rdf.setIri(resource, PREFIX + 'fileNameControl',
+                $service.control.toIri($scope.control.fileName));
+            rdf.setIri(resource, PREFIX + 'targetGraphControl',
+                $service.control.toIri($scope.control.targetGraph));
+            rdf.setIri(resource, PREFIX + 'loadDirectoryControl',
+                $service.control.toIri($scope.control.loadDirectory));
+            rdf.setIri(resource, PREFIX + 'clearGraphControl',
+                $service.control.toIri($scope.control.clearGraph));
+            rdf.setIri(resource, PREFIX + 'clearSqlLoadTableControl',
+                $service.control.toIri($scope.control.clearLoadList));
+            rdf.setIri(resource, PREFIX + 'userNameControl',
+                $service.control.toIri($scope.control.userName));
+            rdf.setIri(resource, PREFIX + 'passwordControl',
+                $service.control.toIri($scope.control.password));
+            rdf.setIri(resource, PREFIX + 'statusUpdateControl',
+                $service.control.toIri($scope.control.statusUpdate));
+        }
 
-            rdf.setString(resource, 'uri', $scope.dialog.host);
-            rdf.setString(resource, 'fileName', $scope.dialog.fileName);
-            rdf.setString(resource, 'graph', $scope.dialog.targetGraph);
-            rdf.setString(resource, 'directory', $scope.dialog.loadDirectory);
-            rdf.setBoolean(resource, 'clearGraph', $scope.dialog.clearGraph);
-            rdf.setBoolean(resource, 'clearSqlLoadTable', $scope.dialog.clearLoadList);
-            rdf.setString(resource, 'username', $scope.dialog.userName);
-            rdf.setString(resource, 'password', $scope.dialog.password);
-            rdf.setInteger(resource, 'updateInterval', $scope.dialog.statusUpdate);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
         $service.onStore = function () {
             saveDialog();
         }
 
-        // Load data.
         loadDialog();
     }
-    //
+
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
     return controller;
 });
