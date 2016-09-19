@@ -84,6 +84,12 @@
                                             <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
                                         </dependency>
                                         <dependency>
+                                            <groupId>commons-net</groupId>
+                                            <artifactId>commons-net</artifactId>
+                                            <version>3.5</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
                                             <groupId>org.eclipse.birt.runtime</groupId>
                                             <artifactId>org.apache.commons.logging</artifactId>
                                             <version>1.1.1.v201101211721</version>

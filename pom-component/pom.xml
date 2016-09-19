@@ -52,6 +52,12 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>3.5</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.openrdf.sesame</groupId>
                 <artifactId>sesame-model</artifactId>
                 <scope>provided</scope>
