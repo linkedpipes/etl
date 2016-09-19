@@ -1,12 +1,14 @@
 <div class="container-flow">
     <div class="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.pattern.forced" flex>
             <label>File name filter pattern</label>
-            <input ng-model="dialog.pattern" required placeholder="*\.csv">
+            <input ng-model="dialog.pattern" placeholder="*\.csv" ng-disabled="control.pattern.inherit" required>
         </md-input-container>
-        <div>
+        <div ng-hide="control.pattern.forced">
             <a href="http://regexr.com/" target="_blank">Test your regexp here</a>, uses
             <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" target="_blank">Java regular expression</a>.
         </div>
     </div>
 </div>
+
+
