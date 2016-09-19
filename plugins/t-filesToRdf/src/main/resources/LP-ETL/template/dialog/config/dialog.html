@@ -1,8 +1,8 @@
 <div class="container-flow">
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.mimeType.forced" flex>
             <label>Format</label>
-            <md-select ng-model="dialog.mimeType">
+            <md-select ng-model="dialog.mimeType" ng-disabled="control.mimeType.inherit">
                 <md-option value="">Automatic</md-option>
                 <md-option value="application/rdf+xml">RDF/XML</md-option>
                 <md-option value="application/n-triples">N-Triples</md-option>
@@ -17,9 +17,12 @@
                 <md-option value="application/xhtml+xml">RDFa</md-option>
             </md-select>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.commitSize.forced" flex>
             <label>Commit size</label>
-            <input type="number" ng-model="dialog.commitSize" placeholder="100000" min="10000" step="10000">
+            <input type="number" ng-model="dialog.commitSize"
+                   placeholder="100000" min="10000" step="10000"
+                   ng-disabled="control.commitSize.inherit">
         </md-input-container>
     </div>
 </div>
+

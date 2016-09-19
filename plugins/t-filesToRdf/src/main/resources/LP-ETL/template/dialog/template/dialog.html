@@ -1,0 +1,22 @@
+<div class="container-flow">
+    <div class="row">
+        <span ng-hide="control.mimeType.forced">
+            Format
+            <md-checkbox ng-model="control.mimeType.inherit">
+                Inherit from template
+            </md-checkbox>
+            <md-checkbox ng-model="control.mimeType.force">
+                Overwrite in instance
+            </md-checkbox>
+        </span>
+        <span ng-hide="control.commitSize.forced">
+            Commit size
+            <md-checkbox ng-model="control.commitSize.inherit">
+                Inherit from template
+            </md-checkbox>
+            <md-checkbox ng-model="control.commitSize.force">
+                Overwrite in instance
+            </md-checkbox>
+        </span>
+    </div>
+</div>
