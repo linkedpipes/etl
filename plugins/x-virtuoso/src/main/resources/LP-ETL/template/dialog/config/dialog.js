@@ -42,17 +42,19 @@ define([], function () {
             $scope.control.targetGraph = $service.control.fromIri(
                 rdf.getIri(resource, PREFIX + 'targetGraphControl'));
             $scope.control.loadDirectory = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'loadDirectoryControl'));
+                rdf.getIri(resource, PREFIX + 'directoryControl'));
             $scope.control.clearGraph = $service.control.fromIri(
                 rdf.getIri(resource, PREFIX + 'clearGraphControl'));
             $scope.control.clearLoadList = $service.control.fromIri(
                 rdf.getIri(resource, PREFIX + 'clearSqlLoadTableControl'));
             $scope.control.userName = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'userNameControl'));
+                rdf.getIri(resource, PREFIX + 'usernameControl'));
             $scope.control.password = $service.control.fromIri(
                 rdf.getIri(resource, PREFIX + 'passwordControl'));
             $scope.control.statusUpdate = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'statusUpdateControl'));
+                rdf.getIri(resource, PREFIX + 'updateIntervalControl'));
+
+            console.log(JSON.stringify(resource, null, 2));
         }
 
         function saveDialog() {
@@ -102,18 +104,20 @@ define([], function () {
                 $service.control.toIri($scope.control.fileName));
             rdf.setIri(resource, PREFIX + 'targetGraphControl',
                 $service.control.toIri($scope.control.targetGraph));
-            rdf.setIri(resource, PREFIX + 'loadDirectoryControl',
+            rdf.setIri(resource, PREFIX + 'directoryControl',
                 $service.control.toIri($scope.control.loadDirectory));
             rdf.setIri(resource, PREFIX + 'clearGraphControl',
                 $service.control.toIri($scope.control.clearGraph));
             rdf.setIri(resource, PREFIX + 'clearSqlLoadTableControl',
                 $service.control.toIri($scope.control.clearLoadList));
-            rdf.setIri(resource, PREFIX + 'userNameControl',
+            rdf.setIri(resource, PREFIX + 'usernameControl',
                 $service.control.toIri($scope.control.userName));
             rdf.setIri(resource, PREFIX + 'passwordControl',
                 $service.control.toIri($scope.control.password));
-            rdf.setIri(resource, PREFIX + 'statusUpdateControl',
+            rdf.setIri(resource, PREFIX + 'updateIntervalControl',
                 $service.control.toIri($scope.control.statusUpdate));
+
+            console.log(JSON.stringify(resource, null, 2));
         }
 
         $service.onStore = function () {

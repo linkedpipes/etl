@@ -1,85 +1,83 @@
-<div class="container-flow">
-    <div class="row">
-        <span ng-hide="control.host.forced">
-            Virtuoso JDBC connection string
-            <md-checkbox ng-model="control.host.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.host.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.userName.forced">
-            Virtuoso user name
-            <md-checkbox ng-model="control.userName.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.userName.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.password.forced">
-            Virtuoso password
-            <md-checkbox ng-model="control.password.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.password.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.loadDirectory.forced">
-            Remote directory with source files
-            <md-checkbox ng-model="control.loadDirectory.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.loadDirectory.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.fileName.forced">
-            Filename to load
-            <md-checkbox ng-model="control.fileName.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.fileName.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.targetGraph.forced">
-            Target graph IRI
-            <md-checkbox ng-model="control.targetGraph.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.targetGraph.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.clearGraph.forced">
-            Clear target graph
-            <md-checkbox ng-model="control.clearGraph.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.clearGraph.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.clearLoadList.forced">
-            Clear Virtuoso load list
-            <md-checkbox ng-model="control.clearLoadList.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.clearLoadList.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
-        <span ng-hide="control.statusUpdate.forced">
-            Status update interval
-            <md-checkbox ng-model="control.statusUpdate.inherit">
-                Inherit from template
-            </md-checkbox>
-            <md-checkbox ng-model="control.statusUpdate.force">
-                Overwrite in instance
-            </md-checkbox>
-        </span>
+<div class="container-flow" class="column">
+    <div ng-hide="control.host.forced">
+        Virtuoso JDBC connection string
+        <md-checkbox ng-model="control.host.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.host.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.userName.forced">
+        Virtuoso user name
+        <md-checkbox ng-model="control.userName.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.userName.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.password.forced">
+        Virtuoso password
+        <md-checkbox ng-model="control.password.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.password.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.loadDirectory.forced">
+        Remote directory with source files
+        <md-checkbox ng-model="control.loadDirectory.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.loadDirectory.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.fileName.forced">
+        Filename to load
+        <md-checkbox ng-model="control.fileName.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.fileName.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.targetGraph.forced">
+        Target graph IRI
+        <md-checkbox ng-model="control.targetGraph.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.targetGraph.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.clearGraph.forced">
+        Clear target graph
+        <md-checkbox ng-model="control.clearGraph.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.clearGraph.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.clearLoadList.forced">
+        Clear Virtuoso load list
+        <md-checkbox ng-model="control.clearLoadList.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.clearLoadList.force">
+            Overwrite in instance
+        </md-checkbox>
+    </div>
+    <div ng-hide="control.statusUpdate.forced">
+        Status update interval
+        <md-checkbox ng-model="control.statusUpdate.inherit">
+            Inherit from template
+        </md-checkbox>
+        <md-checkbox ng-model="control.statusUpdate.force">
+            Overwrite in instance
+        </md-checkbox>
     </div>
 </div>
