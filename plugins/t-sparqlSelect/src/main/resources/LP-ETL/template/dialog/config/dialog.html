@@ -1,12 +1,17 @@
 <div class="container-flow">
     <div class="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.fileName.forced" flex>
             <label>Output file name</label>
-            <input ng-model="dialog.fileName" required placeholder="my.csv">
+            <input ng-model="dialog.fileName" placeholder="my.csv"
+                   ng-disabled="control.fileName.inherit" required>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="control.query.forced" flex>
             <label>SPARQL SELECT query</label>
-            <textarea id="query" ng-model="dialog.query" required placeholder="SELECT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 100" md-select-on-focus>
+            <textarea id="query" ng-model="dialog.query"
+                      placeholder="SELECT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 100"
+                      ng-disabled="control.query.inherit"
+                      md-select-on-focus required/>
 	</md-input-container>
     </div>
 </div>
+
