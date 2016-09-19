@@ -524,6 +524,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/x-deleteDirectory/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-htmlCssUv</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-htmlCssUv/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>

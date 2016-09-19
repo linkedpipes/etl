@@ -54,6 +54,7 @@
         <module>x-virtuosoExtractor</module>
         <module>t-valueParser</module>
         <module>x-deleteDirectory</module>
+        <module>t-htmlCssUv</module>
     </modules>
 
 </project>
