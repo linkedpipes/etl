@@ -32,6 +32,8 @@ define([], function () {
             'generateRowTriple': false
         };
 
+        $scope.control = { };
+
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-tabularUv#');
 
         function loadDialog() {
@@ -106,9 +108,15 @@ define([], function () {
             });
             $scope.dialog.namedCell = newItems;
 
+            $scope.control = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'control'));
         };
 
         function saveDialog() {
+            if ($scope.control.forced) {
+                return;
+            }
+
             var table = rdf.secureByType('Configuration');
 
             rdf.setString(table, 'keyColumn', $scope.dialog.keyColumn);

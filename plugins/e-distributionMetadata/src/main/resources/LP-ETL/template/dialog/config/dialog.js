@@ -35,6 +35,8 @@ define([], function () {
             'schemaType': ''
         };
 
+        $scope.control = { };
+
         var listToString = function(list) {
             return list.join();
         };
@@ -96,9 +98,16 @@ define([], function () {
             $scope.dialog.temporalFromDataset = rdf.getBoolean(resource, 'temporalFromDataset');
 
             $scope.dialog.exampleResources = listToString(rdf.getValueList(resource, 'exampleResources'));
+
+            $scope.control = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'control'));
         };
 
         function saveDialog() {
+            if ($scope.control.forced) {
+                return;
+            }
+
             var resource = rdf.secureByType('Configuration');
 
             rdf.setString(resource, 'datasetURI', $scope.dialog.datasetURI);

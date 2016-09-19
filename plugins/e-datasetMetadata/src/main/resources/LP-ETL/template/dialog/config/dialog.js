@@ -33,6 +33,8 @@ define([], function () {
             'schema': ''
         };
 
+        $scope.control = { };
+
         var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/e-datasetMetadata#');
 
         var listToString = function(string) {
@@ -89,9 +91,16 @@ define([], function () {
             $scope.dialog.keywords_orig = listToString(rdf.getValueList(resource, 'keywords_orig'));
             $scope.dialog.keywords_en = listToString(rdf.getValueList(resource, 'keywords_en'));
             $scope.dialog.themes = listToString(rdf.getValueList(resource, 'themes'));
+
+            $scope.control = $service.control.fromIri(
+                rdf.getIri(resource, PREFIX + 'control'));
         };
 
         function saveDialog() {
+            if ($scope.control.forced) {
+                return;
+            }
+
             var resource = rdf.secureByType('Configuration');
 
             rdf.setString(resource, 'datasetURI', $scope.dialog.datasetURI);
