@@ -11,7 +11,7 @@ define([], function () {
     var _data = {};
 
     var _status = {
-        'ready' : false,
+        'ready': false,
         'loading': false
     };
 
@@ -52,9 +52,13 @@ define([], function () {
             var parsedResponse = jsonldService.toJson(response.data,
                 INFO_SELECTOR, INFO_TEMPLATE)[0];
 
-            data.tags = parsedResponse.tags;
-            data.followup = {};
+            if (Array.isArray(parsedResponse.tags)) {
+                data.tags = parsedResponse.tags;
+            } else {
+                data.tags = [parsedResponse.tags];
+            }
 
+            data.followup = {};
             if (parsedResponse.followup) {
                 parsedResponse.followup.forEach((item) => {
                     if (data.followup[item['source']] === undefined) {
@@ -91,7 +95,7 @@ define([], function () {
 
         var service = {
             'update': update.bind(null, _data, $http, jsonldService),
-            'getTags' : () => _data.tags,
+            'getTags': () => _data.tags,
             'getTemplatePriority': getTemplatePriority.bind(null, _data),
             'initialize': function (callback) {
                 if (_status.ready) {

@@ -7,8 +7,10 @@ define([], function () {
             'searchText' : '',
             'all' : [],
             'querySearch': function(query) {
+                query = query.toLowerCase()
                 return $scope.tags.all.filter(function (item) {
-                    return item.indexOf(query) !== -1;
+                    console.log(item, query, item.indexOf(query) !== -1)
+                    return item.toLowerCase().indexOf(query) !== -1;
                 });
             }
         };
