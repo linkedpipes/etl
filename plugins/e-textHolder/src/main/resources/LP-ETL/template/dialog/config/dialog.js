@@ -49,13 +49,6 @@ define([], function () {
                 $service.control.toIri($scope.control.content));
         }
 
-        function loadTemplate() {
-            RDF.setData($service.config.template);
-            var resource = RDF.secureByType(PREFIX + 'Control');
-            $scope.template.fileNameForce = RDF.getBoolean(resource,
-                PREFIX + 'fileNameForce');
-        }
-
         // Define the save function.
         $service.onStore = function () {
             saveDialog();
@@ -63,8 +56,6 @@ define([], function () {
 
         // Load data.
         loadDialog();
-        loadTemplate();
-
     }
     //
     controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
