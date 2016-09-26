@@ -27,7 +27,7 @@ define([], function () {
             rdf.setData($service.config.instance);
             var resource = rdf.secureByType(PREFIX + 'Configuration');
             //
-            if (!$scope.control.query.path) {
+            if (!$scope.control.path) {
                 rdf.setString(resource, PREFIX + 'path', $scope.dialog.path);
             }
             //

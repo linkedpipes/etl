@@ -93,7 +93,7 @@ define([], function () {
             $scope.dialog.themes = listToString(rdf.getValueList(resource, 'themes'));
 
             $scope.control = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'control'));
+                rdf.getIri(resource, 'control'));
         };
 
         function saveDialog() {

@@ -109,7 +109,7 @@ define([], function () {
             $scope.dialog.namedCell = newItems;
 
             $scope.control = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'control'));
+                rdf.getIri(table, 'control'));
         };
 
         function saveDialog() {

@@ -35,15 +35,15 @@ define([], function () {
             rdf.setData($service.config.instance);
             var resource = rdf.secureByType(PREFIX + 'Configuration');
             //
-            if (!$scope.control.query.uri) {
+            if (!$scope.control.uri) {
                 rdf.setString(resource, PREFIX + 'fileUri',
                     $scope.dialog.uri);
             }
-            if (!$scope.control.query.fileName) {
+            if (!$scope.control.fileName) {
                 rdf.setString(resource, PREFIX + 'fileName',
                     $scope.dialog.fileName);
             }
-            if (!$scope.control.query.hardRedirect) {
+            if (!$scope.control.hardRedirect) {
                 rdf.setBoolean(resource, PREFIX + 'hardRedirect',
                     $scope.dialog.hardRedirect);
             }
