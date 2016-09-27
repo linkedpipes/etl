@@ -33,7 +33,7 @@ define([], function () {
 
         function saveDialog() {
             rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
+            var resource = rdf.secureByType(PREFIX + 'Configuration');
             //
             if (!$scope.control.fileName.forced) {
                 rdf.setString(resource, PREFIX + 'fileName',
