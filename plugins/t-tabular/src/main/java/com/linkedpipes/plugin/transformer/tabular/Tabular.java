@@ -42,7 +42,7 @@ public class Tabular implements Component.Sequential {
         for (Entry entry : inputFilesDataUnit) {
             LOG.info("Processing file: {}", entry.toFile());
             output.onFileStart();
-            mapper.onTableStart("file://" + entry.getFileName(), null);
+            mapper.onTableStart("file:///" + entry.getFileName(), null);
             try {
                 parser.parse(entry, mapper);
             } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
