@@ -1,47 +1,34 @@
 define([], function () {
+    "use strict";
 
-    const PREFIX = 'http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#';
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#",
+        "$type": "Configuration",
+        "prefix" : {
+            "$type" : "str",
+            "$property" : "prefix",
+            "$control": "prefixControl",
+            "$label" : "Template file prefix"
+        }
+    };
 
-    function controller($scope, $service, rdfService) {
+    function controller($scope, $service) {
 
-        $scope.dialog = {};
-
-        if ($scope.control === undefined) {
-            $scope.control = {};
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        var rdf = rdfService.create();
-
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            $scope.dialog.prefix = rdf.getString(resource, PREFIX + 'prefix');
-            //
-            $scope.control.prefix = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'prefixControl'));
-        }
-
-        function saveDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            if (!$scope.control.prefix.forced) {
-                rdf.setString(resource, PREFIX + 'prefix',
-                    $scope.dialog.prefix);
-            }
-            //
-            rdf.setIri(resource, PREFIX + 'prefixControl',
-                $service.control.toIri($scope.control.prefix));
-        }
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {
-            saveDialog();
-        }
+            dialogManager.save();
+        };
 
-        loadDialog();
+        dialogManager.load();
+
     }
 
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
