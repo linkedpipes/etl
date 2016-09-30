@@ -155,9 +155,12 @@ public class Model {
         protected LinkedList<Entity> entities = new LinkedList<>();
 
         /**
-         * @return First entity.
+         * @return First entity or null.
          */
         public Entity single() {
+            if (entities.isEmpty()) {
+                return null;
+            }
             return entities.getFirst();
         }
 

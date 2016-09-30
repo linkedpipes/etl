@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Petr Škoda
@@ -120,7 +121,8 @@ public class ConfigurationFacade {
                 if (configuration == null) {
                     model = null;
                     LOG.warn("Skipping configuration due to missing " +
-                            "configuration entity.");
+                            "configuration entity for: {}",
+                            description.getType());
                 }
                 continue;
             }
@@ -137,6 +139,11 @@ public class ConfigurationFacade {
             for (ConfigDescription.Member member : description.getMembers()) {
                 merge(member, configuration, childConfiguration);
             }
+        }
+        //
+        if (model == null) {
+            LOG.warn("Configuration model is empty.");
+            return Collections.EMPTY_LIST;
         }
         //
         model.updateResources(baseIri);
