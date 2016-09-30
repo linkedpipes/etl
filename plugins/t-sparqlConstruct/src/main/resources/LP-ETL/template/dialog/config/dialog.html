@@ -1,9 +1,9 @@
-<div class="container-flow">
-    <md-input-container class="md-block" ng-hide="control.query.forced" flex>
+<div class="row">
+    <md-input-container class="md-block" ng-hide="dialog.query.hide" >
         <label>SPARQL CONSTRUCT query</label>
-        <textarea id="query" ng-model="dialog.query"
+        <textarea id="query" ng-model="dialog.query.value"
                   placeholder="CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 100"
-                  ng-disabled="control.query.inherit"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
                   required  md-select-on-focus />
     </md-input-container>
 </div>
