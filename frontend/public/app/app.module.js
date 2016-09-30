@@ -18,7 +18,11 @@ define([
     'app/services/designService',
     'app/components/inputs/localizedTextInput/localizedTextInput',
     'app/components/inputs/iriList/iriList',
-    'app/components/templateDetailDialog/templateDetailDialogCtrl',
+    'app/components/templates/listView/templateListView',
+    'app/components/templates/detailView/templateDetailView',
+    'app/components/templates/templateService',
+    'app/components/templates/generalTab/templateGeneralTab',
+    'app/components/templates/hierarchyTab/templateHierarchyTab',
     'angular',
     'angular-route',
     'angular-resource',
@@ -48,7 +52,11 @@ define([
         designService,
         localizedTextInputInit,
         iriListInit,
-        templateDetailDialogCtrl,
+        templateListInit,
+        templateDetailInit,
+        templateService,
+        templateGeneralTab,
+        templateHierarchyTab,
         angular
         ) {
     var app = angular.module('angularApp', [
@@ -72,7 +80,11 @@ define([
     designService(app);
     localizedTextInputInit(app);
     iriListInit(app);
-    templateDetailDialogCtrl(app);
+    templateListInit(app);
+    templateDetailInit(app);
+    templateService(app);
+    templateGeneralTab(app);
+    templateHierarchyTab(app);
     //
     executionModel(app);
     pipelineListCtrlInit(app);
@@ -98,8 +110,6 @@ define([
 
         $scope.route = $route;
         $scope.index = indexPage;
-
-        console.log('indexPage', indexPage);
 
         $scope.$on('$routeChangeSuccess', function (event, current, previous) {
             if (current.$$route && current.$$route.pageTitle) {
@@ -127,6 +137,11 @@ define([
         $scope.onExecutions = function () {
             $scope.closeSidenav();
             $location.path('/executions').search({});
+        };
+
+        $scope.onTemplates = function () {
+            $scope.closeSidenav();
+            $location.path('/templates').search({});
         };
 
         $scope.onPersonalization = function () {

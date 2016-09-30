@@ -118,17 +118,15 @@ define([
         }
         // Check for type - this can be slow, we may wan't to
         // use hashing, or some other method?
-        var typesS = cellS.model.attributes.portsData[
+        var contentS = cellS.model.attributes.portsData[
                 magnetS.getAttribute('port')]['dataType'];
-        var typesT = cellT.model.attributes.portsData[
+        var contentT = cellT.model.attributes.portsData[
                 magnetT.getAttribute('port')]['dataType'];
-        for (var i = 0; i < typesS.length; ++i) {
-            for (var j = 0; j < typesT.length; ++j) {
-                if (typesS[i] === typesT[j]) {
-                    return true;
-                }
-            }
+
+        if (contentS === contentT) {
+            return true;
         }
+
         return false;
     }
 
@@ -149,7 +147,7 @@ define([
                 portsData[port['binding']] = {
                     'binding': port['binding'],
                     'label': port['label'],
-                    'dataType': port['type'],
+                    'dataType': port['content'],
                     'useLabel': template['inputs'].length > 1
                 };
                 inPorts.push(port['binding']);
@@ -160,7 +158,7 @@ define([
                 portsData[port['binding']] = {
                     'binding': port['binding'],
                     'label': port['label'],
-                    'dataType': port['type'],
+                    'dataType': port['content'],
                     'useLabel': template['outputs'].length > 1
                 };
                 outPorts.push(port['binding']);
@@ -208,7 +206,7 @@ define([
             console.error('Ignored component without a template: ', template);
             return;
         }
-        var ports = createPorts(template);
+        var ports = createPorts(this.templates.getCoreTemplate(template));
         var cell = new ComponenModel({
             'position': {
                 'x': componentService.getX(component),
@@ -987,7 +985,7 @@ define([
 
     return function (app) {
         app.factory('canvas.pipeline', [
-            'components.templates.services.repository',
+            'template.service',
             'components.pipelines.services.model',
             'services.status',
             factory]);

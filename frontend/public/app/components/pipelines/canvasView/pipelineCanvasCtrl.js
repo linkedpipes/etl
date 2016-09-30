@@ -4,23 +4,25 @@ define([
     'app/components/canvas/pipelineCanvas',
     'app/components/canvas/executionProgress',
     'app/components/pipelineEditDirective/pipelineEditDirective',
-    'app/components/pipelines/configurationDialog/configurationDialogCtrl',
     'app/components/templates/templatesRepository',
     'app/components/pipelines/pipelineModelService',
-    'app/components/templates/selectDialog/selectTemplateDialogCtrl',
+    'app/components/templates/selectDialog/templateSelectDialog',
     'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
-    'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl'
+    'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
+    'app/components/templates/detailDialog/templateDetailDialog',
+    'app/components/instances/detailDialog/instanceDetailDialog'
 ], function (jQuery,
              pipelineCanvasDirective,
              canvasPipelineFactory,
              executionProgressFactory,
              pipelineEditDirective,
-             componentDialogCtrl,
              templatesRepositoryFactory,
              pipelineModelService,
              selectTemplateDialog,
              importPipelineDialog,
-             pipelineDetailDialog) {
+             pipelineDetailDialog,
+             templateDetailDialog,
+             instanceDetailDialog) {
     function controler($scope,
                        $mdDialog,
                        $mdMedia,
@@ -41,8 +43,6 @@ define([
                         pipelineDesign
                        // TODO Update names, check for factories and service.
     ) {
-
-        console.log('components.pipeline.canvas.view : ctrl');
 
         $scope.canvas = {};
 
@@ -85,25 +85,22 @@ define([
             var comFacade = pipelineService.component;
             var templateIri = comFacade.getTemplateIri(component);
             var template = templateService.getTemplate(templateIri);
-            // TODO Replace with premise.
-            templateService.fetchTemplateConfiguration(template, function () {
-                $mdDialog.show({
-                    'controller': 'components.pipelines.configuration.dialog',
-                    'templateUrl': 'app/components/pipelines/configurationDialog/configurationDialogView.html',
-                    'clickOutsideToClose': false,
-                    'fullscreen': useFullScreen,
-                    'locals': {
-                        'component': component,
-                        'template': template,
-                        'data': data.pipeline
-                    }
-                }).then(function () {
-                    // Notify about change in the
-                    $scope.canvas.getPaper().trigger('lp:component:changed',
-                        component['@id'], component);
-                }, function () {
-                    // No action here.
-                });
+            $mdDialog.show({
+                'controller': 'instance.detail.dialog',
+                'templateUrl': 'app/components/instances/detailDialog/instanceDetailDialog.html',
+                'clickOutsideToClose': false,
+                'fullscreen': useFullScreen,
+                'locals': {
+                    'component': component,
+                    'template': template,
+                    'data': data.pipeline
+                }
+            }).then(function () {
+                // Notify about change in the
+                $scope.canvas.getPaper().trigger('lp:component:changed',
+                    component['@id'], component);
+            }, function () {
+                // No action here.
             });
         }
 
@@ -112,28 +109,24 @@ define([
             var comFacade = pipelineService.component;
             var templateIri = comFacade.getTemplateIri(component);
             var template = templateService.getTemplate(templateIri);
-            // TODO Replace with premise.
-            templateService.fetchTemplateConfiguration(template, function () {
-                $mdDialog.show({
-                    'controller': 'components.templates.configuration.dialog',
-                    'templateUrl': 'app/components/templateDetailDialog/templateDetailDialogView.html',
-                    'clickOutsideToClose': false,
-                    'fullscreen': useFullScreen,
-                    'locals': {
-                        'component': component,
-                        'template': template,
-                        'pipeline': data.pipeline
-                    }
-                }).then(function () {
-                    // Notify about change in the component as
-                    // inherited properties may changed.
-                    $scope.canvas.getPaper().trigger('lp:component:changed',
-                        component['@id'], component);
-                }, function () {
-                    // No action here.
-                });
+            $mdDialog.show({
+                'controller': 'template.detail.dialog',
+                'templateUrl': 'app/components/templates/detailDialog/templateDetailDialog.html',
+                'clickOutsideToClose': false,
+                'fullscreen': useFullScreen,
+                'locals': {
+                    'component': component,
+                    'template': template,
+                    'pipeline': data.pipeline
+                }
+            }).then(function () {
+                // Notify about change in the component as
+                // inherited properties may changed.
+                $scope.canvas.getPaper().trigger('lp:component:changed',
+                    component['@id'], component);
+            }, function () {
+                // No action here.
             });
-
         }
 
         function onDebug(component) {
@@ -164,7 +157,7 @@ define([
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 'controller': 'components.templates.select.dialog',
-                'templateUrl': 'app/components/templates/selectDialog/selectTemplateDialogView.html',
+                'templateUrl': 'app/components/templates/selectDialog/templateSelectDialog.html',
                 'parent': angular.element(document.body),
                 'hasBackdrop': false,
                 'clickOutsideToClose': true,
@@ -316,7 +309,7 @@ define([
         var readyComponents = 0;
 
         $scope.pipelineEdit.onLink = function () {
-            console.log('components.pipeline.canvas.view : onLink');
+
             $scope.pipelineEdit.bind(
                 $scope.canvas,
                 pipelineCanvas);
@@ -348,7 +341,7 @@ define([
             if (readyComponents !== 2) {
                 return;
             }
-            console.log('components.pipeline.canvas.view : initialize');
+
             // Set mode based on the input.
             // TODO This should each component do on it own.
             if (data.execution.iri === undefined) {
@@ -361,7 +354,7 @@ define([
             // Update pipeline design information.
             pipelineDesign.update();
             // TODO replace with promise.
-            templateService.load(function () {
+            templateService.load().then(function () {
                 loadData();
             }, function (response) {
                 statusService.deleteFailed({
@@ -372,8 +365,6 @@ define([
         }
 
         $timeout(function () {
-
-            console.log('components.pipeline.canvas.view : timeout');
 
             // Wait for the end of the initialization.
 
@@ -665,7 +656,7 @@ define([
         '$http',
         '$routeParams',
         '$timeout',
-        'components.templates.services.repository',
+        'template.service',
         'services.status',
         'service.refresh',
         'services.jsonld',
@@ -684,12 +675,13 @@ define([
         canvasPipelineFactory(app);
         executionProgressFactory(app);
         pipelineEditDirective(app);
-        componentDialogCtrl(app);
         templatesRepositoryFactory(app);
         pipelineModelService(app);
         selectTemplateDialog(app);
         importPipelineDialog(app);
         pipelineDetailDialog(app);
+        templateDetailDialog(app);
+        instanceDetailDialog(app);
     };
 
 });

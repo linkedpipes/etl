@@ -17,7 +17,7 @@ module.exports = gApiRouter;
 
 gApiRouter.get('/info', function (request, response) {
     response.status(200).json({
-        'path' : {
+        'path': {
             'ftp': gConfiguration.executor.ftp.uri
         }
     });
@@ -28,13 +28,17 @@ gApiRouter.get('/info', function (request, response) {
 gApiRouter.get('/components/:type', function (request, response) {
     // Re-post to the storage.
     var iri = gConfiguration.storage.url + '/api/v1/components/';
-    switch(request.params.type) {
+    switch (request.params.type) {
         case 'interface':
             iri += 'interface?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
             break;
         case 'definition':
             iri += 'definition?';
+            iri += 'iri=' + encodeURIComponent(request.query.iri)
+            break;
+        case 'effective':
+            iri += 'configEffective?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
             break;
         case 'config':
@@ -63,7 +67,8 @@ gApiRouter.get('/components/:type', function (request, response) {
                     'systemMessage': '',
                     'userMessage': 'Missing resource.',
                     'errorCode': 'CONNECTION_REFUSED'
-                }});
+                }
+            });
             return;
     }
     // Pass header options.
@@ -98,3 +103,28 @@ gApiRouter.get('/jars/file', function (request, response) {
         });
     }).pipe(response);
 });
+
+// Updates for templates
+
+gApiRouter.post('/components/config', function (request, response) {
+    var url = gConfiguration.storage.url +
+        '/api/v1/components/config?iri=' +
+        encodeURIComponent(request.query.iri);
+    request.pipe(gRequest.post(url, {
+        'form': request.body
+    }), {
+        'end': false
+    }).pipe(response);
+});
+
+gApiRouter.post('/components/component', function (request, response) {
+    var url = gConfiguration.storage.url +
+        '/api/v1/components/component?iri=' +
+        encodeURIComponent(request.query.iri);
+    request.pipe(gRequest.post(url, {
+        'form': request.body
+    }), {
+        'end': false
+    }).pipe(response);
+});
+

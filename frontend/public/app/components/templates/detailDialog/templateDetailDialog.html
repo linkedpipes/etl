@@ -1,8 +1,8 @@
-<md-dialog aria-label="Component detail" ng-cloak flex="50">
+<md-dialog aria-label="Template dialog" ng-cloak flex="50">
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h4>{{general.label}}</h4>
+                <h4>Create template from : {{templateToEdit.label}}</h4>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="onCancel()">
                     <md-icon md-svg-src="close"
@@ -12,12 +12,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <lp-component-detail api="api"
-                                     instance="instance"
-                                     template="template"
-                                     instance-config="instanceConfig"
-                                     template-config="templateConfig"
-                </lp-component-detail>
+                <lp-template-detail api="api"></lp-template-detail>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
@@ -26,7 +21,7 @@
                 DISCARD CHANGES
             </md-button>
             <md-button ng-click="onSave()" class="md-primary">
-                APPLY CHANGES
+                CREATE TEMPLATE
             </md-button>
         </md-dialog-actions>
     </form>

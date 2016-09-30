@@ -1,0 +1,9 @@
+<div ng-repeat="item in model" ng-show="!item.hide">
+    <span>{{item.label}}</span><br/>
+    <md-checkbox ng-model="item.inherit">
+        Inherit from template
+    </md-checkbox>
+    <md-checkbox ng-model="item.force">
+        Overwrite in instance
+    </md-checkbox>
+</div>
