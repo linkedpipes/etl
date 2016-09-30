@@ -99,7 +99,7 @@ define([], function () {
 
             $scope.dialog.exampleResources = listToString(rdf.getValueList(resource, 'exampleResources'));
 
-            $scope.control = $service.control.fromIri(
+            $scope.control = $service.v0.iriToControl(
                 rdf.getIri(resource, 'control'));
         };
 

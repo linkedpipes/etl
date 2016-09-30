@@ -108,7 +108,7 @@ define([], function () {
             });
             $scope.dialog.namedCell = newItems;
 
-            $scope.control = $service.control.fromIri(
+            $scope.control = $service.v0.iriToControl(
                 rdf.getIri(table, 'control'));
         };
 

@@ -92,7 +92,7 @@ define([], function () {
             $scope.dialog.keywords_en = listToString(rdf.getValueList(resource, 'keywords_en'));
             $scope.dialog.themes = listToString(rdf.getValueList(resource, 'themes'));
 
-            $scope.control = $service.control.fromIri(
+            $scope.control = $service.v0.iriToControl(
                 rdf.getIri(resource, 'control'));
         };
 

@@ -9,6 +9,16 @@ define([
 ], function (jsonld, dialogManager, instanceDirective, templateDirective) {
     "use strict";
 
+    const LP_RESOURCE = "http://plugins.linkedpipes.com/resource/";
+
+    const LP = {
+        "Inherit": LP_RESOURCE + "configuration/Inherit",
+        "Force": LP_RESOURCE + "configuration/Force",
+        "InheritAndForce": LP_RESOURCE + "configuration/InheritAndForce",
+        "Forced": LP_RESOURCE + "configuration/Forced",
+        "None": LP_RESOURCE + "configuration/None"
+    };    
+    
     function factoryFunction() {
 
         /**
@@ -46,6 +56,67 @@ define([
             // Contains versioned advanced services.
             //
 
+            service.v0 = {
+                "iriToControl": function (iri) {
+                    switch (iri) {
+                        case LP.Inherit:
+                            return {
+                                'inherit': true,
+                                'force': false,
+                                'forced': false
+                            }
+                        case LP.Force:
+                            // This apply for templates.
+                            return {
+                                'inherit': false,
+                                'force': true,
+                                'forced': false
+                            }
+                        case LP.InheritAndForce:
+                            // This apply for templates.
+                            return {
+                                'inherit': true,
+                                'force': true,
+                                'forced': false
+                            }
+                        case LP.Forced:
+                            return {
+                                'forced': true
+                            }
+                        case LP.None:
+                            return {
+                                'inherit': false,
+                                'force': false,
+                                'forced': false
+                            };
+                        default:
+                            return {
+                                'inherit': false,
+                                'force': false,
+                                'forced': false
+                            };
+                    }
+                },
+                "controlToIri": function (control) {
+                    if (control.forced) {
+                        return LP.Forced;
+                    }
+                    if (control.inherit) {
+                        if (control.force) {
+                            return LP.InheritAndForce;
+                        } else {
+                            return LP.Inherit;
+                        }
+                    } else {
+                        if (control.force) {
+                            return LP.Force;
+                        } else {
+                            return LP.None;
+                        }
+                    }
+                }
+            };
+
             service.v1 = {
                 /**
                  * Create and return dialog manager.
@@ -63,7 +134,7 @@ define([
             //
 
             service.api = {
-                "setIri" : (iri) => {
+                "setIri": (iri) => {
                     service.iri = iri;
                 },
                 "setInstanceConfig": (config) => {
