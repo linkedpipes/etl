@@ -4,7 +4,7 @@
  * There are two type of templates jarTemplates and refTemplates.
  *
  * All type of templates contains common generated properties:
- *  _parents - List of parent.
+ *  _parents - List of parent, the core template is the first.
  *  _children - Recursive list of children.
  *  _core - Reference to the core template, for core reference to it self.
  *
@@ -354,6 +354,25 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
          */
         service.getCoreTemplate = (template) => {
             return template._core;
+        };
+
+        /**
+         * Color that should be used by instances of this template.
+         *
+         * @param template
+         * @returns
+         */
+        service.getEffectiveColor = (template) => {
+            if (template.color !== undefined) {
+                return template.color;
+            }
+            for (let i = template._parents.length - 1; i >= 0; --i) {
+                const parent = template._parents[i];
+                if (parent.color !== undefined) {
+                    return parent.color;
+                }
+            }
+            console.warn("Missing color for: ", template);
         };
 
         /**

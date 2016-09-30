@@ -368,7 +368,7 @@ define([
         // Color.
         var color = componentService.getColor(component);
         if (color === undefined) {
-            color = template.color;
+            color = this.templates.getEffectiveColor(template);
         }
         if (componentService.isDisabled(component)) {
             color = '#f2f2f2';
@@ -973,11 +973,11 @@ define([
     };
 
     function factory(templates, pipelineModel, statusService) {
-        return jQuery.extend({
+        return jQuery.extend(service, {
             'templates': templates,
             'pipelineModel': pipelineModel,
             'statusService': statusService
-        }, service);
+        });
     }
 
     // TODO Embeed functions from canvasDirective and make this
