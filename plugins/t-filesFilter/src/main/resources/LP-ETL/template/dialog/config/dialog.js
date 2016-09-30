@@ -1,48 +1,33 @@
 define([], function () {
+    "use strict";
 
-    const PREFIX = 'http://plugins.linkedpipes.com/ontology/t-filesFilter#';
+    const DESC = {
+        "$namespace" : "http://plugins.linkedpipes.com/ontology/t-filesFilter#",
+        "$type": "Configuration",
+        "fileNamePattern" : {
+            "$type" : "str",
+            "$property" : "fileNamePattern",
+            "$control": "fileNamePatternControl",
+            "$label" : "File name filter pattern<"
+        }
+    };
 
-    function controller($scope, $service, rdfService) {
+    function controller($scope, $service) {
 
-        $scope.dialog = {};
-
-        if ($scope.control === undefined) {
-            $scope.control = {};
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        var rdf = rdfService.create('');
-
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            $scope.dialog.pattern = rdf.getString(resource,
-                PREFIX + 'fileNamePattern');
-            //
-            $scope.control.fileNamePattern = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'fileNamePatternControl'));
-        }
-
-        function saveDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            if (!$scope.control.fileNamePattern.forced) {
-                rdf.setString(resource, PREFIX + 'fileNamePattern',
-                    $scope.dialog.pattern);
-            }
-            //
-            rdf.setIri(resource, PREFIX + 'fileNamePatternControl',
-                $service.control.toIri($scope.control.fileNamePattern));
-        }
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {
-            saveDialog();
-        }
+            dialogManager.save();
+        };
 
-        loadDialog();
+        dialogManager.load();
+
     }
 
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
