@@ -1,20 +1,18 @@
-<div class="container-flow">
-    <div class="row">
-        <md-input-container class="md-block" ng-hide="control.endpoint.forced" flex>
-            <label>Endpoint URL</label>
-            <input type="url" ng-model="dialog.endpoint"
-                   placeholder="http://example.com/sparql"
-                   ng-disabled="control.endpoint.inherit"
-                   required>
-        </md-input-container>
-        <md-input-container class="md-block" ng-hide="control.query.forced" flex>
-            <label>SPARQL CONSTRUCT query</label>
-            <textarea id="query" ng-model="dialog.query"
-                      placeholder="CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 100"
-                      ng-disabled="control.query.inherit"
-                      required md-select-on-focus />
-        </md-input-container>
-    </div>
+<div class="row">
+    <md-input-container class="md-block" ng-hide="dialog.endpoint.hide">
+        <label>Endpoint URL</label>
+        <input type="url" ng-model="dialog.endpoint.value"
+               placeholder="http://example.com/sparql"
+               ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
+               required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide">
+        <label>SPARQL CONSTRUCT query</label>
+        <textarea id="query" ng-model="dialog.query.value"
+                  placeholder="CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 100"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
+                  required md-select-on-focus/>
+    </md-input-container>
 </div>
 
 
