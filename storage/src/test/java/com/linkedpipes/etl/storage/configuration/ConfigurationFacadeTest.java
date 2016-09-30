@@ -78,7 +78,7 @@ public class ConfigurationFacadeTest {
         );
         //
         final Collection<Statement> newConfig = ConfigurationFacade
-                .createConfigurationTemplate(configRdf, descRdf,
+                .createTemplateConfiguration(configRdf, descRdf,
                         "http://localhost/resource/new", null);
         // TODO Implement check !
 //        System.out.println();

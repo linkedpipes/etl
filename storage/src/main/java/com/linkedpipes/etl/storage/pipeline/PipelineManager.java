@@ -446,7 +446,7 @@ class PipelineManager {
                 templateRdf.addAll(templatesFacade.getDefinition(template));
                 //
                 additionalRdf.addAll(templateRdf);
-                additionalRdf.addAll(templatesFacade.getConfig(template));
+                additionalRdf.addAll(templatesFacade.getConfigurationTemplate(template));
             }
         }
         if (includeMapping) {
@@ -475,7 +475,7 @@ class PipelineManager {
             if (statement.getPredicate().stringValue().equals(
                     "http://linkedpipes.com/ontology/template") &&
                     statement.getContext().stringValue().equals(pipelineIri)) {
-                templates.addAll(templatesFacade.getTemplateHierarchy(
+                templates.addAll(templatesFacade.getTemplates(
                         statement.getObject().stringValue(), false));
             }
         }

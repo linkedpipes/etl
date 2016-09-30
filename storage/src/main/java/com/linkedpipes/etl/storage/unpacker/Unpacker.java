@@ -277,11 +277,11 @@ class Unpacker {
                 // We also have to add description, so the executor
                 // can work with the configuration.
                 if (!addedConfigurations.contains(templateIri)) {
-                    configurations.addAll(templates.getConfig(template));
+                    configurations.addAll(templates.getConfigurationTemplate(template));
                     // TODO Do not add same description twice -
                     // under different names. Requires change
                     // in a component description.
-                    configurations.addAll(templates.getConfigDesc(template));
+                    configurations.addAll(templates.getConfigurationDescription(template));
                     addedConfigurations.add(templateIri);
                 }
             }

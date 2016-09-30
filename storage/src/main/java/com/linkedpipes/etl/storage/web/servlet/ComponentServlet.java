@@ -43,7 +43,7 @@ public class ComponentServlet {
     public void getAll(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, BaseException {
-        RdfUtils.write(request, response, templates.getInterface());
+        RdfUtils.write(request, response, templates.getInterfaces());
     }
 
     /**
@@ -90,6 +90,23 @@ public class ComponentServlet {
         RdfUtils.write(request, response, templates.getDefinition(template));
     }
 
+    @RequestMapping(value = "/component",
+            method = RequestMethod.POST)
+    @ResponseBody
+    public void updateComponent(@RequestParam(name = "iri") String iri,
+            @RequestParam(name = "component") MultipartFile componentRdf,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, BaseException {
+        // Get component.
+        final Template template = templates.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        final Collection<Statement> component = RdfUtils.read(componentRdf);
+        templates.updateTemplate(template, component);
+    }
+
     @RequestMapping(value = "/config",
             method = RequestMethod.GET)
     @ResponseBody
@@ -103,7 +120,40 @@ public class ComponentServlet {
             return;
         }
         //
-        RdfUtils.write(request, response, templates.getConfig(template));
+        RdfUtils.write(request, response, templates.getConfigurationTemplate(template));
+    }
+
+    @RequestMapping(value = "/config",
+            method = RequestMethod.POST)
+    @ResponseBody
+    public void updateConfig(@RequestParam(name = "iri") String iri,
+            @RequestParam(name = "configuration") MultipartFile configRdf,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, BaseException {
+        // Get component.
+        final Template template = templates.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        final Collection<Statement> config = RdfUtils.read(configRdf);
+        templates.updateConfig(template, config);
+    }
+
+    @RequestMapping(value = "/configEffective",
+            method = RequestMethod.GET)
+    @ResponseBody
+    public void getEffectiveConfig(@RequestParam(name = "iri") String iri,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, BaseException {
+        // Get component.
+        final Template template = templates.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        //
+        RdfUtils.write(request, response, templates.getEffectiveConfiguration(template));
     }
 
     @RequestMapping(value = "/configTemplate",
@@ -120,7 +170,7 @@ public class ComponentServlet {
         }
         //
         RdfUtils.write(request, response,
-                templates.getConfigForInstance(template));
+                templates.getConfigurationInstance(template));
     }
 
     @RequestMapping(value = "/configDescription", method = RequestMethod.GET)
@@ -135,7 +185,7 @@ public class ComponentServlet {
             return;
         }
         //
-        RdfUtils.write(request, response, templates.getConfigDesc(template));
+        RdfUtils.write(request, response, templates.getConfigurationDescription(template));
     }
 
     @RequestMapping(value = "/dialog",

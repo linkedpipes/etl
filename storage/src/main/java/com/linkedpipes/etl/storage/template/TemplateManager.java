@@ -8,10 +8,9 @@ import com.linkedpipes.etl.storage.jar.JarFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.apache.commons.io.FileUtils;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
+import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +116,68 @@ class TemplateManager {
         }
     }
 
+    public void updateTemplate(Template template,
+            Collection<Statement> contentRdf) throws BaseException {
+        // We need to update the component definition.
+        if (template instanceof FullTemplate) {
+            throw new BaseException("Can't modify core component.");
+        }
+        // For now there are changes only in the interface
+        // (label, description, color).
+        final ValueFactory vf = SimpleValueFactory.getInstance();
+        final Set<IRI> updateRdf = new HashSet<>();
+        final List<Statement> newInterface = new LinkedList<>();
+        final IRI templateIri = vf.createIRI(template.getIri());
+        for (Statement statement : contentRdf) {
+            updateRdf.add(statement.getPredicate());
+            //
+            newInterface.add(vf.createStatement(templateIri,
+                    statement.getPredicate(), statement.getObject(),
+                    templateIri));
+        }
+        // Add unchanged.
+        final ReferenceTemplate refTemplate = (ReferenceTemplate)template;
+        for (Statement statement : refTemplate.getInterfaceRdf()) {
+            if (!updateRdf.contains(statement.getPredicate())) {
+                newInterface.add(statement);
+            }
+        }
+        // Set and save.
+        refTemplate.setInterfaceRdf(newInterface);
+        RdfUtils.write(new File(((BaseTemplate) template).getDirectory(),
+                Template.INTERFACE_FILE), RDFFormat.TRIG, newInterface);
+    }
+
+    public void updateConfig(Template template,
+            Collection<Statement> configRdf) throws BaseException {
+        final List<Statement> configWithGraph
+                = new ArrayList<>(configRdf.size());
+        final ValueFactory vf = SimpleValueFactory.getInstance();
+        // TODO The graph IRI should be defined on a single place.
+        final IRI graph = vf.createIRI(
+                template.getIri() + "/configuration");
+        for (Statement s : configRdf) {
+            configWithGraph.add(vf.createStatement(
+                    s.getSubject(),s.getPredicate(),s.getObject(), graph
+            ));
+        }
+        //
+        final BaseTemplate baseTemplate = (BaseTemplate) template;
+        // Create configuration for instances.
+        final IRI newGraph = vf.createIRI(template.getIri() +
+                "/newConfiguration");
+        final Collection<Statement> instanceConfigRdf
+                = ConfigurationFacade.createTemplateConfiguration(
+                configWithGraph, baseTemplate.getConfigDescRdf(),
+                graph.stringValue(), newGraph);
+        // Save to file.
+        RdfUtils.write(new File(((BaseTemplate) template).getDirectory(),
+                        Template.CONFIG_FILE), RDFFormat.TRIG, configWithGraph);
+        // Update definitions.
+        baseTemplate.setConfigRdf(configWithGraph);
+        baseTemplate.setConfigForInstanceRdf(instanceConfigRdf);
+    }
+
     /**
      * Load and return template from given directory.
      *
@@ -138,8 +199,7 @@ class TemplateManager {
         final Resource referenceTemplateResource
                 = RdfUtils.find(interfaceRdf, ReferenceTemplate.TYPE);
         if (referenceTemplateResource != null) {
-            return loadReferenceTemplate(
-                    referenceTemplateResource, interfaceRdf, directory);
+            return loadReferenceTemplate(interfaceRdf, directory);
         }
         // Unknown template type.
         throw new BaseException("Missing template resource");
@@ -185,12 +245,11 @@ class TemplateManager {
     /**
      * Load a reference template.
      *
-     * @param resource
      * @param interfaceRdf
      * @param directory
      * @return
      */
-    private static BaseTemplate loadReferenceTemplate(Resource resource,
+    private static BaseTemplate loadReferenceTemplate(
             Collection<Statement> interfaceRdf, File directory)
             throws BaseException {
         final ReferenceTemplate template = new ReferenceTemplate();
@@ -226,7 +285,7 @@ class TemplateManager {
         final IRI graph = SimpleValueFactory.getInstance().createIRI(
                 template.getIri() + "/new");
         template.setConfigForInstanceRdf(
-                ConfigurationFacade.createConfigurationTemplate(
+                ConfigurationFacade.createTemplateConfiguration(
                         template.getConfigRdf(),
                         template.getConfigDescRdf(),
                         graph.stringValue(), graph));
