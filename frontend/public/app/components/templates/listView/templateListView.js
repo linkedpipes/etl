@@ -3,7 +3,7 @@ define([], function () {
 
     function controller($scope, $location, templateService) {
 
-        $scope.templates = {};
+        $scope.templates = [];
 
         $scope.loaded = false;
 
@@ -33,9 +33,14 @@ define([], function () {
         
         (function init() {
             templateService.load().then(() => {
-                $scope.templates = templateService.getTemplatesList();
-                $scope.templates.forEach((template) => {
+                const templateList = templateService.getTemplatesList();
+                templateList.forEach((template) => {
+                    // Filter out core templates.
+                    if (template.core) {
+                        return;
+                    }
                     template._templateListView = true;
+                    $scope.templates.push(template);
                 });
                 $scope.loaded = true;
             });

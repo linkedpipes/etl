@@ -125,7 +125,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             "type": type,
             "dialogs": dialogs,
             "inputs": inputs,
-            "outputs": outputs
+            "outputs": outputs,
+            "core": true
         };
     }
 
@@ -151,7 +152,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             "label": i18.str(label),
             "description": i18.str(description),
             "template": template[0],
-            "color": color[""]
+            "color": color[""],
+            "core" : false
         };
     }
 
