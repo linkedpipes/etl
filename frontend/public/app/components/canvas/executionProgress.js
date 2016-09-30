@@ -87,7 +87,6 @@ define([
     };
 
     service.update = function () {
-        console.time('executionProgress.update');
         var components = this.execution.getComponents();
         for (var iri in components) {
             var component = components[iri];
@@ -99,7 +98,6 @@ define([
             }
             updateVisual(cell, component, this.execution, this.enabled);
         }
-        console.timeEnd('executionProgress.update');
     };
 
     service.onComponentClick = function (component) {
