@@ -18,7 +18,7 @@ define([], function () {
             "$label" : "Filename to load"
         },
         "graph" : {
-            "$type" : "str",
+            "$type" : "iri",
             "$property" : "graph",
             "$control": "graphControl",
             "$label" : "Target graph IRI"

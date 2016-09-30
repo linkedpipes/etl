@@ -7,10 +7,10 @@
                required>
     </md-input-container>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" ng-hide="dialog.userName.hide">
+        <md-input-container class="md-block" ng-hide="dialog.username.hide">
             <label>Virtuoso user name</label>
-            <input ng-model="dialog.userName.value" placeholder="dba"
-                   ng-disabled="dialog.userName.disabled || dialog.userName.inherit"
+            <input ng-model="dialog.username.value" placeholder="dba"
+                   ng-disabled="dialog.username.disabled || dialog.username.inherit"
                    required>
         </md-input-container>
         <md-input-container class="md-block" ng-hide="dialog.password.hide">
@@ -23,11 +23,11 @@
     </div>
     <div layout-gt-sm="row">
         <md-input-container class="md-block"
-                            ng-hide="dialog.loadDirectory.hide">
+                            ng-hide="dialog.directory.hide">
             <label>Remote directory with source files</label>
-            <input ng-model="dialog.loadDirectory.value"
+            <input ng-model="dialog.directory.value"
                    placeholder="/data/upload"
-                   ng-disabled="dialog.loadDirectory.disabled || dialog.loadDirectory.inherit"
+                   ng-disabled="dialog.directory.disabled || dialog.directory.inherit"
                    required>
         </md-input-container>
         <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
@@ -38,11 +38,11 @@
                    required>
         </md-input-container>
     </div>
-    <md-input-container class="md-block" ng-hide="dialog.targetGraph.hide">
+    <md-input-container class="md-block" ng-hide="dialog.graph.hide">
         <label>Target graph IRI</label>
-        <input type="uri" ng-model="dialog.targetGraph.value"
+        <input type="uri" ng-model="dialog.graph.value"
                placeholder="http://example.org/resource/graph"
-               ng-disabled="dialog.targetGraph.disabled || dialog.targetGraph.inherit">
+               ng-disabled="dialog.graph.disabled || dialog.graph.inherit">
     </md-input-container>
     <md-switch ng-model="dialog.clearGraph.value"
                ng-hide="dialog.clearGraph.hide"
