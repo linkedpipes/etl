@@ -220,7 +220,7 @@
         } else {
             return undefined;
         }
-    }
+    };
 
     /**
      * Set string value under given predicate.
@@ -518,7 +518,17 @@
                 return parseInt(value);
             }
         },
-        "getBoolean" : getValue,
+        "getBoolean" : (resource, predicate) => {
+            // Boolean can be stored as a string or as a direct value.
+            const value = getValue(resource, predicate);
+            if (value === "true") {
+                return true;
+            } else if (value === "false") {
+                return false;
+            } else {
+                return value;
+            }
+        },
         "getIRIs": getIRIs,
         "getIRI": getIRI,
         "getReferences": getReferences,
