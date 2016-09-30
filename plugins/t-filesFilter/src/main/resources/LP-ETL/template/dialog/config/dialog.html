@@ -1,11 +1,11 @@
 <div class="row">
-    <md-input-container class="md-block" ng-hide="dialog.pattern.hide">
+    <md-input-container class="md-block" ng-hide="dialog.fileNamePattern.hide">
         <label>File name filter pattern</label>
         <input ng-model="dialog.pattern.value"
-               ng-disabled="dialog.pattern.disabled || dialog.pattern.inherit"
+               ng-disabled="dialog.fileNamePattern.disabled || dialog.fileNamePattern.inherit"
                required>
     </md-input-container>
-    <div ng-hide="dialog.pattern.hide">
+    <div ng-hide="dialog.fileNamePattern.hide">
         <a href="http://regexr.com/" target="_blank">Test your regexp here</a>, uses
         <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" target="_blank">Java regular expression</a>.
     </div>
