@@ -8,7 +8,7 @@ define([], function () {
             "$type" : "str",
             "$property" : "fileNamePattern",
             "$control": "fileNamePatternControl",
-            "$label" : "File name filter pattern<"
+            "$label" : "File name filter pattern"
         }
     };
 
