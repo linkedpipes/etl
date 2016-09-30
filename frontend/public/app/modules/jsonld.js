@@ -186,6 +186,9 @@
                 result.push(value["@id"]);
             } else if (value.id !== undefined) {
                 result.push(value.id);
+            } else if (value["@value"] !== undefined) {
+                console.warn("IRI stored as value: ", value, "on", resource);
+                result.push(value["@value"]);
             } else {
                 console.error("Invalid IRI reference: ", value, "on", resource);
             }
