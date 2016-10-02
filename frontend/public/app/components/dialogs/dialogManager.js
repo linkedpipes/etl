@@ -45,6 +45,9 @@ define(["jsonld"], function (jsonld) {
             }
         },
         "value": function (string) {
+            if (string === undefined) {
+                return undefined;
+            }
             return {
                 "@value": string
             };

@@ -33,6 +33,9 @@ define([
             }
         },
         "value": function (string) {
+            if (string === undefined) {
+                return undefined;
+            }
             return {
                 "@value": string
             };
