@@ -408,9 +408,11 @@ class Unpacker {
             do {
                 initialSize = toExecute.size();
                 //
+                final List<RdfObjects.Entity> toAdd = new LinkedList<>();
                 toExecute.forEach((c) -> {
-                    toExecute.addAll(dependencies.get(c));
+                    toAdd.addAll(dependencies.get(c));
                 });
+                toExecute.addAll(toAdd);
                 // As toExecute is a set, we will end as there are no more
                 // dependencies.
             } while (toExecute.size() != initialSize);
