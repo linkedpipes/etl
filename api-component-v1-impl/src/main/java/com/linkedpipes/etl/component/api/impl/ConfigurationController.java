@@ -5,7 +5,9 @@ import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Can be used to merge configurations.
@@ -24,6 +26,14 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
 
         @Override
         public boolean load(String predicate) {
+            if (ConfigurationController.this.loadingRuntime) {
+                // In case of runtime configuration we are loading all.
+                return true;
+            }
+            if (ConfigurationController.this.forced.contains(predicate)) {
+                // Was forced by some previous configuration.
+                return false;
+            }
             final String control = options.get(predicate);
             if (control == null) {
                 return true;
@@ -32,6 +42,9 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
                 case "http://plugins.linkedpipes.com/resource/configuration/Inherit":
                 case "http://plugins.linkedpipes.com/resource/configuration/Forced":
                     return false;
+                case "http://plugins.linkedpipes.com/resource/configuration/Force":
+                    ConfigurationController.this.forced.add(predicate);
+                    return true;
                 default:
                     // Load by default.
                     return true;
@@ -43,6 +56,13 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
      * Object with pipeline and configurations definition.
      */
     private final SparqlSelect definition;
+
+    /**
+     * Store list of forced properties.
+     */
+    private final Set<String> forced = new HashSet<>();
+
+    private boolean loadingRuntime = false;
 
     public ConfigurationController(SparqlSelect definition) {
         this.definition = definition;
@@ -61,6 +81,13 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
             options.put(record.get("property"), record.get("controlValue"));
         }
         return new MergerPolicy(options);
+    }
+
+    /**
+     * Must be called before runtime configuration is
+     */
+    public void loadingRuntime() {
+        loadingRuntime = true;
     }
 
     /**

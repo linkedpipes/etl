@@ -168,12 +168,9 @@ final class SimpleComponentImpl implements SequentialComponent {
      */
     protected void loadConfigurations(SparqlSelect runtimeConfig)
             throws RdfException {
-        final ConfigurationController configController
-                = new ConfigurationController(definition);
         for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Configuration.class) != null) {
-                loadConfigurationForField(field, runtimeConfig,
-                        configController);
+                loadConfigurationForField(field, runtimeConfig);
             }
         }
     }
@@ -183,12 +180,11 @@ final class SimpleComponentImpl implements SequentialComponent {
      * function can be re-executed.
      *
      * @param field
-     * @param runtimeConfig
      */
     protected void loadConfigurationForField(Field field,
-            SparqlSelect runtimeConfig,
-            ConfigurationController configController)
-            throws RdfException {
+            SparqlSelect runtimeConfig) throws RdfException {
+        final ConfigurationController configController
+                = new ConfigurationController(definition);
         // Create configuration object.
         final Object fieldValue;
         try {
@@ -219,6 +215,7 @@ final class SimpleComponentImpl implements SequentialComponent {
             }
         }
         // Load runtime configuration.
+        configController.loadingRuntime();
         try {
             if (runtimeConfig != null) {
                 RdfReader.addToObject(fieldValue, runtimeConfig, null,
