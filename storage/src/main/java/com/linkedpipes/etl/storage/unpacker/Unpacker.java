@@ -523,8 +523,16 @@ class Unpacker {
                     builder.add(RDF.TYPE, vf.createIRI(
                             "http://linkedpipes.com/ontology/PortSource"));
                     //
+                    Value executionIri;
+                    try {
+                        executionIri = sourcePort.getReference(vf.createIRI(
+                                "http://etl.linkedpipes.com/ontology/execution"))
+                                .getResource();
+                    } catch (Exception ex) {
+                        executionIri = vf.createIRI(execMap.getExecution());
+                    }
                     builder.add("http://linkedpipes.com/ontology/execution",
-                            vf.createIRI(execMap.getExecution()));
+                            executionIri);
                     builder.add("http://linkedpipes.com/ontology/debug",
                             sourcePort.getProperty(vf.createIRI(
                                     "http://etl.linkedpipes.com/ontology/debug")));
