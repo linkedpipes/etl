@@ -67,7 +67,7 @@ public final class Unpack implements Component.Sequential {
         try (final InputStream stream = new FileInputStream(
                 inputEntry.toFile())) {
             switch (extension) {
-                case "zip":
+                case ArchiveStreamFactory.ZIP:
                     unpackZip(stream, targetDirectory);
                     break;
                 case "bz2":
@@ -96,7 +96,7 @@ public final class Unpack implements Component.Sequential {
      */
     private String getExtension(FilesDataUnit.Entry entry) {
         if (configuration.getFormat() == null || configuration.getFormat().isEmpty()) {
-            LOG.debug("No format setting provided, autodetection used as default.");
+            LOG.debug("No format setting provided.");
             configuration.setFormat(UnpackVocabulary.FORMAT_DETECT);
         }
         switch (configuration.getFormat()) {
