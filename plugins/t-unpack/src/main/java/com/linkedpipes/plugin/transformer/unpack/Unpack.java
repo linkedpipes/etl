@@ -74,8 +74,7 @@ public final class Unpack implements Component.Sequential {
                     unpackBzip2(stream, targetDirectory, inputEntry);
                     break;
                 case "gz":
-                    unpackGzip(stream, new File(targetDirectory,
-                            inputEntry.getFileName()));
+                    unpackGzip(stream, targetDirectory, inputEntry);
                     break;
                 default:
                     throw exceptionFactory.failure(
@@ -150,10 +149,16 @@ public final class Unpack implements Component.Sequential {
         }
     }
 
-    private static void unpackGzip(InputStream inputStream, File targetFile)
+    private static void unpackGzip(InputStream inputStream,
+            File targetDirectory, FilesDataUnit.Entry inputEntry)
             throws IOException {
+        String outputFileName = inputEntry.getFileName();
+        if (outputFileName.toLowerCase().endsWith(".gz")) {
+            outputFileName = outputFileName.substring(0,
+                    outputFileName.length() - 3);
+        }
         try (GZIPInputStream gzipStream = new GZIPInputStream(inputStream)) {
-            copyToFile(gzipStream, targetFile);
+            copyToFile(gzipStream, new File(targetDirectory, outputFileName));
         }
     }
 
