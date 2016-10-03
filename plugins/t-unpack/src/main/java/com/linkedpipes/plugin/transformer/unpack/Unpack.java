@@ -1,13 +1,11 @@
 package com.linkedpipes.plugin.transformer.unpack;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -15,12 +13,11 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import java.io.*;
+import java.util.zip.GZIPInputStream;
 
 /**
- *
  * @author Škoda Petr
  */
 public final class Unpack implements Component.Sequential {
@@ -67,7 +64,8 @@ public final class Unpack implements Component.Sequential {
     private void unpack(FilesDataUnit.Entry inputEntry, File targetDirectory)
             throws LpException {
         final String extension = getExtension(inputEntry);
-        try (final InputStream stream = new FileInputStream(inputEntry.toFile())) {
+        try (final InputStream stream = new FileInputStream(
+                inputEntry.toFile())) {
             switch (extension) {
                 case "zip":
                     unpackZip(stream, targetDirectory);
@@ -75,10 +73,14 @@ public final class Unpack implements Component.Sequential {
                 case "bz2":
                     unpackBzip2(stream, targetDirectory, inputEntry);
                     break;
+                case "gz":
+                    unpackGzip(stream, new File(targetDirectory,
+                            inputEntry.getFileName()));
+                    break;
                 default:
                     throw exceptionFactory.failure(
                             "Unknown file format (" + extension + ") : " +
-                            inputEntry.getFileName());
+                                    inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
             throw exceptionFactory.failure("Extraction failure: {}",
@@ -114,8 +116,6 @@ public final class Unpack implements Component.Sequential {
      *
      * @param inputStream
      * @param targetDirectory
-     * @throws IOException
-     * @throws ArchiveException
      */
     private static void unpackZip(InputStream inputStream, File targetDirectory) throws IOException, ArchiveException {
         try (ArchiveInputStream archiveStream = new ArchiveStreamFactory().createArchiveInputStream("zip", inputStream)) {
@@ -133,14 +133,7 @@ public final class Unpack implements Component.Sequential {
                     continue;
                 }
                 // Copy stream to file.
-                try (FileOutputStream out = new FileOutputStream(entryFile)) {
-                    final byte[] buffer = new byte[8196];
-                    int length;
-                    while ((length = archiveStream.read(buffer)) > 0) {
-                        out.write(buffer, 0, length);
-                        out.flush();
-                    }
-                }
+                copyToFile(archiveStream, entryFile);
             }
         }
     }
@@ -151,13 +144,31 @@ public final class Unpack implements Component.Sequential {
             final File outputFile = new File(targetDirectory, outputFileName);
             outputFile.getParentFile().mkdirs();
             // Copy stream to file.
-            try (FileOutputStream out = new FileOutputStream(outputFile)) {
-                final byte[] buffer = new byte[8196];
-                int length;
-                while ((length = bzip2Stream.read(buffer)) > 0) {
-                    out.write(buffer, 0, length);
-                    out.flush();
-                }
+            copyToFile(bzip2Stream, outputFile);
+        }
+    }
+
+    private static void unpackGzip(InputStream inputStream, File targetFile)
+            throws IOException {
+        try (GZIPInputStream gzipStream = new GZIPInputStream(inputStream)) {
+            copyToFile(gzipStream, targetFile);
+        }
+    }
+
+    /**
+     * Write given stream to a file.
+     *
+     * @param stream
+     * @param file
+     */
+    private static void copyToFile(InputStream stream, File file)
+            throws IOException {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            final byte[] buffer = new byte[8196];
+            int length;
+            while ((length = stream.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+                out.flush();
             }
         }
     }
