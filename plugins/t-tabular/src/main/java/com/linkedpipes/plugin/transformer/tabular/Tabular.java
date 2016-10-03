@@ -1,14 +1,15 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
-import java.io.IOException;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import java.io.IOException;
 
 /**
  *
@@ -42,7 +43,16 @@ public class Tabular implements Component.Sequential {
         for (Entry entry : inputFilesDataUnit) {
             LOG.info("Processing file: {}", entry.toFile());
             output.onFileStart();
-            mapper.onTableStart("file:///" + entry.getFileName(), null);
+            final String table;
+            switch (configuration.getEncodeType()) {
+                case "emptyHost":
+                    table = "file:///" + entry.getFileName();
+                    break;
+                default:
+                    table = "file://" + entry.getFileName();
+                    break;
+            }
+            mapper.onTableStart(table, null);
             try {
                 parser.parse(entry, mapper);
             } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
