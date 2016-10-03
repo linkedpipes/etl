@@ -104,6 +104,8 @@ public final class Unpack implements Component.Sequential {
                 return ArchiveStreamFactory.ZIP;
             case UnpackVocabulary.FORMAT_BZIP2:
                 return "bz2";
+            case UnpackVocabulary.FORMAT_GZIP:
+                return "gz";
             case UnpackVocabulary.FORMAT_DETECT:
             default:
                 final String fileName = entry.getFileName();
