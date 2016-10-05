@@ -4,7 +4,7 @@
             <lp-template-general-tab ng-model="templateToEdit">
             </lp-template-general-tab>
         </md-tab>
-        <md-tab label="Hierarchy">
+        <md-tab label="Hierarchy" ng-if="showHierarchy">
             <lp-template-hierarchy-tab ng-model="template">
             </lp-template-hierarchy-tab>
         </md-tab>

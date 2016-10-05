@@ -83,7 +83,8 @@ define([
             "scope": {
                 // Shared API object.
                 // Use store property to transfer data.
-                "api": "="
+                "api": "=",
+                "showHierarchy": "="
             },
             "controller": controller
         };
