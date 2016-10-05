@@ -48,9 +48,13 @@ define([
      * @param template Template to edit object.
      * @param parent Parent template.
      * @param configuration
+     * @param templateService
      * @return Promise with new template IRI.
      */
-    function createTemplate($http, template, parent, configuration) {
+    function createTemplate($http, template, parent, configuration,
+                            templateService) {
+
+        // TODO Move to the templateService
 
         const resource = {
             "@type": ["http://linkedpipes.com/ontology/Template"]
@@ -79,7 +83,9 @@ define([
         }), "configuration.jsonld");
         return $http.post("./resources/components", data, postConfiguration)
         .then((response) => {
-            return response.data[0]["@graph"][0]["@id"];
+            return templateService.load(true).then(() => {
+                return response.data[0]["@graph"][0]["@id"];
+            });
         });
     }
 
@@ -96,7 +102,7 @@ define([
             $scope.api.save();
 
             createTemplate($http, $scope.templateToEdit, template,
-                $scope.configuration).then((iri) => {
+                $scope.configuration, templateService).then((iri) => {
                 // TODO Move to pipeline manipulation service.
                 // Update component : change parent IRI
                 // and disconnect configuration as it was
