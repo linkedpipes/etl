@@ -466,6 +466,19 @@ class Unpacker {
             final Value targetBinding =
                     connection.getProperty(vf.createIRI(
                             "http://linkedpipes.com/ontology/targetBinding"));
+            // We add the HAS_SOURCE only if the source component is enabled.
+            try {
+                Value disabled  = source.getProperty(HAS_DISABLED);
+                if (disabled instanceof Literal) {
+                    Literal literal = (Literal)disabled;
+                    if (literal.booleanValue()) {
+                        // It is disabled -> skip.
+                        return;
+                    }
+                }
+            } catch (Exception ex) {
+                // It's not disabled.
+            }
             //
             final RdfObjects.Entity sourcePort = getPort(source, sourceBinding);
             final RdfObjects.Entity targetPort = getPort(target, targetBinding);

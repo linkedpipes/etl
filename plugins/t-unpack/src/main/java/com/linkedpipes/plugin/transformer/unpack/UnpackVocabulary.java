@@ -20,4 +20,6 @@ public final class UnpackVocabulary {
 
     public static final String FORMAT_BZIP2 = PREFIX + "bzip2";
 
+    public static final String FORMAT_GZIP = PREFIX + "gz";
+
 }

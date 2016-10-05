@@ -415,6 +415,9 @@ public class TabularConfiguration {
     @RdfToPojo.Property(uri = TabularVocabulary.HAS_GENERETE_NULL_HEADER)
     private boolean generateNullHeaderName = false;
 
+    @RdfToPojo.Property(uri = TabularVocabulary.HAS_ENCODE_TYPE)
+    private String encodeType = "";
+
     public TabularConfiguration() {
     }
 
@@ -482,4 +485,11 @@ public class TabularConfiguration {
         this.generateNullHeaderName = generateNullHeaderName;
     }
 
+    public String getEncodeType() {
+        return encodeType;
+    }
+
+    public void setEncodeType(String encodeType) {
+        this.encodeType = encodeType;
+    }
 }

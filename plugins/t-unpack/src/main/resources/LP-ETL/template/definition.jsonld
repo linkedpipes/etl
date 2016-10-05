@@ -12,7 +12,7 @@
             {"@id": "http://etl.linkedpipes.com/resources/components/t-unpack/0.0.0/input"}
         ],
         "http://linkedpipes.com/ontology/keyword": [
-            "unpack", "zip", "unzip", "decompress", "bzip2", "bz2"
+            "unpack", "zip", "unzip", "decompress", "bzip2", "bz2", "gz", "gunzip"
         ]
     },
     {
