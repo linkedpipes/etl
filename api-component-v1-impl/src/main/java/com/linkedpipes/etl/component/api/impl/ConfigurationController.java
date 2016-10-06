@@ -42,7 +42,13 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
                 case "http://plugins.linkedpipes.com/resource/configuration/Inherit":
                 case "http://plugins.linkedpipes.com/resource/configuration/Forced":
                     return false;
+                case "http://plugins.linkedpipes.com/resource/configuration/InheritAndForce":
+                    // Do not read - ie. preserve from parent and
+                    // save as forced.
+                    ConfigurationController.this.forced.add(predicate);
+                    return false;
                 case "http://plugins.linkedpipes.com/resource/configuration/Force":
+                    // Load and save as forced.
                     ConfigurationController.this.forced.add(predicate);
                     return true;
                 default:
