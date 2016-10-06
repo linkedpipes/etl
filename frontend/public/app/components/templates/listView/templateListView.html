@@ -7,7 +7,7 @@
                  style="padding-top: 5em"/>
         </div>
         <div ng-show="loaded" style="margin: 1.2em 2em 0em 1em;">
-            <md-input-container class   ="md-block"
+            <md-input-container class="md-block"
                                 style="margin: 0em 0em 0em 0em;">
                 <label>Label search</label>
                 <input ng-model="searchLabel">
@@ -19,22 +19,10 @@
                           ng-show="template._templateListView">
                 <div class="md-list-item-text" layout="column">
                     <h3>{{::template.label}}</h3>
-                    <p ng-switch on="template._parents.length">
-                        <span ng-switch-when="0"></span>
-                        <span ng-switch-when="1">
-                            {{::template._parents[0].label}}
-                        </span>
-                        <span ng-switch-when="2">
-                            {{::template._parents[0].label}}
-                            ...
-                            {{::template._parents[1].label}}
-                        </span>
-                        <span ng-switch-default>
-                            {{::template._parents[0].label}}
-                            ...
-                            {{::template._parents.length - 2}}
-                            ...
-                            {{::template._parents[1].label}}
+                    <p>
+                        <span ng-repeat="item in template._parents">
+                            {{item.label}}
+                            <span ng-if="!$last"> -> </span>
                         </span>
                     </p>
                 </div>
