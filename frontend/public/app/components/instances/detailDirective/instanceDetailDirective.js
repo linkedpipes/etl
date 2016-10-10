@@ -3,9 +3,10 @@ define([
     "../../templates/generalTab/templateGeneralTab",
     "../../templates/embedDirective/templateEmbedDirective",
     "../../templates/templateService",
-    "../../dialogs/dialogService"
+    "../../dialogs/dialogService",
+    "../hierarchyTab/instanceHierarchyTab"
 ], function (jQuery, jsonld, generalTab, embedDirective,
-             templateService, templateDialogService) {
+             templateService, templateDialogService, hierarchyTab) {
     "use strict";
 
     const PARENT_PATH = "app/components/instances/detailDirective/";
@@ -37,6 +38,7 @@ define([
 
                 $scope.dialogService.api.setIri(instance.id);
                 $scope.instance = instance;
+                $scope.parent = parent;
                 $scope.dialogService.api.setInstanceConfig(configuration);
                 // Load parent configuration.
                 templateService.fetchEffectiveConfig(parent.id).then((config) => {
@@ -91,6 +93,7 @@ define([
         embedDirective(app);
         templateService(app);
         templateDialogService(app);
+        hierarchyTab(app);
         //
         app.directive("lpInstanceDetail", ["$rootScope",
             "template.service", "template.dialog.service", directive]);
