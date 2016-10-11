@@ -71,7 +71,8 @@ define([], function () {
                     'accept': 'application/ld+json'
                 }
             };
-            var uri = '/resources/pipelines?pipeline=' + $scope.url;
+            var uri = '/resources/pipelines?pipeline=' +
+                encodeURIComponent($scope.url);
             $http.post(uri, data, config).then( function(response) {
             // $http.post(uri).then(function (response) {
                 $location.path('/pipelines/edit/canvas').search({
