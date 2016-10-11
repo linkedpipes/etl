@@ -290,7 +290,7 @@ final class SimpleComponentImpl implements SequentialComponent {
         } catch (LpException ex) {
             throw RdfException.rethrow(ex);
         } catch (Throwable ex) {
-            throw RdfException.failure("Component failure on Throwable.", ex);
+            throw RdfException.failure("Component failed.", ex);
         } finally {
             if (afterExecution != null) {
                 afterExecution.postExecution();
