@@ -43,7 +43,7 @@ public class ConfigurationFacade {
     }
 
     /**
-     * Create a configuration that should be used by the children o
+     * Create a configuration that should be used by the children.
      *
      * @param configurationRdf Configuration.
      * @param descriptionRdf Description of the configuration.
@@ -91,14 +91,14 @@ public class ConfigurationFacade {
             String baseIri, IRI graph) throws BaseException {
         final ConfigDescription description = loadDescription(descriptionRdf);
         Model model = null;
-        Model.Entity configuration = null;
+        Model.Entity modelConfiguration = null;
         for (Collection<Statement> configurationRdf : configurationsRdf) {
             if (model == null) {
-                // Create model.
+                // First configuration - just load.
                 model = Model.create(configurationRdf);
-                configuration = model.select(null, RDF.TYPE,
+                modelConfiguration = model.select(null, RDF.TYPE,
                         description.getType()).single();
-                if (configuration == null) {
+                if (modelConfiguration == null) {
                     model = null;
                     LOG.warn("Skipping configuration due to missing " +
                             "configuration entity for: {}",
@@ -106,7 +106,17 @@ public class ConfigurationFacade {
                 }
                 continue;
             }
-            // Create children model.
+            // Read global control.
+            if (description.getControl() != null) {
+                final String control = modelConfiguration.getPropertyAsStr(
+                        description.getControl());
+                if (control.equals(FORCE) || control.equals(INHERIT_AND_FORCE)) {
+                    // We force all - there is no need to load anything
+                    // else.
+                    break;
+                }
+            }
+            // Create instance of current configuration.
             final Model childModel = Model.create(configurationRdf);
             final Model.Entity childConfiguration = childModel.select(null,
                     RDF.TYPE, description.getType()).single();
@@ -115,9 +125,28 @@ public class ConfigurationFacade {
                         "configuration entity.");
                 continue;
             }
-            // Merge.
+            String control = null;
+            if (description.getControl() != null) {
+                control = childConfiguration.getPropertyAsStr(
+                        description.getControl());
+            }
+            if (FORCE.equals(control)) {
+                // We inherit all -> do not load anything from this object.
+                continue;
+            } else if (INHERIT_AND_FORCE.equals(control)) {
+                // We do not load anything not (inherit) or any further (force).
+                modelConfiguration.setIri(description.getControl(), FORCED);
+                break;
+            }
+            // Merge from children to model.
             for (ConfigDescription.Member member : description.getMembers()) {
-                merge(member, configuration, childConfiguration);
+                merge(member, modelConfiguration, childConfiguration);
+            }
+            if (FORCE.equals(control)) {
+                // We force -> do not load anything. We just need to set
+                // inheritance of all to forced.
+                modelConfiguration.setIri(description.getControl(), FORCED);
+                break;
             }
         }
         //
@@ -127,7 +156,7 @@ public class ConfigurationFacade {
         }
         //
         model.updateResources(baseIri);
-        return model.asStatements(configuration, graph);
+        return model.asStatements(modelConfiguration, graph);
     }
 
     /**
