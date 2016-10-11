@@ -2,4 +2,16 @@
 
 <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-xslt#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-xslt#Configuration>  ;
+    config:member <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/xslt> ,
+        <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/extension> .
+
+<http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/xslt>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xslt#xslt> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xslt#xsltControl> .
+
+<http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/extension>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xslt#extension> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xslt#extensionControl> .
