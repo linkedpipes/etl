@@ -1,27 +1,42 @@
-<div class="container-flow">
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.host.hide" flex>
             <label>Host address</label>
-            <input ng-model="dialog.host" required placeholder="myserver.example.com">
+            <input ng-model="dialog.host.value"
+                   ng-disabled="dialog.host.disabled || dialog.host.inherit"
+                   placeholder="myserver.example.com" required>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.port.hide" flex>
             <label>Port number</label>
-            <input ng-model="dialog.port" type="number" required placeholder="22" min="1" max="65535" >
+            <input ng-model="dialog.port.value"
+                   ng-disabled="dialog.port.disabled || dialog.port.inherit"
+                   type="number" required placeholder="22" min="1" max="65535">
         </md-input-container>
     </div>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.userName.hide"
+                            flex>
             <label>User name</label>
-            <input ng-model="dialog.userName" required placeholder="john">
+            <input ng-model="dialog.userName.value"
+                   ng-disabled="dialog.userName.disabled || dialog.userName.inherit"
+                   placeholder="john" required>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.password.hide" flex>
             <label>Password</label>
-            <input type="password" ng-model="dialog.password" required>
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit"
+                   required>
         </md-input-container>
     </div>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.directory.hide" flex>
         <label>Target directory</label>
-        <input ng-model="dialog.directory" required placeholder="/data/upload">
+        <input ng-model="dialog.directory.value"
+               ng-disabled="dialog.directory.disabled || dialog.directory.inherit"
+               placeholder="/data/upload" required>
     </md-input-container>
-    <md-switch ng-model="dialog.createDirectory">Create target directory</md-switch>
+    <md-switch ng-hide="dialog.createDirectory.hide"
+               ng-disabled="dialog.createDirectory.disabled || dialog.createDirectory.inherit"
+               ng-model="dialog.createDirectory.value">Create target directory
+    </md-switch>
 </div>
