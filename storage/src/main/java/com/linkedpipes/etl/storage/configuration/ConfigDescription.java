@@ -60,6 +60,12 @@ class ConfigDescription implements PojoLoader.Loadable {
      */
     private IRI type;
 
+    /**
+     * Property used to control all properties, overwrite configuration
+     * of all properties.
+     */
+    private IRI control;
+
     private List<Member> members = new ArrayList<>(12);
 
     @Override
@@ -73,12 +79,19 @@ class ConfigDescription implements PojoLoader.Loadable {
                 final Member newMember = new Member();
                 members.add(newMember);
                 return newMember;
+            case "http://plugins.linkedpipes.com/ontology/configuration/control":
+                this.control = (IRI)value;
+                break;
         }
         return null;
     }
 
     public IRI getType() {
         return type;
+    }
+
+    public IRI getControl() {
+        return control;
     }
 
     public List<Member> getMembers() {

@@ -43,6 +43,8 @@ abstract class BaseTemplate implements Template {
 
     }
 
+    public abstract boolean isSupportControl();
+
     @Override
     public String getIri() {
         return iri;

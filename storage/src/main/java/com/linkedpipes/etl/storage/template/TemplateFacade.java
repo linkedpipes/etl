@@ -84,13 +84,17 @@ public class TemplateFacade {
 
     public Collection<Statement> getEffectiveConfiguration(Template template)
             throws BaseException {
-        //return ((BaseTemplate) template).getEffectiveConfigRdf();
-
         final BaseTemplate baseTemplate = (BaseTemplate) template;
         LinkedList<Collection<Statement>> configurations = new LinkedList<>();
         getTemplates(template.getIri(), true).forEach((item) -> {
             configurations.add(getConfigurationTemplate(item));
         });
+        //
+        if (!baseTemplate.isSupportControl()) {
+            // For template without inheritance control, the current
+            // configuration is the effective one.
+            return ((BaseTemplate) template).getConfigRdf();
+        }
         //
         return ConfigurationFacade.merge(configurations,
                 baseTemplate.getConfigDescRdf(),

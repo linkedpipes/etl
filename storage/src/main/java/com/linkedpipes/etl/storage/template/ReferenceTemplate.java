@@ -53,4 +53,10 @@ class ReferenceTemplate extends BaseTemplate implements PojoLoader.Loadable {
         return iri;
     }
 
+    @Override
+    public boolean isSupportControl() {
+        // Every reference support control as its parent support control,
+        // because we have template from it.
+        return true;
+    }
 }
