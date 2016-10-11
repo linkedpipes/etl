@@ -1,36 +1,36 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'deleteDirectory': ''
-        };
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/x-deleteDirectory#",
+        "$type": "Configuration",
+        "$control" : "control",
+        "$options" : {
+            "$predicate": "auto"
+        },
+        "directory" : {
+            "$type" : "bool",
+            "$label" : "Directory to delete"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/x-deleteDirectory#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.deleteDirectory = rdf.getString(resource, 'deleteDirectory');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setString(resource, 'deleteDirectory', $scope.dialog.deleteDirectory);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
