@@ -1,5 +1,187 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix dm: <http://plugins.linkedpipes.com/ontology/e-distributionMetadata#> .
 
 <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/e-distributionMetadata#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/e-distributionMetadata#Configuration> ;
+    config:member
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/datasetURI> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/distributionURI> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/language_orig> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/title_orig> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/title_en> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/desc_orig> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/desc_en> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/license> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/sparqlEndpointUrl> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/mediaType> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/downloadURL> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/accessURL> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/issued> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/temporalEnd> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/temporalStart> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/schema> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/schemaType> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useDatasetURIfromInput> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useNow> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/titleFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/generateDistroURIFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/originalLanguageFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/issuedFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/descriptionFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/licenseFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/schemaFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useTemporal> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useNowTemporalEnd> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/temporalFromDataset> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/exampleResources> .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/datasetURI>
+    a config:ConfigurationMember ;
+    config:property dm:datasetURI ;
+    config:control dm:datasetURIControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/distributionURI>
+    a config:ConfigurationMember ;
+    config:property dm:distributionURI ;
+    config:control dm:distributionURIControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/language_orig>
+    a config:ConfigurationMember ;
+    config:property dm:language_orig ;
+    config:control dm:language_origControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/title_orig>
+    a config:ConfigurationMember ;
+    config:property dm:title_orig ;
+    config:control dm:title_origControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/title_en>
+    a config:ConfigurationMember ;
+    config:property dm:title_en ;
+    config:control dm:title_enControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/desc_orig>
+    a config:ConfigurationMember ;
+    config:property dm:desc_orig ;
+    config:control dm:desc_origControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/desc_en>
+    a config:ConfigurationMember ;
+    config:property dm:desc_en ;
+    config:control dm:desc_enControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/license>
+    a config:ConfigurationMember ;
+    config:property dm:license ;
+    config:control dm:licenseControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/sparqlEndpointUrl>
+    a config:ConfigurationMember ;
+    config:property dm:sparqlEndpointUrl ;
+    config:control dm:sparqlEndpointUrlControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/mediaType>
+    a config:ConfigurationMember ;
+    config:property dm:mediaType ;
+    config:control dm:mediaTypeControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/downloadURL>
+    a config:ConfigurationMember ;
+    config:property dm:downloadURL ;
+    config:control dm:downloadURLControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/accessURL>
+    a config:ConfigurationMember ;
+    config:property dm:accessURL ;
+    config:control dm:accessURLControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/issued>
+    a config:ConfigurationMember ;
+    config:property dm:issued ;
+    config:control dm:issuedControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/temporalEnd>
+    a config:ConfigurationMember ;
+    config:property dm:temporalEnd ;
+    config:control dm:temporalEndControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/temporalStart>
+    a config:ConfigurationMember ;
+    config:property dm:temporalStart ;
+    config:control dm:temporalStartControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/schema>
+    a config:ConfigurationMember ;
+    config:property dm:schema ;
+    config:control dm:schemaControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/schemaType>
+    a config:ConfigurationMember ;
+    config:property dm:schemaType ;
+    config:control dm:schemaTypeControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useDatasetURIfromInput>
+    a config:ConfigurationMember ;
+    config:property dm:useDatasetURIfromInput ;
+    config:control dm:useDatasetURIfromInputControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useNow>
+    a config:ConfigurationMember ;
+    config:property dm:useNow ;
+    config:control dm:useNowControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/titleFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:titleFromDataset ;
+    config:control dm:titleFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/generateDistroURIFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:generateDistroURIFromDataset ;
+    config:control dm:generateDistroURIFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/originalLanguageFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:originalLanguageFromDataset ;
+    config:control dm:originalLanguageFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/issuedFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:issuedFromDataset ;
+    config:control dm:issuedFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/descriptionFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:descriptionFromDataset ;
+    config:control dm:descriptionFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/licenseFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:licenseFromDataset ;
+    config:control dm:licenseFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/schemaFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:schemaFromDataset ;
+    config:control dm:schemaFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useTemporal>
+    a config:ConfigurationMember ;
+    config:property dm:useTemporal ;
+    config:control dm:useTemporalControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useNowTemporalEnd>
+    a config:ConfigurationMember ;
+    config:property dm:useNowTemporalEnd ;
+    config:control dm:useNowTemporalEndControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/temporalFromDataset>
+    a config:ConfigurationMember ;
+    config:property dm:temporalFromDataset ;
+    config:control dm:temporalFromDatasetControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/exampleResources>
+    a config:ConfigurationMember ;
+    config:property dm:exampleResources ;
+    config:control dm:exampleResourcesControl .
