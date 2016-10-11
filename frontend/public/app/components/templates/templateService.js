@@ -187,7 +187,6 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
      * @param data
      */
     function expandTemplates(data) {
-        console.log(data);
         const templateList = [];
         const templateMap = {};
         // Prepare jarTemplates.
