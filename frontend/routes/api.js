@@ -49,6 +49,10 @@ gApiRouter.get('/components/:type', function (request, response) {
             iri += 'configTemplate?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
             break;
+        case 'configDescription':
+            iri += 'configDescription?';
+            iri += 'iri=' + encodeURIComponent(request.query.iri)
+            break;
         case 'static':
             iri += 'static?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
