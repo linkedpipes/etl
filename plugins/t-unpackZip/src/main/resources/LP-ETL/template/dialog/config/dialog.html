@@ -1,5 +1,9 @@
-<div class="container-flow">
-    <md-input-container>
-        <md-switch ng-model="dialog.usePrefix">{{dialog.usePrefix ? "Unpacking each file to separate directory" : "Unpacking all files to the same directory"}}</md-switch>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container ng-hide="dialog.usePrefix.hide" flex>
+        <md-switch ng-disabled="dialog.usePrefix.disabled || dialog.usePrefix.inherit"
+                   ng-model="dialog.usePrefix.value">
+            Unpack each file to separate directory
+        </md-switch>
     </md-input-container>
 </div>

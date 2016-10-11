@@ -3,3 +3,9 @@
 <http://linkedpipes.com/resources/components/t-unpackZip/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-unpackZip#Configuration> .
+    config:member <http://linkedpipes.com/resources/components/t-unpackZip/0.0.0/configuration/desc/usePrefix> .
+
+<http://linkedpipes.com/resources/components/t-unpackZip/0.0.0/configuration/desc/usePrefix>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-unpackZip#usePrefix> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-unpackZip#usePrefixControl> .
