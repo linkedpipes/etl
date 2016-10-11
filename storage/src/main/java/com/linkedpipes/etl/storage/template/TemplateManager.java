@@ -8,7 +8,10 @@ import com.linkedpipes.etl.storage.jar.JarFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.apache.commons.io.FileUtils;
-import org.openrdf.model.*;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
@@ -221,6 +224,11 @@ class TemplateManager {
         template.setInterfaceRdf(interfaceRdf);
         //
         loadBaseTemplate(template, directory);
+        // Load information.
+        FullTemplate.Info info = new FullTemplate.Info();
+        PojoLoader.loadOfType(template.getDefinitionRdf(),
+                FullTemplate.TYPE, info);
+        template.setInfo(info);
         // Load dialogs.
         final File dialogDirectory = new File(directory, "dialog");
         if (!dialogDirectory.exists()) {
@@ -289,7 +297,6 @@ class TemplateManager {
                         template.getConfigRdf(),
                         template.getConfigDescRdf(),
                         graph.stringValue(), graph));
-
     }
 
 }
