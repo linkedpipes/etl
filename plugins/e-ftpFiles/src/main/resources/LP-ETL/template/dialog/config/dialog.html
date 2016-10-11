@@ -1,17 +1,15 @@
-<div class="container-flow">
-    <div class="row">
-        <p>Files to download can be specified via the configuration input.</p>
-        <md-switch ng-model="dialog.passiveMode">
-            Use passive mode
-        </md-switch>
-        <md-switch ng-model="dialog.binaryMode">
-            Use binary mode
-        </md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Control timeout (seconds)</label>
-            <input type="number" ng-model="dialog.keepAliveControl"
-                   placeholder="" min="0" step="10">
-            <md-tooltip>Use 0 to disable the timeout.</md-tooltip>
-        </md-input-container>
-    </div>
+<div>
+    <p>Files to download can be specified via the configuration input.</p>
+    <md-switch ng-model="dialog.passiveMode">
+        Use passive mode
+    </md-switch>
+    <md-switch ng-model="dialog.binaryMode">
+        Use binary mode
+    </md-switch>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Control timeout (seconds)</label>
+        <input type="number" ng-model="dialog.keepAliveControl"
+               placeholder="" min="0" step="10">
+        <md-tooltip>Use 0 to disable the timeout.</md-tooltip>
+    </md-input-container>
 </div>
