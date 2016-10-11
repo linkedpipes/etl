@@ -1,15 +1,16 @@
-<div class="row">
-    <md-input-container class="md-block" ng-hide="control.fileName.hide" >
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="control.fileName.hide">
         <label>Output file name</label>
-        <input ng-model="dialog.fileName.value" placeholder="my.csv"
+        <input ng-model="dialog.fileName.value"
                ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
-               required>
+               placeholder="my.csv">
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="control.query.hide" >
+    <md-input-container class="md-block" ng-hide="control.query.hide">
         <label>SPARQL SELECT query</label>
         <textarea id="query" ng-model="dialog.query.value"
                   placeholder="SELECT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 100"
                   ng-disabled="dialog.query.disabled || dialog.query.inherit"
-                  md-select-on-focus required/>
+                  md-select-on-focus/>
     </md-input-container>
 </div>

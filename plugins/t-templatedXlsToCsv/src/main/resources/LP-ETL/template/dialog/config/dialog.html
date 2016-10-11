@@ -1,8 +1,8 @@
-<div class="container-flow">
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
     <md-input-container class="md-block" ng-hide="dialog.prefix.hide">
         <label>Template file prefix</label>
         <input ng-model="dialog.prefix.value"
-               ng-disabled="dialog.prefix.disabled || dialog.prefix.inherit"
-               required>
+               ng-disabled="dialog.prefix.disabled || dialog.prefix.inherit">
     </md-input-container>
 </div>

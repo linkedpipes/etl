@@ -1,15 +1,16 @@
-<div class="row">
-    <md-input-container class="md-block" ng-hide="dialog.fileName.hide" >
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
         <label>Output file name</label>
         <input ng-model="dialog.fileName.value"
                ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
-               placeholder="my.ttl" required>
+               placeholder="my.ttl">
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.fileType.hide" >
+    <md-input-container class="md-block" ng-hide="dialog.fileType.hide">
         <label>Format</label>
-        <md-select ng-model="dialog.fileType.value"
-                   ng-disabled="dialog.fileType.disabled || dialog.fileType.inherit"
-                   required>
+        <md-select
+                ng-disabled="dialog.fileType.disabled || dialog.fileType.inherit"
+                ng-model="dialog.fileType.value">
             <md-option value="application/rdf+xml">RDF/XML</md-option>
             <md-option value="application/n-triples">N-Triples</md-option>
             <md-option value="text/turtle">Turtle</md-option>
@@ -23,7 +24,7 @@
             <md-option value="application/xhtml+xml">RDFa</md-option>
         </md-select>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.graphUri.hide" >
+    <md-input-container class="md-block" ng-hide="dialog.graphUri.hide">
         <label>URI of output graph (for quads)</label>
         <input type="url" ng-model="dialog.graphUri.value"
                placeholder="http://example.com/resource/graph"

@@ -1,4 +1,5 @@
-<div class="row">
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
     <md-input-container class="md-block" ng-hide="dialog.endpoint.hide">
         <label>Endpoint URL</label>
         <input type="url" ng-model="dialog.endpoint.value"
@@ -14,6 +15,3 @@
                   required md-select-on-focus/>
     </md-input-container>
 </div>
-
-
-

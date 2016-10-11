@@ -1,9 +1,10 @@
-<div class="row">
-    <md-input-container class="md-block" ng-hide="dialog.query.hide" >
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide">
         <label>SPARQL UPDATE query</label>
         <textarea id="query" ng-model="dialog.query.value"
                   placeholder="DELETE {?s ?p ?o} INSERT {?s2 ?p2 ?o2} WHERE {?s ?p ?o}"
                   ng-disabled="dialog.query.disabled || dialog.query.inherit"
-                  required  md-select-on-focus />
+                  md-select-on-focus/>
     </md-input-container>
 </div>
