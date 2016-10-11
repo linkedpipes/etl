@@ -1,39 +1,38 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'query': '',
-            'failOnTrue': true
-        };
+    const DESC = {
+        "$namespace": "http://plugins.linkedpipes.com/ontology/q-sparqlAsk#",
+        "$type": "Configuration",
+        "$control": {
+            "$predicate": "auto"
+        },
+        "query": {
+            "$type": "str",
+            "$label": "Query"
+        },
+        "failOnTrue": {
+            "$type": "bool",
+            "$label": "Target graph IRI"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/q-sparqlAsk#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.query = rdf.getString(resource, 'query');
-            $scope.dialog.failOnTrue = rdf.getBoolean(resource, 'failOnTrue');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setString(resource, 'query', $scope.dialog.query);
-            rdf.setBoolean(resource, 'failOnTrue', $scope.dialog.failOnTrue);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
