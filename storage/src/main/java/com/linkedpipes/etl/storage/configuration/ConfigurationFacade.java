@@ -94,27 +94,18 @@ public class ConfigurationFacade {
         Model.Entity modelConfiguration = null;
         for (Collection<Statement> configurationRdf : configurationsRdf) {
             if (model == null) {
-                // First configuration - just load.
+                // First configuration - just load, the template
+                // configuration does not contains control.
                 model = Model.create(configurationRdf);
                 modelConfiguration = model.select(null, RDF.TYPE,
                         description.getType()).single();
                 if (modelConfiguration == null) {
                     model = null;
                     LOG.warn("Skipping configuration due to missing " +
-                            "configuration entity for: {}",
+                                    "configuration entity for: {}",
                             description.getType());
                 }
                 continue;
-            }
-            // Read global control.
-            if (description.getControl() != null) {
-                final String control = modelConfiguration.getPropertyAsStr(
-                        description.getControl());
-                if (control.equals(FORCE) || control.equals(INHERIT_AND_FORCE)) {
-                    // We force all - there is no need to load anything
-                    // else.
-                    break;
-                }
             }
             // Create instance of current configuration.
             final Model childModel = Model.create(configurationRdf);
@@ -125,26 +116,39 @@ public class ConfigurationFacade {
                         "configuration entity.");
                 continue;
             }
-            String control = null;
+            // Read global control.
+            final String control;
             if (description.getControl() != null) {
                 control = childConfiguration.getPropertyAsStr(
                         description.getControl());
+            } else {
+                control = null;
             }
-            if (FORCE.equals(control)) {
-                // We inherit all -> do not load anything from this object.
+            // Check control.
+            if (INHERIT.equals(control)) {
+                // Do not load anything.
                 continue;
-            } else if (INHERIT_AND_FORCE.equals(control)) {
-                // We do not load anything not (inherit) or any further (force).
+            }
+            if (INHERIT_AND_FORCE.equals(control)) {
+                // Do not load anything from this instance, not any further.
                 modelConfiguration.setIri(description.getControl(), FORCED);
                 break;
             }
             // Merge from children to model.
-            for (ConfigDescription.Member member : description.getMembers()) {
-                merge(member, modelConfiguration, childConfiguration);
+            if (description.getMembers().isEmpty()) {
+                // We should load all properties from children, ald overwrite
+                // those in parent -> this can be done by simply swapping
+                //                    the configurations.
+                modelConfiguration = childConfiguration;
+            } else {
+                // Use from definition.
+                for (ConfigDescription.Member member :
+                        description.getMembers()) {
+                    merge(member, modelConfiguration, childConfiguration);
+                }
             }
             if (FORCE.equals(control)) {
-                // We force -> do not load anything. We just need to set
-                // inheritance of all to forced.
+                // Do not load anything in any further instance.
                 modelConfiguration.setIri(description.getControl(), FORCED);
                 break;
             }
@@ -195,8 +199,7 @@ public class ConfigurationFacade {
             return;
         }
         // Check children options.
-        String childrenControl = children.getPropertyAsStr(
-                member.getControl());
+        String childrenControl = children.getPropertyAsStr(member.getControl());
         if (childrenControl == null) {
             childrenControl = NONE;
         }
