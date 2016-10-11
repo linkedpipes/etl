@@ -55,6 +55,14 @@
         };
     };
 
+    const select = function (data) {
+        if (data.length > 0) {
+            return data[0];
+        } else {
+            return undefined;
+        }
+    };
+
     //
     // Manipulation with resources.
     //
@@ -84,121 +92,162 @@
     };
 
     /**
-     * Return a dictionary where under language tags the string values
-     * are stored.
+     * Return an array of string values. Each item contains the
+     * "@value" property. The "@language" property is optional.
+     *
+     * If no language tag is provided the value is stored "".
      *
      * @param resource
      * @param predicate
-     * @returns Dictionary.
+     * @returns An array.
      */
-    const getString = function (resource, predicate) {
-
-        const getStringValue = function (value, result) {
+    const getStrings = function (resource, predicate) {
+        const getStringValue = function (value) {
             if (value["@value"] === undefined) {
-                result[""] = value;
+                return {
+                    "@value": value
+                };
             } else if (value["@lang"] === undefined) {
-                result[""] = value["@value"];
+                return {
+                    "@value": value["@value"]
+                };
             } else {
-                result[value["@lang"]] = value["@value"];
+                return {
+                    "@value": value["@value"],
+                    "@language": value["@language"]
+                };
             }
         };
-
-        const value = resource[predicate];
-        if (value === undefined) {
-            return {};
-        }
-
-        const result = {};
-        if (Array.isArray(value)) {
-            if (value.length === 0) {
-                return result;
-            } else if (value.length === 1) {
-                getStringValue(value[0], result);
-            } else {
-                getStringValue(value[0], result);
-                console.log("Only single value used for ", value, "on",
-                    resource);
-            }
-        } else {
-            getStringValue(value, result);
-        }
-        return result;
-    };
-
-    const getStrings = function (resource, predicate) {
-
-        const value = resource[predicate];
+        //
+        let value = resource[predicate];
         if (value === undefined) {
             return [];
         }
-
-        if (Array.isArray(value)) {
-            const results = [];
-            for (var index in value) {
-                if (!value.hasOwnProperty(index)) {
-                    continue;
-                }
-                results.push(getString(value, index));
-            }
-            return results;
-        } else {
-            return [getString(resource, predicate)];
+        const result = [];
+        if (!Array.isArray(value)) {
+            value = [value];
         }
+        value.forEach((item) => {
+            result.push(getStringValue(item));
+        });
+        return result;
     };
 
     /**
-     * Return a value under given predicate. In case of multiple values
-     * only one is returned.
+     * Set string value under given predicate.
      *
      * @param resource
      * @param predicate
-     * @returns Single value or undefined.
+     * @param value String or string object, array of both, undefined.
+     * @param lang Optional.
      */
-    const getValue = function (resource, predicate) {
+    const setStrings = function (resource, predicate, value) {
+        if (value === undefined) {
+            delete resource[predicate];
+            return;
+        }
+        if (!Array.isArray(value)) {
+            value = [value];
+        }
+        const resourceValue = [];
+        value.forEach((item) => {
+            if (item["@value"] === undefined) {
+                resourceValue.push({
+                    "@value": item
+                });
+            } else {
+                resourceValue.push({
+                    "@value": item["@value"],
+                    "@language": item["@language"]
+                });
+            }
+        });
+        resource[predicate] = resourceValue;
+    };
+
+    /**
+     * Return an array of object values.
+     *
+     * @param resource
+     * @param predicate
+     * @returns An array.
+     */
+    const getValues = function (resource, predicate) {
         let value = resource[predicate];
         if (value === undefined) {
-            return {};
+            return [];
         }
-
-        if (Array.isArray(value)) {
-            value = value[0];
+        const result = [];
+        if (!Array.isArray(value)) {
+            value = [value];
         }
-
-        if (value["@value"] === undefined) {
-            return value;
-        } else {
-            return value["@value"];
-        }
+        value.forEach((item) => {
+            // TODO Support @type ?
+            if (item["@value"] === undefined) {
+                result.push(item);
+            } else {
+                result.push(item["@value"]);
+            }
+        });
+        return result;
     };
 
     /**
-     * Return an IRI value for given predicate. If multiple are
-     * presented only one is used.
+     * Set array of values under given property, the values may be
+     * simple values of values JSON-LD objects (object with @value).
      *
      * @param resource
      * @param predicate
-     * @return A single value.
+     * @param value
+     */
+    const setValues = function (resource, predicate, value) {
+        if (value === undefined) {
+            delete resource[predicate];
+            return;
+        }
+        if (!Array.isArray(value)) {
+            value = [value];
+        }
+        const resourceValue = [];
+        value.forEach((item) => {
+            if (item["@value"] === undefined) {
+                resourceValue.push({
+                    "@value": item
+                });
+            } else {
+                resourceValue.push(item);
+            }
+        });
+        resource[predicate] = resourceValue;
+    };
+
+    /**
+     * Return an array of IRI values for given predicate.
+     *
+     * @param resource
+     * @param predicate
+     * @return An array.
      */
     const getIRIs = function (resource, predicate) {
-
         const getIRIValue = function (value, result) {
             if (value["@id"] !== undefined) {
                 result.push(value["@id"]);
             } else if (value.id !== undefined) {
                 result.push(value.id);
             } else if (value["@value"] !== undefined) {
-                console.warn("IRI stored as value: ", value, "on", resource);
+                console.warn("IRI stored as value: ", value,
+                    "on object", resource);
                 result.push(value["@value"]);
             } else {
-                console.error("Invalid IRI reference: ", value, "on", resource);
+                console.error("Invalid IRI value: ", value,
+                    "on object", resource);
             }
         };
-
+        //
         const value = resource[predicate];
         if (value === undefined) {
             return [];
         }
-
         const result = [];
         if (Array.isArray(value)) {
             for (var itemIndex in value) {
@@ -213,78 +262,99 @@
         return result;
     };
 
-    const getIRI = function (resource, predicate) {
-        const result = getIRIs(resource, predicate);
-        if (result.length > 0) {
-            return result[0];
-        } else {
-            return undefined;
-        }
-    };
-
     /**
-     * Set string value under given predicate.
-     *
-     * @param resource
-     * @param predicate
-     * @param value String or string object.
-     * @param lang Optional.
-     */
-    const setString = function (resource, predicate, value, lang) {
-        if (value === undefined) {
-            delete resource[predicate];
-            return;
-        }
-        // Check for object.
-        if (Array.isArray(value) || value["@value"] !== undefined) {
-            resource[predicate] = value;
-            return;
-        }
-        //
-        if (lang !== undefined || lang === "") {
-            resource[predicate] = {
-                "@value" : value,
-                "@language" : lang
-            };
-        } else {
-            resource[predicate] = {
-                "@value" : value,
-            };
-        }
-    };
-
-    /**
-     * Set general type value under given predicate.
+     * Set IRIs values under given predicate.
      *
      * @param resource
      * @param predicate
      * @param value
      */
-    const setValue = function (resource, predicate, value) {
+    const setIRIs = function (resource, predicate, value) {
         if (value === undefined) {
             delete resource[predicate];
             return;
         }
-        resource[predicate] = {
-            "@value" : value,
-        };
+        if (!Array.isArray(value)) {
+            value = [value];
+        }
+        const resourceValue = [];
+        value.forEach((item) => {
+            if (item["@id"] === undefined) {
+                resourceValue.push({
+                    "@id": item
+                });
+            } else {
+                resourceValue.push(item);
+            }
+        });
+        resource[predicate] = resourceValue;
     };
 
-    /**
-     * Set IRI value under given predicate.
-     *
-     * @param resource
-     * @param predicate
-     * @param value
-     */
-    const setIRI = function (resource, predicate, value) {
+    const getIntegers = function (resource, predicate) {
+        const value = getValues(resource, predicate);
+        const result = [];
+        value.forEach((item) => {
+            result.push(parseInt(item));
+        });
+        return result;
+    };
+
+    const setIntegers = function (resource, predicate, value) {
+        setValues(resource, predicate, value);
+    };
+
+    const getBooleans = function (resource, predicate) {
+        const value = getValues(resource, predicate);
+        const result = [];
+        value.forEach((item) => {
+            if (item === "true") {
+                result.push(true);
+            } else if (item === "false") {
+                result.push(false);
+            } else {
+                result.push(value);
+            }
+        });
+        return result;
+    };
+
+    const setBooleans = function (resource, predicate, value) {
+        setValues(resource, predicate, value);
+    };
+
+    const getDates = function (resource, predicate) {
+        const value = getValues(resource, predicate);
+        const result = [];
+        value.forEach((item) => {
+            result.push(new Date(item));
+        });
+        return result;
+    };
+
+    const setDates = function (resource, predicate, value) {
         if (value === undefined) {
             delete resource[predicate];
             return;
         }
-        resource[predicate] = {
-            "@id" : value,
-        };
+        if (!Array.isArray(value)) {
+            value = [value];
+        }
+        const resourceValue = [];
+        value.forEach((item) => {
+            let valueAsString = item.getFullYear() + '-';
+            if (value.getMonth() + 1 < 10) {
+                valueAsString += '0';
+            }
+            valueAsString += (item.getMonth() + 1) + '-';
+            if (value.getDate() < 10) {
+                valueAsString += '0';
+            }
+            valueAsString += item.getDate();
+            resourceValue.push({
+                "@value": valueAsString
+            });
+        });
+        resource[predicate] = resourceValue;
     };
 
     //
@@ -508,34 +578,27 @@
     const resourceService = {
         "getTypes": getTypes,
         "getId": getId,
-        "getString": getString,
         "getStrings": getStrings,
-        "getInteger" : (resource, predicate) => {
-            const value = getValue(resource, predicate);
-            if (value === undefined) {
-                return value;
-            } else {
-                return parseInt(value);
-            }
-        },
-        "getBoolean" : (resource, predicate) => {
-            // Boolean can be stored as a string or as a direct value.
-            const value = getValue(resource, predicate);
-            if (value === "true") {
-                return true;
-            } else if (value === "false") {
-                return false;
-            } else {
-                return value;
-            }
-        },
+        "getString": (resource, predicate) =>
+            select(getStrings(resource, predicate)),
+        "setStrings": setStrings,
+        "getIntegers": getIntegers,
+        "getInteger": (resource, predicate) =>
+            select(getIntegers(resource, predicate)),
+        "setIntegers": setIntegers,
+        "getBooleans": getBooleans,
+        "getBoolean": (resource, predicate) =>
+            select(getBooleans(resource, predicate)),
+        "setBooleans": setBooleans,
+        "getDates": getDates,
+        "getDate": (resource, predicate) =>
+            select(getDates(resource, predicate)),
+        "setDates": setDates,
         "getIRIs": getIRIs,
-        "getIRI": getIRI,
-        "getReferences": getReferences,
-        "setString" : setString,
-        "setInteger" : setValue,
-        "setBoolean" : setValue,
-        "setIRI" : setIRI
+        "getIRI": (resource, predicate) =>
+            select(getIRIs(resource, predicate)),
+        "setIRIs": setIRIs,
+        "getReferences": getReferences
     };
 
     /* jshint latedef: false */

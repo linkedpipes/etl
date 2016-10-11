@@ -31,26 +31,22 @@ define(["jsonld"], function (jsonld) {
         "None": LP_RESOURCE + "configuration/None"
     };
 
-    // TODO Move to the separated module
     const i18 = {
         "str": function (value) {
+            if (value === undefined) {
+                return undefined;
+            }
             if (Array.isArray(value)) {
                 const result = [];
                 value.forEach((item) => {
-                    result.push(item[""]);
+                    result.push(item["@value"]);
                 });
                 return result;
+            } else if (value["@value"]) {
+                return value["@value"];
             } else {
-                return value[""];
+                return value;
             }
-        },
-        "value": function (string) {
-            if (string === undefined) {
-                return undefined;
-            }
-            return {
-                "@value": string
-            };
         }
     };
 
@@ -109,38 +105,54 @@ define(["jsonld"], function (jsonld) {
         }
     }
 
+    function select(value, desc) {
+        if (desc.$array) {
+            return value;
+        } else {
+            if (value.length > 0) {
+                return value[0];
+            } else {
+                return undefined;
+            }
+        }
+    }
+
     // TODO Add support for lists (strings, string with language, integers .. )
 
     function loadValue(desc, ns, resource) {
-        switch(desc.$type) {
+        switch (desc.$type) {
+            case "date":
+                return jsonld.r.getDates(resource, ns + desc.$property);
             case "str":
-                return i18.str(jsonld.r.getString(
-                    resource,ns + desc.$property));
+                return i18.str(jsonld.r.getStrings(resource,
+                    ns + desc.$property));
             case "int":
-                return jsonld.r.getInteger(resource,ns + desc.$property);
+                return jsonld.r.getIntegers(resource, ns + desc.$property);
             case "bool":
-                return jsonld.r.getBoolean(resource,ns + desc.$property);
+                return jsonld.r.getBooleans(resource, ns + desc.$property);
             case "iri":
-                return jsonld.r.getIRI(resource,ns + desc.$property);
+                return jsonld.r.getIRIs(resource, ns + desc.$property);
             default:
                 console.error("Unknown type for: ", desc);
         }
     }
 
     function saveValue(desc, ns, resource, value) {
-        switch(desc.$type) {
+        switch (desc.$type) {
+            case "date":
+                jsonld.r.setDates(resource, ns + desc.$property, value);
+                break;
             case "str":
-                jsonld.r.setString(resource,ns + desc.$property,
-                    i18.value(value));
+                jsonld.r.setStrings(resource, ns + desc.$property, value);
                 break;
             case "int":
-                jsonld.r.setInteger(resource,ns + desc.$property, value);
+                jsonld.r.setIntegers(resource, ns + desc.$property, value);
                 break;
             case "bool":
-                jsonld.r.setBoolean(resource,ns + desc.$property, value);
+                jsonld.r.setBooleans(resource, ns + desc.$property, value);
                 break;
             case "iri":
-                jsonld.r.setIRI(resource,ns + desc.$property, value);
+                jsonld.r.setIRIs(resource, ns + desc.$property, value);
                 break;
             default:
                 console.error("Unknown type for: ", desc);
@@ -150,7 +162,10 @@ define(["jsonld"], function (jsonld) {
     function loadTemplate(desc, dialog, instanceConfig, instance,
                           templateConfig, template) {
         const ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
-
+        let autoPredicate = false;
+        if (desc.$control !== undefined) {
+            autoPredicate = desc.$control.$predicate === "auto";
+        }
         for (let key in desc) {
             if (!desc.hasOwnProperty(key)) {
                 continue;
@@ -159,29 +174,49 @@ define(["jsonld"], function (jsonld) {
                 continue;
             }
             const item = desc[key];
+            // Generate missing.
+            if (item.$property === undefined) {
+                item.$property = key;
+            }
+            if (item.$control === undefined || autoPredicate)  {
+                item.$control = item.$property + "Control";
+            }
             //
-            const instanceValue = loadValue(item, ns, instance);
-            const instanceControl = iriToControl(
-                jsonld.r.getIRI(instance,ns + item.$control));
-            const templateValue = loadValue(item, ns, template);
-            const templateControl = iriToControl(
-                jsonld.r.getIRI(template, ns + item.$control));
+            let instanceValue = select(loadValue(item, ns, instance), item);
+            let templateValue = select(loadValue(item, ns, template), item);
+            if (item.onLoad !== undefined) {
+                instanceValue = item.$onLoad(instanceValue);
+                templateValue = item.$onLoad(templateValue);
+            }
+            let instanceControl;
+            let templateControl;
+            if (item.$control === undefined) {
+                instanceControl = {
+                    "inherit": false,
+                    "force": false
+                };
+                templateControl = {
+                    "forced": false
+                };
+            } else {
+                instanceControl = iriToControl(
+                    jsonld.r.getIRI(instance, ns + item.$control));
+                templateControl = iriToControl(
+                    jsonld.r.getIRI(template, ns + item.$control));
+            }
             //
             dialog[key] = {
                 "value": instanceValue,
                 "templateValue": templateValue,
-                "forced" : templateControl.forced,
+                "forced": templateControl.forced,
                 "hide": templateControl.forced,
                 "disabled": false,
                 "inherit": instanceControl.inherit,
                 "force": instanceControl.force,
-                "label": item.$label
+                "label": item.$label,
+                "controlled": item.$control !== undefined
             };
         }
-    }
-
-    function loadCoreTemplate(desc, dialog, instanceConfig, instance) {
-        console.log('   !!! MISSING IMPLEMENTATION !!!')
     }
 
     /**
@@ -194,47 +229,35 @@ define(["jsonld"], function (jsonld) {
      */
     function load(desc, dialog, instanceConfig, templateConfig) {
         const ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
-
         instanceConfig = jsonld.triples(instanceConfig);
         const instance = instanceConfig.getResource(
             instanceConfig.findByType(ns + desc.$type));
-
         if (templateConfig === undefined) {
-            loadCoreTemplate(desc, dialog, instanceConfig, instance);
+            console.error("Core templates are not supported.")
             return;
         }
-
         templateConfig = jsonld.triples(templateConfig);
         const template = templateConfig.getResource(
             templateConfig.findByType(ns + desc.$type));
-
         loadTemplate(desc, dialog, instanceConfig, instance,
             templateConfig, template);
-
-        // console.debug("LOAD");
-        // console.debug("instance: ", instance);
-        // console.debug("template: ", template);
-        // console.debug("desc:", desc);
-        // console.debug(" ->  ", dialog);
     }
 
     /**
      * Save content from dialog to configuration.instance.
      *
-     * @param desc
+     * @param desc Must be used for loading first.
      * @param dialog
      * @param iri
      * @param configuration
      */
     function save(desc, dialog, iri, configuration) {
         const ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
-
         // Construct the configuration object.
         const resource = {
-            '@id': iri + "/configuration",
+            "@id": iri + "/configuration",
             "@type": [ns + desc.$type]
         };
-
         for (let key in desc) {
             if (!desc.hasOwnProperty(key)) {
                 continue;
@@ -243,20 +266,22 @@ define(["jsonld"], function (jsonld) {
                 continue;
             }
             const item = desc[key];
-            if (dialog[key].forced) {
+            if (dialog[key].forced && item.$control !== undefined) {
                 jsonld.r.setIRI(resource, ns + item.$control, LP.Forced);
                 continue;
             }
-
-            saveValue(item, ns, resource, dialog[key].value);
-            jsonld.r.setIRI(resource, ns + item.$control,
-                controlToIri(dialog[key].inherit, dialog[key].force));
+            let value = dialog[key].value;
+            if (item.$onSave !== undefined) {
+                value = item.$onSave(value);
+            }
+            saveValue(item, ns, resource, value);
+            if (item.$control !== undefined) {
+                jsonld.r.setIRIs(resource, ns + item.$control,
+                    controlToIri(dialog[key].inherit, dialog[key].force));
+            }
         }
-
-        console.debug("SAVE", dialog, "->", resource);
-
         // Perform in-place modification of the array.
-        configuration.length = 0
+        configuration.length = 0;
         configuration.push(resource);
     }
 
@@ -267,7 +292,7 @@ define(["jsonld"], function (jsonld) {
      * @param dialog The dialog object given by dialog.
      * @returns
      */
-    function factoryFunction (dialogService, description, dialog) {
+    return function factoryFunction(dialogService, description, dialog) {
         const service = {
             "load": () => {
                 load(description, dialog, dialogService.config.instance,
@@ -278,10 +303,6 @@ define(["jsonld"], function (jsonld) {
                     dialogService.config.instance);
             }
         };
-
         return service;
-    }
-
-    return factoryFunction;
-
-})
+    };
+});

@@ -34,7 +34,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         "template": "http://linkedpipes.com/ontology/template",
         "Input": "http://linkedpipes.com/ontology/Input",
         "Output": "http://linkedpipes.com/ontology/Output",
-        "Port": "http://linkedpipes.com/ontology/Port"
+        "Port": "http://linkedpipes.com/ontology/Port",
+        "supportControl": "http://linkedpipes.com/ontology/supportControl"
     };
 
     const SKOS = {
@@ -54,23 +55,20 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
     // TODO Move to the separated module
     const i18 = {
         "str": function (value) {
+            if (value === undefined) {
+                return undefined;
+            }
             if (Array.isArray(value)) {
                 const result = [];
                 value.forEach((item) => {
-                    result.push(item[""]);
+                    result.push(item["@value"]);
                 });
                 return result;
+            } else if (value["@value"]) {
+                return value["@value"];
             } else {
-                return value[""];
+                return value;
             }
-        },
-        "value": function (string) {
-            if (string === undefined) {
-                return undefined;
-            }
-            return {
-                "@value": string
-            };
         }
     };
 
@@ -89,11 +87,15 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         const color = jsonld.r.getString(resource, LP.color);
         // const configuration = jsonld.r.getIRIs(resource, LP.configuration);
         const type = jsonld.r.getIRIs(resource, LP.type);
+        let supportControl =  jsonld.r.getBoolean(resource, LP.supportControl);
+        if (supportControl === undefined) {
+            supportControl = false;
+        }
 
         const dialogs = [];
         jsonld.r.getReferences(graph, resource, LP.dialog).forEach((dialog) => {
             dialogs.push({
-                "name": jsonld.r.getString(dialog, LP.name)
+                "name": i18.str(jsonld.r.getString(dialog, LP.name))
             });
         });
 
@@ -124,12 +126,13 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             "label": i18.str(label),
             "description": i18.str(description),
             "keyword": keyword,
-            "color": color[""],
+            "color": i18.str(color),
             "type": type,
             "dialogs": dialogs,
             "inputs": inputs,
             "outputs": outputs,
-            "core": true
+            "core": true,
+            "supportControl" : supportControl
         };
     }
 
@@ -143,20 +146,16 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         const id = jsonld.r.getId(resource);
         const label = jsonld.r.getString(resource, SKOS.prefLabel);
         const description = jsonld.r.getString(resource, DCTERMS.description);
-        const template = jsonld.r.getIRIs(resource, LP.template);
+        const template = jsonld.r.getIRI(resource, LP.template);
         const color = jsonld.r.getString(resource, LP.color);
-        if (template.length !== 1) {
-            console.warn("Invalid template for: ", id);
-            return;
-        }
-
         data.refTemplate[id] = {
             "id": id,
             "label": i18.str(label),
             "description": i18.str(description),
-            "template": template[0],
-            "color": color[""],
-            "core" : false
+            "template": template,
+            "color": i18.str(color),
+            "core" : false,
+            "supportControl" : true
         };
     }
 
@@ -174,6 +173,9 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                 return data;
             }
         }).then(function (response) {
+            if (response.data.length === 0) {
+                return [];
+            }
             // TODO Use jsonld service to get the graph here.
             return response.data[0]['@graph'];
         });
@@ -185,6 +187,7 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
      * @param data
      */
     function expandTemplates(data) {
+        console.log(data);
         const templateList = [];
         const templateMap = {};
         // Prepare jarTemplates.
@@ -271,8 +274,6 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
     }
 
     function factoryFunction($http, $q) {
-
-        console.log("templateService.factoryFunction")
 
         const data = {
             "loaded": false,
@@ -378,6 +379,10 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             console.warn("Missing color for: ", template);
         };
 
+        service.getSupportControl = (template) => {
+            return template.supportControl;
+        };
+
         /**
          * Return copy of the template that contains editable fields.
          * After update this class can be used to save the modification
@@ -446,6 +451,26 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         };
 
         /**
+         * Fetch a description of the configuration.
+         *
+         * @param id ID of a template.
+         * @returns Promise.
+         */
+        service.fetchConfigDesc = (id) => {
+            // TODO Load only for "core" templates.
+            const storeId = "desc:" + id;
+            if (data.config[storeId] !== undefined) {
+                return $q.when(data.config[storeId]);
+            }
+            const url = "/api/v1/components/configDescription?iri=" +
+                encodeURI(id);
+            return fetchConfiguration(url, $http).then(function (config) {
+                data.config[storeId] = config;
+                return config;
+            });
+        };
+
+        /**
          * Fetch a configuration that represent the effective configuration
          * of a template.
          *
@@ -485,7 +510,7 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             //
             const result = [];
             core.dialogs.forEach((dialog) => {
-                const name = dialog.name[""];
+                const name = dialog.name;
                 // Filter template/instance specific.
                 if (!isTemplate && name === "template") {
                     return;
@@ -521,9 +546,9 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             const updateObject = {
                 "@id": template.id
             };
-            updateObject[SKOS.prefLabel] = i18.value(template.label);
+            updateObject[SKOS.prefLabel] = template.label;
             updateObject[LP.color] = template.color;
-            updateObject[DCTERMS.description] = i18.value(template.description);
+            updateObject[DCTERMS.description] = template.description;
 
             const options = {
                 'transformRequest': angular.identity,

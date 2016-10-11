@@ -8,7 +8,8 @@ define([
     const LP = {
         "template": "http://linkedpipes.com/ontology/template",
         "color": "http://linkedpipes.com/ontology/color",
-        "configurationGraph": "http://linkedpipes.com/ontology/configurationGraph"
+        "configurationGraph": "http://linkedpipes.com/ontology/configurationGraph",
+        "control" : "http://plugins.linkedpipes.com/ontology/configuration/control"
     }
 
     const SKOS = {
@@ -22,23 +23,20 @@ define([
     // TODO Move to the separated module
     const i18 = {
         "str": function (value) {
+            if (value === undefined) {
+                return undefined;
+            }
             if (Array.isArray(value)) {
                 const result = [];
                 value.forEach((item) => {
-                    result.push(item[""]);
+                    result.push(item["@value"]);
                 });
                 return result;
+            } else if (value["@value"]) {
+                return value["@value"];
             } else {
-                return value[""];
+                return value;
             }
-        },
-        "value": function (string) {
-            if (string === undefined) {
-                return undefined;
-            }
-            return {
-                "@value": string
-            };
         }
     };
 
@@ -59,11 +57,11 @@ define([
         const resource = {
             "@type": ["http://linkedpipes.com/ontology/Template"]
         };
-        jsonld.r.setString(resource, SKOS.prefLabel, template.label);
-        jsonld.r.setString(resource, DCTERMS.description, template.description);
-        jsonld.r.setIRI(resource, LP.template, parent.id);
+        jsonld.r.setStrings(resource, SKOS.prefLabel, template.label);
+        jsonld.r.setStrings(resource, DCTERMS.description, template.description);
+        jsonld.r.setIRIs(resource, LP.template, parent.id);
         if (template.color !== undefined) {
-            jsonld.r.setString(resource, LP.color, template.color);
+            jsonld.r.setStrings(resource, LP.color, template.color);
         }
 
         // Post the data.
@@ -101,29 +99,56 @@ define([
             // Update shared data.
             $scope.api.save();
 
+            console.log('COMPONENT SAVED');
+
             createTemplate($http, $scope.templateToEdit, template,
                 $scope.configuration, templateService).then((iri) => {
-                // TODO Move to pipeline manipulation service.
-                // Update component : change parent IRI
-                // and disconnect configuration as it was
-                // 'moved' to a template.
-
-                component['http://linkedpipes.com/ontology/template'] = {
+                // Update template.
+                component['http://linkedpipes.com/ontology/template'] = [{
                     '@id': iri
-                };
-
-                var configIRI = jsonld.r.getIRI(component,
+                }];
+                // Update current configuration, we know that the configuration
+                // is the same. So we set all controls to inherit.
+                let configIRI = jsonld.r.getIRI(component,
                     'http://linkedpipes.com/ontology/configurationGraph');
-                if (configIRI !== undefined) {
-                    delete component['http://linkedpipes.com/ontology/configurationGraph'];
-                    delete pipeline.model.graphs[configIRI];
+                if (configIRI === undefined) {
+                    configIRI = jsonld.r.getId(component) + "/configuration";
+                    jsonld.r.setIRIs(component,
+                        'http://linkedpipes.com/ontology/configurationGraph',
+                        configIRI);
+                    // Use configuration from template.
+                    // TODO This is fallback for older version of pipelines.
+                    pipeline.model.graphs[configIRI] =
+                        jQuery.extend(true, {} , $scope.configuration);
                 }
-
-                statusService.success({
-                    'title': 'Template created.'
+                // Update configuration.
+                templateService.fetchConfigDesc(iri).then((description) => {
+                    const config = pipeline.model.graphs[configIRI];
+                    // TODO Move this into separated service.
+                    const controlProperties = [];
+                    jsonld.triples(description).iterate((resource) => {
+                        const control = jsonld.r.getIRI(resource, LP.control);
+                        if (control !== undefined) {
+                            controlProperties.push(control);
+                        }
+                    });
+                    jsonld.triples(config).iterate((resource) => {
+                        for (let key in resource) {
+                            if (!resource.hasOwnProperty(key)) {
+                                continue;
+                            }
+                            if (controlProperties.indexOf(key) !== -1) {
+                                jsonld.r.setIRIs(resource, key,
+                                    "http://plugins.linkedpipes.com/resource/configuration/Inherit");
+                            }
+                        }
+                    });
+                    //
+                    statusService.success({
+                        'title': 'Template created.'
+                    });
+                    $mdDialog.hide();
                 });
-
-                $mdDialog.hide();
             }, () => {
                 statusService.postFailed({
                     'title': "Can't create template."

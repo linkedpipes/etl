@@ -1,5 +1,6 @@
 define([
     'jquery',
+    'jsonld',
     'app/components/canvas/canvasDirective',
     'app/components/canvas/pipelineCanvas',
     'app/components/canvas/executionProgress',
@@ -11,7 +12,7 @@ define([
     'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
     'app/components/templates/detailDialog/templateDetailDialog',
     'app/components/instances/detailDialog/instanceDetailDialog'
-], function (jQuery,
+], function (jQuery, jsonld,
              pipelineCanvasDirective,
              canvasPipelineFactory,
              executionProgressFactory,
@@ -40,7 +41,7 @@ define([
                        pipelineCanvas,
                        executionCanvas,
                        indexPage,
-                        pipelineDesign
+                       pipelineDesign
                        // TODO Update names, check for factories and service.
     ) {
 
@@ -264,22 +265,22 @@ define([
         function loadData() {
             console.time('pipelineCanvasCtrl.loadData');
             loadPipeline()
-                .then(infoService.wait)
-                .then(loadExecution)
-                .then(function () {
-                    console.timeEnd('pipelineCanvasCtrl.loadData');
-                    // Initialize refresh here.
-                    refreshService.set(function update() {
-                        if (data.execution.update) {
-                            loadExecution();
-                        }
-                    });
-                }, function (message) {
-                    statusService.deleteFailed({
-                        'title': "Can't load data.",
-                        'response': message
-                    });
+            .then(infoService.wait)
+            .then(loadExecution)
+            .then(function () {
+                console.timeEnd('pipelineCanvasCtrl.loadData');
+                // Initialize refresh here.
+                refreshService.set(function update() {
+                    if (data.execution.update) {
+                        loadExecution();
+                    }
                 });
+            }, function (message) {
+                statusService.deleteFailed({
+                    'title': "Can't load data.",
+                    'response': message
+                });
+            });
         }
 
         // Switch to edit mode.
@@ -330,6 +331,12 @@ define([
                     return executionCanvas.isMappingAvailable(
                         component['@id']);
                 }
+            };
+            $scope.pipelineEdit.API.createTemplate = function (component) {
+                const templateIri = jsonld.r.getIRI(component,
+                    'http://linkedpipes.com/ontology/template');
+                return templateService.getSupportControl(
+                    templateService.getTemplate(templateIri));
             };
             $scope.pipelineEdit.API.onCreateComponent = onCreateComponent;
 
@@ -475,16 +482,16 @@ define([
         var executePipeline = function (configuration, onSucess) {
             $http.post('/resources/executions?pipeline=' + data.pipeline.iri,
                 configuration)
-                .then(function () {
-                    if (onSucess) {
-                        onSucess();
-                    }
-                }, function (response) {
-                    statusService.postFailed({
-                        'title': "Can't start the execution.",
-                        'response': response
-                    });
+            .then(function () {
+                if (onSucess) {
+                    onSucess();
+                }
+            }, function (response) {
+                statusService.postFailed({
+                    'title': "Can't start the execution.",
+                    'response': response
                 });
+            });
         };
 
         $scope.onExecute = function () {
@@ -559,35 +566,35 @@ define([
                 }
             }
             $http.post('./resources/pipelines', data, config)
-                .success(function (data, status, headers) {
-                    statusService.success({
-                        'title': 'Pipeline has been successfully copied.'
-                    });
-                    // The response is a reference.
-                    // TODO Use JSONLD service to get the value !!
-                    var newPipelineUri = data[0]['@graph'][0]['@id'];
-                    //
-                    statusService.success({
-                        'title': 'Pipeline has been successfully copied.'
-                    });
-                    $location.path('/pipelines/edit/canvas').search(
-                        {'pipeline': newPipelineUri});
-                })
-                .error(function (data, status, headers) {
-                    statusService.postFailed({
-                        'title': "Can't create new pipeline.",
-                        'response': data
-                    });
+            .success(function (data, status, headers) {
+                statusService.success({
+                    'title': 'Pipeline has been successfully copied.'
                 });
+                // The response is a reference.
+                // TODO Use JSONLD service to get the value !!
+                var newPipelineUri = data[0]['@graph'][0]['@id'];
+                //
+                statusService.success({
+                    'title': 'Pipeline has been successfully copied.'
+                });
+                $location.path('/pipelines/edit/canvas').search(
+                    {'pipeline': newPipelineUri});
+            })
+            .error(function (data, status, headers) {
+                statusService.postFailed({
+                    'title': "Can't create new pipeline.",
+                    'response': data
+                });
+            });
         };
 
         $scope.onDelete = function (event) {
             var confirm = $mdDialog.confirm()
-                .title('Would you like to delete this pipeline?')
-                .ariaLabel('Delete pipeline.')
-                .targetEvent(event)
-                .ok('Delete pipeline')
-                .cancel('Cancel');
+            .title('Would you like to delete this pipeline?')
+            .ariaLabel('Delete pipeline.')
+            .targetEvent(event)
+            .ok('Delete pipeline')
+            .cancel('Cancel');
             $mdDialog.show(confirm).then(function () {
                 // Delete pipeline.
                 $http({

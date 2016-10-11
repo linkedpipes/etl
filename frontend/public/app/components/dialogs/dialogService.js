@@ -4,9 +4,11 @@
 define([
     "jsonld",
     "./dialogManager",
+    "./controlConfigDirective/controlConfigDirective",
     "./controlInstanceDirective/dialogControlInstanceDirective",
     "./controlTemplateDirective/dialogControlTemplateDirective",
-], function (jsonld, dialogManager, instanceDirective, templateDirective) {
+], function (jsonld, dialogManager, configDirective,
+             instanceDirective, templateDirective) {
     "use strict";
 
     const LP_RESOURCE = "http://plugins.linkedpipes.com/resource/";
@@ -163,6 +165,7 @@ define([
         }
         _initialized = true;
         //
+        configDirective(app);
         instanceDirective(app);
         templateDirective(app);
         //

@@ -22,23 +22,20 @@ define([
     // TODO Move to the separated module
     const i18 = {
         "str": function (value) {
+            if (value === undefined) {
+                return undefined;
+            }
             if (Array.isArray(value)) {
                 const result = [];
                 value.forEach((item) => {
-                    result.push(item[""]);
+                    result.push(item["@value"]);
                 });
                 return result;
+            } else if (value["@value"]) {
+                return value["@value"];
             } else {
-                return value[""];
+                return value;
             }
-        },
-        "value": function (string) {
-            if (string === undefined) {
-                return undefined;
-            }
-            return {
-                "@value": string
-            };
         }
     };
 
@@ -51,24 +48,24 @@ define([
             // Update shared data.
             $scope.api.save();
             // Save changes in instance.
-            jsonld.r.setString(component, SKOS.prefLabel,
-                i18.value($scope.componentToEdit.label));
+            jsonld.r.setStrings(component, SKOS.prefLabel,
+                $scope.componentToEdit.label);
             component[DCTERMS.description] = $scope.componentToEdit.description;
             if ($scope.componentToEdit.color === undefined) {
                 delete component[LP.color];
             } else {
                 component[LP.color] = $scope.componentToEdit.color;
             }
-            // jsonld.r.setString(component, DCTERMS.description,
-            //     i18.value($scope.componentToEdit.description));
-            // jsonld.r.setString(component, LP.color,
-            //     i18.value($scope.componentToEdit.color));
             // Save configuration.
             var configGraph = jsonld.r.getIRI(component,
                 'http://linkedpipes.com/ontology/configurationGraph');
             if (configGraph === undefined) {
                 configGraph = jsonld.r.getId(component) + '/configuration';
-                jsonld.r.setIRI(component, LP.configurationGraph, configGraph);
+                jsonld.r.setIRIs(component, LP.configurationGraph, configGraph);
+            }
+            if (!template.supportControl) {
+                // Update configuration.
+
             }
             pipeline.model.graphs[configGraph] = $scope.configuration;
             //
@@ -80,6 +77,13 @@ define([
         };
 
         function initDirective() {
+
+            if (template.supportControl) {
+                $scope.componentToEdit.useTemplateConfig = false;
+            } else {
+                // Load from configuration.
+                $scope.componentToEdit.useTemplateConfig = false;
+            }
 
             $scope.api.store = {
                 "instance": $scope.componentToEdit,

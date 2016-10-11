@@ -152,6 +152,12 @@ define([
         } else {
             this.getComponentMenuMappingDom().css('display', 'none');
         }
+        // Create template.
+        if (this.API.createTemplate(component)) {
+            componentMenuDom.find('#createTemplate').css('display', 'inline');
+        } else {
+            componentMenuDom.find('#createTemplate').css('display', 'none');
+        }
     };
 
     service.menuComponentUpdateHeight = function (height) {
