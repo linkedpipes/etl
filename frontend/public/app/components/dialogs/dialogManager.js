@@ -162,10 +162,28 @@ define(["jsonld"], function (jsonld) {
     function loadTemplate(desc, dialog, instanceConfig, instance,
                           templateConfig, template) {
         const ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
-        let autoPredicate = false;
-        if (desc.$control !== undefined) {
-            autoPredicate = desc.$control.$predicate === "auto";
+        // Load dialog options.
+        let autoControl = false;
+        if (desc.$options !== undefined) {
+            autoControl = desc.$options.$control === "auto";
+            console.log('auto control', autoControl);
         }
+        // Check global control (dialog level).
+        if (desc.$control !== undefined) {
+            const instanceControl = iriToControl(
+                jsonld.r.getIRI(instance, ns + desc.$control));
+            const templateControl = iriToControl(
+                jsonld.r.getIRI(template, ns + desc.$control));
+            //
+            dialog.$control = {
+                "forced": templateControl.forced,
+                "hide": templateControl.forced,
+                "disabled": false,
+                "inherit": instanceControl.inherit,
+                "force": instanceControl.force
+            };
+        }
+        //
         for (let key in desc) {
             if (!desc.hasOwnProperty(key)) {
                 continue;
@@ -173,12 +191,12 @@ define(["jsonld"], function (jsonld) {
             if (key.startsWith("$")) {
                 continue;
             }
+            // Part of the dialog configuration.
             const item = desc[key];
-            // Generate missing.
             if (item.$property === undefined) {
                 item.$property = key;
             }
-            if (item.$control === undefined || autoPredicate)  {
+            if (item.$control === undefined && autoControl) {
                 item.$control = item.$property + "Control";
             }
             //
@@ -217,6 +235,8 @@ define(["jsonld"], function (jsonld) {
                 "controlled": item.$control !== undefined
             };
         }
+        console.log("template", template);
+        console.log("dialog", dialog);
     }
 
     /**
@@ -279,6 +299,11 @@ define(["jsonld"], function (jsonld) {
                 jsonld.r.setIRIs(resource, ns + item.$control,
                     controlToIri(dialog[key].inherit, dialog[key].force));
             }
+        }
+        // Save dialog configuration.
+        if (desc.$control !== undefined) {
+            jsonld.r.setIRIs(resource, ns + desc.$control,
+                controlToIri(dialog.$control.inherit, dialog.$control.force));
         }
         // Perform in-place modification of the array.
         configuration.length = 0;
