@@ -62,29 +62,9 @@ public class ConfigurationFacade {
         final ValueFactory vf = SimpleValueFactory.getInstance();
         config.getTyped(description.getType()).forEach((instance) -> {
             for (ConfigDescription.Member member : description.getMembers()) {
-                RdfObjects.Entity control;
-                try {
-                    control = instance.getReference(member.getControl());
-                } catch (Exception ex) {
-                    // The configuration is missing -> do nothing.
-                    continue;
-                }
-                switch (control.getResource().stringValue()) {
-                    case NONE:
-                    case INHERIT:
-                        // Do nothing.
-                        break;
-                    case FORCE:
-                    case INHERIT_AND_FORCE:
-                        // We force value to children.
-                        instance.delete(member.getControl());
-                        instance.delete(member.getProperty());
-                        instance.add(member.getControl(), vf.createIRI(FORCED));
-                        break;
-                    case FORCED:
-                        // The value is forced by parent, do nothing with it.
-                        break;
-                }
+                // Set all to inherit.
+                instance.deleteReferences(member.getControl());
+                instance.add(member.getControl(), vf.createIRI(INHERIT));
             }
         });
         // Update resources and return.
