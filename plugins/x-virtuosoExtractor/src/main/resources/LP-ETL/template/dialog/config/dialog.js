@@ -1,48 +1,52 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'host': '',
-            'userName': '',
-            'password': '',
-            'outputPath': '',
-            'graph' : ''
-        };
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#",
+        "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "host" : {
+            "$type" : "str",
+            "$label" : "Virtuoso JDBC connection string"
+        },
+        "userName" : {
+            "$type" : "str",
+            "$label" : "Virtuoso user name"
+        },
+        "password" : {
+            "$type" : "str",
+            "$label" : "Virtuoso password"
+        },
+        "outputPath" : {
+            "$type" : "str",
+            "$label" : "Output path"
+        },
+        "graph" : {
+            "$type" : "iri",
+            "$label" : "Source graph IRI"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.host = rdf.getString(resource, 'uri');
-            $scope.dialog.userName = rdf.getString(resource, 'username');
-            $scope.dialog.password = rdf.getString(resource, 'password');
-            $scope.dialog.outputPath = rdf.getString(resource, 'outputPath');
-            $scope.dialog.graph = rdf.getString(resource, 'graph');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setString(resource, 'uri', $scope.dialog.host);
-            rdf.setString(resource, 'username', $scope.dialog.userName);
-            rdf.setString(resource, 'password', $scope.dialog.password);
-            rdf.setString(resource, 'outputPath', $scope.dialog.outputPath);
-            rdf.setString(resource, 'graph', $scope.dialog.graph);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });

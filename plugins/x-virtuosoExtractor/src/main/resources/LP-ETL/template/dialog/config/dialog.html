@@ -1,26 +1,38 @@
-<div class="container-flow">
-    <md-input-container class="md-block" flex-gt-sm>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.host.hide">
         <label>Virtuoso JDBC connection string</label>
-        <input ng-model="dialog.host" required placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/">
+        <input ng-model="dialog.host.value"
+               ng-disabled="dialog.host.disabled || dialog.host.inherit"
+               placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/">
     </md-input-container>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.userName.hide" flex-gt-sm>
             <label>Virtuoso user name</label>
-            <input ng-model="dialog.userName" required placeholder="dba">
+            <input ng-model="dialog.userName.value"
+                   ng-disabled="dialog.userName.disabled || dialog.userName.inherit"
+                   placeholder="dba">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.password.hide" flex-gt-sm>
             <label>Virtuoso password</label>
-            <input type="password" ng-model="dialog.password" required placeholder="dba">
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit"
+                   placeholder="dba">
         </md-input-container>
     </div>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.outputPath.hide">
             <label>Output path</label>
-            <input ng-model="dialog.outputPath" required placeholder="">
+            <input ng-model="dialog.outputPath.value"
+                   ng-disabled="dialog.outputPath.disabled || dialog.outputPath.inherit">
         </md-input-container>
     </div>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.graph.hide">
         <label>Source graph IRI</label>
-        <input type="uri" ng-model="dialog.graph" placeholder="http://example.org/resource/graph">
+        <input type="uri" ng-model="dialog.graph.value"
+               ng-disabled="dialog.graph.disabled || dialog.graph.inherit"
+               placeholder="http://example.org/resource/graph">
     </md-input-container>
 </div>
