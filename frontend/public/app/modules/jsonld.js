@@ -20,7 +20,7 @@
      * @return Normalized form of the data.
      */
     const normalizeData = function (data) {
-        var graphList = [];
+        const graphList = [];
 
         if (data["@graph"]) {
             if (data["@graph"].length === 0) {
@@ -250,7 +250,7 @@
         }
         const result = [];
         if (Array.isArray(value)) {
-            for (var itemIndex in value) {
+            for (let itemIndex in value) {
                 if (!value.hasOwnProperty(itemIndex)) {
                     continue;
                 }
@@ -406,7 +406,7 @@
     };
 
     /**
-     * Return a single resource with given IRI.
+     * Return a single resource defined by given reference.
      *
      * @param data
      * @param ref
@@ -421,6 +421,16 @@
                 return resource;
             }
         }
+    };
+
+    /**
+     * Add a single resource
+     *
+     * @param data
+     * @param resource
+     */
+    const addResource = function (data, resource) {
+        data.graph.push(resource);
     };
 
     //
@@ -527,9 +537,9 @@
      */
     const graph = function (data, iri, graph) {
         if (graph === undefined) {
-            return new triplePrototype(getGraph(data, iri), iri);
+            return new triples(getGraph(data, iri), iri);
         } else {
-            return new triplePrototype(graph, iri);
+            return new triples(graph, iri);
         }
     };
 
@@ -561,7 +571,7 @@
      */
     const findByType = function (data, type) {
         return iterateResourcesInGraphs(data, (resource, iri) => {
-            var types = getTypes(resource);
+            const types = getTypes(resource);
             if (types.indexOf(type) !== -1) {
                 return {
                     "resource": getId(resource),
@@ -602,7 +612,7 @@
     };
 
     /* jshint latedef: false */
-    const triplePrototype = function (graph, iri) {
+    const triples = function (graph, iri) {
         this._data = {
             "graph": graph,
             "graphIri": iri
@@ -621,12 +631,21 @@
             };
             return findByType(wrap, type);
         };
-        this.getResource = getResource.bind(null, this._data)
+        this.getResource = (reference) => {
+            // Can be used with IRI or output from findByType.
+            if (reference.resource === undefined) {
+                reference = {"resource": reference};
+            }
+            return getResource(this._data, reference);
+        };
+        this.addResource = (resource) => {
+            addResource(this._data, resource);
+        };
 
         return this;
     };
 
-    const quadsPrototype = function (data) {
+    const quads = function (data) {
         // Prepare data and status objects.
         this._data = normalizeData(data);
         this._status = {};
@@ -644,9 +663,9 @@
 
     };
 
-    var factory = {
+    const factory = {
         "quads": (data) => {
-            return new quadsPrototype(data);
+            return new quads(data);
         },
         "triples": (graph, iri) => {
             if (iri === undefined && graph["@graph"] && graph["@id"]) {
@@ -655,7 +674,7 @@
             if (graph["@graph"]) {
                 graph = graph["@graph"];
             }
-            return new triplePrototype(graph, iri);
+            return new triples(graph, iri);
         },
         "r": resourceService
     };
