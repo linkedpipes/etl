@@ -50,6 +50,9 @@ define(["jsonld"], function (jsonld) {
         }
     };
 
+    /**
+     * Convert IRI to control object.
+     */
     function iriToControl(iri) {
         switch (iri) {
             case LP.Inherit:
@@ -89,6 +92,9 @@ define(["jsonld"], function (jsonld) {
         }
     }
 
+    /**
+     * Convert control properties to IRI.
+     */
     function controlToIri(inherit, force) {
         if (inherit) {
             if (force) {
@@ -117,70 +123,68 @@ define(["jsonld"], function (jsonld) {
         }
     }
 
-    // TODO Add support for lists (strings, string with language, integers .. )
-
-    function loadValue(desc, ns, resource) {
+    /**
+     * Return simple value.
+     */
+    function loadValue(desc, resource) {
         switch (desc.$type) {
             case "date":
-                return jsonld.r.getDates(resource, ns + desc.$property);
+                return jsonld.r.getDates(resource, desc.$property);
             case "str":
-                return i18.str(jsonld.r.getStrings(resource,
-                    ns + desc.$property));
+                return i18.str(jsonld.r.getStrings(resource, desc.$property));
             case "int":
-                return jsonld.r.getIntegers(resource, ns + desc.$property);
+                return jsonld.r.getIntegers(resource, desc.$property);
             case "bool":
-                return jsonld.r.getBooleans(resource, ns + desc.$property);
+                return jsonld.r.getBooleans(resource, desc.$property);
             case "iri":
-                return jsonld.r.getIRIs(resource, ns + desc.$property);
+                return jsonld.r.getIRIs(resource, desc.$property);
             default:
                 console.error("Unknown type for: ", desc);
         }
     }
 
-    function saveValue(desc, ns, resource, value) {
+    /**
+     * Store simple value into the given resource.
+     */
+    function saveValue(desc, resource, value) {
         switch (desc.$type) {
             case "date":
-                jsonld.r.setDates(resource, ns + desc.$property, value);
+                jsonld.r.setDates(resource, desc.$property, value);
                 break;
             case "str":
-                jsonld.r.setStrings(resource, ns + desc.$property, value);
+                jsonld.r.setStrings(resource, desc.$property, value);
                 break;
             case "int":
-                jsonld.r.setIntegers(resource, ns + desc.$property, value);
+                jsonld.r.setIntegers(resource, desc.$property, value);
                 break;
             case "bool":
-                jsonld.r.setBooleans(resource, ns + desc.$property, value);
+                jsonld.r.setBooleans(resource, desc.$property, value);
                 break;
             case "iri":
-                jsonld.r.setIRIs(resource, ns + desc.$property, value);
+                jsonld.r.setIRIs(resource, desc.$property, value);
                 break;
             default:
                 console.error("Unknown type for: ", desc);
         }
     }
 
-    function loadTemplate(desc, dialog, instanceConfig, instance,
-                          templateConfig, template) {
-        const ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
-        // Load dialog options.
-        let autoControl = false;
-        if (desc.$options !== undefined) {
-            autoControl = desc.$options.$control === "auto";
-            console.log('auto control', autoControl);
-        }
-        // Check global control (dialog level).
+    /**
+     * Load given RDF instance into target object.
+     *
+     * @param desc Description.
+     * @param instance RDF resource.
+     * @param instanceTriples RDF triples.
+     * @param target Target to load into.
+     */
+    function loadObject(desc, instance, triples, target) {
+        // Object level control.
         if (desc.$control !== undefined) {
             const instanceControl = iriToControl(
-                jsonld.r.getIRI(instance, ns + desc.$control));
-            const templateControl = iriToControl(
-                jsonld.r.getIRI(template, ns + desc.$control));
-            //
-            dialog.$control = {
-                "forced": templateControl.forced,
-                "hide": templateControl.forced,
-                "disabled": false,
+                jsonld.r.getIRI(instance, desc.$control));
+            target.$control = {
                 "inherit": instanceControl.inherit,
-                "force": instanceControl.force
+                "force": instanceControl.force,
+                "forced": instanceControl.forced
             };
         }
         //
@@ -192,92 +196,69 @@ define(["jsonld"], function (jsonld) {
                 continue;
             }
             // Part of the dialog configuration.
-            const item = desc[key];
-            if (item.$property === undefined) {
-                item.$property = key;
+            const descItem = desc[key];
+            // Load values from instance and template.
+            let instanceValue;
+            if (descItem.$object === undefined) {
+                instanceValue = select(loadValue(descItem, instance), descItem);
+            } else {
+                const objects = [];
+                const iris = jsonld.r.getIRIs(instance, descItem.$property);
+                for (let i = 0; i < iris.length; ++i) {
+                    const iri = iris[i];
+                    const objectInstance = triples.getResource(iri);
+                    const object = {};
+                    //
+                    loadObject(descItem.$object, objectInstance, triples,
+                        object);
+                    objects.push(object);
+                }
+                instanceValue = select(objects, descItem);
             }
-            if (item.$control === undefined && autoControl) {
-                item.$control = item.$property + "Control";
+            if (descItem.$onLoad !== undefined) {
+                instanceValue = descItem.$onLoad(instanceValue);
             }
-            //
-            let instanceValue = select(loadValue(item, ns, instance), item);
-            let templateValue = select(loadValue(item, ns, template), item);
-            if (item.onLoad !== undefined) {
-                instanceValue = item.$onLoad(instanceValue);
-                templateValue = item.$onLoad(templateValue);
-            }
-            let instanceControl;
-            let templateControl;
-            if (item.$control === undefined) {
-                instanceControl = {
+            if (descItem.$control === undefined) {
+                target[key] = {
+                    "value": instanceValue,
                     "inherit": false,
-                    "force": false
-                };
-                templateControl = {
+                    "force": false,
                     "forced": false
                 };
             } else {
-                instanceControl = iriToControl(
-                    jsonld.r.getIRI(instance, ns + item.$control));
-                templateControl = iriToControl(
-                    jsonld.r.getIRI(template, ns + item.$control));
+                const instanceControl = iriToControl(
+                    jsonld.r.getIRI(instance, descItem.$control));
+                // Create dialog representation.
+                target[key] = {
+                    "value": instanceValue,
+                    "inherit": instanceControl.inherit,
+                    "force": instanceControl.force,
+                    "forced": instanceControl.forced
+                };
             }
-            //
-            dialog[key] = {
-                "value": instanceValue,
-                "templateValue": templateValue,
-                "forced": templateControl.forced,
-                "hide": templateControl.forced,
-                "disabled": false,
-                "inherit": instanceControl.inherit,
-                "force": instanceControl.force,
-                "label": item.$label,
-                "controlled": item.$control !== undefined
-            };
         }
-        console.log("template", template);
-        console.log("dialog", dialog);
     }
 
     /**
-     * Load given configurations into the dialog.
      *
-     * @param desc
-     * @param dialog
-     * @param instanceConfig
-     * @param templateConfig
+     * @param desc Object description class.
+     * @param toSave to save, must be a an object.
+     * @param graph RDF object.
+     * @param iri The base IRI for the object.
      */
-    function load(desc, dialog, instanceConfig, templateConfig) {
-        const ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
-        instanceConfig = jsonld.triples(instanceConfig);
-        const instance = instanceConfig.getResource(
-            instanceConfig.findByType(ns + desc.$type));
-        if (templateConfig === undefined) {
-            console.error("Core templates are not supported.")
-            return;
-        }
-        templateConfig = jsonld.triples(templateConfig);
-        const template = templateConfig.getResource(
-            templateConfig.findByType(ns + desc.$type));
-        loadTemplate(desc, dialog, instanceConfig, instance,
-            templateConfig, template);
-    }
-
-    /**
-     * Save content from dialog to configuration.instance.
-     *
-     * @param desc Must be used for loading first.
-     * @param dialog
-     * @param iri
-     * @param configuration
-     */
-    function save(desc, dialog, iri, configuration) {
-        const ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
-        // Construct the configuration object.
-        const resource = {
-            "@id": iri + "/configuration",
-            "@type": [ns + desc.$type]
+    function saveObject(desc, toSave, graph, iri) {
+        const instance = {
+            "@id": iri,
+            "@type": [desc.$type]
         };
+        // Check object control.
+        if (desc.$control !== undefined && toSave.$cotrol !== undefined &&
+            toSave.$control.inherit !== undefined &&
+            toSave.$control.force !== undefined) {
+            jsonld.r.setIRIs(instance, desc.$control,
+                controlToIri(toSave.$control.inherit, toSave.$control.force));
+        }
+        // Save object data properties.
         for (let key in desc) {
             if (!desc.hasOwnProperty(key)) {
                 continue;
@@ -285,33 +266,207 @@ define(["jsonld"], function (jsonld) {
             if (key.startsWith("$")) {
                 continue;
             }
-            const item = desc[key];
-            if (dialog[key].forced && item.$control !== undefined) {
-                jsonld.r.setIRI(resource, ns + item.$control, LP.Forced);
-                continue;
+            const descItem = desc[key];
+            let toSaveItem = toSave[key];
+            // toSaveItem can be a simple object, created outside the dialog.
+            // In that case we create a simple wrap.
+            if (!(toSaveItem instanceof Object)) {
+                toSaveItem = {
+                    "value": toSaveItem
+                };
             }
-            let value = dialog[key].value;
-            if (item.$onSave !== undefined) {
-                value = item.$onSave(value);
+            // Get value to save, the value can be transformed before saving.
+            let valueToSave;
+            if (descItem.$onSave !== undefined) {
+                valueToSave = descItem.$onSave(toSaveItem.value);
+            } else {
+                valueToSave = toSaveItem.value;
             }
-            saveValue(item, ns, resource, value);
-            if (item.$control !== undefined) {
-                jsonld.r.setIRIs(resource, ns + item.$control,
-                    controlToIri(dialog[key].inherit, dialog[key].force));
+            // Save value.
+            if (descItem.$object === undefined) {
+                saveValue(descItem, instance, valueToSave);
+            } else {
+                // Save objects.
+                if (!Array.isArray(valueToSave)) {
+                    valueToSave = [valueToSave];
+                }
+                const iris = [];
+                for (let i = 0; i < valueToSave.length; ++i) {
+                    const newIri = iri + "/" + i;
+                    saveObject(descItem.$object, valueToSave[i], graph, newIri);
+                    iris.push(newIri);
+                }
+                jsonld.r.setIRIs(instance, descItem.$property, iris);
+            }
+            // Save control.
+            if (descItem.$control !== undefined &&
+                toSaveItem.inherit !== undefined &&
+                toSaveItem.force !== undefined) {
+                jsonld.r.setIRIs(instance, descItem.$control,
+                    controlToIri(toSaveItem.inherit, toSaveItem.force));
             }
         }
-        // Save dialog configuration.
-        if (desc.$control !== undefined) {
-            jsonld.r.setIRIs(resource, ns + desc.$control,
-                controlToIri(dialog.$control.inherit, dialog.$control.force));
-        }
-        // Perform in-place modification of the array.
-        configuration.length = 0;
-        configuration.push(resource);
+        //
+        graph.push(instance);
     }
 
     /**
+     * Perform in-place preparation of the description object. Can be
+     * called multiple times on the same object.
+     */
+    function prepareDescription(desc, ns, autoControl) {
+        if (desc.$decorated) {
+            return;
+        } else {
+            desc.$decorated = true;
+        }
+        // Load optional values.
+        if (ns === undefined) {
+            ns = (desc.$namespace === undefined) ? "" : desc.$namespace;
+        }
+        if (autoControl === undefined) {
+            autoControl = false;
+        }
+        // Load configuration options.
+        if (desc.$options !== undefined) {
+            autoControl = desc.$options.$control === "auto";
+        }
+        // Update object properties.
+        if (desc.$class !== undefined) {
+            desc.$class = ns + desc.$class;
+        }
+        if (desc.$control !== undefined) {
+            desc.$control = ns + desc.$control;
+        }
+        if (desc.$type !== undefined) {
+            desc.$type = ns + desc.$type;
+        }
+        // Iterate over resources.
+        for (let key in desc) {
+            if (!desc.hasOwnProperty(key)) {
+                continue;
+            }
+            if (key.startsWith("$")) {
+                continue;
+            }
+            // Update all other.
+            const item = desc[key];
+            if (item.$property === undefined) {
+                item.$property = ns + key;
+            } else {
+                item.$property = ns + item.$property;
+            }
+            if (item.$control === undefined) {
+                if (autoControl) {
+                    item.$control = item.$property + "Control";
+                }
+            } else {
+                item.$control = ns + item.$control;
+            }
+            // Check for objects.
+            if (item.$object !== undefined) {
+                // Objects does not have controls.
+                prepareDescription(item.$object, ns, false);
+            }
+        }
+    }
+
+    /**
+     * Merge instance and template class into a dialog.
      *
+     * @param desc
+     * @param instance
+     * @param template
+     * @param dialog
+     */
+    function merge(desc, instance, template, dialog) {
+        // Control from instance.
+        if (desc.$control !== undefined) {
+            dialog.$control = {
+                "forced": instance.$control.forced,
+                "hide": instance.$control.forced,
+                "disabled": false,
+                "inherit": template.$control.inherit,
+                "force": template.$control.force
+            };
+        }
+        for (let key in desc) {
+            if (!desc.hasOwnProperty(key)) {
+                continue;
+            }
+            if (key.startsWith("$")) {
+                continue;
+            }
+            const descItem = desc[key];
+            const instanceValue = instance[key];
+            const templateValue = instance[key];
+            if (descItem.$object === undefined) {
+                dialog[key] = {
+                    "value": instanceValue.value,
+                    "templateValue": templateValue.value,
+                    "forced": templateValue.forced,
+                    "hide": templateValue.forced,
+                    "disabled": false,
+                    "inherit": instanceValue.inherit,
+                    "force": instanceValue.force,
+                    // From control.
+                    "label": descItem.$label,
+                    "controlled": descItem.$control !== undefined
+                };
+            } else {
+                // TODO Call merge for objects.
+                dialog[key] = {
+                    "value": instanceValue.value,
+                    "templateValue": templateValue.value,
+                    "forced": templateValue.forced,
+                    "hide": templateValue.forced,
+                    "disabled": false,
+                    "inherit": instanceValue.inherit,
+                    "force": instanceValue.force,
+                    // From control.
+                    "label": descItem.$label,
+                    "controlled": descItem.$control !== undefined
+                };
+            }
+        }
+    }
+
+    /**
+     * Load given configurations into the dialog object.
+     */
+    function load(desc, dialog, instanceConfig, templateConfig) {
+        prepareDescription(desc);
+        //
+        const instanceTriples = jsonld.triples(instanceConfig);
+        const instance = {};
+        loadObject(desc, instanceTriples.getResource(
+            instanceTriples.findByType(desc.$type)),
+            instanceTriples, instance);
+
+        if (templateConfig === undefined) {
+            console.error("Core templates are not supported.")
+            return;
+        }
+        const templateTriples = jsonld.triples(templateConfig);
+        const template = {};
+        loadObject(desc, templateTriples.getResource(
+            templateTriples.findByType(desc.$type)),
+            templateTriples, template);
+        //
+        merge(desc, instance, template, dialog);
+    }
+
+    /**
+     * Save dialog object to configuration. Given configuration
+     * must be an array. All existing data in configuration are lost.
+     */
+    function save(desc, dialog, iri, configuration) {
+        prepareDescription(desc);
+        configuration.length = 0;
+        saveObject(desc, dialog, configuration, iri + "/configuration");
+    }
+
+    /**
      * @param dialogService Dialog service.
      * @param description Description given by dialog.
      * @param dialog The dialog object given by dialog.
