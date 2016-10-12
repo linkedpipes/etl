@@ -1,41 +1,40 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'pattern': '',
-            'replaceWith': ''
-        };
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/t-filesRenamer#",
+        "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "pattern" : {
+            "$type" : "str",
+            "$label" : "Full file name RegExp to match"
+        },
+        "replaceWith" : {
+            "$type" : "bool",
+            "$label" : "Replace RegExp with with"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-filesRenamer#');
+    function controller($scope, $service) {
 
-
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.pattern = rdf.getString(resource, 'pattern');
-            $scope.dialog.replaceWith = rdf.getString(resource, 'replaceWith');
-
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setString(resource, 'pattern', $scope.dialog.pattern);
-            rdf.setString(resource, 'replaceWith', $scope.dialog.replaceWith);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
