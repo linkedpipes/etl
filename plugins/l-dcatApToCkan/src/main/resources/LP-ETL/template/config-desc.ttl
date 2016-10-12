@@ -2,4 +2,64 @@
 
 <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/apiUrl> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/apiKey> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/loadToCKAN> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/datasetID> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/filename> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/orgID> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/loadLanguage> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/generateVirtuoso> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/generateExampleResource> ,
+        <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/overwrite> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/apiUrl>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiUrl> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiUrlControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/apiKey>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKey> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKeyControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/loadToCKAN>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadToCKAN> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadToCKANontrol> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/datasetID>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#datasetID> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#datasetIDControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/filename>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#filename> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#filenameControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/orgID>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#orgID> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#orgIDControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/loadLanguage>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadLanguage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadLanguageControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/generateVirtuoso>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateVirtuoso> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateVirtuosoControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/generateExampleResource>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateExampleResource> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateExampleResourceControl> .
+
+<http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/overwrite>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#overwrite> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#overwriteControl> .

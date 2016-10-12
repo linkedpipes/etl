@@ -1,32 +1,61 @@
-<div layout-gt-sm="row">
-    <md-input-container class="md-block" flex-gt-sm>
-        <label>CKAN Action API URL</label>
-        <input type="url" ng-model="dialog.apiUrl" required placeholder="http://localhost/api/3/action">
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" ng-hide="dialog.apiUrl.hide"
+                            flex-gt-sm>
+            <label>CKAN Action API URL</label>
+            <input type="url" ng-model="dialog.apiUrl.value"
+                   ng-disabled="dialog.apiUrl.disabled || dialog.apiUrl.inherit"
+                   placeholder="http://localhost/api/3/action">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.apiKey.hide"
+                            flex-gt-sm>
+            <label>CKAN API Key</label>
+            <input ng-model="dialog.apiKey.value"
+                   ng-disabled="dialog.apiKey.disabled || dialog.apiKey.inherit"
+                   placeholder="00000000-0000-0000-0000-000000000000">
+        </md-input-container>
+    </div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" ng-hide="dialog.datasetID.hide"
+                            flex-gt-sm>
+            <label>CKAN dataset ID</label>
+            <input ng-model="dialog.datasetID.value"
+                   ng-disabled="dialog.datasetID.disabled || dialog.datasetID.inherit"
+                   placeholder="my-dataset">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.orgID.hide"
+                            flex-gt-sm>
+            <label>Dataset owner organization ID</label>
+            <input ng-model="dialog.orgID.value"
+                   ng-disabled="dialog.orgID.disabled || dialog.orgID.inherit"
+                   placeholder="00000000-0000-0000-0000-000000000000">
+        </md-input-container>
+    </div>
+    <md-input-container class="md-block" ng-hide="dialog.loadLanguage.hide"
+                        flex-gt-sm>
+        <label>Load language (cs|en)</label>
+        <input ng-model="dialog.loadLanguage.value"
+               ng-disabled="dialog.loadLanguage.disabled || dialog.loadLanguage.inherit"
+               placeholder="en">
     </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
-        <label>CKAN API Key</label>
-        <input ng-model="dialog.apiKey" required placeholder="00000000-0000-0000-0000-000000000000">
+    <md-switch ng-model="dialog.generateVirtuoso.value"
+               ng-disabled="dialog.generateVirtuoso.disabled || dialog.generateVirtuoso.inherit"
+               ng-hide="dialog.generateVirtuoso.hide">Turtle example resources (for Virtuoso)</md-switch>
+    <md-switch ng-model="dialog.generateExampleResource.value"
+               ng-disabled="dialog.generateExampleResource.disabled || dialog.generateExampleResource.inherit"
+               ng-hide="dialog.generateExampleResource.hide">Example resources</md-switch>
+    <md-switch ng-model="dialog.overwrite.value"
+               ng-disabled="dialog.overwrite.disabled || dialog.overwrite.inherit"
+               ng-hide="dialog.overwrite.hide">Overwrite target CKAN record</md-switch>
+    <md-switch ng-model="dialog.loadToCKAN.value"
+               ng-disabled="dialog.loadToCKAN.disabled || dialog.loadToCKAN.inherit"
+               ng-hide="dialog.loadToCKAN.hide">Load to CKAN</md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.filename.hide">
+        <label>Output JSON filename</label>
+        <input ng-model="dialog.filename.value"
+               ng-disabled="dialog.filename.disabled || dialog.filename.inherit"
+               placeholder="package_show.json">
     </md-input-container>
+
 </div>
-<div layout-gt-sm="row">
-    <md-input-container class="md-block" flex-gt-sm>
-        <label>CKAN dataset ID</label>
-        <input ng-model="dialog.datasetID" required placeholder="my-dataset">
-    </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
-        <label>Dataset owner organization ID</label>
-        <input ng-model="dialog.orgID" placeholder="00000000-0000-0000-0000-000000000000">
-    </md-input-container>
-</div>
-<md-input-container class="md-block" flex-gt-sm>
-    <label>Load language (cs|en)</label>
-    <input ng-model="dialog.loadLanguage" required placeholder="en">
-</md-input-container>
-<md-switch ng-model="dialog.generateVirtuoso">Turtle example resources (for Virtuoso)</md-switch>
-<md-switch ng-model="dialog.generateExampleResource">Example resources</md-switch>
-<md-switch ng-model="dialog.overwrite">Overwrite target CKAN record</md-switch>
-<md-switch ng-model="dialog.loadToCKAN">Load to CKAN</md-switch>
-<md-input-container class="md-block" flex-gt-sm>
-    <label>Output JSON filename</label>
-    <input ng-model="dialog.filename" required placeholder="package_show.json">
-</md-input-container>

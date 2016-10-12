@@ -1,63 +1,72 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'apiUrl': '',
-            'apiKey': '',
-            'loadToCKAN': true,
-            'datasetID': '',
-            'filename': '',
-            'orgID': '',
-            'loadLanguage': '',
-            'generateVirtuoso': true,
-            'generateExampleResource': true,
-            'overwrite': true
-        };
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#",
+        "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "apiUrl" : {
+            "$type" : "str",
+            "$label" : "CKAN Action API URL"
+        },
+        "apiKey" : {
+            "$type" : "str",
+            "$label" : "CKAN API Key"
+        },
+        "loadToCKAN" : {
+            "$type" : "bool",
+            "$label" : "Load to CKAN"
+        },
+        "datasetID" : {
+            "$type" : "str",
+            "$label" : "CKAN dataset ID"
+        },
+        "filename" : {
+            "$type" : "str",
+            "$label" : "Output JSON filename"
+        },
+        "orgID" : {
+            "$type" : "str",
+            "$label" : "Dataset owner organization ID"
+        },
+        "loadLanguage" : {
+            "$type" : "str",
+            "$label" : "Load language (cs|en)"
+        },
+        "generateVirtuoso" : {
+            "$type" : "bool",
+            "$label" : "Turtle example resources (for Virtuoso)"
+        },
+        "generateExampleResource" : {
+            "$type" : "bool",
+            "$label" : "Example resources"
+        },
+        "overwrite" : {
+            "$type" : "bool",
+            "$label" : "Overwrite target CKAN record"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.apiUrl = rdf.getString(resource, 'apiUrl');
-            $scope.dialog.apiKey = rdf.getString(resource, 'apiKey');
-            $scope.dialog.loadToCKAN = rdf.getBoolean(resource, 'loadToCKAN');
-            $scope.dialog.datasetID = rdf.getString(resource, 'datasetID');
-            $scope.dialog.filename = rdf.getString(resource, 'filename');
-            $scope.dialog.orgID = rdf.getString(resource, 'organizationId');
-            $scope.dialog.loadLanguage = rdf.getString(resource, 'loadLanguage');
-            $scope.dialog.generateVirtuoso = rdf.getBoolean(resource, 'generateVirtuosoExample');
-            $scope.dialog.generateExampleResource = rdf.getBoolean(resource, 'generateExample');
-            $scope.dialog.overwrite = rdf.getBoolean(resource, 'overwrite');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setString(resource, 'apiUrl', $scope.dialog.apiUrl);
-            rdf.setString(resource, 'apiKey', $scope.dialog.apiKey);
-            rdf.setBoolean(resource, 'loadToCKAN', $scope.dialog.loadToCKAN);
-            rdf.setString(resource, 'datasetID', $scope.dialog.datasetID);
-            rdf.setString(resource, 'filename', $scope.dialog.filename);
-            rdf.setString(resource, 'organizationId', $scope.dialog.orgID);
-            rdf.setString(resource, 'loadLanguage', $scope.dialog.loadLanguage);
-            rdf.setBoolean(resource, 'generateVirtuosoExample', $scope.dialog.generateVirtuoso);
-            rdf.setBoolean(resource, 'generateExample', $scope.dialog.generateExampleResource);
-            rdf.setBoolean(resource, 'overwrite', $scope.dialog.overwrite);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
