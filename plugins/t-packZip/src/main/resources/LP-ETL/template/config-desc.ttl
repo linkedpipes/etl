@@ -2,4 +2,10 @@
 
 <http://linkedpipes.com/resources/components/t-packZip/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-packZip#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-packZip#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-packZip/0.0.0/configuration/desc/fileName> .
+
+<http://linkedpipes.com/resources/components/t-packZip/0.0.0/configuration/desc/fileName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#fileName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#fileNameControl> .
