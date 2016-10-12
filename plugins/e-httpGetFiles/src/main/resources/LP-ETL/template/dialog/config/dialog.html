@@ -1,6 +1,9 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
 <div>
     <p>Files to download can be specified via the configuration input.</p>
-    <md-switch ng-model="dialog.hardRedirect">
+    <md-switch ng-model="dialog.hardRedirect.value"
+               ng-hide="dialog.hardRedirect.hide"
+               ng-disabled="dialog.hardRedirect.disabled || dialog.hardRedirect.inherit">
         Force to follow redirects
         <md-tooltip>If false only redirect in scope of the same protocol
             are followed. If true redirect to any any address is followed.
@@ -8,7 +11,9 @@
             to https.
         </md-tooltip>
     </md-switch>
-    <md-switch ng-model="dialog.skipOnError">
+    <md-switch ng-model="dialog.skipOnError.value"
+               ng-hide="dialog.skipOnError.hide"
+               ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit">
         Skip on error
         <md-tooltip>If set and download failed, the file is skipped. If
             not set and download failed the component fail.
