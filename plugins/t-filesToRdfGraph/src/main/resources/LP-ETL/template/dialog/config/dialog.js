@@ -1,44 +1,44 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'commitSize': '',
-            'mimeType': ''
-        };
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
+        "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "mimeType" : {
+            "$type" : "str",
+            "$label" : "Format"
+        },
+        "softFail" : {
+            "$type" : "bool",
+            "$label" : "Skip file on failure"
+        },
+        "commitSize" : {
+            "$type" : "int",
+            "$label" : "Commit size"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-filesToRdf#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.commitSize = rdf.getInteger(resource, 'commitSize');
-            $scope.dialog.mimeType = rdf.getString(resource, 'mimeType');
-            $scope.dialog.softFail = rdf.getBoolean(resource, 'softFail');
-            if ($scope.dialog.mimeType === undefined) {
-                $scope.dialog.mimeType = "";
-            }
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setInteger(resource, 'commitSize', $scope.dialog.commitSize);
-            rdf.setString(resource, 'mimeType', $scope.dialog.mimeType);
-            rdf.setBoolean(resource, 'softFail', $scope.dialog.softFail);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
