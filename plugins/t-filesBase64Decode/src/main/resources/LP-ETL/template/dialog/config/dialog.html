@@ -1,7 +1,8 @@
-<div class="container-flow">
-    <div class="row">
-        <md-switch ng-model="dialog.skipOnError">
-            Skip file on error
-        </md-switch>
-    </div>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-switch ng-model="dialog.skipOnError.value"
+               ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit"
+               ng-hide="dialog.skipOnError.hide">
+        Skip file on error
+    </md-switch>
 </div>

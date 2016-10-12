@@ -1,36 +1,36 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'skipOnError': false
-        };
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/t-fileDecode#",
+        "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "skipOnError" : {
+            "$type" : "bool",
+            "$label" : "Skip file on error"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-fileDecode#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.skipOnError = rdf.getBoolean(resource, 'skipOnError');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setBoolean(resource, 'skipOnError', $scope.dialog.skipOnError);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
