@@ -1,47 +1,60 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = { };
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#",
+        "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "apiUrl" : {
+            "$type" : "str",
+            "$label" : "CKAN Action API URL"
+        },
+        "apiKey" : {
+            "$type" : "str",
+            "$label" : "CKAN API Key"
+        },
+        "createCkanOrg" : {
+            "$type" : "bool",
+            "$label" : "Create/Use CKAN organization from dataset publisher"
+        },
+        "datasetID" : {
+            "$type" : "str",
+            "$label" : "CKAN dataset ID"
+        },
+        "organizationId" : {
+            "$type" : "str",
+            "$label" : "Dataset owner organization ID"
+        },
+        "loadLanguage" : {
+            "$type" : "str",
+            "$label" : "Load language (cs|en)"
+        },
+        "overwrite" : {
+            "$type" : "bool",
+            "$label" : "Overwrite target CKAN record"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.apiUrl = rdf.getString(resource, 'apiUrl');
-            $scope.dialog.apiKey = rdf.getString(resource, 'apiKey');
-            $scope.dialog.createCkanOrg = rdf.getBoolean(resource, 'createCkanOrg');
-            $scope.dialog.datasetID = rdf.getString(resource, 'datasetID');
-            $scope.dialog.orgID = rdf.getString(resource, 'organizationId');
-            $scope.dialog.loadLanguage = rdf.getString(resource, 'loadLanguage') ;
-            $scope.dialog.overwrite = rdf.getBoolean(resource, 'overwrite');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setString(resource, 'apiUrl', $scope.dialog.apiUrl);
-            rdf.setString(resource, 'apiKey', $scope.dialog.apiKey);
-            rdf.setBoolean(resource, 'createCkanOrg', $scope.dialog.createCkanOrg);
-            rdf.setString(resource, 'datasetID', $scope.dialog.datasetID);
-            rdf.setString(resource, 'organizationId', $scope.dialog.orgID);
-            rdf.setString(resource, 'loadLanguage', $scope.dialog.loadLanguage);
-            rdf.setBoolean(resource, 'overwrite', $scope.dialog.overwrite);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
 
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
