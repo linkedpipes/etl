@@ -1,19 +1,21 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.transformer.tabular.TabularConfiguration.Column;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collections;
-import org.openrdf.model.IRI;
+import java.util.List;
 
 /**
  *
@@ -66,7 +68,18 @@ class ColumnFactory {
                 throw exceptionFactory.failure(
                         "Missing predicate for column: '{}'", column.getName());
             } else {
-                predicate = new UrlTemplate(column.getPropertyUrl());
+                // We need to test if we got absolute IRI or not.
+                String predicateAsString = column.getPropertyUrl();
+                try {
+                    if (!URI.create(predicateAsString).isAbsolute()) {
+                        predicateAsString = configuration.getBaseUri()
+                                + predicateAsString;
+                    }
+                } catch (IllegalArgumentException ex) {
+                    throw exceptionFactory.failure("Invalid IRI: '{}'",
+                            ex);
+                }
+                predicate = new UrlTemplate(predicateAsString);
             }
 
             if (column.isSupressOutput()) {
