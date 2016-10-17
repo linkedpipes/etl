@@ -48,7 +48,7 @@
         <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.columns">
             <md-input-container class="md-block" flex-gt-sm>
                 <label>Column</label>
-                <input ng-model="item.name" placeholder="column1">
+                <input ng-model="item.name" placeholder="column1" ng-trim="false">
             </md-input-container>
             <md-switch ng-model="item.required"></md-switch>
             <md-input-container class="md-block" flex-gt-sm>
