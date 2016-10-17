@@ -66,7 +66,12 @@ abstract class ColumnAbstract {
             throws MissingNameInHeader, InvalidTemplate {
         aboutUrl.initialize(tableUri, header);
         predicate.initialize(tableUri, header);
-        valueIndex = header.indexOf(name);
+        for (int i = 0; i < header.size(); ++i) {
+            if (name.equals(header.get(i))) {
+                valueIndex = i;
+                break;
+            }
+        }
         if (valueIndex == -1) {
             throw new MissingNameInHeader(name);
         }
