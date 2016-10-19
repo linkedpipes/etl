@@ -3,7 +3,7 @@
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#Configuration> ;
-        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError> ,
+    config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/hardRedirect> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError>
