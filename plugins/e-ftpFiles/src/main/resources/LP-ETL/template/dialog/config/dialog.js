@@ -1,53 +1,43 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'passiveMode': false,
-            'binaryMode': false,
-            'keepAliveControl': 0
-        };
+    const DESC = {
+        "$namespace" : "http://plugins.linkedpipes.com/ontology/e-ftpFiles#",
+        "$type": "Configuration",
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "passiveMode" : {
+            "$type" : "bool",
+            "$label" : "Use passive mode"
+        },
+        "binaryMode" : {
+            "$type" : "bool",
+            "$label" : "Use binary mode"
+        },
+        "keepAliveControl" : {
+            "$type" : "int",
+            "$label" : "Control timeout (seconds)"
+        }
+    };
 
-        var RDF = rdfService.create('http://plugins.linkedpipes.com/ontology/e-ftpFiles#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            RDF.setData($service.config.instance);
-            var resource = RDF.secureByType('Configuration');
-
-            $scope.dialog.passiveMode = RDF.getBoolean(
-                resource, 'passiveMode');
-            $scope.dialog.binaryMode = RDF.getBoolean(
-                resource, 'binaryMode');
-            $scope.dialog.keepAliveControl = RDF.getInteger(
-                resource, 'keepAliveControl');
-        };
-
-        function saveDialog() {
-            var resource = RDF.secureByType('Configuration');
-
-            RDF.setBoolean(resource, 'passiveMode',
-                $scope.dialog.passiveMode);
-            RDF.setBoolean(resource, 'binaryMode',
-                $scope.dialog.binaryMode);
-            RDF.setInteger(resource, 'keepAliveControl',
-                $scope.dialog.keepAliveControl);
-
-            console.log($scope.dialog);
-            console.log(resource);
-
-            return RDF.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
 
     }
 
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
