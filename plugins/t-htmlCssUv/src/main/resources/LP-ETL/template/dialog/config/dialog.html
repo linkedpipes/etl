@@ -1,50 +1,48 @@
-<div class="container-flow">
-    <div class="row">
-        <md-input-container class="md-block" flex>
-            <label>Class of root subject</label>
-            <input ng-model="dialog.class">
-        </md-input-container>
-
-        <md-input-container class="md-block" flex>
-            <label>Default has predicate</label>
-            <input ng-model="dialog.predicate">
-        </md-input-container>
-
-        <md-switch ng-model="dialog.includeSourceInformation">Generate source info</md-switch>
-
-        <div>
-            <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.records">
-                <md-input-container class="md-block">
-                    <label>Name</label>
-                    <input ng-model="item.name">
-                </md-input-container>
-                <md-input-container class="md-block">
-                    <label>Type</label>
-                    <md-select ng-model="item.type">
-                        <md-option value="QUERY">Query</md-option>
-                        <md-option value="TEXT">Text</md-option>
-                        <md-option value="HTML">HTML</md-option>
-                        <md-option value="ATTRIBUTE">Attribute</md-option>
-                        <md-option value="OUTPUT">Output</md-option>
-                        <md-option value="SUBJECT">Subject</md-option>
-                        <md-option value="UNLIST">Unlist</md-option>
-                        <md-option value="SUBJECT_CLASS">Class</md-option>
-                    </md-select>
-                </md-input-container>
-                <md-input-container class="md-block" flex>
-                    <label>Data</label>
-                    <input ng-model="item.data">
-                </md-input-container>
-                <md-input-container class="md-block">
-                    <label>Output</label>
-                    <input ng-model="item.output">
-                </md-input-container>
-                <button hide-gt-sm ng-click="onDelete($index)" class="md-raised md-warn md-button md-ink-ripple">Remove column</button>
-                <button hide show-gt-sm ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
-            </section>
-            <button hide-gt-sm ng-click="onAdd()" class="md-raised md-primary md-button md-ink-ripple">Add column</button>
-            <button hide show-gt-sm ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
-        </div>
-
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div >
+    <md-input-container class="md-block" ng-hide="dialog.class.hide" flex>
+        <label>Class of root subject</label>
+        <input ng-model="dialog.class.value"
+               ng-disabled="dialog.class.disabled || dialog.class.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.predicate.hide" flex>
+        <label>Default has predicate</label>
+        <input ng-model="dialog.predicate.value"
+               ng-disabled="dialog.predicate.disabled || dialog.predicate.inherit">
+    </md-input-container>
+    <md-switch ng-model="dialog.includeSourceInformation.value"
+               ng-disabled="dialog.includeSourceInformation.disabled || dialog.includeSourceInformation.inherit"
+               ng-hide="dialog.includeSourceInformation.hide">
+        Generate source info</md-switch>
+    <div ng-hide="dialog.action.disabled || dialog.action.inherit || dialog.action.hide">
+        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.action.value">
+            <md-input-container class="md-block">
+                <label>Name</label>
+                <input ng-model="item.name.value">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>Type</label>6
+                <md-select ng-model="item.type.value">
+                    <md-option value="QUERY">Query</md-option>
+                    <md-option value="TEXT">Text</md-option>
+                    <md-option value="HTML">HTML</md-option>
+                    <md-option value="ATTRIBUTE">Attribute</md-option>
+                    <md-option value="OUTPUT">Output</md-option>
+                    <md-option value="SUBJECT">Subject</md-option>
+                    <md-option value="UNLIST">Unlist</md-option>
+                    <md-option value="SUBJECT_CLASS">Class</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block" flex>
+                <label>Data</label>
+                <input ng-model="item.data.value">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>Output</label>
+                <input ng-model="item.output.value">
+            </md-input-container>
+            <button ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+        </section>
+        <button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
     </div>
 </div>

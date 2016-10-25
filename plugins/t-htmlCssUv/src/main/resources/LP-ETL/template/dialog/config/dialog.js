@@ -1,101 +1,77 @@
 define([], function () {
-    "use-prefix";
+    "use strict";
 
-    const PREFIX = 'http://plugins.linkedpipes.com/ontology/t-htmlCssUv#';
+    const DESC = {
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#",
+        "$type": "Configuration",
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "class": {
+            "$type": "str",
+            "$label": "Class of root subject"
+        },
+        "predicate": {
+            "$type": "str",
+            "$label": "Default has predicate"
+        },
+        "includeSourceInformation": {
+            "$type": "bool",
+            "$label": "Generate source info"
+        },
+        "action": {
+            "$label": "Actions",
+            "$array": true,
+            "$object": {
+                "$type": "Action",
+                "name": {
+                    "$type": "str"
+                },
+                "type": {
+                    "$type": "str"
+                },
+                "data": {
+                    "$type": "str"
+                },
+                "output": {
+                    "$type": "str"
+                }
+            }
+        }
+    };
 
-    function controller($scope, $service, rdfService) {
+    function controller($scope, $service) {
 
-        // Obtain the RDF service.
-        const RDF = rdfService.create('');
-
-        // Store configuration of the dialog.
-        $scope.dialog = {
-            'class': '',
-            'predicate': '',
-            'includeSourceInformation': undefined,
-            'records': []
-        };
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
+        }
 
         $scope.onDelete = function (index) {
-            $scope.dialog.records.splice(index, 1);
+            $scope.dialog.records.value.splice(index, 1);
         };
 
         $scope.onAdd = function () {
-            $scope.dialog.records.push({
-                'name': '',
-                'type': 'QUERY'
+            $scope.dialog.records.value.push({
+                'name': {'value': ''},
+                'type': {'value': 'QUERY'},
+                'data': {'value': ''},
+                'output': {'value': ''}
             });
             //
             console.log('onAdd', $scope.dialog.records);
         };
 
-        function loadDialog() {
-            RDF.setData($service.config.instance);
-            var resource = RDF.secureByType(PREFIX + 'Configuration');
-            //
-            $scope.dialog.class = RDF.getString(resource, PREFIX + 'class');
-            $scope.dialog.predicate = RDF.getString(resource,
-                PREFIX + 'predicate');
-            $scope.dialog.includeSourceInformation = RDF.getBoolean(resource,
-                PREFIX + 'includeSourceInformation');
-            //
-            var actions = RDF.getObjects(resource, PREFIX + 'action');
-            actions.forEach(function (action) {
-                var record = {
-                    '@id': action['@id'],
-                    'name': RDF.getString(action, PREFIX + 'name'),
-                    'type': RDF.getString(action, PREFIX + 'type'),
-                    'data': RDF.getString(action, PREFIX + 'data'),
-                    'output': RDF.getString(action, PREFIX + 'output')
-                };
-                $scope.dialog.records.push(record);
-            });
-        }
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
-        function saveDialog() {
-            RDF.setData($service.config.instance);
-            var resource = RDF.secureByType(PREFIX + 'Configuration');
-            //
-            RDF.setString(resource, PREFIX + 'class', $scope.dialog.class);
-            RDF.setString(resource, PREFIX + 'predicate',
-                $scope.dialog.predicate);
-            RDF.setBoolean(resource, PREFIX + 'includeSourceInformation',
-                $scope.dialog.includeSourceInformation);
-            //
-            var actions = [];
-            $scope.dialog.records.forEach(function (record) {
-                var id = record['@id'];
-                var action;
-                if (id) {
-                    // Try to read existing object.
-                    action = RDF.filterSingle(RDF.findByUri(id));
-                }
-                if (!id || !action) {
-                    // New object.
-                    action = RDF.createObject(PREFIX + 'Column');
-                }
-                // Now we have object to store data into.
-                RDF.setString(action, PREFIX + 'name', record.name);
-                RDF.setString(action, PREFIX + 'type', record.type);
-                RDF.setString(action, PREFIX + 'data', record.data);
-                RDF.setString(action, PREFIX + 'output', record.output);
-                //
-                actions.push(action);
-            });
-            // Do not add new object, as we have already add them.
-            RDF.updateObjects(resource, PREFIX + 'action', actions, false);
-        }
-
-        // Define the save function.
         $service.onStore = function () {
-            saveDialog();
-        }
+            dialogManager.save();
+        };
 
-        // Load data.
-        loadDialog();
+        dialogManager.load();
+
     }
 
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });
