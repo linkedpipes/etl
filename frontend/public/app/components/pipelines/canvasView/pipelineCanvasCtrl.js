@@ -177,6 +177,19 @@ define([
                         newComponent.component, result['portBinding'],
                         []);
                 }
+                // Add the configuration.
+                const templateIri = jsonld.r.getIRI(newComponent.component,
+                    "http://linkedpipes.com/ontology/template");
+                templateService.fetchNewConfig(templateIri).then((config) => {
+                    const configuration = jQuery.extend(true, [], config);
+                    const configIri =
+                        jsonld.r.getId(newComponent.component) +
+                        '/configuration';
+                    jsonld.r.setIRIs(newComponent.component,
+                        "http://linkedpipes.com/ontology/configurationGraph",
+                        configIri);
+                    data.pipeline.model.graphs[configIri] = configuration;
+                });
             }, function () {
                 // No action here.
             });
