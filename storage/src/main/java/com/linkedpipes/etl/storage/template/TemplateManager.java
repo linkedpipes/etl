@@ -169,10 +169,12 @@ class TemplateManager {
         // Create configuration for instances.
         final IRI newGraph = vf.createIRI(template.getIri() +
                 "/newConfiguration");
+        final boolean isJarTemplate = template instanceof FullTemplate;
         final Collection<Statement> instanceConfigRdf
-                = ConfigurationFacade.createTemplateConfiguration(
+                = ConfigurationFacade.createNewConfiguration(
                 configWithGraph, baseTemplate.getConfigDescRdf(),
-                graph.stringValue(), newGraph);
+                graph.stringValue(), newGraph,
+                !isJarTemplate);
         // Save to file.
         RdfUtils.write(new File(((BaseTemplate) template).getDirectory(),
                         Template.CONFIG_FILE), RDFFormat.TRIG, configWithGraph);
@@ -292,11 +294,13 @@ class TemplateManager {
         // Create configuration for instances.
         final IRI graph = SimpleValueFactory.getInstance().createIRI(
                 template.getIri() + "/new");
+        final boolean isJarTemplate = template instanceof FullTemplate;
         template.setConfigForInstanceRdf(
-                ConfigurationFacade.createTemplateConfiguration(
+                ConfigurationFacade.createNewConfiguration(
                         template.getConfigRdf(),
                         template.getConfigDescRdf(),
-                        graph.stringValue(), graph));
+                        graph.stringValue(), graph,
+                        !isJarTemplate));
     }
 
 }

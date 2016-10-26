@@ -49,22 +49,29 @@ public class ConfigurationFacade {
      * @param descriptionRdf Description of the configuration.
      * @param baseIri Resource used for generated configuration.
      * @param graph Graph used for generated configuration.
+     * @param inheritAll If true all control properties are set to inherit.
      * @return
      */
-    public static Collection<Statement> createTemplateConfiguration(
+    public static Collection<Statement> createNewConfiguration(
             Collection<Statement> configurationRdf,
             Collection<Statement> descriptionRdf,
-            String baseIri, IRI graph) throws BaseException {
+            String baseIri, IRI graph, boolean inheritAll) throws BaseException {
         final ConfigDescription description = loadDescription(descriptionRdf);
         // Load configuration.
         final RdfObjects config = new RdfObjects(configurationRdf);
         // Update configuration.
         final ValueFactory vf = SimpleValueFactory.getInstance();
+        final IRI inheritType;
+        if (inheritAll) {
+            inheritType =  vf.createIRI(INHERIT);
+        } else {
+            inheritType =  vf.createIRI(NONE);
+        }
         config.getTyped(description.getType()).forEach((instance) -> {
             for (ConfigDescription.Member member : description.getMembers()) {
                 // Set all to inherit.
                 instance.deleteReferences(member.getControl());
-                instance.add(member.getControl(), vf.createIRI(INHERIT));
+                instance.add(member.getControl(), inheritType);
             }
         });
         // Update resources and return.
