@@ -357,6 +357,21 @@
         resource[predicate] = resourceValue;
     };
 
+    /**
+     * Return whole value object as stored under the property.
+     */
+    const getRawValue = function (resource, predicate) {
+        return resource[predicate];
+    };
+
+    const setRawValue = function (resource, predicate, value) {
+        if (value === undefined) {
+            delete resource[predicate];
+        } else {
+            resource[predicate] = value;
+        }
+    };
+
     //
     // Manipulation with triples.
     //
@@ -608,7 +623,9 @@
         "getIRI": (resource, predicate) =>
             select(getIRIs(resource, predicate)),
         "setIRIs": setIRIs,
-        "getReferences": getReferences
+        "getReferences": getReferences,
+        "getValue" : getRawValue,
+        "setValue" : setRawValue
     };
 
     /* jshint latedef: false */
