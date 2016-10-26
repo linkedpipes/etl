@@ -1,62 +1,128 @@
 <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="Basics">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
         <md-subheader class="md-primary">Mandatory</md-subheader>
-        <md-switch ng-model="dialog.getDatasetIRIFromInput" flex-gt-sm>Get dataset IRI from input</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-switch ng-model="dialog.getDatasetIRIFromInput.value"
+                   ng-hide="dialog.getDatasetIRIFromInput.hide"
+                   ng-disabled="dialog.getDatasetIRIFromInput.disabled || dialog.getDatasetIRIFromInput.inherit"
+                   flex-gt-sm>Get dataset IRI from input
+        </md-switch>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.datasetIRI.hide"
+                            flex-gt-sm>
             <label>Dataset IRI</label>
-            <input type="uri" ng-disabled="dialog.getDatasetIRIFromInput" ng-model="dialog.datasetIRI" placeholder="https://my.dataset.iri">
+            <input type="uri"
+                   ng-disabled="dialog.getDatasetIRIFromInput.value || dialog.datasetIRI.disabled || dialog.datasetIRI.inherit"
+                   ng-model="dialog.datasetIRI.value"
+                   placeholder="https://my.dataset.iri">
         </md-input-container>
-        <md-switch ng-model="dialog.genDistroIRI" flex-gt-sm>Generate distribution IRI from dataset IRI</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-switch ng-model="dialog.genDistroIRI.value"
+                   ng-hide="dialog.genDistroIRI.hide"
+                   ng-disabled="dialog.genDistroIRI.disabled || dialog.genDistroIRI.inherit"
+                   flex-gt-sm>Generate distribution IRI from dataset IRI
+        </md-switch>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.distributionIRI.hide"
+                            flex-gt-sm>
             <label>Distribution IRI</label>
-            <input type="uri" ng-disabled="dialog.genDistroIRI" ng-model="dialog.distributionIRI" placeholder="https://my.distribution.iri">
+            <input type="uri"
+                   ng-model="dialog.distributionIRI.value"
+                   ng-disabled="dialog.genDistroIRI.value || dialog.distributionIRI.disabled || dialog.distributionIRI.inherit"
+                   placeholder="https://my.distribution.iri">
         </md-input-container>
-        <lp-iri-list required label-top="Access URLs" label-item="Access URL" ng-model="dialog.accessURLs"></lp-iri-list>
+        <lp-iri-list label-top="Access URLs" label-item="Access URL"
+                     ng-model="dialog.accessURLs.value"
+                     ng-disabled="dialog.accessURLs.disabled || dialog.accessURLs.inherit"
+                     ng-hide="dialog.accessURLs.hide"></lp-iri-list>
         <md-subheader class="md-primary">Recommended</md-subheader>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.formatIRI.hide"
+                            flex-gt-sm>
             <label>Format</label>
-            <md-select ng-model="dialog.formatIRI">
-                <md-option ng-repeat="format in formats" value="{{format['@id']}}">
+            <md-select
+                    ng-disabled="dialog.formatIRI.disabled || dialog.formatIRI.inherit"
+                    ng-model="dialog.formatIRI.value">
+                <md-option ng-repeat="format in formats"
+                           value="{{format['@id']}}">
                     <span ng-repeat="label in format['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
                 </md-option>
             </md-select>
         </md-input-container>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.licenseIRI.hide"
+                            flex-gt-sm>
             <label>License</label>
-            <input type="uri" ng-model="dialog.licenseIRI" placeholder="https://my.distribution.license">
+            <input type="uri" ng-model="dialog.licenseIRI.value"
+                   ng-disabled="dialog.licenseIRI.disabled || dialog.licenseIRI.inherit"
+                   placeholder="https://my.distribution.license">
         </md-input-container>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.licenseTypeIRI.hide"
+                            flex-gt-sm>
             <label>License type</label>
-            <md-select ng-model="dialog.licenseTypeIRI">
-                <md-option ng-repeat="type in licenseTypes" value="{{type['@id']}}">
+            <md-select
+                    ng-disabled="dialog.licenseTypeIRI.disabled || dialog.licenseTypeIRI.inherit"
+                    ng-model="dialog.licenseTypeIRI.value">
+                <md-option ng-repeat="type in licenseTypes"
+                           value="{{type['@id']}}">
                     <span ng-repeat="label in type['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
                 </md-option>
             </md-select>
         </md-input-container>
-
-        <lp-localized-text-input class="md-block" label-top="Distribution description" label-item="Description" ng-model="dialog.descriptions"></lp-localized-text-input>
+        <lp-localized-text-input class="md-block"
+                                 label-top="Distribution description"
+                                 label-item="Description"
+                                 ng-model="dialog.descriptions.value"
+                                 ng-disabled="dialog.descriptions.disabled || dialog.descriptions.inherit"
+                                 ng-hide="dialog.descriptions.hide">
+        </lp-localized-text-input>
     </md-tab>
     <md-tab label="Download">
-        <lp-iri-list label-top="Download URLs" label-item="Download URL" ng-model="dialog.downloadURLs"></lp-iri-list>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-iri-list label-top="Download URLs"
+                     label-item="Download URL"
+                     ng-model="dialog.downloadURLs.value"
+                     ng-disabled="dialog.downloadURLs.disabled || dialog.downloadURLs.inherit"
+                     ng-hide="dialog.downloadURLs.hide"></lp-iri-list>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.mediaType.hide"
+                            flex-gt-sm>
             <label>Media type</label>
-            <input type="text" ng-model="dialog.mediaType" placeholder="application/trig">
+            <input type="text" ng-model="dialog.mediaType.value"
+                   ng-disabled="dialog.mediaType.disabled || dialog.mediaType.inherit"
+                   placeholder="application/trig">
         </md-input-container>
-
     </md-tab>
     <md-tab label="Documentation">
-        <lp-localized-text-input class="md-block" label-top="Distribution title" label-item="Title" ng-model="dialog.titles"></lp-localized-text-input>
-
-        <lp-iri-list label-top="Documentation IRIs" label-item="Documentation IRI" ng-model="dialog.documentationIRIs"></lp-iri-list>
-
-        <md-switch ng-model="dialog.languagesFromDataset" flex-gt-sm>Use languages from dataset</md-switch>
-
-        <md-chips ng-model="dialog.languages" md-transform-chip="transformChip($chip)" md-autocomplete-snap md-require-match="false">
-            <md-autocomplete ng-disabled="dialog.languagesFromDataset" placeholder="Search for language" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in langSearch(searchText)" md-item-text="item.value">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-localized-text-input class="md-block"
+                                 label-top="Distribution title"
+                                 label-item="Title"
+                                 ng-model="dialog.titles.value"
+                                 ng-disabled="dialog.titles.disabled || dialog.titles.inherit"
+                                 ng-hide="dialog.titles.hide">
+        </lp-localized-text-input>
+        <lp-iri-list label-top="Documentation IRIs"
+                     label-item="Documentation IRI"
+                     ng-model="dialog.documentationIRIs.value"
+                     ng-disabled="dialog.documentationIRIs.disabled || dialog.documentationIRIs.inherit"
+                     ng-hide="dialog.documentationIRIs.hide">
+        </lp-iri-list>
+        <md-switch ng-model="dialog.languagesFromDataset.value"
+                   ng-hide="dialog.languagesFromDataset.hide"
+                   ng-disabled="dialog.languagesFromDataset.disabled || dialog.languagesFromDataset.inherit"
+                   flex-gt-sm>Use languages from dataset
+        </md-switch>
+        <md-chips ng-model="dialog.languages.value"
+                  ng-disabled="dialog.languagesFromDataset.value || dialog.languages.disabled || dialog.languages.inherit"
+                  ng-hide="dialog.languages.hide"
+                  md-transform-chip="transformChip($chip)"
+                  md-autocomplete-snap md-require-match="false">
+            <md-autocomplete placeholder="Search for language"
+                             md-selected-item="selectedItem"
+                             md-search-text="searchText"
+                             md-items="item in langSearch(searchText)"
+                             md-item-text="item.value">
                 <span md-highlight-text="searchText">{{item.value}}</span>
             </md-autocomplete>
             <md-chip-template>
@@ -65,67 +131,124 @@
                 </span>
             </md-chip-template>
         </md-chips>
-
-        <lp-iri-list label-top="IRIs of linked schemas" label-item="Linked schema IRI" ng-model="dialog.conformsToIRIs"></lp-iri-list>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-iri-list label-top="IRIs of linked schemas"
+                     label-item="Linked schema IRI"
+                     ng-model="dialog.conformsToIRIs.value"
+                     ng-disabled="dialog.conformsToIRIs.disabled || dialog.conformsToIRIs.inherit"
+                     ng-hide="dialog.conformsToIRIs.hide">
+        </lp-iri-list>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.statusIRI.hide"
+                            flex-gt-sm>
             <label>Status</label>
-            <md-select ng-model="dialog.statusIRI">
-                <md-option ng-repeat="status in states" value="{{status['@id']}}">
+            <md-select
+                    ng-disabled="dialog.statusIRI.disabled || dialog.statusIRI.inherit"
+                    ng-model="dialog.statusIRI.value">
+                <md-option ng-repeat="status in states"
+                           value="{{status['@id']}}">
                     <span ng-repeat="label in status['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
                 </md-option>
             </md-select>
         </md-input-container>
-
         <div layout-gt-sm="row">
-            <md-switch ng-model="dialog.issuedFromDataset" flex-gt-sm>Use release date from dataset</md-switch>
-            <md-datepicker ng-disabled="dialog.issuedFromDataset" ng-model="dialog.issued" md-placeholder="Release date" flex-gt-sm></md-datepicker>
+            <md-switch ng-model="dialog.issuedFromDataset.value"
+                       ng-disabled="dialog.issuedFromDataset.disabled || dialog.issuedFromDataset.inherit"
+                       ng-hide="dialog.issuedFromDataset.hide"
+                       flex-gt-sm>Use release date from dataset
+            </md-switch>
+            <md-datepicker
+                    ng-disabled="dialog.issuedFromDataset.value || dialog.issued.disabled || dialog.issued.inherit"
+                    ng-model="dialog.issued.value"
+                    ng-hide="dialog.issued.hide"
+                    md-placeholder="Release date" flex-gt-sm>
+            </md-datepicker>
         </div>
         <div layout-gt-sm="row">
-            <md-switch ng-model="dialog.modifiedFromDataset" flex-gt-sm>Use modified date from dataset</md-switch>
-            <md-switch ng-model="dialog.modifiedNow" ng-disabled="dialog.modifiedFromDataset" flex-gt-sm>Use current date as modified</md-switch>
-            <md-datepicker ng-disabled="dialog.modifiedFromDataset || dialog.modifiedNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>
+            <md-switch ng-model="dialog.modifiedFromDataset.value"
+                       ng-disabled="dialog.modifiedFromDataset.disabled || dialog.modifiedFromDataset.inherit"
+                       ng-hide="dialog.modifiedFromDataset.hide"
+                       flex-gt-sm>Use modified date from dataset
+            </md-switch>
+            <md-switch ng-model="dialog.modifiedNow.value"
+                       ng-disabled="dialog.modifiedFromDataset.value || dialog.modifiedNow.disabled || dialog.modifiedNow.inherit"
+                       ng-hide="dialog.modifiedNow.hide"
+                       flex-gt-sm>Use current date as modified
+            </md-switch>
+            <md-datepicker
+                    ng-disabled="dialog.modifiedFromDataset.value || dialog.modifiedNow.value || dialog.modified.disabled || dialog.modified.inherit"
+                    ng-model="dialog.modified.value"
+                    ng-hide="dialog.modified.hide"
+                    md-placeholder="Modified"
+                    flex-gt-sm></md-datepicker>
         </div>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.rightsIRI.hide"
+                            flex-gt-sm>
             <label>Rights</label>
-            <input type="uri" ng-model="dialog.rightsIRI" placeholder="http://my.rights.iri">
+            <input type="uri" ng-model="dialog.rightsIRI.value"
+                   ng-disabled="dialog.rightsIRI.disabled || dialog.rightsIRI.inherit"
+                   placeholder="http://my.rights.iri">
         </md-input-container>
-
-
     </md-tab>
     <md-tab label="Verification">
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.byteSize.hide"
+                            flex-gt-sm>
             <label>Byte size</label>
-            <input type="number" ng-model="dialog.byteSize" placeholder="10000" step="1" min="0">
+            <input type="number" ng-model="dialog.byteSize.value"
+                   ng-disabled="dialog.byteSize.disabled || dialog.byteSize.inherit"
+                   placeholder="10000" step="1" min="0">
         </md-input-container>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.checksum.hide"
+                            flex-gt-sm>
             <label>SHA-1 checksum</label>
-            <input type="text" ng-model="dialog.checksum" placeholder="deadbeef">
+            <input type="text" ng-model="dialog.checksum.value"
+                   ng-disabled="dialog.checksum.disabled || dialog.checksum.inherit"
+                   placeholder="deadbeef">
         </md-input-container>
-
-
     </md-tab>
     <md-tab label="Series">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
         <md-input-container class="md-block" flex-gt-sm>
-            See <a href="https://joinup.ec.europa.eu/node/150348" target="_blank">DCAT-AP v1.1 Implementation Guideline for Dataset Series</a>
+            See <a href="https://joinup.ec.europa.eu/node/150348"
+                   target="_blank">DCAT-AP v1.1 Implementation Guideline for
+            Dataset Series</a>
         </md-input-container>
-        <lp-iri-list label-top="Spatial coverage IRIs" label-item="Spatial coverage IRI" ng-model="dialog.spatialIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Spatial coverage IRIs"
+                     label-item="Spatial coverage IRI"
+                     ng-model="dialog.spatialIRIs.value"
+                     ng-disabled="dialog.spatialIRIs.disabled || dialog.spatialIRIs.inherit"
+                     ng-hide="dialog.spatialIRIs.hide"></lp-iri-list>
         <div layout-gt-sm="row">
-            <md-datepicker ng-model="dialog.temporalStart" md-placeholder="Temp. cov. start" flex-gt-sm></md-datepicker>    
-            <md-datepicker ng-model="dialog.temporalEnd" md-placeholder="Temp. cov. end" flex-gt-sm></md-datepicker>    
+            <md-datepicker ng-model="dialog.temporalStart.value"
+                           ng-disabled="dialog.temporalStart.disabled || dialog.temporalStart.inherit"
+                           ng-hide="dialog.temporalStart.hide"
+                           md-placeholder="Temp. cov. start"
+                           flex-gt-sm></md-datepicker>
+            <md-datepicker ng-model="dialog.temporalEnd.value"
+                           ng-disabled="dialog.temporalEnd.disabled || dialog.temporalEnd.inherit"
+                           ng-hide="dialog.temporalEnd.hide"
+                           md-placeholder="Temp. cov. end"
+                           flex-gt-sm></md-datepicker>
         </div>
-        
     </md-tab>
     <md-tab label="StatDCAT-AP">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
         <md-input-container class="md-block" flex-gt-sm>
-            See <a href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4" target="_blank">StatDCAT-AP draft 4</a>
+            See <a target="_blank"
+                   href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4">
+            StatDCAT-AP draft 4</a>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.distributionTypeIRI.hide"
+                            flex-gt-sm>
             <label>Distribution type</label>
-            <md-select ng-model="dialog.distributionTypeIRI">
-                <md-option ng-repeat="dtype in distributionTypes" value="{{dtype['@id']}}">
+            <md-select
+                    ng-disabled="dialog.distributionTypeIRI.disabled || dialog.distributionTypeIRI.inherit"
+                    ng-model="dialog.distributionTypeIRI.value">
+                <md-option ng-repeat="dtype in distributionTypes"
+                           value="{{dtype['@id']}}">
                     <span ng-repeat="label in dtype['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
                 </md-option>
             </md-select>

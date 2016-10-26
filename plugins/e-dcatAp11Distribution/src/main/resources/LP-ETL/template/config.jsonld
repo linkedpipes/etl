@@ -1,7 +1,7 @@
 [
     {
         "@id": "http://linkedpipes.com/resources/components/e-dcatAp11Distribution/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/e-dcatAp11Distribution#Configuration"],
+        "@type" : ["http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/Configuration"],
         "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/genDistroIRI" : true,
         "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/getDatasetIRIFromInput" : true,
         "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/languagesFromDataset" : true,
