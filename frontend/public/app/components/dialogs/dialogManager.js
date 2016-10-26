@@ -138,6 +138,8 @@ define(["jsonld"], function (jsonld) {
                 return jsonld.r.getBooleans(resource, desc.$property);
             case "iri":
                 return jsonld.r.getIRIs(resource, desc.$property);
+            case "value":
+                return jsonld.r.getValue(resource, desc.$property);
             default:
                 console.error("Unknown type for: ", desc);
         }
@@ -162,6 +164,9 @@ define(["jsonld"], function (jsonld) {
                 break;
             case "iri":
                 jsonld.r.setIRIs(resource, desc.$property, value);
+                break;
+            case "value":
+                jsonld.r.setValue(resource, desc.$property, value);
                 break;
             default:
                 console.error("Unknown type for: ", desc);
@@ -338,7 +343,8 @@ define(["jsonld"], function (jsonld) {
         if (desc.$control !== undefined) {
             desc.$control = ns + desc.$control;
         }
-        if (desc.$type !== undefined) {
+        // The type may be set as an absolute IRI.
+        if (desc.$type !== undefined && desc.$type.indexOf("http://") === -1) {
             desc.$type = ns + desc.$type;
         }
         // Iterate over resources.
