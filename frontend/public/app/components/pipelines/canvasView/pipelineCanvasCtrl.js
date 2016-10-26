@@ -240,7 +240,8 @@ define([
          * a promise.
          */
         function loadPipeline() {
-            return $http.get(data.pipeline.iri).then(function (response) {
+            const iri = data.pipeline.iri + '&templates=false&mappings=false'
+            return $http.get(iri).then(function (response) {
                 data.pipeline.model = pipelineService.fromJsonLd(response.data);
                 data.pipeline.resource = pipelineService.getPipeline(
                     data.pipeline.model);
