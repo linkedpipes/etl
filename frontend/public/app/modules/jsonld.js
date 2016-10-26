@@ -342,11 +342,11 @@
         const resourceValue = [];
         value.forEach((item) => {
             let valueAsString = item.getFullYear() + '-';
-            if (value.getMonth() + 1 < 10) {
+            if (item.getMonth() + 1 < 10) {
                 valueAsString += '0';
             }
             valueAsString += (item.getMonth() + 1) + '-';
-            if (value.getDate() < 10) {
+            if (item.getDate() < 10) {
                 valueAsString += '0';
             }
             valueAsString += item.getDate();
