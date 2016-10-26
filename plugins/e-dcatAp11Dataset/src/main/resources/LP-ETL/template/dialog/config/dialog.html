@@ -16,7 +16,7 @@
                                      label-top="Dataset titles"
                                      label-item="Dataset title"
                                      ng-model="dialog.titles.value"
-                                     ng-disabled="dialog.titles.disabled || dialog.titles.inherit"
+                                     lp-disabled="dialog.titles.disabled || dialog.titles.inherit"
                                      flex-gt-sm></lp-localized-text-input>
         </div>
         <div class="row" ng-hide="dialog.descriptions.hide">
@@ -24,7 +24,7 @@
                                      label-top="Dataset descriptions"
                                      label-item="Dataset description"
                                      ng-model="dialog.descriptions.value"
-                                     ng-disabled="dialog.descriptions.disabled || dialog.descriptions.inherit"
+                                     lp-disabled="dialog.descriptions.disabled || dialog.descriptions.inherit"
                                      flex-gt-sm></lp-localized-text-input>
         </div>
     </md-tab>
@@ -70,7 +70,7 @@
         <md-subheader class="md-primary">Keywords and Themes</md-subheader>
         <lp-localized-text-input class="md-block" label-item="Keyword"
                                  ng-model="dialog.keywords.value"
-                                 ng-disabled="dialog.keywords.disabled || dialog.keywords.inherit"
+                                 lp-disabled="dialog.keywords.disabled || dialog.keywords.inherit"
                                  ng-hide="dialog.keywords.hide"></lp-localized-text-input>
         <md-input-container class="md-block" ng-hide="dialog.euThemeIRI.hide"
                             flex-gt-sm>
@@ -85,7 +85,7 @@
         </md-input-container>
         <lp-iri-list label-top="Other theme IRIs" label-item="Theme IRI"
                      ng-model="dialog.otherThemeIRIs.value"
-                     ng-disabled="dialog.otherThemeIRIs.disabled || dialog.otherThemeIRIs.inherit"
+                     lp-disabled="dialog.otherThemeIRIs.disabled || dialog.otherThemeIRIs.inherit"
                      ng-hide="dialog.otherThemeIRIs.hide"></lp-iri-list>
         <md-subheader class="md-primary">Publisher</md-subheader>
         <md-input-container class="md-block" ng-hide="dialog.publisherIRI.hide"
@@ -98,7 +98,7 @@
         <lp-localized-text-input class="md-block" label-top="Publisher names"
                                  label-item="Publisher name"
                                  ng-model="dialog.publisherNames.value"
-                                 ng-disabled="dialog.publisherNames.disabled || dialog.publisherNames.inherit"
+                                 lp-disabled="dialog.publisherNames.disabled || dialog.publisherNames.inherit"
                                  ng-hide="dialog.publisherNames.hide"
                                  flex-gt-sm></lp-localized-text-input>
         <md-input-container class="md-block" ng-hide="dialog.publisherTypeIRI.hide"
@@ -165,7 +165,7 @@
         <lp-iri-list label-top="Spatial coverage IRIs"
                      label-item="Spatial coverage IRI"
                      ng-model="dialog.spatialIRIs.value"
-                     ng-disabled="dialog.spatialIRIs.disabled || dialog.spatialIRIs.inherit"
+                     lp-disabled="dialog.spatialIRIs.disabled || dialog.spatialIRIs.inherit"
                      ng-hide="dialog.spatialIRIs.hide"></lp-iri-list>
         <div layout-gt-sm="row">
             <md-datepicker ng-model="dialog.temporalStart.value"
@@ -201,7 +201,7 @@
         <lp-iri-list label-top="Documentation IRIs"
                      label-item="Documentation IRI"
                      ng-model="dialog.documentationIRIs.value"
-                     ng-disabled="dialog.documentationIRIs.disabled || dialog.documentationIRIs.inherit"
+                     lp-disabled="dialog.documentationIRIs.disabled || dialog.documentationIRIs.inherit"
                      ng-hide="dialog.documentationIRIs.hide"></lp-iri-list>
         <md-input-container class="md-block" ng-hide="dialog.accessRightsIRI.hide"
                             flex-gt-sm>
@@ -219,7 +219,7 @@
                                      label-top="Provenance statement"
                                      label-item="Provenance"
                                      ng-model="dialog.provenances.value"
-                                     ng-disabled="dialog.provenances.disabled || dialog.provenances.inherit"
+                                     lp-disabled="dialog.provenances.disabled || dialog.provenances.inherit"
                                      ng-hide="dialog.provenances.hide"
                                      flex-gt-sm></lp-localized-text-input>
         </div>
@@ -236,37 +236,37 @@
         <lp-iri-list label-top="Sample distribution IRIs"
                      label-item="Sample distribution IRI"
                      ng-model="dialog.sampleIRIs.value"
-                     ng-disabled="dialog.sampleIRIs.disabled || dialog.sampleIRIs.inherit"
+                     lp-disabled="dialog.sampleIRIs.disabled || dialog.sampleIRIs.inherit"
                      ng-hide="dialog.sampleIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Landing page IRIs"
                      label-item="Landing page IRI"
                      ng-model="dialog.landingPageIRIs.value"
-                     ng-disabled="dialog.landingPageIRIs.disabled || dialog.landingPageIRIs.inherit"
+                     lp-disabled="dialog.landingPageIRIs.disabled || dialog.landingPageIRIs.inherit"
                      ng-hide="dialog.landingPageIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Related resource IRIs"
                      label-item="Related resource IRI"
                      ng-model="dialog.relatedIRIs.value"
-                     ng-disabled="dialog.relatedIRIs.disabled || dialog.relatedIRIs.inherit"
+                     lp-disabled="dialog.relatedIRIs.disabled || dialog.relatedIRIs.inherit"
                      ng-hide="dialog.relatedIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Conforms to IRIs"
                      label-item="Conforms to IRI"
                      ng-model="dialog.conformsToIRIs.value"
-                     ng-disabled="dialog.conformsToIRIs.disabled || dialog.conformsToIRIs.inherit"
+                     lp-disabled="dialog.conformsToIRIs.disabled || dialog.conformsToIRIs.inherit"
                      ng-hide="dialog.conformsToIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Source dataset IRIs"
                      label-item="Source dataset IRI"
                      ng-model="dialog.sourceIRIs.value"
-                     ng-disabled="dialog.sourceIRIs.disabled || dialog.sourceIRIs.inherit"
+                     lp-disabled="dialog.sourceIRIs.disabled || dialog.sourceIRIs.inherit"
                      ng-hide="dialog.sourceIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Has version Dataset IRIs"
                      label-item="Has version dataset IRI"
                      ng-model="dialog.hasVersionIRIs.value"
-                     ng-disabled="dialog.hasVersionIRIs.disabled || dialog.hasVersionIRIs.inherit"
+                     lpdisabled="dialog.hasVersionIRIs.disabled || dialog.hasVersionIRIs.inherit"
                      ng-hide="dialog.hasVersionIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Is version of Dataset IRIs"
                      label-item="Is version of IRI"
                      ng-model="dialog.isVersionOfIRIs.value"
-                     ng-disabled="dialog.isVersionOfIRIs.disabled || dialog.isVersionOfIRIs.inherit"
+                     lp-disabled="dialog.isVersionOfIRIs.disabled || dialog.isVersionOfIRIs.inherit"
                      ng-hide="dialog.isVersionOfIRIs.hide"></lp-iri-list>
     </md-tab>
     <md-tab label="Versions">
@@ -282,7 +282,7 @@
             <lp-localized-text-input class="md-block" label-top="Version notes"
                                      label-item="Version notes"
                                      ng-model="dialog.versionNotes.value"
-                                     ng-disabled="dialog.versionNotes.disabled || dialog.versionNotes.inherit"
+                                     lp-disabled="dialog.versionNotes.disabled || dialog.versionNotes.inherit"
                                      ng-hide="dialog.versionNotes.hide"
                                      flex-gt-sm></lp-localized-text-input>
         </div>
@@ -297,12 +297,12 @@
         <lp-iri-list label-top="Attribute IRIs"
                      label-item="Attribute IRI"
                      ng-model="dialog.attributeIRIs.value"
-                     ng-disabled="dialog.attributeIRIs.disabled || dialog.attributeIRIs.inherit"
+                     lp-disabled="dialog.attributeIRIs.disabled || dialog.attributeIRIs.inherit"
                      ng-hide="dialog.attributeIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Dimension IRIs"
                      label-item="Dimension IRI"
                      ng-model="dialog.dimensionIRIs.value"
-                     ng-disabled="dialog.dimensionIRIs.disabled || dialog.dimensionIRIs.inherit"
+                     lp-disabled="dialog.dimensionIRIs.disabled || dialog.dimensionIRIs.inherit"
                      ng-hide="dialog.dimensionIRIs.hide"></lp-iri-list>
         <md-input-container class="md-block" ng-hide="dialog.numSeries.hide"
                             flex-gt-sm>
@@ -314,12 +314,12 @@
         <lp-iri-list label-top="Quality annotation IRIs"
                      label-item="Quality annotation IRI"
                      ng-model="dialog.qualityAnnotationIRIs.value"
-                     ng-disabled="dialog.qualityAnnotationIRIs.disabled || dialog.qualityAnnotationIRIs.inherit"
+                     lp-disabled="dialog.qualityAnnotationIRIs.disabled || dialog.qualityAnnotationIRIs.inherit"
                      ng-hide="dialog.qualityAnnotationIRIs.hide"></lp-iri-list>
         <lp-iri-list label-top="Unit of measurement IRIs"
                      label-item="Unit of measurement IRI"
                      ng-model="dialog.unitOfMeasurementIRIs.value"
-                     ng-disabled="dialog.unitOfMeasurementIRIs.disabled || dialog.unitOfMeasurementIRIs.inherit"
+                     lp-disabled="dialog.unitOfMeasurementIRIs.disabled || dialog.unitOfMeasurementIRIs.inherit"
                      ng-hide="dialog.unitOfMeasurementIRIs.hide"></lp-iri-list>
     </md-tab>
 </md-tabs>

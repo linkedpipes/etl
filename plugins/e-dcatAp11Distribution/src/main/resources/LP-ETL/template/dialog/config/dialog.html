@@ -32,7 +32,7 @@
         </md-input-container>
         <lp-iri-list label-top="Access URLs" label-item="Access URL"
                      ng-model="dialog.accessURLs.value"
-                     ng-disabled="dialog.accessURLs.disabled || dialog.accessURLs.inherit"
+                     lp-disabled="dialog.accessURLs.disabled || dialog.accessURLs.inherit"
                      ng-hide="dialog.accessURLs.hide"></lp-iri-list>
         <md-subheader class="md-primary">Recommended</md-subheader>
         <md-input-container class="md-block"
@@ -73,7 +73,7 @@
                                  label-top="Distribution description"
                                  label-item="Description"
                                  ng-model="dialog.descriptions.value"
-                                 ng-disabled="dialog.descriptions.disabled || dialog.descriptions.inherit"
+                                 lp-disabled="dialog.descriptions.disabled || dialog.descriptions.inherit"
                                  ng-hide="dialog.descriptions.hide">
         </lp-localized-text-input>
     </md-tab>
@@ -82,7 +82,7 @@
         <lp-iri-list label-top="Download URLs"
                      label-item="Download URL"
                      ng-model="dialog.downloadURLs.value"
-                     ng-disabled="dialog.downloadURLs.disabled || dialog.downloadURLs.inherit"
+                     lp-disabled="dialog.downloadURLs.disabled || dialog.downloadURLs.inherit"
                      ng-hide="dialog.downloadURLs.hide"></lp-iri-list>
         <md-input-container class="md-block"
                             ng-hide="dialog.mediaType.hide"
@@ -99,13 +99,13 @@
                                  label-top="Distribution title"
                                  label-item="Title"
                                  ng-model="dialog.titles.value"
-                                 ng-disabled="dialog.titles.disabled || dialog.titles.inherit"
+                                 lp-disabled="dialog.titles.disabled || dialog.titles.inherit"
                                  ng-hide="dialog.titles.hide">
         </lp-localized-text-input>
         <lp-iri-list label-top="Documentation IRIs"
                      label-item="Documentation IRI"
                      ng-model="dialog.documentationIRIs.value"
-                     ng-disabled="dialog.documentationIRIs.disabled || dialog.documentationIRIs.inherit"
+                     lp-disabled="dialog.documentationIRIs.disabled || dialog.documentationIRIs.inherit"
                      ng-hide="dialog.documentationIRIs.hide">
         </lp-iri-list>
         <md-switch ng-model="dialog.languagesFromDataset.value"
@@ -134,7 +134,7 @@
         <lp-iri-list label-top="IRIs of linked schemas"
                      label-item="Linked schema IRI"
                      ng-model="dialog.conformsToIRIs.value"
-                     ng-disabled="dialog.conformsToIRIs.disabled || dialog.conformsToIRIs.inherit"
+                     lp-disabled="dialog.conformsToIRIs.disabled || dialog.conformsToIRIs.inherit"
                      ng-hide="dialog.conformsToIRIs.hide">
         </lp-iri-list>
         <md-input-container class="md-block"
@@ -218,7 +218,7 @@
         <lp-iri-list label-top="Spatial coverage IRIs"
                      label-item="Spatial coverage IRI"
                      ng-model="dialog.spatialIRIs.value"
-                     ng-disabled="dialog.spatialIRIs.disabled || dialog.spatialIRIs.inherit"
+                     lp-disabled="dialog.spatialIRIs.disabled || dialog.spatialIRIs.inherit"
                      ng-hide="dialog.spatialIRIs.hide"></lp-iri-list>
         <div layout-gt-sm="row">
             <md-datepicker ng-model="dialog.temporalStart.value"
