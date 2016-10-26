@@ -405,35 +405,20 @@ define(["jsonld"], function (jsonld) {
             }
             const descItem = desc[key];
             const instanceValue = instance[key];
-            const templateValue = instance[key];
-            if (descItem.$object === undefined) {
-                dialog[key] = {
-                    "value": instanceValue.value,
-                    "templateValue": templateValue.value,
-                    "forced": templateValue.forced,
-                    "hide": templateValue.forced,
-                    "disabled": false,
-                    "inherit": instanceValue.inherit,
-                    "force": instanceValue.force,
-                    // From control.
-                    "label": descItem.$label,
-                    "controlled": descItem.$control !== undefined
-                };
-            } else {
-                // TODO Call merge for objects.
-                dialog[key] = {
-                    "value": instanceValue.value,
-                    "templateValue": templateValue.value,
-                    "forced": templateValue.forced,
-                    "hide": templateValue.forced,
-                    "disabled": false,
-                    "inherit": instanceValue.inherit,
-                    "force": instanceValue.force,
-                    // From control.
-                    "label": descItem.$label,
-                    "controlled": descItem.$control !== undefined
-                };
-            }
+            const templateValue = template[key];
+            // TODO Add support for objects : descItem.$object === undefined
+            dialog[key] = {
+                "value": instanceValue.value,
+                "templateValue": templateValue.value,
+                "forced": templateValue.forced,
+                "hide": templateValue.forced,
+                "disabled": false,
+                "inherit": instanceValue.inherit,
+                "force": instanceValue.force,
+                // From control.
+                "label": descItem.$label,
+                "controlled": descItem.$control !== undefined
+            };
         }
     }
 
