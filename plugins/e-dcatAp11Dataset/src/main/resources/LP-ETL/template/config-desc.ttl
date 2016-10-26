@@ -1,5 +1,246 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix dm: <http://linkedpipes.com/resources/components/e-dcatAp11Dataset/0.0.0/configuration/desc> .
 
 <http://linkedpipes.com/resources/components/e-dcatAp11Dataset/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/e-dcatAp11Dataset#Configuration> .
+    config:type <http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/Configuration> ;
+    config:member dm:datasetIRI ,
+      dm:titles ,
+      dm:descriptions ,
+      dm:contactPointTypeIRI ,
+      dm:contactPointName ,
+      dm:contactPointEmail ,
+      dm:keywords ,
+      dm:euThemeIRI ,
+      dm:otherThemeIRIs ,
+      dm:publisherIRI ,
+      dm:publisherNames ,
+      dm:publisherTypeIRI ,
+      dm:languages ,
+      dm:accrualPeriodicityIRI ,
+      dm:issued ,
+      dm:modifiedNow ,
+      dm:modified ,
+      dm:spatialIRIs ,
+      dm:temporalStart ,
+      dm:temporalEnd ,
+      dm:documentationIRIs ,
+      dm:accessRightsIRI ,
+      dm:identifier ,
+      dm:datasetTypeIRI ,
+      dm:provenances ,
+      dm:catalogIRI ,
+      dm:sampleIRIs ,
+      dm:landingPageIRIs ,
+      dm:relatedIRIs ,
+      dm:conformsToIRIs ,
+      dm:sourceIRIs ,
+      dm:hasVersionIRIs ,
+      dm:isVersionOfIRIs ,
+      dm:version ,
+      dm:versionNotes ,
+      dm:attributeIRIs ,
+      dm:dimensionIRIs ,
+      dm:numSeries ,
+      dm:qualityAnnotationIRIs ,
+      dm:unitOfMeasurementIRIs .
+
+dm:datasetIRI
+    a config:ConfigurationMember ;
+    config:property dm:datasetIRI ;
+    config:control dm:datasetIRIControl .
+
+dm:titles
+    a config:ConfigurationMember ;
+    config:property dm:titles ;
+    config:control dm:titlesControl .
+
+dm:descriptions
+    a config:ConfigurationMember ;
+    config:property dm:descriptions ;
+    config:control dm:descriptionsControl .
+
+dm:contactPointTypeIRI
+    a config:ConfigurationMember ;
+    config:property dm:contactPointTypeIRI ;
+    config:control dm:contactPointTypeIRIControl .
+
+dm:contactPointName
+    a config:ConfigurationMember ;
+    config:property dm:contactPointName ;
+    config:control dm:contactPointNameControl .
+
+dm:contactPointEmail
+    a config:ConfigurationMember ;
+    config:property dm:contactPointEmail ;
+    config:control dm:contactPointEmailControl .
+
+dm:keywords
+    a config:ConfigurationMember ;
+    config:property dm:keywords ;
+    config:control dm:keywordsControl .
+
+dm:euThemeIRI
+    a config:ConfigurationMember ;
+    config:property dm:euThemeIRI ;
+    config:control dm:euThemeIRIControl .
+
+dm:otherThemeIRIs
+    a config:ConfigurationMember ;
+    config:property dm:otherThemeIRIs ;
+    config:control dm:otherThemeIRIsControl .
+
+dm:publisherIRI
+    a config:ConfigurationMember ;
+    config:property dm:publisherIRI ;
+    config:control dm:publisherIRIControl .
+
+dm:publisherNames
+    a config:ConfigurationMember ;
+    config:property dm:publisherNames ;
+    config:control dm:publisherNamesControl .
+
+dm:publisherTypeIRI
+    a config:ConfigurationMember ;
+    config:property dm:publisherTypeIRI ;
+    config:control dm:publisherTypeIRIControl .
+
+dm:languages
+    a config:ConfigurationMember ;
+    config:property dm:languages ;
+    config:control dm:languagesControl .
+
+dm:accrualPeriodicityIRI
+    a config:ConfigurationMember ;
+    config:property dm:accrualPeriodicityIRI ;
+    config:control dm:accrualPeriodicityIRIControl .
+
+dm:issued
+    a config:ConfigurationMember ;
+    config:property dm:issued ;
+    config:control dm:issuedControl .
+
+dm:modifiedNow
+    a config:ConfigurationMember ;
+    config:property dm:modifiedNow ;
+    config:control dm:modifiedNowControl .
+
+dm:modified
+    a config:ConfigurationMember ;
+    config:property dm:modified ;
+    config:control dm:modifiedControl .
+
+dm:spatialIRIs
+    a config:ConfigurationMember ;
+    config:property dm:spatialIRIs ;
+    config:control dm:spatialIRIsControl .
+
+dm:temporalStart
+    a config:ConfigurationMember ;
+    config:property dm:temporalStart ;
+    config:control dm:temporalStartControl .
+
+dm:temporalEnd
+    a config:ConfigurationMember ;
+    config:property dm:temporalEnd ;
+    config:control dm:temporalEndControl .
+
+dm:documentationIRIs
+    a config:ConfigurationMember ;
+    config:property dm:documentationIRIs ;
+    config:control dm:documentationIRIsControl .
+
+dm:accessRightsIRI
+    a config:ConfigurationMember ;
+    config:property dm:accessRightsIRI ;
+    config:control dm:accessRightsIRIControl .
+
+dm:identifier
+    a config:ConfigurationMember ;
+    config:property dm:identifier ;
+    config:control dm:identifierControl .
+
+dm:datasetTypeIRI
+    a config:ConfigurationMember ;
+    config:property dm:datasetTypeIRI ;
+    config:control dm:datasetTypeIRIControl .
+
+dm:provenances
+    a config:ConfigurationMember ;
+    config:property dm:provenances ;
+    config:control dm:provenancesControl .
+
+dm:catalogIRI
+    a config:ConfigurationMember ;
+    config:property dm:catalogIRI ;
+    config:control dm:catalogIRIControl .
+
+dm:sampleIRIs
+    a config:ConfigurationMember ;
+    config:property dm:sampleIRIs ;
+    config:control dm:sampleIRIsControl .
+
+dm:landingPageIRIs
+    a config:ConfigurationMember ;
+    config:property dm:landingPageIRIs ;
+    config:control dm:landingPageIRIsControl .
+
+dm:relatedIRIs
+    a config:ConfigurationMember ;
+    config:property dm:relatedIRIs ;
+    config:control dm:relatedIRIsControl .
+
+dm:conformsToIRIs
+    a config:ConfigurationMember ;
+    config:property dm:conformsToIRIs ;
+    config:control dm:conformsToIRIsControl .
+
+dm:sourceIRIs
+    a config:ConfigurationMember ;
+    config:property dm:sourceIRIs ;
+    config:control dm:sourceIRIsControl .
+
+dm:hasVersionIRIs
+    a config:ConfigurationMember ;
+    config:property dm:hasVersionIRIs ;
+    config:control dm:hasVersionIRIsControl .
+
+dm:isVersionOfIRIs
+    a config:ConfigurationMember ;
+    config:property dm:isVersionOfIRIs ;
+    config:control dm:isVersionOfIRIsControl .
+
+dm:version
+    a config:ConfigurationMember ;
+    config:property dm:version ;
+    config:control dm:versionControl .
+
+dm:versionNotes
+    a config:ConfigurationMember ;
+    config:property dm:versionNotes ;
+    config:control dm:versionNotesControl .
+
+dm:attributeIRIs
+    a config:ConfigurationMember ;
+    config:property dm:attributeIRIs ;
+    config:control dm:attributeIRIsControl .
+
+dm:dimensionIRIs
+    a config:ConfigurationMember ;
+    config:property dm:dimensionIRIs ;
+    config:control dm:dimensionIRIsControl .
+
+dm:numSeries
+    a config:ConfigurationMember ;
+    config:property dm:numSeries ;
+    config:control dm:numSeriesControl .
+
+dm:qualityAnnotationIRIs
+    a config:ConfigurationMember ;
+    config:property dm:qualityAnnotationIRIs ;
+    config:control dm:qualityAnnotationIRIsControl .
+
+dm:unitOfMeasurementIRIs
+    a config:ConfigurationMember ;
+    config:property dm:unitOfMeasurementIRIs ;
+    config:control dm:unitOfMeasurementIRIsControl .
