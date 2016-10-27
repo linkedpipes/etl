@@ -326,7 +326,7 @@ public class ComponentServlet {
         }
     }
 
-    @RequestMapping(value = "/component", method = RequestMethod.DELETE)
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
     @ResponseBody
     public void remove(@RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)

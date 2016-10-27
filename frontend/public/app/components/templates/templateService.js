@@ -291,9 +291,12 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             if (data.loaded && !force) {
                 return $q.when();
             }
+            data.loaded = false;
             return $http.get(COMPONENTS_IRI).then((response) => {
                 console.time("Loading templates ...");
-                // Clear caches.
+                // Clear data.
+                data.jarTemplate = {};
+                data.refTemplate = {};
                 data.config = {};
                 // Each component is stored in a single graph.
                 response = jsonld.quads(response.data);
@@ -579,6 +582,12 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                         encodeURIComponent(template.id), configData, options);
                 }).then(() => {
                 // TODO Do not reload all.
+                return service.load(true);
+            });
+        };
+
+        service.delete = (id) => {
+            return $http({'method': 'DELETE', 'url': id}).then(() => {
                 return service.load(true);
             });
         };

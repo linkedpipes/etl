@@ -19,6 +19,12 @@ var gMonitorUri = gConfiguration.executor.monitor.url;
 // Components as templates.
 //
 
+gApiRouter.delete('/components/:id', function (request, response) {
+    var url = gConfiguration.storage.url + '/api/v1/components?iri='
+        + encodeURI(gConfiguration.storage.domain + request.originalUrl);
+    gRequest.del(url).pipe(response);
+});
+
 gApiRouter.get('/components', function (request, response) {
     var options = {
         'url': gConfiguration.storage.url + '/api/v1/components/list',

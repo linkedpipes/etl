@@ -8,7 +8,7 @@
             <lp-template-hierarchy-tab ng-model="template">
             </lp-template-hierarchy-tab>
         </md-tab>
-        <md-tab label="Usage">
+        <md-tab label="Usage" ng-if="showHierarchy">
             <lp-template-usage-tab ng-model="template">
             </lp-template-usage-tab>
         </md-tab>
@@ -17,6 +17,25 @@
                  js="item.js" html="item.html"
                  scope="dialogScope" locals="dialogLocals"
                  lp-embed></div>
+        </md-tab>
+        <md-tab label="Delete" ng-if="showHierarchy">
+            <div class="layout-padding">
+                <p>
+                    WARNING:
+                    <br/><br/>
+                    This action will delete the template, it does not check
+                    whether the template is used somewhere or if it has
+                    any successors.
+                    <br/><br/><br/>
+                    There is no additional warning dialog, once the delete
+                    button is clicked there is no way back.
+                </p>
+                <md-button ng-click="onDelete()">
+                    <md-icon md-menu-origin md-svg-icon="delete_forever"
+                             class="lp-icon" style="color:red"></md-icon>
+                    Delete
+                </md-button>
+            </div>
         </md-tab>
     </md-tabs>
 </div>

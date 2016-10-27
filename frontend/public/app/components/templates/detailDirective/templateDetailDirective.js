@@ -12,7 +12,8 @@ define([
 
     const PARENT_PATH = "app/components/templates/detailDirective/";
 
-    function directive($rootScope, templateService, templateDialogService) {
+    function directive($rootScope, $location, statusService,
+                       templateService, templateDialogService) {
 
         function controller($scope) {
 
@@ -58,6 +59,17 @@ define([
                         template.id, true);
                 });
             }
+
+            $scope.onDelete = () => {
+                templateService.delete($scope.template.id).then(() => {
+                    $location.path("/templates").search({});
+                }, (response) => {
+                    statusService.deleteFailed({
+                        'title': "Can't delete the pipeline.",
+                        'response': response
+                    });
+                });
+            };
 
             /**
              * Make sure that the content in the shared objects is
@@ -105,8 +117,9 @@ define([
         templateService(app);
         templateDialogService(app);
         //
-        app.directive("lpTemplateDetail", ["$rootScope",
-            "template.service", "template.dialog.service", directive]);
+        app.directive("lpTemplateDetail", ["$rootScope", "$location",
+            "services.status", "template.service",
+            "template.dialog.service", directive]);
     };
 
 });
