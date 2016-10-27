@@ -40,6 +40,10 @@ class PipelineOptions implements PojoLoader.Loadable {
      */
     private IRI pipelineIri;
 
+    private boolean importTemplates = false;
+
+    private boolean updateTemplates = false;
+
     public List<Literal> getLabels() {
         return labels;
     }
@@ -56,12 +60,22 @@ class PipelineOptions implements PojoLoader.Loadable {
         this.pipelineIri = pipelineIri;
     }
 
+    public boolean isImportTemplates() {
+        return importTemplates;
+    }
+
+    public boolean isUpdateTemplates() {
+        return updateTemplates;
+    }
+
     @Override
     public PojoLoader.Loadable load(String predicate, Value value)
             throws PojoLoader.CantLoadException {
         switch (predicate) {
             case "http://etl.linkedpipes.com/ontology/local":
-                local = ((Literal) value).booleanValue();
+                if (value instanceof Literal) {
+                    local = ((Literal) value).booleanValue();
+                }
                 break;
             case "http://www.w3.org/2004/02/skos/core#prefLabel":
                 if (value instanceof Literal) {
@@ -72,6 +86,16 @@ class PipelineOptions implements PojoLoader.Loadable {
                 if (value instanceof IRI) {
                     pipelineIri = (IRI)value;
                 }
+            case "http://etl.linkedpipes.com/ontology/importTemplates":
+                if (value instanceof Literal) {
+                    importTemplates = ((Literal) value).booleanValue();
+                }
+                break;
+            case "http://etl.linkedpipes.com/ontology/updateTemplates":
+                if (value instanceof Literal) {
+                    updateTemplates = ((Literal) value).booleanValue();
+                }
+                break;
         }
         return null;
     }

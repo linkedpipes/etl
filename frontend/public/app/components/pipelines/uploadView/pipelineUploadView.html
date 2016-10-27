@@ -10,6 +10,14 @@
                     <md-radio-button value="file"> Upload file </md-radio-button>
                     <md-radio-button value="url"> From URL </md-radio-button>
                 </md-radio-group>
+                <div>
+                    <md-switch ng-model="importTemplates">
+                        Import templates
+                    </md-switch>
+                    <md-switch ng-model="updateTemplates">
+                        Update existing templates
+                    </md-switch>
+                </div>
             </div>
             <div ng-show="type === 'file'" style="height:10em">
                 <div class="md-padding">

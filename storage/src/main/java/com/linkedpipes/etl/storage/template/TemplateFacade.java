@@ -2,6 +2,7 @@ package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
+import com.linkedpipes.etl.storage.mapping.MappingFacade;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class TemplateFacade {
 
     @Autowired
     private TemplateManager manager;
+
+    @Autowired
+    private MappingFacade mappingFacade;
 
     public Template getTemplate(String iri) {
         return manager.getTemplates().get(iri);
@@ -215,6 +219,7 @@ public class TemplateFacade {
 
     public void remove(Template template) throws BaseException {
         manager.remove(template);
+        mappingFacade.remove(template);
     }
 
 }

@@ -1,10 +1,14 @@
 define([], function () {
-    function controler($scope, $http, $timeout, $location, Upload, statusService) {
+    function controler($scope, $http, $timeout, $location, Upload,
+                       statusService, templateService) {
 
         $scope.fileReady = false;
         $scope.uploading = false;
         $scope.log = '';
         $scope.type = 'file';
+
+        $scope.importTemplates = true;
+        $scope.updateTemplates = false;
 
         /**
          * Create a new pipeline with given ID.
@@ -18,7 +22,9 @@ define([], function () {
             var options = {
                 '@id': 'http://localhost/options',
                 '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
-                'http://etl.linkedpipes.com/ontology/local' : 'false'
+                'http://etl.linkedpipes.com/ontology/local': 'false',
+                'http://etl.linkedpipes.com/ontology/importTemplates': $scope.importTemplates,
+                'http://etl.linkedpipes.com/ontology/updateTemplates': $scope.updateTemplates
             };
             data.append('options', new Blob([JSON.stringify(options)], {
                 type: "application/ld+json"
@@ -35,8 +41,18 @@ define([], function () {
             };
             var uri = '/resources/pipelines';
             $http.post(uri, data, config).then(function(response) {
-                $location.path('/pipelines/edit/canvas').search({
-                    'pipeline': response.data[0]['@graph'][0]['@id']
+                templateService.load(true).then(() => {
+                    $location.path('/pipelines/edit/canvas').search({
+                        'pipeline': response.data[0]['@graph'][0]['@id']
+                    });
+                }, () => {
+                    statusService.getFailed({
+                        'title': "Can't update templates.",
+                        'response': response
+                    });
+                    $location.path('/pipelines/edit/canvas').search({
+                        'pipeline': response.data[0]['@graph'][0]['@id']
+                    });
                 });
             }, function (response) {
                 console.log('failed:', response);
@@ -57,7 +73,9 @@ define([], function () {
             var options = {
                 '@id': 'http://localhost/options',
                 '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
-                'http://etl.linkedpipes.com/ontology/local' : 'false'
+                'http://etl.linkedpipes.com/ontology/local' : 'false',
+                'http://etl.linkedpipes.com/ontology/importTemplates': $scope.importTemplates,
+                'http://etl.linkedpipes.com/ontology/updateTemplates': $scope.updateTemplates
             };
             data.append('options', new Blob([JSON.stringify(options)], {
                 type: "application/ld+json"
@@ -74,9 +92,18 @@ define([], function () {
             var uri = '/resources/pipelines?pipeline=' +
                 encodeURIComponent($scope.url);
             $http.post(uri, data, config).then( function(response) {
-            // $http.post(uri).then(function (response) {
-                $location.path('/pipelines/edit/canvas').search({
-                    'pipeline':  response.data[0]['@graph'][0]['@id']
+                templateService.load(true).then(() => {
+                    $location.path('/pipelines/edit/canvas').search({
+                        'pipeline': response.data[0]['@graph'][0]['@id']
+                    });
+                }, () => {
+                    statusService.getFailed({
+                        'title': "Can't update templates.",
+                        'response': response
+                    });
+                    $location.path('/pipelines/edit/canvas').search({
+                        'pipeline': response.data[0]['@graph'][0]['@id']
+                    });
                 });
             }, function (response) {
                 console.log('failed:', response);
@@ -118,7 +145,8 @@ define([], function () {
 
     }
     //
-    controler.$inject = ['$scope', '$http', '$timeout', '$location', 'Upload', 'services.status'];
+    controler.$inject = ['$scope', '$http', '$timeout', '$location', 'Upload',
+        'services.status', 'template.service'];
     //
     function init(app) {
         app.controller('components.pipelines.upload', controler);

@@ -1,5 +1,5 @@
 define([], function () {
-    function controler($scope, $mdDialog, $http,
+    function controler($scope, $mdDialog, $http, templateService,
                        statusService, jsonldService) {
 
         // Fragment sources.
@@ -12,6 +12,8 @@ define([], function () {
         $scope.activeTab = 0;
 
         $scope.importing = false;
+        $scope.importTemplates = true;
+        $scope.updateTemplates = false;
 
         var template = {
             'iri': {
@@ -33,7 +35,9 @@ define([], function () {
             var options = {
                 '@id': 'http://localhost/options',
                 '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
-                'http://etl.linkedpipes.com/ontology/local': fromLocal
+                'http://etl.linkedpipes.com/ontology/local': fromLocal,
+                'http://etl.linkedpipes.com/ontology/importTemplates': $scope.importTemplates,
+                'http://etl.linkedpipes.com/ontology/updateTemplates': $scope.updateTemplates
             };
             data.append('options', new Blob([JSON.stringify(options)], {
                 type: "application/ld+json"
@@ -49,9 +53,19 @@ define([], function () {
             };
             //
             $http.post(iri, data, config).then(function (response) {
-                $scope.importing = false;
-                $mdDialog.hide({
-                    'pipeline': response.data
+                templateService.load(true).then(() => {
+                    $scope.importing = false;
+                    $mdDialog.hide({
+                        'pipeline': response.data
+                    });
+                }, () => {
+                    statusService.getFailed({
+                        'title': "Can't update templates.",
+                        'response': response
+                    });
+                    $mdDialog.hide({
+                        'pipeline': response.data
+                    });
                 });
             }, function (response) {
                 $scope.importing = false;
@@ -72,7 +86,9 @@ define([], function () {
             var options = {
                 '@id': 'http://localhost/options',
                 '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
-                'http://etl.linkedpipes.com/ontology/local': false
+                'http://etl.linkedpipes.com/ontology/local': false,
+                'http://etl.linkedpipes.com/ontology/importTemplates': $scope.importTemplates,
+                'http://etl.linkedpipes.com/ontology/updateTemplates': $scope.updateTemplates
             };
             data.append('options', new Blob([JSON.stringify(options)], {
                 type: "application/ld+json"
@@ -93,9 +109,19 @@ define([], function () {
 
             $http.post('/resources/localize', data, config).then(
                 function (response) {
-                    $scope.importing = false;
-                    $mdDialog.hide({
-                        'pipeline': response.data
+                    templateService.load(true).then(() => {
+                        $scope.importing = false;
+                        $mdDialog.hide({
+                            'pipeline': response.data
+                        });
+                    }, () => {
+                        statusService.getFailed({
+                            'title': "Can't update templates.",
+                            'response': response
+                        });
+                        $mdDialog.hide({
+                            'pipeline': response.data
+                        });
                     });
                 }, function (response) {
                     $scope.importing = false;
@@ -218,7 +244,7 @@ define([], function () {
     }
 
     controler.$inject = ['$scope', '$mdDialog', '$http',
-        'services.status', 'services.jsonld'];
+        'template.service', 'services.status', 'services.jsonld'];
 
     return function init(app) {
         app.controller('components.pipelines.import.dialog', controler);

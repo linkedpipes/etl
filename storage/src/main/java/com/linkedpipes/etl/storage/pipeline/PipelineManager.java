@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline;
 
+import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
@@ -234,71 +235,24 @@ class PipelineManager {
             Collection<Statement> optionsRdf)
             throws PipelineFacade.OperationFailed {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        //
-        final PipelineOptions options = new PipelineOptions();
-        try {
-            PojoLoader.loadOfType(optionsRdf, PipelineOptions.TYPE, options);
-        } catch (PojoLoader.CantLoadException ex) {
-            throw new PipelineFacade.OperationFailed("Can't load options.", ex);
-        }
-        // Set pipeline IRI - ie. prepare new pipeline IRI.
-        if (options.getPipelineIri() == null) {
-            final IRI iri = valueFactory.createIRI(reservePipelineIri());
-            options.setPipelineIri(iri);
-        }
-        // If we do not have pipeline take and empty one.
-        if (pipelineRdf.isEmpty()) {
-            pipelineRdf = createEmptyPipeline(options.getPipelineIri());
-        }
-        // If pipeline is not local we need to align/import templates.
-        if (!options.isLocal()) {
-            pipelineRdf = PipelineUpdate.updateTemplates(pipelineRdf,
-                    templatesFacade, mappingFacade);
-        }
+        // Prepare pipeline IRI.
+        final IRI iri = valueFactory.createIRI(reservePipelineIri());
+        pipelineRdf = localizePipeline(pipelineRdf, optionsRdf, iri);
         // Read pipeline info.
         Pipeline.Info info = new Pipeline.Info();
         try {
             PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
         } catch (PojoLoader.CantLoadException ex) {
             throw new PipelineFacade.OperationFailed(
-                    "Can't read pipeline.", ex);
+                    "Can't read pipeline after localization.", ex);
         }
-        // Check version.
-        if (info.getVersion() != Pipeline.VERSION_NUMBER) {
-            try {
-                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
-                        templatesFacade, false);
-            } catch (PipelineUpdate.UpdateFailed ex) {
-                throw new PipelineFacade.OperationFailed(
-                        "Migration failed from version: {}",
-                        info.getVersion(), ex);
-            }
-        }
-        // Perform updates.
-        try {
-            pipelineRdf = PipelineUpdate.update(pipelineRdf,
-                    valueFactory.createIRI(info.getIri()), options);
-        } catch (PipelineUpdate.UpdateFailed ex) {
-            throw new PipelineFacade.OperationFailed(
-                    "Can't perform required updates.", ex);
-        }
-        // Reload info from current version.
-        // TODO This is not necessary if there is no change.
-        info = new Pipeline.Info();
-        try {
-            PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
-        } catch (PojoLoader.CantLoadException ex) {
-            throw new PipelineFacade.OperationFailed(
-                    "Can't read pipeline.", ex);
-        }
-        // Create pipeline.
-        final String fileName
-                = options.getPipelineIri().getLocalName() + ".trig";
-        final Pipeline pipeline = new Pipeline(
-                new File(configuration.getPipelinesDirectory(), fileName),
+        // Add to pipeline list.
+        final String fileName  = iri.getLocalName() + ".trig";
+        final Pipeline pipeline = new Pipeline(new File(
+                configuration.getPipelinesDirectory(), fileName),
                 info);
         createPipelineReference(pipeline);
-        // TODO Use event to notify about changes !
+        // Save to dist.
         try {
             RdfUtils.write(pipeline.getFile(), RDFFormat.TRIG, pipelineRdf);
         } catch (RdfUtils.RdfException ex) {
@@ -308,7 +262,7 @@ class PipelineManager {
                     "Can't write pipeline to {}", pipeline.getFile(), ex);
         }
         //
-        pipelines.put(pipeline.getIri(), pipeline);
+        pipelines.put(iri.stringValue(), pipeline);
         infoFacade.onPipelineCreate(pipeline, pipelineRdf);
         return pipeline;
     }
@@ -360,56 +314,7 @@ class PipelineManager {
     public Collection<Statement> localizePipeline(
             Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
             throws PipelineFacade.OperationFailed {
-        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        //
-        if (pipelineRdf.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-        //
-        final PipelineOptions options = new PipelineOptions();
-        try {
-            PojoLoader.loadOfType(optionsRdf, PipelineOptions.TYPE, options);
-        } catch (PojoLoader.CantLoadException ex) {
-            throw new PipelineFacade.OperationFailed("Can't load options.", ex);
-        }
-        // Load pipeline info.
-        Pipeline.Info info = new Pipeline.Info();
-        try {
-            PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
-        } catch (PojoLoader.CantLoadException ex) {
-            throw new PipelineFacade.OperationFailed(
-                    "Can't read pipeline.", ex);
-        }
-        // Perform import if needed.
-        // TODO: Do not import templates here!
-        if (!options.isLocal()) {
-            pipelineRdf = PipelineUpdate.updateTemplates(pipelineRdf,
-                    templatesFacade, mappingFacade);
-        }
-        // Check version.
-        if (info.getVersion() != Pipeline.VERSION_NUMBER) {
-            try {
-                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
-                        templatesFacade, false);
-            } catch (PipelineUpdate.UpdateFailed ex) {
-                throw new PipelineFacade.OperationFailed(
-                        "Migration failed from version: {}",
-                        info.getVersion(), ex);
-            }
-        }
-        // Get pipeline IRI.
-        if (options.getPipelineIri() == null) {
-            final IRI iri = valueFactory.createIRI(reservePipelineIri());
-            options.setPipelineIri(iri);
-        }
-        try {
-            pipelineRdf = PipelineUpdate.update(pipelineRdf,
-                    valueFactory.createIRI(info.getIri()), options);
-        } catch (PipelineUpdate.UpdateFailed ex) {
-            throw new PipelineFacade.OperationFailed(
-                    "Can't perform required updates.", ex);
-        }
-        return pipelineRdf;
+        return  localizePipeline(pipelineRdf, optionsRdf, null);
     }
 
     /**
@@ -482,5 +387,75 @@ class PipelineManager {
         return templates;
     }
 
+    /**
+     * Prepare given pipeline to be used on this instance.
+     *
+     * @param pipelineRdf
+     * @param optionsRdf
+     * @param pipelineIri
+     * @return
+     */
+    private Collection<Statement> localizePipeline(
+            Collection<Statement> pipelineRdf,
+            Collection<Statement> optionsRdf,
+            IRI pipelineIri)
+            throws PipelineFacade.OperationFailed {
+        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        // Check if we have some data.
+        if (pipelineRdf.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+        // Load localization import.
+        final PipelineOptions options = new PipelineOptions();
+        try {
+            PojoLoader.loadOfType(optionsRdf, PipelineOptions.TYPE, options);
+        } catch (PojoLoader.CantLoadException ex) {
+            throw new PipelineFacade.OperationFailed("Can't load options.", ex);
+        }
+        // Load pipeline info.
+        Pipeline.Info info = new Pipeline.Info();
+        try {
+            PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
+        } catch (PojoLoader.CantLoadException ex) {
+            throw new PipelineFacade.OperationFailed(
+                    "Can't read pipeline.", ex);
+        }
+        // Import templates.
+        if (!options.isLocal()) {
+            try {
+                pipelineRdf = PipelineUpdate.updateTemplates(pipelineRdf,
+                        templatesFacade, mappingFacade,
+                        options.isImportTemplates(),
+                        options.isUpdateTemplates());
+            } catch (BaseException ex) {
+                throw new PipelineFacade.OperationFailed(
+                        "Can't import templates.", ex);
+            }
+        }
+        // Migration.
+        if (info.getVersion() != Pipeline.VERSION_NUMBER) {
+            try {
+                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
+                        templatesFacade, false);
+            } catch (PipelineUpdate.UpdateFailed ex) {
+                throw new PipelineFacade.OperationFailed(
+                        "Migration failed from version: {}",
+                        info.getVersion(), ex);
+            }
+        }
+        // Update pipeline IRI.
+        if (pipelineIri != null) {
+            pipelineRdf = PipelineUpdate.updateResources(pipelineRdf,
+                    pipelineIri.stringValue());
+        } else {
+            pipelineIri = valueFactory.createIRI(info.getIri());
+        }
+        // Update labels.
+        if (options.getLabels() != null && !options.getLabels().isEmpty()) {
+            pipelineRdf = PipelineUpdate.updateLabels(pipelineRdf, pipelineIri,
+                    options.getLabels());
+        }
+        return pipelineRdf;
+    }
 
 }
