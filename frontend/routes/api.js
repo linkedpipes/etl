@@ -135,7 +135,7 @@ gApiRouter.post('/components/component', function (request, response) {
 
 gApiRouter.get('/usage', function (request, response) {
     // Pass header options.
-    const options = {
+    var options = {
         'url': gConfiguration.storage.url + '/api/v1/components/usage?iri=' +
         encodeURIComponent(request.query.iri),
         'headers': request.headers
