@@ -17,10 +17,13 @@ define([], function () {
                         return;
                     }
                     // Update data.
-                    scope.template = template;
+                    scope.loaded = false;
                     templateService.getUsage(template.id).then((usage) => {
                         scope.data = usage;
+                        scope.empty = Object.keys(usage).length === 0;
+                        scope.loaded = true;
                     });
+
                 });
 
                 scope.onPipeline = (iri) => {

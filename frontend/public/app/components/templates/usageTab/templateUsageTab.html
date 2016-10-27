@@ -1,15 +1,26 @@
 <div class="layout-padding">
-    <md-list-item class="md-2-line" ng-repeat="(id, pipeline) in data"
-                  ng-click="onPipeline(id)">
-        <div class="md-list-item-text" layout="column">
-            <h3>{{::pipeline.label}}</h3>
-            <p>&nbsp;&nbsp;
-                <span ng-repeat="template in pipeline.templates">
+    <div ng-show="!loaded" layout="row">
+        <span flex="50"/>
+        <img src="app/components/pipelines/listView/assets/img/loading.gif"
+             class="center-block" title="Loading..."
+             style="padding-top: 5em"/>
+    </div>
+    <div ng-show="loaded">
+        <div ng-show="empty">
+            There is no pipeline that use this template or any of its successors.
+        </div>
+        <md-list-item class="md-2-line" ng-repeat="(id, pipeline) in data"
+                      ng-click="onPipeline(id)">
+            <div class="md-list-item-text" layout="column">
+                <h3>{{::pipeline.label}}</h3>
+                <p>&nbsp;&nbsp;
+                    <span ng-repeat="template in pipeline.templates">
                     {{::template.label}}
                     <span ng-if="!$last">,&nbsp;</span>
                 </span>
-            </p>
-        </div>
-        <md-divider></md-divider>
-    </md-list-item>
+                </p>
+            </div>
+            <md-divider></md-divider>
+        </md-list-item>
+    </div>
 </div>
