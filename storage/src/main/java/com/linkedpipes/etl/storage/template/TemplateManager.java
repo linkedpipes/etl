@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -139,7 +140,7 @@ class TemplateManager {
                     templateIri));
         }
         // Add unchanged.
-        final ReferenceTemplate refTemplate = (ReferenceTemplate)template;
+        final ReferenceTemplate refTemplate = (ReferenceTemplate) template;
         for (Statement statement : refTemplate.getInterfaceRdf()) {
             if (!updateRdf.contains(statement.getPredicate())) {
                 newInterface.add(statement);
@@ -161,7 +162,7 @@ class TemplateManager {
                 template.getIri() + "/configuration");
         for (Statement s : configRdf) {
             configWithGraph.add(vf.createStatement(
-                    s.getSubject(),s.getPredicate(),s.getObject(), graph
+                    s.getSubject(), s.getPredicate(), s.getObject(), graph
             ));
         }
         //
@@ -177,7 +178,7 @@ class TemplateManager {
                 !isJarTemplate);
         // Save to file.
         RdfUtils.write(new File(((BaseTemplate) template).getDirectory(),
-                        Template.CONFIG_FILE), RDFFormat.TRIG, configWithGraph);
+                Template.CONFIG_FILE), RDFFormat.TRIG, configWithGraph);
         // Update definitions.
         baseTemplate.setConfigRdf(configWithGraph);
         baseTemplate.setConfigForInstanceRdf(instanceConfigRdf);
@@ -301,6 +302,19 @@ class TemplateManager {
                         template.getConfigDescRdf(),
                         graph.stringValue(), graph,
                         !isJarTemplate));
+    }
+
+    public void remove(Template template) throws BaseException {
+        if (!(template instanceof ReferenceTemplate)) {
+            throw new BaseException("Can't delete non-reference template");
+        }
+        final ReferenceTemplate reference = (ReferenceTemplate) template;
+        try {
+            FileUtils.deleteDirectory(reference.getDirectory());
+        } catch (IOException ex) {
+            LOG.error("Can't delete template directory.", ex);
+        }
+        templates.remove(template.getIri());
     }
 
 }

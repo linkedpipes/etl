@@ -66,6 +66,49 @@ public class TemplateFacade {
         return templates;
     }
 
+    /**
+     * Return all successors of the template.
+     *
+     * @param template
+     * @return
+     */
+    public Collection<Template> getTemplateSuccessors(Template template) {
+        // TODO We do not have to construct this every time.
+        // Create hierarchy of all templates.
+        final Map<Template, List<Template>> successors = new HashMap<>();
+        for (Template item : getTemplates()) {
+            if (!(item instanceof ReferenceTemplate)) {
+                continue;
+            }
+            final ReferenceTemplate ref = (ReferenceTemplate) item;
+            final Template parent = getTemplate(ref.getTemplate());
+            List<Template> brothers = successors.get(parent);
+            if (brothers == null) {
+                brothers = new LinkedList<>();
+                successors.put(parent, brothers);
+            }
+            brothers.add(ref);
+        }
+        // Gather the results.
+        final Set<Template> results = new HashSet<>();
+        final Set<Template> toTest = new HashSet<>();
+        toTest.addAll(successors.getOrDefault(template, Collections.EMPTY_LIST));
+        while (!toTest.isEmpty()) {
+            final Template item = toTest.iterator().next();
+            toTest.remove(item);
+            if (results.contains(item)) {
+                continue;
+            }
+            //
+            final List<Template> children = successors.getOrDefault(item,
+                    Collections.EMPTY_LIST);
+            results.add(item);
+            results.addAll(children);
+            toTest.addAll(children);
+        }
+        return results;
+    }
+
     public Collection<Statement> getInterface(Template template) {
         return ((BaseTemplate) template).getInterfaceRdf();
     }
@@ -168,6 +211,10 @@ public class TemplateFacade {
     public void updateConfig(Template template,
             Collection<Statement> configRdf) throws BaseException {
         manager.updateConfig(template, configRdf);
+    }
+
+    public void remove(Template template) throws BaseException {
+        manager.remove(template);
     }
 
 }
