@@ -152,8 +152,7 @@ public class TemplateFacade {
      * Update template.
      *
      * @param template
-     * @param definitionRdf Template definition.
-     * @param interfaceRdf Interface definition.
+     * @param contentRdf
      */
     public void updateTemplate(Template template,
             Collection<Statement> contentRdf) throws BaseException {
