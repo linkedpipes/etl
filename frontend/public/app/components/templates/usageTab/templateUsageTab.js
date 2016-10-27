@@ -1,29 +1,26 @@
 define([], function () {
     "use strict";
 
-    function directiveFunction($location, templateService) {
+    function directiveFunction($location) {
         return {
             "restrict": "E",
             "scope": {
-                "ngModel": "="
+                "ngModel": "=",
+                "isUsed": "="
             },
             "templateUrl":
                 "app/components/templates/usageTab/templateUsageTab.html",
             "link": (scope) => {
 
-                scope.$watch("ngModel", (template) => {
-                    if (template === undefined) {
-                        scope.template = {};
+                scope.loaded = false;
+                scope.$watch("ngModel", (usage) => {
+                    if (usage === undefined) {
+                        scope.data = {};
                         return;
                     }
-                    // Update data.
-                    scope.loaded = false;
-                    templateService.getUsage(template.id).then((usage) => {
-                        scope.data = usage;
-                        scope.empty = Object.keys(usage).length === 0;
-                        scope.loaded = true;
-                    });
-
+                    scope.loaded = true;
+                    scope.data = usage;
+                    scope.empty = Object.keys(usage).length === 0;
                 });
 
                 scope.onPipeline = (iri) => {
@@ -43,8 +40,7 @@ define([], function () {
         }
         _initialized = true;
         //
-        app.directive("lpTemplateUsageTab",
-            ["$location", "template.service", directiveFunction]);
+        app.directive("lpTemplateUsageTab", ["$location",  directiveFunction]);
     };
 
 });

@@ -17,6 +17,8 @@ define([
 
         function controller($scope) {
 
+            $scope.isUsed = true;
+
             // Instance used to communicate with the dialog.
             $scope.dialogService = templateDialogService.new();
 
@@ -58,10 +60,18 @@ define([
                     $scope.dialogs = templateService.getDialogs(
                         template.id, true);
                 });
+                // Load usage.
+                templateService.getUsage(template.id).then((usage) => {
+                    $scope.usage = usage;
+                    $scope.isUsed = Object.keys(usage).length !== 0;
+                });
             }
 
             $scope.onDelete = () => {
                 templateService.delete($scope.template.id).then(() => {
+                    statusService.success({
+                        'title': "Template deleted.",
+                    });
                     $location.path("/templates").search({});
                 }, (response) => {
                     statusService.deleteFailed({
