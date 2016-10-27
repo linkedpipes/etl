@@ -35,7 +35,10 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         "Input": "http://linkedpipes.com/ontology/Input",
         "Output": "http://linkedpipes.com/ontology/Output",
         "Port": "http://linkedpipes.com/ontology/Port",
-        "supportControl": "http://linkedpipes.com/ontology/supportControl"
+        "supportControl": "http://linkedpipes.com/ontology/supportControl",
+        "Pipeline" : "http://linkedpipes.com/ontology/Pipeline",
+        "Template": "http://etl.linkedpipes.com/ontology/Template",
+        "usedIn" : "http://etl.linkedpipes.com/ontology/usedIn"
     };
 
     const SKOS = {
@@ -577,6 +580,52 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                 }).then(() => {
                 // TODO Do not reload all.
                 return service.load(true);
+            });
+        };
+
+        service.getUsage = (id) => {
+            const url = "/api/v1/usage?iri=" + encodeURI(id);
+            const options = {"headers": {"Accept": "application/ld+json"}};
+            return $http.get(url, options).then(function (response) {
+                const data = jsonld.quads(response.data);
+                const pipelines = {};
+                const templates = {};
+                data.iterateResources((item) => {
+                    const id = jsonld.r.getId(item);
+                    const types = jsonld.r.getTypes(item);
+                    if (types.indexOf(LP.Pipeline) !== -1) {
+                        const label = jsonld.r.getString(
+                            item, SKOS.prefLabel)["@value"];
+                        pipelines[id] = {
+                            'label' : label,
+                            'templates' : []
+                        };
+                    }
+                    if (types.indexOf(LP.Template) !== -1) {
+                        const id = jsonld.r.getId(item);
+                        const usedIn = jsonld.r.getIRIs(item, LP.usedIn);
+                        templates[id] = {
+                            "template" : service.getTemplate(id),
+                            "pipelines" : usedIn
+                        };
+                    }
+                });
+                for (let key in templates) {
+                    if (!templates.hasOwnProperty(key)) {
+                        continue;
+                    }
+                    const template = templates[key];
+                    //
+                    for (let index = 0; index < template.pipelines.length;
+                         ++index) {
+                        const iri = template.pipelines[index];
+                        pipelines[iri].templates.push({
+                            'id' : template.template.id,
+                            'label' : template.template.label
+                        });
+                    }
+                }
+                return pipelines;
             });
         };
 

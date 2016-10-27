@@ -3,10 +3,11 @@ define([
     "../generalTab/templateGeneralTab",
     "../hierarchyTab/templateHierarchyTab",
     "../embedDirective/templateEmbedDirective",
+    "../usageTab/templateUsageTab",
     "../templateService",
     "../../dialogs/dialogService"
 ], function (jQuery, jsonld, generalTab, hierarchyTab, embedDirective,
-             templateService, templateDialogService) {
+             usageTab, templateService, templateDialogService) {
     "use strict";
 
     const PARENT_PATH = "app/components/templates/detailDirective/";
@@ -100,6 +101,7 @@ define([
         generalTab(app);
         hierarchyTab(app);
         embedDirective(app);
+        usageTab(app);
         templateService(app);
         templateDialogService(app);
         //

@@ -132,3 +132,23 @@ gApiRouter.post('/components/component', function (request, response) {
     }).pipe(response);
 });
 
+
+gApiRouter.get('/usage', function (request, response) {
+    // Pass header options.
+    const options = {
+        'url': gConfiguration.storage.url + '/api/v1/components/usage?iri=' +
+        encodeURIComponent(request.query.iri),
+        'headers': request.headers
+    }
+    console.log(options.url);
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
+});

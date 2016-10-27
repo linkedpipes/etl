@@ -8,6 +8,10 @@
             <lp-template-hierarchy-tab ng-model="template">
             </lp-template-hierarchy-tab>
         </md-tab>
+        <md-tab label="Usage">
+            <lp-template-usage-tab ng-model="template">
+            </lp-template-usage-tab>
+        </md-tab>
         <md-tab ng-repeat="item in dialogs" label="{{item.label}}">
             <div class="md-padding"
                  js="item.js" html="item.html"

@@ -1,0 +1,15 @@
+<div class="layout-padding">
+    <md-list-item class="md-2-line" ng-repeat="(id, pipeline) in data"
+                  ng-click="onPipeline(id)">
+        <div class="md-list-item-text" layout="column">
+            <h3>{{::pipeline.label}}</h3>
+            <p>&nbsp;&nbsp;
+                <span ng-repeat="template in pipeline.templates">
+                    {{::template.label}}
+                    <span ng-if="!$last">,&nbsp;</span>
+                </span>
+            </p>
+        </div>
+        <md-divider></md-divider>
+    </md-list-item>
+</div>

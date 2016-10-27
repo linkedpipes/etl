@@ -39,10 +39,18 @@
                 }
             }
         } else if (Array.isArray(data)) {
-            // It"s array with graphs.
-            return {
-                "@graph": data
-            };
+            data.forEach((item)=> {
+                if (item["@graph"] !== undefined) {
+                    graphList.push(item);
+                } else {
+                    // Default graph.
+                    if (!Array.isArray(item)) {
+                        // It can be a single object.
+                        item = [item];
+                    }
+                    graphList.push({"@graph" : item, "@id": ""});
+                }
+            });
         } else {
             // There is no graph.
             graphList.push({
