@@ -140,7 +140,6 @@ gApiRouter.get('/usage', function (request, response) {
         encodeURIComponent(request.query.iri),
         'headers': request.headers
     }
-    console.log(options.url);
     gRequest.get(options).on('error', function (error) {
         response.status(503).json({
             'exception': {
