@@ -24,6 +24,7 @@ define([], function () {
             const componentCore = templateService.getCoreTemplate(component);
             return {
                 "label": component.label,
+                "parent": component.core ? "" : componentCore.label,
                 "icon": ICONS[componentCore.type],
                 "component": component,
                 "order": 0,
@@ -53,6 +54,7 @@ define([], function () {
                 if (port.content === sourcePort.content) {
                     const record = {
                         "label": component.label,
+                        "parent": component.core ? "" : componentCore.label,
                         "icon": ICONS[componentCore.type],
                         "component": component,
                         "portBinding": port.binding,
