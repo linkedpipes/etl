@@ -156,7 +156,7 @@ define([], function () {
         "isVersionOfIRIs" : {
             "$type": "value",
             "$array": true,
-            "$label": "s version of Dataset IRIs"
+            "$label": "Is version of Dataset IRIs"
         },
         "version" : {
             "$type": "str",
