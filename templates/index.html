@@ -1,0 +1,167 @@
+---
+layout: default
+title: Component templates
+materialicon: extension
+---
+
+<div class="row container">
+  <div class="col s12 l11">
+    <div class="scrollspy" id="overview">
+        <h2 class="header center orange-text">Component templates</h2>
+        <p class="flow-text">
+        Sooner or later, a need for sharing configuration of <a href="../components/">components</a> among individual pipelines arises.
+        A typical example can be multiple pipelines loading data to a single destination.
+        When that destination changes, without templates, one needs to go through individual pipelines and rewrite all loader instances manually.
+        Well, in the case of LP-ETL, this operation can also be done by a text editor by replacing all occurences in the RDF files in which the pipelines are stored.
+        Nevertheless, a proper support for this use case (and many others) comes in a form of component templates.
+        </p>
+    </div>
+    <div id="creating" class="scrollspy">
+        <h3 class="center orange-text">Creating a component template</h3>
+        <div class="row">
+            <div class="col s12 m7 l6">
+                <p class="center"><img src="/assets/snippets/createtemplate.png" alt="Create a template" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m5 l6">
+                <p class="flow-text">
+                To create a template, click on the <i class="material-icons">add</i> button of the selected component in the pipeline edit view.
+                </p>
+            </div>
+        </div>    
+        <div class="row">
+            <div class="col s12 m7 l6">
+                <p class="flow-text">
+                A &quot;Create template from:&quot; dialog will appear, with configuration pre-filled according to the component instance from which the template is being created.
+                The configuration has the same items as does the configuration of the component itself.
+                If you want the newly created template to have a different configuration stored, you can change it now.
+                Next, click on the &quot;Create template&quot; button.
+                </p>
+            </div>
+            <div class="col s12 m5 l6">
+                <p class="center"><img src="/assets/snippets/createtemplate2.png" alt="Create template dialog" class="responsive-img"/></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m5 l6">
+                <p class="center"><img src="/assets/snippets/createtemplate3.png" alt="Template instance" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m7 l6">
+                <p class="flow-text">
+                Once the template is created, take a look at the original component instance.
+                Its configuration will be disabled (grayed out).
+                This is due to the default setting in the &quot;Inheritance&quot; tab, where all configuration items are set to inherit their values from the template.
+                In case you want to inherit only some of the items and change others in the component instances, this is where you can disable the inheritance for each such item.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="managing" class="scrollspy">
+        <h3 class="center orange-text">Managing existing templates</h3>
+        <div class="row">
+            <div class="col s12 m7 l6">
+                <p class="center"><img src="/assets/snippets/listtemplates1.png" alt="List templates" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m5 l6">
+                <p class="flow-text">
+                To see existing templates, click on the &quot;Templates&quot; top-level menu item.
+                A searchable list of component templates will appear.
+                Each item in the list represents a component template.
+                On the second row of the item are the ancestor templates in a template hierarchy, which we will <a href="#hierarchy">explain later</a>.
+                In our case, the name of the original component is displayed there.
+                </p>
+            </div>
+        </div>    
+        <div class="row">
+            <div class="col s12 m7 l6">
+                <p class="flow-text">
+                In the &quot;Configuration&quot; tab of a template, its configuration can be changed, possibly affecting all component instances of the template.
+                In the &quot;Usage&quot; tab of a template, its usage in pipelines can be seen.
+                Since there can be a hierarchy of templates, the name of the template actually used in the pipeline (which can be a descendant of the currently displayed template) is displayed on the second row of the usage item.
+                By clicking on the usage item, we get to the pipeline edit mode.
+                </p>
+            </div>
+            <div class="col s12 m5 l6">
+                <p class="center"><img src="/assets/snippets/templateusage.png" alt="Template usage tab" class="responsive-img"/></p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="flow-text">
+            On the &quot;Delete&quot; tab of the template, the template can be deleted.
+            If the template is being used, a warning will be displayed.
+            Please note that deleting a template being used is possible, but discouraged as it will break all descendant templates and all pipelines in which it or a descendant template was used.
+            The recommended way of deleting a template is to delete all affected pipelines and templates first.
+            </p>
+        </div>
+    </div>
+    <div id="hierarchy" class="scrollspy">
+        <h3 class="center orange-text">Template hierarchies</h3>
+        <div class="row">
+            <div class="col s12 m7 l6">
+                <p class="center"><img src="/assets/snippets/secondleveltemplate.png" alt="Second level template" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m5 l6">
+                <p class="flow-text">
+                In more complex projects, it may be necessary to use a multi-level configuration inheritance scheme.
+                This is possible as you can create a template from an instance of a template already used in a pipeline in the same way as <a href="#creating">described above</a>.
+                The resulting template hierarchy will be displayed in the &quot;Hierarchy&quot; tab of the component instance.
+                A similar view with ancestor and descendant templates overview can be seen for templates in their &quot;Hierarchy&quot; tab.
+                </p>
+            </div>
+        </div>    
+    </div>    
+    <div id="inheritance" class="scrollspy">
+        <h3 class="center orange-text">Configuration inheritance types</h3>
+        <div class="row">
+            <div class="col s12 m5 l6">
+                <p class="flow-text">
+                In the &quot;Template&quot; tab of a template, inheritance types can be controlled for each configuration item.
+                The &quot;Inherit from template&quot; option is already familiar from the component instance.
+                It says that this value will not be set in this template and will be inherited from the ancestor (root) template.
+                When enabled, the corresponding configuration item will be disabled (grayed out) and its value ignored.
+                </p>
+                <p class="flow-text">
+                The &quot;Overwrite instance&quot; option allows us to forbid changing this value in descendant templates and component instances.
+                When enabled, these configuration items will be hidden in the descendants and the value set in this template (or inherited from an ancestor template) will be used.
+                </p>
+            </div>
+            <div class="col s12 m7 l6">
+                <p class="center"><img src="/assets/snippets/inheritancetypes.png" alt="Configuration inheritance types" class="responsive-img"/></p>
+            </div>
+        </div>    
+    </div>
+    <div id="import" class="scrollspy">
+        <h3 class="center orange-text">Importing pipelines with templates</h3>
+        <div class="row">
+            <div class="col s12 m7 l6">
+                <p class="center"><img src="/assets/snippets/pipeline-import.png" alt="Importing pipelines with templates" class="responsive-img"/></p>
+            </div>
+            <div class="col s12 m5 l6">
+                <p class="flow-text">
+                Pipelines using templates can be exported to and imported from other LP-ETL instances.
+                Pipeline export file (or the pipeline export obtained by dereferencing the pipeline IRI) contains all templates used in that pipeline.
+                There is a switch in the import pipeline dialog, which determines whether templates already present in the pipeline being imported should overwrite or reuse the templates existing in the LP-ETL instance.
+                </p>
+                <p class="flow-text">
+                When you have, e.g. a testing and a production instance, and you update your templates in the testing instance and want to update the production instance by importing pipeline from the testing envrionment, you probably want to rewrite the pre-existing templates.
+                </p>
+                <p class="flow-text">
+                On the other hand, when you have two independent instances, e.g. of two developers, which load data to different triple stores, and this loading configuration is stored in a template, you may want to reuse the existing templates when importing a pipeline.
+                This causes the incoming pipeline to load to the correct triple store, if it uses the same loader templates.
+                </p>
+            </div>
+        </div>    
+    </div>
+  </div>
+  <div class="col l1 hide-on-med-and-down">
+    <div class="toc-wrapper pinned">
+        <ul class="section table-of-contents flow-text">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#creating">Creating templates</a></li>
+            <li><a href="#managing">Template management</a></li>
+            <li><a href="#hierarchy">Template hierarchies</a></li>
+            <li><a href="#inheritance">Inheritance types</a></li>
+            <li><a href="#import">Import with templates</a></li>
+        </ul>
+    </div>
+  </div>
+</div>
