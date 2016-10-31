@@ -1,33 +1,33 @@
-<div class="container-flow">
-    <div layout-gt-sm="row">
-        <md-input-container class="md-block" ng-hide="control.fileName.forced" flex>
-            <label>Output file name</label>
-            <input ng-model="dialog.fileName"
-                   ng-disabled="control.fileName.inherit"
-                   placeholder="my.ttl" required>
-        </md-input-container>
-        <md-input-container class="md-block" ng-hide="control.fileType.forced" flex>
-            <label>Format</label>
-            <md-select ng-model="dialog.fileType" ng-disabled="control.fileType.inherit" required>
-                <md-option value="application/rdf+xml">RDF/XML</md-option>
-                <md-option value="application/n-triples">N-Triples</md-option>
-                <md-option value="text/turtle">Turtle</md-option>
-                <md-option value="text/rdf+n3">N3</md-option>
-                <md-option value="application/trix">TriX</md-option>
-                <md-option value="application/trig">TriG</md-option>
-                <md-option value="application/x-binary-rdf">BinaryRDF</md-option>
-                <md-option value="application/n-quads">N-Quads</md-option>
-                <md-option value="application/ld+json">JSON-LD</md-option>
-                <md-option value="application/rdf+json">RDF/JSON</md-option>
-                <md-option value="application/xhtml+xml">RDFa</md-option>
-            </md-select>
-        </md-input-container>
-    </div>
-    <md-input-container class="md-block" ng-hide="control.graphUri.forced" flex>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
+        <label>Output file name</label>
+        <input ng-model="dialog.fileName.value"
+               ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
+               placeholder="my.ttl">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.fileType.hide">
+        <label>Format</label>
+        <md-select
+                ng-disabled="dialog.fileType.disabled || dialog.fileType.inherit"
+                ng-model="dialog.fileType.value">
+            <md-option value="application/rdf+xml">RDF/XML</md-option>
+            <md-option value="application/n-triples">N-Triples</md-option>
+            <md-option value="text/turtle">Turtle</md-option>
+            <md-option value="text/rdf+n3">N3</md-option>
+            <md-option value="application/trix">TriX</md-option>
+            <md-option value="application/trig">TriG</md-option>
+            <md-option value="application/x-binary-rdf">BinaryRDF</md-option>
+            <md-option value="application/n-quads">N-Quads</md-option>
+            <md-option value="application/ld+json">JSON-LD</md-option>
+            <md-option value="application/rdf+json">RDF/JSON</md-option>
+            <md-option value="application/xhtml+xml">RDFa</md-option>
+        </md-select>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.graphUri.hide">
         <label>URI of output graph (for quads)</label>
-        <input type="url" ng-model="dialog.graphUri"
+        <input type="url" ng-model="dialog.graphUri.value"
                placeholder="http://example.com/resource/graph"
-               ng-disabled="control.graphUri.inherit">
+               ng-disabled="dialog.graphUri.disabled || dialog.graphUri.inherit">
     </md-input-container>
 </div>
-

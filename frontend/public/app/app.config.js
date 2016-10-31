@@ -22,6 +22,20 @@ define([], function () {
                     'pageTitle': 'Execution - LinkedPipes ETL',
                     'color': '#FF9800'
                 })
+                .when('/templates', {
+                    'templateUrl': 'app/components/templates/listView/templateListView.html',
+                    'controller': 'template.list',
+                    'activeView': 'templates',
+                    'pageTitle': 'Templates - LinkedPipes ETL',
+                    'color': '#2196F3'
+                })
+                .when('/templates/detail', {
+                    'templateUrl': 'app/components/templates/detailView/templateDetailView.html',
+                    'controller': 'template.detail',
+                    'activeView': 'templates',
+                    'pageTitle': 'Templates - LinkedPipes ETL',
+                    'color': '#2196F3'
+                })
                 .when('/pipelines', {
                     'templateUrl': 'app/components/pipelines/listView/pipelineListView.html',
                     'controller': 'components.pipelines.list',

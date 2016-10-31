@@ -1,69 +1,45 @@
 define([], function () {
+    "use strict";
 
-    const PREFIX = 'http://plugins.linkedpipes.com/ontology/e-httpGetFile#';
+    const DESC = {
+        "$namespace" : "http://plugins.linkedpipes.com/ontology/e-httpGetFile#",
+        "$type": "Configuration",
+        "uri" : {
+            "$type" : "str",
+            "$property" : "fileUri",
+            "$control": "fileUriControl",
+            "$label" : "File URL"
+        },
+        "fileName" : {
+            "$type" : "str",
+            "$property" : "fileName",
+            "$control": "fileNameControl",
+            "$label" : "File name"
+        },
+        "hardRedirect" : {
+            "$type" : "bool",
+            "$property" : "hardRedirect",
+            "$control": "hardRedirectControl",
+            "$label" : "Force to follow redirects"
+        }
+    };
 
-    function controller($scope, $service, rdfService) {
+    function controller($scope, $service) {
 
-        $scope.dialog = {};
-
-        if ($scope.control === undefined) {
-            $scope.control = {};
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        var rdf = rdfService.create('');
-
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            $scope.dialog.uri = rdf.getString(resource,
-                PREFIX + 'fileUri');
-            $scope.dialog.fileName = rdf.getString(resource,
-                PREFIX + 'fileName');
-            $scope.dialog.hardRedirect = rdf.getBoolean(resource,
-                PREFIX + 'hardRedirect');
-            //
-            $scope.control.uri = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'fileUriControl'));
-            $scope.control.fileName = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'fileNameControl'));
-            $scope.control.hardRedirect = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'hardRedirectControl'));
-        }
-
-        function saveDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            if (!$scope.control.uri.forced) {
-                rdf.setString(resource, PREFIX + 'fileUri',
-                    $scope.dialog.uri);
-            }
-            if (!$scope.control.fileName.forced) {
-                rdf.setString(resource, PREFIX + 'fileName',
-                    $scope.dialog.fileName);
-            }
-            if (!$scope.control.hardRedirect.forced) {
-                rdf.setBoolean(resource, PREFIX + 'hardRedirect',
-                    $scope.dialog.hardRedirect);
-            }
-            //
-            rdf.setIri(resource, PREFIX + 'fileUriControl',
-                $service.control.toIri($scope.control.uri));
-            rdf.setIri(resource, PREFIX + 'fileNameControl',
-                $service.control.toIri($scope.control.fileName));
-            rdf.setIri(resource, PREFIX + 'hardRedirectControl',
-                $service.control.toIri($scope.control.hardRedirect));
-        }
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {
-            saveDialog();
-        }
+            dialogManager.save();
+        };
 
-        loadDialog();
+        dialogManager.load();
 
     }
 
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });

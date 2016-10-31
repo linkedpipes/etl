@@ -1,14 +1,11 @@
 define([], function () {
-    "use-prefix";
+    "use strict";
 
     function controller($scope) {
 
-        // Define the control object on shared scope.
-        if ($scope.control == undefined) {
-            $scope.control = {}
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
-
-        // Here we just use the scope to show the values from template.
 
     }
 

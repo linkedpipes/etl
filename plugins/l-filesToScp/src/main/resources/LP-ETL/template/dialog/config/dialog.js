@@ -1,51 +1,54 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'host': '',
-            'port': 22,
-            'directory': '',
-            'createDirectory': false,
-            'userName': '',
-            'password': ''
-        };
+    const DESC = {
+        "$namespace": "http://plugins.linkedpipes.com/ontology/l-filesToScp#",
+        "$type": "Configuration",
+        "$control": {
+            "$predicate": "auto"
+        },
+        "host": {
+            "$type": "str",
+            "$label": "Host address"
+        },
+        "port": {
+            "$type": "int",
+            "$label": "Port number"
+        },
+        "directory": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "createDirectory": {
+            "$type": "bool",
+            "$label": "Password"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "Target directory"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Create target directory"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/l-filesToScp#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.host = rdf.getString(resource, 'host');
-            $scope.dialog.port = rdf.getInteger(resource, 'port');
-            $scope.dialog.directory = rdf.getString(resource, 'targetDirectory');
-            $scope.dialog.createDirectory = rdf.getBoolean(resource, 'createDirectory');
-            $scope.dialog.userName = rdf.getString(resource, 'userName');
-            $scope.dialog.password = rdf.getString(resource, 'password');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setString(resource, 'host', $scope.dialog.host);
-            rdf.setInteger(resource, 'port', $scope.dialog.port);
-            rdf.setString(resource, 'targetDirectory', $scope.dialog.directory);
-            rdf.setBoolean(resource, 'createDirectory', $scope.dialog.createDirectory);
-            rdf.setString(resource, 'userName', $scope.dialog.userName);
-            rdf.setString(resource, 'password', $scope.dialog.password);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });

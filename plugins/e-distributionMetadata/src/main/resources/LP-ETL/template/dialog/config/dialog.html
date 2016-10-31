@@ -1,111 +1,205 @@
-<div ng-hide="control.pattern.forced">
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.downloadURL.hide">
+        <label>Download URL</label>
+        <input type="url"
+               ng-model="dialog.downloadURL.value"
+               ng-disabled="dialog.downloadURL.disabled || dialog.downloadURL.inherit"
+               placeholder="http://ex.org/dump/dataset.ttl">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.mediaType.hide">
+        <label>Media (MIME) type</label>
+        <input ng-model="dialog.mediaType.value"
+               ng-disabled="dialog.mediaType.disabled || dialog.mediaType.inherit"
+               placeholder="application/trig">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.accessURL.hide">
+        <label>Access URL</label>
+        <input type="url" ng-model="dialog.accessURL.value"
+               ng-disabled="dialog.accessURL.disabled || dialog.accessURL.inherit"
+               placeholder="http://ex.org/dump/dataset">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.exampleResources.hide">
+        <label>Example resources (comma separated)</label>
+        <input ng-model="dialog.exampleResources.value"
+               ng-disabled="dialog.exampleResources.disabled || dialog.exampleResources.inherit"
+               placeholder="http://ex.org/resource/my">
+    </md-input-container>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.sparqlEndpointUrl.hide">
+        <label>SPARQL Endpoint URL</label>
+        <input type="url" ng-model="dialog.sparqlEndpointUrl"
+               ng-disabled="dialog.sparqlEndpointUrl.disabled || dialog.sparqlEndpointUrl.inherit"
+               placeholder="http://ex.org/sparql">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.schemaType.hide">
+        <label>Schema MIME type</label>
+        <input ng-model="dialog.schemaType.value"
+               ng-disabled="dialog.schemaType.disabled || dialog.schemaType.inherit"
+               placeholder="application/trig">
+    </md-input-container>
+    <md-switch ng-model="dialog.schemaFromDataset"
+               ng-disabled="dialog.schemaFromDataset.disabled || dialog.schemaFromDataset.inherit"
+               ng-hide="dialog.schemaFromDataset.hide"
+               flex-gt-sm>Dataset doc as schema
+    </md-switch>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.schemaFromDataset.hide">
+        <label>Schema URL</label>
+        <input type="url"
+               ng-disabled="dialog.schemaFromDataset.value"
+               ng-disabled="dialog.schemaFromDataset.disabled || dialog.schemaFromDataset.inherit"
+               ng-model="dialog.schema.value"
+               placeholder="http://ex.org/resource/my.schema">
+    </md-input-container>
+    <md-switch ng-model="dialog.useDatasetURIfromInput"
+               ng-disabled="dialog.useDatasetURIfromInput.disabled || dialog.useDatasetURIfromInput.inherit"
+               ng-hide="dialog.useDatasetURIfromInput.hide"
+    >Dataset IRI from dataset
+    </md-switch>
+    <md-input-container class="md-block">
+        <label>Dataset IRI</label>
+        <input type="url"
+               ng-disabled="dialog.useDatasetURIfromInput.value || dialog.datasetURI.disabled || dialog.datasetURI.inherit"
+               ng-model="dialog.datasetURI.value"
+               placeholder="http://ex.org/resource/dataset">
+    </md-input-container>
+    <md-switch ng-model="dialog.generateDistroURIFromDataset.value"
+               ng-disabled="dialog.generateDistroURIFromDataset.disabled || dialog.generateDistroURIFromDataset.inherit"
+               ng-hide="dialog.generateDistroURIFromDataset.hide">
+        Distribution IRI based on dataset
+    </md-switch>
+    <md-input-container class="md-block">
+        <label>Distribution IRI</label>
+        <input type="url"
+               ng-hide="dialog.distributionURI.hide"
+               ng-disabled="dialog.generateDistroURIFromDataset.value || dialog.distributionURI.disabled || dialog.distributionURI.inherit"
+               ng-model="dialog.distributionURI.value"
+               placeholder="http://ex.org/resource/dataset/distribution">
+    </md-input-container>
+    <md-switch ng-model="dialog.originalLanguageFromDataset"
+               ng-disabled="dialog.originalLanguageFromDataset.disabled || dialog.originalLanguageFromDataset.inherit"
+               ng-hide="dialog.originalLanguageFromDataset.hide">
+        Original language from dataset
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.language_orig.hide">
+        <label>Original language tag</label>
+        <input ng-disabled="dialog.originalLanguageFromDataset || dialog.language_orig.disabled || dialog.language_orig.inherit"
+               ng-model="dialog.language_orig.value"
+               placeholder="cs">
+    </md-input-container>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Download URL</label>
-            <input type="url" required ng-model="dialog.downloadURL" placeholder="http://ex.org/dump/dataset.ttl">
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Media (MIME) type</label>
-            <input required ng-model="dialog.mediaType" placeholder="application/trig">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Access URL</label>
-            <input type="url" ng-model="dialog.accessURL" placeholder="http://ex.org/dump/dataset">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Example resources (comma separated)</label>
-            <input ng-model="dialog.exampleResources" placeholder="http://ex.org/resource/my">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>SPARQL Endpoint URL</label>
-            <input type="url" ng-model="dialog.sparqlEndpointUrl" placeholder="http://ex.org/sparql">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Schema MIME type</label>
-            <input ng-model="dialog.schemaType" placeholder="application/trig">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.schemaFromDataset" flex-gt-sm>Dataset doc as schema</md-switch>
-        <md-input-container  class="md-block" flex-gt-sm>
-            <label>Schema URL</label>
-            <input type="url" ng-disabled="dialog.schemaFromDataset" ng-model="dialog.schema" placeholder="http://ex.org/resource/my.schema">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useDatasetURIfromInput" flex-gt-sm>Dataset IRI from dataset</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Dataset IRI</label>
-            <input type="url" ng-disabled="dialog.useDatasetURIfromInput" ng-model="dialog.datasetURI" placeholder="http://ex.org/resource/dataset">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.generateDistroURIFromDataset" flex-gt-sm>Distribution IRI based on dataset</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Distribution IRI</label>
-            <input type="url" ng-disabled="dialog.generateDistroURIFromDataset" ng-model="dialog.distributionURI" placeholder="http://ex.org/resource/dataset/distribution">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.originalLanguageFromDataset" flex-gt-sm>Original language from dataset</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Original language tag</label>
-            <input ng-disabled="dialog.originalLanguageFromDataset" ng-model="dialog.language_orig" placeholder="cs">
-        </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.titleFromDataset" flex-gt-sm>Get title from dataset</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-switch ng-model="dialog.titleFromDataset.value"
+                   ng-disabled="dialog.titleFromDataset.disabled || dialog.titleFromDataset.inherit"
+                   ng-hide="dialog.titleFromDataset.hide"
+                   flex>Get title from dataset
+        </md-switch>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.title_orig.hide" flex>
             <label>Dataset title in original language</label>
-            <input ng-disabled="dialog.titleFromDataset" ng-model="dialog.language_orig" placeholder="Můj dataset">
+            <input ng-model="dialog.title_orig.value"
+                   ng-disabled="dialog.titleFromDataset.value || dialog.title_orig.disabled || dialog.title_orig.inherit"
+                   placeholder="Můj dataset">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.title_en.hide"
+                            flex>
             <label>Dataset title in English</label>
-            <input ng-disabled="dialog.titleFromDataset" ng-model="dialog.title_en" placeholder="My dataset">
+            <input ng-model="dialog.title_en.value"
+                   ng-disabled="dialog.titleFromDataset || dialog.title_en.disabled || dialog.title_en.inherit"
+                   placeholder="My dataset">
         </md-input-container>
     </div>
     <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.descriptionFromDataset" flex-gt-sm>Get description from dataset</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-switch ng-model="dialog.descriptionFromDataset.value"
+                   ng-disabled="dialog.descriptionFromDataset.disabled || dialog.descriptionFromDataset.inherit"
+                   ng-hide="dialog.descriptionFromDataset.hide"
+                   flex>Get description from dataset
+        </md-switch>
+        <md-input-container class="md-block" ng-hide="dialog.desc_orig.hide"
+                            flex>
             <label>Dataset description in original language</label>
-            <input ng-disabled="dialog.descriptionFromDataset" ng-model="dialog.desc_orig" placeholder="Můj dataset">
+            <input ng-disabled="dialog.descriptionFromDataset || dialog.desc_orig.disabled || dialog.desc_orig.inherit"
+                   ng-model="dialog.desc_orig.value"
+                   placeholder="Můj dataset">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.desc_en.hide"
+                            flex>
             <label>Dataset description in English</label>
-            <input ng-disabled="dialog.descriptionFromDataset" ng-model="dialog.desc_en" placeholder="My dataset">
+            <input ng-disabled="dialog.descriptionFromDataset || dialog.desc_en.disabled || dialog.desc_en.inherit"
+                   ng-model="dialog.desc_en.value"
+                   placeholder="My dataset">
         </md-input-container>
     </div>
     <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.issuedFromDataset" flex-gt-sm>Use issued date from dataset</md-switch>
-        <md-datepicker ng-disabled="dialog.issuedFromDataset" ng-model="dialog.issued" md-placeholder="Issued" flex-gt-sm></md-datepicker>
+        <md-switch ng-model="dialog.issuedFromDataset.value"
+                   ng-disabled="dialog.issuedFromDataset.disabled || dialog.issuedFromDataset.inherit"
+                   ng-hide="dialog.issuedFromDataset.hide"
+                   flex>Use issued date from dataset
+        </md-switch>
+        <md-datepicker
+                ng-disabled="dialog.issuedFromDataset.value || dialog.issued.disabled || dialog.issued.inherit"
+                ng-hide="dialog.issued.hide"
+                ng-model="dialog.issued.value"
+                md-placeholder="Issued" flex></md-datepicker>
     </div>
     <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useNow" flex-gt-sm>Use current date as modified</md-switch>
-        <md-datepicker ng-disabled="dialog.useNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>
+        <md-switch ng-model="dialog.useNow.value"
+                   ng-disabled="dialog.useNow.disabled || dialog.useNow.inherit"
+                   ng-hide="dialog.useNow.hide"
+                   flex>Use current date as modified
+        </md-switch>
+        <md-datepicker
+                ng-disabled="dialog.useNow.value || dialog.modified.disabled || dialog.modified.inherit"
+                ng-model="dialog.modified.value"
+                ng-hide="dialog.modified.hide"
+                md-placeholder="Modified" flex></md-datepicker>
     </div>
 
     <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useTemporal" flex-gt-sm>Use temporal coverage</md-switch>
-        <md-switch ng-disabled="!dialog.useTemporal" ng-model="dialog.temporalFromDataset" flex-gt-sm>Temporal coverage from dataset</md-switch>
+        <md-switch ng-model="dialog.useTemporal.value"
+                   ng-disabled="dialog.useTemporal.disabled || dialog.useTemporal.inherit"
+                   ng-hide="dialog.useTemporal.hide"
+                   flex>Use temporal coverage
+        </md-switch>
+        <md-switch
+                ng-disabled="!dialog.useTemporal || dialog.temporalFromDataset.disabled || dialog.temporalFromDataset.inherit"
+                ng-model="dialog.temporalFromDataset.value"
+                ng-hide="dialog.temporalFromDataset.hide"
+                flex>Temporal coverage from dataset
+        </md-switch>
     </div>
     <div layout-gt-sm="row">
-        <md-datepicker ng-disabled="!dialog.useTemporal || dialog.temporalFromDataset" ng-model="dialog.temporalStart" md-placeholder="Start" flex-gt-sm></md-datepicker>
-        <md-datepicker ng-disabled="dialog.useNowTemporalEnd || !dialog.useTemporal || dialog.temporalFromDataset" ng-model="dialog.temporalEnd" md-placeholder="End" flex-gt-sm></md-datepicker>
-        <md-switch ng-disabled="!dialog.useTemporal || dialog.temporalFromDataset" ng-model="dialog.useNowTemporalEnd" flex-gt-sm>Temporal coverage end is Now</md-switch>
+        <md-datepicker
+                ng-disabled="!dialog.useTemporal.value || dialog.temporalFromDataset.value || dialog.temporalStart.disabled || dialog.temporalStart.inherit"
+                ng-model="dialog.temporalStart.value"
+                ng-hide="dialog.temporalStart.hide"
+                md-placeholder="Start" flex></md-datepicker>
+        <md-datepicker
+                ng-disabled="dialog.useNowTemporalEnd.value || !dialog.useTemporal.value || dialog.temporalFromDataset.value || dialog.temporalEnd.disabled || dialog.temporalEnd.inherit"
+                ng-model="dialog.temporalEnd.value"
+                ng-hide="dialog.temporalEnd.hide"
+                md-placeholder="End" flex></md-datepicker>
+        <md-switch
+                ng-disabled="!dialog.useTemporal.value || dialog.temporalFromDataset.value || dialog.useNowTemporalEnddisabled || dialog.useNowTemporalEnd.inherit"
+                ng-model="dialog.useNowTemporalEnd.value"
+                ng-hide="dialog.useNowTemporalEnd.hide"
+                flex>Temporal coverage end is Now
+        </md-switch>
     </div>
     <div layout-gt-sm="row">
-        <md-switch ng-model="dialog.licenseFromDataset" flex-gt-sm>Use license from dataset</md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-switch ng-model="dialog.licenseFromDataset.value"
+                   ng-disabled="dialog.licenseFromDataset.disabled || dialog.licenseFromDataset.inherit"
+                   ng-hide="dialog.licenseFromDataset.hide"
+                   flex>Use license from dataset
+        </md-switch>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.license.hide"
+                            flex>
             <label>License IRI</label>
-            <input type="url" ng-disabled="dialog.licenseFromDataset" ng-model="dialog.license" placeholder="https://creativecommons.org/licenses/by/4.0/">
+            <input type="url"
+                   ng-disabled="dialog.licenseFromDataset.value || dialog.license.disabled || dialog.license.inherit"
+                   ng-model="dialog.license"
+                   placeholder="https://creativecommons.org/licenses/by/4.0/">
         </md-input-container>
     </div>
 </div>

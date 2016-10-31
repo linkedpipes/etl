@@ -177,6 +177,14 @@ public class MappingFacade {
     }
 
     /**
+     * Remove mappings for the template.
+     * @param template
+     */
+    public void remove(Template template) {
+        mappings.values().remove(template);
+    }
+
+    /**
      * Should be called after any call (or sequence of calls) of
      * {@link #add(Template, String)}.
      */

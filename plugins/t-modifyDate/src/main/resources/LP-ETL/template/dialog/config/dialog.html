@@ -1,14 +1,21 @@
-<div class="container-flow">
-    <md-input-container class="md-block" ng-hide="control.input.forced" flex>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.input.hide">
         <label>Input predicate</label>
-        <input ng-model="dialog.input" ng-disabled="control.input.inherit" required>
+        <input ng-model="dialog.input.value"
+               ng-disabled="dialog.input.disabled || dialog.input.inherit"
+               required>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="control.shiftBy.forced" flex>
+    <md-input-container class="md-block" ng-hide="dialog.shiftBy.hide">
         <label>Shift date by</label>
-        <input ng-model="dialog.shiftBy" ng-disabled="control.shiftBy.inherit" required>
+        <input ng-model="dialog.shiftBy.value"
+               ng-disabled="dialog.shiftBy.disabled || dialog.shiftBy.inherit"
+               required>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="control.output.forced" flex>
+    <md-input-container class="md-block" ng-hide="dialog.output.hide">
         <label>Output predicate</label>
-        <input ng-model="dialog.output" ng-disabled="control.output.inherit" required>
+        <input ng-model="dialog.output.value"
+               ng-disabled="dialog.output.disabled || dialog.output.inherit"
+               required>
     </md-input-container>
 </div>

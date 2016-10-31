@@ -27,10 +27,12 @@ public final class TextHolder implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getFileName() == null
-                || configuration.getFileName().isEmpty()) {
+        if (configuration.getFileName() == null) {
             throw exceptionFactory.failure("Missing property: {}",
                     TextHolderVocabulary.HAS_FILE_NAME);
+        }
+        if (configuration.getFileName().isEmpty()) {
+            throw exceptionFactory.failure("File name must not be empty.");
         }
         //
         final File outputFile = outputFiles.createFile(

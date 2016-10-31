@@ -1,126 +1,209 @@
-<div ng-hide="control.pattern.forced">
-    <md-input-container class="md-block" flex-gt-sm>
-	    <label>Dataset IRI</label>
-        <input type="uri" ng-model="dialog.datasetURI" required placeholder="http://example.org/resource/dataset/my">
-	</md-input-container>
-	<div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.datasetURI.hide">
+        <label>Dataset IRI</label>
+        <input type="uri" ng-model="dialog.datasetURI.value"
+               ng-disabled="dialog.datasetURI.disabled || dialog.datasetURI.inherit"
+               placeholder="http://example.org/resource/dataset/my"
+               required>
+    </md-input-container>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.title_cs.hide"
+                            flex>
             <label>Dataset title original language</label>
-            <input ng-model="dialog.title_cs" placeholder="Můj dataset">
+            <input ng-model="dialog.title_cs.value"
+                   ng-disabled="dialog.title_cs.disabled || dialog.title_cs.inherit"
+                   placeholder="Můj dataset">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.title_en.hide"
+                            flex>
             <label>Dataset title in English</label>
-            <input ng-model="dialog.title_en" placeholder="My dataset">
+            <input ng-model="dialog.title_en.value"
+                   ng-disabled="dialog.title_en.disabled || dialog.title_en.inherit"
+                   placeholder="My dataset">
         </md-input-container>
     </div>
-	<div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" ng-hide="dialog.desc_cs.hide"
+                            flex>
             <label>Description in original language</label>
-            <input ng-model="dialog.desc_cs" placeholder="Popis mého datasetu">
+            <input ng-model="dialog.desc_cs.value"
+                   ng-disabled="dialog.desc_cs.disabled || dialog.desc_cs.inherit"
+                   placeholder="Popis mého datasetu">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.desc_en.hide"
+                            flex>
             <label>Description in English</label>
-            <input ng-model="dialog.desc_en" placeholder="Description of my dataset">
+            <input ng-model="dialog.desc_en.value"
+                   ng-disabled="dialog.desc_en.disabled || dialog.desc_en.inherit"
+                   laceholder="Description of my dataset">
         </md-input-container>
     </div>
-	<div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" ng-hide="dialog.language_orig.hide"
+                            flex>
             <label>Original language tag</label>
-            <input ng-model="dialog.language_orig" placeholder="cs">
+            <input ng-model="dialog.language_orig.value"
+                   ng-disabled="dialog.language_orig.disabled || dialog.language_orig.inherit"
+                   placeholder="cs">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.identifier.hide"
+                            flex>
             <label>Identifier</label>
-            <input ng-model="dialog.identifier" placeholder="ID1">
+            <input ng-model="dialog.identifier.value"
+                   ng-disabled="dialog.identifier.disabled || dialog.identifier.inherit"
+                   placeholder="ID1">
         </md-input-container>
     </div>
-	<div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useNow" flex-gt-sm>Modified is Now</md-switch>
-        <md-datepicker ng-disabled="dialog.useNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>    
+    <div layout-gt-sm="row">
+        <md-switch ng-model="dialog.useNow.value" ng-hide="dialog.useNow.hide"
+                   flex>Modified is Now
+        </md-switch>
+        <md-datepicker ng-hide="dialog.modified.hide"
+                       ng-disabled="dialog.useNow.value || dialog.modified.disabled || dialog.modified.inherit"
+                       ng-model="dialog.modified.value" flex></md-datepicker>
     </div>
-	<div layout-gt-sm="row">
-        <md-datepicker ng-model="dialog.issued" md-placeholder="Issued" flex-gt-sm></md-datepicker>    
+    <div>
+        Issued
+        <md-datepicker ng-model="dialog.issued.value"
+                       ng-disabled="dialog.issued.disabled || dialog.issued.inherit"
+                       ng-hide="dialog.issued.hide"
+                       md-placeholder="Issued"></md-datepicker>
     </div>
-    <!-- Keywords in original language -->
-    <!-- Keywords in English -->
-    <!-- Languages -->
-	<div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" ng-hide="dialog.keywords_orig.hide"
+                            flex>
             <label>Keywords in original language (comma separated)</label>
-            <input ng-model="dialog.keywords_orig" placeholder="data, veverky">
+            <input ng-model="dialog.keywords_orig.value"
+                   ng-disabled="dialog.keywords_orig.disabled || dialog.keywords_orig.inherit"
+                   placeholder="data, veverky">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.keywords_en.hide"
+                            flex>
             <label>Keywords in English (comma separated)</label>
-            <input ng-model="dialog.keywords_en" placeholder="data, squirrels">
+            <input ng-model="dialog.keywords_en.value"
+                   ng-disabled="dialog.keywords_en.disabled || dialog.keywords_en.inherit"
+                   placeholder="data, squirrels">
         </md-input-container>
     </div>
-	<div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Languages IRIs (comma separated)</label>
-            <input ng-model="dialog.languages" placeholder="http://publications.europa.eu/resource/authority/language/ENG">
-        </md-input-container>
-    </div>
-	<div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.languages.hide">
+        <label>Languages IRIs (comma separated)</label>
+        <input ng-model="dialog.languages.value"
+               ng-disabled="dialog.languages.disabled || dialog.languages.inherit"
+               placeholder="http://publications.europa.eu/resource/authority/language/ENG">
+    </md-input-container>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.contactPointName.hide"
+                            flex>
             <label>Contact point name</label>
-            <input ng-model="dialog.contactPointName" placeholder="John Doe">
+            <input ng-model="dialog.contactPointName.value"
+                   ng-disabled="dialog.contactPointName.disabled || dialog.contactPointName.inherit"
+                   placeholder="John Doe">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.contactPoint.hide"
+                            flex>
             <label>Contact point email</label>
-            <input type="email" ng-model="dialog.contactPoint" placeholder="john@doe.ex">
+            <input type="email"
+                   ng-model="dialog.contactPoint.value"
+                   ng-disabled="dialog.contactPoint.disabled || dialog.contactPoint.inherit"
+                   placeholder="john@example.com">
         </md-input-container>
     </div>
-	<div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.publisherName.hide"
+                            flex>
             <label>Publisher name</label>
-            <input ng-model="dialog.publisherName" placeholder="Publisher Organization">
+            <input ng-model="dialog.publisherName.value"
+                   ng-disabled="dialog.publisherName.disabled || dialog.publisherName.inherit"
+                   placeholder="Publisher Organization">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.publisherURI.hide"
+                            flex>
             <label>Publisher IRI</label>
-            <input type="uri" ng-model="dialog.publisherURI" placeholder="http://example.org/resource/publisher">
+            <input type="uri"
+                   ng-model="dialog.publisherURI.value"
+                   ng-disabled="dialog.publisherURI.disabled || dialog.publisherURI.inherit"
+                   placeholder="http://example.org/resource/publisher">
         </md-input-container>
     </div>
-	<div layout-gt-sm="row">
-        <md-switch ng-model="dialog.useTemporal" flex-gt-sm>Temporal coverage</md-switch>
-        <md-switch ng-disabled="!dialog.useTemporal" ng-model="dialog.useNowTemporalEnd">End is Now</md-switch>
+    <div layout-gt-sm="row">
+        <md-switch ng-model="dialog.useTemporal.value"
+                   ng-disabled="dialog.useTemporal.disabled || dialog.useTemporal.inherit"
+                   ng-hide="dialog.useTemporal.hide"
+                   flex>
+            Temporal coverage
+        </md-switch>
+        <md-switch ng-hide="dialog.useNowTemporalEnd.hide"
+                   ng-model="dialog.useNowTemporalEnd.value"
+                   ng-disabled="!dialog.useTemporal.value || dialog.useNowTemporalEnd.disabled || dialog.useNowTemporalEnd.inherit"
+                   flex>
+            End is Now
+        </md-switch>
     </div>
-	<div layout-gt-sm="row">
-        <md-datepicker ng-disabled="!dialog.useTemporal" ng-model="dialog.temporalStart" md-placeholder="Start" flex-gt-sm></md-datepicker>    
-        <md-datepicker ng-disabled="!dialog.useTemporal || dialog.useNowTemporalEnd" ng-model="dialog.temporalEnd" md-placeholder="End" flex-gt-sm></md-datepicker>
+    <div layout-gt-sm="row">
+        <md-datepicker ng-hide="dialog.useTemporal.hide"
+                       ng-disabled="!dialog.useTemporal.value"
+                       ng-disabled="dialog.useTemporal.disabled || dialog.useTemporal.inherit"
+                       ng-model="dialog.temporalStart.value"
+                       md-placeholder="Start" flex></md-datepicker>
+        <md-datepicker
+                ng-hide="dialog.temporalEnd.hide"
+                ng-disabled="!dialog.useTemporal.value || dialog.useNowTemporalEnd.value || dialog.temporalEnd.disabled || dialog.temporalEnd.inherit"
+                ng-model="dialog.temporalEnd.value"
+                md-placeholder="End" flex></md-datepicker>
     </div>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.periodicity.hide">
         <label>Periodicity</label>
-        <input ng-model="dialog.periodicity" placeholder="R/P1Y">
+        <input ng-model="dialog.periodicity.value"
+               ng-disabled="dialog.periodicity.disabled || dialog.periodicity.inherit"
+               placeholder="R/P1Y">
     </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.spatial.hide">
         <label>Spatial coverage IRI</label>
-        <input type="uri" ng-model="dialog.spatial" placeholder="http://publications.europa.eu/resource/authority/country/CZE">
+        <input type="uri" ng-model="dialog.spatial.value"
+               ng-disabled="dialog.spatial.disabled || dialog.spatial.inherit"
+               placeholder="http://publications.europa.eu/resource/authority/country/CZE">
     </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.schema.hide">
         <label>Human readable documentation URL</label>
-        <input type="uri" ng-model="dialog.schema" placeholder="http://example.org/resource/documentation/my.html">
+        <input type="uri" ng-model="dialog.schema.value"
+               ng-disabled="dialog.schema.disabled || dialog.schema.inherit"
+               placeholder="http://example.org/resource/documentation/my.html">
     </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.landingPage.hide">
         <label>Landing page URL</label>
-        <input type="uri" ng-model="dialog.landingPage" placeholder="http://example.org/resource/dataset">
+        <input type="uri" ng-model="dialog.landingPage.value"
+               ng-disabled="dialog.landingPage.disabled || dialog.landingPage.inherit"
+               placeholder="http://example.org/resource/dataset">
     </md-input-container>
-    <!-- licenses -->
-    <!-- Sources -->
-    <!-- Themes -->
-    <!-- Selected authors -->
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.license.hide">
         <label>Licenses IRIs (comma separated)</label>
-        <input ng-model="dialog.license" placeholder="http://publications.europa.eu/resource/authority/language/ENG">
+        <input ng-model="dialog.license.value"
+               ng-disabled="dialog.license.disabled || dialog.license.inherit"
+               placeholder="http://publications.europa.eu/resource/authority/language/ENG">
     </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.sources.hide">
         <label>Sources IRIs (comma separated)</label>
-        <input ng-model="dialog.sources" placeholder="http://ex.org/source">
+        <input ng-model="dialog.sources.value"
+               ng-disabled="dialog.sources.disabled || dialog.sources.inherit"
+               placeholder="http://ex.org/source">
     </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.themes.hide">
         <label>Themes IRIs (comma separated)</label>
-        <input ng-model="dialog.themes" placeholder="http://publications.europa.eu/resource/authority/data-theme/EDUC">
+        <input ng-model="dialog.themes.value"
+               ng-disabled="dialog.themes.disabled || dialog.themes.inherit"
+               placeholder="http://publications.europa.eu/resource/authority/data-theme/EDUC">
     </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block" ng-hide="dialog.authors.hide">
         <label>Authors IRIs (comma separated)</label>
-        <input ng-model="dialog.authors" placeholder="http://ex.org/author">
+        <input ng-model="dialog.authors.value"
+               ng-disabled="dialog.authors.disabled || dialog.authors.inherit"
+               placeholder="http://ex.org/author">
     </md-input-container>
 </div>

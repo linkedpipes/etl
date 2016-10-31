@@ -1,16 +1,21 @@
-<div class="container-flow">
-    <div class="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Full file name RegExp to match</label>
-            <input ng-model="dialog.pattern" required placeholder="\.csv">
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Replace RegExp with with</label>
-            <input ng-model="dialog.replaceWith" required placeholder="\.xml">
-        </md-input-container>
-        <div>
-            <a href="http://regexr.com/" target="_blank">Test your regexp here</a>, uses
-            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" target="_blank">Java regular expression</a>.
-        </div>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.pattern.hide">
+        <label>Full file name RegExp to match</label>
+        <input ng-model="dialog.pattern.value"
+               ng-disabled="dialog.pattern.disabled || dialog.pattern.inherit"
+               placeholder="\.csv">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.replaceWith.hide">
+        <label>Replace RegExp with with</label>
+        <input ng-model="dialog.replaceWith.value"
+               ng-disabled="dialog.replaceWith.disabled || dialog.replaceWith.inherit"
+               placeholder="\.xml">
+    </md-input-container>
+    <div>
+        <a href="http://regexr.com/" target="_blank">Test your regexp here</a>,
+        uses
+        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html"
+           target="_blank">Java regular expression</a>.
     </div>
 </div>

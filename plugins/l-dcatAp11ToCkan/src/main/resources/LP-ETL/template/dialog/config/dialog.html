@@ -1,30 +1,51 @@
-<div layout-gt-sm="row">
-    <md-input-container class="md-block" flex-gt-sm>
-        <label>CKAN Action API URL</label>
-        <input type="url" ng-model="dialog.apiUrl" required placeholder="http://localhost/api/3/action">
-    </md-input-container>
-    <md-input-container class="md-block" flex-gt-sm>
-        <label>CKAN API Key</label>
-        <input ng-model="dialog.apiKey" required placeholder="00000000-0000-0000-0000-000000000000">
-    </md-input-container>
-</div>
-<div layout-gt-sm="row">
-    <md-input-container class="md-block" flex-gt-sm>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.apiUrl.hide"
+                            flex-gt-sm>
+            <label>CKAN Action API URL</label>
+            <input type="url" ng-model="dialog.apiUrl.value"
+                   ng-disabled="dialog.apiUrl.disabled || dialog.apiUrl.inherit"
+                   placeholder="http://localhost/api/3/action">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.apiKey.hide"
+                            flex-gt-sm>
+            <label>CKAN API Key</label>
+            <input ng-model="dialog.apiKey.value"
+                   ng-disabled="dialog.apiKey.disabled || dialog.apiKey.inherit"
+                   placeholder="00000000-0000-0000-0000-000000000000">
+        </md-input-container>
+    </div>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.datasetID.hide">
         <label>CKAN dataset ID</label>
-        <input ng-model="dialog.datasetID" required placeholder="my-dataset">
+        <input ng-model="dialog.datasetID.value"
+               ng-disabled="dialog.datasetID.disabled || dialog.datasetID.inherit"
+               placeholder="my-dataset">
     </md-input-container>
-</div>
-<md-input-container class="md-block" flex-gt-sm>
-    <label>Load language RDF language tag</label>
-    <input ng-model="dialog.loadLanguage" required placeholder="en">
-</md-input-container>
-<div layout-gt-sm="row">
-    <md-switch ng-model="dialog.createCkanOrg">Create/Use CKAN organization from dataset publisher</md-switch>
-</div>
-<div layout-gt-sm="row">
-    <md-input-container class="md-block" flex-gt-sm>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.loadLanguage.hide">
+        <label>Load language RDF language tag</label>
+        <input ng-model="dialog.loadLanguage.value"
+               ng-disabled="dialog.loadLanguage.disabled || dialog.loadLanguage.inherit"
+               placeholder="en">
+    </md-input-container>
+    <md-switch ng-model="dialog.createCkanOrg.value"
+               ng-disabled="dialog.createCkanOrg.disabled || dialog.createCkanOrg.inherit"
+               ng-hide="dialog.createCkanOrg.hide">Create/Use CKAN organization
+        from dataset publisher
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.organizationId.hide">
         <label>Dataset owner organization ID</label>
-        <input ng-model="dialog.orgID" ng-disabled="dialog.createCkanOrg" placeholder="00000000-0000-0000-0000-000000000000">
+        <input ng-model="dialog.organizationId.value"
+               ng-hide="dialog.organizationId.hide"
+               ng-disabled="dialog.createCkanOrg.value || dialog.organizationId.disabled || dialog.organizationId.inherit"
+               placeholder="00000000-0000-0000-0000-000000000000">
     </md-input-container>
+    <md-switch ng-model="dialog.overwrite.value"
+               ng-disabled="dialog.overwrite.disabled || dialog.overwrite.inherit"
+               ng-hide="dialog.overwrite.hide">Overwrite target CKAN record
+    </md-switch>
 </div>
-<md-switch ng-model="dialog.overwrite">Overwrite target CKAN record</md-switch>

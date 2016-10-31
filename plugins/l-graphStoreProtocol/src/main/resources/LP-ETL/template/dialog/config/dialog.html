@@ -1,8 +1,11 @@
-<div class="container-flow">
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
     <div class="row">
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.repository.hide"
+                            flex>
             <label>Repository</label>
-            <md-select ng-model="dialog.repository">
+            <md-select ng-model="dialog.repository.value"
+                       ng-disabled="dialog.repository.disabled || dialog.repository.inherit">
                 <md-option value="VIRTUOSO">Virtuoso</md-option>
                 <md-option value="FUSEKI">Fuseki</md-option>
                 <md-option value="BLAZEGRAPH">Blazegraph</md-option>
@@ -10,35 +13,53 @@
         </md-input-container>
     </div>
     <div class="row">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Graph store protocol endpoint:</label>
-            <input type="url" ng-model="dialog.endpoint" required
+        <md-input-container class="md-block"
+                            ng-hide="dialog.endpoint.hide" flex>
+            <label>Graph store protocol endpoint</label>
+            <input type="url" ng-model="dialog.endpoint.value"
+                   ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
                    placeholder="http://localhost:8890/sparql-graph-crud">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.graph.hide" flex>
             <label>Target graph IRI</label>
-            <input type="url" ng-model="dialog.graph" required
+            <input type="url" ng-model="dialog.graph.value"
+                   ng-disabled="dialog.graph.disabled || dialog.graph.inherit"
                    placeholder="http://localhost/resource/upload">
         </md-input-container>
-        <md-switch ng-model="dialog.replace">Clear target graph before loading</md-switch>
+        <md-switch ng-model="dialog.replace.value"
+                   ng-disabled="dialog.replace.disabled || dialog.replace.inherit"
+                   ng-hide="dialog.replace.hide">
+            Clear target graph before loading
+        </md-switch>
     </div>
-    <md-switch ng-model="dialog.checkSize">Log graph size</md-switch>
-    <div class="row" ng-show="dialog.checkSize">
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>SPARQL Endpoint</label>
-            <input type="url" ng-model="dialog.endpointSelect" required
-                   placeholder="http://localhost:8890/sparql">
-        </md-input-container>
-    </div>
-    <md-switch ng-model="dialog.authentification">Use authentication</md-switch>
-    <div layout-gt-sm="row" ng-show="dialog.authentification">
-        <md-input-container class="md-block" flex-gt-sm>
+    <md-switch ng-model="dialog.checkSize.value"
+               ng-disabled="dialog.checkSize.disabled || dialog.checkSize.inherit"
+               ng-hide="dialog.checkSize.hide">Log graph size
+    </md-switch>
+    <md-input-container class="md-block"
+                        ng-hide="!dialog.checkSize.value || dialog.endpointSelect.hide" flex>
+        <label>SPARQL Endpoint</label>
+        <input type="url" ng-model="dialog.endpointSelect.value"
+               ng-disabled="dialog.endpointSelect.disabled || dialog.endpointSelect.inherit"
+               placeholder="http://localhost:8890/sparql">
+    </md-input-container>
+    <md-switch ng-model="dialog.authentification.value"
+               ng-disabled="dialog.authentification.disabled || dialog.authentification.inherit"
+               ng-hide="dialog.authentification.hide">Use authentication
+    </md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.authentification.value">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.user.hide"
+                            flex>
             <label>User name</label>
-            <input ng-model="dialog.user" required placeholder="dba">
+            <input ng-model="dialog.user.value"
+                   ng-disabled="dialog.user.disabled || dialog.user.inherit"
+                   placeholder="dba">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.password.hide" flex>
             <label>Password</label>
-            <input type="password" ng-model="dialog.password" required>
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit">
         </md-input-container>
     </div>
 </div>

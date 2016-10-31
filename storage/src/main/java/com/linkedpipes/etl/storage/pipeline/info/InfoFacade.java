@@ -50,9 +50,14 @@ public class InfoFacade {
         private Collection<Value> tags = new HashSet<>();
 
         /**
-         * Templates by type.
+         * Followup info for templates by type.
          */
-        private Map<Resource, TemplateInfo> templates = new HashMap<>();
+        private Map<Resource, TemplateInfo> followups = new HashMap<>();
+
+        /**
+         * Templates used in this pipeline.
+         */
+        private Set<Resource> templates = new HashSet<>();
 
         /**
          * Merge information from given info to this instance.
@@ -61,11 +66,11 @@ public class InfoFacade {
          */
         private void merge(PipelineInfo info) {
             tags.addAll(info.tags);
-            info.templates.entrySet().forEach((entry) -> {
-                TemplateInfo templateInfo = templates.get(entry.getKey());
+            info.followups.entrySet().forEach((entry) -> {
+                TemplateInfo templateInfo = followups.get(entry.getKey());
                 if (templateInfo == null) {
                     templateInfo = new TemplateInfo();
-                    templates.put(entry.getKey(), templateInfo);
+                    followups.put(entry.getKey(), templateInfo);
                 }
                 templateInfo.merge(entry.getValue());
             });
@@ -96,10 +101,10 @@ public class InfoFacade {
                 return;
             }
             //
-            TemplateInfo templateInfo = info.templates.get(sourceTemplate);
+            TemplateInfo templateInfo = info.followups.get(sourceTemplate);
             if (templateInfo == null) {
                 templateInfo = new TemplateInfo();
-                info.templates.put(sourceTemplate, templateInfo);
+                info.followups.put(sourceTemplate, templateInfo);
             }
             templateInfo.followup.put(target,
                     templateInfo.followup.getOrDefault(target, 0) + 1);
@@ -126,6 +131,25 @@ public class InfoFacade {
 
     public Collection<Statement> getInformation() {
         return information;
+    }
+
+    /**
+     *
+     * @param templateIriAsString
+     * @return Names of pipeline where given pipeline is used.
+     */
+    public Collection<String> getUsage(String templateIriAsString) {
+        final Resource templateIri = SimpleValueFactory.getInstance().createIRI(
+                templateIriAsString);
+        final List<String> usage = new LinkedList<>();
+        for (Map.Entry<String, PipelineInfo> entry :
+                pipelineInfo.entrySet()) {
+            final PipelineInfo info = entry.getValue();
+            if (info.templates.contains(templateIri)) {
+                usage.add(entry.getKey());
+            }
+        }
+        return usage;
     }
 
     public void onPipelineCreate(Pipeline pipeline,
@@ -171,7 +195,7 @@ public class InfoFacade {
         }
         Integer counter = 0;
         for (Map.Entry<Resource, TemplateInfo> template :
-                globalInfo.templates.entrySet()) {
+                globalInfo.followups.entrySet()) {
             for (Map.Entry<Resource, Integer> followup
                     : template.getValue().followup.entrySet()) {
                 final Resource followupResource = vf.createIRI(
@@ -255,15 +279,16 @@ public class InfoFacade {
                 continue;
             }
             //
-            TemplateInfo templateInfo = info.templates.get(connection.source);
+            TemplateInfo templateInfo = info.followups.get(connection.source);
             if (templateInfo == null) {
                 templateInfo = new TemplateInfo();
-                info.templates.put(connection.source, templateInfo);
+                info.followups.put(connection.source, templateInfo);
             }
             templateInfo.followup.put(connection.target,
                     templateInfo.followup.getOrDefault(connection.target, 0)
                     + 1);
         }
+        info.templates.addAll(componentTypes.values());
         return info;
     }
 

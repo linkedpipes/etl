@@ -1,0 +1,15 @@
+<div>
+    <div ng-if="::model.$control" ng-show="!model.$control.hide">
+        Configuration
+        <md-checkbox ng-model="model.$control.inherit">
+            Inherit from template
+        </md-checkbox>
+    </div>
+    <div ng-repeat="item in model" ng-if="::item.controlled"
+         ng-show="!item.hide">
+        <span>{{::item.label}}</span><br/>
+        <md-checkbox ng-model="item.inherit">
+            Inherit from template
+        </md-checkbox>
+    </div>
+</div>

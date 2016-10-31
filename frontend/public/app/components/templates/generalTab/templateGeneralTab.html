@@ -1,0 +1,22 @@
+<div class="layout-padding">
+    <md-input-container class="md-block">
+        <label>Label</label>
+        <input ng-model="template.label"
+               ng-disabled="template.readonly">
+    </md-input-container>
+    <md-input-container class="md-block" flex>
+        <label>Description</label>
+        <textarea ng-model="template.description"
+                  ng-disabled="template.readonly"/>
+    </md-input-container>
+    <div ng-show="!template.readonly">
+        <md-switch ng-model="useTemplateColor" ng-change="onUseTemplateColor()">
+            Use color from template
+        </md-switch>
+        <div ng-hide="useTemplateColor">
+            Component color:
+            <input type="color" ng-model="color" style="width:3em;"
+                   ng-change="onColorChange()"/>
+        </div>
+    </div>
+</div>

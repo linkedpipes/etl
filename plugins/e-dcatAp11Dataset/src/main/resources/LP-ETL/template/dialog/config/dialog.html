@@ -1,75 +1,130 @@
 <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="Mandatory">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
         <md-subheader class="md-primary">IRI</md-subheader>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.datasetIRI.hide"
+                            flex-gt-sm>
             <label>Dataset IRI</label>
-            <input type="uri" ng-model="dialog.datasetIRI" required placeholder="http://example.org/resource/dataset/my">
+            <input type="uri" ng-model="dialog.datasetIRI.value"
+                   ng-disabled="dialog.datasetIRI.disabled || dialog.datasetIRI.inherit"
+                   placeholder="http://example.org/resource/dataset/my">
         </md-input-container>
         <md-subheader class="md-primary">Title and description</md-subheader>
-        <div class="row">
-            <lp-localized-text-input class="md-block" required label-top="Dataset titles" label-item="Dataset title" ng-model="dialog.titles" flex-gt-sm></lp-localized-text-input>
+        <div class="row" ng-hide="dialog.titles.hide">
+            <lp-localized-text-input class="md-block"
+                                     label-top="Dataset titles"
+                                     label-item="Dataset title"
+                                     ng-model="dialog.titles.value"
+                                     lp-disabled="dialog.titles.disabled || dialog.titles.inherit"
+                                     flex-gt-sm></lp-localized-text-input>
         </div>
-        <div class="row">
-            <lp-localized-text-input class="md-block" required label-top="Dataset descriptions" label-item="Dataset description" ng-model="dialog.descriptions" flex-gt-sm></lp-localized-text-input>
+        <div class="row" ng-hide="dialog.descriptions.hide">
+            <lp-localized-text-input class="md-block"
+                                     label-top="Dataset descriptions"
+                                     label-item="Dataset description"
+                                     ng-model="dialog.descriptions.value"
+                                     lp-disabled="dialog.descriptions.disabled || dialog.descriptions.inherit"
+                                     flex-gt-sm></lp-localized-text-input>
         </div>
     </md-tab>
     <md-tab label="Recommended">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
         <md-subheader class="md-primary">Contact point</md-subheader>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.contactPointTypeIRI.hide"
+                            flex-gt-sm>
             <label>Contact point type</label>
-            <md-select ng-model="dialog.contactPointTypeIRI">
-              <md-option value="http://www.w3.org/2006/vcard/ns#Individual">
-                <span>Individual</span>
-              </md-option>
-              <md-option value="http://www.w3.org/2006/vcard/ns#Organization">
-                <span>Organization</span>
-              </md-option>
-              <md-option value="http://www.w3.org/2006/vcard/ns#Group">
-                <span>Group</span>
-              </md-option>
-              <md-option value="http://www.w3.org/2006/vcard/ns#Location">
-                <span>Location</span>
-              </md-option>
+            <md-select ng-model="dialog.contactPointTypeIRI.value"
+                       ng-disabled="dialog.contactPointTypeIRI.disabled || dialog.contactPointTypeIRI.inherit">
+                <md-option value="http://www.w3.org/2006/vcard/ns#Individual">
+                    <span>Individual</span>
+                </md-option>
+                <md-option value="http://www.w3.org/2006/vcard/ns#Organization">
+                    <span>Organization</span>
+                </md-option>
+                <md-option value="http://www.w3.org/2006/vcard/ns#Group">
+                    <span>Group</span>
+                </md-option>
+                <md-option value="http://www.w3.org/2006/vcard/ns#Location">
+                    <span>Location</span>
+                </md-option>
             </md-select>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.contactPointName.hide"
+                            flex-gt-sm>
             <label>Contact name</label>
-            <input type="text" ng-model="dialog.contactPointName" placeholder="John Doe">
+            <input type="text" ng-model="dialog.contactPointName.value"
+                   ng-disabled="dialog.contactPointName.disabled || dialog.contactPointName.inherit"
+                   placeholder="John Doe">
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.contactPointEmail.hide"
+                            flex-gt-sm>
             <label>Contact email</label>
-            <input type="email" ng-model="dialog.contactPointEmail" placeholder="john@publisher.org">
+            <input type="email" ng-model="dialog.contactPointEmail.value"
+                   ng-disabled="dialog.contactPointEmail.disabled || dialog.contactPointEmail.inherit"
+                   placeholder="john@publisher.org">
         </md-input-container>
         <md-subheader class="md-primary">Keywords and Themes</md-subheader>
-        <lp-localized-text-input class="md-block" label-item="Keyword" ng-model="dialog.keywords" flex-gt-sm></lp-localized-text-input>
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-localized-text-input class="md-block" label-item="Keyword"
+                                 ng-model="dialog.keywords.value"
+                                 lp-disabled="dialog.keywords.disabled || dialog.keywords.inherit"
+                                 ng-hide="dialog.keywords.hide"></lp-localized-text-input>
+        <md-input-container class="md-block" ng-hide="dialog.euThemeIRI.hide"
+                            flex-gt-sm>
             <label>Dataset EU Theme</label>
-            <md-select ng-model="dialog.euThemeIRI">
-              <md-option ng-repeat="euTheme in euThemes" value="{{euTheme['@id']}}">
-                <span ng-repeat="label in euTheme['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
-              </md-option>
+            <md-select ng-model="dialog.euThemeIRI.value"
+                       ng-disabled="dialog.euThemeIRI.disabled || dialog.euThemeIRI.inherit">
+                <md-option ng-repeat="euTheme in euThemes"
+                           value="{{euTheme['@id']}}">
+                    <span ng-repeat="label in euTheme['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                </md-option>
             </md-select>
         </md-input-container>
-        <lp-iri-list label-top="Other theme IRIs" label-item="Theme IRI" ng-model="dialog.otherThemeIRIs"></lp-iri-list>
-        
+        <lp-iri-list label-top="Other theme IRIs" label-item="Theme IRI"
+                     ng-model="dialog.otherThemeIRIs.value"
+                     lp-disabled="dialog.otherThemeIRIs.disabled || dialog.otherThemeIRIs.inherit"
+                     ng-hide="dialog.otherThemeIRIs.hide"></lp-iri-list>
         <md-subheader class="md-primary">Publisher</md-subheader>
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.publisherIRI.hide"
+                            flex-gt-sm>
             <label>Publisher IRI</label>
-            <input type="uri" ng-model="dialog.publisherIRI" placeholder="http://example.org/resource/publisher">
+            <input type="uri" ng-model="dialog.publisherIRI.value"
+                   ng-disabled="dialog.publisherIRI.disabled || dialog.publisherIRI.inherit"
+                   placeholder="http://example.org/resource/publisher">
         </md-input-container>
-        <lp-localized-text-input class="md-block" label-top="Publisher names" label-item="Publisher name" ng-model="dialog.publisherNames" flex-gt-sm></lp-localized-text-input>
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-localized-text-input class="md-block" label-top="Publisher names"
+                                 label-item="Publisher name"
+                                 ng-model="dialog.publisherNames.value"
+                                 lp-disabled="dialog.publisherNames.disabled || dialog.publisherNames.inherit"
+                                 ng-hide="dialog.publisherNames.hide"
+                                 flex-gt-sm></lp-localized-text-input>
+        <md-input-container class="md-block" ng-hide="dialog.publisherTypeIRI.hide"
+                            flex-gt-sm>
             <label>Publisher type</label>
-            <md-select ng-model="dialog.publisherTypeIRI">
-              <md-option ng-repeat="publishertype in publishertypes" value="{{publishertype.IRI}}">
-                {{publishertype.label}}
-              </md-option>
+            <md-select ng-model="dialog.publisherTypeIRI.value"
+                       ng-disabled="dialog.publisherTypeIRI.disabled || dialog.publisherTypeIRI.inherit">
+                <md-option ng-repeat="publishertype in publishertypes"
+                           value="{{publishertype.IRI}}">
+                    {{publishertype.label}}
+                </md-option>
             </md-select>
         </md-input-container>
     </md-tab>
     <md-tab label="Optional">
-        <md-chips ng-model="dialog.languages" md-transform-chip="transformChip($chip)" md-autocomplete-snap md-require-match="false">
-            <md-autocomplete placeholder="Search for language" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in langSearch(searchText)" md-item-text="item.value">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <md-chips ng-model="dialog.languages.value"
+                  ng-disabled="dialog.languages.disabled || dialog.languages.inherit"
+                  md-transform-chip="transformChip($chip)"
+                  md-autocomplete-snap md-require-match="false"
+                  ng-hide="dialog.languages.hide">
+            <md-autocomplete placeholder="Search for language"
+                             md-selected-item="selectedItem"
+                             md-search-text="searchText"
+                             md-items="item in langSearch(searchText)"
+                             md-item-text="item.value">
                 <span md-highlight-text="searchText">{{item.value}}</span>
             </md-autocomplete>
             <md-chip-template>
@@ -78,91 +133,193 @@
                 </span>
             </md-chip-template>
         </md-chips>
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.accrualPeriodicityIRI.hide"
+                            flex-gt-sm>
             <label>Update frequency</label>
-            <md-select ng-model="dialog.accrualPeriodicityIRI">
-              <md-option ng-repeat="frequency in frequencies" value="{{frequency['@id']}}">
-                <span ng-repeat="label in frequency['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
-              </md-option>
+            <md-select ng-model="dialog.accrualPeriodicityIRI.value"
+                       ng-disabled="dialog.accrualPeriodicityIRI.disabled || dialog.accrualPeriodicityIRI.inherit">
+                <md-option ng-repeat="frequency in frequencies"
+                           value="{{frequency['@id']}}">
+                    <span ng-repeat="label in frequency['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+                </md-option>
             </md-select>
         </md-input-container>
         <div layout-gt-sm="row">
-            <md-datepicker ng-model="dialog.issued" md-placeholder="Release date" flex-gt-sm></md-datepicker>
+            <md-datepicker ng-model="dialog.issued.value"
+                           ng-disabled="dialog.issued.disabled || dialog.issued.inherit"
+                           ng-hide="dialog.issued.hide"
+                           md-placeholder="Release date" flex-gt-sm>
+            </md-datepicker>
         </div>
         <div layout-gt-sm="row">
-            <md-switch ng-model="dialog.modifiedNow" ng-disabled="dialog.modifiedFromDataset" flex-gt-sm>Use current date as modified</md-switch>
-            <md-datepicker ng-disabled="dialog.modifiedNow" ng-model="dialog.modified" md-placeholder="Modified" flex-gt-sm></md-datepicker>
+            <md-switch ng-model="dialog.modifiedNow.value"
+                       ng-disabled="dialog.modifiedNow.disabled || dialog.modifiedNow.inherit || dialog.modifiedFromDataset.value"
+                       ng-hide="dialog.modifiedNow.hide"
+                       flex-gt-sm>Use current date as modified
+            </md-switch>
+            <md-datepicker ng-model="dialog.modified.value"
+                           ng-disabled="dialog.modified.disabled || dialog.modified.inherit || dialog.modifiedNow.value"
+                           ng-hide="dialog.modified.hide"
+                           md-placeholder="Modified" flex-gt-sm></md-datepicker>
         </div>
-        <lp-iri-list label-top="Spatial coverage IRIs" label-item="Spatial coverage IRI" ng-model="dialog.spatialIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Spatial coverage IRIs"
+                     label-item="Spatial coverage IRI"
+                     ng-model="dialog.spatialIRIs.value"
+                     lp-disabled="dialog.spatialIRIs.disabled || dialog.spatialIRIs.inherit"
+                     ng-hide="dialog.spatialIRIs.hide"></lp-iri-list>
         <div layout-gt-sm="row">
-            <md-datepicker ng-model="dialog.temporalStart" md-placeholder="Temp. cov. start" flex-gt-sm></md-datepicker>    
-            <md-datepicker ng-model="dialog.temporalEnd" md-placeholder="Temp. cov. end" flex-gt-sm></md-datepicker>    
+            <md-datepicker ng-model="dialog.temporalStart.value"
+                           ng-disabled="dialog.temporalStart.disabled || dialog.temporalStart.inherit"
+                           ng-hide="dialog.temporalStart.hide"
+                           md-placeholder="Temp. cov. start" flex-gt-sm>
+            </md-datepicker>
+            <md-datepicker ng-model="dialog.temporalEnd.value"
+                           ng-hide="dialog.temporalEnd.hide"
+                           ng-disabled="dialog.temporalEnd.disabled || dialog.temporalEnd.inherit"
+                           md-placeholder="Temp. cov. end" flex-gt-sm>
+            </md-datepicker>
         </div>
-        
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.datasetTypeIRI.hide"
+                            flex-gt-sm>
             <!--  see http://publications.europa.eu/mdr/resource/authority/dataset-type/html/dataset-types-eng.html -->
             <label>Dataset type</label>
-            <md-select ng-model="dialog.datasetTypeIRI">
-                <md-option ng-repeat="datasetType in datasetTypes" value="{{datasetType['@id']}}">
+            <md-select ng-model="dialog.datasetTypeIRI.value"
+                       ng-disabled="dialog.datasetTypeIRI.disabled || dialog.datasetTypeIRI.inherit">
+                <md-option ng-repeat="datasetType in datasetTypes"
+                           value="{{datasetType['@id']}}">
                     <span ng-repeat="label in datasetType['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
                 </md-option>
             </md-select>
         </md-input-container>
-
-
-        <md-input-container class="md-block" flex-gt-sm>
+        <md-input-container class="md-block" ng-hide="dialog.identifier.hide"
+                            flex-gt-sm>
             <label>Identifier</label>
-            <input type="text" ng-model="dialog.identifier" placeholder="https://unique.identifier">
+            <input type="text" ng-model="dialog.identifier.value"
+                   ng-disabled="dialog.identifier.disabled || dialog.identifier.inherit"
+                   placeholder="https://unique.identifier">
         </md-input-container>
-        
-        <lp-iri-list label-top="Documentation IRIs" label-item="Documentation IRI" ng-model="dialog.documentationIRIs"></lp-iri-list>
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-iri-list label-top="Documentation IRIs"
+                     label-item="Documentation IRI"
+                     ng-model="dialog.documentationIRIs.value"
+                     lp-disabled="dialog.documentationIRIs.disabled || dialog.documentationIRIs.inherit"
+                     ng-hide="dialog.documentationIRIs.hide"></lp-iri-list>
+        <md-input-container class="md-block" ng-hide="dialog.accessRightsIRI.hide"
+                            flex-gt-sm>
             <label>Access rights</label>
-            <md-select ng-model="dialog.accessRightsIRI">
-                <md-option ng-repeat="accessRight in accessRights" value="{{accessRight['@id']}}">
+            <md-select ng-model="dialog.accessRightsIRI.value"
+                       ng-disabled="dialog.accessRightsIRI.disabled || dialog.accessRightsIRI.inherit">
+                <md-option ng-repeat="accessRight in accessRights"
+                           value="{{accessRight['@id']}}">
                     <span ng-repeat="label in accessRight['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
                 </md-option>
             </md-select>
         </md-input-container>
         <div class="row">
-            <lp-localized-text-input class="md-block" label-top="Provenance statement" label-item="Provenance" ng-model="dialog.provenances" flex-gt-sm></lp-localized-text-input>
+            <lp-localized-text-input class="md-block"
+                                     label-top="Provenance statement"
+                                     label-item="Provenance"
+                                     ng-model="dialog.provenances.value"
+                                     lp-disabled="dialog.provenances.disabled || dialog.provenances.inherit"
+                                     ng-hide="dialog.provenances.hide"
+                                     flex-gt-sm></lp-localized-text-input>
         </div>
-        <!--<div class="md-block">Identifiers</div>-->
     </md-tab>
     <md-tab label="Relations">
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <md-input-container class="md-block" ng-hide="dialog.catalogIRI.hide"
+                            flex-gt-sm>
             <label>Catalog IRI</label>
-            <input type="text" ng-model="dialog.catalogIRI" placeholder="https://my.data.catalog.iri">
+            <input type="text" ng-model="dialog.catalogIRI.value"
+                   ng-disabled="dialog.catalogIRI.disabled || dialog.catalogIRI.inherit"
+                   placeholder="https://my.data.catalog.iri">
         </md-input-container>
-        <lp-iri-list label-top="Sample distribution IRIs" label-item="Sample distribution IRI" ng-model="dialog.sampleIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Landing page IRIs" label-item="Landing page IRI" ng-model="dialog.landingPageIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Related resource IRIs" label-item="Related resource IRI" ng-model="dialog.relatedIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Conforms to IRIs" label-item="Conforms to IRI" ng-model="dialog.conformsToIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Source dataset IRIs" label-item="Source dataset IRI" ng-model="dialog.sourceIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Has version Dataset IRIs" label-item="Has version dataset IRI" ng-model="dialog.hasVersionIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Is version of Dataset IRIs" label-item="Is version of IRI" ng-model="dialog.isVersionOfIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Sample distribution IRIs"
+                     label-item="Sample distribution IRI"
+                     ng-model="dialog.sampleIRIs.value"
+                     lp-disabled="dialog.sampleIRIs.disabled || dialog.sampleIRIs.inherit"
+                     ng-hide="dialog.sampleIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Landing page IRIs"
+                     label-item="Landing page IRI"
+                     ng-model="dialog.landingPageIRIs.value"
+                     lp-disabled="dialog.landingPageIRIs.disabled || dialog.landingPageIRIs.inherit"
+                     ng-hide="dialog.landingPageIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Related resource IRIs"
+                     label-item="Related resource IRI"
+                     ng-model="dialog.relatedIRIs.value"
+                     lp-disabled="dialog.relatedIRIs.disabled || dialog.relatedIRIs.inherit"
+                     ng-hide="dialog.relatedIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Conforms to IRIs"
+                     label-item="Conforms to IRI"
+                     ng-model="dialog.conformsToIRIs.value"
+                     lp-disabled="dialog.conformsToIRIs.disabled || dialog.conformsToIRIs.inherit"
+                     ng-hide="dialog.conformsToIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Source dataset IRIs"
+                     label-item="Source dataset IRI"
+                     ng-model="dialog.sourceIRIs.value"
+                     lp-disabled="dialog.sourceIRIs.disabled || dialog.sourceIRIs.inherit"
+                     ng-hide="dialog.sourceIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Has version Dataset IRIs"
+                     label-item="Has version dataset IRI"
+                     ng-model="dialog.hasVersionIRIs.value"
+                     lpdisabled="dialog.hasVersionIRIs.disabled || dialog.hasVersionIRIs.inherit"
+                     ng-hide="dialog.hasVersionIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Is version of Dataset IRIs"
+                     label-item="Is version of IRI"
+                     ng-model="dialog.isVersionOfIRIs.value"
+                     lp-disabled="dialog.isVersionOfIRIs.disabled || dialog.isVersionOfIRIs.inherit"
+                     ng-hide="dialog.isVersionOfIRIs.hide"></lp-iri-list>
     </md-tab>
     <md-tab label="Versions">
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <md-input-container class="md-block" ng-hide="dialog.version.hide"
+                            flex-gt-sm>
             <label>Version number</label>
-            <input ng-model="dialog.version" placeholder="1.0">
+            <input ng-model="dialog.version.value"
+                   ng-disabled="dialog.version.disabled || dialog.version.inherit"
+                   placeholder="1.0">
         </md-input-container>
         <div class="row">
-            <lp-localized-text-input class="md-block" label-top="Version notes" label-item="Version notes" ng-model="dialog.versionNotes" flex-gt-sm></lp-localized-text-input>
-        </div>    
+            <lp-localized-text-input class="md-block" label-top="Version notes"
+                                     label-item="Version notes"
+                                     ng-model="dialog.versionNotes.value"
+                                     lp-disabled="dialog.versionNotes.disabled || dialog.versionNotes.inherit"
+                                     ng-hide="dialog.versionNotes.hide"
+                                     flex-gt-sm></lp-localized-text-input>
+        </div>
     </md-tab>
     <md-tab label="StatDCAT-AP">
+        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
         <md-input-container class="md-block" flex-gt-sm>
-            See <a href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4" target="_blank">StatDCAT-AP draft 4</a>
+            See <a
+                href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4"
+                target="_blank">StatDCAT-AP draft 4</a>
         </md-input-container>
-        <lp-iri-list label-top="Attribute IRIs" label-item="Attribute IRI" ng-model="dialog.attributeIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Dimension IRIs" label-item="Dimension IRI" ng-model="dialog.dimensionIRIs"></lp-iri-list>
-        <md-input-container class="md-block" flex-gt-sm>
+        <lp-iri-list label-top="Attribute IRIs"
+                     label-item="Attribute IRI"
+                     ng-model="dialog.attributeIRIs.value"
+                     lp-disabled="dialog.attributeIRIs.disabled || dialog.attributeIRIs.inherit"
+                     ng-hide="dialog.attributeIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Dimension IRIs"
+                     label-item="Dimension IRI"
+                     ng-model="dialog.dimensionIRIs.value"
+                     lp-disabled="dialog.dimensionIRIs.disabled || dialog.dimensionIRIs.inherit"
+                     ng-hide="dialog.dimensionIRIs.hide"></lp-iri-list>
+        <md-input-container class="md-block" ng-hide="dialog.numSeries.hide"
+                            flex-gt-sm>
             <label>Number of data series</label>
-            <input ng-model="dialog.numSeries" placeholder="3" step="1" min="1">
+            <input ng-model="dialog.numSeries.value"
+                   ng-disabled="dialog.numSeries.disabled || dialog.numSeries.inherit"
+                   placeholder="3" step="1" min="1">
         </md-input-container>
-        <lp-iri-list label-top="Quality annotation IRIs" label-item="Quality annotation IRI" ng-model="dialog.qualityAnnotationIRIs"></lp-iri-list>
-        <lp-iri-list label-top="Unit of measurement IRIs" label-item="Unit of measurement IRI" ng-model="dialog.unitOfMeasurementIRIs"></lp-iri-list>
+        <lp-iri-list label-top="Quality annotation IRIs"
+                     label-item="Quality annotation IRI"
+                     ng-model="dialog.qualityAnnotationIRIs.value"
+                     lp-disabled="dialog.qualityAnnotationIRIs.disabled || dialog.qualityAnnotationIRIs.inherit"
+                     ng-hide="dialog.qualityAnnotationIRIs.hide"></lp-iri-list>
+        <lp-iri-list label-top="Unit of measurement IRIs"
+                     label-item="Unit of measurement IRI"
+                     ng-model="dialog.unitOfMeasurementIRIs.value"
+                     lp-disabled="dialog.unitOfMeasurementIRIs.disabled || dialog.unitOfMeasurementIRIs.inherit"
+                     ng-hide="dialog.unitOfMeasurementIRIs.hide"></lp-iri-list>
     </md-tab>
 </md-tabs>

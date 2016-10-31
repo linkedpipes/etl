@@ -2,4 +2,16 @@
 
 <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> .
+
+<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl> .
+
+<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl> .

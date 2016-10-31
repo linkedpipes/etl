@@ -143,82 +143,21 @@ public class PipelineUpdate {
                     throw new UpdateFailed("Missing template: {}", templateIri);
                 }
                 newTemplates.add(vf.createIRI(templateIri));
-            };
+            }
+            ;
             entity.deleteReferences(HAS_TEMPLATE);
             newTemplates.forEach((e) -> entity.add(HAS_TEMPLATE, e));
         }
     }
 
     /**
-     * Update and return given pipeline based on the given options.
-     *
-     * @param pipelineRdf Pipeline in the RDF.
-     * @param pipelineIri Current IRI of the given pipeline.
-     * @param options
-     * @return
-     */
-    public static Collection<Statement> update(
-            Collection<Statement> pipelineRdf,
-            IRI pipelineIri, PipelineOptions options)
-            throws UpdateFailed {
-        // Update resources.
-        if (!pipelineIri.equals(options.getPipelineIri())) {
-            pipelineRdf = updateResources(pipelineRdf,
-                    options.getPipelineIri().stringValue());
-        }
-        // Parse pipeline.
-        final List<Statement> result = new ArrayList<>(pipelineRdf.size() + 16);
-        final List<Statement> pplInstance = new LinkedList<>();
-        for (Statement statement : pipelineRdf) {
-            if (statement.getSubject().equals(pipelineIri)) {
-                pplInstance.add(statement);
-            } else {
-                result.add(statement);
-            }
-        }
-        // Update labels.
-        if (options.getLabels() != null && !options.getLabels().isEmpty()) {
-            updateLabels(pplInstance, options.getLabels());
-        }
-
-        result.addAll(pplInstance);
-        return result;
-    }
-
-    /**
-     * Perform in-place update of pipeline labels.
-     *
-     * @param pipelineInstance Statements describing the pipeline.
-     * @param labels
-     */
-    private static void updateLabels(List<Statement> pipelineInstance,
-            Collection<Literal> labels) throws UpdateFailed {
-        // Remove existing label statements.
-        final List<Statement> toRemove = new ArrayList<>(2);
-        for (Statement statement : pipelineInstance) {
-            if (SKOS.PREF_LABEL.equals(statement.getPredicate())) {
-                toRemove.add(statement);
-            }
-        }
-        pipelineInstance.removeAll(toRemove);
-        // Add labels.
-        final Resource pipelineResource = pipelineInstance.get(0).getSubject();
-        final Resource graph = pipelineInstance.get(0).getContext();
-        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        for (Value value : labels) {
-            pipelineInstance.add(valueFactory.createStatement(pipelineResource,
-                    SKOS.PREF_LABEL, value, graph));
-        }
-    }
-
-    /**
-     * update resource/graph IRIs.
+     * Update resource/graph IRIs.
      *
      * @param pipelineRdf
      * @param baseIri
      * @return
      */
-    private static Collection<Statement> updateResources(
+    public static Collection<Statement> updateResources(
             Collection<Statement> pipelineRdf, String baseIri) {
         // Create mapping.
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -264,17 +203,49 @@ public class PipelineUpdate {
     }
 
     /**
+     * Perform in-place update of pipeline labels.
+     *
+     * @param pipelineRdf Pipeline in the RDF.
+     * @param pipelineIri
+     * @param labels
+     * @return
+     */
+    public static Collection<Statement> updateLabels(
+            Collection<Statement> pipelineRdf, IRI pipelineIri,
+            Collection<Literal> labels) {
+        // Add all besides the pipeline labels.
+        final List<Statement> result = new ArrayList<>(pipelineRdf.size());
+        for (Statement statement : pipelineRdf) {
+            if (!statement.getSubject().equals(pipelineIri) ||
+                    !SKOS.PREF_LABEL.equals(statement.getPredicate())) {
+                result.add(statement);
+            }
+        }
+        // Add labels.
+        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        for (Value value : labels) {
+            result.add(valueFactory.createStatement(pipelineIri,
+                    SKOS.PREF_LABEL, value, pipelineIri));
+        }
+        return result;
+    }
+
+    /**
      * Align templates in the pipeline with local templates. Missing
      * templates are imported.
      *
      * @param pipelineRdf
      * @param templateFacade
      * @param mappingFacade
+     * @param importMissing
+     * @param updateExisting
      * @return
      */
     public static Collection<Statement> updateTemplates(
             Collection<Statement> pipelineRdf, TemplateFacade templateFacade,
-            MappingFacade mappingFacade) {
+            MappingFacade mappingFacade, boolean importMissing,
+            boolean updateExisting) throws BaseException {
+        LOG.info("import: {} update: {}", importMissing, updateExisting);
         // First we need to split pipeline statements based on their graph.
         final Map<IRI, List<Statement>> graphs = new HashMap<>();
         Resource pipelineGraph = null;
@@ -291,10 +262,10 @@ public class PipelineUpdate {
             graph.add(statement);
         }
         if (pipelineGraph == null) {
-            // TODO: Missing pipeline, there is nothing to import.
+            // There is nothing to import.
             return pipelineRdf;
         }
-        // Read mappings if there is any.
+        // Read mappings if there are any.
         final Mapping mapping = mappingFacade.read(pipelineRdf);
         // Iterate over all templates. For each template check if the
         // template is known. If no check if parent is known. If so
@@ -306,10 +277,25 @@ public class PipelineUpdate {
             for (TemplateInfo templateInfo : templates) {
                 // Translate IRI.
                 final String templateIri = mapping.map(templateInfo.getIri());
-                // Check if we know the template, if so we can continue.
-                if (templateFacade.getTemplate(templateIri) != null) {
+                // Check if we know the template.
+                final Template localTemplate = templateFacade.getTemplate(
+                        templateIri);
+                if (localTemplate != null) {
+                    if (updateExisting) {
+                        LOG.info("updating: {}", templateIri);
+                        templateFacade.updateTemplate(localTemplate,
+                                templateInfo.getDefinition());
+                        templateFacade.updateConfig(localTemplate,
+                                templateInfo.getConfiguration());
+                    }
                     continue;
                 }
+                // Continue only if we should import.
+                if (!importMissing) {
+                    LOG.info("skip: {}", templateIri);
+                    continue;
+                }
+                LOG.info("import: {}", templateIri);
                 // We import the hierarchy from the top, so for every
                 // template to import we require its parent to be
                 // already imported.

@@ -1,6 +1,9 @@
 package com.linkedpipes.etl.storage.template;
 
+import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Literal;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.io.File;
@@ -20,6 +23,24 @@ class FullTemplate extends BaseTemplate {
     static {
         TYPE = SimpleValueFactory.getInstance().createIRI(
                 "http://linkedpipes.com/ontology/JarTemplate");
+    }
+
+    // TODO Move properties BaseTemplate ?
+    public static class Info implements PojoLoader.Loadable {
+
+        private boolean supportControl;
+
+        @Override
+        public PojoLoader.Loadable load(String predicate, Value value)
+                throws PojoLoader.CantLoadException {
+            switch (predicate) {
+                case "http://linkedpipes.com/ontology/supportControl":
+                    supportControl = ((Literal)value).booleanValue();
+                    break;
+            }
+            return null;
+        }
+
     }
 
     /**
@@ -60,6 +81,8 @@ class FullTemplate extends BaseTemplate {
 
     private Map<String, Dialog> dialogs = Collections.EMPTY_MAP;
 
+    private Info info = null;
+
     public FullTemplate() {
     }
 
@@ -75,4 +98,16 @@ class FullTemplate extends BaseTemplate {
         this.dialogs = dialogs;
     }
 
+    public Info getInfo() {
+        return info;
+    }
+
+    public void setInfo(Info info) {
+        this.info = info;
+    }
+
+    @Override
+    public boolean isSupportControl() {
+        return info.supportControl;
+    }
 }

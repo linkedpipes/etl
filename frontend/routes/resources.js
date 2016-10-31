@@ -19,6 +19,12 @@ var gMonitorUri = gConfiguration.executor.monitor.url;
 // Components as templates.
 //
 
+gApiRouter.delete('/components/:id', function (request, response) {
+    var url = gConfiguration.storage.url + '/api/v1/components?iri='
+        + encodeURI(gConfiguration.storage.domain + request.originalUrl);
+    gRequest.del(url).pipe(response);
+});
+
 gApiRouter.get('/components', function (request, response) {
     var options = {
         'url': gConfiguration.storage.url + '/api/v1/components/list',
@@ -125,7 +131,8 @@ function postImportPipeline(request, response, url) {
         }
         // Get pipeline.
         gRequest.get({
-            'url': request.query.pipeline,
+            // Include mapping and templates.
+            'url': request.query.pipeline + '&templates=true&mappings=true',
             'headers': {
                 'Accept': 'application/ld+json'
             }
@@ -173,15 +180,13 @@ function postImportPipeline(request, response, url) {
 gApiRouter.post('/pipelines', function (request, response) {
     var url = gConfiguration.storage.url + '/api/v1/pipelines';
     if (request.query.pipeline) {
-        // We need to parse the body, get the pipeline and append
-        // the pipeline to the body.
+        // Get pipeline from given IRI.
         postImportPipeline(request, response, url);
     } else {
         // We can just pipe the content to the storage component.
         request.pipe(gRequest.post(url)).pipe(response);
     }
 });
-
 
 // TODO This is more part of the API.
 gApiRouter.post('/localize', function (request, response) {

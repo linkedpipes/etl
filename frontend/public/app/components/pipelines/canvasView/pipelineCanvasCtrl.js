@@ -1,26 +1,29 @@
 define([
     'jquery',
+    'jsonld',
     'app/components/canvas/canvasDirective',
     'app/components/canvas/pipelineCanvas',
     'app/components/canvas/executionProgress',
     'app/components/pipelineEditDirective/pipelineEditDirective',
-    'app/components/pipelines/configurationDialog/configurationDialogCtrl',
     'app/components/templates/templatesRepository',
     'app/components/pipelines/pipelineModelService',
-    'app/components/templates/selectDialog/selectTemplateDialogCtrl',
+    'app/components/templates/selectDialog/templateSelectDialog',
     'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
-    'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl'
-], function (jQuery,
+    'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
+    'app/components/templates/detailDialog/templateDetailDialog',
+    'app/components/instances/detailDialog/instanceDetailDialog'
+], function (jQuery, jsonld,
              pipelineCanvasDirective,
              canvasPipelineFactory,
              executionProgressFactory,
              pipelineEditDirective,
-             componentDialogCtrl,
              templatesRepositoryFactory,
              pipelineModelService,
              selectTemplateDialog,
              importPipelineDialog,
-             pipelineDetailDialog) {
+             pipelineDetailDialog,
+             templateDetailDialog,
+             instanceDetailDialog) {
     function controler($scope,
                        $mdDialog,
                        $mdMedia,
@@ -38,11 +41,9 @@ define([
                        pipelineCanvas,
                        executionCanvas,
                        indexPage,
-                        pipelineDesign
+                       pipelineDesign
                        // TODO Update names, check for factories and service.
     ) {
-
-        console.log('components.pipeline.canvas.view : ctrl');
 
         $scope.canvas = {};
 
@@ -85,25 +86,22 @@ define([
             var comFacade = pipelineService.component;
             var templateIri = comFacade.getTemplateIri(component);
             var template = templateService.getTemplate(templateIri);
-            // TODO Replace with premise.
-            templateService.fetchTemplateConfiguration(template, function () {
-                $mdDialog.show({
-                    'controller': 'components.pipelines.configuration.dialog',
-                    'templateUrl': 'app/components/pipelines/configurationDialog/configurationDialogView.html',
-                    'clickOutsideToClose': false,
-                    'fullscreen': useFullScreen,
-                    'locals': {
-                        'component': component,
-                        'template': template,
-                        'data': data.pipeline
-                    }
-                }).then(function () {
-                    // Notify about change in the
-                    $scope.canvas.getPaper().trigger('lp:component:changed',
-                        component['@id'], component);
-                }, function () {
-                    // No action here.
-                });
+            $mdDialog.show({
+                'controller': 'instance.detail.dialog',
+                'templateUrl': 'app/components/instances/detailDialog/instanceDetailDialog.html',
+                'clickOutsideToClose': false,
+                'fullscreen': useFullScreen,
+                'locals': {
+                    'component': component,
+                    'template': template,
+                    'data': data.pipeline
+                }
+            }).then(function () {
+                // Notify about change in the
+                $scope.canvas.getPaper().trigger('lp:component:changed',
+                    component['@id'], component);
+            }, function () {
+                // No action here.
             });
         }
 
@@ -112,28 +110,24 @@ define([
             var comFacade = pipelineService.component;
             var templateIri = comFacade.getTemplateIri(component);
             var template = templateService.getTemplate(templateIri);
-            // TODO Replace with premise.
-            templateService.fetchTemplateConfiguration(template, function () {
-                $mdDialog.show({
-                    'controller': 'components.templates.configuration.dialog',
-                    'templateUrl': 'app/components/templateDetailDialog/templateDetailDialogView.html',
-                    'clickOutsideToClose': false,
-                    'fullscreen': useFullScreen,
-                    'locals': {
-                        'component': component,
-                        'template': template,
-                        'pipeline': data.pipeline
-                    }
-                }).then(function () {
-                    // Notify about change in the component as
-                    // inherited properties may changed.
-                    $scope.canvas.getPaper().trigger('lp:component:changed',
-                        component['@id'], component);
-                }, function () {
-                    // No action here.
-                });
+            $mdDialog.show({
+                'controller': 'template.detail.dialog',
+                'templateUrl': 'app/components/templates/detailDialog/templateDetailDialog.html',
+                'clickOutsideToClose': false,
+                'fullscreen': useFullScreen,
+                'locals': {
+                    'component': component,
+                    'template': template,
+                    'pipeline': data.pipeline
+                }
+            }).then(function () {
+                // Notify about change in the component as
+                // inherited properties may changed.
+                $scope.canvas.getPaper().trigger('lp:component:changed',
+                    component['@id'], component);
+            }, function () {
+                // No action here.
             });
-
         }
 
         function onDebug(component) {
@@ -164,7 +158,7 @@ define([
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 'controller': 'components.templates.select.dialog',
-                'templateUrl': 'app/components/templates/selectDialog/selectTemplateDialogView.html',
+                'templateUrl': 'app/components/templates/selectDialog/templateSelectDialog.html',
                 'parent': angular.element(document.body),
                 'hasBackdrop': false,
                 'clickOutsideToClose': true,
@@ -183,6 +177,19 @@ define([
                         newComponent.component, result['portBinding'],
                         []);
                 }
+                // Add the configuration.
+                const templateIri = jsonld.r.getIRI(newComponent.component,
+                    "http://linkedpipes.com/ontology/template");
+                templateService.fetchNewConfig(templateIri).then((config) => {
+                    const configuration = jQuery.extend(true, [], config);
+                    const configIri =
+                        jsonld.r.getId(newComponent.component) +
+                        '/configuration';
+                    jsonld.r.setIRIs(newComponent.component,
+                        "http://linkedpipes.com/ontology/configurationGraph",
+                        configIri);
+                    data.pipeline.model.graphs[configIri] = configuration;
+                });
             }, function () {
                 // No action here.
             });
@@ -233,7 +240,8 @@ define([
          * a promise.
          */
         function loadPipeline() {
-            return $http.get(data.pipeline.iri).then(function (response) {
+            const iri = data.pipeline.iri + '&templates=false&mappings=false'
+            return $http.get(iri).then(function (response) {
                 data.pipeline.model = pipelineService.fromJsonLd(response.data);
                 data.pipeline.resource = pipelineService.getPipeline(
                     data.pipeline.model);
@@ -271,22 +279,22 @@ define([
         function loadData() {
             console.time('pipelineCanvasCtrl.loadData');
             loadPipeline()
-                .then(infoService.wait)
-                .then(loadExecution)
-                .then(function () {
-                    console.timeEnd('pipelineCanvasCtrl.loadData');
-                    // Initialize refresh here.
-                    refreshService.set(function update() {
-                        if (data.execution.update) {
-                            loadExecution();
-                        }
-                    });
-                }, function (message) {
-                    statusService.deleteFailed({
-                        'title': "Can't load data.",
-                        'response': message
-                    });
+            .then(infoService.wait)
+            .then(loadExecution)
+            .then(function () {
+                console.timeEnd('pipelineCanvasCtrl.loadData');
+                // Initialize refresh here.
+                refreshService.set(function update() {
+                    if (data.execution.update) {
+                        loadExecution();
+                    }
                 });
+            }, function (message) {
+                statusService.deleteFailed({
+                    'title': "Can't load data.",
+                    'response': message
+                });
+            });
         }
 
         // Switch to edit mode.
@@ -316,7 +324,7 @@ define([
         var readyComponents = 0;
 
         $scope.pipelineEdit.onLink = function () {
-            console.log('components.pipeline.canvas.view : onLink');
+
             $scope.pipelineEdit.bind(
                 $scope.canvas,
                 pipelineCanvas);
@@ -338,6 +346,12 @@ define([
                         component['@id']);
                 }
             };
+            $scope.pipelineEdit.API.createTemplate = function (component) {
+                const templateIri = jsonld.r.getIRI(component,
+                    'http://linkedpipes.com/ontology/template');
+                return templateService.getSupportControl(
+                    templateService.getTemplate(templateIri));
+            };
             $scope.pipelineEdit.API.onCreateComponent = onCreateComponent;
 
             readyComponents++;
@@ -348,7 +362,7 @@ define([
             if (readyComponents !== 2) {
                 return;
             }
-            console.log('components.pipeline.canvas.view : initialize');
+
             // Set mode based on the input.
             // TODO This should each component do on it own.
             if (data.execution.iri === undefined) {
@@ -361,7 +375,7 @@ define([
             // Update pipeline design information.
             pipelineDesign.update();
             // TODO replace with promise.
-            templateService.load(function () {
+            templateService.load().then(function () {
                 loadData();
             }, function (response) {
                 statusService.deleteFailed({
@@ -372,8 +386,6 @@ define([
         }
 
         $timeout(function () {
-
-            console.log('components.pipeline.canvas.view : timeout');
 
             // Wait for the end of the initialization.
 
@@ -484,16 +496,16 @@ define([
         var executePipeline = function (configuration, onSucess) {
             $http.post('/resources/executions?pipeline=' + data.pipeline.iri,
                 configuration)
-                .then(function () {
-                    if (onSucess) {
-                        onSucess();
-                    }
-                }, function (response) {
-                    statusService.postFailed({
-                        'title': "Can't start the execution.",
-                        'response': response
-                    });
+            .then(function () {
+                if (onSucess) {
+                    onSucess();
+                }
+            }, function (response) {
+                statusService.postFailed({
+                    'title': "Can't start the execution.",
+                    'response': response
                 });
+            });
         };
 
         $scope.onExecute = function () {
@@ -568,35 +580,35 @@ define([
                 }
             }
             $http.post('./resources/pipelines', data, config)
-                .success(function (data, status, headers) {
-                    statusService.success({
-                        'title': 'Pipeline has been successfully copied.'
-                    });
-                    // The response is a reference.
-                    // TODO Use JSONLD service to get the value !!
-                    var newPipelineUri = data[0]['@graph'][0]['@id'];
-                    //
-                    statusService.success({
-                        'title': 'Pipeline has been successfully copied.'
-                    });
-                    $location.path('/pipelines/edit/canvas').search(
-                        {'pipeline': newPipelineUri});
-                })
-                .error(function (data, status, headers) {
-                    statusService.postFailed({
-                        'title': "Can't create new pipeline.",
-                        'response': data
-                    });
+            .success(function (data, status, headers) {
+                statusService.success({
+                    'title': 'Pipeline has been successfully copied.'
                 });
+                // The response is a reference.
+                // TODO Use JSONLD service to get the value !!
+                var newPipelineUri = data[0]['@graph'][0]['@id'];
+                //
+                statusService.success({
+                    'title': 'Pipeline has been successfully copied.'
+                });
+                $location.path('/pipelines/edit/canvas').search(
+                    {'pipeline': newPipelineUri});
+            })
+            .error(function (data, status, headers) {
+                statusService.postFailed({
+                    'title': "Can't create new pipeline.",
+                    'response': data
+                });
+            });
         };
 
         $scope.onDelete = function (event) {
             var confirm = $mdDialog.confirm()
-                .title('Would you like to delete this pipeline?')
-                .ariaLabel('Delete pipeline.')
-                .targetEvent(event)
-                .ok('Delete pipeline')
-                .cancel('Cancel');
+            .title('Would you like to delete this pipeline?')
+            .ariaLabel('Delete pipeline.')
+            .targetEvent(event)
+            .ok('Delete pipeline')
+            .cancel('Cancel');
             $mdDialog.show(confirm).then(function () {
                 // Delete pipeline.
                 $http({
@@ -665,7 +677,7 @@ define([
         '$http',
         '$routeParams',
         '$timeout',
-        'components.templates.services.repository',
+        'template.service',
         'services.status',
         'service.refresh',
         'services.jsonld',
@@ -684,12 +696,13 @@ define([
         canvasPipelineFactory(app);
         executionProgressFactory(app);
         pipelineEditDirective(app);
-        componentDialogCtrl(app);
         templatesRepositoryFactory(app);
         pipelineModelService(app);
         selectTemplateDialog(app);
         importPipelineDialog(app);
         pipelineDetailDialog(app);
+        templateDetailDialog(app);
+        instanceDetailDialog(app);
     };
 
 });

@@ -2,4 +2,30 @@
 
 <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/host> .
+
+<http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/host>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#host> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#hostControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/userName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#userNameControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/outputPath>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#outputPath> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#outputPathControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/graph>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#graph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl> .

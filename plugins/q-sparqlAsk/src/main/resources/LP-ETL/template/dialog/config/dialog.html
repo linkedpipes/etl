@@ -1,7 +1,13 @@
-<div class="container-flow">
-    <md-switch ng-model="dialog.failOnTrue">Fail on ASK success</md-switch>
-    <md-input-container class="md-block" flex-gt-sm>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-switch ng-model="dialog.failOnTrue.value"
+               ng-disabled="dialog.failOnTrue.disabled || dialog.failOnTrue.inherit"
+               ng-hide="dialog.failOnTrue.hide">Fail on ASK success
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide" flex>
         <label>SPARQL ASK query</label>
-        <textarea id="query" ng-model="dialog.query" required md-select-on-focus>
+        <textarea id="query" ng-model="dialog.query.value"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
+                  md-select-on-focus/>
     </md-input-container>
 </div>

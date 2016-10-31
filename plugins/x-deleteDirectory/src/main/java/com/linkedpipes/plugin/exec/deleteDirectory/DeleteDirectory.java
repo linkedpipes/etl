@@ -22,7 +22,7 @@ public final class DeleteDirectory implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getDirectory() != null) {
+        if (configuration.getDirectory() == null) {
             throw exceptionFactory.failure(
                     "Invalid configuration (missing directory).");
         }

@@ -1,11 +1,18 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
 import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
+import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
+import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
-import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.apache.commons.io.FileUtils;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * A servlet responsible for handling request regards components.
@@ -30,7 +38,13 @@ import java.util.Collection;
 public class ComponentServlet {
 
     @Autowired
-    private TemplateFacade templates;
+    private TemplateFacade templateFacade;
+
+    @Autowired
+    private InfoFacade infoFacade;
+
+    @Autowired
+    private PipelineFacade pipelineFacade;
 
     /**
      * Return list of interfaces of all components.
@@ -43,7 +57,7 @@ public class ComponentServlet {
     public void getAll(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, BaseException {
-        RdfUtils.write(request, response, templates.getInterface());
+        RdfUtils.write(request, response, templateFacade.getInterfaces());
     }
 
     /**
@@ -59,13 +73,14 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, BaseException {
         // Get component.
-        final Template template = templates.getTemplate(iri);
+        final Template template = templateFacade.getTemplate(iri);
         if (template == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
-        RdfUtils.write(request, response, templates.getInterface(template));
+        RdfUtils.write(request, response,
+                templateFacade.getInterface(template));
     }
 
     /**
@@ -81,13 +96,31 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, BaseException {
         // Get component.
-        final Template template = templates.getTemplate(iri);
+        final Template template = templateFacade.getTemplate(iri);
         if (template == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
-        RdfUtils.write(request, response, templates.getDefinition(template));
+        RdfUtils.write(request, response,
+                templateFacade.getDefinition(template));
+    }
+
+    @RequestMapping(value = "/component",
+            method = RequestMethod.POST)
+    @ResponseBody
+    public void updateComponent(@RequestParam(name = "iri") String iri,
+            @RequestParam(name = "component") MultipartFile componentRdf,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, BaseException {
+        // Get component.
+        final Template template = templateFacade.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        final Collection<Statement> component = RdfUtils.read(componentRdf);
+        templateFacade.updateTemplate(template, component);
     }
 
     @RequestMapping(value = "/config",
@@ -97,13 +130,48 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, BaseException {
         // Get component.
-        final Template template = templates.getTemplate(iri);
+        final Template template = templateFacade.getTemplate(iri);
         if (template == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
-        RdfUtils.write(request, response, templates.getConfig(template));
+        RdfUtils.write(request, response,
+                templateFacade.getConfigurationTemplate(template));
+    }
+
+    @RequestMapping(value = "/config",
+            method = RequestMethod.POST)
+    @ResponseBody
+    public void updateConfig(@RequestParam(name = "iri") String iri,
+            @RequestParam(name = "configuration") MultipartFile configRdf,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, BaseException {
+        // Get component.
+        final Template template = templateFacade.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        final Collection<Statement> config = RdfUtils.read(configRdf);
+        templateFacade.updateConfig(template, config);
+    }
+
+    @RequestMapping(value = "/configEffective",
+            method = RequestMethod.GET)
+    @ResponseBody
+    public void getEffectiveConfig(@RequestParam(name = "iri") String iri,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, BaseException {
+        // Get component.
+        final Template template = templateFacade.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        //
+        RdfUtils.write(request, response,
+                templateFacade.getEffectiveConfiguration(template));
     }
 
     @RequestMapping(value = "/configTemplate",
@@ -113,14 +181,14 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, BaseException {
         // Get component.
-        final Template template = templates.getTemplate(iri);
+        final Template template = templateFacade.getTemplate(iri);
         if (template == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
         RdfUtils.write(request, response,
-                templates.getConfigForInstance(template));
+                templateFacade.getConfigurationInstance(template));
     }
 
     @RequestMapping(value = "/configDescription", method = RequestMethod.GET)
@@ -129,13 +197,14 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, BaseException {
         // Get component.
-        final Template template = templates.getTemplate(iri);
+        final Template template = templateFacade.getTemplate(iri);
         if (template == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
-        RdfUtils.write(request, response, templates.getConfigDesc(template));
+        RdfUtils.write(request, response,
+                templateFacade.getConfigurationDescription(template));
     }
 
     @RequestMapping(value = "/dialog",
@@ -147,13 +216,13 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         // Get component.
-        final Template template = templates.getTemplate(iri);
+        final Template template = templateFacade.getTemplate(iri);
         if (template == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
-        final File file = templates.getDialogResource(template,
+        final File file = templateFacade.getDialogResource(template,
                 dialogName, filePath);
         if (file == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -172,13 +241,13 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         // Get component.
-        final Template template = templates.getTemplate(iri);
+        final Template template = templateFacade.getTemplate(iri);
         if (template == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
-        final File file = templates.getStaticResource(template, filePath);
+        final File file = templateFacade.getStaticResource(template, filePath);
         if (file == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -201,12 +270,76 @@ public class ComponentServlet {
         final Collection<Statement> configurationRdf
                 = RdfUtils.read(configuration);
         // Create template and stream interface as a response.
-        final Template template = templates.createTemplate(componentRdf,
+        final Template template = templateFacade.createTemplate(componentRdf,
                 configurationRdf);
         try (OutputStream stream = response.getOutputStream()) {
             RdfUtils.write(stream, getFormat(request),
-                    templates.getInterface(template));
+                    templateFacade.getInterface(template));
         }
+    }
+
+    @RequestMapping(value = "/usage",
+            method = RequestMethod.GET)
+    public void getUsage(@RequestParam(name = "iri") String iri,
+            HttpServletRequest request, HttpServletResponse response)
+            throws BaseException, IOException {
+        // TODO Move to pipeline/dpu facade (hide pipeline.info to pipeline).
+        // Get component.
+        final Template template = templateFacade.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        // Get components.
+        final Collection<Template> templates =
+                templateFacade.getTemplateSuccessors(template);
+        templates.add(template);
+        // Get pipelines and construct the response.
+        final Collection<Statement> responseRdf = new LinkedList<>();
+        final ValueFactory vf = SimpleValueFactory.getInstance();
+        // TODO Add component interface
+        final IRI root = vf.createIRI(iri);
+        for (Template item : templates) {
+            final IRI templateIri = vf.createIRI(item.getIri());
+            responseRdf.add(vf.createStatement(root, vf.createIRI(
+                    "http://etl.linkedpipes.com/ontology/hasInstance"),
+                    templateIri));
+            responseRdf.add(vf.createStatement(templateIri, RDF.TYPE,
+                    vf.createIRI(
+                            "http://etl.linkedpipes.com/ontology/Template")));
+            final Collection<String> usage = infoFacade.getUsage(item.getIri());
+            for (String pipelineIri : usage) {
+                final Pipeline pipeline =
+                        pipelineFacade.getPipeline(pipelineIri);
+                if (pipeline == null) {
+                    continue;
+                }
+                responseRdf.addAll(pipeline.getReferenceRdf());
+                responseRdf.add(vf.createStatement(templateIri, vf.createIRI(
+                        "http://etl.linkedpipes.com/ontology/usedIn"),
+                        vf.createIRI(pipeline.getIri())));
+            }
+        }
+        //
+        try (OutputStream stream = response.getOutputStream()) {
+            RdfUtils.write(stream, getFormat(request), responseRdf);
+        }
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void remove(@RequestParam(name = "iri") String iri,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, BaseException {
+        // Get component.
+        final Template template = templateFacade.getTemplate(iri);
+        if (template == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        //
+        templateFacade.remove(template);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     /**

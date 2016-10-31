@@ -1,8 +1,8 @@
-<div class="container-flow">
-    <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex>
-            <label>Predicate</label>
-            <input ng-model="dialog.predicate" required>
-        </md-input-container>
-    </div>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.predicate.hide">
+        <label>Predicate</label>
+        <input ng-model="dialog.predicate.value"
+               ng-disabled="dialog.predicate.disabled || dialog.predicate.inherit">
+    </md-input-container>
 </div>

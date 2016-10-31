@@ -124,7 +124,7 @@ define(['jquery'], function (jQuery) {
             var newPort = {
                 'label': port['label'],
                 'binding': port['binding'],
-                'type': []
+                'content': undefined
             };
             port['types'].forEach(function (type) {
                 if (type === 'http://linkedpipes.com/ontology/Port') {
@@ -135,7 +135,7 @@ define(['jquery'], function (jQuery) {
                     outputs.push(newPort);
                 } else {
                     // Add all others to port type.
-                    newPort['type'].push(type);
+                    newPort['content'] = type;
                 }
             });
         });
@@ -244,6 +244,29 @@ define(['jquery'], function (jQuery) {
             console.warn("Can't map template:", iri);
         };
 
+        var fetchEffectiveConfiguration = function (template, onSuccess, onFailure) {
+            // Get configuration used for new instances.
+            // TODO Add configuration for template, instance, description.
+            // TODO Check for updates on configuration.
+            var url = '/api/v1/components/effective?iri=' +
+                encodeURI(template['id']);
+            $http.get(url, {'headers': {'Accept': 'application/ld+json'}}, {
+                // Suppress default AngularJS conversion.
+                transformResponse: function (data, headersGetter) {
+                    return data;
+                }
+            }).then(function (response) {
+                template['effective'] = response.data;
+                if (onSuccess) {
+                    onSuccess();
+                }
+            }, function (response) {
+                if (onFailure) {
+                    onFailure(response);
+                }
+            });
+        };
+
         /**
          * Make sure that given template has configuration loaded.
          *
@@ -251,7 +274,7 @@ define(['jquery'], function (jQuery) {
          * @param onSuccess Called on success.
          * @param onFailure Called on failure, parameter is a failure message from $http.get.
          */
-        service.fetchTemplateConfiguration = function (template, onSuccess, onFailure) {
+        service.fetchNewConfig = function (template, onSuccess, onFailure) {
             // Get configuration used for new instances.
             // TODO Add configuration for template, instance, description.
             // TODO Check for updates on configuration.
@@ -264,10 +287,7 @@ define(['jquery'], function (jQuery) {
                 }
             }).then(function (response) {
                 template['configuration'] = response.data;
-                if (onSuccess) {
-                    onSuccess();
-                }
-                ;
+                fetchEffectiveConfiguration(template, onSuccess, onFailure);
             }, function (response) {
                 if (onFailure) {
                     onFailure(response);

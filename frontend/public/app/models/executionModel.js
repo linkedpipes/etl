@@ -1,9 +1,7 @@
 //
-// Contains definition of an execution model. This model can be used
-// to read informations from an execution.
+// Contains definition of an execution model.
 //
-// TODO jsonld should be requireJs dependecy, factory funciton can return
-//  instance of the service class only
+// TODO jsonld should be requireJs dependency, factory function can return instance of the service class only
 //
 
 define([

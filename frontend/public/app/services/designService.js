@@ -6,8 +6,6 @@
  */
 define([], function () {
 
-    console.log('design.function');
-
     var _data = {};
 
     var _status = {
@@ -90,8 +88,6 @@ define([], function () {
     }
 
     function factoryFunction($http, jsonldService) {
-
-        console.log('design.factory');
 
         var service = {
             'update': update.bind(null, _data, $http, jsonldService),

@@ -17,7 +17,7 @@ module.exports = gApiRouter;
 
 gApiRouter.get('/info', function (request, response) {
     response.status(200).json({
-        'path' : {
+        'path': {
             'ftp': gConfiguration.executor.ftp.uri
         }
     });
@@ -28,7 +28,7 @@ gApiRouter.get('/info', function (request, response) {
 gApiRouter.get('/components/:type', function (request, response) {
     // Re-post to the storage.
     var iri = gConfiguration.storage.url + '/api/v1/components/';
-    switch(request.params.type) {
+    switch (request.params.type) {
         case 'interface':
             iri += 'interface?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
@@ -37,12 +37,20 @@ gApiRouter.get('/components/:type', function (request, response) {
             iri += 'definition?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
             break;
+        case 'effective':
+            iri += 'configEffective?';
+            iri += 'iri=' + encodeURIComponent(request.query.iri)
+            break;
         case 'config':
             iri += 'config?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
             break;
         case 'configTemplate':
             iri += 'configTemplate?';
+            iri += 'iri=' + encodeURIComponent(request.query.iri)
+            break;
+        case 'configDescription':
+            iri += 'configDescription?';
             iri += 'iri=' + encodeURIComponent(request.query.iri)
             break;
         case 'static':
@@ -63,7 +71,8 @@ gApiRouter.get('/components/:type', function (request, response) {
                     'systemMessage': '',
                     'userMessage': 'Missing resource.',
                     'errorCode': 'CONNECTION_REFUSED'
-                }});
+                }
+            });
             return;
     }
     // Pass header options.
@@ -91,6 +100,50 @@ gApiRouter.get('/jars/file', function (request, response) {
         response.status(503).json({
             'exception': {
                 'errorMessage': '',
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
+});
+
+// Updates for templates
+
+gApiRouter.post('/components/config', function (request, response) {
+    var url = gConfiguration.storage.url +
+        '/api/v1/components/config?iri=' +
+        encodeURIComponent(request.query.iri);
+    request.pipe(gRequest.post(url, {
+        'form': request.body
+    }), {
+        'end': false
+    }).pipe(response);
+});
+
+gApiRouter.post('/components/component', function (request, response) {
+    var url = gConfiguration.storage.url +
+        '/api/v1/components/component?iri=' +
+        encodeURIComponent(request.query.iri);
+    request.pipe(gRequest.post(url, {
+        'form': request.body
+    }), {
+        'end': false
+    }).pipe(response);
+});
+
+
+gApiRouter.get('/usage', function (request, response) {
+    // Pass header options.
+    var options = {
+        'url': gConfiguration.storage.url + '/api/v1/components/usage?iri=' +
+        encodeURIComponent(request.query.iri),
+        'headers': request.headers
+    }
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
                 'systemMessage': 'Executor-monitor is offline.',
                 'userMessage': 'Backend is offline.',
                 'errorCode': 'CONNECTION_REFUSED'

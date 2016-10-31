@@ -1,17 +1,21 @@
-<div class="container-flow">
-    <div class="row">
-        <p>Files to download can be specified via the configuration input.</p>
-        <md-switch ng-model="dialog.passiveMode">
-            Use passive mode
-        </md-switch>
-        <md-switch ng-model="dialog.binaryMode">
-            Use binary mode
-        </md-switch>
-        <md-input-container class="md-block" flex-gt-sm>
-            <label>Control timeout (seconds)</label>
-            <input type="number" ng-model="dialog.keepAliveControl"
-                   placeholder="" min="0" step="10">
-            <md-tooltip>Use 0 to disable the timeout.</md-tooltip>
-        </md-input-container>
-    </div>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <p>Files to download can be specified via the configuration input.</p>
+    <md-switch ng-model="dialog.passiveMode.value"
+               ng-disabled="dialog.passiveMode.disabled || dialog.passiveMode.inherit"
+               ng-hide="dialog.passiveMode.hide">
+        Use passive mode
+    </md-switch>
+    <md-switch ng-model="dialog.binaryMode.value"
+               ng-disabled="dialog.binaryMode.disabled || dialog.binaryMode.inherit"
+               ng-hide="dialog.binaryMode.hide">
+        Use binary mode
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.keepAliveControl.hide">
+        <label>Control timeout (seconds)</label>
+        <input type="number" ng-model="dialog.keepAliveControl.value"
+               ng-disabled="dialog.keepAliveControl.disabled || dialog.keepAliveControl.inherit"
+               placeholder="" min="0" step="10">
+        <md-tooltip>Use 0 to disable the timeout.</md-tooltip>
+    </md-input-container>
 </div>

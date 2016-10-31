@@ -1,36 +1,34 @@
 define([], function () {
-    function controller($scope, $service, rdfService) {
+    "use strict";
 
-        $scope.dialog = {
-            'usePrefix': false
-        };
+    const DESC = {
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-unpackZip#",
+        "$type": "Configuration",
+        "$control": {
+            "$predicate": "auto"
+        },
+        "usePrefix": {
+            "$type": "bool",
+            "$label": "Unpack each file to separate directory"
+        }
+    };
 
-        var rdf = rdfService.create('http://plugins.linkedpipes.com/ontology/t-unpackZip#');
+    function controller($scope, $service) {
 
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType('Configuration');
-
-            $scope.dialog.usePrefix = rdf.getBoolean(resource, 'usePrefix');
-        };
-
-        function saveDialog() {
-            var resource = rdf.secureByType('Configuration');
-
-            rdf.setBoolean(resource, 'usePrefix', $scope.dialog.usePrefix);
-
-            return rdf.getData();
-        };
-
-        // Define the save function.
-        $service.onStore = function () {
-            saveDialog();
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        // Load data.
-        loadDialog();
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
+
+        $service.onStore = function () {
+            dialogManager.save();
+        };
+
+        dialogManager.load();
+
     }
-    //
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });

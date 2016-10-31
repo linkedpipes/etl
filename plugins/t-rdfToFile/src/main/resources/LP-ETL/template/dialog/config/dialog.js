@@ -1,68 +1,46 @@
 define([], function () {
+    "use strict";
 
-    const PREFIX = 'http://plugins.linkedpipes.com/ontology/t-rdfToFile#';
+    const DESC = {
+        "$namespace" :
+            "http://plugins.linkedpipes.com/ontology/t-rdfToFile#",
+        "$type": "Configuration",
+        "fileName" : {
+            "$type" : "str",
+            "$property" : "fileName",
+            "$control": "fileNameControl",
+            "$label" : "Output file name"
+        },
+        "fileType" : {
+            "$type" : "str",
+            "$property" : "fileType",
+            "$control": "fileTypeControl",
+            "$label" : "Format"
+        },
+        "graphUri" : {
+            "$type" : "iri",
+            "$property" : "graphUri",
+            "$control": "graphUriControl",
+            "$label" : "URI of output graph"
+        }
+    };
 
-    function controller($scope, $service, rdfService) {
+    function controller($scope, $service) {
 
-        $scope.dialog = {};
-
-        if ($scope.control === undefined) {
-            $scope.control = {};
+        if ($scope.dialog === undefined) {
+            $scope.dialog = {};
         }
 
-        var rdf = rdfService.create();
-
-        function loadDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            $scope.dialog.fileName = rdf.getString(resource,
-                PREFIX + 'fileName');
-            $scope.dialog.fileType = rdf.getString(resource,
-                PREFIX + 'fileType');
-            $scope.dialog.graphUri = rdf.getString(resource,
-                PREFIX + 'graphUri');
-            //
-            $scope.control.fileName = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'fileNameControl'));
-            $scope.control.fileType = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'fileTypeControl'));
-            $scope.control.graphUri = $service.control.fromIri(
-                rdf.getIri(resource, PREFIX + 'graphUriControl'));
-        }
-
-        function saveDialog() {
-            rdf.setData($service.config.instance);
-            var resource = rdf.secureByType(PREFIX + 'Configuration');
-            //
-            if (!$scope.control.fileName.forced) {
-                rdf.setString(resource, PREFIX + 'fileName',
-                    $scope.dialog.fileName);
-            }
-            if (!$scope.control.fileType.forced) {
-                rdf.setString(resource, PREFIX + 'fileType',
-                    $scope.dialog.fileType);
-            }
-            if (!$scope.control.graphUri.forced) {
-                rdf.setString(resource, PREFIX + 'graphUri',
-                    $scope.dialog.graphUri);
-            }
-            //
-            rdf.setIri(resource, PREFIX + 'fileNameControl',
-                $service.control.toIri($scope.control.fileName));
-            rdf.setIri(resource, PREFIX + 'fileTypeControl',
-                $service.control.toIri($scope.control.fileType));
-            rdf.setIri(resource, PREFIX + 'graphUriControl',
-                $service.control.toIri($scope.control.graphUri));
-        }
+        const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {
-            saveDialog();
-        }
+            dialogManager.save();
+        };
 
-        loadDialog();
+        dialogManager.load();
+
     }
 
-    controller.$inject = ['$scope', '$service', 'services.rdf.0.0.0'];
+    controller.$inject = ['$scope', '$service'];
     return controller;
 });

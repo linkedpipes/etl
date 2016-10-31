@@ -1,3 +1,4 @@
+
 /**
  * Directive that embeds controller and HTML template on given URIs
  * and display them.
@@ -39,7 +40,6 @@ define([], function () {
 
                     // TODO We can cache the templateFunction ?
 
-                    console.timeEnd('Loading .. ' + $scope.html);
                 });
             });
         }

@@ -57,9 +57,9 @@ public class PipelineServlet {
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public void getPipeline(@RequestParam(name = "iri") String iri,
-            @RequestParam(name = "templates", defaultValue = "false")
+            @RequestParam(name = "templates", defaultValue = "true")
                     boolean includeTemplates,
-            @RequestParam(name = "mappings", defaultValue = "false")
+            @RequestParam(name = "mappings", defaultValue = "true")
                     boolean includeMapping,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {

@@ -1,17 +1,16 @@
-<div class="container-flow">
-    <div class="row">
-        <md-input-container class="md-block" ng-hide="control.fileName.forced" flex>
-            <label>Output file name</label>
-            <input ng-model="dialog.fileName" placeholder="my.csv"
-                   ng-disabled="control.fileName.inherit" required>
-        </md-input-container>
-        <md-input-container class="md-block" ng-hide="control.query.forced" flex>
-            <label>SPARQL SELECT query</label>
-            <textarea id="query" ng-model="dialog.query"
-                      placeholder="SELECT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 100"
-                      ng-disabled="control.query.inherit"
-                      md-select-on-focus required/>
-	</md-input-container>
-    </div>
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="control.fileName.hide">
+        <label>Output file name</label>
+        <input ng-model="dialog.fileName.value"
+               ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
+               placeholder="my.csv">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="control.query.hide">
+        <label>SPARQL SELECT query</label>
+        <textarea id="query" ng-model="dialog.query.value"
+                  placeholder="SELECT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 100"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
+                  md-select-on-focus/>
+    </md-input-container>
 </div>
-

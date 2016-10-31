@@ -11,7 +11,9 @@ import org.apache.commons.io.FileUtils;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
+import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -117,6 +120,70 @@ class TemplateManager {
         }
     }
 
+    public void updateTemplate(Template template,
+            Collection<Statement> contentRdf) throws BaseException {
+        // We need to update the component definition.
+        if (template instanceof FullTemplate) {
+            throw new BaseException("Can't modify core component.");
+        }
+        // For now there are changes only in the interface
+        // (label, description, color).
+        final ValueFactory vf = SimpleValueFactory.getInstance();
+        final Set<IRI> updateRdf = new HashSet<>();
+        final List<Statement> newInterface = new LinkedList<>();
+        final IRI templateIri = vf.createIRI(template.getIri());
+        for (Statement statement : contentRdf) {
+            updateRdf.add(statement.getPredicate());
+            //
+            newInterface.add(vf.createStatement(templateIri,
+                    statement.getPredicate(), statement.getObject(),
+                    templateIri));
+        }
+        // Add unchanged.
+        final ReferenceTemplate refTemplate = (ReferenceTemplate) template;
+        for (Statement statement : refTemplate.getInterfaceRdf()) {
+            if (!updateRdf.contains(statement.getPredicate())) {
+                newInterface.add(statement);
+            }
+        }
+        // Set and save.
+        refTemplate.setInterfaceRdf(newInterface);
+        RdfUtils.write(new File(((BaseTemplate) template).getDirectory(),
+                Template.INTERFACE_FILE), RDFFormat.TRIG, newInterface);
+    }
+
+    public void updateConfig(Template template,
+            Collection<Statement> configRdf) throws BaseException {
+        final List<Statement> configWithGraph
+                = new ArrayList<>(configRdf.size());
+        final ValueFactory vf = SimpleValueFactory.getInstance();
+        // TODO The graph IRI should be defined on a single place.
+        final IRI graph = vf.createIRI(
+                template.getIri() + "/configuration");
+        for (Statement s : configRdf) {
+            configWithGraph.add(vf.createStatement(
+                    s.getSubject(), s.getPredicate(), s.getObject(), graph
+            ));
+        }
+        //
+        final BaseTemplate baseTemplate = (BaseTemplate) template;
+        // Create configuration for instances.
+        final IRI newGraph = vf.createIRI(template.getIri() +
+                "/newConfiguration");
+        final boolean isJarTemplate = template instanceof FullTemplate;
+        final Collection<Statement> instanceConfigRdf
+                = ConfigurationFacade.createNewConfiguration(
+                configWithGraph, baseTemplate.getConfigDescRdf(),
+                graph.stringValue(), newGraph,
+                !isJarTemplate);
+        // Save to file.
+        RdfUtils.write(new File(((BaseTemplate) template).getDirectory(),
+                Template.CONFIG_FILE), RDFFormat.TRIG, configWithGraph);
+        // Update definitions.
+        baseTemplate.setConfigRdf(configWithGraph);
+        baseTemplate.setConfigForInstanceRdf(instanceConfigRdf);
+    }
+
     /**
      * Load and return template from given directory.
      *
@@ -138,8 +205,7 @@ class TemplateManager {
         final Resource referenceTemplateResource
                 = RdfUtils.find(interfaceRdf, ReferenceTemplate.TYPE);
         if (referenceTemplateResource != null) {
-            return loadReferenceTemplate(
-                    referenceTemplateResource, interfaceRdf, directory);
+            return loadReferenceTemplate(interfaceRdf, directory);
         }
         // Unknown template type.
         throw new BaseException("Missing template resource");
@@ -161,6 +227,11 @@ class TemplateManager {
         template.setInterfaceRdf(interfaceRdf);
         //
         loadBaseTemplate(template, directory);
+        // Load information.
+        FullTemplate.Info info = new FullTemplate.Info();
+        PojoLoader.loadOfType(template.getDefinitionRdf(),
+                FullTemplate.TYPE, info);
+        template.setInfo(info);
         // Load dialogs.
         final File dialogDirectory = new File(directory, "dialog");
         if (!dialogDirectory.exists()) {
@@ -185,12 +256,11 @@ class TemplateManager {
     /**
      * Load a reference template.
      *
-     * @param resource
      * @param interfaceRdf
      * @param directory
      * @return
      */
-    private static BaseTemplate loadReferenceTemplate(Resource resource,
+    private static BaseTemplate loadReferenceTemplate(
             Collection<Statement> interfaceRdf, File directory)
             throws BaseException {
         final ReferenceTemplate template = new ReferenceTemplate();
@@ -225,12 +295,26 @@ class TemplateManager {
         // Create configuration for instances.
         final IRI graph = SimpleValueFactory.getInstance().createIRI(
                 template.getIri() + "/new");
+        final boolean isJarTemplate = template instanceof FullTemplate;
         template.setConfigForInstanceRdf(
-                ConfigurationFacade.createConfigurationTemplate(
+                ConfigurationFacade.createNewConfiguration(
                         template.getConfigRdf(),
                         template.getConfigDescRdf(),
-                        graph.stringValue(), graph));
+                        graph.stringValue(), graph,
+                        !isJarTemplate));
+    }
 
+    public void remove(Template template) throws BaseException {
+        if (!(template instanceof ReferenceTemplate)) {
+            throw new BaseException("Can't delete non-reference template");
+        }
+        final ReferenceTemplate reference = (ReferenceTemplate) template;
+        try {
+            FileUtils.deleteDirectory(reference.getDirectory());
+        } catch (IOException ex) {
+            LOG.error("Can't delete template directory.", ex);
+        }
+        templates.remove(template.getIri());
     }
 
 }
