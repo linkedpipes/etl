@@ -225,7 +225,8 @@ class PipelineManager {
     }
 
     /**
-     * Import pipeline from given data and apply given options.
+     * Import pipeline from given data and apply given options. If the
+     * pipelineRdf is empty then create new empty pipeline.
      *
      * @param pipelineRdf
      * @param optionsRdf
@@ -235,9 +236,13 @@ class PipelineManager {
             Collection<Statement> optionsRdf)
             throws PipelineFacade.OperationFailed {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        // Prepare pipeline IRI.
+        // Prepare pipeline IRI and update pipeline resources.
         final IRI iri = valueFactory.createIRI(reservePipelineIri());
-        pipelineRdf = localizePipeline(pipelineRdf, optionsRdf, iri);
+        if (pipelineRdf.isEmpty()) {
+            pipelineRdf = createEmptyPipeline(iri);
+        } else {
+            pipelineRdf = localizePipeline(pipelineRdf, optionsRdf, iri);
+        }
         // Read pipeline info.
         Pipeline.Info info = new Pipeline.Info();
         try {
@@ -251,6 +256,7 @@ class PipelineManager {
         final Pipeline pipeline = new Pipeline(new File(
                 configuration.getPipelinesDirectory(), fileName),
                 info);
+        pipeline.setInfo(info);
         createPipelineReference(pipeline);
         // Save to dist.
         try {
