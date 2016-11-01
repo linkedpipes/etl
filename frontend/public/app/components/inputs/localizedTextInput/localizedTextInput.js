@@ -12,7 +12,8 @@ define(["jquery"], function (jQuery) {
             scope: {
                 "topLabel": "@labelTop",
                 "itemLabel": "@labelItem",
-                "disabled": "=lpDisabled"
+                "disabled": "=lpDisabled",
+                "multiline" : "@multiline"
             },
             replace: true,
             restrict: "E",
