@@ -8,18 +8,15 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
-import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-/**
- *
- * @author Petr Škoda
- */
+import java.io.File;
+
 public class ExecutorMonitor {
-   /**
+    /**
      * Create rolling file appender with given configuration.
      *
      * @param logDirectory
@@ -106,7 +103,7 @@ public class ExecutorMonitor {
         initLogger();
         final AbstractApplicationContext context
                 = new ClassPathXmlApplicationContext(
-                        "spring/context-executor-monitor.xml");
+                "spring/context-executor-monitor.xml");
         context.registerShutdownHook();
         context.start();
     }

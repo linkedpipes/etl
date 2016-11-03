@@ -10,7 +10,6 @@ import org.openrdf.query.impl.SimpleDataset;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class SparqlAsk implements Component.Sequential {
 

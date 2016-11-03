@@ -11,8 +11,6 @@ import java.util.Collection;
 
 /**
  * Class used to load data from RDF to POJO.
- *
- * @author Škoda Petr
  */
 public class PojoLoader {
 

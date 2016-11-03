@@ -6,8 +6,6 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Component factory. Is used to create components from OSGI bundles.
- *
- * @author Škoda Petr
  */
 public interface ComponentFactory {
 

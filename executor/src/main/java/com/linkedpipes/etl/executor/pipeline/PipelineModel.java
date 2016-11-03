@@ -11,8 +11,6 @@ import java.util.*;
 
 /**
  * Store pipeline definition as loaded from RDF.
- *
- * @author Petr Škoda
  */
 public class PipelineModel implements PojoLoader.Loadable {
 
@@ -51,10 +49,6 @@ public class PipelineModel implements PojoLoader.Loadable {
         private String execution;
 
         public DataSource() {
-        }
-
-        public String getDebug() {
-            return debug;
         }
 
         public String getLoadPath() {
@@ -106,10 +100,6 @@ public class PipelineModel implements PojoLoader.Loadable {
 
         public String getIri() {
             return iri;
-        }
-
-        public List<String> getTypes() {
-            return types;
         }
 
         public String getBinding() {
@@ -179,10 +169,6 @@ public class PipelineModel implements PojoLoader.Loadable {
 
         public String getIri() {
             return iri;
-        }
-
-        public Map<String, String> getLabels() {
-            return labels;
         }
 
         public List<DataUnit> getDataUnits() {

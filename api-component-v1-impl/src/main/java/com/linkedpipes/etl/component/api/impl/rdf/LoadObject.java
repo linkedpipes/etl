@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Petr Škoda
+ * Specializatin of loader for loading Java objects.
  */
 class LoadObject extends LoaderToValue {
 
@@ -29,7 +29,7 @@ class LoadObject extends LoaderToValue {
             throws CanNotDeserializeObject {
         // Check object type.
         if (!checkType(field.getType(), select, property.get("value"), graph)) {
-            throw new CanNotDeserializeObject("Type missmatch.");
+            throw new CanNotDeserializeObject("Type mismatch.");
         }
         // Create and set a new object.
         final Object value = loadNew(field.getType(), property.get("value"),

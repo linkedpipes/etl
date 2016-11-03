@@ -25,9 +25,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Petr Škoda
- */
 public class PipelineExecutor implements EventManager.EventListener {
 
     private static class InitializationFailure extends Exception {
@@ -118,10 +115,10 @@ public class PipelineExecutor implements EventManager.EventListener {
         beforeExecution();
         // Get all components, so if some is missing we find out at the
         // beginning of a pipeline.
-        final Map<String, SequentialComponent> componenInstances;
+        final Map<String, SequentialComponent> componentInstances;
         try {
             sendExecutionBeginNotification();
-            componenInstances = initializeComponents();
+            componentInstances = initializeComponents();
             dataUnits.onExecutionStart(modules);
         } catch (InitializationFailure | DataUnitManager.DataUnitException ex) {
             events.publish(EventFactory.initializationFailed(
@@ -136,7 +133,7 @@ public class PipelineExecutor implements EventManager.EventListener {
             //
             final ComponentExecutor executor = ComponentExecutor.create(
                     dataUnits, events, pipeline, execution, component.getIri(),
-                    componenInstances.get(component.getIri()));
+                    componentInstances.get(component.getIri()));
             if (executor == null) {
                 events.publish(EventFactory.executionFailed(
                         "Can't get executor."));
@@ -242,14 +239,7 @@ public class PipelineExecutor implements EventManager.EventListener {
             final Component instance;
             try {
                 instance = modules.getComponent(pipeline,
-                        component.getIri(), new Component.Context() {
-
-                            @Override
-                            public void sendMessage(Event message) {
-                                events.publish(message);
-                            }
-
-                        });
+                        component.getIri(), message -> events.publish(message));
             } catch (ModuleException ex) {
                 LOG.error("Component ({}) initialization failed.",
                         component.getDefaultLabel());

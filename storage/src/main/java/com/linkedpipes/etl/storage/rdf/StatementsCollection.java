@@ -6,9 +6,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 import java.util.*;
 import java.util.function.Function;
 
-/**
- * @author Petr Škoda
- */
 public class StatementsCollection {
 
     private final Collection<Statement> statements;
@@ -78,15 +75,13 @@ public class StatementsCollection {
     }
 
     /**
-     *
      * @param toRemove Statements to removeProperties.
      */
-    public void remove(Collection<Statement>  toRemove) {
+    public void remove(Collection<Statement> toRemove) {
         statements.removeAll(toRemove);
     }
 
     /**
-     *
      * @param toRemove Statements to removeProperties.
      */
     public void remove(StatementsCollection toRemove) {

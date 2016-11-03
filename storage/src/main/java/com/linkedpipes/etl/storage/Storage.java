@@ -15,10 +15,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 
-/**
- *
- * @author Petr Škoda
- */
 public class Storage {
 
     /**
@@ -108,7 +104,7 @@ public class Storage {
         initLogger();
         final AbstractApplicationContext context
                 = new ClassPathXmlApplicationContext(
-                        "spring/context-storage.xml");
+                "spring/context-storage.xml");
         context.registerShutdownHook();
         context.start();
     }

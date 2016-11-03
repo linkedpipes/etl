@@ -8,8 +8,6 @@ import org.openrdf.model.Value;
 
 /**
  * Data object used to carry information about data unit and its status.
- *
- * @author Petr Škoda
  */
 final class DataUnitContainer implements PojoLoader.Loadable {
 

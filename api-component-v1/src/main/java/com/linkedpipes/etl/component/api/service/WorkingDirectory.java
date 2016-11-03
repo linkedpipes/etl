@@ -4,8 +4,6 @@ import java.io.File;
 
 /**
  * Provide access to an existing working directory in form of an {@link File}.
- *
- * @author Petr Škoda
  */
 public class WorkingDirectory extends File {
 

@@ -7,9 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 import com.linkedpipes.etl.executor.api.v1.rdf.PojoLoader;
 import org.osgi.service.component.annotations.Component;
 
-/**
- * @author Petr Škoda
- */
 @Component(immediate = true, service = {DataUnitFactory.class})
 public class SystemPlugin implements DataUnitFactory {
 

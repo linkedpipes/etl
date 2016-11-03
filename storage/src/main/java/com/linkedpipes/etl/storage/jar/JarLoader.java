@@ -24,8 +24,6 @@ import java.util.jar.JarFile;
  * Load the JarComponent from the JAR file. The file must contains
  * LP-ETL/jar/info.* file, where the extension must be a valid RDF
  * file extension.
- *
- * @author Petr Škoda
  */
 final class JarLoader {
 

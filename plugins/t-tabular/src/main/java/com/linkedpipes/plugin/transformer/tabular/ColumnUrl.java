@@ -10,7 +10,6 @@ import org.openrdf.model.Resource;
 /**
  * Represents a column with IRI value.
  *
- * @author Petr Škoda
  */
 class ColumnUrl extends ColumnAbstract {
 

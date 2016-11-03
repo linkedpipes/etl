@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * Contains settings for pipeline operations.
- *
- * @author Petr Škoda
  */
 class PipelineOptions implements PojoLoader.Loadable {
 
@@ -35,11 +33,6 @@ class PipelineOptions implements PojoLoader.Loadable {
      */
     private boolean local = true;
 
-    /**
-     * Target IRI of the pipeline.
-     */
-    private IRI pipelineIri;
-
     private boolean importTemplates = false;
 
     private boolean updateTemplates = false;
@@ -50,14 +43,6 @@ class PipelineOptions implements PojoLoader.Loadable {
 
     public boolean isLocal() {
         return local;
-    }
-
-    public IRI getPipelineIri() {
-        return pipelineIri;
-    }
-
-    public void setPipelineIri(IRI pipelineIri) {
-        this.pipelineIri = pipelineIri;
     }
 
     public boolean isImportTemplates() {
@@ -79,13 +64,9 @@ class PipelineOptions implements PojoLoader.Loadable {
                 break;
             case "http://www.w3.org/2004/02/skos/core#prefLabel":
                 if (value instanceof Literal) {
-                    labels.add((Literal)value);
+                    labels.add((Literal) value);
                 }
                 break;
-            case "http://etl.linkedpipes.com/ontology/pipeline":
-                if (value instanceof IRI) {
-                    pipelineIri = (IRI)value;
-                }
             case "http://etl.linkedpipes.com/ontology/importTemplates":
                 if (value instanceof Literal) {
                     importTemplates = ((Literal) value).booleanValue();

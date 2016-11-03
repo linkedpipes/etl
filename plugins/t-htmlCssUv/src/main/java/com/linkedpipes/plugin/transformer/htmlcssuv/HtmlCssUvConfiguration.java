@@ -7,7 +7,6 @@ import java.util.List;
 
 
 /**
- * @author Petr Škoda
  */
 @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Configuration")
 public class HtmlCssUvConfiguration {

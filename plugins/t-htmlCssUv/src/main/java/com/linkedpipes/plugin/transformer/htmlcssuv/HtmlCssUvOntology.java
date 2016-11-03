@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.htmlcssuv;
 
 /**
- * @author Petr Škoda
  */
 public class HtmlCssUvOntology {
 

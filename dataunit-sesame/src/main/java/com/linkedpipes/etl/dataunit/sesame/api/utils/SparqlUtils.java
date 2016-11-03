@@ -16,8 +16,6 @@ import java.util.Map;
 
 /**
  * Utility class easy queering for with SPARQL select.
- *
- * @author Petr Škoda
  */
 public final class SparqlUtils {
 

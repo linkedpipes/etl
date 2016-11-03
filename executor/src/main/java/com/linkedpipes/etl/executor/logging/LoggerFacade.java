@@ -12,8 +12,6 @@ import java.io.File;
 
 /**
  * Can be used to manage logging.
- *
- * @author Petr Škoda
  */
 public class LoggerFacade {
 

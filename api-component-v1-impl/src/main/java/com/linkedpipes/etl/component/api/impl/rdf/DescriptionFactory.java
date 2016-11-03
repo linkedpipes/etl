@@ -12,7 +12,10 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * @author Petr Škoda
+ * Create a description (for java object, field) that can be used to load
+ * value into the given object, field.
+ *
+ * Is used in process of loading RDF into Java objects.
  */
 class DescriptionFactory {
 
@@ -36,7 +39,7 @@ class DescriptionFactory {
         WRAP_TYPES.add(Date.class);
     }
 
-    Map<String, List<Loader>> createDescription(Class<?> type,
+    public Map<String, List<Loader>> createDescription(Class<?> type,
             RdfReader.MergeOptionsFactory optionsFactory)
             throws Loader.CanNotDeserializeObject {
         final Map<String, List<Loader>> result = new HashMap<>();
@@ -163,7 +166,7 @@ class DescriptionFactory {
         loaders.add(newLoader);
     }
 
-    static boolean isPrimitive(Class<?> fieldClass) {
+    public static boolean isPrimitive(Class<?> fieldClass) {
         return fieldClass.isPrimitive() || WRAP_TYPES.contains(fieldClass);
     }
 

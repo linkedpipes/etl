@@ -15,8 +15,6 @@ import java.util.*;
 
 /**
  * Store debugName data related to an executionId.
- *
- * @author Petr Škoda
  */
 public class DebugData {
 
@@ -142,7 +140,8 @@ public class DebugData {
             if (statement.getPredicate().equals(RDF.TYPE)) {
                 if (statement.getObject().stringValue().equals(
                         "http://etl.linkedpipes.com/ontology/DataUnit")) {
-                    loadingDataUnits.put(statement.getSubject(), new DataUnit());
+                    loadingDataUnits
+                            .put(statement.getSubject(), new DataUnit());
                 }
             }
         }

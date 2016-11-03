@@ -22,8 +22,6 @@ import java.util.*;
 
 /**
  * Responsible for storing information about existing executions.
- *
- * @author Petr Škoda
  */
 @Service
 class ExecutionStorage {
@@ -220,8 +218,6 @@ class ExecutionStorage {
      *
      * @param stream Execution data in JSONLD.
      * @return
-     * @throws UnknownExecution
-     * @throws OperationFailed
      */
     public Execution discover(InputStream stream)
             throws UnknownExecution, OperationFailed {
@@ -239,7 +235,7 @@ class ExecutionStorage {
                         execution.getExecutionStatements());
                 execution.setLastChange(newExecution.getLastChange());
                 execution.setLastCheck(newExecution.getLastCheck());
-                // We can change status from queud to running only.
+                // We can change status from queue to running only.
                 if (newExecution.getStatus() == Execution.StatusType.RUNNING
                         &&
                         execution.getStatus() == Execution.StatusType.QUEUED) {
@@ -313,7 +309,7 @@ class ExecutionStorage {
                 toRemove.add(execution);
             } catch (IOException ex) {
                 // The directory can be used by other process or user,
-                // so it may take more atteps to delete the directory.
+                // so it may take more attempts to delete the directory.
             }
         }
         executionToDelete.removeAll(toRemove);

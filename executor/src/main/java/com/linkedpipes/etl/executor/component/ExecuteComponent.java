@@ -16,8 +16,6 @@ import java.util.Map;
 
 /**
  * Execute component with "EXECUTE" execution type.
- *
- * @author Petr Škoda
  */
 class ExecuteComponent implements ComponentExecutor, Runnable {
 

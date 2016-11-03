@@ -15,7 +15,6 @@ import org.openrdf.query.impl.SimpleDataset;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class GraphMerger implements Component.Sequential {
 

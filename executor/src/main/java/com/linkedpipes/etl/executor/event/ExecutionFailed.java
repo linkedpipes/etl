@@ -10,8 +10,6 @@ import java.io.StringWriter;
 /**
  * Used to report that execution failed. The {@link ExecutionFinished} event
  * is still raised.
- *
- * @author Škoda Petr
  */
 public class ExecutionFailed extends AbstractEvent {
 

@@ -4,9 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 
-/**
- * @author Škoda Petr
- */
 public interface SesameDataUnit {
 
     @FunctionalInterface

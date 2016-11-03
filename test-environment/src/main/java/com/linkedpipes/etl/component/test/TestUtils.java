@@ -20,9 +20,6 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 
-/**
- * @author Petr Škoda
- */
 public class TestUtils {
 
     private TestUtils() {
@@ -85,7 +82,7 @@ public class TestUtils {
         final URL url = Thread.currentThread().getContextClassLoader().
                 getResource(fileName);
         if (url == null) {
-            throw new RuntimeException("Required resourcce '"
+            throw new RuntimeException("Required resource '"
                     + fileName + "' is missing.");
         }
         return new File(url.getPath());

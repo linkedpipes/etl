@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FileDecode implements Component.Sequential {
 

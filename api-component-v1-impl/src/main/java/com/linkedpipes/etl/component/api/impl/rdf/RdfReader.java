@@ -8,8 +8,7 @@ import java.util.Map;
 
 /**
  * Facade used to make the functionality of this package public.
- *
- * @author Petr Škoda
+ * Provide functions for reading RDF objects into Java.
  */
 public class RdfReader {
 
@@ -114,7 +113,6 @@ public class RdfReader {
      * </ul>
      *
      * @param type
-     * @param graph If null GRAPHT statement is not used.
      * @return Query that search for objects of given types.
      */
     static String getQueryForTypes(String type) {
@@ -133,7 +131,7 @@ public class RdfReader {
      * </ul>
      *
      * @param type
-     * @param graph If null GRAPHT statement is not used.
+     * @param graph If null GRAPH statement is not used.
      * @return Query that search for objects of given types.
      */
     static String getQueryForTypes(String type, String graph) {

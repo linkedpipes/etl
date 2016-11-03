@@ -8,9 +8,6 @@ import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
 
 import java.util.Collection;
 
-/**
- * @author Škoda Petr
- */
 public interface ModuleFacade {
 
     public class ModuleException extends ExecutorException {

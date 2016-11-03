@@ -30,9 +30,6 @@ import java.net.URLEncoder;
 import java.util.*;
 import java.util.function.Consumer;
 
-/**
- * @author Škoda Petr
- */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 class ModuleFacadeImpl implements ModuleFacade,
@@ -255,7 +252,7 @@ class ModuleFacadeImpl implements ModuleFacade,
             }
         }
         throw new ModuleException(
-                "No factory can instantiace required data unit.");
+                "No factory can instantiate required data unit.");
     }
 
     protected void scanDirectory(File root, Consumer<File> consumer) {

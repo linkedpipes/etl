@@ -6,8 +6,6 @@ package com.linkedpipes.etl.component.api.service;
  *
  * The intended usage is to close opened resources that were open during
  * execution and whose closing would render code unreadable.
- *
- * @author Petr Škoda
  */
 public interface AfterExecution {
 

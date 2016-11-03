@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Custom implementation to enable support of Multipart on PUT.
- *
- * @author Petr Škoda
  */
 class MultipartResolver extends CommonsMultipartResolver {
 

@@ -12,9 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @author Škoda Petr
- */
 public final class FilesDataUnitImpl implements ManageableFilesDataUnit {
 
     /**

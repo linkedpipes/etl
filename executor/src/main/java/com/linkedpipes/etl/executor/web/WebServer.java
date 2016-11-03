@@ -2,10 +2,6 @@ package com.linkedpipes.etl.executor.web;
 
 import com.linkedpipes.etl.executor.Configuration;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -28,10 +24,11 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-/**
- *
- * @author Petr Škoda
- */
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @Service
 class WebServer implements ApplicationListener<ApplicationEvent> {
 

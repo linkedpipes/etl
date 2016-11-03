@@ -1,15 +1,5 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
@@ -20,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- *
- * @author Petr Škoda
- */
+import java.io.*;
+import java.util.*;
+
 @Service
 public class ExecutionFacade {
 
@@ -58,7 +47,6 @@ public class ExecutionFacade {
     private ExecutionStorage storage;
 
     /**
-     *
      * @param id
      * @return
      */
@@ -67,7 +55,6 @@ public class ExecutionFacade {
     }
 
     /**
-     *
      * @return List of all executions.
      */
     public Collection<Execution> getExecutions() {
@@ -107,7 +94,6 @@ public class ExecutionFacade {
     }
 
     /**
-     *
      * @param execution
      * @return Path to the execution log file.
      */
@@ -121,8 +107,6 @@ public class ExecutionFacade {
      * @param execution
      * @param format
      * @param stream
-     * @throws ExecutionFacade.OperationFailed
-     * @throws ExecutionFacade.UnknownExecution
      */
     public void writeExecution(Execution execution, RDFFormat format,
             OutputStream stream) throws OperationFailed, UnknownExecution {
@@ -154,8 +138,6 @@ public class ExecutionFacade {
      * @param execution
      * @param format
      * @param stream
-     * @throws ExecutionFacade.OperationFailed
-     * @throws ExecutionFacade.UnknownExecution
      */
     public void writePipeline(Execution execution, RDFFormat format,
             OutputStream stream) throws OperationFailed, UnknownExecution {
@@ -173,7 +155,6 @@ public class ExecutionFacade {
      * @param pipeline
      * @param inputs
      * @return
-     * @throws ExecutionFacade.OperationFailed
      */
     public Execution createExecution(MultipartFile pipeline,
             List<MultipartFile> inputs) throws OperationFailed {
@@ -195,8 +176,6 @@ public class ExecutionFacade {
      *
      * @param stream
      * @return
-     * @throws ExecutionFacade.UnknownExecution
-     * @throws ExecutionFacade.OperationFailed
      */
     public Execution discover(InputStream stream)
             throws UnknownExecution, OperationFailed {
@@ -212,8 +191,6 @@ public class ExecutionFacade {
      *
      * @param execution
      * @param stream
-     * @throws ExecutionFacade.ExecutionMismatch
-     * @throws ExecutionFacade.OperationFailed
      */
     public void update(Execution execution, InputStream stream)
             throws ExecutionMismatch, OperationFailed {
@@ -266,7 +243,6 @@ public class ExecutionFacade {
      * @param sourceFormat
      * @param targetFormat
      * @param stream
-     * @throws ExecutionFacade.OperationFailed
      */
     private void streamFile(File file, RDFFormat sourceFormat,
             RDFFormat targetFormat, OutputStream stream)

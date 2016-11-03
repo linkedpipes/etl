@@ -26,7 +26,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
- * @author Petr Škoda
  */
 public class SparqlEndpointLoader implements Component.Sequential {
 

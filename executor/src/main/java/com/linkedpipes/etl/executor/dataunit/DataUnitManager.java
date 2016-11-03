@@ -19,8 +19,6 @@ import java.util.*;
 
 /**
  * Manage life cycle of all data units.
- *
- * @author Petr Škoda
  */
 public class DataUnitManager {
 

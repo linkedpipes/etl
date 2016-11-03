@@ -8,10 +8,6 @@ import java.util.*;
 
 /**
  * Represent an RDF graph in form of an Java object. Works with triples.
- * <p>
- * TODO Clean code !
- *
- * @author Petr Škoda
  */
 public class RdfObjects {
 

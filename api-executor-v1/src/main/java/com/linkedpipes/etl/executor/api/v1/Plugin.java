@@ -5,8 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 /**
  * Interface used by plugins. Plugins are basic units that can be loaded
  * into the application.
- *
- * @author Petr Škoda
  */
 public interface Plugin {
 

@@ -7,8 +7,6 @@ import org.apache.ftpserver.ftplet.FtpFile;
 /**
  * Implementation of the FTP server view. Represents a view of the
  * content for client.
- *
- * @author Petr Škoda
  */
 public class VirtualFileSystemView implements FileSystemView {
 

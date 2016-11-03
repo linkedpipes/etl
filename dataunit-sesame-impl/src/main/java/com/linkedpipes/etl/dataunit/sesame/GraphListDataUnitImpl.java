@@ -28,8 +28,6 @@ import java.util.*;
 /**
  * Utilize one graph (so called "metadata graph") to store references to
  * other graphs, where the data are located.
- *
- * @author Škoda Petr
  */
 public final class GraphListDataUnitImpl extends SesameDataUnitImpl
         implements ManageableGraphListDataUnit {

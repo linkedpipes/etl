@@ -13,7 +13,6 @@ import java.io.IOException;
 
 /**
  *
- * @author Petr Škoda
  */
 public class Tabular implements Component.Sequential {
 

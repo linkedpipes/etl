@@ -12,8 +12,6 @@ import java.util.List;
 
 /**
  * Describe options that can be used to modify pipeline unpacking.
- *
- * @author Petr Škoda
  */
 class UnpackOptions implements PojoLoader.Loadable {
 

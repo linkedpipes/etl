@@ -18,8 +18,6 @@ import java.util.*;
 
 /**
  * Contains utilities for RDF IO operations.
- *
- * @author Petr Škoda
  */
 public final class RdfUtils {
 
@@ -106,8 +104,8 @@ public final class RdfUtils {
      * Change names of all typed resource so the use given prefix.
      *
      * @param statements
-     * @param baseIri    Must not end with '/'.
-     * @param context    Context used for new statements.
+     * @param baseIri Must not end with '/'.
+     * @param context Context used for new statements.
      * @return
      */
     public static Collection<Statement> renameResources(

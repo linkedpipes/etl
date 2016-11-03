@@ -3,8 +3,8 @@ package com.linkedpipes.etl.storage.unpacker;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
-import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
+import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,6 @@ import java.util.Collection;
 
 /**
  * Provide capabilities to unpack pipeline for execution.
- *
- * @author Petr Škoda
  */
 @Service
 public class UnpackerFacade {

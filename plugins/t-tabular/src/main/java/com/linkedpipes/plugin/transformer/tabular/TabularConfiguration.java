@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/
  *
- * @author Petr Škoda
  */
 @RdfToPojo.Type(uri = TabularVocabulary.TABLE)
 public class TabularConfiguration {

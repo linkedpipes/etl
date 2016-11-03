@@ -30,8 +30,6 @@ import java.util.LinkedList;
 
 /**
  * A servlet responsible for handling request regards components.
- *
- * @author Petr Škoda
  */
 @RestController
 @RequestMapping(value = "/components")

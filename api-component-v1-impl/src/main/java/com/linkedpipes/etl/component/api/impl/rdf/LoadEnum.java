@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- * @author Petr Škoda
+ * Loader implementation used to load enum values.
  */
 class LoadEnum extends LoaderToValue {
 

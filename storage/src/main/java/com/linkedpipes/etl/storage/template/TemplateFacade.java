@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.*;
 
-/**
- * @author Petr Škoda
- */
 @Service
 public class TemplateFacade {
 
@@ -34,7 +31,7 @@ public class TemplateFacade {
     /**
      * Return all templates that are ancestors to given template.
      *
-     * The core tempalte is the first one.
+     * The core template is the first one.
      *
      * @param templateIri
      * @param includeFirstLevelTemplates
@@ -96,7 +93,8 @@ public class TemplateFacade {
         // Gather the results.
         final Set<Template> results = new HashSet<>();
         final Set<Template> toTest = new HashSet<>();
-        toTest.addAll(successors.getOrDefault(template, Collections.EMPTY_LIST));
+        toTest.addAll(
+                successors.getOrDefault(template, Collections.EMPTY_LIST));
         while (!toTest.isEmpty()) {
             final Template item = toTest.iterator().next();
             toTest.remove(item);

@@ -4,8 +4,6 @@ import org.slf4j.helpers.MessageFormatter;
 
 /**
  * LinkedPipes specific exception.
- *
- * @author Petr Škoda
  */
 public class LpException extends Exception {
 

@@ -6,8 +6,6 @@ import java.util.Collection;
 
 /**
  * Provide access to the component definition.
- *
- * @author Petr Škoda
  */
 public interface DefinitionReader {
 

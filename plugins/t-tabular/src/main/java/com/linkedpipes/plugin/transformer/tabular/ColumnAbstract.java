@@ -11,7 +11,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
  * + URLEncoder.encode(column.name, "UTF-8"));
  *
  *
- * @author Petr Škoda
  */
 abstract class ColumnAbstract {
 

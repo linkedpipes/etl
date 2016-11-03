@@ -7,8 +7,6 @@ import java.util.Map;
 
 /**
  * Library independent interface design to query for RDF data.
- *
- * @author Škoda Petr
  */
 public interface SparqlSelect {
 

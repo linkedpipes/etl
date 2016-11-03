@@ -18,7 +18,6 @@ import org.openrdf.model.vocabulary.RDF;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FileHasher implements Component.Sequential {
 

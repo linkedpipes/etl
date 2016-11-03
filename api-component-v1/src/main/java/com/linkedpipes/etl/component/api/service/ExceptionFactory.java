@@ -4,8 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  * Can be used to create an exception that reports various failures.
- *
- * @author Petr Škoda
  */
 public interface ExceptionFactory {
 

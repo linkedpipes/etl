@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * @author Petr Škoda
- */
 @RestController
 @RequestMapping(value = "/jars")
 public class JarServlet {

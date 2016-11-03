@@ -5,9 +5,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.util.*;
 
-/**
- * @author Petr Škoda
- */
 public class Model {
 
     public class Entity {
@@ -195,7 +192,7 @@ public class Model {
                 : newEntity.properties.entrySet()) {
             final List<Value> data = new LinkedList<>();
             data.addAll(entry.getValue());
-            newEntity.properties.put(entry.getKey(),data);
+            newEntity.properties.put(entry.getKey(), data);
         }
     }
 
@@ -319,7 +316,6 @@ public class Model {
     }
 
     /**
-     *
      * @return Representation of all entities.
      */
     public Collection<Statement> asStatements() {

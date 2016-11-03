@@ -6,8 +6,6 @@ import ch.qos.logback.core.spi.FilterReply;
 
 /**
  * DENY all messages, whose logger's name does not start with given prefixes.
- *
- * @author Škoda Petr
  */
 class PackageFilter extends Filter<ILoggingEvent> {
 

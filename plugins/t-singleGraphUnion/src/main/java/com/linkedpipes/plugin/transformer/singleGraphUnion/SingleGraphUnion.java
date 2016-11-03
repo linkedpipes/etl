@@ -11,7 +11,6 @@ import org.openrdf.repository.RepositoryConnection;
 
 /**
  *
- * @author Petr Škoda
  */
 public class SingleGraphUnion implements Component.Sequential {
 

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Petr Škoda
+ * Loader used to load to collection field type.
  */
 class LoadCollection extends LoaderToValue {
 
@@ -34,7 +34,7 @@ class LoadCollection extends LoaderToValue {
     @Override
     public void load(Object object, Map<String, String> property, String graph,
             SparqlSelect select) throws CanNotDeserializeObject {
-        // Get colllection.
+        // Get collection.
         final Method readMethod = this.property.getReadMethod();
         final Collection collection;
         try {

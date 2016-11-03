@@ -13,8 +13,6 @@ import java.util.*;
 /**
  * Provide existing pipeline based knowledge to improve used experience
  * with pipeline design.
- *
- * @author Petr Škoda
  */
 @Service
 public class InfoFacade {
@@ -32,12 +30,11 @@ public class InfoFacade {
             for (Map.Entry<Resource, Integer> entry :
                     info.followup.entrySet()) {
                 followup.put(entry.getKey(), followup.getOrDefault(
-                        entry.getKey(), 0) +entry.getValue());
+                        entry.getKey(), 0) + entry.getValue());
             }
         }
 
     }
-
 
     /**
      * Holds information about a single pipeline.
@@ -134,7 +131,6 @@ public class InfoFacade {
     }
 
     /**
-     *
      * @param templateIriAsString
      * @return Names of pipeline where given pipeline is used.
      */
@@ -255,15 +251,15 @@ public class InfoFacade {
                     break;
                 case "http://linkedpipes.com/ontology/template":
                     componentTypes.put(statement.getSubject(),
-                            (Resource)statement.getObject());
+                            (Resource) statement.getObject());
                     break;
                 case "http://linkedpipes.com/ontology/sourceComponent":
                     getConnection(connections, statement.getSubject()).source =
-                            (Resource)statement.getObject();
+                            (Resource) statement.getObject();
                     break;
                 case "http://linkedpipes.com/ontology/targetComponent":
                     getConnection(connections, statement.getSubject()).target =
-                            (Resource)statement.getObject();
+                            (Resource) statement.getObject();
                     break;
             }
         }
@@ -286,14 +282,13 @@ public class InfoFacade {
             }
             templateInfo.followup.put(connection.target,
                     templateInfo.followup.getOrDefault(connection.target, 0)
-                    + 1);
+                            + 1);
         }
         info.templates.addAll(componentTypes.values());
         return info;
     }
 
     /**
-     *
      * @param connections
      * @param resource
      * @return Connection for given resource.

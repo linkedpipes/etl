@@ -1,6 +1,8 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -10,11 +12,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * @author Petr Škoda
+ * Specialization of Loader to load primitive values.
  */
 class LoadPrimitive extends LoaderToValue {
 

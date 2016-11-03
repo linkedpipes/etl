@@ -4,8 +4,6 @@ package com.linkedpipes.etl.storage.mapping;
  * Provide access to mapping stored on instance and also loaded.
  *
  * Any change to instance mapping is immediately reflected in this class.
- *
- * @author Petr Škoda
  */
 public interface Mapping {
 

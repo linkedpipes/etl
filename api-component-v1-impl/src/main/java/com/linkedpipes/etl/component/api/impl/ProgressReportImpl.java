@@ -6,9 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 
 import java.util.Collection;
 
-/**
- * @author Škoda Petr
- */
 class ProgressReportImpl implements ProgressReport {
 
     private static class ReportProgress extends AbstractEvent {

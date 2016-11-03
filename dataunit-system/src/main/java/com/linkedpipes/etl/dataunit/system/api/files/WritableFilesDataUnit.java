@@ -4,9 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 import java.io.File;
 
-/**
- * @author Škoda Petr
- */
 public interface WritableFilesDataUnit extends FilesDataUnit {
 
     /**

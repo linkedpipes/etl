@@ -2,8 +2,6 @@ package com.linkedpipes.etl.executor.api.v1.rdf;
 
 /**
  * Interface for object that can be converted to RDF.
- *
- * @author Petr Škoda
  */
 public interface SerializableToRdf {
 

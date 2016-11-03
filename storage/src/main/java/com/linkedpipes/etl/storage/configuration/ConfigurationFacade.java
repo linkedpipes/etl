@@ -15,9 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * @author Petr Škoda
- */
 public class ConfigurationFacade {
 
     static final String NONE =
@@ -55,7 +52,8 @@ public class ConfigurationFacade {
     public static Collection<Statement> createNewConfiguration(
             Collection<Statement> configurationRdf,
             Collection<Statement> descriptionRdf,
-            String baseIri, IRI graph, boolean inheritAll) throws BaseException {
+            String baseIri, IRI graph, boolean inheritAll)
+            throws BaseException {
         final ConfigDescription description = loadDescription(descriptionRdf);
         // Load configuration.
         final RdfObjects config = new RdfObjects(configurationRdf);
@@ -63,9 +61,9 @@ public class ConfigurationFacade {
         final ValueFactory vf = SimpleValueFactory.getInstance();
         final IRI inheritType;
         if (inheritAll) {
-            inheritType =  vf.createIRI(INHERIT);
+            inheritType = vf.createIRI(INHERIT);
         } else {
-            inheritType =  vf.createIRI(NONE);
+            inheritType = vf.createIRI(NONE);
         }
         config.getTyped(description.getType()).forEach((instance) -> {
             for (ConfigDescription.Member member : description.getMembers()) {

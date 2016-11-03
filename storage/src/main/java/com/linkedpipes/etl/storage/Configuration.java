@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * @author Petr Škoda
- */
 @Service
 public class Configuration {
 
@@ -121,7 +118,7 @@ public class Configuration {
         if (value == null) {
             LOG.error("Missing configuration property: '{}'", name);
             throw new RuntimeException("Missing configuration property:" +
-                name);
+                    name);
         } else {
             return value;
         }

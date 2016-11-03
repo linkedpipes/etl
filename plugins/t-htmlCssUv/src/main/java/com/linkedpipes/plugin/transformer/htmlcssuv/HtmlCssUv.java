@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * @author Petr Škoda
  */
 public class HtmlCssUv implements Component.Sequential {
 

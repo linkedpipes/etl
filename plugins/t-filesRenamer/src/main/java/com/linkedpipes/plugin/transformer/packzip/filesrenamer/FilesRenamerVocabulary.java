@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.packzip.filesrenamer;
 
 /**
  *
- * @author Petr Škoda
  */
 final class FilesRenamerVocabulary {
 

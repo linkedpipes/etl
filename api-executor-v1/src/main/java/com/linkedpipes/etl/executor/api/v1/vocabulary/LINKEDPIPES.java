@@ -1,14 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
-/**
- *
- * @author Petr Škoda
- */
 public final class LINKEDPIPES {
 
     private static final String PREFIX_ONTOLOGY = "http://linkedpipes.com/ontology/";
-
-    private static final String PREFIX_RESOURCE = "http://linkedpipes.com/resources/";
 
     public static final String PIPELINE = PREFIX_ONTOLOGY + "Pipeline";
 
@@ -46,15 +40,7 @@ public final class LINKEDPIPES {
 
     public static final String HAS_DEBUG = PREFIX_ONTOLOGY + "debug";
 
-    public static final String HAS_DEBUG_PATH = PREFIX_ONTOLOGY + "debugPath";
-
     public static final String HAS_SOURCE = PREFIX_ONTOLOGY + "dataSource";
-
-    public static final String HAS_EXECUTION_METADATA = PREFIX_ONTOLOGY + "executionMetadata";
-
-    public static final String HAS_EXECUTION_TYPE = PREFIX_ONTOLOGY + "execution/type";
-
-    public static final String HAS_TARGET_COMPONENT = PREFIX_ONTOLOGY + "execution/targetComponent";
 
     public static class CONFIGURATION {
 
@@ -79,11 +65,7 @@ public final class LINKEDPIPES {
 
         public static final String EXECUTION_END = PREFIX_ONTOLOGY + "ExecutionEnd";
 
-        public static final String EXECUTION_CANCELLED = PREFIX_ONTOLOGY + "ExecutionCancelled";
-
         public static final String EXECUTION_FAILED = PREFIX_ONTOLOGY + "ExecutionFailed";
-
-        public static final String EXECUTION_STOP = PREFIX_ONTOLOGY + "StopExecution";
 
         public static final String COMPONENT_BEGIN = PREFIX_ONTOLOGY + "ComponentBegin";
 
@@ -114,10 +96,6 @@ public final class LINKEDPIPES {
             public static final String HAS_TOTAL = PREFIX_ONTOLOGY + "total";
 
             public static final String HAS_CURRENT = PREFIX_ONTOLOGY + "current";
-
-            public static final String CONFIGURATION_CLASS = PREFIX_ONTOLOGY + "Configuration";
-
-            public static final String HAS_STEP_REPORT_SIZE = PREFIX_ONTOLOGY + "reportStepSize";
 
         }
 
@@ -150,15 +128,5 @@ public final class LINKEDPIPES {
         public static final String RESOLVE_DEFINITION_RESOURCE = PREFIX_ONTOLOGY + "DefinitionResource";
 
     }
-
-    /**
-     * As property is used to tell instance that it should store debug data to given directory.
-     */
-    public static final String HAS_DEBUG_DIRECTORY = PREFIX_ONTOLOGY + "debugDirectory";
-
-    /**
-     * Uri fragments are used to construct URI of objects.
-     */
-    public static final String HAS_URI_FRAGMENT = PREFIX_ONTOLOGY + "uriFragment";
 
 }

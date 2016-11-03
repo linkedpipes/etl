@@ -2,7 +2,6 @@ package com.linkedpipes.etl.plugin.transformer.filedecode;
 
 /**
  *
- * @author Petr Škoda
  */
 final class FileDecodeVocabulary {
 

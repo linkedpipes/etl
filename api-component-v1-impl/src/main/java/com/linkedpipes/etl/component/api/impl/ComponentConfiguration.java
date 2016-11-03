@@ -13,7 +13,7 @@ import java.util.List;
  * Describes information stored in RDF that are used for execution
  * of a component.
  *
- * @author Škoda Petr
+ * This does not represent the configuration loaded into component.
  */
 final class ComponentConfiguration implements PojoLoader.Loadable {
 
@@ -71,10 +71,6 @@ final class ComponentConfiguration implements PojoLoader.Loadable {
         @Override
         public void validate() {
 
-        }
-
-        public int getOrder() {
-            return order;
         }
 
         public String getConfigurationIri() {

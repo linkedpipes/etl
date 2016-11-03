@@ -1,12 +1,5 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
@@ -22,10 +15,14 @@ import org.openrdf.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author Petr Škoda
- */
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 class PipelineLoader {
 
     private static final Logger LOG
@@ -41,8 +38,6 @@ class PipelineLoader {
      * directory as fallback.
      *
      * @param execution
-     * @throws IOException
-     * @throws ExecutionFacade.OperationFailed
      */
     public static void loadPipeline(Execution execution)
             throws IOException, ExecutionFacade.OperationFailed {
@@ -56,7 +51,7 @@ class PipelineLoader {
             if (!directory.exists()) {
                 throw new ExecutionFacade.OperationFailed(
                         "Missing directory for execution: "
-                        + execution.getIri());
+                                + execution.getIri());
             }
             //
             for (File file : directory.listFiles()) {
@@ -69,7 +64,7 @@ class PipelineLoader {
             if (pipelineFile == null) {
                 throw new ExecutionFacade.OperationFailed(
                         "Missing pipeline file for execution: "
-                        + execution.getIri());
+                                + execution.getIri());
             }
         }
         //
@@ -168,7 +163,6 @@ class PipelineLoader {
      *
      * @param file
      * @return
-     * @throws IOException
      */
     private static List<Statement> loadFile(File file) throws IOException,
             ExecutionFacade.OperationFailed {
@@ -182,7 +176,6 @@ class PipelineLoader {
      *
      * @param stream
      * @return
-     * @throws IOException
      */
     private static List<Statement> loadStream(InputStream stream)
             throws IOException, ExecutionFacade.OperationFailed {
@@ -208,7 +201,6 @@ class PipelineLoader {
     }
 
     /**
-     *
      * @param valueFactory
      * @param execution
      * @return Graph used to store information about execution.

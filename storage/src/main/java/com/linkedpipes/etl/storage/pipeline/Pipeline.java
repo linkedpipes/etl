@@ -8,12 +8,13 @@ import org.openrdf.model.Value;
 import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represent a pipeline object.
- *
- * @author Petr Škoda
  */
 public class Pipeline {
 

@@ -4,10 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.RdfException;
 
 /**
  * Exception factory that should be used in this project to create exceptions.
- *
- * TODO Use more specific exceptions.
- *
- * @author Petr Škoda
  */
 final class ExceptionFactory {
 

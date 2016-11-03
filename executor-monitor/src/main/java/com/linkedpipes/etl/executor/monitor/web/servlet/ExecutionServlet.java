@@ -3,14 +3,6 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorFacade;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
@@ -20,18 +12,18 @@ import org.openrdf.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- *
- * @author Petr Škoda
- */
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/executions")
 public class ExecutionServlet {
@@ -54,8 +46,7 @@ public class ExecutionServlet {
         public void setIri(String iri) {
             this.iri = iri;
         }
-
-    };
+    }
 
     @Autowired
     private ExecutionFacade executionFacade;
@@ -66,7 +57,8 @@ public class ExecutionServlet {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
     public void getExecutions(
-            @RequestParam(value = "changedSince", required = false) Long changedSince,
+            @RequestParam(value = "changedSince",
+                    required = false) Long changedSince,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         //
@@ -87,7 +79,8 @@ public class ExecutionServlet {
                 for (Statement statement : execution.getExecutionStatements()) {
                     writer.handleStatement(statement);
                 }
-                for (Statement statement : execution.getExecutionStatementsGenerated()) {
+                for (Statement statement :
+                        execution.getExecutionStatementsGenerated()) {
                     writer.handleStatement(statement);
                 }
                 for (Statement statement : execution.getPipelineStatements()) {
@@ -98,15 +91,21 @@ public class ExecutionServlet {
             final SimpleValueFactory valueFactory
                     = SimpleValueFactory.getInstance();
             writer.handleStatement(valueFactory.createStatement(
-                    valueFactory.createIRI("http://etl.linkedpipes.com/metadata"),
+                    valueFactory
+                            .createIRI("http://etl.linkedpipes.com/metadata"),
                     RDF.TYPE,
-                    valueFactory.createIRI("http://etl.linkedpipes.com/ontology/Metadata"),
-                    valueFactory.createIRI("http://etl.linkedpipes.com/metadata")));
+                    valueFactory.createIRI(
+                            "http://etl.linkedpipes.com/ontology/Metadata"),
+                    valueFactory
+                            .createIRI("http://etl.linkedpipes.com/metadata")));
             writer.handleStatement(valueFactory.createStatement(
-                    valueFactory.createIRI("http://etl.linkedpipes.com/metadata"),
-                    valueFactory.createIRI("http://etl.linkedpipes.com/ontology/serverTime"),
+                    valueFactory
+                            .createIRI("http://etl.linkedpipes.com/metadata"),
+                    valueFactory.createIRI(
+                            "http://etl.linkedpipes.com/ontology/serverTime"),
                     valueFactory.createLiteral((new Date()).getTime()),
-                    valueFactory.createIRI("http://etl.linkedpipes.com/metadata")));
+                    valueFactory
+                            .createIRI("http://etl.linkedpipes.com/metadata")));
             //
             writer.endRDF();
             stream.flush();

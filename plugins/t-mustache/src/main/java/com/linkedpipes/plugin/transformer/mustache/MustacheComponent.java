@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class MustacheComponent implements Component.Sequential {
 

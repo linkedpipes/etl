@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.web;
 
 import com.linkedpipes.etl.executor.monitor.Configuration;
-import java.io.IOException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -21,10 +20,8 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-/**
- *
- * @author Petr Škoda
- */
+import java.io.IOException;
+
 @Service
 class WebServer implements ApplicationListener<ApplicationEvent> {
 

@@ -6,9 +6,6 @@ import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Petr Škoda
- */
 public final class EventFactory {
 
     private static final Logger LOG

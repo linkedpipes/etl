@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class TabularVocabulary {
 

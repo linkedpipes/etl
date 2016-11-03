@@ -13,9 +13,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Petr Škoda
- */
 @Service
 class JarManager {
 
@@ -40,8 +37,8 @@ class JarManager {
             componentDirectory.mkdirs();
         }
         // Each JAR file has its directory.
-        FileUtils.listFiles(componentDirectory, new String[]{"jar"}, true).forEach(
-                (file) -> {
+        FileUtils.listFiles(componentDirectory, new String[]{"jar"}, true
+        ).forEach((file) -> {
             if (!file.isDirectory() && file.getName().endsWith(".jar")) {
                 final JarComponent component = loader.load(file);
                 if (component != null) {

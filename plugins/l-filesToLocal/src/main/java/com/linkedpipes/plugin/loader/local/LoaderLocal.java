@@ -15,7 +15,6 @@ import java.nio.file.StandardCopyOption;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class LoaderLocal implements Component.Sequential {
 

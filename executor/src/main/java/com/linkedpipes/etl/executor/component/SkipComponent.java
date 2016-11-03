@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Execute component with "SKIP" execution type.
- *
- * @author Petr Škoda
  */
 class SkipComponent implements ComponentExecutor {
 

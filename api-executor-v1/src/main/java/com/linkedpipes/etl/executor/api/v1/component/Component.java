@@ -8,8 +8,6 @@ import java.util.Map;
 
 /**
  * Base interface for a component.
- *
- * @author Petr Škoda
  */
 public interface Component {
 

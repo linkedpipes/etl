@@ -16,8 +16,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.rio.RDFFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +28,9 @@ import static com.linkedpipes.etl.storage.rdf.RdfUtils.write;
 
 /**
  * Manage pipeline storage.
- *
- * @author Petr Škoda
  */
 @Service
 class PipelineManager {
-
-    private static final Logger LOG
-            = LoggerFactory.getLogger(PipelineManager.class);
 
     private static final SimpleDateFormat DATE_FORMAT
             = new SimpleDateFormat("yyyy-MM-dd");
@@ -252,7 +245,7 @@ class PipelineManager {
                     "Can't read pipeline after localization.", ex);
         }
         // Add to pipeline list.
-        final String fileName  = iri.getLocalName() + ".trig";
+        final String fileName = iri.getLocalName() + ".trig";
         final Pipeline pipeline = new Pipeline(new File(
                 configuration.getPipelinesDirectory(), fileName),
                 info);
@@ -320,7 +313,7 @@ class PipelineManager {
     public Collection<Statement> localizePipeline(
             Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
             throws PipelineFacade.OperationFailed {
-        return  localizePipeline(pipelineRdf, optionsRdf, null);
+        return localizePipeline(pipelineRdf, optionsRdf, null);
     }
 
     /**
@@ -357,7 +350,8 @@ class PipelineManager {
                 templateRdf.addAll(templatesFacade.getDefinition(template));
                 //
                 additionalRdf.addAll(templateRdf);
-                additionalRdf.addAll(templatesFacade.getConfigurationTemplate(template));
+                additionalRdf.addAll(templatesFacade
+                        .getConfigurationTemplate(template));
             }
         }
         if (includeMapping) {

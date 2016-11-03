@@ -1,10 +1,7 @@
 package com.linkedpipes.etl.storage.template;
 
-
 /**
  * Public interface for a template typed component.
- *
- * @author Petr Škoda
  */
 public interface Template {
 

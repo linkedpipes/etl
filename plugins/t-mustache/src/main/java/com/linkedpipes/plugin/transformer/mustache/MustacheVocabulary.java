@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.mustache;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class MustacheVocabulary {
 

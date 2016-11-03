@@ -8,7 +8,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 /**
  * Used to create resources.
  *
- * @author Petr Škoda
  */
 public class ResourceTemplate {
 

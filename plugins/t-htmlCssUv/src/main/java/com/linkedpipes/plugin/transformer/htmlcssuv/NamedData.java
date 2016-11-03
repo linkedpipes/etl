@@ -6,7 +6,6 @@ import org.openrdf.model.IRI;
 /**
  * Store processing context.
  *
- * @author Petr Škoda
  */
 class NamedData {
 

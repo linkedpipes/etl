@@ -13,8 +13,6 @@ import java.util.List;
 /**
  * Represents a description of the configuration. For one only the first
  * level of the configuration.
- *
- * @author Petr Škoda
  */
 class ConfigDescription implements PojoLoader.Loadable {
 
@@ -80,7 +78,7 @@ class ConfigDescription implements PojoLoader.Loadable {
                 members.add(newMember);
                 return newMember;
             case "http://plugins.linkedpipes.com/ontology/configuration/control":
-                this.control = (IRI)value;
+                this.control = (IRI) value;
                 break;
         }
         return null;

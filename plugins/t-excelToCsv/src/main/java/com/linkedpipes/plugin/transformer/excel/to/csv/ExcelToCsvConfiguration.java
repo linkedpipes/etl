@@ -6,7 +6,6 @@ import java.util.List;
 
 /**
  *
- * @author Petr Škoda
  */
 @RdfToPojo.Type(uri = ExcelToCsvVocabulary.CONFIG)
 public class ExcelToCsvConfiguration {

@@ -2,29 +2,22 @@ package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.query.Binding;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.repository.util.Repositories;
 import org.openrdf.sail.memory.MemoryStore;
 
-/**
- *
- * @author Petr Škoda
- */
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 class RdfDataSource implements SparqlSelect {
 
     protected Repository repository;
@@ -64,7 +57,8 @@ class RdfDataSource implements SparqlSelect {
     }
 
     @Override
-    public List<Map<String, String>> executeSelect(String query) throws RdfException {
+    public List<Map<String, String>> executeSelect(String query)
+            throws RdfException {
         return Repositories.get(repository, (connection) -> {
             List<Map<String, String>> output = new LinkedList<>();
             final TupleQuery tupleQuery = connection.prepareTupleQuery(

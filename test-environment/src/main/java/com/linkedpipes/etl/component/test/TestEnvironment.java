@@ -1,32 +1,29 @@
 package com.linkedpipes.etl.component.test;
 
-import com.linkedpipes.etl.dataunit.sesame.GraphListDataUnitImpl;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.RdfDataUnitConfiguration;
-import com.linkedpipes.etl.dataunit.sesame.SingleGraphDataUnitImpl;
-import com.linkedpipes.etl.dataunit.system.FilesDataUnitConfiguration;
-import com.linkedpipes.etl.dataunit.system.FilesDataUnitImpl;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.Component.InputPort;
 import com.linkedpipes.etl.component.api.Component.OutputPort;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import java.io.File;
-import java.lang.reflect.Field;
+import com.linkedpipes.etl.component.api.service.WorkingDirectory;
+import com.linkedpipes.etl.dataunit.sesame.GraphListDataUnitImpl;
+import com.linkedpipes.etl.dataunit.sesame.RdfDataUnitConfiguration;
+import com.linkedpipes.etl.dataunit.sesame.SingleGraphDataUnitImpl;
+import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.system.FilesDataUnitConfiguration;
+import com.linkedpipes.etl.dataunit.system.FilesDataUnitImpl;
+import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import org.openrdf.model.IRI;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.WorkingDirectory;
 
-/**
- *
- * @author Petr Škoda
- */
+import java.io.File;
+import java.lang.reflect.Field;
+
 public class TestEnvironment implements AutoCloseable {
 
     private static final String IRI_PREFIX = "http://localhost/test/";
@@ -51,8 +48,6 @@ public class TestEnvironment implements AutoCloseable {
 
     /**
      * Execute the DPU with given configuration.
-     *
-     * @throws java.lang.Exception
      */
     public void execute() throws Exception {
         bindExtensions();
@@ -83,9 +78,9 @@ public class TestEnvironment implements AutoCloseable {
         final IRI dataUnitIri = getUri("dataUnit");
         final FilesDataUnitConfiguration configuration
                 = new FilesDataUnitConfiguration(
-                        dataUnitIri.stringValue(),
-                        binding,
-                        workingDirectory.toURI().toString());
+                dataUnitIri.stringValue(),
+                binding,
+                workingDirectory.toURI().toString());
         final WritableFilesDataUnit dataUnit
                 = new FilesDataUnitImpl(configuration);
         bindDataUnit(binding, dataUnit);
@@ -100,10 +95,12 @@ public class TestEnvironment implements AutoCloseable {
      */
     public WritableSingleGraphDataUnit bindSingleGraphDataUnit(String binding) {
         final IRI dataUnitIri = getUri("dataUnit");
-        final RdfDataUnitConfiguration configuration = new RdfDataUnitConfiguration(
-                dataUnitIri.stringValue(), binding);
-        final WritableSingleGraphDataUnit dataUnit = new SingleGraphDataUnitImpl(
-                dataUnitIri, sesameRepository, configuration);
+        final RdfDataUnitConfiguration configuration =
+                new RdfDataUnitConfiguration(
+                        dataUnitIri.stringValue(), binding);
+        final WritableSingleGraphDataUnit dataUnit =
+                new SingleGraphDataUnitImpl(
+                        dataUnitIri, sesameRepository, configuration);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
     }
@@ -118,7 +115,7 @@ public class TestEnvironment implements AutoCloseable {
         final IRI dataUnitIri = getUri("dataUnit");
         final RdfDataUnitConfiguration configuration
                 = new RdfDataUnitConfiguration(
-                        dataUnitIri.stringValue(), binding);
+                dataUnitIri.stringValue(), binding);
         final WritableGraphListDataUnit dataUnit = new GraphListDataUnitImpl(
                 dataUnitIri, sesameRepository, configuration);
         bindDataUnit(binding, dataUnit);
@@ -152,7 +149,6 @@ public class TestEnvironment implements AutoCloseable {
     }
 
     /**
-     *
      * @param type
      * @return Newly generated unique URI that contains given type.
      */
@@ -163,8 +159,6 @@ public class TestEnvironment implements AutoCloseable {
     }
 
     /**
-     *
-     *
      * @param name
      * @return Field for data unit with given name, or null.
      */
@@ -201,7 +195,7 @@ public class TestEnvironment implements AutoCloseable {
             field.set(component, dataUnit);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
             throw new RuntimeException("Can't bind data unit, "
-                    + "check for type and acess modifier.", ex);
+                    + "check for type and access modifier.", ex);
         }
     }
 

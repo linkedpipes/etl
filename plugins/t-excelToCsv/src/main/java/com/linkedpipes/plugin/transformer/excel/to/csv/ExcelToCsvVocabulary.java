@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 /**
  *
- * @author Petr Škoda
  */
 final class ExcelToCsvVocabulary {
 

@@ -15,9 +15,6 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * @author Škoda Petr
- */
 final class SimpleComponentImpl implements SequentialComponent {
 
     private static final Logger LOG

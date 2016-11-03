@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * FTP server used to access debug data.
- *
- * @author Petr Škoda
  */
 @Service
 public class FtpServer implements ApplicationListener<ApplicationEvent> {

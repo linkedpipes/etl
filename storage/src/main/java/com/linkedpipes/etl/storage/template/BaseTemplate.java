@@ -5,9 +5,6 @@ import org.openrdf.model.Statement;
 import java.io.File;
 import java.util.Collection;
 
-/**
- * @author Petr Škoda
- */
 abstract class BaseTemplate implements Template {
 
     protected String iri;

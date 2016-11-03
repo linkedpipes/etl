@@ -7,9 +7,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author Petr Škoda
- */
 abstract class AbstractEvent implements Event {
 
     private final static DateFormat DATE_FORMAT

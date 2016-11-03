@@ -3,9 +3,6 @@ package com.linkedpipes.etl.executor.api.v1.dataunit;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 
-/**
- * @author Škoda Petr
- */
 public interface DataUnitFactory {
 
     /**

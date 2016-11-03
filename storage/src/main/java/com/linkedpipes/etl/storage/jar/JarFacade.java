@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Collection;
 
-/**
- * @author Petr Škoda
- */
 @Service
 public class JarFacade {
 

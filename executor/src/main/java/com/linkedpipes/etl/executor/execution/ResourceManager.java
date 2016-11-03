@@ -2,9 +2,6 @@ package com.linkedpipes.etl.executor.execution;
 
 import java.io.File;
 
-/**
- * @author Škoda Petr
- */
 public final class ResourceManager {
 
     /**

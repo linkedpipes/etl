@@ -8,8 +8,6 @@ import java.util.List;
 
 /**
  * Designed to handle publishing of event in the application.
- *
- * @author Petr Škoda
  */
 public class EventManager {
 

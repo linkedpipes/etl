@@ -13,7 +13,6 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FilesRenamer implements Component.Sequential {
 

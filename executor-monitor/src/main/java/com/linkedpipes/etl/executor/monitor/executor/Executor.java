@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.executor.monitor.executor;
 
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
+
 import java.util.Date;
 
 /**
  * Represents an instance of an executor.
- *
- * @author Petr Škoda
  */
 public class Executor {
 

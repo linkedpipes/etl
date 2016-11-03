@@ -9,7 +9,6 @@ import org.openrdf.model.IRI;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FilesToRdfTest {
 

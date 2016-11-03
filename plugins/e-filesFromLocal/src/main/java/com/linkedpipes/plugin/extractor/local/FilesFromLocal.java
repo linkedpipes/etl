@@ -12,7 +12,6 @@ import java.nio.file.Path;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FilesFromLocal implements Component.Sequential {
 

@@ -21,8 +21,6 @@ import java.util.jar.JarFile;
 
 /**
  * Import a component from given JAR file.
- *
- * @author Petr Škoda
  */
 final class JarImport {
 
@@ -84,7 +82,7 @@ final class JarImport {
             if (!file.isDirectory()) {
                 continue;
             }
-            final Resource dialogResource =vf.createIRI(
+            final Resource dialogResource = vf.createIRI(
                     resource.stringValue(), "/dialog/" + file.getName());
             // Reference to a dialog.
             definitionRdf.add(vf.createStatement(

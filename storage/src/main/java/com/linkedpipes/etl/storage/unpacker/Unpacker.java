@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.template.Template;
-import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import com.linkedpipes.etl.storage.rdf.StatementsCollection;
+import com.linkedpipes.etl.storage.template.Template;
+import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -24,11 +24,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.*;
 
-/**
- * TODO Introduce custom exception.
- *
- * @author Petr Škoda
- */
 class Unpacker {
 
     private static Resource PIPELINE;
@@ -277,11 +272,13 @@ class Unpacker {
                 // We also have to add description, so the executor
                 // can work with the configuration.
                 if (!addedConfigurations.contains(templateIri)) {
-                    configurations.addAll(templates.getConfigurationTemplate(template));
+                    configurations.addAll(templates
+                            .getConfigurationTemplate(template));
                     // TODO Do not add same description twice -
                     // under different names. Requires change
                     // in a component description.
-                    configurations.addAll(templates.getConfigurationDescription(template));
+                    configurations.addAll(templates
+                            .getConfigurationDescription(template));
                     addedConfigurations.add(templateIri);
                 }
             }
@@ -358,7 +355,7 @@ class Unpacker {
             deps.put(entry.getKey(), entities);
         }
         // Search for components without dependencies, to those
-        // add execution order and remove them from the deps.
+        // add execution order and remove them from the dependencies.
         Integer executionOrder = 0;
         while (!deps.isEmpty()) {
             final List<RdfObjects.Entity> toRemove = new ArrayList<>(16);
@@ -468,9 +465,9 @@ class Unpacker {
                             "http://linkedpipes.com/ontology/targetBinding"));
             // We add the HAS_SOURCE only if the source component is enabled.
             try {
-                Value disabled  = source.getProperty(HAS_DISABLED);
+                Value disabled = source.getProperty(HAS_DISABLED);
                 if (disabled instanceof Literal) {
-                    Literal literal = (Literal)disabled;
+                    Literal literal = (Literal) disabled;
                     if (literal.booleanValue()) {
                         // It is disabled -> skip.
                         return;
@@ -564,7 +561,6 @@ class Unpacker {
             }
         }
     }
-
 
     /**
      * @param component

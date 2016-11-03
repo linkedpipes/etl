@@ -8,8 +8,6 @@ import java.util.*;
 
 /**
  * Can be used to merge configurations.
- *
- * @author Petr Škoda
  */
 class ConfigurationController implements RdfReader.MergeOptionsFactory {
 
@@ -101,7 +99,7 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
         // Check for object type inheritance.
         for (Map<String, String> record
                 : definition.executeSelect(
-                        getQueryObjectControl(resourceIri, graph))) {
+                getQueryObjectControl(resourceIri, graph))) {
             // There should be only one result.
             switch (record.get("controlValue")) {
                 case "http://plugins.linkedpipes.com/resource/configuration/Inherit":
@@ -148,7 +146,8 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
      * @param graph
      * @return
      */
-    protected static String getQueryObjectControl(String resourceIri, String graph) {
+    protected static String getQueryObjectControl(String resourceIri,
+            String graph) {
         return "PREFIX config: <http://plugins.linkedpipes.com/ontology/configuration/>\n" +
                 "\n" +
                 "SELECT ?controlValue WHERE {\n" +
@@ -172,7 +171,8 @@ class ConfigurationController implements RdfReader.MergeOptionsFactory {
      * @param graph
      * @return
      */
-    protected static String getQueryPropertyControl(String resourceIri, String graph) {
+    protected static String getQueryPropertyControl(String resourceIri,
+            String graph) {
         return "PREFIX config: <http://plugins.linkedpipes.com/ontology/configuration/>\n" +
                 "\n" +
                 "SELECT ?property ?controlValue WHERE {\n" +

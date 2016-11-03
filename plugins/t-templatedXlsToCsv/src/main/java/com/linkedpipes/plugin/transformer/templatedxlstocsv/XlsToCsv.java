@@ -15,7 +15,6 @@ import java.util.Map;
 
 /**
  *
- * @author Petr Škoda
  */
 public class XlsToCsv implements Component.Sequential {
 

@@ -17,7 +17,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * @author Škoda Petr
+ * Implementation of a component factory. Can be used to create components
+ * from bundles.
  */
 @org.osgi.service.component.annotations.Component(immediate = true,
         service = {ComponentFactory.class})
@@ -38,9 +39,8 @@ public class ComponentFactoryImpl implements ComponentFactory {
         // Create an instance.
         final com.linkedpipes.etl.component.api.Component.Sequential instance;
         try {
-            instance =
-                    (com.linkedpipes.etl.component.api.Component.Sequential) info
-                            .getClazz().newInstance();
+            instance = (com.linkedpipes.etl.component.api.Component.Sequential)
+                    info.getClazz().newInstance();
         } catch (IllegalAccessException | InstantiationException ex) {
             throw RdfException.failure("Can't create component class.", ex);
         }
@@ -87,12 +87,12 @@ public class ComponentFactoryImpl implements ComponentFactory {
                 // Scan interfaces.
                 for (Type item : clazz.getGenericInterfaces()) {
                     if (item.getTypeName().equals(
-                            com.linkedpipes.etl.component.api.Component.Sequential.class
-                                    .getTypeName())) {
+                            com.linkedpipes.etl.component.api.Component
+                                    .Sequential.class.getTypeName())) {
                         mainClasses.add(clazz);
                     }
                 }
-                // In evere case we can use the package name.
+                // In every case we can use the package name.
                 final String packageName
                         = className.substring(0, className.lastIndexOf("."));
                 if (!packages.contains(packageName)) {

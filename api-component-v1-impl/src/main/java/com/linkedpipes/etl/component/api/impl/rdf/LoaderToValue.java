@@ -4,7 +4,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
 /**
- * @author Petr Škoda
+ * Specialization of loader used to load a simple value.
  */
 abstract class LoaderToValue extends Loader {
 
@@ -24,7 +24,7 @@ abstract class LoaderToValue extends Loader {
     }
 
     /**
-     * Set value.
+     * Set value to the given object.
      *
      * @param object
      * @param value
@@ -36,7 +36,7 @@ abstract class LoaderToValue extends Loader {
             property.getWriteMethod().invoke(object, value);
         } catch (Exception ex) {
             throw new CanNotDeserializeObject(
-                    "Can't set propety '" + field.getName() + "'"
+                    "Can't set property '" + field.getName() + "'"
                             + " (RDF deserialization) to value: "
                             + valueAsString, ex);
         }

@@ -24,9 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @author Petr Škoda
- */
 @Service
 class TemplateManager {
 

@@ -33,8 +33,6 @@ import java.util.*;
  *
  * The mapping facade use fixed graph to store RDF data. The triples are of
  * shape ORIGINAL_IRI predicate LOCAL_IRI.
- *
- * @author Petr Škoda
  */
 @Service
 public class MappingFacade {
@@ -107,7 +105,8 @@ public class MappingFacade {
                     originalIri = entry.getKey();
                     break;
                 }
-            };
+            }
+            ;
             if (originalIri == null) {
                 // There is no mapping.
                 continue;
@@ -178,6 +177,7 @@ public class MappingFacade {
 
     /**
      * Remove mappings for the template.
+     *
      * @param template
      */
     public void remove(Template template) {

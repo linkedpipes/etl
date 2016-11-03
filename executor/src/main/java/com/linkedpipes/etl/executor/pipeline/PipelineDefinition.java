@@ -33,8 +33,6 @@ import java.util.Map;
 
 /**
  * Provide access to the RDF pipeline definition.
- *
- * @author Petr Škoda
  */
 public class PipelineDefinition implements SparqlSelect {
 

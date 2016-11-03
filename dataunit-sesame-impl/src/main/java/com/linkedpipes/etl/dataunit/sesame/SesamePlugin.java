@@ -22,9 +22,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Petr Škoda
- */
 @Component(immediate = true,
         service = {DataUnitFactory.class, Plugin.PipelineListener.class})
 public class SesamePlugin implements DataUnitFactory, Plugin.PipelineListener {
@@ -40,7 +37,8 @@ public class SesamePlugin implements DataUnitFactory, Plugin.PipelineListener {
             + "prefix lp: <http://linkedpipes.com/ontology/>\n"
             + "SELECT ?s WHERE {\n"
             + " ?s a <" + LINKEDPIPES.REPOSITORY + "> ;\n"
-            + "    a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository> .\n"
+            +
+            "    a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository> .\n"
             + "}";
 
     private boolean initialized = false;

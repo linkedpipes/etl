@@ -6,11 +6,9 @@ import java.util.Collection;
 /**
  * DataUnit can contains same file multiple times - if such file is presented
  * in multiple sources used to create this data unit.
- * <p>
+ *
  * When iterated only presented files are returned, the iteration does not
  * return directories.
- *
- * @author Škoda Petr
  */
 public interface FilesDataUnit extends Iterable<FilesDataUnit.Entry> {
 

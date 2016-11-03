@@ -5,10 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author Petr Škoda
- */
 public class MockedExceptionFactory implements ExceptionFactory {
 
     public static class MockedLpException extends LpException {

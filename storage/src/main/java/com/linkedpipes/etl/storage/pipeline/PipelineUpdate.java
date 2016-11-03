@@ -19,8 +19,6 @@ import java.util.*;
 
 /**
  * Provide functionality to perform updates on the pipeline.
- *
- * @author Petr Škoda
  */
 public class PipelineUpdate {
 

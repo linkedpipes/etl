@@ -7,8 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
 
 /**
  * Interface for a single graph RDF data unit.
- *
- * @author Petr Škoda
  */
 public interface ManageableSingleGraphDataUnit extends SesameDataUnit,
         ManageableDataUnit, WritableSingleGraphDataUnit, SparqlSelect {

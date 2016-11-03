@@ -4,8 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  * Specification of the {@link LpException} as used in this module.
- *
- * @author Petr Škoda
  */
 public class RdfException extends LpException {
 

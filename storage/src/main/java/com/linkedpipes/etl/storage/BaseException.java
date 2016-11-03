@@ -4,8 +4,6 @@ import org.slf4j.helpers.MessageFormatter;
 
 /**
  * A base exception used by storage component.
- *
- * @author Petr Škoda
  */
 public class BaseException extends Exception {
 

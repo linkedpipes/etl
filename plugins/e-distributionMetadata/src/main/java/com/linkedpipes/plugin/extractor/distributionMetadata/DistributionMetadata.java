@@ -28,7 +28,6 @@ import java.util.List;
 
 /**
  *
- * @author Petr Škoda
  */
 public class DistributionMetadata implements Component.Sequential {
 

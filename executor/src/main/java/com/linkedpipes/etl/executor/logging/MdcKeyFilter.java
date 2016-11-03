@@ -6,8 +6,6 @@ import ch.qos.logback.core.spi.FilterReply;
 
 /**
  * Filter messages that does not contains given key in MDC context.
- *
- * @author Petr Škoda
  */
 class MdcKeyFilter extends Filter<ILoggingEvent> {
 

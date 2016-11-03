@@ -22,7 +22,6 @@ import org.supercsv.util.CsvContext;
 
 /**
  *
- * @author Petr Škoda
  */
 class Parser {
 

@@ -26,7 +26,6 @@ import org.apache.poi.ss.usermodel.DateUtil;
 
 /**
  *
- * @author Petr Škoda
  */
 class Parser {
 

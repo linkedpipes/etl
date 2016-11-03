@@ -3,9 +3,6 @@ package com.linkedpipes.etl.executor.event;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 
-/**
- * @author Petr Škoda
- */
 public class ComponentFailed extends AbstractEvent {
 
     private final String componentIri;

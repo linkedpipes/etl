@@ -14,9 +14,6 @@ import org.openrdf.repository.util.Repositories;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Petr Škoda
- */
 public class PojoLoader {
 
     /**

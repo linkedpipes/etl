@@ -26,17 +26,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * TODO: Extract runtime information from pipeline
- *
- * @author Petr Škoda
- */
 public final class ExecutionModel implements EventManager.EventListener {
 
     enum ExecutionStatus {
         MAPPED("http://etl.linkedpipes.com/resources/status/mapped"),
         QUEUED("http://etl.linkedpipes.com/resources/status/queued"),
-        INITIALIZING("http://etl.linkedpipes.com/resources/status/initializing"),
+        INITIALIZING(
+                "http://etl.linkedpipes.com/resources/status/initializing"),
         RUNNING("http://etl.linkedpipes.com/resources/status/running"),
         FINISHED("http://etl.linkedpipes.com/resources/status/finished"),
         FAILED("http://etl.linkedpipes.com/resources/status/failed");
@@ -61,8 +57,6 @@ public final class ExecutionModel implements EventManager.EventListener {
         final int id;
 
         final String iri;
-
-        final Date created = new Date();
 
         final List<Statement> statements;
 
@@ -146,10 +140,6 @@ public final class ExecutionModel implements EventManager.EventListener {
             return dataPath;
         }
 
-        public void setDataPath(File dataPath) {
-            this.dataPath = dataPath;
-        }
-
         public boolean isMapped() {
             return mapped;
         }
@@ -199,10 +189,6 @@ public final class ExecutionModel implements EventManager.EventListener {
 
         public String getIri() {
             return iri;
-        }
-
-        public boolean isMapped() {
-            return mapped;
         }
 
         public List<DataUnit> getDataUnits() {

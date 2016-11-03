@@ -21,9 +21,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-/**
- * @author Petr Škoda
- */
 @Service
 public class ExecutorFacade {
 
@@ -41,10 +38,6 @@ public class ExecutorFacade {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private final Object startLock = new Object();
-
-    public List<Executor> getExecutors() {
-        return Collections.unmodifiableList(executors);
-    }
 
     @PostConstruct
     protected void onInit() {

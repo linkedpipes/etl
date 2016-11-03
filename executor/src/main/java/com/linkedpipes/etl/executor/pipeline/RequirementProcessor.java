@@ -16,8 +16,6 @@ import java.util.Map;
 
 /**
  * Find requirements in pipeline definition and handle them.
- *
- * @author Škoda Petr
  */
 class RequirementProcessor {
 

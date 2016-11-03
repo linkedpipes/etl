@@ -13,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author Petr Škoda
  */
 public class PipelineInput implements Component.Sequential {
 

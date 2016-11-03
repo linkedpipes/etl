@@ -8,9 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Basic component definition.w
- *
- * @author Petr Škoda
+ * Basic component definition.
  */
 public interface Component {
 

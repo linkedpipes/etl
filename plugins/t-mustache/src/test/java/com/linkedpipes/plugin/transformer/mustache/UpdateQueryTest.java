@@ -5,7 +5,6 @@ import org.junit.Test;
 
 /**
  *
- * @author Petr Škoda
  */
 public class UpdateQueryTest {
 

@@ -1,21 +1,17 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import com.linkedpipes.etl.executor.api.v1.RdfException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Test suite for {@link LoadObject} class.
- *
- * @author Petr Škoda
  */
 public class LoadObjectTest {
 

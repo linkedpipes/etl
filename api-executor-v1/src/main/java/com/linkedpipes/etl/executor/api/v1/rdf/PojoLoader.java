@@ -10,8 +10,6 @@ import java.util.Map;
  *
  * Advantage to annotations is the pure java code without annotations, bigger
  * flexibility of loading.
- *
- * @author Škoda Petr
  */
 public final class PojoLoader {
 

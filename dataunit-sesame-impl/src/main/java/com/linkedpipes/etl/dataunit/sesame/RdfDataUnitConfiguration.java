@@ -9,8 +9,6 @@ import java.util.LinkedList;
 
 /**
  * Describe configuration of sesame data unit.
- *
- * @author Škoda Petr
  */
 public final class RdfDataUnitConfiguration implements PojoLoader.Loadable {
 

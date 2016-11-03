@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
+import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.unpacker.UnpackerFacade;
 import org.openrdf.model.Statement;
@@ -16,9 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
-/**
- * @author Petr Škoda
- */
 @RestController
 @RequestMapping(value = "/pipelines")
 public class PipelineServlet {

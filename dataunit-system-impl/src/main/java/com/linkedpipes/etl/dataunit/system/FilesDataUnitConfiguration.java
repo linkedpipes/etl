@@ -10,8 +10,6 @@ import java.util.LinkedList;
 
 /**
  * Describe common configuration of sesame data unit.
- *
- * @author Škoda Petr
  */
 public final class FilesDataUnitConfiguration implements PojoLoader.Loadable {
 

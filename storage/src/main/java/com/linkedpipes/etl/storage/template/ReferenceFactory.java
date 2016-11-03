@@ -16,8 +16,6 @@ import java.util.Collection;
 
 /**
  * Create a component content that can be loaded as a component reference.
- *
- * @author Petr Škoda
  */
 final class ReferenceFactory {
 

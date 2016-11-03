@@ -19,8 +19,6 @@ import java.util.StringTokenizer;
 /**
  * Virtual file system with following structure:
  * {execution}/debug/{data unit}
- *
- * @author Petr Škoda
  */
 @Service
 public class VirtualFileSystem {

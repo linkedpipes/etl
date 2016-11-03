@@ -2,9 +2,6 @@ package com.linkedpipes.etl.executor.event;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 
-/**
- * @author Škoda Petr
- */
 public class ComponentFinished extends AbstractEvent {
 
     private final String componentIri;

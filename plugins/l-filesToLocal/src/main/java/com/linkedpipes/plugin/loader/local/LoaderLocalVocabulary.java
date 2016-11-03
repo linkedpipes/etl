@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.loader.local;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class LoaderLocalVocabulary {
 

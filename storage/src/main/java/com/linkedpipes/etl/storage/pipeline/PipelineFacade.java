@@ -10,9 +10,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 
-/**
- * @author Petr Škoda
- */
 @Service
 public class PipelineFacade {
 

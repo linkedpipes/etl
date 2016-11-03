@@ -7,9 +7,6 @@ import org.openrdf.repository.Repository;
 
 import java.util.Collection;
 
-/**
- * @author Škoda Petr
- */
 abstract class SesameDataUnitImpl implements SesameDataUnit,
         ManageableDataUnit {
 

@@ -22,10 +22,6 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import java.io.IOException;
 
-/**
- *
- * @author Petr Škoda
- */
 @Service
 class WebServer implements ApplicationListener<ApplicationEvent> {
 

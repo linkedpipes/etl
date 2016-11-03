@@ -11,7 +11,6 @@ import org.openrdf.model.Value;
 /**
  * Represent a column with a type.
  *
- * @author Petr Škoda
  */
 class ColumnTyped extends ColumnAbstract {
 

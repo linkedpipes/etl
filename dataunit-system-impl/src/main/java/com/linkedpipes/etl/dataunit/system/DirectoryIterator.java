@@ -6,9 +6,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.Iterator;
 
-/**
- * @author Škoda Petr
- */
 class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
 
     private Iterator<File> fileIterator;

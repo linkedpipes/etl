@@ -4,7 +4,6 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
  *
- * @author Petr Škoda
  */
 @RdfToPojo.Type(uri = SparqlAskVocabulary.CONFIG)
 public class SparqlAskConfiguration {

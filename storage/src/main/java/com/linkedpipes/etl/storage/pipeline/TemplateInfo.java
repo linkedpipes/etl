@@ -11,8 +11,6 @@ import java.util.*;
 /**
  * Holds information about a single template. Is used for pipeline
  * updates.
- *
- * @author Petr Škoda
  */
 class TemplateInfo {
 
@@ -42,11 +40,6 @@ class TemplateInfo {
      * Configuration of this template.
      */
     private Collection<Statement> configuration = null;
-
-    /**
-     * List of alternative IRIs. Does not contains main IRI.
-     */
-    private List<String> alternativeIris = null;
 
     private TemplateInfo(IRI iri, Collection<Statement> definition) {
         this.iri = iri;
@@ -81,10 +74,6 @@ class TemplateInfo {
         return configuration;
     }
 
-    public List<String> getAlternativeIris() {
-        return Collections.unmodifiableList(alternativeIris);
-    }
-
     /**
      * Extract information from given graphs about templates and return it.
      *
@@ -98,7 +87,6 @@ class TemplateInfo {
             TemplateInfo templateInfo = null;
             IRI parentTemplate = null;
             IRI configurationGraph = null;
-            List<String> alternativeIris = new LinkedList<>();
             // We may want to remove some statements and replace them
             // later.
             final Collection<Statement> toRemove = new LinkedList<>();
@@ -106,7 +94,7 @@ class TemplateInfo {
             for (Statement statement : entry.getValue()) {
                 if (statement.getPredicate().equals(RDF.TYPE)) {
                     if (statement.getObject().stringValue().equals(
-                                "http://linkedpipes.com/ontology/Template")) {
+                            "http://linkedpipes.com/ontology/Template")) {
                         templateInfo = new TemplateInfo(
                                 entry.getKey(), entry.getValue());
                     }
@@ -117,9 +105,6 @@ class TemplateInfo {
                         "http://linkedpipes.com/ontology/template")) {
                     parentTemplate = (IRI) statement.getObject();
                     toRemove.add(statement);
-                } else if (statement.getPredicate().stringValue().equals(
-                        "http://linkedpipes.com/ontology/alternativeIri")) {
-                    alternativeIris.add(statement.getObject().stringValue());
                 }
             }
             if (templateInfo != null) {
@@ -129,7 +114,6 @@ class TemplateInfo {
                 }
                 templateInfo.template = parentTemplate;
                 templateInfo.definitionGraph = entry.getKey();
-                templateInfo.alternativeIris = alternativeIris;
                 result.add(templateInfo);
             }
         }

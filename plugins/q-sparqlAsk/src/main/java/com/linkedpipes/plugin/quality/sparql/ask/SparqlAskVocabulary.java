@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.quality.sparql.ask;
 
 /**
  *
- * @author Petr Škoda
  */
 final class SparqlAskVocabulary {
 

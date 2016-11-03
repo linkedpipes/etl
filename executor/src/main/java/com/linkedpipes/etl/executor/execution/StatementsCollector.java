@@ -9,9 +9,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Petr Škoda
- */
 class StatementsCollector implements SerializableToRdf.Writer {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();

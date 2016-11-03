@@ -8,8 +8,6 @@ import java.io.File;
 
 /**
  * Configuration class used by the RDF repository.
- *
- * @author Škoda Petr
  */
 final class FactoryConfiguration implements PojoLoader.Loadable {
 

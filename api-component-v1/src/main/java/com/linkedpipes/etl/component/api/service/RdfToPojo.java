@@ -13,8 +13,6 @@ import java.lang.annotation.Target;
  * <ul>
  * <li>For the {@link java.util.Date} the GMT time zone is used.</li>
  * </ul>
- *
- * @author Škoda Petr
  */
 public interface RdfToPojo {
 

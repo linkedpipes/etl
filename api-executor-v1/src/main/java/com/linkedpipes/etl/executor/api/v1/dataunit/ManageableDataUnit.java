@@ -8,8 +8,6 @@ import java.util.Map;
 
 /**
  * Extension of DataUnit provides ways and means for management.
- *
- * @author Škoda Petr
  */
 public interface ManageableDataUnit extends DataUnit {
 

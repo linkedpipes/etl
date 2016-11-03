@@ -13,8 +13,6 @@ import java.util.Map;
 /**
  * A full template that points towards a pipeline or a JAR file.
  * Contains full definition together with the dialogs and resources.
- *
- * @author Petr Škoda
  */
 class FullTemplate extends BaseTemplate {
 

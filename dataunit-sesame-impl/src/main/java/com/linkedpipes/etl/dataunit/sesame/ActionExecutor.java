@@ -9,8 +9,6 @@ import org.openrdf.repository.RepositoryConnection;
 
 /**
  * Provide save way to execute operations with the RDF.
- *
- * @author Škoda Petr
  */
 final class ActionExecutor {
 

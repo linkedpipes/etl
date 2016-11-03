@@ -13,9 +13,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
-/**
- * @author Škoda Petr
- */
 @Service
 public class Configuration {
 
@@ -114,7 +111,6 @@ public class Configuration {
     public String getFtpDataPort() {
         return ftpDataPort;
     }
-
 
     public String getExecutionPrefix() {
         return executionPrefix;

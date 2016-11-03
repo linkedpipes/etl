@@ -20,7 +20,6 @@ import java.io.*;
  * JSCH also supports SFTP, example on the project site and on
  * http://stackoverflow.com/questions/2346764/java-sftp-transfer-library
  *
- * @author Petr Škoda
  */
 public final class LoaderScp implements Component.Sequential {
 

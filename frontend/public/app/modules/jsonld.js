@@ -1,9 +1,6 @@
 /**
  * Library for R/W manipulation with JSON-LD.
- *
- * @author Petr Škoda
  */
-
 (function () {
     "use strict";
 
@@ -48,7 +45,7 @@
                         // It can be a single object.
                         item = [item];
                     }
-                    graphList.push({"@graph" : item, "@id": ""});
+                    graphList.push({"@graph": item, "@id": ""});
                 }
             });
         } else {
@@ -632,8 +629,8 @@
             select(getIRIs(resource, predicate)),
         "setIRIs": setIRIs,
         "getReferences": getReferences,
-        "getValue" : getRawValue,
-        "setValue" : setRawValue
+        "getValue": getRawValue,
+        "setValue": setRawValue
     };
 
     /* jshint latedef: false */

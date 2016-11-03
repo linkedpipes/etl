@@ -13,7 +13,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
  *
- * @author Petr Škoda
  */
 public class RdfWriter {
 

@@ -13,7 +13,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FilesFilter implements Component.Sequential {
 

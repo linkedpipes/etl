@@ -3,7 +3,8 @@ package com.linkedpipes.etl.component.api.impl;
 import java.util.List;
 
 /**
- * @author Petr Škoda
+ * Object representing basic information about the bundle loaded as plugin
+ * into LP-ETL.
  */
 class BundleInformation {
 

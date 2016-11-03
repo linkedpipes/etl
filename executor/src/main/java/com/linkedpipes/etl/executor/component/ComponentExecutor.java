@@ -9,8 +9,6 @@ import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 
 /**
  * Interface and factory for component execution objects.
- *
- * @author Petr Škoda
  */
 public interface ComponentExecutor {
 
@@ -49,7 +47,7 @@ public interface ComponentExecutor {
                 return new ExecuteComponent(instance, executionComponent,
                         component, dataunit, events);
             case MAP:
-                return new MapComponent(events, dataunit, executionComponent);
+                return new MapComponent(dataunit, executionComponent);
             case SKIP:
                 return new SkipComponent(executionComponent);
             default:

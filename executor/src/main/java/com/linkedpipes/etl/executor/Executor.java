@@ -15,9 +15,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 
-/**
- * @author Petr Škoda
- */
 public class Executor {
 
     /**

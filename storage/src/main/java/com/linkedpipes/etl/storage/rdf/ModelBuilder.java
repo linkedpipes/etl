@@ -6,8 +6,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
  * A helper class that can be used to build {@link Model}.
- *
- * @author Petr Škoda
  */
 public class ModelBuilder {
 

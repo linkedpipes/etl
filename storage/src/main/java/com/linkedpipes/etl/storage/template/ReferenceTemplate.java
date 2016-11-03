@@ -8,8 +8,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 /**
  * Represent a thin template that can modify basic component
  * properties and configuration.
- *
- * @author Petr Škoda
  */
 class ReferenceTemplate extends BaseTemplate implements PojoLoader.Loadable {
 
