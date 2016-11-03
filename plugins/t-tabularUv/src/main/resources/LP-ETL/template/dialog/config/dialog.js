@@ -12,7 +12,7 @@ define([], function () {
             "$type": "str",
             "$label": "Key column"
         },
-        "columns": {
+        "column": {
             "$label": "Mapping",
             "$array": true,
             "$object": {

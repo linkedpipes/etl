@@ -114,8 +114,8 @@
     </div>
     <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Simple">
-            <div ng-hide="dialog.columns.disabled || dialog.columns.inherit || dialog.columns.hide">
-                <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.columns.value">
+            <div ng-hide="dialog.column.disabled || dialog.column.inherit || dialog.column.hide">
+                <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.column.value">
                     <md-input-container>
                         <label>Column</label>
                         <input ng-model="item.name.value">
