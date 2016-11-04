@@ -1,12 +1,9 @@
 # LinkedPipes ETL
 
-> Upgrade note 2: When upgrading from develop prior to feature/templates, you need to move your pipelines folder from e.g. ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
-
-> Upgrade note: When upgrading from master prior to 2016-04-07 to master after 2016-04-07, you need to delete your old execution data (e.g. in /data/lp/etl/working/data)
-
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
-- REST API based set of components for easy integration
-- Library of Data Processing Units (DPUs) to get you started faster
+- [REST API](https://github.com/linkedpipes/etl/wiki) based set of components for easy integration
+- [Library of components](http://etl.linkedpipes.com/components) to get you started faster
+- [Sharing of configuration](http://etl.linkedpipes.com/templates/) among individual pipelines using templates
 - RDF configuration of transformation pipelines
 
 ## Requirements
@@ -58,6 +55,11 @@ There are components in the ```jars``` directory. Detailed description of how to
 
 ## Known issues
  * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
+ 
+## Update notes
+> Update note 2: When upgrading from master prior to 2016-11-04, you need to move your pipelines folder from e.g. ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
+
+> Update note: When upgrading from master prior to 2016-04-07, you need to delete your old execution data (e.g. in /data/lp/etl/working/data)
  
 ## Update script
 Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse if you wish. The script sets path to Java 8, kills running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```
