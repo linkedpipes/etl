@@ -50,7 +50,14 @@ define([
             // Save changes in instance.
             jsonld.r.setStrings(component, SKOS.prefLabel,
                 $scope.componentToEdit.label);
-            component[DCTERMS.description] = $scope.componentToEdit.description;
+            if ($scope.componentToEdit.description === undefined ||
+                $scope.componentToEdit.description === "") {
+                jsonld.r.setStrings(component, DCTERMS.description,
+                    undefined);
+            } else {
+                jsonld.r.setStrings(component, DCTERMS.description,
+                    $scope.componentToEdit.description);
+            }
             if ($scope.componentToEdit.color === undefined) {
                 delete component[LP.color];
             } else {
