@@ -38,7 +38,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         "supportControl": "http://linkedpipes.com/ontology/supportControl",
         "Pipeline" : "http://linkedpipes.com/ontology/Pipeline",
         "Template": "http://etl.linkedpipes.com/ontology/Template",
-        "usedIn" : "http://etl.linkedpipes.com/ontology/usedIn"
+        "usedIn": "http://etl.linkedpipes.com/ontology/usedIn",
+        "infoLink": "http://linkedpipes.com/ontology/infoLink"
     };
 
     const SKOS = {
@@ -90,7 +91,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         const color = jsonld.r.getString(resource, LP.color);
         // const configuration = jsonld.r.getIRIs(resource, LP.configuration);
         const type = jsonld.r.getIRIs(resource, LP.type);
-        let supportControl =  jsonld.r.getBoolean(resource, LP.supportControl);
+        const infoLink = jsonld.r.getIRI(resource, LP.infoLink);
+        let supportControl = jsonld.r.getBoolean(resource, LP.supportControl);
         if (supportControl === undefined) {
             supportControl = false;
         }
@@ -135,7 +137,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             "inputs": inputs,
             "outputs": outputs,
             "core": true,
-            "supportControl" : supportControl
+            "supportControl": supportControl,
+            "infoLink": infoLink
         };
     }
 

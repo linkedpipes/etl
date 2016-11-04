@@ -203,6 +203,9 @@ define([
                 "color": i18.str(jsonld.r.getString(
                     component, LP.color))
             };
+
+            $scope.infoLink = template._core.infoLink;
+
             // Construct a new temporary template object.
             $scope.component = jQuery.extend({}, template,
                 {

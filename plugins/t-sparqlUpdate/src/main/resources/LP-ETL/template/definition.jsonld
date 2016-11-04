@@ -15,7 +15,8 @@
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "SPARQL", "update"
-        ]
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-sparqlupdate"}
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0/input",

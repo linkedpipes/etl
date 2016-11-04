@@ -14,7 +14,8 @@
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "SPARQL", "query", "endpoint"
-        ]
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-sparql"}
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/output",

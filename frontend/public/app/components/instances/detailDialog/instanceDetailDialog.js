@@ -116,6 +116,8 @@ define([
                     component, LP.color))
             };
 
+            $scope.infoLink = template._core.infoLink;
+
             var configIRI = jsonld.r.getIRI(component,
                 'http://linkedpipes.com/ontology/configurationGraph');
             if (configIRI === undefined) {

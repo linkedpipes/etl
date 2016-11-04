@@ -14,7 +14,8 @@
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "merge", "rdf"
-        ]
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-graphmerger"}
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-graphMerger/0.0.0/input",

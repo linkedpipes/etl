@@ -4,6 +4,11 @@
             <div class="md-toolbar-tools">
                 <h4>Create template from : {{::templateToEdit.label}}</h4>
                 <span flex></span>
+                <md-button class="md-icon-button" ng-if="infoLink"
+                           ng-href="{{infoLink}}" target="_blank">
+                    <md-icon md-svg-src="info_outline"
+                             aria-label="Show help"></md-icon>
+                </md-button>
                 <md-button class="md-icon-button" ng-click="onCancel()">
                     <md-icon md-svg-src="close"
                              aria-label="Close dialog"></md-icon>

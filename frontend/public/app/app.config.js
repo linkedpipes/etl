@@ -91,6 +91,7 @@ define([], function () {
                 .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg')
                 .icon('ic_content_paste', 'libraries/google.design/ic_content_paste_24px.svg')
                 .icon('ic_power_settings_new', 'libraries/google.design/ic_power_settings_new_24px.svg')
+                .icon('info_outline', 'libraries/google.design/ic_info_outline_24px.svg')
                 ;
 
         $mdThemingProvider.theme('default')

@@ -14,7 +14,8 @@
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "zip", "compress"
-        ]
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-packzip"}
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-packZip/0.0.0/input",
