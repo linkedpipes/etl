@@ -3,7 +3,7 @@
  *
  * This module exports info object.
  */
-(function() {
+(function () {
     "use strict";
     var gFs = require("fs");
     var info = {};
@@ -20,7 +20,7 @@
     } catch (e) {
         console.warn("Missing git.json file. " +
             "The information about version will not be available.", e);
-}
+    }
 
     // Information from the configuration class.
     var gConfiguration = require('./../modules/configuration');
