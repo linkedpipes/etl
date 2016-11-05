@@ -279,7 +279,7 @@ define([
         function loadData() {
             console.time('pipelineCanvasCtrl.loadData');
             loadPipeline()
-            .then(infoService.wait)
+            .then(infoService.fetch)
             .then(loadExecution)
             .then(function () {
                 console.timeEnd('pipelineCanvasCtrl.loadData');

@@ -140,11 +140,12 @@ define([
         }
         // Construct path to data unit debug.
         var execIri = this.execution.getIri();
-        var ftpPath = this.infoService.get().path.ftp + '/' +
-                execIri.substring(
-                        execIri.lastIndexOf('executions/') + 11) + '/';
-        // Open in new tab.
-        window.open(ftpPath + dataUnit.debug, '_blank');
+        this.infoService.fetch((info) => {
+            var ftpPath = info.path.ftp + '/' +
+                execIri.substring(execIri.lastIndexOf('executions/') + 11)
+                + '/';
+            window.open(ftpPath + dataUnit.debug, '_blank');
+        });
     };
 
     /**
