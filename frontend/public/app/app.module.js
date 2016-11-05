@@ -9,6 +9,7 @@ define([
     'app/components/executions/detailView/executionDetailCtrl',
     'app/components/componentExecutionDetail/componentExecutionDetailCtrl',
     'app/components/personalizationView/personalizationCtrl',
+    'app/components/help/view/helpView',
     'app/services/rdfService',
     'app/services/refreshService',
     'app/services/repositoryService',
@@ -43,6 +44,7 @@ define([
         executionDetailCtrlInit,
         componentExecutionDetailCtrl,
         personalizationCtrl,
+        helpCtrl,
         rdfService,
         refreshService,
         repositoryService,
@@ -95,6 +97,7 @@ define([
     executionDetailCtrlInit(app);
     componentExecutionDetailCtrl(app);
     personalizationCtrl(app);
+    helpCtrl(app);
     //
     app.bootstrap = function () {
         angular.bootstrap(document, ['angularApp']);
@@ -147,6 +150,11 @@ define([
         $scope.onPersonalization = function () {
             $scope.closeSidenav();
             $location.path('/personalization').search({});
+        };
+
+        $scope.onHelp = function () {
+            $scope.closeSidenav();
+            $location.path('/help').search({});
         };
 
     });
