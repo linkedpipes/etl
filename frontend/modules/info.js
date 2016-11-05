@@ -3,7 +3,7 @@
  *
  * This module exports info object.
  */
-(() => {
+(function() {
     "use strict";
     var gFs = require("fs");
     var info = {};
