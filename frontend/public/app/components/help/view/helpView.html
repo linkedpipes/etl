@@ -34,7 +34,7 @@
             and provide their list as a part of the issue description.
             <br/><br/>
             If your are experiencing problem with a certain pipeline and
-            the pipeline (or its modification) is not private. Please
+            the pipeline (or its modification) is not private, please
             feel free to upload the pipeline to the
             <a href="http://demo.etl.linkedpipes.com" target="_blank">
                 demo instance</a> and provide the link to the pipeline
@@ -42,7 +42,10 @@
         </div>
         <div>
             <h4>Version</h4>
-            <div>Commit: {{commit}}</div>
+            <div>Commit: <a
+                    ng-href="https://github.com/linkedpipes/etl/commit/{{commit}}"
+                    target="_blank">{{commit}}</a>
+            </div>
         </div>
     </md-content>
 </div>
