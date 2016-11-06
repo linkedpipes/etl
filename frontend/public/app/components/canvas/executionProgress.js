@@ -140,7 +140,7 @@ define([
         }
         // Construct path to data unit debug.
         var execIri = this.execution.getIri();
-        this.infoService.fetch((info) => {
+        this.infoService.fetch().then((info) => {
             var ftpPath = info.path.ftp + '/' +
                 execIri.substring(execIri.lastIndexOf('executions/') + 11)
                 + '/';
