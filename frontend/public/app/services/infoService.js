@@ -25,7 +25,7 @@ define([], function () {
          */
         function fetch() {
             if (data.ready) {
-                $q.when(data.info);
+                return $q.when(data.info);
             } else {
                 return load();
             }
