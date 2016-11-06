@@ -6,7 +6,6 @@ define([], function () {
             if (info.version !== undefined) {
                 $scope.commit = info.version.commit;
             }
-            console.log("info", info, $scope.commit);
         });
     }
 
