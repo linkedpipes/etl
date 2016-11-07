@@ -1,0 +1,23 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/e-httpGetFile#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileUri> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileName> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/hardRedirect> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileUri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileUriControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileNameControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/hardRedirect>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirectControl> .

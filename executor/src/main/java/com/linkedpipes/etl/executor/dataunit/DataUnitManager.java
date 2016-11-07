@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.dataunit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedpipes.etl.executor.ExecutorException;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.event.EventFactory;
 import com.linkedpipes.etl.executor.event.EventManager;
@@ -10,22 +10,15 @@ import com.linkedpipes.etl.executor.execution.ExecutionModel;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.module.ModuleFacade.ModuleException;
 import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
 /**
  * Manage life cycle of all data units.
- *
- * TODO Implement support for cancell.
- *
- * @author Petr Škoda
  */
 public class DataUnitManager {
 
@@ -56,7 +49,7 @@ public class DataUnitManager {
     /**
      * Store direct access to data unit instances.
      */
-    private final Map<String, ManagableDataUnit> instances = new HashMap<>();
+    private final Map<String, ManageableDataUnit> instances = new HashMap<>();
 
     public DataUnitManager(PipelineDefinition pipelineSparql,
             ExecutionModel execution, EventManager events) {
@@ -68,7 +61,7 @@ public class DataUnitManager {
     public void onExecutionStart(ModuleFacade moduleFacade)
             throws DataUnitException {
         // Eager mode. Create instances of data units.
-        // Instances should be an empty clasess till the initilization
+        // Instances should be an empty classes till the initialization
         // so it should be ok to do this.
         for (ExecutionModel.Component comp : this.execution.getComponents()) {
             for (ExecutionModel.DataUnit dataUnit : comp.getDataUnits()) {
@@ -94,17 +87,18 @@ public class DataUnitManager {
         }
     }
 
-    public Map<String, ManagableDataUnit> onComponentStart(
+    public Map<String, ManageableDataUnit> onComponentStart(
             ExecutionModel.Component component) throws DataUnitException {
         // Get all data units used by the given component, initialize
         // them and return them.
-        final Map<String, ManagableDataUnit> usedDataUnits = new HashMap<>();
+        final Map<String, ManageableDataUnit> usedDataUnits = new HashMap<>();
         for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
             if (!dataUnit.isUsedForExecution()) {
                 // Skip those that are not used for execution.
                 continue;
             }
-            final DataUnitContainer container = dataUnits.get(dataUnit.getIri());
+            final DataUnitContainer container =
+                    dataUnits.get(dataUnit.getIri());
             initialize(container);
             usedDataUnits.put(dataUnit.getIri(), container.getInstance());
             // If the data unit is input, we want to save the
@@ -125,7 +119,8 @@ public class DataUnitManager {
                 continue;
             }
             //
-            final DataUnitContainer container = dataUnits.get(dataUnit.getIri());
+            final DataUnitContainer container =
+                    dataUnits.get(dataUnit.getIri());
             save(container);
         }
     }
@@ -136,7 +131,6 @@ public class DataUnitManager {
      *
      * @param moduleFacade
      * @param dataUnit
-     * @throws com.linkedpipes.etl.executor.dataunit.DataUnitManager.DataUnitException
      */
     private void createDataUnit(ModuleFacade moduleFacade,
             ExecutionModel.DataUnit dataUnit) throws DataUnitException {
@@ -144,15 +138,15 @@ public class DataUnitManager {
             // Skip data units that are not used in the execution.
             return;
         }
-        // Craete an instance and add to list of data units.
+        // Create an instance and add to list of data units.
         try {
-            final ManagableDataUnit instance = moduleFacade.getDataUnit(
+            final ManageableDataUnit instance = moduleFacade.getDataUnit(
                     pipelineSparql, dataUnit.getIri());
             instances.put(dataUnit.getIri(), instance);
             dataUnits.put(dataUnit.getIri(),
                     new DataUnitContainer(instance, dataUnit));
         } catch (ModuleException ex) {
-            throw new DataUnitException("Can't get data unit instace.", ex);
+            throw new DataUnitException("Can't get data unit instance.", ex);
         }
     }
 
@@ -183,7 +177,7 @@ public class DataUnitManager {
             LOG.info("Loading existing data into data unit {} : {} ... done",
                     dataUnit.getBinding(), dataUnit.getIri());
         } else {
-            // We trust ManagableDataUnit and provide it with all
+            // We trust ManageableDataUnit and provide it with all
             // data units.
             LOG.info("Initializing data unit: {} : {} ...",
                     dataUnit.getBinding(), dataUnit.getIri());
@@ -264,6 +258,7 @@ public class DataUnitManager {
         }
         LOG.info("Closing data unit: {} : {} ... done",
                 dataUnit.getBinding(), dataUnit.getIri());
+        container.onClose();
     }
 
 }

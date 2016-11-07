@@ -44,7 +44,6 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.protocol.HttpClientContext;
 
 /**
- * @author Petr Škoda
  */
 public class GraphStoreProtocol implements Component.Sequential {
 
@@ -68,12 +67,12 @@ public class GraphStoreProtocol implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getEndpoint() == null
                 || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     GraphStoreProtocolVocabulary.HAS_CRUD);
         }
         //
         if (inputFiles.size() > 1 && configuration.isReplace()) {
-            throw exceptionFactory.failed("Only one file can be uploaded"
+            throw exceptionFactory.failure("Only one file can be uploaded"
                     + "with replace mode.");
         }
         //
@@ -83,15 +82,19 @@ public class GraphStoreProtocol implements Component.Sequential {
             try {
                 beforeSize = getGraphSize();
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't get graph size.", ex);
+                throw exceptionFactory.failure("Can't get graph size.", ex);
             }
         }
         for (final Entry entry : inputFiles) {
             final Optional<RDFFormat> rdfFormat
                     = Rio.getParserFormatForFileName(entry.getFileName());
             if (!rdfFormat.isPresent()) {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Can't determine format for file: {}", entry);
+            }
+            if (rdfFormat.get().supportsContexts()) {
+                throw exceptionFactory.failure(
+                        "Quad-based formats are not supported.");
             }
             final String mimeType = rdfFormat.get().getDefaultMIMEType();
             //
@@ -116,13 +119,13 @@ public class GraphStoreProtocol implements Component.Sequential {
                             configuration.isReplace());
                     break;
                 default:
-                    throw exceptionFactory.failed("Unknown repository type!");
+                    throw exceptionFactory.failure("Unknown repository type!");
             }
             if (configuration.isCheckSize()) {
                 try {
                     afterSize = getGraphSize();
                 } catch (IOException ex) {
-                    throw exceptionFactory.failed("Can't get graph size.", ex);
+                    throw exceptionFactory.failure("Can't get graph size.", ex);
                 }
             }
         }
@@ -156,7 +159,7 @@ public class GraphStoreProtocol implements Component.Sequential {
                         QueryLanguage.SPARQL, query).evaluate();
                 if (!result.hasNext()) {
                     // Empty result.
-                    throw exceptionFactory.failed(
+                    throw exceptionFactory.failure(
                             "Remote query for size does not return any value.");
                 }
                 final Binding binding = result.next().getBinding("count");
@@ -177,7 +180,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         try {
             url += "?context-uri=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw exceptionFactory.failed("URLEncoder failed.", ex);
+            throw exceptionFactory.failure("URLEncoder failure.", ex);
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
@@ -188,7 +191,7 @@ public class GraphStoreProtocol implements Component.Sequential {
             try {
                 url += "&query=" + URLEncoder.encode(query, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
-                throw exceptionFactory.failed("URLEncoder failed.", ex);
+                throw exceptionFactory.failure("URLEncoder failure.", ex);
             }
             //
             httpMethod = new HttpPut(url);
@@ -210,7 +213,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw exceptionFactory.failed("URLEncoder failed.", ex);
+            throw exceptionFactory.failure("URLEncoder failure.", ex);
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
@@ -237,7 +240,7 @@ public class GraphStoreProtocol implements Component.Sequential {
         try {
             url += "?graph=" + URLEncoder.encode(graph, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw exceptionFactory.failed("URLEncoder failed.", ex);
+            throw exceptionFactory.failure("URLEncoder failure.", ex);
         }
         //
         final HttpEntityEnclosingRequestBase httpMethod;
@@ -305,17 +308,17 @@ public class GraphStoreProtocol implements Component.Sequential {
                     response.getStatusLine().getReasonPhrase());
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode < 200 && statusCode >= 300) {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Can't upload data, reason: {}",
                         response.getStatusLine().getReasonPhrase());
             }
         } catch (IOException | ParseException ex) {
-            throw exceptionFactory.failed("Can't execute request.", ex);
+            throw exceptionFactory.failure("Can't execute request.", ex);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't close request.", ex);
+                throw exceptionFactory.failure("Can't close request.", ex);
             }
         }
     }

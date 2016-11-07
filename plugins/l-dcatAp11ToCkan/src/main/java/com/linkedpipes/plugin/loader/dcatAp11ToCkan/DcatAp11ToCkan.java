@@ -1,9 +1,6 @@
 package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.Normalizer;
 import java.util.HashMap;
@@ -12,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -39,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import org.openrdf.query.TupleQueryResult;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
@@ -73,7 +68,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
         String apiURI = configuration.getApiUri();
 
         if (datasetID == null || datasetID.isEmpty() || apiURI == null || apiURI.isEmpty() || configuration.getApiKey() == null || configuration.getApiKey().isEmpty() ) {
-            throw exceptionFactory.failed("Missing required settings.");
+            throw exceptionFactory.failure("Missing required settings.");
         }
 
         String datasetURI = executeSimpleSelectQuery("SELECT ?d WHERE {?d a <" + DcatAp11ToCkanVocabulary.DCAT_DATASET_CLASS + ">}", "d");
@@ -242,7 +237,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             JSONObject root = new JSONObject();
 
             if (publisher_name == null || publisher_name.isEmpty()) {
-                throw exceptionFactory.failed("Organization has no name: " + publisher_uri);
+                throw exceptionFactory.failure("Organization has no name: " + publisher_uri);
             }
 
             root.put("title", publisher_name);
@@ -275,11 +270,11 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                 } else if (response.getStatusLine().getStatusCode() == 409) {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Organization conflict: " + ent);
-                    throw exceptionFactory.failed("Organization conflict: " + ent);
+                    throw exceptionFactory.failure("Organization conflict: " + ent);
                 } else {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Response:" + ent);
-                    throw exceptionFactory.failed("Error creating organization: " + ent);
+                    throw exceptionFactory.failure("Error creating organization: " + ent);
                 }
             } catch (ClientProtocolException e) {
                 LOG.error(e.getLocalizedMessage(), e);
@@ -292,7 +287,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                         client.close();
                     } catch (IOException e) {
                         LOG.error(e.getLocalizedMessage(), e);
-                        throw exceptionFactory.failed("Error creating dataset");
+                        throw exceptionFactory.failure("Error creating dataset");
                     }
                 }
             }
@@ -417,11 +412,11 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                 } else if (response.getStatusLine().getStatusCode() == 409) {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Dataset already exists: " + ent);
-                    throw exceptionFactory.failed("Dataset already exists");
+                    throw exceptionFactory.failure("Dataset already exists");
                 } else {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Response:" + ent);
-                    throw exceptionFactory.failed("Error creating dataset");
+                    throw exceptionFactory.failure("Error creating dataset");
                 }
             } catch (ClientProtocolException e) {
                 LOG.error(e.getLocalizedMessage(), e);
@@ -434,7 +429,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                         client.close();
                     } catch (IOException e) {
                         LOG.error(e.getLocalizedMessage(), e);
-                        throw exceptionFactory.failed("Error creating dataset");
+                        throw exceptionFactory.failure("Error creating dataset");
                     }
                 }
             }
@@ -460,7 +455,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             } else {
                 String ent = EntityUtils.toString(response.getEntity());
                 LOG.error("Response:" + ent);
-                throw exceptionFactory.failed("Error updating dataset");
+                throw exceptionFactory.failure("Error updating dataset");
             }
         } catch (ClientProtocolException e) {
             LOG.error(e.getLocalizedMessage(), e);
@@ -473,7 +468,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                     client.close();
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
-                    throw exceptionFactory.failed("Error updating dataset");
+                    throw exceptionFactory.failure("Error updating dataset");
                 }
             }
         }

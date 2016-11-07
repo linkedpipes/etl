@@ -45,7 +45,7 @@ public final class RdfToFile implements Component.Sequential {
         Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
                 configuration.getFileType());
         if (!rdfFormat.isPresent()) {
-            throw exceptionFactory.failed("Invalid output file type: {}",
+            throw exceptionFactory.failure("Invalid output file type: {}",
                     configuration.getFileName());
         }
         final File outputFile = outputFiles.createFile(
@@ -66,7 +66,7 @@ public final class RdfToFile implements Component.Sequential {
                 connection.export(writer, inputRdf.getGraph());
                 progressReport.done();
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't write data.", ex);
+                throw exceptionFactory.failure("Can't write data.", ex);
             }
         });
     }

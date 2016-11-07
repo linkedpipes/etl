@@ -11,6 +11,35 @@ import java.util.List;
 @RdfToPojo.Type(uri = HttpGetFilesVocabulary.CONFIG)
 public class HttpGetFilesConfiguration {
 
+    @RdfToPojo.Type(uri = HttpGetFilesVocabulary.HEADER)
+    public static class Header {
+
+        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_KEY)
+        private String key;
+
+        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_VALUE)
+        private String value;
+
+        public Header() {
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
     @RdfToPojo.Type(uri = HttpGetFilesVocabulary.REFERENCE)
     public static class Reference {
 
@@ -19,6 +48,9 @@ public class HttpGetFilesConfiguration {
 
         @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_NAME)
         private String fileName;
+
+        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_HEADER)
+        private List<Header> headers = new LinkedList<>();
 
         public Reference() {
         }
@@ -39,6 +71,14 @@ public class HttpGetFilesConfiguration {
             this.fileName = fileName;
         }
 
+        public List<Header> getHeaders() {
+            return headers;
+        }
+
+        public void setHeaders(
+                List<Header> headers) {
+            this.headers = headers;
+        }
     }
 
     @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_REFERENCE)
@@ -60,6 +100,9 @@ public class HttpGetFilesConfiguration {
      */
     @RdfToPojo.Property(uri = HttpGetFilesVocabulary.SKIP_ON_ERROR)
     private boolean skipOnError = false;
+
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_HEADER)
+    private List<Header> headers = new LinkedList<>();
 
     public HttpGetFilesConfiguration() {
     }
@@ -88,4 +131,12 @@ public class HttpGetFilesConfiguration {
         this.skipOnError = skipOnError;
     }
 
+    public List<Header> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(
+            List<Header> headers) {
+        this.headers = headers;
+    }
 }

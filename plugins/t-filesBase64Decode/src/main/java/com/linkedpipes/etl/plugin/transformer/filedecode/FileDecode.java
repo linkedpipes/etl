@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FileDecode implements Component.Sequential {
 
@@ -47,7 +46,7 @@ public class FileDecode implements Component.Sequential {
                 if (configuration.isSkipOnError()) {
                     LOG.warn("Invalid file ignored", ex);
                 } else {
-                    throw exceptionFactory.failed("Can't decode file: {}",
+                    throw exceptionFactory.failure("Can't decode file: {}",
                             entry, ex);
                 }
             }

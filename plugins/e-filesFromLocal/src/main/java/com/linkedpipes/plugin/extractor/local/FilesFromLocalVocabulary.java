@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.local;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class FilesFromLocalVocabulary {
 

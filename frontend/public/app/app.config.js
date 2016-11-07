@@ -1,6 +1,13 @@
 define([], function () {
     function config($routeProvider, $mdIconProvider, $mdThemingProvider) {
         $routeProvider
+                .when('/help', {
+                    'templateUrl': 'app/components/help/view/helpView.html',
+                    'controller': 'help',
+                    'activeView': 'help',
+                    'pageTitle': 'Help - LinkedPipes ETL',
+                    'color': '#999999'
+                })
                 .when('/personalization', {
                     'templateUrl': 'app/components/personalizationView/personalizationView.html',
                     'controller': 'personalization',
@@ -21,6 +28,20 @@ define([], function () {
                     'activeView': 'executions',
                     'pageTitle': 'Execution - LinkedPipes ETL',
                     'color': '#FF9800'
+                })
+                .when('/templates', {
+                    'templateUrl': 'app/components/templates/listView/templateListView.html',
+                    'controller': 'template.list',
+                    'activeView': 'templates',
+                    'pageTitle': 'Templates - LinkedPipes ETL',
+                    'color': '#2196F3'
+                })
+                .when('/templates/detail', {
+                    'templateUrl': 'app/components/templates/detailView/templateDetailView.html',
+                    'controller': 'template.detail',
+                    'activeView': 'templates',
+                    'pageTitle': 'Templates - LinkedPipes ETL',
+                    'color': '#2196F3'
                 })
                 .when('/pipelines', {
                     'templateUrl': 'app/components/pipelines/listView/pipelineListView.html',
@@ -77,6 +98,7 @@ define([], function () {
                 .icon('file_download', 'libraries/google.design/ic_file_download_24px.svg')
                 .icon('ic_content_paste', 'libraries/google.design/ic_content_paste_24px.svg')
                 .icon('ic_power_settings_new', 'libraries/google.design/ic_power_settings_new_24px.svg')
+                .icon('info_outline', 'libraries/google.design/ic_info_outline_24px.svg')
                 ;
 
         $mdThemingProvider.theme('default')

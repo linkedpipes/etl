@@ -9,14 +9,21 @@ define([
     'app/components/executions/detailView/executionDetailCtrl',
     'app/components/componentExecutionDetail/componentExecutionDetailCtrl',
     'app/components/personalizationView/personalizationCtrl',
+    'app/components/help/view/helpView',
     'app/services/rdfService',
     'app/services/refreshService',
     'app/services/repositoryService',
     'app/services/statusService',
     'app/services/jsonldService',
     'app/services/infoService',
+    'app/services/designService',
     'app/components/inputs/localizedTextInput/localizedTextInput',
     'app/components/inputs/iriList/iriList',
+    'app/components/templates/listView/templateListView',
+    'app/components/templates/detailView/templateDetailView',
+    'app/components/templates/templateService',
+    'app/components/templates/generalTab/templateGeneralTab',
+    'app/components/templates/hierarchyTab/templateHierarchyTab',
     'angular',
     'angular-route',
     'angular-resource',
@@ -37,14 +44,21 @@ define([
         executionDetailCtrlInit,
         componentExecutionDetailCtrl,
         personalizationCtrl,
+        helpCtrl,
         rdfService,
         refreshService,
         repositoryService,
         statusService,
         jsonldService,
         infoService,
+        designService,
         localizedTextInputInit,
         iriListInit,
+        templateListInit,
+        templateDetailInit,
+        templateService,
+        templateGeneralTab,
+        templateHierarchyTab,
         angular
         ) {
     var app = angular.module('angularApp', [
@@ -65,8 +79,14 @@ define([
     statusService(app);
     jsonldService(app);
     infoService(app);
+    designService(app);
     localizedTextInputInit(app);
     iriListInit(app);
+    templateListInit(app);
+    templateDetailInit(app);
+    templateService(app);
+    templateGeneralTab(app);
+    templateHierarchyTab(app);
     //
     executionModel(app);
     pipelineListCtrlInit(app);
@@ -77,6 +97,7 @@ define([
     executionDetailCtrlInit(app);
     componentExecutionDetailCtrl(app);
     personalizationCtrl(app);
+    helpCtrl(app);
     //
     app.bootstrap = function () {
         angular.bootstrap(document, ['angularApp']);
@@ -92,8 +113,6 @@ define([
 
         $scope.route = $route;
         $scope.index = indexPage;
-
-        console.log('indexPage', indexPage);
 
         $scope.$on('$routeChangeSuccess', function (event, current, previous) {
             if (current.$$route && current.$$route.pageTitle) {
@@ -123,9 +142,19 @@ define([
             $location.path('/executions').search({});
         };
 
+        $scope.onTemplates = function () {
+            $scope.closeSidenav();
+            $location.path('/templates').search({});
+        };
+
         $scope.onPersonalization = function () {
             $scope.closeSidenav();
             $location.path('/personalization').search({});
+        };
+
+        $scope.onHelp = function () {
+            $scope.closeSidenav();
+            $location.path('/help').search({});
         };
 
     });

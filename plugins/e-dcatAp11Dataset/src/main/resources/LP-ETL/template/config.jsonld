@@ -1,0 +1,7 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-dcatAp11Dataset/0.0.0/configuration",
+        "@type" : ["http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/Configuration"],
+        "http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/modifiedNow" : true
+    }
+]

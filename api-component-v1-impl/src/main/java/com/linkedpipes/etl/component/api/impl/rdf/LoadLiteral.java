@@ -1,26 +1,19 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- *
- * @author Petr Škoda
+ * Specialization of Loader to load literals.
  */
 class LoadLiteral extends LoaderToValue {
 
     private final PropertyDescriptor valueDescriptor;
 
     private final PropertyDescriptor languageDescriptor;
-
-    LoadLiteral(PropertyDescriptor valueDescriptor,
-            PropertyDescriptor languageDescriptor) {
-        super(null, null);
-        this.valueDescriptor = valueDescriptor;
-        this.languageDescriptor = languageDescriptor;
-    }
 
     LoadLiteral(PropertyDescriptor valueDescriptor,
             PropertyDescriptor languageDescriptor,
@@ -75,7 +68,6 @@ class LoadLiteral extends LoaderToValue {
      * @param type
      * @param property
      * @return
-     * @throws CanNotDeserializeObject
      */
     static Object loadNew(Class<?> type, Map<String, String> property)
             throws CanNotDeserializeObject {

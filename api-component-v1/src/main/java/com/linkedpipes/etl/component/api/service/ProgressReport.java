@@ -6,8 +6,6 @@ import java.util.Collection;
  * Should be used to report DPU progress. As frequent call of this
  * {@link #entryProcessed()} may cause performance drop, we advise to report
  * after bigger work chunks (files, graphs).
- *
- * @author Škoda Petr
  */
 public interface ProgressReport {
 
@@ -27,7 +25,6 @@ public interface ProgressReport {
 
     /**
      * Should be called whenever entry is processed.
-     *
      */
     public void entryProcessed();
 

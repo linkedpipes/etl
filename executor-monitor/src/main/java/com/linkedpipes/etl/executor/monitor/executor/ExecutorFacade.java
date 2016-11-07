@@ -3,16 +3,6 @@ package com.linkedpipes.etl.executor.monitor.executor;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +15,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-/**
- *
- * @author Petr Škoda
- */
+import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
 @Service
 public class ExecutorFacade {
 
@@ -46,10 +38,6 @@ public class ExecutorFacade {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private final Object startLock = new Object();
-
-    public List<Executor> getExecutors() {
-        return Collections.unmodifiableList(executors);
-    }
 
     @PostConstruct
     protected void onInit() {
@@ -95,10 +83,9 @@ public class ExecutorFacade {
 
     /**
      * Try to start given execution on given executor.
-     *
+     * <p>
      * If execution is started the reference is set to executor as well
      * as an execution.
-     *
      *
      * @param execution
      * @param executor
@@ -148,7 +135,7 @@ public class ExecutorFacade {
 
     /**
      * Use HTTP to check the executor status and running pipeline.
-     *
+     * <p>
      * Can be used for initialization as well as an update.
      *
      * @param executor
@@ -203,7 +190,7 @@ public class ExecutorFacade {
             }
             executor.setLastCheck(new Date());
         } catch (ExecutionFacade.UnknownExecution | ExecutionFacade.ExecutionMismatch ex) {
-            // The execution in the stream is uknown. Detach the execution
+            // The execution in the stream is unknown. Detach the execution
             // and wait for other refresh.
             if (executor.getExecution() != null) {
                 executionFacade.detachExecutor(executor.getExecution());
@@ -212,7 +199,7 @@ public class ExecutorFacade {
             //
             LOG.warn("Executor change the execution.", ex);
         } catch (ExecutionFacade.OperationFailed ex) {
-            // Unset execution, it will be discoverd in the next check.
+            // Unset execution, it will be discovered in the next check.
             if (executor.getExecution() != null) {
                 executionFacade.detachExecutor(executor.getExecution());
                 executor.setExecution(null);

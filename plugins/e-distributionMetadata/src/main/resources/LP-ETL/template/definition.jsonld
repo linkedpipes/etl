@@ -1,0 +1,34 @@
+[
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/e-distributionMetadata/0.0.0",
+        "@type": "http://linkedpipes.com/ontology/JarTemplate",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "(DEPRECATED) Distribution metadata",
+        "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/e-distributionMetadata/0.0.0"},
+        "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
+        "http://linkedpipes.com/ontology/color": "#F6D8CE",
+        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Extractor"},
+        "http://linkedpipes.com/ontology/supportControl" : true,
+        "http://linkedpipes.com/ontology/port": [
+            {"@id": "http://etl.linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/output"},
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-distributionMetadata/0.0.0/input"}
+        ]
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/t-distributionMetadata/0.0.0/input",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "DatasetMetadata",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
+            "http://linkedpipes.com/ontology/Input"
+        ],
+        "http://linkedpipes.com/ontology/binding": "DatasetMetadata"
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/output",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Metadata",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
+            "http://linkedpipes.com/ontology/Output"
+        ],
+        "http://linkedpipes.com/ontology/binding": "Metadata"
+    }
+]

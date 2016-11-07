@@ -1,8 +1,0 @@
-{
-    "@graph": [
-        {
-            "@id": "http://localhost/resources/configuration",
-            "@type" : ["http://plugins.linkedpipes.com/ontology/e-datasetMetadata#Configuration"]
-        }
-    ]
-}

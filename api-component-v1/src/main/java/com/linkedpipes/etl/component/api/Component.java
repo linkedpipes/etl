@@ -1,15 +1,14 @@
 package com.linkedpipes.etl.component.api;
 
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This class provide basic definition that should by new components.
- *
- * @author Petr Škoda
+ * Basic component definition.
  */
 public interface Component {
 
@@ -20,8 +19,6 @@ public interface Component {
 
         /**
          * Perform execution of the component.
-         *
-         * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
          */
         void execute() throws LpException;
 
@@ -36,8 +33,6 @@ public interface Component {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface Configuration {
-
-        Class<?>[] history() default {};
 
     }
 

@@ -1,0 +1,9 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.path.hide">
+        <label>Target path</label>
+        <input ng-model="dialog.path.value"
+               ng-disabled="dialog.path.disabled || dialog.path.inherit"
+               required>
+    </md-input-container>
+</div>

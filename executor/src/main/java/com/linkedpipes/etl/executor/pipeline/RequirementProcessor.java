@@ -1,23 +1,21 @@
 package com.linkedpipes.etl.executor.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.io.File;
-import java.util.Map;
-
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
-import com.linkedpipes.etl.executor.rdf.EntityLoader;
-import java.util.List;
+import com.linkedpipes.etl.executor.rdf.PojoLoader;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.util.Repositories;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Find requirements in pipeline definition and handle them.
- *
- * @author Škoda Petr
  */
 class RequirementProcessor {
 
@@ -29,12 +27,12 @@ class RequirementProcessor {
 
     }
 
-    private static class TempDirectory implements EntityLoader.Loadable {
+    private static class TempDirectory implements PojoLoader.Loadable {
 
         private String targetProperty;
 
         @Override
-        public EntityLoader.Loadable load(String predicate, Value object)
+        public PojoLoader.Loadable load(String predicate, Value object)
                 throws LpException {
             switch (predicate) {
                 case LINKEDPIPES.REQUIREMENTS.HAS_TARGET_PROPERTY:
@@ -47,12 +45,12 @@ class RequirementProcessor {
 
     }
 
-    private static class InputDirectory implements EntityLoader.Loadable {
+    private static class InputDirectory implements PojoLoader.Loadable {
 
         private String targetProperty;
 
         @Override
-        public EntityLoader.Loadable load(String predicate, Value object)
+        public PojoLoader.Loadable load(String predicate, Value object)
                 throws LpException {
             switch (predicate) {
                 case LINKEDPIPES.REQUIREMENTS.HAS_TARGET_PROPERTY:
@@ -117,7 +115,7 @@ class RequirementProcessor {
         // Read requirements.
         final TempDirectory tempDirectory = new TempDirectory();
         try {
-            EntityLoader.load(
+            PojoLoader.load(
                     definition.getRepository(),
                     requirement,
                     definition.getDefinitionGraph(),
@@ -147,7 +145,7 @@ class RequirementProcessor {
         // Read requirements.
         final InputDirectory inputDirectory = new InputDirectory();
         try {
-            EntityLoader.load(
+            PojoLoader.load(
                     definition.getRepository(),
                     requirement,
                     definition.getDefinitionGraph(),

@@ -1,5 +1,10 @@
 package com.linkedpipes.etl.executor.monitor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,16 +12,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import org.springframework.stereotype.Service;
-
-/**
- *
- * @author Škoda Petr
- */
 @Service
 public class Configuration {
 
@@ -33,17 +29,9 @@ public class Configuration {
 
     private String executorUri;
 
-    private String fusekiPath = null;
-
-    private String externalWorkingDirectoryPath;
-
     private int ftpCommandPort;
 
     private String ftpDataPort;
-
-    private int processPortStart;
-
-    private int processPortEnd;
 
     private String executionPrefix;
 
@@ -59,7 +47,8 @@ public class Configuration {
         }
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
-        try (InputStream stream = new FileInputStream(new File(propertiesFile))) {
+        try (InputStream stream = new FileInputStream(
+                new File(propertiesFile))) {
             properties.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("Can't load configuration file.", ex);
@@ -70,15 +59,13 @@ public class Configuration {
 
     protected void loadProperties() {
         executorUri = getProperty("executor.webserver.uri");
-        workingDirectoryPath = getProperty("executor.execution.working_directory");
+        workingDirectoryPath =
+                getProperty("executor.execution.working_directory");
         webServerPort = getPropertyInteger("executor-monitor.webserver.port");
         logDirectoryPath = getProperty("executor-monitor.log.directory");
         logFilter = getProperty("executor-monitor.log.core.level");
-        fusekiPath = getProperty("external.fuseki.path");
-        externalWorkingDirectoryPath = getProperty("external.working");
-        ftpCommandPort = getPropertyInteger("executor-monitor.ftp.command_port");
-        processPortStart = getPropertyInteger("external.port.start");
-        processPortEnd = getPropertyInteger("external.port.end");
+        ftpCommandPort =
+                getPropertyInteger("executor-monitor.ftp.command_port");
         executionPrefix = getProperty("executor.execution.uriPrefix");
         //
         final Integer ftpDataPortsStart = getPropertyInteger(
@@ -93,15 +80,10 @@ public class Configuration {
     }
 
     public File getWorkingDirectory() {
-        final File workingDirectory = new File(workingDirectoryPath + File.separator + "data");
+        final File workingDirectory =
+                new File(workingDirectoryPath + File.separator + "data");
         workingDirectory.mkdirs();
         return workingDirectory;
-    }
-
-    public File getUploadDirectory() {
-        final File uploadDirectory = new File(workingDirectoryPath + File.separator + "upload");
-        uploadDirectory.mkdirs();
-        return uploadDirectory;
     }
 
     public File getLogDirectory() {
@@ -122,30 +104,12 @@ public class Configuration {
         return executorUri;
     }
 
-    public File getFusekiPath() {
-        return new File(fusekiPath);
-    }
-
-    public File getExternalWorkingDirectoryPath() {
-        final File result = new File(externalWorkingDirectoryPath);
-        result.mkdirs();
-        return result;
-    }
-
     public int getFtpCommandPort() {
         return ftpCommandPort;
     }
 
     public String getFtpDataPort() {
         return ftpDataPort;
-    }
-
-    public int getProcessPortStart() {
-        return processPortStart;
-    }
-
-    public int getProcessPortEnd() {
-        return processPortEnd;
     }
 
     public String getExecutionPrefix() {

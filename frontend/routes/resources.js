@@ -1,15 +1,8 @@
-//
-// Route for resource management.
-//
-
 'use strict';
 
 var gExpress = require('express');
-var gTemplates = require('./../modules/templates');
-var gPipelines = require('./../modules/pipelines');
 var gRequest = require('request'); // https://github.com/request/request
 var gConfiguration = require('./../modules/configuration');
-var gUnpacker = require('./../modules/unpacker');
 var gMultiparty = require('multiparty');
 var gHttp = require('http');
 var gUrl = require('url');
@@ -20,61 +13,65 @@ module.exports = gApiRouter;
 
 var gMonitorUri = gConfiguration.executor.monitor.url;
 
+// TODO Split access via dereference and REST like with IRI.
+
 //
 // Components as templates.
 //
 
+gApiRouter.delete('/components/:id', function (request, response) {
+    var url = gConfiguration.storage.url + '/api/v1/components?iri='
+        + encodeURI(gConfiguration.storage.domain + request.originalUrl);
+    gRequest.del(url).pipe(response);
+});
+
 gApiRouter.get('/components', function (request, response) {
-    var value = {
-        '@graph': gTemplates.getList()
-    };
-    response.json(value);
-});
-
-gApiRouter.get('/components/:name', function (request, response) {
-    var value = gTemplates.getDefinition(request.params.name);
-    if (value) {
-        response.json(value);
-    } else {
-        response.status(404).send('');
+    var options = {
+        'url': gConfiguration.storage.url + '/api/v1/components/list',
+        'headers': {
+            'Accept': 'application/ld+json'
+        }
     }
-});
-
-gApiRouter.get('/components/:name/:type', function (request, response) {
-    var type = request.params.type;
-    if (type === 'configuration') {
-        var value = gTemplates.getConfigurationString(request.params.name);
-        if (value) {
-            response.status(200).setHeader('content-type', 'application/json');
-            response.send(value);
-        } else {
-            response.status(404).send('');
-        }
-    } else if (type === 'dialog.js') {
-        var value = gTemplates.getDialogJs(request.params.name);
-        if (value) {
-            response.status(200).setHeader('content-type', 'text/javascript');
-            response.send(value);
-        } else {
-            response.status(404).send('');
-        }
-    } else if (type === 'dialog.html') {
-        var value = gTemplates.getDialogHtml(request.params.name);
-        if (value) {
-            response.status(200).setHeader('content-type', 'text/html');
-            response.send(value);
-        } else {
-            response.status(404).send('');
-        }
-    } else {
-        response.status(400).json({
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
             'exception': {
-                'errorMessage': '',
-                'systemMessage': 'Type: "' + type + '".',
-                'userMessage': "Invalid request.",
-                'errorCode': 'INVALID_INPUT'
-            }});
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
+});
+
+gApiRouter.get('/components/definition', function (request, response) {
+    var options = {
+        'url': gConfiguration.storage.url +
+        '/api/v1/components/definition?iri=' + request.query.iri,
+        'headers': {
+            'Accept': 'application/ld+json'
+        }
     }
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
+});
+
+
+gApiRouter.post('/components', function (request, response) {
+    var url = gConfiguration.storage.url + '/api/v1/components/';
+    request.pipe(gRequest.post(url, {
+        'form': request.body
+    }), {
+        'end': false
+    }).pipe(response);
 });
 
 //
@@ -82,96 +79,223 @@ gApiRouter.get('/components/:name/:type', function (request, response) {
 //
 
 gApiRouter.get('/pipelines', function (request, response) {
-    var value = {
-        '@graph': gPipelines.getList()
-    };
-    response.json(value);
+    var options = {
+        'url': gConfiguration.storage.url + '/api/v1/pipelines/list',
+        'headers': {
+            'Accept': 'application/ld+json'
+        }
+    }
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
 });
 
+/**
+ * Import a pipeline from given IRI as a new pipeline.
+ *
+ * @param request
+ * @param response
+ */
+function postImportPipeline(request, response, url) {
+    var form = new gMultiparty.Form();
+    var importOptions = {
+        'content': '',
+        'type': ''
+    };
+    form.on('part', function (part) {
+        if (part.name === 'options') {
+            importOptions.type = part['headers']['content-type']
+            // Read and save the configuration.
+            part.on('data', function (chunk) {
+                importOptions.content += chunk;
+            });
+        } else {
+            part.resume();
+        }
+    });
+    form.on('close', function () {
+        if (importOptions.content === '') {
+            importOptions.content = JSON.stringify({
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/import': true
+            });
+            importOptions.options = 'appplication/ld+json';
+        }
+        // Get pipeline.
+        gRequest.get({
+            // Include mapping and templates.
+            'url': request.query.pipeline + '&templates=true&mappings=true',
+            'headers': {
+                'Accept': 'application/ld+json'
+            }
+        }, function (error, http, bodyPipeline) {
+            if (error) {
+                response.status(503).json({
+                    'exception': {
+                        'errorMessage': error,
+                        'systemMessage': '',
+                        'userMessage': 'Can not download pipeline.',
+                        'errorCode': 'INVALID_INPUT'
+                    }
+                });
+                return;
+            }
+            // We got options and pipeline, create a pipeline.
+            var options = {
+                'url': url,
+                'headers': {
+                    'Accept': 'application/ld+json'
+                },
+                'formData': {
+                    'options': {
+                        'value': importOptions.content,
+                        'options': {
+                            'contentType': importOptions.type,
+                            'filename': 'options.jsonld'
+                        }
+                    },
+                    'pipeline': {
+                        'value': bodyPipeline,
+                        'options': {
+                            'contentType': 'application/ld+json',
+                            'filename': 'pipeline.jsonld'
+                        }
+                    }
+                }
+            };
+            gRequest.post(options).pipe(response);
+        });
+    });
+    form.parse(request);
+}
+
 gApiRouter.post('/pipelines', function (request, response) {
-    var record = gPipelines.create();
-    response.json(record);
+    var url = gConfiguration.storage.url + '/api/v1/pipelines';
+    if (request.query.pipeline) {
+        // Get pipeline from given IRI.
+        postImportPipeline(request, response, url);
+    } else {
+        // We can just pipe the content to the storage component.
+        request.pipe(gRequest.post(url)).pipe(response);
+    }
+});
+
+// TODO This is more part of the API.
+gApiRouter.post('/localize', function (request, response) {
+    var url = gConfiguration.storage.url + '/api/v1/pipelines/localize';
+    if (request.query.pipeline) {
+        // We need to parse the body, get the pipeline and append
+        // the pipeline to the body.
+        postImportPipeline(request, response, url);
+    } else {
+        // We can just pipe the content to the storage component.
+        request.pipe(gRequest.post(url)).pipe(response);
+    }
+});
+
+// TODO This is more part of the API.
+gApiRouter.get('/pipelines/info', function(request, response) {
+    var options = {
+        'url': gConfiguration.storage.url + '/api/v1/pipelines/info',
+        'headers': {
+            'Accept': 'application/ld+json'
+        }
+    }
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
 });
 
 gApiRouter.get('/pipelines/:id', function (request, response) {
-    var id = request.params.id;
-    var content = gPipelines.getDefinitionStream(id);
-    if (content) {
-        response.status(200).setHeader('content-type', 'application/json');
-        content.pipe(response);
+
+    // Parse IRI.
+    var queryIri;
+    var queryParams = '';
+    var queryIndex = request.originalUrl.indexOf('?');
+    if (queryIndex === -1) {
+        queryIri = request.originalUrl;
     } else {
-        response.status(500).json({
-            'exception': {
-                'errorMessage': '',
-                'systemMessage': '',
-                'userMessage': 'Pipeline "' + id + '" does not exists.',
-                'errorCode': 'ERROR'
-            }});
+        queryIri = request.originalUrl.substring(0, queryIndex);
+        queryParams = '&' + request.originalUrl.substring(queryIndex + 1);
     }
+
+    var options = {
+        'url': gConfiguration.storage.url + '/api/v1/pipelines?iri='
+        + encodeURI(gConfiguration.storage.domain + queryIri) + queryParams,
+        'headers': {
+            'Accept': 'application/ld+json'
+        }
+    }
+
+    gRequest.get(options).on('error', function (error) {
+        response.status(503).json({
+            'exception': {
+                'errorMessage': error,
+                'systemMessage': 'Executor-monitor is offline.',
+                'userMessage': 'Backend is offline.',
+                'errorCode': 'CONNECTION_REFUSED'
+            }
+        });
+    }).pipe(response);
+
 });
 
 gApiRouter.delete('/pipelines/:id', function (request, response) {
-    gPipelines.delete(request.params.id);
-    response.status(200);
-    response.send('');
-});
-
-gApiRouter.post('/pipelines/:id', function (request, response) {
-    if (request.query.pipeline) {
-        // Import pipeline from given URL.
-        gPipelines.import(request.params.id, request.query.pipeline, function (record) {
-            if (record) {
-                response.json(record);
-            } else {
-                response.status(500).setHeader('content-type', 'application/json');
-                response.json({
-                    'exception': {
-                        'errorMessage': '',
-                        'systemMessage': '',
-                        'userMessage': 'Import failed.',
-                        'errorCode': 'INVALID_INPUT'
-                    }});
-            }
-        });
-    } else {
-        // Create a new empty pipeline.
-        var record = gPipelines.create(request.params.id);
-        if (record) {
-            response.json(record);
-        } else {
-            response.status(500).setHeader('content-type', 'application/json');
-            response.json({
-                'exception': {
-                    'errorMessage': '',
-                    'systemMessage': '',
-                    'userMessage': 'Given id is already used.',
-                    'errorCode': 'INVALID_INPUT'
-                }});
-        }
-    }
+    var url = gConfiguration.storage.url + '/api/v1/pipelines?iri='
+        + encodeURI(gConfiguration.storage.domain + request.originalUrl);
+    gRequest.del(url).pipe(response);
 });
 
 gApiRouter.put('/pipelines/:id', function (request, response) {
-
     var body = '';
     request.on('data', function (chunk) {
         body += chunk;
     });
     request.on('end', function () {
-        if (gPipelines.update(request.params.id, JSON.parse(body),
-                request.query.unchecked !== 'true')) {
-            response.status(200).send('');
-        } else {
-            response.status(500).json({
+        // We need the URI without any options, suffixes etc ...
+        var urlSuffix = request.originalUrl;
+        var n = urlSuffix.indexOf('?');
+        urlSuffix = urlSuffix.substring(0, n != -1 ? n : s.length);
+        //
+        var options = {
+            'url': gConfiguration.storage.url + '/api/v1/pipelines?iri='
+            + encodeURI(gConfiguration.storage.domain + urlSuffix),
+            'headers': {},
+            'formData': {
+                'pipeline': {
+                    'value': body,
+                    'options': {
+                        'contentType': 'application/ld+json',
+                        'filename': 'pipeline.jsonld'
+                    }
+                }
+            }
+        };
+        gRequest.put(options).on('error', function (error) {
+            response.status(503).json({
                 'exception': {
-                    'errorMessage': '',
-                    'systemMessage': '',
-                    'userMessage': 'Pipeline does not exist.',
-                    'errorCode': 'ERROR'
-                }});
-        }
-
-
+                    'errorMessage': error,
+                    'systemMessage': 'Executor-monitor is offline.',
+                    'userMessage': 'Backend is offline.',
+                    'errorCode': 'CONNECTION_REFUSED'
+                }
+            });
+        }).pipe(response);
     });
 });
 
@@ -187,7 +311,8 @@ var pipeGet = function (uri, response) {
                 'systemMessage': 'Executor-monitor is offline.',
                 'userMessage': 'Backend is offline.',
                 'errorCode': 'CONNECTION_REFUSED'
-            }});
+            }
+        });
     }).pipe(response);
 };
 
@@ -246,7 +371,7 @@ var StreamCombiner = function (stream) {
             this.closeCurrent();
             // Send new stream.
             console.log('   : sending ', this.index + 1, ' of ',
-                    this.sources.length);
+                this.sources.length);
 
             this.index += 1;
             var stream = this.sources[this.index];
@@ -283,14 +408,59 @@ gApiRouter.get('/executions', function (request, response) {
     pipeGet(uri, response);
 });
 
+
+// callback(success, result)
+function unpack(pipelineObject, optionsAsString, callback) {
+    // pipelineObject.iri
+    // pipelineObject.pipeline
+    if (optionsAsString === undefined || optionsAsString === '') {
+        optionsAsString = '{}';
+    }
+    var formData = {
+        'options': {
+            'value': optionsAsString,
+            'options': {
+                'contentType': 'application/ld+json',
+                'filename': 'options.jsonld'
+            }
+        }
+    };
+    var headers = {
+        'Accept': 'application/ld+json'
+    };
+    //
+    var url = gConfiguration.storage.url + '/api/v1/pipelines/unpack';
+    if (pipelineObject.iri) {
+        url += '?iri=' + encodeURIComponent(pipelineObject.iri);
+    }
+    if (pipelineObject.pipeline) {
+        formData['pipeline'] = {
+            'value': pipelineObject.pipeline,
+            'options': {
+                'contentType': 'application/ld+json',
+                'filename': 'pipeline.jsonld'
+            }
+        }
+    }
+    //
+    console.time('  [POST] /unpack');
+    gRequest.post({'url': url, 'formData': formData, 'headers': headers},
+        function optionalCallback(error, httpResponse, body) {
+            if (error) {
+                callback(false, body);
+            } else {
+                callback(true, body);
+            }
+        });
+}
+
 gApiRouter.post('/executions', function (request, response) {
 
     console.log('[POST] /executions');
     console.log('  content-type: ', request.headers['content-type']);
 
     if (request.headers['content-type'] === undefined ||
-            request.headers['content-type'].toLowerCase().
-            indexOf('multipart/form-data') === -1) {
+        request.headers['content-type'].toLowerCase().indexOf('multipart/form-data') === -1) {
         // It's not multipart/form-data request.
         if (request.query.pipeline === undefined) {
             response.status(500).json({
@@ -314,34 +484,19 @@ gApiRouter.post('/executions', function (request, response) {
             body += chunk;
         });
         request.on('end', function () {
-            if (body === '') {
-                configuration = {};
-            } else {
-                try {
-                    configuration = JSON.parse(body);
-                } catch (error) {
-                    console.error(error);
-                    response.status(500).json({
-                        'exception': {
-                            'errorMessage': JSON.stringify(error),
-                            'systemMessage': 'Invalid configuration',
-                            'userMessage': "Invalid execution command.",
-                            'errorCode': 'ERROR'
-                        }
-                    });
-                    return;
-                }
-            }
-            gUnpacker.unpack(pipelineObject, configuration, function (sucess, result) {
+            var configuration = body;
+            // Post pipeline for unpacking.
+            unpack(pipelineObject, configuration, function (success, result) {
                 console.timeEnd('  unpack');
-                if (sucess === false) {
+                if (success === false) {
                     response.status(503).json(result);
+                    return;
                 }
                 console.time('  stringify');
                 var formData = {
                     'format': 'application/ld+json',
                     'pipeline': {
-                        'value': JSON.stringify(result),
+                        'value': result,
                         'options': {
                             'contentType': 'application/octet-stream',
                             'filename': 'pipeline.jsonld'
@@ -370,6 +525,7 @@ gApiRouter.post('/executions', function (request, response) {
                     console.timeEnd('  POST');
                 }).pipe(response);
             });
+
         });
         return;
     }
@@ -396,17 +552,17 @@ gApiRouter.post('/executions', function (request, response) {
     // executor-monitor, instead custom error is provided.
     var pipePost = true;
     var postRequest = gHttp.request(post_options, function (res) {
-        // Pipe result bach to caller if pipePost is true.
+        // Pipe result back to caller if pipePost is true.
         if (pipePost) {
             res.pipe(response);
         }
     });
     // We use wrap to pipe multiple streams.
     var postStream = new StreamCombiner(postRequest);
-    // Parse incomming data.
+    // Parse incoming data.
     var form = new gMultiparty.Form();
     var firstBoundary = true;
-    var configuration = '{}'; // Default is empty configuration.
+    var configuration = ''; // Default is empty configuration.
     var pipelineAsString = '';
     // If true we need to unpack given pipeline.
     var unpack_pipeline = !request.query.unpacked_pipeline;
@@ -469,32 +625,32 @@ gApiRouter.post('/executions', function (request, response) {
         // Unpack the pipeline.
         try {
             console.time('  unpack');
-            gUnpacker.unpack(pipelineObject,
-                    JSON.parse(configuration), function (sucess, result) {
-                console.timeEnd('  unpack');
-                if (sucess === false) {
-                    console.log('unpack:fail');
-                    pipePost = false;
-                    response.status(503).json(result);
+            unpack(pipelineObject,
+                configuration, function (success, result) {
+                    console.timeEnd('  unpack');
+                    if (success === false) {
+                        console.log('unpack:fail');
+                        pipePost = false;
+                        response.status(503).json(result);
+                        postStream.end();
+                        return;
+                    }
+                    var textStream = new gStream.PassThrough();
+                    if (firstBoundary) {
+                        firstBoundary = false;
+                    } else {
+                        textStream.write('\r\n');
+                    }
+                    textStream.write('--' + boundaryString + '\r\n');
+                    textStream.write('Content-Disposition: form-data; name="pipeline"; filename="pipeline.jsonld"\r\n');
+                    textStream.write('Content-Type: application/octet-stream\r\n\r\n');
+                    textStream.write(result);
+                    textStream.write('\r\n--' + boundaryString + '--\r\n');
+                    textStream.end();
+                    postStream.append(textStream);
                     postStream.end();
-                    return;
-                }
-                var textStream = new gStream.PassThrough();
-                if (firstBoundary) {
-                    firstBoundary = false;
-                } else {
-                    textStream.write('\r\n');
-                }
-                textStream.write('--' + boundaryString + '\r\n');
-                textStream.write('Content-Disposition: form-data; name="pipeline"; filename="pipeline.jsonld"\r\n');
-                textStream.write('Content-Type: application/octet-stream\r\n\r\n');
-                textStream.write(JSON.stringify(result));
-                textStream.write('\r\n--' + boundaryString + '--\r\n');
-                textStream.end();
-                postStream.append(textStream);
-                postStream.end();
-                console.timeEnd('  total');
-            });
+                    console.timeEnd('  total');
+                });
         } catch (err) {
             console.timeEnd('  unpack');
             console.log('unpack:exception', err, err.stack);
@@ -506,7 +662,7 @@ gApiRouter.post('/executions', function (request, response) {
                     'errorCode': 'ERROR'
                 }
             });
-            // Here we fail the multiplart/request as we fail to write
+            // Here we fail the multipart/request as we fail to write
             // the closing boundary.
             postStream.end();
             console.timeEnd('  total');
@@ -536,3 +692,6 @@ gApiRouter.get('/executions/:id/logs', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/logs';
     pipeGet(uri, response);
 });
+
+
+

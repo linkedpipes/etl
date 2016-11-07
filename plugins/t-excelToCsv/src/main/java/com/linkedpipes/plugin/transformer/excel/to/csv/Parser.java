@@ -26,7 +26,6 @@ import org.apache.poi.ss.usermodel.DateUtil;
 
 /**
  *
- * @author Petr Škoda
  */
 class Parser {
 
@@ -45,7 +44,7 @@ class Parser {
         try {
             workbook = WorkbookFactory.create(entry.toFile());
         } catch (IOException | InvalidFormatException ex) {
-            throw exceptionFactory.failed("Can't open workbook file.", ex);
+            throw exceptionFactory.failure("Can't open workbook file.", ex);
         }
         for (int index = 0; index < workbook.getNumberOfSheets(); ++index) {
             final Sheet sheet = workbook.getSheetAt(index);
@@ -59,7 +58,7 @@ class Parser {
                     continue;
                 }
             } catch (PatternSyntaxException ex) {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Invalid regular expression for sheet filter.", ex);
             }
             // Create output file name.
@@ -77,7 +76,7 @@ class Parser {
                     new FileOutputStream(outputFile), false, "UTF-8")) {
                 processSheet(sheet, outputStream);
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't write output to file.",
+                throw exceptionFactory.failure("Can't write output to file.",
                         ex);
             }
         }

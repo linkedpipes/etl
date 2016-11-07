@@ -11,7 +11,6 @@ import org.openrdf.rio.RDFHandlerException;
 
 /**
  *
- * @author Petr Škoda
  */
 public class StatementInserter implements RDFHandler {
 

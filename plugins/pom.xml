@@ -41,6 +41,7 @@
         <module>t-mustache</module>
         <module>q-sparqlAsk</module>
         <module>l-filesToLocal</module>
+        <module>e-ftpFiles</module>
         <module>e-filesFromLocal</module>
         <module>t-tabularUv</module>
         <module>t-singleGraphUnion</module>
@@ -50,6 +51,11 @@
         <module>t-filesRenamer</module>
         <module>t-templatedXlsToCsv</module>
         <module>t-fileHasher</module>
+        <module>x-virtuosoExtractor</module>
+        <module>t-valueParser</module>
+        <module>x-deleteDirectory</module>
+        <module>t-htmlCssUv</module>
+        <module>t-modifyDate</module>
     </modules>
 
 </project>

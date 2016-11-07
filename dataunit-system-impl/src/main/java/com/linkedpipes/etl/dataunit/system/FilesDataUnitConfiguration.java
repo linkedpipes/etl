@@ -1,19 +1,17 @@
 package com.linkedpipes.etl.dataunit.system;
 
 import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.rdf.PojoLoader;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
-
 /**
  * Describe common configuration of sesame data unit.
- *
- * @author Škoda Petr
  */
-public final class FilesDataUnitConfiguration implements EntityLoader.Loadable {
+public final class FilesDataUnitConfiguration implements PojoLoader.Loadable {
 
     private final String resourceUri;
 
@@ -61,7 +59,7 @@ public final class FilesDataUnitConfiguration implements EntityLoader.Loadable {
     }
 
     @Override
-    public EntityLoader.Loadable load(String predicate, String value)
+    public PojoLoader.Loadable load(String predicate, String value)
             throws RdfException {
         switch (predicate) {
             case LINKEDPIPES.HAS_BINDING:

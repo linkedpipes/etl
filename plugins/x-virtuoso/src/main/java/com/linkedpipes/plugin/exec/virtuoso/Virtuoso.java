@@ -54,7 +54,7 @@ public final class Virtuoso implements Component.Sequential {
         try {
             virtuosoRepository.initialize();
         } catch (RepositoryException ex) {
-            throw exceptionFactory.failed("Can't connect to Virtuoso repository.", ex);
+            throw exceptionFactory.failure("Can't connect to Virtuoso repository.", ex);
         }
         cleanUp.addAction(() -> {
             try {
@@ -89,7 +89,7 @@ public final class Virtuoso implements Component.Sequential {
             final ResultSet resultSetLdDir = statementLdDir.executeQuery();
             resultSetLdDir.close();
         } catch (SQLException ex) {
-            throw exceptionFactory.failed("Can't execute ld_dir query.", ex);
+            throw exceptionFactory.failure("Can't execute ld_dir query.", ex);
         }
         // Check number of files to load.
         final int filesToLoad;
@@ -100,7 +100,7 @@ public final class Virtuoso implements Component.Sequential {
                 filesToLoad = resultSetProcessing.getInt(1);
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failed("Can't query load_list table.", ex);
+            throw exceptionFactory.failure("Can't query load_list table.", ex);
         } finally {
             // Here we can close the connection.
             try {
@@ -172,7 +172,7 @@ public final class Virtuoso implements Component.Sequential {
             return DriverManager.getConnection(configuration.getVirtuosoUrl(), configuration.getUsername(),
                     configuration.getPassword());
         } catch (SQLException ex) {
-            throw exceptionFactory.failed("Can't create sql connection.", ex);
+            throw exceptionFactory.failure("Can't create sql connection.", ex);
         }
     }
 
@@ -186,7 +186,7 @@ public final class Virtuoso implements Component.Sequential {
                 resultSetRun.close();
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failed("Can't start loading.", ex);
+            throw exceptionFactory.failure("Can't start loading.", ex);
         } finally {
             try {
                 if (loaderConnection != null) {

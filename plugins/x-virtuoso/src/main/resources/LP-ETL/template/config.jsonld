@@ -1,0 +1,38 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/x-virtuoso#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#uri": "jdbc:virtuoso://localhost:1111/charset=UTF-8/",
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#uriControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#username": "dba",
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#usernameControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#password": "dba",
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraph": false,
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraphControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#directory": "",
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#directoryControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#graph": "http://target/graph",
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateInterval": 10,
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateIntervalControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearSqlLoadTable": true,
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearSqlLoadTableControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

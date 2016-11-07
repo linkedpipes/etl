@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#prefix": "SABLONA_",
+        "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#prefixControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

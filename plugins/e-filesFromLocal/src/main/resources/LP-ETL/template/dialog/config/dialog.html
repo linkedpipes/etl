@@ -1,0 +1,10 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" flex
+                        ng-hide="dialog.path.hide">
+        <label>Path to a local file or a directory</label>
+        <input ng-model="dialog.path.value"
+               ng-disabled="dialog.path.disabled || dialog.path.inherit"
+               required>
+    </md-input-container>
+</div>

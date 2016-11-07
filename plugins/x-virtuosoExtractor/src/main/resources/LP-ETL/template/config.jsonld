@@ -1,0 +1,11 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uri": "jdbc:virtuoso://localhost:1111/charset=UTF-8/",
+        "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#username": "dba",
+        "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#password": "dba",
+        "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#outputPath": "~/output",
+        "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#graph": "http://target/graph"
+    }
+]

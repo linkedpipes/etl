@@ -2,27 +2,19 @@ package com.linkedpipes.etl.executor.web.servlet;
 
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineExecutor;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-/**
- *
- * @author Petr Škoda
- */
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+
 @RestController
 @RequestMapping(value = "/executions")
 class ExecutionServlet {
@@ -42,7 +34,9 @@ class ExecutionServlet {
          */
         public String directory;
 
-    };
+    }
+
+    ;
 
     @Autowired
     private ModuleFacade modules;

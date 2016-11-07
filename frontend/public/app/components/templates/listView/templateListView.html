@@ -1,0 +1,33 @@
+<div layout="row" layout-align="space-around">
+    <div class="container" style="max-width: 66em;width: 100%;">
+        <div ng-show="!loaded" layout="row">
+            <span flex="50"/>
+            <img src="app/components/pipelines/listView/assets/img/loading.gif"
+                 class="center-block" title="Loading..."
+                 style="padding-top: 5em"/>
+        </div>
+        <div ng-show="loaded" style="margin: 1.2em 2em 0em 1em;">
+            <md-input-container class="md-block"
+                                style="margin: 0em 0em 0em 0em;">
+                <label>Label search</label>
+                <input ng-model="searchLabel">
+            </md-input-container>
+        </div>
+        <md-list flex>
+            <md-list-item class="md-2-line" ng-click="onClick(template)"
+                          ng-repeat="template in templates"
+                          ng-show="template._templateListView">
+                <div class="md-list-item-text" layout="column">
+                    <h3>{{::template.label}}</h3>
+                    <p>
+                        <span ng-repeat="item in template._parents">
+                            {{item.label}}
+                            <span ng-if="!$last"> -> </span>
+                        </span>
+                    </p>
+                </div>
+                <md-divider></md-divider>
+            </md-list-item>
+        </md-list>
+    </div>
+</div>

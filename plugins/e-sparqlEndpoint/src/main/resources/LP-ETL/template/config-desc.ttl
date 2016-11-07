@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/query>  ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/endpoint> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/query>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#queryControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/endpoint>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl> .

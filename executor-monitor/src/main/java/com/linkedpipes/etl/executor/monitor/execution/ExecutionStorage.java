@@ -4,18 +4,6 @@ import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.ExecutionMismatch;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.OperationFailed;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.UnknownExecution;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import javax.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
@@ -26,10 +14,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
 /**
  * Responsible for storing information about existing executions.
- *
- * @author Petr Škoda
  */
 @Service
 class ExecutionStorage {
@@ -78,7 +70,6 @@ class ExecutionStorage {
     }
 
     /**
-     *
      * @return Unmodifiable list.
      */
     public List<Execution> getExecutions() {
@@ -101,7 +92,8 @@ class ExecutionStorage {
         return null;
     }
 
-    public Execution createExecution(MultipartFile pipeline, List<MultipartFile> inputs) throws OperationFailed {
+    public Execution createExecution(MultipartFile pipeline,
+            List<MultipartFile> inputs) throws OperationFailed {
         final String uuid = UUID.randomUUID().toString();
         final File directory = new File(
                 configuration.getWorkingDirectory(), uuid);
@@ -116,7 +108,7 @@ class ExecutionStorage {
         // Save pipeline definition.
         final File definitionFile = new File(directory,
                 "definition" + File.separator + "definition."
-                + format.get().getDefaultFileExtension());
+                        + format.get().getDefaultFileExtension());
         definitionFile.getParentFile().mkdirs();
         try {
             pipeline.transferTo(definitionFile);
@@ -221,13 +213,11 @@ class ExecutionStorage {
     /**
      * Discover and return execution instance for execution content in the
      * given stream.
-     *
+     * <p>
      * Use to determine the execution based only on the RDF content.
      *
      * @param stream Execution data in JSONLD.
      * @return
-     * @throws UnknownExecution
-     * @throws OperationFailed
      */
     public Execution discover(InputStream stream)
             throws UnknownExecution, OperationFailed {
@@ -245,9 +235,10 @@ class ExecutionStorage {
                         execution.getExecutionStatements());
                 execution.setLastChange(newExecution.getLastChange());
                 execution.setLastCheck(newExecution.getLastCheck());
-                // We can change status from queud to running only.
+                // We can change status from queue to running only.
                 if (newExecution.getStatus() == Execution.StatusType.RUNNING
-                        && execution.getStatus() == Execution.StatusType.QUEUED) {
+                        &&
+                        execution.getStatus() == Execution.StatusType.QUEUED) {
                     execution.setStatus(Execution.StatusType.RUNNING);
                 }
                 //
@@ -275,7 +266,7 @@ class ExecutionStorage {
         try {
             PipelineLoader.loadPipeline(execution);
         } catch (OperationFailed | IOException ex) {
-            throw new OperationFailed("Can't load pipeline.", ex);
+            throw new OperationFailed("Can't create an execution.", ex);
         }
         return execution;
     }
@@ -318,7 +309,7 @@ class ExecutionStorage {
                 toRemove.add(execution);
             } catch (IOException ex) {
                 // The directory can be used by other process or user,
-                // so it may take more atteps to delete the directory.
+                // so it may take more attempts to delete the directory.
             }
         }
         executionToDelete.removeAll(toRemove);

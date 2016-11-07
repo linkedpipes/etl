@@ -4,15 +4,12 @@ import com.linkedpipes.etl.component.api.service.DefinitionReader;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author Petr Škoda
- */
 class DefinitionReaderImpl implements DefinitionReader {
 
     private final SparqlSelect sparqlSelect;
@@ -36,7 +33,7 @@ class DefinitionReaderImpl implements DefinitionReader {
         try {
             queryResult = sparqlSelect.executeSelect(query);
         } catch (RdfException ex) {
-            throw RdfException.wrap(ex, "Can't query for data.");
+            throw RdfException.failure("Can't query for data.", ex);
         }
         //
         final List<String> result = new ArrayList<>(2);
@@ -48,7 +45,8 @@ class DefinitionReaderImpl implements DefinitionReader {
         return result;
     }
 
-    private String createQuery(String graph, String resource, String predicate) {
+    private String createQuery(String graph, String resource,
+            String predicate) {
         return "SELECT ?value FROM <" + graph
                 + "> WHERE { <" + resource + "> <"
                 + predicate + "> ?value }";

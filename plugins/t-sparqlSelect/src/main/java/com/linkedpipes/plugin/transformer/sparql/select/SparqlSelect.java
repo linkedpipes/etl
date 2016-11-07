@@ -1,11 +1,10 @@
 package com.linkedpipes.plugin.transformer.sparql.select;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.model.IRI;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -14,9 +13,11 @@ import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  *
@@ -46,12 +47,12 @@ public final class SparqlSelect implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     SparqlSelectVocabulary.HAS_FILE_NAME, "");
         }
         if (configuration.getQuery()== null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     SparqlSelectVocabulary.HAS_QUERY, "");
         }
         //
@@ -72,7 +73,7 @@ public final class SparqlSelect implements Component.Sequential {
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Exception.", ex);
+                throw exceptionFactory.failure("Exception.", ex);
             }
         });
     }

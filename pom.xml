@@ -25,6 +25,7 @@
         <!-- Applications. -->
         <module>executor</module>
         <module>executor-monitor</module>
+        <module>storage</module>
         <!-- Plugins. -->
         <module>plugins</module>
         <!-- Deploy. -->

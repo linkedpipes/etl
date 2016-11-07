@@ -3,21 +3,9 @@ package com.linkedpipes.etl.executor.monitor.execution;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.ExecutionMismatch;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.OperationFailed;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFFormat;
@@ -27,26 +15,20 @@ import org.openrdf.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * This class apply defensive approach ie. if an exception
  * is thrown by any operation the given parameter object should
  * stay in consistent state.
- *
- * @author Petr Škoda
  */
 class ExecutionChecker {
-
-    /**
-     * Used to report that file from which should the data be loaded is
-     * missing.
-     */
-    static class MissingFile extends Exception {
-
-        MissingFile(String message) {
-            super(message);
-        }
-
-    }
 
     private static final Logger LOG
             = LoggerFactory.getLogger(ExecutionChecker.class);
@@ -124,7 +106,8 @@ class ExecutionChecker {
         }
 
         Date lastChange = null;
-        final IRI executionResource = valueFactory.createIRI(execution.getIri());
+        final IRI executionResource =
+                valueFactory.createIRI(execution.getIri());
         final IRI graph = createGraph(valueFactory, execution.getIri());
         for (Statement statement : executionStatements) {
             // Read status.
@@ -169,14 +152,18 @@ class ExecutionChecker {
             } else if (statement.getSubject().equals(executionResource)) {
                 // For the pipeline itself we store the status and
                 // reference to the pipeline object.
-                if (statement.getPredicate().stringValue().equals("http://etl.linkedpipes.com/ontology/pipeline")) {
+                if (statement.getPredicate().stringValue()
+                        .equals("http://etl.linkedpipes.com/ontology/pipeline")) {
                     output.add(valueFactory.createStatement(
                             statement.getSubject(),
                             statement.getPredicate(),
                             statement.getObject(),
                             graph));
-                } else if (statement.getPredicate().stringValue().equals("http://etl.linkedpipes.com/ontology/lastChange")) {
-                    lastChange = ((Literal) statement.getObject()).calendarValue().toGregorianCalendar().getTime();
+                } else if (statement.getPredicate().stringValue()
+                        .equals("http://etl.linkedpipes.com/ontology/lastChange")) {
+                    lastChange =
+                            ((Literal) statement.getObject()).calendarValue()
+                                    .toGregorianCalendar().getTime();
                 }
             }
         }
@@ -193,11 +180,13 @@ class ExecutionChecker {
         Value end = null;
         for (Statement statement : executionStatements) {
             if (statement.getSubject().equals(startEvent)) {
-                if (statement.getPredicate().stringValue().equals("http://linkedpipes.com/ontology/events/created")) {
+                if (statement.getPredicate().stringValue()
+                        .equals("http://linkedpipes.com/ontology/events/created")) {
                     start = statement.getObject();
                 }
             } else if (statement.getSubject().equals(endEvent)) {
-                if (statement.getPredicate().stringValue().equals("http://linkedpipes.com/ontology/events/created")) {
+                if (statement.getPredicate().stringValue()
+                        .equals("http://linkedpipes.com/ontology/events/created")) {
                     end = statement.getObject();
                 }
             }
@@ -207,39 +196,46 @@ class ExecutionChecker {
         output.add(valueFactory.createStatement(
                 valueFactory.createIRI(execution.getIri()),
                 RDF.TYPE,
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/Execution"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/Execution"),
                 graph));
 
         if (execution.getDirectory() != null) {
             output.add(valueFactory.createStatement(
                     executionResource,
-                    valueFactory.createIRI("http://etl.linkedpipes.com/ontology/execution/size"),
-                    valueFactory.createLiteral(FileUtils.sizeOfDirectory(execution.getDirectory())),
+                    valueFactory.createIRI(
+                            "http://etl.linkedpipes.com/ontology/execution/size"),
+                    valueFactory.createLiteral(FileUtils
+                            .sizeOfDirectory(execution.getDirectory())),
                     graph));
         }
 
         output.add(valueFactory.createStatement(
                 executionResource,
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/execution/componentCount"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/execution/componentCount"),
                 valueFactory.createLiteral(components.size()),
                 graph));
 
         output.add(valueFactory.createStatement(
                 executionResource,
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/execution/componentToExecute"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/execution/componentToExecute"),
                 valueFactory.createLiteral(componentsToExecute),
                 graph));
 
         output.add(valueFactory.createStatement(
                 executionResource,
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/execution/componentFinished"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/execution/componentFinished"),
                 valueFactory.createLiteral(componentsFinished),
                 graph));
 
         if (start != null) {
             output.add(valueFactory.createStatement(
                     executionResource,
-                    valueFactory.createIRI("http://etl.linkedpipes.com/ontology/execution/start"),
+                    valueFactory.createIRI(
+                            "http://etl.linkedpipes.com/ontology/execution/start"),
                     start,
                     graph));
         }
@@ -247,7 +243,8 @@ class ExecutionChecker {
         if (end != null) {
             output.add(valueFactory.createStatement(
                     executionResource,
-                    valueFactory.createIRI("http://etl.linkedpipes.com/ontology/execution/end"),
+                    valueFactory.createIRI(
+                            "http://etl.linkedpipes.com/ontology/execution/end"),
                     end,
                     graph));
         }
@@ -255,9 +252,9 @@ class ExecutionChecker {
         // Update debug data.
         execution.setDebugData(new DebugData(executionStatements, execution));
 
-        // Update execution status on discovered informations.
+        // Update execution status on discovered information.
         if (execution.getStatus() == null) {
-            // We are loading new execution, so we have to assign a staus.
+            // We are loading new execution, so we have to assign a status.
             if (startEvent == null) {
                 execution.setStatus(Execution.StatusType.QUEUED);
             } else if (endEvent == null) {
@@ -311,7 +308,8 @@ class ExecutionChecker {
         output.add(valueFactory.createStatement(
                 valueFactory.createIRI(execution.getIri()),
                 RDF.TYPE,
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/Deleted"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/Deleted"),
                 graph));
 
         // For now set change time to every reload.
@@ -340,20 +338,24 @@ class ExecutionChecker {
         output.add(valueFactory.createStatement(
                 valueFactory.createIRI(execution.getIri()),
                 RDF.TYPE,
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/Execution"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/Execution"),
                 graph));
 
         output.add(valueFactory.createStatement(
                 valueFactory.createIRI(execution.getIri()),
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/execution/size"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/execution/size"),
                 valueFactory.createLiteral(
                         FileUtils.sizeOfDirectory(execution.getDirectory())),
                 graph));
 
         output.add(valueFactory.createStatement(
                 valueFactory.createIRI(execution.getIri()),
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/status"),
-                valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/queued"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/status"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/resources/status/queued"),
                 graph));
 
         updateGenerated(execution);
@@ -370,7 +372,6 @@ class ExecutionChecker {
      *
      * @param stream
      * @return
-     * @throws IOException
      */
     private static List<Statement> loadStream(InputStream stream)
             throws IOException, OperationFailed {
@@ -396,12 +397,12 @@ class ExecutionChecker {
     }
 
     /**
-     *
      * @param valueFactory
      * @param execution
      * @return Graph used to store information about execution.
      */
-    private static IRI createGraph(ValueFactory valueFactory, String execution) {
+    private static IRI createGraph(ValueFactory valueFactory,
+            String execution) {
         return valueFactory.createIRI(execution + "/list");
     }
 
@@ -413,27 +414,34 @@ class ExecutionChecker {
         final IRI status;
         switch (execution.getStatus()) {
             case DANGLING:
-                status = valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/dangling");
+                status = valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/resources/status/dangling");
                 break;
             case FINISHED:
-                status = valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/finished");
+                status = valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/resources/status/finished");
                 break;
             case QUEUED:
-                status = valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/queued");
+                status = valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/resources/status/queued");
                 break;
             case RUNNING:
-                status = valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/running");
+                status = valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/resources/status/running");
                 break;
             case UNRESPONSIVE:
-                status = valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/unresponsive");
+                status = valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/resources/status/unresponsive");
                 break;
             default:
-                status = valueFactory.createIRI("http://etl.linkedpipes.com/resources/status/unknown");
+                status = valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/resources/status/unknown");
                 break;
         }
         output.add(valueFactory.createStatement(
                 valueFactory.createIRI(execution.getIri()),
-                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/statusMonitor"),
+                valueFactory.createIRI(
+                        "http://etl.linkedpipes.com/ontology/statusMonitor"),
                 status, graph));
 
         execution.setExecutionStatementsGenerated(output);

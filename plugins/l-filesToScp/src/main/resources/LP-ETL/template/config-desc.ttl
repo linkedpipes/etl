@@ -1,0 +1,41 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/userName> ,
+        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/password> ,
+        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/host> ,
+        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/port> ,
+        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/targetDirectory> ,
+        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/createDirectory> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/userName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#userNameControl> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#passwordControl> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/host>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#host> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#hostControl> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/port>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#port> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#portControl> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/targetDirectory>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#targetDirectory> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#targetDirectoryControl> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/createDirectory>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectoryControl> .

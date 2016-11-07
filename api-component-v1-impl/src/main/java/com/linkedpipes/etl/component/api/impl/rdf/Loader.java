@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+
 import java.util.Map;
 
 /**
- * Base for loading RDF to POJO.
- *
- * @author Petr Škoda
+ * Base class for loader from RDF to POJO.
  */
 abstract class Loader {
 
@@ -28,11 +27,10 @@ abstract class Loader {
     /**
      * Load property to given object.
      *
-     * @param object
-     * @param property
-     * @param graph
-     * @param select
-     * @throws CanNotDeserializeObject
+     * @param object Object to load into.
+     * @param property Record for property to load (iri, value, type, language)
+     * @param graph Graph to used for queries.
+     * @param select RDF source.
      */
     public abstract void load(Object object, Map<String, String> property,
             String graph, SparqlSelect select) throws CanNotDeserializeObject;

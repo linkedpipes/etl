@@ -7,8 +7,6 @@ import org.apache.ftpserver.ftplet.FtpFile;
 /**
  * Implementation of the FTP server view. Represents a view of the
  * content for client.
- *
- * @author Petr Škoda
  */
 public class VirtualFileSystemView implements FileSystemView {
 
@@ -24,10 +22,6 @@ public class VirtualFileSystemView implements FileSystemView {
     @Override
     public FtpFile getHomeDirectory() throws FtpException {
         return vfs.getFile(VirtualFileSystem.ROOT_PATH);
-//        // Home is always resolved to the synthetic directory.
-//        final VirtualFileSystem.ResolvedPath path =
-//                virtualFileSystem.resolvePath(VirtualFileSystem.HOME_DIRECTORY, "");
-//        return virtualFileSystem.getSyntheticDirectory(path);
     }
 
     @Override
@@ -38,17 +32,6 @@ public class VirtualFileSystemView implements FileSystemView {
         } else {
             return vfs.getFile(path);
         }
-//        final VirtualFileSystem.ResolvedPath path
-//                = virtualFileSystem.resolvePath(currentDirectory, "");
-//        if (path == null) {
-//            // Path does not exists.
-//            return getHomeDirectory();
-//        }
-//        if (path.isSynthetic()) {
-//            return virtualFileSystem.getSyntheticDirectory(path);
-//        } else {
-//            return new ReadonlyFtpFile(path.getFtpPath(), new File(path.getPath()));
-//        }
     }
 
     @Override
@@ -66,31 +49,11 @@ public class VirtualFileSystemView implements FileSystemView {
                     currentDirectory = path.getFtpPath();
                     return true;
                 } else {
-                    // We can't chenge path to a file.
+                    // We can't change path to a file.
                     return false;
                 }
             }
         }
-//        final VirtualFileSystem.ResolvedPath path
-//                = virtualFileSystem.resolvePath(currentDirectory, ftpPath);
-//        if (path == null) {
-//            // Invalid path.
-//            return false;
-//        }
-//        if (path.isSynthetic()) {
-//            // Synthetic is always directory.
-//            currentDirectory = path.getFtpPath();
-//            return true;
-//        } else {
-//            final File fileObject = new File(path.getPath());
-//            if (fileObject.isDirectory()) {
-//                currentDirectory = path.getFtpPath();
-//                return true;
-//            } else {
-//                // It's not a directory.
-//                return false;
-//            }
-//        }
     }
 
     @Override
@@ -102,17 +65,6 @@ public class VirtualFileSystemView implements FileSystemView {
         } else {
             return vfs.getFile(path);
         }
-//        final VirtualFileSystem.ResolvedPath path
-//                = virtualFileSystem.resolvePath(currentDirectory, ftpPath);
-//        if (path == null) {
-//            // Path does not exists.
-//            return getHomeDirectory();
-//        }
-//        if (path.isSynthetic()) {
-//            return virtualFileSystem.getSyntheticDirectory(path);
-//        } else {
-//            return new ReadonlyFtpFile(path.getFtpPath(), new File(path.getPath()));
-//        }
     }
 
     @Override

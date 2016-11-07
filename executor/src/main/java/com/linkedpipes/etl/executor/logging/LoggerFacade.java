@@ -5,14 +5,13 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
-import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 /**
  * Can be used to manage logging.
- *
- * @author Petr Škoda
  */
 public class LoggerFacade {
 

@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
- * @author Petr Škoda
+ * Utility class easy queering for with SPARQL select.
  */
 public final class SparqlUtils {
 
@@ -29,7 +28,6 @@ public final class SparqlUtils {
      * @param dataUnit
      * @param query
      * @return
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public static List<Map<String, Value>> executeSelect(
             SingleGraphDataUnit dataUnit, String query) throws LpException {

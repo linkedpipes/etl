@@ -1,17 +1,17 @@
 package com.linkedpipes.plugin.extractor.local;
 
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author Petr Škoda
  */
 public class FilesFromLocal implements Component.Sequential {
 
@@ -28,7 +28,7 @@ public class FilesFromLocal implements Component.Sequential {
     public void execute() throws LpException {
         final File source = new File(configuration.getPath());
         if (!source.exists()) {
-            throw exceptionFactory.invalidConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     FilesFromLocalVocabulary.HAS_PATH,
                     "Source path does not exists."
             );
@@ -39,7 +39,7 @@ public class FilesFromLocal implements Component.Sequential {
             final Path rootPath = source.toPath();
             final File [] files = source.listFiles();
             if (files == null) {
-                throw exceptionFactory.failed("Method listFiles return null. "
+                throw exceptionFactory.failure("Method listFiles return null. "
                         + "Please check privilages.");
             }
             for (File file : files) {
@@ -67,7 +67,7 @@ public class FilesFromLocal implements Component.Sequential {
                 FileUtils.copyFile(file, destination);
             }
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't copy file.", ex);
+            throw exceptionFactory.failure("Can't copy file.", ex);
         }
     }
 

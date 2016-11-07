@@ -1,9 +1,0 @@
-{
-    "@graph": [
-        {
-            "@id": "http://localhost/resources/configuration",
-            "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration"],
-            "http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize" : 50000
-        }
-    ]
-}

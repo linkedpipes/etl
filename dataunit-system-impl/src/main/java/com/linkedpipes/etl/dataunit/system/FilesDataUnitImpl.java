@@ -2,27 +2,17 @@ package com.linkedpipes.etl.dataunit.system;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.io.IOException;
-import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+public final class FilesDataUnitImpl implements ManageableFilesDataUnit {
 
     /**
      * Implementation of files data unit entry.
@@ -106,7 +96,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
     }
 
     @Override
-    public void initialize(Map<String, ManagableDataUnit> dataUnits)
+    public void initialize(Map<String, ManageableDataUnit> dataUnits)
             throws LpException {
         if (rootDirectory == null) {
             throw ExceptionFactory.initializationFailed(
@@ -118,7 +108,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
                 throw ExceptionFactory.initializationFailed(
                         "Missing input: {}", sourceUri);
             }
-            final ManagableDataUnit dataunit = dataUnits.get(sourceUri);
+            final ManageableDataUnit dataunit = dataUnits.get(sourceUri);
             if (dataunit instanceof FilesDataUnitImpl) {
                 merge((FilesDataUnitImpl) dataunit);
             } else {
@@ -130,7 +120,8 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
         initialized = true;
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(FilesDataUnitImpl.class);
+    private static final Logger LOG
+            = LoggerFactory.getLogger(FilesDataUnitImpl.class);
 
     @Override
     public List<File> save(File directory) throws LpException {
@@ -152,7 +143,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
             throw ExceptionFactory.failure(
                     "Can't save directory list.", ex);
         }
-        // Return list of data directorie.
+        // Return list of data directories.
         return readRootDirectories;
     }
 
@@ -204,7 +195,7 @@ public final class FilesDataUnitImpl implements ManagableFilesDataUnit {
 
     @Override
     public long size() {
-        // TODO We should use better approeach here.
+        // TODO We should use better approach here.
         long size = 0;
         for (FilesDataUnit.Entry item : this) {
             ++size;

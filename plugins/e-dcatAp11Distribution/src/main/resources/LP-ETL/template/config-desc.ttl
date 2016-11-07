@@ -1,0 +1,198 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix dm: <http://linkedpipes.com/resources/components/e-dcatAp11Distribution/0.0.0/configuration/desc> .
+
+<http://linkedpipes.com/resources/components/e-dcatAp11Distribution/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/Configuration> ;
+    config:member dm:getDatasetIRIFromInput,
+        dm:datasetIRI ,
+        dm:distributionIRI ,
+        dm:genDistroIRI ,
+        dm:accessURLs ,
+        dm:formatIRI ,
+        dm:licenseIRI ,
+        dm:licenseTypeIRI ,
+        dm:descriptions ,
+        dm:downloadURLs ,
+        dm:datasetIRI ,
+        dm:mediaType ,
+        dm:datasetIRI ,
+        dm:titles ,
+        dm:documentationIRIs ,
+        dm:datasetIRI ,
+        dm:languagesFromDataset ,
+        dm:languages ,
+        dm:conformsToIRIs ,
+        dm:statusIRI ,
+        dm:issuedFromDataset ,
+        dm:issued ,
+        dm:modifiedFromDataset ,
+        dm:modifiedNow ,
+        dm:modified ,
+        dm:rightsIRI ,
+        dm:byteSize ,
+        dm:checksum ,
+        dm:spatialIRIs ,
+        dm:temporalStart ,
+        dm:temporalEnd ,
+        dm:distributionTypeIRI .
+
+dm:getDatasetIRIFromInput
+    a config:ConfigurationMember ;
+    config:property dm:getDatasetIRIFromInput ;
+    config:control dm:getDatasetIRIFromInputControl .
+
+dm:datasetIRI
+    a config:ConfigurationMember ;
+    config:property dm:datasetIRI ;
+    config:control dm:datasetIRIControl .
+
+dm:distributionIRI
+    a config:ConfigurationMember ;
+    config:property dm:distributionIRI ;
+    config:control dm:distributionIRIControl .
+
+dm:genDistroIRI
+    a config:ConfigurationMember ;
+    config:property dm:genDistroIRI ;
+    config:control dm:genDistroIRIControl .
+
+dm:accessURLs
+    a config:ConfigurationMember ;
+    config:property dm:accessURLs ;
+    config:control dm:accessURLsControl .
+
+dm:formatIRI
+    a config:ConfigurationMember ;
+    config:property dm:formatIRI ;
+    config:control dm:formatIRIControl .
+
+dm:licenseIRI
+    a config:ConfigurationMember ;
+    config:property dm:licenseIRI ;
+    config:control dm:licenseIRIControl .
+
+dm:licenseTypeIRI
+    a config:ConfigurationMember ;
+    config:property dm:licenseTypeIRI ;
+    config:control dm:licenseTypeIRIControl .
+
+dm:descriptions
+    a config:ConfigurationMember ;
+    config:property dm:descriptions ;
+    config:control dm:descriptionsControl .
+
+dm:downloadURLs
+    a config:ConfigurationMember ;
+    config:property dm:downloadURLs ;
+    config:control dm:downloadURLsControl .
+
+dm:datasetIRI
+    a config:ConfigurationMember ;
+    config:property dm:datasetIRI ;
+    config:control dm:datasetIRIControl .
+
+dm:mediaType
+    a config:ConfigurationMember ;
+    config:property dm:mediaType ;
+    config:control dm:mediaTypeControl .
+
+dm:datasetIRI
+    a config:ConfigurationMember ;
+    config:property dm:datasetIRI ;
+    config:control dm:datasetIRIControl .
+
+dm:titles
+    a config:ConfigurationMember ;
+    config:property dm:titles ;
+    config:control dm:titlesControl .
+
+dm:documentationIRIs
+    a config:ConfigurationMember ;
+    config:property dm:documentationIRIs ;
+    config:control dm:documentationIRIsControl .
+
+dm:datasetIRI
+    a config:ConfigurationMember ;
+    config:property dm:datasetIRI ;
+    config:control dm:datasetIRIControl .
+
+dm:languagesFromDataset
+    a config:ConfigurationMember ;
+    config:property dm:languagesFromDataset ;
+    config:control dm:languagesFromDatasetControl .
+
+dm:languages
+    a config:ConfigurationMember ;
+    config:property dm:languages ;
+    config:control dm:languagesControl .
+
+dm:conformsToIRIs
+    a config:ConfigurationMember ;
+    config:property dm:conformsToIRIs ;
+    config:control dm:conformsToIRIsControl .
+
+dm:statusIRI
+    a config:ConfigurationMember ;
+    config:property dm:statusIRI ;
+    config:control dm:statusIRIControl .
+
+dm:issuedFromDataset
+    a config:ConfigurationMember ;
+    config:property dm:issuedFromDataset ;
+    config:control dm:issuedFromDatasetControl .
+
+dm:issued
+    a config:ConfigurationMember ;
+    config:property dm:issued ;
+    config:control dm:issuedControl .
+
+dm:modifiedFromDataset
+    a config:ConfigurationMember ;
+    config:property dm:modifiedFromDataset ;
+    config:control dm:modifiedFromDatasetControl .
+
+dm:modifiedNow
+    a config:ConfigurationMember ;
+    config:property dm:modifiedNow ;
+    config:control dm:modifiedNowControl .
+
+dm:modified
+    a config:ConfigurationMember ;
+    config:property dm:modified ;
+    config:control dm:modifiedControl .
+
+dm:rightsIRI
+    a config:ConfigurationMember ;
+    config:property dm:rightsIRI ;
+    config:control dm:rightsIRIControl .
+
+dm:byteSize
+    a config:ConfigurationMember ;
+    config:property dm:byteSize ;
+    config:control dm:byteSizeControl .
+
+dm:checksum
+    a config:ConfigurationMember ;
+    config:property dm:checksum ;
+    config:control dm:checksumControl .
+
+dm:spatialIRIs
+    a config:ConfigurationMember ;
+    config:property dm:spatialIRIs ;
+    config:control dm:spatialIRIsControl .
+
+dm:temporalStart
+    a config:ConfigurationMember ;
+    config:property dm:temporalStart ;
+    config:control dm:temporalStartControl .
+
+dm:temporalEnd
+    a config:ConfigurationMember ;
+    config:property dm:temporalEnd ;
+    config:control dm:temporalEndControl .
+
+dm:distributionTypeIRI
+    a config:ConfigurationMember ;
+    config:property dm:distributionTypeIRI ;
+    config:control dm:distributionTypeIRIControl .

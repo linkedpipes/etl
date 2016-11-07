@@ -1,24 +1,16 @@
 package com.linkedpipes.plugin.loader.scp;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.jcraft.jsch.*;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.AfterExecution;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 /**
  *
@@ -28,7 +20,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
  * JSCH also supports SFTP, example on the project site and on
  * http://stackoverflow.com/questions/2346764/java-sftp-transfer-library
  *
- * @author Petr Škoda
  */
 public final class LoaderScp implements Component.Sequential {
 
@@ -54,19 +45,19 @@ public final class LoaderScp implements Component.Sequential {
         final int port = configuration.getPort();
         final String targetFile = configuration.getTargetDirectory();
         if (user == null || user.isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_USERNAME);
         }
         if (password == null || password.isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_PASSWORD);
         }
         if (host == null || host.isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_HOST);
         }
         if (targetFile == null || targetFile.isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderScpVocabulary.HAS_TARGET_DIRECTORY);
         }
         //
@@ -77,7 +68,7 @@ public final class LoaderScp implements Component.Sequential {
             session = jsch.getSession(user, host, port);
             session.setPassword(password);
         } catch (JSchException ex) {
-            throw exceptionFactory.failed("Can't create session.", ex);
+            throw exceptionFactory.failure("Can't create session.", ex);
         }
         // Enable connection to machines with unknown host
         // key - this is potential secutiry risk!
@@ -87,7 +78,7 @@ public final class LoaderScp implements Component.Sequential {
         try {
             session.connect();
         } catch (JSchException ex) {
-            throw exceptionFactory.failed("Can't connect to host", ex);
+            throw exceptionFactory.failure("Can't connect to host", ex);
         }
         cleanUp.addAction(() -> session.disconnect());
 
@@ -95,7 +86,7 @@ public final class LoaderScp implements Component.Sequential {
             try {
                 secureCreateDirectory(session, targetFile);
             } catch (JSchException | SftpException | IOException ex) {
-                throw exceptionFactory.failed("Can't create directory.", ex);
+                throw exceptionFactory.failure("Can't create directory.", ex);
             }
         }
 
@@ -104,7 +95,7 @@ public final class LoaderScp implements Component.Sequential {
         try {
             channel = session.openChannel("exec");
         } catch (JSchException ex) {
-            throw exceptionFactory.failed("Can't create session.", ex);
+            throw exceptionFactory.failure("Can't create session.", ex);
         }
         // File transfer.
         // -r - enable copy of empty directory
@@ -121,7 +112,7 @@ public final class LoaderScp implements Component.Sequential {
                 sendDirectoryContent(remoteOut, remoteIn, rootDirectory);
             }
         } catch (IOException | JSchException | LpException ex) {
-            throw exceptionFactory.failed(
+            throw exceptionFactory.failure(
                     "Can't upload data!", ex);
         } finally {
             if (channel.isConnected()) {
@@ -256,18 +247,18 @@ public final class LoaderScp implements Component.Sequential {
         final int response = stream.read();
         switch (response) {
             case -1: // No response from server.
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "No response from server!");
             case 0: // Success.
                 break;
             case 1:
-                throw exceptionFactory.failed("Error: {}",
+                throw exceptionFactory.failure("Error: {}",
                         readResponseLine(stream));
             case 2:
-                throw exceptionFactory.failed("Fatal error: {}",
+                throw exceptionFactory.failure("Fatal error: {}",
                         readResponseLine(stream));
             default:
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Invalid reponse: {}", response);
         }
     }

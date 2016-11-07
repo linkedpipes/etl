@@ -15,7 +15,6 @@ import java.util.Map;
 
 /**
  *
- * @author Petr Škoda
  */
 public class XlsToCsv implements Component.Sequential {
 
@@ -70,7 +69,7 @@ public class XlsToCsv implements Component.Sequential {
             try {
                 xls2Csv.init(task.input, task.template);
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't initialize Xls2Csv.", ex);
+                throw exceptionFactory.failure("Can't initialize Xls2Csv.", ex);
             }
             //
             xls2Csv.parse();

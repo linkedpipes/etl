@@ -1,0 +1,12 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#userName": "",
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#password": "",
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#host": "",
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#port": 22,
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#targetDirectory": "/tmp/upload/",
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory": true
+    }
+]

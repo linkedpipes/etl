@@ -1,0 +1,194 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <div layout="row" layout-align="space-between">
+        <div layout="column">
+            <md-input-container class="md-block" ng-hide="dialog.tableType.hide">
+                <label>Table type</label>
+                <md-select ng-model="dialog.tableType.value"
+                           ng-disabled="dialog.tableType.disabled || dialog.tableType.inherit">
+                    <md-option value="CSV">CSV</md-option>
+                    <md-option value="DBF">DBF</md-option>
+                    <md-option value="XLS">XLS</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block" ng-hide="dialog.baseUri.hide">
+                <label>Resource URI base</label>
+                <input ng-model="dialog.baseUri.value"
+                       ng-disabled="dialog.baseUri.disabled || dialog.baseUri.inherit">
+            </md-input-container>
+            <md-input-container class="md-block" ng-hide="dialog.keyColumn.hide">
+                <label>Key column</label>
+                <input ng-model="dialog.keyColumn.value"
+                       ng-disabled="dialog.keyColumn.disabled || dialog.keyColumn.inherit">
+            </md-input-container>
+            <md-input-container class="md-block" ng-hide="dialog.encoding.hide">
+                <label>Encoding</label>
+                <input ng-model="dialog.encoding.value"
+                       ng-disabled="dialog.encoding.disabled || dialog.encoding.inherit">
+            </md-input-container>
+            <md-input-container class="md-block" ng-hide="dialog.rowsLimit.hide">
+                <label>Rows limit</label>
+                <input ng-model="dialog.rowsLimit.value"
+                       ng-disabled="dialog.rowsLimit.disabled || dialog.rowsLimit.inherit">
+            </md-input-container>
+            <md-input-container class="md-block" ng-hide="dialog.rowClass.hide">
+                <label>Class for a row entity</label>
+                <input ng-model="dialog.rowClass.value"
+                       ng-disabled="dialog.rowClass.disabled || dialog.rowClass.inherit">
+            </md-input-container>
+        </div>
+        <div layout="column">
+            <md-input-container class="md-block" ng-hide="dialog.quote.hide">
+                <label>Quote char</label>
+                <input ng-model="dialog.quote.value"
+                       ng-disabled="dialog.quote.disabled || dialog.quote.inherit">
+            </md-input-container>
+            <md-input-container class="md-block" ng-hide="dialog.delimeter.hide">
+                <label>Delimiter char</label>
+                <input ng-model="dialog.delimeter.value"
+                       ng-disabled="dialog.delimeter.disabled || dialog.delimeter.inherit">
+            </md-input-container>
+            <md-input-container class="md-block" ng-hide="dialog.linesToIgnore.hide">
+                <label>Skip n first lines</label>
+                <input ng-model="dialog.linesToIgnore.value"
+                       ng-disabled="dialog.linesToIgnore.disabled || dialog.linesToIgnore.inherit">
+            </md-input-container>
+            <md-switch ng-model="dialog.hasHeader.value"
+                       ng-disabled="dialog.hasHeader.disabled || dialog.hasHeader.inherit"
+                       ng-hide="dialog.hasHeader.hide" >Has header</md-switch>
+        </div>
+        <div layout="column">
+            <md-input-container class="md-block" ng-hide="dialog.sheetName.hide">
+                <label>Sheet name</label>
+                <input ng-model="dialog.sheetName.value"
+                       ng-disabled="dialog.sheetName.disabled || dialog.sheetName.inherit">
+            </md-input-container>
+            <md-switch ng-model="dialog.stripHeader.value"
+                       ng-disabled="dialog.stripHeader.disabled || dialog.stripHeader.inherit"
+                       ng-hide="dialog.stripHeader.hide">Strip header for nulls</md-switch>
+            <md-switch ng-model="dialog.xlsAdvancedParser.value"
+                       ng-disabled="dialog.xlsAdvancedParser.disabled || dialog.xlsAdvancedParser.inherit"
+                       ng-hide="dialog.xlsAdvancedParser.hide">Use advanced parser for 'double'</md-switch>
+        </div>
+    </div>
+    <div layout="row" layout-align="space-between">
+        <div layout="column">
+            <md-switch ng-model="dialog.generateNew.value"
+                       ng-disabled="dialog.generateNew.disabled || dialog.generateNew.inherit"
+                       ng-hide="dialog.generateNew.hide">Full column mapping</md-switch>
+            <md-switch ng-model="dialog.tableSubject.value"
+                       ng-disabled="dialog.tableSubject.disabled || dialog.tableSubject.inherit"
+                       ng-hide="dialog.tableSubject.hide">Generate subject for table</md-switch>
+            <md-switch ng-model="dialog.ignoreMissingColumn.value"
+                       ng-disabled="dialog.ignoreMissingColumn.disabled || dialog.ignoreMissingColumn.inherit"
+                       ng-hide="dialog.ignoreMissingColumn.hide">Ignore missing columns</md-switch>
+            <md-switch ng-model="dialog.ignoreBlankCell.value"
+                       ng-disabled="dialog.ignoreBlankCell.disabled || dialog.ignoreBlankCell.inherit"
+                       ng-hide="dialog.ignoreBlankCell.hide">Ignore blank cells</md-switch>
+        </div>
+        <div layout="column">
+            <md-switch ng-model="dialog.autoAsString.value"
+                       ng-disabled="dialog.autoAsString.disabled || dialog.autoAsString.inherit"
+                       ng-hide="dialog.autoAsString.hide">Auto type as string</md-switch>
+            <md-switch ng-model="dialog.staticRowCounter.value"
+                       ng-disabled="dialog.staticRowCounter.disabled || dialog.staticRowCounter.inherit"
+                       ng-hide="dialog.staticRowCounter.hide">Use static row counter</md-switch>
+            <md-switch ng-model="dialog.tableClass.value"
+                       ng-disabled="dialog.tableClass.disabled || dialog.tableClass.inherit"
+                       ng-hide="dialog.tableClass.hide">Generate table/row class</md-switch>
+            <md-switch ng-model="dialog.advancedKey.value"
+                       ng-disabled="dialog.advancedKey.disabled || dialog.advancedKey.inherit"
+                       ng-hide="dialog.advancedKey.hide">Advances key column</md-switch>
+        </div>
+        <div layout="column">
+            <md-switch ng-model="dialog.generateLabels.value"
+                       ng-disabled="dialog.generateLabels.disabled || dialog.generateLabels.inherit"
+                       ng-hide="dialog.generateLabels.hide">Generate labels</md-switch>
+            <md-switch ng-model="dialog.generateRowTriple.value"
+                       ng-disabled="dialog.generateRowTriple.disabled || dialog.generateRowTriple.inherit"
+                       ng-hide="dialog.generateRowTriple.hide">Generate row column</md-switch>
+            <md-switch ng-model="dialog.trimString.value"
+                       ng-disabled="dialog.trimString.disabled || dialog.trimString.inherit"
+                       ng-hide="dialog.trimString.hide">Remove trailing spaces</md-switch>
+        </div>
+    </div>
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Simple">
+            <div ng-hide="dialog.column.disabled || dialog.column.inherit || dialog.column.hide">
+                <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.column.value">
+                    <md-input-container>
+                        <label>Column</label>
+                        <input ng-model="item.name.value">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Type</label>
+                        <md-select ng-model="item.type.value">
+                            <md-option value="String">String</md-option>
+                            <md-option value="Integer">Integer</md-option>
+                            <md-option value="Long">Long</md-option>
+                            <md-option value="Double">Double</md-option>
+                            <md-option value="Float">Float</md-option>
+                            <md-option value="Date">Date</md-option>
+                            <md-option value="Boolean">Boolean</md-option>
+                            <md-option value="gYear">gYear</md-option>
+                            <md-option value="Decimal">Decimal</md-option>
+                            <md-option value="Auto">Auto</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container style="width:3em">
+                        <label>Lang</label>
+                        <input ng-model="item.lang.value">
+                    </md-input-container>
+                    <md-input-container style="width:5em">
+                        <label>DBF types</label>
+                        <md-switch ng-model="item.typeFromDbf.value" aria-label="Use DBF types"></md-switch>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Property IRI</label>
+                        <input ng-model="item.uri.value">
+                    </md-input-container>
+                    <button ng-click="onDelete(dialog.columns.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                </section>
+                <button ng-click="onAddColumn()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+            </div>
+        </md-tab>
+        <md-tab label="Advanced">
+            <div ng-hide="dialog.advancedMapping.disabled || dialog.advancedMapping.inherit || dialog.advancedMapping.hide">
+                <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.advancedMapping.value">
+                    <md-input-container>
+                        <label>URI</label>
+                        <input ng-model="item.uri.value">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Template</label>
+                        <input ng-model="item.template.value">
+                    </md-input-container>
+                    <button ng-click="onDelete(dialog.advancedMapping.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                </section>
+                <button ng-click="onAddAdvancedColumn()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+            </div>
+        </md-tab>
+        <md-tab label="XLS Mapping">
+            <div ng-hide="dialog.namedCell.disabled || dialog.namedCell.inherit || dialog.namedCell.hide">
+                <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.namedCell.value">
+                    <md-input-container>
+                        <label>Name</label>
+                        <input ng-model="item.name.value">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Row</label>
+                        <input ng-model="item.rowNumber.value">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Column</label>
+                        <input ng-model="item.columnNumber.value">
+                    </md-input-container>
+                    <button ng-click="onDelete(dialog.namedCell.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                </section>
+                <button ng-click="onAddNamedCell()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+            </div>
+        </md-tab>
+    </md-tabs>
+</div>
+
+

@@ -33,7 +33,6 @@ import org.apache.poi.ss.usermodel.FractionFormat;
  *  disabled grouping for decimal numbers
  *  enforce , as decimal separator
  *
- * @author Petr Škoda
  */
 class CsvDataFormatter {
 

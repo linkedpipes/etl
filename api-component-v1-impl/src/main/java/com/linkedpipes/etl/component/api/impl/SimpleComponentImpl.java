@@ -2,29 +2,19 @@ package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.impl.rdf.RdfReader;
+import com.linkedpipes.etl.component.api.service.*;
+import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
+import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
-import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
-import com.linkedpipes.etl.component.api.service.DefinitionReader;
-import com.linkedpipes.etl.component.api.service.WorkingDirectory;
-import com.linkedpipes.etl.component.api.service.AfterExecution;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.Plugin;
-import com.linkedpipes.etl.executor.api.v1.RdfException;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-
-/**
- *
- * @author Škoda Petr
- */
 final class SimpleComponentImpl implements SequentialComponent {
 
     private static final Logger LOG
@@ -60,11 +50,13 @@ final class SimpleComponentImpl implements SequentialComponent {
      */
     private AfterExecutionImpl afterExecution = null;
 
-    private final Plugin.Context context;
+    private final com.linkedpipes.etl.executor.api.v1.component.Component.Context
+            context;
 
     SimpleComponentImpl(Component.Sequential dpu, BundleInformation info,
             ComponentConfiguration configuration, SparqlSelect definition,
-            String graph, Plugin.Context context) {
+            String graph,
+            com.linkedpipes.etl.executor.api.v1.component.Component.Context context) {
         this.component = dpu;
         this.info = info;
         this.configuration = configuration;
@@ -170,13 +162,12 @@ final class SimpleComponentImpl implements SequentialComponent {
      * Load configuration to all annotated fields in DPU.
      *
      * @param runtimeConfig
-     * @throws Component.InitializationFailed
      */
     protected void loadConfigurations(SparqlSelect runtimeConfig)
             throws RdfException {
         for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Configuration.class) != null) {
-                loadConfiguration(field, runtimeConfig);
+                loadConfigurationForField(field, runtimeConfig);
             }
         }
     }
@@ -186,11 +177,11 @@ final class SimpleComponentImpl implements SequentialComponent {
      * function can be re-executed.
      *
      * @param field
-     * @param runtimeConfig
-     * @throws Component.InitializationFailed
      */
-    protected void loadConfiguration(Field field, SparqlSelect runtimeConfig)
-            throws RdfException {
+    protected void loadConfigurationForField(Field field,
+            SparqlSelect runtimeConfig) throws RdfException {
+        final ConfigurationController configController
+                = new ConfigurationController(definition);
         // Create configuration object.
         final Object fieldValue;
         try {
@@ -209,23 +200,26 @@ final class SimpleComponentImpl implements SequentialComponent {
             final String uri = configRef.getConfigurationIri();
             try {
                 if (uri == null) {
-                    RdfReader.addToObject(fieldValue, definition, graph);
+                    RdfReader.addToObject(fieldValue, definition, graph,
+                            configController);
                 } else {
                     RdfReader.addToObject(fieldValue, definition, graph,
-                            uri);
+                            uri, configController);
                 }
             } catch (RdfException ex) {
-                throw RdfException.wrap(ex,
-                        "Can't load configuration from definition.");
+                throw RdfException.failure(
+                        "Can't load configuration from definition.", ex);
             }
         }
         // Load runtime configuration.
+        configController.loadingRuntime();
         try {
             if (runtimeConfig != null) {
-                RdfReader.addToObject(fieldValue, runtimeConfig, null);
+                RdfReader.addToObject(fieldValue, runtimeConfig, null,
+                        configController);
             }
         } catch (RdfException ex) {
-            throw RdfException.wrap(ex, "Can't load runtime configuration.");
+            throw RdfException.failure("Can't load runtime configuration.", ex);
         }
         // Set value.
         try {
@@ -248,7 +242,8 @@ final class SimpleComponentImpl implements SequentialComponent {
     private SparqlSelect getConfigurationDataUnit() throws RdfException {
         for (Field field : component.getClass().getFields()) {
             final Component.ContainsConfiguration config
-                    = field.getAnnotation(Component.ContainsConfiguration.class);
+                    =
+                    field.getAnnotation(Component.ContainsConfiguration.class);
             if (config != null) {
                 final Object value;
                 try {
@@ -266,7 +261,7 @@ final class SimpleComponentImpl implements SequentialComponent {
                 if (sparqlSelect == null) {
                     throw RdfException.initializationFailed(
                             "Can not use data unit ({}) "
-                            + "as a configuration source.",
+                                    + "as a configuration source.",
                             field.getName());
                 }
                 return sparqlSelect;
@@ -277,7 +272,8 @@ final class SimpleComponentImpl implements SequentialComponent {
     }
 
     @Override
-    public void initialize(Map<String, DataUnit> dataUnits) throws RdfException {
+    public void initialize(Map<String, DataUnit> dataUnits)
+            throws RdfException {
         bindPorts(dataUnits);
         injectObjects();
         // Must be called after bindPorts.
@@ -291,7 +287,7 @@ final class SimpleComponentImpl implements SequentialComponent {
         } catch (LpException ex) {
             throw RdfException.rethrow(ex);
         } catch (Throwable ex) {
-            throw RdfException.failure("Component failed on Throwable.", ex);
+            throw RdfException.failure("Component failed.", ex);
         } finally {
             if (afterExecution != null) {
                 afterExecution.postExecution();

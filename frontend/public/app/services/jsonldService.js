@@ -171,7 +171,7 @@ define(['jquery'], function (jQuery) {
                 continue;
             }
             var propertyValue = object[templateItem['$property']];
-            // Select a convertion function based on the template.
+            // Select a conversion function based on the template.
             if (typeof templateItem['$oneToMany'] !== 'undefined') {
                 // References we should continue with another objects.
                 convertOneToMany(propertyValue, result, data, graph,
@@ -229,6 +229,10 @@ define(['jquery'], function (jQuery) {
             value.forEach(function (item) {
                 var resource = jsonldService.getResource(data, graph,
                         item['@id']);
+                if (resource == undefined) {
+                    console.warn('Unresolved reference:' , item['@id']);
+                    return;
+                }
                 var newObject = evaluateTemplate(data, graph, resource,
                         templateItem['$oneToMany']);
                 resources.push(newObject);
@@ -241,6 +245,16 @@ define(['jquery'], function (jQuery) {
     };
 
     var jsonldService = {};
+
+    jsonldService.getGraph = function (data, graphIri) {
+        var graphs = this.getGraphList(data);
+        for (var index in graphs) {
+            var graph = graphs[index];
+            if (graph['@id'] === graphIri) {
+                return graph;
+            }
+        }
+    }
 
     jsonldService.getGraphList = function (data) {
         var graphList;

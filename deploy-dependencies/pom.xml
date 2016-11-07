@@ -84,6 +84,12 @@
                                             <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
                                         </dependency>
                                         <dependency>
+                                            <groupId>commons-net</groupId>
+                                            <artifactId>commons-net</artifactId>
+                                            <version>3.5</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
                                             <groupId>org.eclipse.birt.runtime</groupId>
                                             <artifactId>org.apache.commons.logging</artifactId>
                                             <version>1.1.1.v201101211721</version>
@@ -252,247 +258,283 @@
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-httpGetFile</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-httpGetFile/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-httpGetFile/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-httpGetFiles</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-httpGetFiles/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-httpGetFiles/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-pipelineInput</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-pipelineInput/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-pipelineInput/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-sparqlEndpoint</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-sparqlEndpoint/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpoint/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>q-sparqlAsk</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/q-sparqlAsk/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/q-sparqlAsk/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesFilter</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-filesFilter/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-filesFilter/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-filesToLocal</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/l-filesToLocal/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/l-filesToLocal/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-filesToScp</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/l-filesToScp/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/l-filesToScp/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-graphStoreProtocol</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/l-graphStoreProtocol/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/l-graphStoreProtocol/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-sparqlEndpoint</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/l-sparqlEndpoint/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/l-sparqlEndpoint/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-datasetMetadata</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-datasetMetadata/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-datasetMetadata/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-dcatAp11Dataset</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-dcatAp11Dataset/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-dcatAp11Dataset/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-dcatAp11ToCkan</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/l-dcatAp11ToCkan/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/l-dcatAp11ToCkan/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-distributionMetadata</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-distributionMetadata/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-distributionMetadata/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-dcatAp11Distribution</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-dcatAp11Distribution/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-dcatAp11Distribution/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-filesFromLocal</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-filesFromLocal/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-filesFromLocal/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-ftpFiles</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/e-ftpFiles/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdf</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-filesToRdf/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-filesToRdf/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdfGraph</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-filesToRdfGraph/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-filesToRdfGraph/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-graphMerger</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-graphMerger/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-graphMerger/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-mustache</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-mustache/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-mustache/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-packZip</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-packZip/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-packZip/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-rdfToFile</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-rdfToFile/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-rdfToFile/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToStatements</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-filesToStatements/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-filesToStatements/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlConstruct</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-sparqlConstruct/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-sparqlConstruct/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlSelect</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-sparqlSelect/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-sparqlSelect/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlSelectMulti</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-sparqlSelectMulti/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-sparqlSelectMulti/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlUpdate</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-sparqlUpdate/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-sparqlUpdate/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-tabular</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-tabular/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-tabular/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-tabularUv</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-tabularUv/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-tabularUv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-templatedXlsToCsv</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-templatedXlsToCsv/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-templatedXlsToCsv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-textHolder</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/e-textHolder/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/e-textHolder/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-dcatApToCkan</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/l-dcatApToCkan/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/l-dcatApToCkan/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-excelToCsv</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-excelToCsv/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-excelToCsv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-fileHasher</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-fileHasher/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-fileHasher/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesBase64Decode</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-filesBase64Decode/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-filesBase64Decode/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesRenamer</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-filesRenamer/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-filesRenamer/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-unpack</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-unpack/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-unpack/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-unpackZip</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-unpackZip/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-unpackZip/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-xslt</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-xslt/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-xslt/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>x-virtuoso</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/x-virtuoso/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/x-virtuoso/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>x-virtuosoExtractor</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/x-virtuosoExtractor/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-singleGraphUnion</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/components/t-singleGraphUnion/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/t-singleGraphUnion/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-valueParser</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-valueParser/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>x-deleteDirectory</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/x-deleteDirectory/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-htmlCssUv</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-htmlCssUv/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-modifyDate</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-modifyDate/</outputDirectory>
                                         </dependency>
                                     </artifactItems>
                                 </configuration>
@@ -517,253 +559,6 @@
                                         <get dest="${deploy.directory}/osgi/external">
                                             <url url="http://uv.opendata.cz/osgi/sesame/sesame-runtime-osgi-4.0.1-SNAPSHOT-custom.jar"/>
                                         </get>
-                                        <mkdir dir="${deploy.directory}/components/e-httpGetFile/"/>
-                                        <copy todir="${deploy.directory}/components/e-httpGetFile/">
-                                            <fileset dir="${plugins.directory}/e-httpGetFile/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-httpGetFiles/"/>
-                                        <copy todir="${deploy.directory}/components/e-httpGetFiles/">
-                                            <fileset dir="${plugins.directory}/e-httpGetFiles/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-pipelineInput/"/>
-                                        <copy todir="${deploy.directory}/components/e-pipelineInput/">
-                                            <fileset dir="${plugins.directory}/e-pipelineInput/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-sparqlEndpoint/"/>
-                                        <copy todir="${deploy.directory}/components/e-sparqlEndpoint/">
-                                            <fileset dir="${plugins.directory}/e-sparqlEndpoint/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/q-sparqlAsk/"/>
-                                        <copy todir="${deploy.directory}/components/q-sparqlAsk/">
-                                            <fileset dir="${plugins.directory}/q-sparqlAsk/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-filesFilter/"/>
-                                        <copy todir="${deploy.directory}/components/t-filesFilter/">
-                                            <fileset dir="${plugins.directory}/t-filesFilter/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/l-filesToLocal/"/>
-                                        <copy todir="${deploy.directory}/components/l-filesToLocal/">
-                                            <fileset dir="${plugins.directory}/l-filesToLocal/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/l-filesToScp/"/>
-                                        <copy todir="${deploy.directory}/components/l-filesToScp/">
-                                            <fileset dir="${plugins.directory}/l-filesToScp/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/l-graphStoreProtocol/"/>
-                                        <copy todir="${deploy.directory}/components/l-graphStoreProtocol/">
-                                            <fileset dir="${plugins.directory}/l-graphStoreProtocol/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/l-sparqlEndpoint/"/>
-                                        <copy todir="${deploy.directory}/components/l-sparqlEndpoint/">
-                                            <fileset dir="${plugins.directory}/l-sparqlEndpoint/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-dcatAp11Dataset/"/>
-                                        <copy todir="${deploy.directory}/components/e-dcatAp11Dataset/">
-                                            <fileset dir="${plugins.directory}/e-dcatAp11Dataset/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-dcatAp11Distribution/"/>
-                                        <copy todir="${deploy.directory}/components/e-dcatAp11Distribution/">
-                                            <fileset dir="${plugins.directory}/e-dcatAp11Distribution/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/l-dcatAp11ToCkan/"/>
-                                        <copy todir="${deploy.directory}/components/l-dcatAp11ToCkan/">
-                                            <fileset dir="${plugins.directory}/l-dcatAp11ToCkan/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-datasetMetadata/"/>
-                                        <copy todir="${deploy.directory}/components/e-datasetMetadata/">
-                                            <fileset dir="${plugins.directory}/e-datasetMetadata/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-distributionMetadata/"/>
-                                        <copy todir="${deploy.directory}/components/e-distributionMetadata/">
-                                            <fileset dir="${plugins.directory}/e-distributionMetadata/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-filesFromLocal/"/>
-                                        <copy todir="${deploy.directory}/components/e-filesFromLocal/">
-                                            <fileset dir="${plugins.directory}/e-filesFromLocal/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-filesToRdf/"/>
-                                        <copy todir="${deploy.directory}/components/t-filesToRdf/">
-                                            <fileset dir="${plugins.directory}/t-filesToRdf/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-filesToRdfGraph/"/>
-                                        <copy todir="${deploy.directory}/components/t-filesToRdfGraph/">
-                                            <fileset dir="${plugins.directory}/t-filesToRdfGraph/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-graphMerger/"/>
-                                        <copy todir="${deploy.directory}/components/t-graphMerger/">
-                                            <fileset dir="${plugins.directory}/t-graphMerger/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-mustache/"/>
-                                        <copy todir="${deploy.directory}/components/t-mustache/">
-                                            <fileset dir="${plugins.directory}/t-mustache/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-packZip/"/>
-                                        <copy todir="${deploy.directory}/components/t-packZip/">
-                                            <fileset dir="${plugins.directory}/t-packZip/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-rdfToFile/"/>
-                                        <copy todir="${deploy.directory}/components/t-rdfToFile/">
-                                            <fileset dir="${plugins.directory}/t-rdfToFile/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-filesToStatements/"/>
-                                        <copy todir="${deploy.directory}/components/t-filesToStatements/">
-                                            <fileset dir="${plugins.directory}/t-filesToStatements/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-sparqlConstruct/"/>
-                                        <copy todir="${deploy.directory}/components/t-sparqlConstruct/">
-                                            <fileset dir="${plugins.directory}/t-sparqlConstruct/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-sparqlSelect/"/>
-                                        <copy todir="${deploy.directory}/components/t-sparqlSelect/">
-                                            <fileset dir="${plugins.directory}/t-sparqlSelect/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-sparqlSelectMulti/"/>
-                                        <copy todir="${deploy.directory}/components/t-sparqlSelectMulti/">
-                                            <fileset dir="${plugins.directory}/t-sparqlSelectMulti/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-sparqlUpdate/"/>
-                                        <copy todir="${deploy.directory}/components/t-sparqlUpdate/">
-                                            <fileset dir="${plugins.directory}/t-sparqlUpdate/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-tabular/"/>
-                                        <copy todir="${deploy.directory}/components/t-tabular/">
-                                            <fileset dir="${plugins.directory}/t-tabular/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-tabularUv/"/>
-                                        <copy todir="${deploy.directory}/components/t-tabularUv/">
-                                            <fileset dir="${plugins.directory}/t-tabularUv/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-templatedXlsToCsv/"/>
-                                        <copy todir="${deploy.directory}/components/t-templatedXlsToCsv/">
-                                            <fileset dir="${plugins.directory}/t-templatedXlsToCsv/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/e-textHolder/"/>
-                                        <copy todir="${deploy.directory}/components/e-textHolder/">
-                                            <fileset dir="${plugins.directory}/e-textHolder/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/l-dcatApToCkan/"/>
-                                        <copy todir="${deploy.directory}/components/l-dcatApToCkan/">
-                                            <fileset dir="${plugins.directory}/l-dcatApToCkan/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-excelToCsv/"/>
-                                        <copy todir="${deploy.directory}/components/t-excelToCsv/">
-                                            <fileset dir="${plugins.directory}/t-excelToCsv/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-fileHasher/"/>
-                                        <copy todir="${deploy.directory}/components/t-fileHasher/">
-                                            <fileset dir="${plugins.directory}/t-fileHasher/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-filesBase64Decode/"/>
-                                        <copy todir="${deploy.directory}/components/t-filesBase64Decode/">
-                                            <fileset dir="${plugins.directory}/t-filesBase64Decode/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-filesRenamer/"/>
-                                        <copy todir="${deploy.directory}/components/t-filesRenamer/">
-                                            <fileset dir="${plugins.directory}/t-filesRenamer/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-unpack/"/>
-                                        <copy todir="${deploy.directory}/components/t-unpack/">
-                                            <fileset dir="${plugins.directory}/t-unpack/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-unpackZip/"/>
-                                        <copy todir="${deploy.directory}/components/t-unpackZip/">
-                                            <fileset dir="${plugins.directory}/t-unpackZip/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-xslt/"/>
-                                        <copy todir="${deploy.directory}/components/t-xslt/">
-                                            <fileset dir="${plugins.directory}/t-xslt/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/x-virtuoso/"/>
-                                        <copy todir="${deploy.directory}/components/x-virtuoso/">
-                                            <fileset dir="${plugins.directory}/x-virtuoso/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/components/t-singleGraphUnion/"/>
-                                        <copy todir="${deploy.directory}/components/t-singleGraphUnion/">
-                                            <fileset dir="${plugins.directory}/t-singleGraphUnion/target/classes">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <!-- -->
                                     </target>
                                 </configuration>
                             </execution>

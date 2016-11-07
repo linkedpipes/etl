@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.templatedxlstocsv;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class XlsToCsvVocabulary {
 

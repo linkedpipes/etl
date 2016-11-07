@@ -3,11 +3,6 @@ package com.linkedpipes.etl.executor.monitor.debug.ftp;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.StringTokenizer;
 import org.apache.ftpserver.ftplet.FileSystemView;
 import org.apache.ftpserver.ftplet.FtpFile;
 import org.slf4j.Logger;
@@ -15,16 +10,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 /**
  * Virtual file system with following structure:
  * {execution}/debug/{data unit}
- *
- * @author Petr Škoda
  */
 @Service
 public class VirtualFileSystem {
 
-    private static final Logger LOG = LoggerFactory.getLogger(VirtualFileSystem.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(VirtualFileSystem.class);
 
     /**
      * Represent a home path.
@@ -56,7 +56,6 @@ public class VirtualFileSystem {
         }
 
         /**
-         *
          * @return True if represents a synthetic path.
          */
         boolean isSynthetic() {
@@ -64,7 +63,6 @@ public class VirtualFileSystem {
         }
 
         /**
-         *
          * @return FTP representation of the path.
          */
         String getFtpPath() {
@@ -135,7 +133,7 @@ public class VirtualFileSystem {
                 String ftpPath) {
             super(ftpPath);
             this.dataUnit = dataUnit;
-            // We need the exeecution directory, but if we use data
+            // We need the execution directory, but if we use data
             // from this execution we can not get it from
             // {@link #executions} as it has not been yet loaded.
             if (dataUnit.getExecutionId() == null || debugData.getExecution()
@@ -175,7 +173,6 @@ public class VirtualFileSystem {
     }
 
     /**
-     *
      * @return View of the virtual FTP file system.
      */
     public FileSystemView getView() {
@@ -186,7 +183,6 @@ public class VirtualFileSystem {
     private ExecutionFacade executions;
 
     /**
-     *
      * @param path
      * @return Null in case of an invalid path.
      */
@@ -208,7 +204,7 @@ public class VirtualFileSystem {
         // Search for data unit.
         final DebugData.DataUnit dataUnit
                 = execution.getDebugData().getDataUnits().get(
-                        parsedPath.removeFirst());
+                parsedPath.removeFirst());
         if (dataUnit == null) {
             return null;
         }
@@ -236,7 +232,6 @@ public class VirtualFileSystem {
     }
 
     /**
-     *
      * @param base
      * @param path
      * @return Null in case of an invalid path.

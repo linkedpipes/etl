@@ -1,19 +1,14 @@
 package com.linkedpipes.etl.executor.execution;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.SerializableToRdf;
-import java.util.ArrayList;
-import java.util.List;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 
-/**
- * Used to convert input from {@link StatementWriter} into a Sesame RDF
- * statements.
- *
- * @author Petr Škoda
- */
+import java.util.ArrayList;
+import java.util.List;
+
 class StatementsCollector implements SerializableToRdf.Writer {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();

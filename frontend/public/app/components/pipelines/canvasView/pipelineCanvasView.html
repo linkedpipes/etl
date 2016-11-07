@@ -66,7 +66,7 @@
         <md-button ng-click="onClose()" class="md-warn" aria-label="Close">
             <md-icon md-menu-origin md-svg-src="close"></md-icon>
         </md-button>
-        <md-button ng-click="onEditMode()" ng-show="data.tools.execFinished">Edit mode</md-button>
+        <md-button ng-click="onEditMode()" ng-show="data.tools.execFinished && !data.tools.edit">Edit mode</md-button>
     </md-content>
 
     <lp-pipeline-edit api="pipelineEdit"></lp-pipeline-edit>

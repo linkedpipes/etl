@@ -1,16 +1,11 @@
 package com.linkedpipes.etl.dataunit.system;
 
+import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.util.Iterator;
 
-import org.apache.commons.io.FileUtils;
-
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-
-/**
- *
- * @author Škoda Petr
- */
 class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
 
     private Iterator<File> fileIterator;

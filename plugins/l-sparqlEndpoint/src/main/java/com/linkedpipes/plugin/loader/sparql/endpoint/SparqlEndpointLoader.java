@@ -26,7 +26,6 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
- * @author Petr Škoda
  */
 public class SparqlEndpointLoader implements Component.Sequential {
 
@@ -55,7 +54,7 @@ public class SparqlEndpointLoader implements Component.Sequential {
         try {
             sparqlRepository.initialize();
         } catch (Throwable t) {
-            throw exceptionFactory.failed(
+            throw exceptionFactory.failure(
                     "Can't connect to remote SPARQL.", t);
         }
         //
@@ -70,13 +69,13 @@ public class SparqlEndpointLoader implements Component.Sequential {
                         configuration.getTargetGraphName());
             }
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't clear data.", ex);
+            throw exceptionFactory.failure("Can't clear data.", ex);
         }
         try (final CloseableHttpClient httpclient = getHttpClient()) {
             sparqlRepository.setHttpClient(httpclient);
             loadData(sparqlRepository);
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't load data.", ex);
+            throw exceptionFactory.failure("Can't load data.", ex);
         }
     }
 

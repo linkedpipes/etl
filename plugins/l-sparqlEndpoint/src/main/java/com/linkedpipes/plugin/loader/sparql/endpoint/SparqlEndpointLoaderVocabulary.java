@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 /**
  *
- * @author Petr Škoda
  */
 final class SparqlEndpointLoaderVocabulary {
 

@@ -11,15 +11,7 @@
     <name>lp-api-commons</name>
     <version>0.0.0</version>
     <packaging>bundle</packaging>
-    <description>Contains definitions of exceptions.</description>
-
-    <dependencies>
-        <!-- Tests. -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-    </dependencies>
+    <description>Contains core definitions.</description>
 
     <build>
         <plugins>

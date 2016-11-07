@@ -98,7 +98,8 @@ define([], function () {
                     type = prefix + type;
                     var resources = [];
                     service.graph.forEach(function (resource) {
-                        if (resource['@type'].indexOf(type) !== -1) {
+                        if (resource['@type'] &&
+                            resource['@type'].indexOf(type) !== -1) {
                             resources.push(resource);
                         }
                     });
@@ -380,21 +381,44 @@ define([], function () {
                     }
                 };
 
-                service.getList = function (resource, property) {
+                service.getValueList = function (resource, property) {
                     property = service.prefix + property;
-                    if (typeof resource[property] === 'undefined') {
+                    //
+                    if (!resource[property]) {
                         return [];
-                    } else {
-                        return resource[property];
                     }
+                    var value = resource[property];
+                    if (jQuery.isArray(value)) {
+                        var result = [];
+                        value.forEach(function (item) {
+                            if (item['@value']) {
+                                result.push(item['@value']);
+                            } else {
+                                result.push(item);
+                            }
+                        });
+                        return result;
+                    } else {
+                        if ('@value' in value) {
+                            return [value['@value']];
+                        } else {
+                            return [value];
+                        }
+                    }
+                    return [];
                 };
 
-                service.setList = function (resource, property, value) {
+                service.setValueList = function (resource, property, value) {
                     property = service.prefix + property;
-                    if (typeof value === 'undefined' || !$.isArray(value) || value.length === 0) {
+                    if (typeof value === 'undefined' || !$.isArray(value) ||
+                        value.length === 0) {
                         delete resource[property];
                     } else {
-                        resource[property] = value;
+                        var list = []
+                        value.forEach(function (iri) {
+                            list.push({'@value' : iri});
+                        });
+                        resource[property] = list;
                     }
                 };
 
@@ -409,6 +433,22 @@ define([], function () {
                         delete resource[property];
                     } else {
                         resource[property] = value;
+                    }
+                };
+
+                service.getIri = function(resource, property) {
+                    property = service.prefix + property;
+                    return jsonld.getReference(resource, property);
+                };
+
+                service.setIri = function(resource, property, value) {
+                    if (value === undefined) {
+                        delete resource[property];
+                        return;
+                    }
+                    property = service.prefix + property;
+                    resource[property] = {
+                        '@id' : value
                     }
                 };
 

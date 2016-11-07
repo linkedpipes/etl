@@ -1,0 +1,23 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-rdfToFile/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-rdfToFile#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/fileName> ,
+        <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/fileType> ,
+        <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/graphUri> .
+
+<http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/fileName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileNameControl> .
+
+<http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/fileType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/graphUri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl> .

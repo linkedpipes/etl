@@ -1,0 +1,34 @@
+<md-dialog aria-label="Component dialog" ng-cloak flex="50">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h4>{{componentToEdit.label}}</h4>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-if="infoLink"
+                           ng-href="{{infoLink}}" target="_blank">
+                    <md-icon md-svg-src="info_outline"
+                             aria-label="Show help"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="onCancel()">
+                    <md-icon md-svg-src="close"
+                             aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <lp-instance-detail api="api"></lp-instance-detail>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="onCancel()">
+                DISCARD CHANGES
+            </md-button>
+            <md-button ng-click="onSave()" class="md-primary">
+                SAVE CHANGES
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

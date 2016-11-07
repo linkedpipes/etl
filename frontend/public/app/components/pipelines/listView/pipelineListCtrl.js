@@ -4,16 +4,13 @@ define([], function () {
 
         var template = {
             'iri': {
-                '$property': 'http://linkedpipes.com/ontology/pipeline'
-            },
-            'id': {
-                '$property': 'http://linkedpipes.com/ontology/id'
+                '$property': '@id'
             },
             'label': {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
             },
             'tags': {
-                '$property': 'http://etl.linkedpipes.com/ontrology/tag',
+                '$property': 'http://etl.linkedpipes.com/ontology/tag',
                 '$type': 'array'
             }
         };
@@ -47,15 +44,18 @@ define([], function () {
                 'data': {
                     'property': '@type',
                     'operation': 'in',
-                    'value': 'http://etl.linkedpipes.com/ontology/Reference'
+                    'value': 'http://linkedpipes.com/ontology/Pipeline'
                 },
                 'deleted': {
                     'property': '@type',
                     'operation': 'in',
-                    'value': 'http://etl.linkedpipes.com/ontology/Deleted'
+                    'value': 'http://linkedpipes.com/ontology/Tombstone'
                 }
             },
             'decorator': function (item) {
+                if (item['label'] === undefined) {
+                    item['label'] = item['iri'];
+                }
                 item['searchLabel'] = item['label'].toLowerCase();
                 // Show by default.
                 item['show'] = true;
@@ -120,20 +120,40 @@ define([], function () {
         };
 
         $scope.onCreate = function () {
-            // Create pipeline.
-            var id = $scope.id = 'created-' + (new Date()).getTime();
-            $http.post('/resources/pipelines/' + id).then(function (response) {
-                $location.path('/pipelines/edit/canvas').search({
-                    'pipeline': response.data.uri
+            var data = new FormData();
+            // Use empty options.
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions'
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            };
+            $http.post('/resources/pipelines/', data, config).then(
+                function (response) {
+                    // The response is a reference.
+                    // TODO Use JSONLD service to get the value !!
+                    console.log(response.data);
+                    var newPipelineUri = response.data[0]['@graph'][0]['@id'];
+                    //
+                    $location.path('/pipelines/edit/canvas').search({
+                        'pipeline': newPipelineUri
+                    });
+                }, function (response) {
+                    statusService.postFailed({
+                        'title': "Can't create the pipeline.",
+                        'response': response
+                    });
                 });
-            }, function (response) {
-                statusService.postFailed({
-                    'title': "Can't create the pipeline.",
-                    'response': response
-                });
-            });
-            // TODO We may try a few time here, although the chance that
-            // two users click in the exactly same unix time is rather small.
         };
 
         $scope.onUpload = function () {
@@ -145,10 +165,28 @@ define([], function () {
         };
 
         $scope.onCopy = function (pipeline) {
-            var id = 'created-' + (new Date()).getTime();
-            var url = '/resources/pipelines/' + id + '?pipeline='
+            var data = new FormData();
+            //
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/local': true
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            }
+            var url = '/resources/pipelines?pipeline='
                 + pipeline.iri;
-            $http.post(url).then(function (response) {
+            $http.post(url, data, config).then(function (response) {
                 statusService.success({
                     'title': 'Pipeline has been successfully copied.'
                 });
@@ -236,7 +274,6 @@ define([], function () {
                         'response': response
                     });
                 });
-
             refreshService.set(function () {
                 // TODO Enable update once the server has
                 // proper support of the JSON-LD repository.

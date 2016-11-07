@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.loader.scp;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class LoaderScpVocabulary {
 

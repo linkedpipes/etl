@@ -1,35 +1,33 @@
 package com.linkedpipes.etl.component.api.impl;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.executor.api.v1.Plugin;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
+import com.linkedpipes.etl.executor.api.v1.rdf.PojoLoader;
+import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.wiring.BundleRevision;
+import org.osgi.framework.wiring.BundleWiring;
+
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.wiring.BundleRevision;
-import org.osgi.framework.wiring.BundleWiring;
-
-import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
-import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
-import com.linkedpipes.etl.executor.api.v1.rdf.EntityLoader;
-import org.osgi.framework.BundleContext;
-import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
-
 /**
- *
- * @author Škoda Petr
+ * Implementation of a component factory. Can be used to create components
+ * from bundles.
  */
 @org.osgi.service.component.annotations.Component(immediate = true,
         service = {ComponentFactory.class})
 public class ComponentFactoryImpl implements ComponentFactory {
 
     @Override
-    public BaseComponent create(SparqlSelect definition, String resourceIri,
-            String graph, BundleContext bundleContext, Plugin.Context context)
+    public Component create(SparqlSelect definition, String resourceIri,
+            String graph, BundleContext bundleContext,
+            Component.Context context)
             throws RdfException {
 
         // Scan bundle for class with ComponentInstance class.
@@ -39,17 +37,17 @@ public class ComponentFactoryImpl implements ComponentFactory {
             return null;
         }
         // Create an instance.
-        final Component.Sequential instance;
+        final com.linkedpipes.etl.component.api.Component.Sequential instance;
         try {
-            instance = (Component.Sequential) info.getClazz().newInstance();
+            instance = (com.linkedpipes.etl.component.api.Component.Sequential)
+                    info.getClazz().newInstance();
         } catch (IllegalAccessException | InstantiationException ex) {
-            throw RdfException.cantCreateObject(
-                    "Can't create component class.", ex);
+            throw RdfException.failure("Can't create component class.", ex);
         }
         // Load configuration.
         final ComponentConfiguration configuration
                 = new ComponentConfiguration(resourceIri);
-        EntityLoader.load(definition, resourceIri, graph, configuration);
+        PojoLoader.load(definition, resourceIri, graph, configuration);
         // Create wrap and return it.
         return new SimpleComponentImpl(instance, info, configuration,
                 definition, graph, context);
@@ -60,7 +58,6 @@ public class ComponentFactoryImpl implements ComponentFactory {
      *
      * @param bundle
      * @return
-     * @throws ComponentFactory.InvalidBundle
      */
     private BundleInformation scanBundle(Bundle bundle) throws RdfException {
         final List<Class<?>> mainClasses = new ArrayList<>(1);
@@ -69,8 +66,8 @@ public class ComponentFactoryImpl implements ComponentFactory {
         final BundleRevision revision = bundle.adapt(BundleRevision.class);
         final BundleWiring wiring = revision.getWiring();
         if (wiring == null) {
-            throw RdfException.cantCreateObject(
-                    "Can't instatntiate BundleWiring!");
+            throw RdfException.failure(
+                    "Can't instantiate BundleWiring!");
         }
         // Search for classes.
         final Enumeration<URL> classContent
@@ -84,17 +81,18 @@ public class ComponentFactoryImpl implements ComponentFactory {
                 try {
                     clazz = bundle.loadClass(className);
                 } catch (ClassNotFoundException ex) {
-                    throw RdfException.cantCreateObject("Can't create class:",
+                    throw RdfException.failure("Can't create class:",
                             className, ex);
                 }
                 // Scan interfaces.
                 for (Type item : clazz.getGenericInterfaces()) {
                     if (item.getTypeName().equals(
-                            Component.Sequential.class.getTypeName())) {
+                            com.linkedpipes.etl.component.api.Component
+                                    .Sequential.class.getTypeName())) {
                         mainClasses.add(clazz);
                     }
                 }
-                // In evere case we can use the package name.
+                // In every case we can use the package name.
                 final String packageName
                         = className.substring(0, className.lastIndexOf("."));
                 if (!packages.contains(packageName)) {
@@ -108,7 +106,7 @@ public class ComponentFactoryImpl implements ComponentFactory {
             return null;
         } else if (mainClasses.size() > 1) {
             // Multiple classes - invalid bundle.
-            throw RdfException.cantCreateObject("Invalid number of components.",
+            throw RdfException.failure("Invalid number of components.",
                     mainClasses.size());
         }
         return new BundleInformation(mainClasses.get(0), packages);

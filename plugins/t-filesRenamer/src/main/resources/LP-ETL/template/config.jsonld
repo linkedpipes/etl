@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-filesRenamer/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesRenamer#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-filesRenamer#pattern": "",
+        "http://plugins.linkedpipes.com/ontology/t-filesRenamer#patternControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-filesRenamer#replaceWith": "",
+        "http://plugins.linkedpipes.com/ontology/t-filesRenamer#replaceWithControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

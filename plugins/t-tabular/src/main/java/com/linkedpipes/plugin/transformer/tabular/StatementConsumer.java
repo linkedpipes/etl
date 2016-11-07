@@ -8,7 +8,6 @@ import org.openrdf.model.Value;
 /**
  * Consumes triples and store then into output.
  *
- * @author Petr Škoda
  */
 public interface StatementConsumer {
 

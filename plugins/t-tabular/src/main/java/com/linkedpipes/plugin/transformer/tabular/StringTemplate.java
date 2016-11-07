@@ -11,7 +11,6 @@ import java.util.List;
  * Token {{TABLE_URI}} can be used to reference table resource uri,
  * passed to the initialize function as a fist parameter.
  *
- * @author Petr Škoda
  */
 class StringTemplate {
 

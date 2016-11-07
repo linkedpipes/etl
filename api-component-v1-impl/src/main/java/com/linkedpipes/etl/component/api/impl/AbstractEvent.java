@@ -2,13 +2,13 @@ package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *
- * @author Škoda Petr
+ * Abstract event class.
  */
 abstract class AbstractEvent implements Event {
 
@@ -39,13 +39,6 @@ abstract class AbstractEvent implements Event {
         this.type = type;
         this.label = null;
         this.labelLanguage = null;
-    }
-
-    protected AbstractEvent(String type, String label, String labelLanguage) {
-        this.created = new Date();
-        this.type = type;
-        this.label = label;
-        this.labelLanguage = labelLanguage;
     }
 
     @Override

@@ -40,7 +40,7 @@ public final class SparqlConstruct implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     SparqlConstructVocabulary.HAS_QUERY);
         }
         // We always perform inserts.
@@ -60,7 +60,7 @@ public final class SparqlConstruct implements Component.Sequential {
                 update.execute();
             });
         } catch (Throwable t) {
-            throw exceptionFactory.failed("Can't execute given query.", t);
+            throw exceptionFactory.failure("Can't execute given query.", t);
         }
     }
 

@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-filesFilter/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesFilter#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-filesFilter#fileNamePattern" : ".*",
+        "http://plugins.linkedpipes.com/ontology/t-filesFilter#fileNamePatternControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

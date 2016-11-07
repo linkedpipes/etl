@@ -1,0 +1,181 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix dm: <http://plugins.linkedpipes.com/ontology/e-datasetMetadata#> .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/e-datasetMetadata#Configuration> ;
+    config:member
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/datasetURI> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/language_orig> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/title_cs> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/title_en> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/desc_cs> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/desc_en> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/authors> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/publisherURI> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/publisherName> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/license> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/sources> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/languages> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/keywords_orig> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/keywords_en> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/themes> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/contactPoint> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/contactPointName> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/periodicity> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/useNow> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/useNowTemporalEnd> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/useTemporal> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/modified> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/issued> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/identifier> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/landingPage> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/temporalEnd> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/temporalStart> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/spatial> ,
+        <http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/schema> .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/datasetURI>
+    a config:ConfigurationMember ;
+    config:property dm:datasetURI ;
+    config:control dm:datasetURIControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/language_orig>
+    a config:ConfigurationMember ;
+    config:property dm:language_orig ;
+    config:control dm:language_origControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/title_cs>
+    a config:ConfigurationMember ;
+    config:property dm:title_cs ;
+    config:control dm:title_csControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/title_en>
+    a config:ConfigurationMember ;
+    config:property dm:title_en ;
+    config:control dm:title_enControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/desc_cs>
+    a config:ConfigurationMember ;
+    config:property dm:desc_cs ;
+    config:control dm:desc_csControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/desc_en>
+    a config:ConfigurationMember ;
+    config:property dm:desc_en ;
+    config:control dm:desc_enControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/authors>
+    a config:ConfigurationMember ;
+    config:property dm:authors ;
+    config:control dm:authorsControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/publisherURI>
+    a config:ConfigurationMember ;
+    config:property dm:publisherURI ;
+    config:control dm:publisherURIControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/publisherName>
+    a config:ConfigurationMember ;
+    config:property dm:publisherName ;
+    config:control dm:publisherNameControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/license>
+    a config:ConfigurationMember ;
+    config:property dm:license ;
+    config:control dm:licenseControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/sources>
+    a config:ConfigurationMember ;
+    config:property dm:sources ;
+    config:control dm:sourcesControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/languages>
+    a config:ConfigurationMember ;
+    config:property dm:languages ;
+    config:control dm:languagesControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/keywords_orig>
+    a config:ConfigurationMember ;
+    config:property dm:keywords_orig ;
+    config:control dm:keywords_origControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/keywords_en>
+    a config:ConfigurationMember ;
+    config:property dm:keywords_en ;
+    config:control dm:keywords_enControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/themes>
+    a config:ConfigurationMember ;
+    config:property dm:themes ;
+    config:control dm:themesControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/contactPoint>
+    a config:ConfigurationMember ;
+    config:property dm:contactPoint ;
+    config:control dm:contactPointControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/contactPointName>
+    a config:ConfigurationMember ;
+    config:property dm:contactPointName ;
+    config:control dm:contactPointNameControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/periodicity>
+    a config:ConfigurationMember ;
+    config:property dm:periodicity ;
+    config:control dm:periodicityControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/useNow>
+    a config:ConfigurationMember ;
+    config:property dm:useNow ;
+    config:control dm:useNowControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/useNowTemporalEnd>
+    a config:ConfigurationMember ;
+    config:property dm:useNowTemporalEnd ;
+    config:control dm:useNowTemporalEndControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/useTemporal>
+    a config:ConfigurationMember ;
+    config:property dm:useTemporal ;
+    config:control dm:useTemporalControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/modified>
+    a config:ConfigurationMember ;
+    config:property dm:modified ;
+    config:control dm:modifiedControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/issued>
+    a config:ConfigurationMember ;
+    config:property dm:issued ;
+    config:control dm:issuedControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/identifier>
+    a config:ConfigurationMember ;
+    config:property dm:identifier ;
+    config:control dm:identifierControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/landingPage>
+    a config:ConfigurationMember ;
+    config:property dm:landingPage ;
+    config:control dm:landingPageControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/temporalEnd>
+    a config:ConfigurationMember ;
+    config:property dm:temporalEnd ;
+    config:control dm:temporalEndControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/temporalStart>
+    a config:ConfigurationMember ;
+    config:property dm:temporalStart ;
+    config:control dm:temporalStartControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/spatial>
+    a config:ConfigurationMember ;
+    config:property dm:spatial ;
+    config:control dm:spatialControl .
+
+<http://linkedpipes.com/resources/components/e-datasetMetadata/0.0.0/configuration/desc/schema>
+    a config:ConfigurationMember ;
+    config:property dm:schema ;
+    config:control dm:schemaControl .

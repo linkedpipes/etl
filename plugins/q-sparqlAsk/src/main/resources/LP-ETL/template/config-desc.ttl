@@ -1,0 +1,18 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/q-sparqlAsk#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/configuration/desc/query> ,
+        <http://linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/configuration/desc/failOnTrue> .
+
+<http://linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/configuration/desc/query>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/q-sparqlAsk#query> ;
+    config:control <http://plugins.linkedpipes.com/ontology/q-sparqlAsk#queryControl> .
+
+<http://linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/configuration/desc/failOnTrue>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/q-sparqlAsk#failOnTrue> ;
+    config:control <http://plugins.linkedpipes.com/ontology/q-sparqlAsk#failOnTrueControl> .
+

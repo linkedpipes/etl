@@ -1,0 +1,30 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/class> ,
+        <http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/predicate> ,
+        <http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/includeSourceInformation> ,
+        <http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/action> .
+
+<http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/class>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#class> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#classControl> .
+ 
+<http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/predicate>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#predicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#predicateControl> .
+
+<http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/includeSourceInformation>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#includeSourceInformation> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#includeSourceInformationControl> .
+
+<http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration/desc/action>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#action> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-htmlCssUv#actionControl> .
+

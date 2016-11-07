@@ -11,7 +11,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
  * + URLEncoder.encode(column.name, "UTF-8"));
  *
  *
- * @author Petr Škoda
  */
 abstract class ColumnAbstract {
 
@@ -66,7 +65,13 @@ abstract class ColumnAbstract {
             throws MissingNameInHeader, InvalidTemplate {
         aboutUrl.initialize(tableUri, header);
         predicate.initialize(tableUri, header);
-        valueIndex = header.indexOf(name);
+        valueIndex = -1;
+        for (int i = 0; i < header.size(); ++i) {
+            if (name.equals(header.get(i))) {
+                valueIndex = i;
+                break;
+            }
+        }
         if (valueIndex == -1) {
             throw new MissingNameInHeader(name);
         }

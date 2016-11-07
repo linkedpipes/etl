@@ -7,7 +7,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 /**
  * Holds vocabulary for CSV on the Web.
  *
- * @author Petr Škoda
  */
 public class CSVW {
 

@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-sparqlSelect#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#query": "SELECT ?s ?p ?o WHERE { ?s ?p ?o }",
+        "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#queryControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#fileName": "table.csv",
+        "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#fileNameControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }        
+    }
+]

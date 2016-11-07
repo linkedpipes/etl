@@ -15,6 +15,9 @@ public class FilesToRdfGraphConfiguration {
     @RdfToPojo.Property(uri = FilesToRdfGraphVocabulary.HAS_MIME_TYPE)
     private String mimeType = null;
 
+    @RdfToPojo.Property(uri = FilesToRdfGraphVocabulary.HAS_SKIP_ON_FAILURE)
+    private boolean skipOnFailure = false;
+
     public FilesToRdfGraphConfiguration() {
     }
 
@@ -34,4 +37,11 @@ public class FilesToRdfGraphConfiguration {
         this.mimeType = mimeType;
     }
 
+    public boolean isSkipOnFailure() {
+        return skipOnFailure;
+    }
+
+    public void setSkipOnFailure(boolean skipOnFailure) {
+        this.skipOnFailure = skipOnFailure;
+    }
 }

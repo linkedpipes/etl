@@ -1,0 +1,7 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-packZip/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-packZip#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-packZip#fileName": "output.ttl"
+    }
+]

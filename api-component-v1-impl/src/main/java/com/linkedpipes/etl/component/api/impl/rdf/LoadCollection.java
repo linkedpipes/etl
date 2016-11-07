@@ -2,18 +2,18 @@ package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author Petr Škoda
+ * Loader used to load to collection field type.
  */
 class LoadCollection extends LoaderToValue {
 
@@ -22,16 +22,19 @@ class LoadCollection extends LoaderToValue {
 
     private final List<Class<?>> types;
 
+    private final RdfReader.MergeOptionsFactory optionsFactory;
+
     LoadCollection(List<Class<?>> types, PropertyDescriptor property,
-            Field field) {
+            Field field, RdfReader.MergeOptionsFactory optionsFactory) {
         super(property, field);
         this.types = types;
+        this.optionsFactory = optionsFactory;
     }
 
     @Override
     public void load(Object object, Map<String, String> property, String graph,
             SparqlSelect select) throws CanNotDeserializeObject {
-        // Get colllection.
+        // Get collection.
         final Method readMethod = this.property.getReadMethod();
         final Collection collection;
         try {
@@ -43,9 +46,10 @@ class LoadCollection extends LoaderToValue {
         if (collection == null) {
             throw new CanNotDeserializeObject(
                     "Collection must be initialized prior to loading."
-                    + " Collection: '" + field.getName()
-                    + "' on class: '" + object.getClass().getCanonicalName()
-                    + "'");
+                            + " Collection: '" + field.getName()
+                            + "' on class: '" +
+                            object.getClass().getCanonicalName()
+                            + "'");
         }
         // Load object - here we need to decide based on the
         // object type.
@@ -54,7 +58,7 @@ class LoadCollection extends LoaderToValue {
             try {
                 if (type.getAnnotation(RdfToPojo.Type.class) != null) {
                     value = LoadObject.loadNew(type, property.get("value"),
-                            graph, select);
+                            graph, select, optionsFactory);
                 } else if (type.getAnnotation(RdfToPojo.Value.class) != null) {
                     value = LoadLiteral.loadNew(type, property);
                 } else if (DescriptionFactory.isPrimitive(type)) {

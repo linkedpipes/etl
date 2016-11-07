@@ -16,25 +16,25 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-component-v1</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-executor-v1</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-commons</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>dataunit-system</artifactId>
-            <version>0.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -47,7 +47,7 @@
             <artifactId>org.osgi.compendium</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- Requred so we can use OSGI DS annotations. -->
+        <!-- Required so we can use OSGI DS annotations. -->
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>

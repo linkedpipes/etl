@@ -1,0 +1,11 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/l-filesToLocal/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/l-filesToLocal#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/l-filesToLocal/0.0.0/configuration/desc/path> .
+
+<http://linkedpipes.com/resources/components/l-filesToLocal/0.0.0/configuration/desc/path>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToLocal#path> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToLocal#pathControl> .

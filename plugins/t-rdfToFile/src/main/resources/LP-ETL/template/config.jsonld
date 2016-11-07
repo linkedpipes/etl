@@ -1,0 +1,18 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-rdfToFile/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-rdfToFile#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileName" : "data.ttl",
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileNameControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileType" : "text/turtle",
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileTypeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri" : "http://localhost/default",
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

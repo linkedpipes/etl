@@ -8,7 +8,7 @@
              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- Configures the @Controller programming model. -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven/>
 
     <!-- Configure plugin JSON as request and response in method handler. -->
     <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -20,8 +20,8 @@
     </beans:bean>
 
     <!-- Configure bean to convert JSON to POJO and vice versa. -->
-    <beans:bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+    <beans:bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
 
-    <context:component-scan base-package="com.linkedpipes.etl.executor.web.servlet" />
+    <context:component-scan base-package="com.linkedpipes.etl.executor.web.servlet"/>
 
 </beans:beans>

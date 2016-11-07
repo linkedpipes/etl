@@ -1,0 +1,65 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/x-virtuoso#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/host> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/username> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/password> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/clearGraph> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/directory> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/fileName> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/graph> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/updateInterval> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/clearSqlLoadTable> ,
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/query> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/host>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#uri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#hostControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/username>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#username> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#usernameControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/clearGraph>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraphControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/directory>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#directory> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#directoryControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/fileName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#fileName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#fileNameControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/graph>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#graph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/updateInterval>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#updateInterval> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#updateIntervalControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/clearSqlLoadTable>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearSqlLoadTable> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearSqlLoadTableControl> .
+
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/query>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#query> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#queryControl> .

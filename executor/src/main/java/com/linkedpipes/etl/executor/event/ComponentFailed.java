@@ -3,12 +3,7 @@ package com.linkedpipes.etl.executor.event;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 
-/**
- *
- * @author Petr Škoda
- */
-class ComponentFailed extends AbstractEvent
-        implements com.linkedpipes.etl.executor.api.v1.event.ComponentFailed {
+public class ComponentFailed extends AbstractEvent {
 
     private final String componentIri;
 
@@ -30,7 +25,7 @@ class ComponentFailed extends AbstractEvent
         if (this.cause == null) {
             return;
         }
-        // Search for firt RdfException and root cause (the first exception).
+        // Search for first RdfException and root cause (the first exception).
         // If there is only one exception, we won't check
         // for RdfException. This would cause rdfException to be null,
         // so there won't be a cause only a rootCause.
@@ -57,7 +52,6 @@ class ComponentFailed extends AbstractEvent
         }
     }
 
-    @Override
     public String getComponentUri() {
         return componentIri;
     }

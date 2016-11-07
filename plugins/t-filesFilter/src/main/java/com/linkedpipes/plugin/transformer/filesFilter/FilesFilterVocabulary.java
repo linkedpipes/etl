@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.filesFilter;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class FilesFilterVocabulary {
 

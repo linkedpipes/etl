@@ -3,22 +3,13 @@ package com.linkedpipes.etl.executor.module;
 import com.linkedpipes.etl.executor.Configuration;
 import com.linkedpipes.etl.executor.api.v1.Plugin;
 import com.linkedpipes.etl.executor.api.v1.RdfException;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.function.Consumer;
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
+import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
+import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
+import org.osgi.framework.*;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.slf4j.Logger;
@@ -33,17 +24,12 @@ import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.linkedpipes.etl.executor.api.v1.component.ComponentFactory;
-import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
-import com.linkedpipes.etl.executor.api.v1.component.BaseComponent;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.function.Consumer;
 
-/**
- *
- * @author Škoda Petr
- */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 class ModuleFacadeImpl implements ModuleFacade,
@@ -131,6 +117,7 @@ class ModuleFacadeImpl implements ModuleFacade,
                 }
             }
         });
+
         // Start library bundles.
         libraries.forEach((bundle) -> {
             try {
@@ -167,49 +154,64 @@ class ModuleFacadeImpl implements ModuleFacade,
         } else if (event instanceof ContextStoppedEvent) {
             // This is Felix dependant:
             // FelixDispatchQueue is thread used by felix, it's created as non
-            // deamon. For this reason we need to manualy stop the framework
+            // daemon. For this reason we need to manually stop the framework
             // and not wait on OnDestroy call.
             stop();
         }
     }
 
     @Override
-    public Collection<Plugin.ExecutionListener> getExecutionListeners()
+    public Collection<Plugin.PipelineListener> getPipelineListeners()
             throws ModuleException {
-        return getServices(Plugin.ExecutionListener.class);
+        return getServices(Plugin.PipelineListener.class);
     }
 
+    /**
+     * TODO This function require storage to be up and running. We should add an option how to pre-load jar files from directory.
+     *
+     * @param definition
+     * @param resource
+     * @param context Context given to new component.
+     * @return
+     */
     @Override
-    public Collection<Plugin.MessageListener> getMessageListeners()
+    public Component getComponent(PipelineDefinition definition,
+            String resource, Component.Context context)
             throws ModuleException {
-        return getServices(Plugin.MessageListener.class);
-    }
-
-    @Override
-    public BaseComponent getComponent(PipelineDefinition definition,
-            String resource, Plugin.Context context) throws ModuleException {
         // We need to get path to jar file first.
         final Map<String, String> componentInfo;
         final List<Map<String, String>> resultList
                 = definition.executeSelect(
-                        "SELECT ?path WHERE {\n"
+                "SELECT ?path WHERE {\n"
                         + "  <" + resource + "> <"
-                        + LINKEDPIPES.HAS_JAR_URI + "> ?path .\n"
+                        + LINKEDPIPES.HAS_JAR + "> ?path .\n"
                         + "}");
         if (resultList.size() != 1) {
-            throw new ModuleException("Invalid number query results!");
+            throw new ModuleException("Invalid component definition : " +
+                    "invalid number of JAR paths: " + resultList.size());
         }
         componentInfo = resultList.get(0);
         // Then we need to load or get the bundle.
         final String jarFileUri = componentInfo.get("path");
+        // TODO Enable reload for updated component versions?
         if (!components.containsKey(jarFileUri)) {
+            // We do not download directly from the IRI, instead
+            // we ask storage.
+            final String bundleIri;
+            try {
+                bundleIri = configuration.getStorageAddress() +
+                        "/api/v1/jars/file?iri=" +
+                        URLEncoder.encode(jarFileUri, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                throw new ModuleException("Invalid encoding!", ex);
+            }
             LOG.info("Loading jar file from: {}", jarFileUri);
             final Bundle bundle;
             try {
-                bundle = framework.getBundleContext().installBundle(jarFileUri);
+                bundle = framework.getBundleContext().installBundle(bundleIri);
             } catch (BundleException ex) {
                 throw new ModuleException(
-                        "Can't load bundle from given location!", ex);
+                        "Can't load bundle!", ex);
             }
             try {
                 bundle.start();
@@ -218,14 +220,14 @@ class ModuleFacadeImpl implements ModuleFacade,
             }
             components.put(jarFileUri, bundle);
         }
-        final BundleContext componenetContext
+        final BundleContext componentContext
                 = components.get(jarFileUri).getBundleContext();
         // Use manager to get the component representation.
         for (ComponentFactory factory : getServices(ComponentFactory.class)) {
             try {
                 return factory.create(definition, resource,
                         definition.getDefinitionGraph(),
-                        componenetContext, context);
+                        componentContext, context);
             } catch (RdfException ex) {
                 throw new ModuleException("Invalid bundle detected!", ex);
             }
@@ -235,12 +237,12 @@ class ModuleFacadeImpl implements ModuleFacade,
     }
 
     @Override
-    public ManagableDataUnit getDataUnit(PipelineDefinition definition,
+    public ManageableDataUnit getDataUnit(PipelineDefinition definition,
             String subject)
             throws ModuleException {
         for (DataUnitFactory factory : getServices(DataUnitFactory.class)) {
             try {
-                final ManagableDataUnit dataUnit = factory.create(definition,
+                final ManageableDataUnit dataUnit = factory.create(definition,
                         subject, definition.getDefinitionGraph());
                 if (dataUnit != null) {
                     return dataUnit;
@@ -250,7 +252,7 @@ class ModuleFacadeImpl implements ModuleFacade,
             }
         }
         throw new ModuleException(
-                "No factory can instantiace required data unit.");
+                "No factory can instantiate required data unit.");
     }
 
     protected void scanDirectory(File root, Consumer<File> consumer) {
@@ -268,11 +270,9 @@ class ModuleFacadeImpl implements ModuleFacade,
     }
 
     /**
-     *
      * @param <T>
      * @param clazz
      * @return Services of given interface.
-     * @throws ModuleException
      */
     public <T> Collection<T> getServices(Class<T> clazz)
             throws ModuleException {

@@ -1,0 +1,60 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.uri.hide">
+        <label>Virtuoso JDBC connection string</label>
+        <input ng-model="dialog.uri.value"
+               placeholder="jdbc:virtuoso://localhost:1111/charset=UTF-8/"
+               ng-disabled="dialog.uri.disabled || dialog.uri.inherit">
+    </md-input-container>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" ng-hide="dialog.username.hide">
+            <label>Virtuoso user name</label>
+            <input ng-model="dialog.username.value"
+                   ng-disabled="dialog.username.disabled || dialog.username.inherit"
+                   placeholder="dba">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.password.hide">
+            <label>Virtuoso password</label>
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit"
+                   placeholder="dba">
+        </md-input-container>
+    </div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.directory.hide">
+            <label>Remote directory with source files</label>
+            <input ng-model="dialog.directory.value"
+                   ng-disabled="dialog.directory.disabled || dialog.directory.inherit"
+                   placeholder="/data/upload">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
+            <label>Filename to load</label>
+            <input ng-model="dialog.fileName.value"
+                   ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
+                   placeholder="my.ttl">
+        </md-input-container>
+    </div>
+    <md-input-container class="md-block" ng-hide="dialog.graph.hide">
+        <label>Target graph IRI</label>
+        <input type="uri" ng-model="dialog.graph.value"
+               ng-disabled="dialog.graph.disabled || dialog.graph.inherit"
+               placeholder="http://example.org/resource/graph">
+    </md-input-container>
+    <md-switch ng-model="dialog.clearGraph.value"
+               ng-disabled="dialog.clearGraph.disabled || dialog.clearGraph.inherit"
+               ng-hide="dialog.clearGraph.hide">
+        Clear target graph before loading
+    </md-switch>
+    <md-switch ng-model="dialog.clearLoadList.value"
+               ng-disabled="dialog.clearLoadList.disabled || dialog.clearLoadList.inherit"
+               ng-hide="dialog.clearLoadList.hide">
+        Clear Virtuoso load list
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.updateInterval.hide">
+        <label>Status update interval in seconds</label>
+        <input type="number" ng-model="dialog.updateInterval.value"
+               ng-disabled="dialog.updateInterval.disabled || dialog.updateInterval.inherit"
+               placeholder="5" step="1" min="1" max="60">
+    </md-input-container>
+</div>

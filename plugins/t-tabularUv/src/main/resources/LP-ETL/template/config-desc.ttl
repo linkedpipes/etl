@@ -1,0 +1,167 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-tabularUv#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/baseUri> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/columns> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/advancedMapping> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/namedCell> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/quote> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/delimeter> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/linesToIgnore> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/encoding> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/rowsLimit> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/tableType> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/hasHeader> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateNew> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/ignoreBlankCell> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/advancedKey> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/rowClass> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/sheetName> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/staticRowCounter> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/rowTriple> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/tableSubject> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/autoAsString> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/tableClass> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateLabels> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/stripHeader> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/trimString> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/xlsAdvancedParser> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/ignoreMissingColumn> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateRowTriple> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/baseUri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#baseUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#baseUriControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/columns>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#columns> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#columnsControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/advancedMapping>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedMapping> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedMappingControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/namedCell>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#namedCell> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#namedCellControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/quote>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#quote> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#quoteControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/delimeter>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#delimeter> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#delimeterControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/linesToIgnore>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#linesToIgnore> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#linesToIgnoreControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/encoding>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#encoding> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#encodingControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/rowsLimit>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsLimit> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsLimitControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/tableType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#tableType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#tableTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/hasHeader>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#hasHeader> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#hasHeaderControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateNew>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#generateNew> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#generateNewControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/ignoreBlankCell>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreBlankCell> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreBlankCellControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/advancedKey>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedKey> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedKeyControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/rowClass>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#rowClass> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#rowClassControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/sheetName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#sheetName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#sheetNameControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/staticRowCounter>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#staticRowCounter> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#staticRowCounterControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/rowTriple>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#rowTriple> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#rowTripleControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/tableSubject>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#tableSubject> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#tableSubjectControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/autoAsString>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#autoAsString> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#autoAsStringControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/tableClass>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#tableClass> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#tableClassControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateLabels>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#generateLabels> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#generateLabelsControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/stripHeader>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#stripHeader> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#stripHeaderControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/trimString>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#trimString> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#trimStringControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/xlsAdvancedParser>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#xlsAdvancedParser> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#xlsAdvancedParserControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/ignoreMissingColumn>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreMissingColumn> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreMissingColumnControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateRowTriple>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#generateRowTriple> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#generateRowTripleControl> .

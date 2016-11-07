@@ -1,7 +1,3 @@
-/**
- * Given 'data' must contains IRI of a pipeline to export or
- * loaded pipeline.
- */
 define(['file-saver'], function (saveAs) {
     function controler($scope, $http, $mdDialog, data, jsonldService) {
 
@@ -23,29 +19,30 @@ define(['file-saver'], function (saveAs) {
         /**
          * If pipeline is not available in data.pipeline then download it.
          */
-        var loadPipeline = function (onSucess) {
+        var loadPipeline = function (onSuccess) {
             if (typeof (data.pipeline) !== 'undefined') {
-                onSucess();
+                onSuccess();
                 return;
             }
             // Load pipeline.
             $scope.waiting_text = 'Loading pipeline ...';
-            $http.get(data.iri).then(function (response) {
-                data.pipeline = response.data;
-                onSucess();
-            }, function (response) {
-                onFailure(response);
-            });
+            $http.get(data.iri + "?templates=true&mappings=true").then(
+                function (response) {
+                    data.pipeline = response.data;
+                    onSuccess();
+                }, function (response) {
+                    onFailure(response);
+                });
         };
 
         /**
-         * Search for componenets in the pipeline.
+         * Search for components in the pipeline.
          */
-        var parsePipeline = function (onSucess) {
+        var parsePipeline = function (onSuccess) {
             console.time('parsePipeline');
             data.model = {
                 'graphs': {},
-                'componenets': [],
+                'components': [],
                 /**
                  * Key is the template IRI value is null as the template
                  * is not yet loaded.
@@ -62,47 +59,72 @@ define(['file-saver'], function (saveAs) {
                     // Ignore resources without type.
                     return;
                 }
-                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1) {
-                    data.model.componenets.push(resource);
+                if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1 ||
+                    resource['@type'].indexOf('http://linkedpipes.com/ontology/Template') !== -1) {
+                    data.model.components.push(resource);
                     var templateIri = jsonld.getReference(resource,
-                            'http://linkedpipes.com/ontology/template');
+                        'http://linkedpipes.com/ontology/template');
                     data.model.templates[templateIri] = null;
                 }
             });
             console.timeEnd('parsePipeline');
-            onSucess();
+            onSuccess();
         };
 
         /**
-         * Download templates definitions into data.model.templates.
+         * Download templates definitions into data.model.templates and
+         * store mapping into data.model.templateMapping.
          */
-        var loadTemplates = function (onSucess) {
+        var loadTemplates = function (onSuccess) {
             $scope.waiting_text = 'Loading templates ...';
 
-            var loadTemplate = function (iri, onSucess) {
-                $http.get(iri).then(function (response) {
+            var loadTemplate = function (iri, onSuccess) {
+                var downloadIri = '/resources/components/definition?iri='
+                    + encodeURIComponent(iri);
+                $http.get(downloadIri).then(function (response) {
                     data.model.templates[iri] = response.data;
-                    onSucess();
+                    onSuccess();
                 }, function (response) {
                     onFailure(response);
                 });
             };
 
             // We need to download all templates and then continue.
+            var downloadedTotal = Object.keys(data.model.templates).length;
+            console.log(downloadedTotal);
 
-            var downloadedTotal = 0;
-            for (var iri in data.model.templates) {
-                downloadedTotal += 1;
+            // There are no templates.
+            if (downloadedTotal == 0) {
+                onSuccess();
             }
 
             /**
-             * Called after every sucess download. When all download are done
+             * Called after every success download. When all download are done
              * call callback.
              */
             var whenFinished = function () {
                 downloadedCounter += 1;
                 if (downloadedCounter === downloadedTotal) {
-                    onSucess();
+                    // Now when the data are downloaded we need to
+                    // identify JarTemplate for evey template. This
+                    // mapping is stored in the data.model.templateMapping.
+                    data.model.templateMapping = {};
+                    for (var iri in data.model.templates) {
+                        var template = data.model.templates[iri];
+                        // Default mapping.
+                        data.model.templateMapping[iri] = iri;
+                        // Search for a reference.
+                        jsonld.iterateObjects(template, function (resource) {
+                            if (resource['@type'].indexOf('http://linkedpipes.com/ontology/Component') !== -1 ||
+                                resource['@type'].indexOf('http://linkedpipes.com/ontology/Template') !== -1) {
+                                data.model.templateMapping[iri] =
+                                    jsonld.getReference(resource,
+                                        'http://linkedpipes.com/ontology/template');
+                            }
+                        });
+                    }
+                    //
+                    onSuccess();
                 }
             };
 
@@ -114,25 +136,36 @@ define(['file-saver'], function (saveAs) {
         };
 
         /**
+         * Given template IRI use data.model.templateMapping to resolve
+         * it to the JarTemplate.
+         */
+        var resolveTemplate = function (iri) {
+            while (iri !== data.model.templateMapping[iri]) {
+                iri = data.model.templateMapping[iri];
+            }
+            return iri;
+        }
+
+        /**
          * Remove private properties from the configuration.
          */
         var removePrivateConfiguration = function () {
-            for (var index in data.model.componenets) {
-                var component = data.model.componenets[index];
+            for (var index in data.model.components) {
+                var component = data.model.components[index];
                 // Get template and configuration graph.
                 var configIri = jsonld.getReference(component,
-                        'http://linkedpipes.com/ontology/configurationGraph');
+                    'http://linkedpipes.com/ontology/configurationGraph');
                 var config = data.model.graphs[configIri];
                 var templateIri = jsonld.getReference(component,
-                        'http://linkedpipes.com/ontology/template');
-                var template = data.model.templates[templateIri];
+                    'http://linkedpipes.com/ontology/template');
+                var template = data.model.templates[resolveTemplate(templateIri)];
                 // Get properties to update.
                 var privateProperties;
                 jsonld.iterateObjects(template, function (resource) {
                     var type = resource['@type'];
                     if (type.indexOf('http://linkedpipes.com/ontology/ConfigurationDescription') !== -1) {
                         privateProperties = jsonld.getReferenceAll(resource,
-                                'http://linkedpipes.com/ontology/privateProperties');
+                            'http://linkedpipes.com/ontology/privateProperties');
                     }
                 });
                 if (!privateProperties || typeof (config) === 'undefined') {
@@ -181,8 +214,8 @@ define(['file-saver'], function (saveAs) {
                             return;
                         }
                         saveAs(new Blob([JSON.stringify(data.pipeline, null, 2)],
-                                {type: 'text/json'}),
-                                data.label + '.jsonld');
+                            {type: 'text/json'}),
+                            data.label + '.jsonld');
                         $mdDialog.hide();
                     });
                 });

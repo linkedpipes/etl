@@ -28,7 +28,9 @@ requirejs.config({
         // Library for client side download
         'file-saver': 'libraries/filesaver/FileSaver',
         // https://github.com/omichelsen/angular-clipboard
-        'angular-clipboard' : 'libraries/angular-clipboard/1.4.2/angular-clipboard'
+        'angular-clipboard' : 'libraries/angular-clipboard/1.4.2/angular-clipboard',
+        // Custom modules.
+        'jsonld': '/app/modules/jsonld'
     },
     map: {
         'backbone': {

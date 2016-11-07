@@ -1,43 +1,48 @@
 /**
- *
- * Load and provide acess to information from backend.
+ * Provide access to information about the server.
  */
 define([], function () {
+    "use strict";
 
-    function factoryFunction($http) {
+    function factory($http, $q) {
 
-        var service = {
-            'data': {},
-            'ready': false,
-            'get': function () {
-                return service.data;
-            },
-            'wait': function (callback) {
-                if (service.ready) {
-                    if (callback) {
-                        callback();
-                    }
-                } else {
-                    // TODO Add error handler if loading fail
-                    $http.get('api/v1/info').then(function (response) {
-                        service.data = response.data;
-                        service.ready = true;
-                        //
-                        if (callback) {
-                            callback();
-                        }
-                    });
-                }
-            }
+        const data = {
+            "ready": false,
+            "info": {}
         };
 
-        return service;
+        function load() {
+            return $http.get("api/v1/info").then(function (response) {
+                data.info = response.data;
+                data.ready = true;
+                return data.info;
+            });
+        }
+
+        /**
+         * If the data are missing load them.
+         * In every case return promise with the info object.
+         */
+        function fetch() {
+            if (data.ready) {
+                return $q.when(data.info);
+            } else {
+                return load();
+            }
+        }
+
+        return {
+            "fetch": fetch
+        };
     }
 
-    factoryFunction.$inject = ['$http'];
-
+    let _initialized = false;
     return function init(app) {
-        app.factory('service.info', factoryFunction);
+        if (_initialized) {
+            return;
+        }
+        _initialized = true;
+        app.factory("service.info", ["$http", "$q", factory]);
     };
 
 });

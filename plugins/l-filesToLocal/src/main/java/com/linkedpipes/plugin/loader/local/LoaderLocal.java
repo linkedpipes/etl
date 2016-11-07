@@ -1,20 +1,20 @@
 package com.linkedpipes.plugin.loader.local;
 
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class LoaderLocal implements Component.Sequential {
 
@@ -37,7 +37,7 @@ public final class LoaderLocal implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getPath() == null
                 || configuration.getPath().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     LoaderLocalVocabulary.HAS_PATH);
         }
         //
@@ -54,7 +54,7 @@ public final class LoaderLocal implements Component.Sequential {
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
                 LOG.error("{} -> {}", inputFile, outputFile);
-                throw exceptionFactory.failed("Can't copy files.", ex);
+                throw exceptionFactory.failure("Can't copy files.", ex);
             }
             //
             progress.entryProcessed();

@@ -1,0 +1,29 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-valueParser#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/regexp> ,
+        <http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/source> ,
+        <http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/preserveMetadata> ,
+        <http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/binding> .
+
+<http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/regexp>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-valueParser#regexp> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-valueParser#regexpControl> .
+
+<http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/source>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-valueParser#source> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-valueParser#sourceControl> .
+
+<http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/preserveMetadata>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-valueParser#preserveMetadata> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-valueParser#preserveMetadataControl> .
+
+<http://linkedpipes.com/resources/components/t-valueParser/0.0.0/configuration/desc/binding>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-valueParser#binding> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-valueParser#bindingControl> .

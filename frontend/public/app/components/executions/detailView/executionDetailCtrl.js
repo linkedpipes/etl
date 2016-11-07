@@ -23,6 +23,8 @@ define([
             'pipeline': null
         };
 
+        var global = {};
+
         /**
          * Update changing properties in target from source.
          */
@@ -100,7 +102,7 @@ define([
         var decorateComponent = function (component) {
             // Prepare paths in data units.
             var exec = $routeParams.execution;
-            var ftpPath = infoService.get().path.ftp + '/' +
+            var ftpPath = global.info.path.ftp + '/' +
                     exec.substring(exec.lastIndexOf('executions/') + 11) + '/';
             component.dataUnits.forEach(function (dataUnit) {
                 dataUnit.ftp = ftpPath + dataUnit.debug;
@@ -369,7 +371,10 @@ define([
         };
 
         var initialize = function () {
-            infoService.wait(loadExecution);
+            infoService.fetch().then((info) => {
+                global.info = info;
+                loadExecution();
+            });
             refreshService.set(function () {
                 updateExecution();
             });

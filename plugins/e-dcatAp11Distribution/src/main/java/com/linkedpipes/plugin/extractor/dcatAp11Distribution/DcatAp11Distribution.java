@@ -61,7 +61,7 @@ public class DcatAp11Distribution implements Sequential {
             datasetIRI = querySingleResult("SELECT ?d WHERE "
                     + "{?d a <" + DcatAp11DistributionVocabulary.DCAT_DATASET_CLASS + ">}", "d");
             if (isBlank(datasetIRI)) {
-                throw exceptionFactory.failed("Missing dataset in the input data.");
+                throw exceptionFactory.failure("Missing dataset in the input data.");
             }
 
         } else {
@@ -85,7 +85,7 @@ public class DcatAp11Distribution implements Sequential {
         addIRI(dataset, DcatAp11DistributionVocabulary.DCAT_DISTRIBUTION, distribution);
 
         if (configuration.getAccessURLs().isEmpty()) {
-            throw exceptionFactory.failed("Access URL is a mandatory property.");
+            throw exceptionFactory.failure("Access URL is a mandatory property.");
         } else {
             addIRIs(distribution, DcatAp11DistributionVocabulary.DCAT_ACCESSURL, configuration.getAccessURLs());
         }
@@ -147,7 +147,7 @@ public class DcatAp11Distribution implements Sequential {
         if (configuration.getIssuedFromDataset() != null && configuration.getIssuedFromDataset()) {
             issued = querySingleResult("SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
             if (isBlank(issued)) {
-                throw exceptionFactory.failed("Missing release date property in the input data.");
+                throw exceptionFactory.failure("Missing release date property in the input data.");
             }
             addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
         } else if (configuration.getIssued() != null) {

@@ -1,22 +1,21 @@
 package com.linkedpipes.etl.executor.component;
 
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManagableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
+import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.event.EventFactory;
 import com.linkedpipes.etl.executor.event.EventManager;
 import com.linkedpipes.etl.executor.execution.ExecutionModel;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
+
+import java.util.Map;
 
 /**
  * Execute component with "EXECUTE" execution type.
- *
- * @author Petr Škoda
  */
 class ExecuteComponent implements ComponentExecutor, Runnable {
 
@@ -58,7 +57,6 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
     }
 
     /**
-     *
      * @return False in case of a normal thread termination.
      */
     @Override
@@ -79,7 +77,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
                 thread.join();
             } catch (InterruptedException ex) {
                 // Ignore exception.
-                LOG.debug("Ignored interrup.", ex);
+                LOG.debug("Ignored interrupt.", ex);
             }
         }
         if (unexpectedTermination) {
@@ -87,12 +85,6 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
                     "Unexpected termination of component execution thread."));
         }
         LOG.info("Execution ends for: {}", this.componentDefinition.getIri());
-    }
-
-    @Override
-    public void cancel() {
-        // TODO Provide implementation.
-        LOG.error("Cancel is not supported!");
     }
 
     @Override
@@ -105,7 +97,7 @@ class ExecuteComponent implements ComponentExecutor, Runnable {
         // mapped we need to store the debug data. It would be nice
         // if we could skip this step and initialize only required
         // data units.
-        final Map<String, ManagableDataUnit> dataUnits;
+        final Map<String, ManageableDataUnit> dataUnits;
         try {
             dataUnits = dataUnitManager.onComponentStart(componentExecution);
         } catch (DataUnitManager.DataUnitException ex) {

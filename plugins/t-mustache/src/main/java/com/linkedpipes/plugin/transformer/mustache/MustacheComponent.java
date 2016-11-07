@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class MustacheComponent implements Component.Sequential {
 
@@ -117,7 +116,7 @@ public final class MustacheComponent implements Component.Sequential {
                     new FileOutputStream(outputFile), "UTF8")) {
                 mustache.execute(outputStream, object.data).flush();
             } catch (IOException ex) {
-                throw exceptionFactory.failed("Can't write output file.", ex);
+                throw exceptionFactory.failure("Can't write output file.", ex);
             }
             progressReport.entryProcessed();
         }

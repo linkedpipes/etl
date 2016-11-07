@@ -1,0 +1,27 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container ng-hide="dialog.usePrefix.hide" flex>
+        <md-switch ng-disabled="dialog.usePrefix.disabled || dialog.usePrefix.inherit"
+                   ng-model="dialog.usePrefix.value">
+            Unpack each file to separate directory
+        </md-switch>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.format.hide" flex>
+        <label>Format</label>
+        <md-select ng-model="dialog.format.value"
+                   ng-disabled="dialog.format.disabled || dialog.format.inherit">
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-unpack#auto">
+                auto
+            </md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-unpack#zip">
+                zip
+            </md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-unpack#bzip2">
+                bzip2
+            </md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-unpack#gz">
+                gzip
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>

@@ -6,9 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * For the {@link java.util.Date} the GMT time zone is used.
+ * Annotation that describe process of loading an RDF into the Java POJO
+ * object.
  *
- * @author Škoda Petr
+ * Implementation specifications:
+ * <ul>
+ * <li>For the {@link java.util.Date} the GMT time zone is used.</li>
+ * </ul>
  */
 public interface RdfToPojo {
 
@@ -34,7 +38,6 @@ public interface RdfToPojo {
      *
      * If used in annotated class it marks the property in which the
      * value should be loaded.
-     *
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.TYPE, ElementType.FIELD})

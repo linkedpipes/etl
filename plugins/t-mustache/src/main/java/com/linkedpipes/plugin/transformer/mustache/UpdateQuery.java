@@ -6,7 +6,6 @@ import java.util.Map;
 /**
  * Unpack PREFIXES in Mustache template.
  *
- * @author Petr Škoda
  */
 class UpdateQuery {
 

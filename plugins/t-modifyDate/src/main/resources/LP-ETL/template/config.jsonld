@@ -1,0 +1,22 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-modifyDate/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-modifyDate#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-modifyDate#input": {
+            "@id" : "http://purl.org/dc/terms/date"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-modifyDate#inputControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-modifyDate#shiftBy": -1,
+        "http://plugins.linkedpipes.com/ontology/t-modifyDate#shiftByControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-modifyDate#output": {
+               "@id" : "http://purl.org/dc/terms/date"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-modifyDate#outputControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

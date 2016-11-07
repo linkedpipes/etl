@@ -61,12 +61,12 @@ public final class UnpackZip implements Component.Sequential {
         try {
             final ZipFile zip = new ZipFile(zipFile);
             if (zip.isEncrypted()) {
-                throw exceptionFactory.failed("File is encrypted: {}",
+                throw exceptionFactory.failure("File is encrypted: {}",
                         zipFile.getName());
             }
             zip.extractAll(targetDirectory.toString());
         } catch (ZipException ex) {
-            throw exceptionFactory.failed("Extraction failed: {}",
+            throw exceptionFactory.failure("Extraction failure: {}",
                     zipFile.getName(), ex);
         }
     }

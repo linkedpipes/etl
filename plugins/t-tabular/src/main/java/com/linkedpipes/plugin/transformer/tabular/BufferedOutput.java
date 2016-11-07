@@ -14,7 +14,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 /**
  * Buffered output handler.
  *
- * @author Petr Škoda
  */
 class BufferedOutput implements StatementConsumer {
 

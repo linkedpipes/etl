@@ -1,18 +1,17 @@
 package com.linkedpipes.etl.component.api.impl.rdf;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
-import java.util.LinkedList;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Test suite for {@link LoadObject} class.
- *
- * @author Petr Škoda
  */
 public class LoadObjectTest {
 
@@ -174,7 +173,8 @@ public class LoadObjectTest {
 
         //
         final TestClassThree object = (TestClassThree) LoadObject.loadNew(
-                TestClassThree.class, "http://localhost/three", null, data);
+                TestClassThree.class, "http://localhost/three", null, data,
+                loadAllOptions());
 
         Assert.assertNotNull(object.one);
         Assert.assertEquals("hodnota", object.one.value);
@@ -207,11 +207,16 @@ public class LoadObjectTest {
 
         //
         final TestClassFour object = (TestClassFour) LoadObject.loadNew(
-                TestClassFour.class, "http://localhost/four", null, data);
+                TestClassFour.class, "http://localhost/four", null, data,
+                loadAllOptions());
 
         Assert.assertNotNull(object.value);
         Assert.assertEquals(2, object.value.size());
 
+    }
+
+    private static RdfReader.MergeOptionsFactory loadAllOptions() {
+        return (resourceIri, graph) -> (predicate -> true);
     }
 
 }

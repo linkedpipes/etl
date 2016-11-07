@@ -1,0 +1,31 @@
+[
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0",
+        "@type": "http://linkedpipes.com/ontology/JarTemplate",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Virtuoso",
+        "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/x-virtuoso/0.0.0"},
+        "http://linkedpipes.com/ontology/color": "#FFAAF3",
+        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Executor"},
+        "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
+        "http://linkedpipes.com/ontology/supportControl" : true,
+        "http://linkedpipes.com/ontology/port": [ ],
+        "http://linkedpipes.com/ontology/keyword": [
+            "virtuoso"
+        ],
+        "http://linkedpipes.com/ontology/configurationDescription": [
+            {"@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0/configurationDescription"}
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/x-virtuoso"}
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0/configurationDescription",
+        "@type": [
+            "http://linkedpipes.com/ontology/ConfigurationDescription"
+        ],
+        "http://linkedpipes.com/ontology/privateProperties" : [
+            {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuoso#uri"},
+            {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuoso#username"},
+            {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuoso#password"}
+        ]
+    }
+]

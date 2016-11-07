@@ -1,6 +1,6 @@
 define([], function () {
-    function controler($scope, $mdDialog, $http,
-            statusService, jsonldService) {
+    function controler($scope, $mdDialog, $http, templateService,
+                       statusService, jsonldService) {
 
         // Fragment sources.
         $scope.url = '';
@@ -12,10 +12,12 @@ define([], function () {
         $scope.activeTab = 0;
 
         $scope.importing = false;
+        $scope.importTemplates = true;
+        $scope.updateTemplates = false;
 
         var template = {
             'iri': {
-                '$property': 'http://linkedpipes.com/ontology/pipeline'
+                '$property': '@id'
             },
             'label': {
                 '$property': 'http://www.w3.org/2004/02/skos/core#prefLabel'
@@ -26,13 +28,44 @@ define([], function () {
         /**
          * Load and return pipeline from given IRI.
          */
-        function loadFromIri(iri) {
+        function loadFromIri(iri, fromLocal) {
             $scope.importing = true;
-            $http.get(iri).then(function (response) {
-                $scope.importing = false;
-                var pipeline = response.data;
-                $mdDialog.hide({
-                    'pipeline': pipeline
+            //
+            var data = new FormData();
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/local': fromLocal,
+                'http://etl.linkedpipes.com/ontology/importTemplates': $scope.importTemplates,
+                'http://etl.linkedpipes.com/ontology/updateTemplates': $scope.updateTemplates
+            };
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            //
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            };
+            //
+            $http.post(iri, data, config).then(function (response) {
+                templateService.load(true).then(() => {
+                    $scope.importing = false;
+                    $mdDialog.hide({
+                        'pipeline': response.data
+                    });
+                }, () => {
+                    statusService.getFailed({
+                        'title': "Can't update templates.",
+                        'response': response
+                    });
+                    $mdDialog.hide({
+                        'pipeline': response.data
+                    });
                 });
             }, function (response) {
                 $scope.importing = false;
@@ -45,25 +78,58 @@ define([], function () {
 
         /**
          * Import from local file.
+         * TODO: Also use server to update the pipeline.
          */
         function importFile() {
-            $scope.importing = true;
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var fragment;
-                try {
-                    fragment = JSON.parse(reader.result);
-                } catch (error) {
-                    statusService.getFailed({
-                        'title': "Given file is not a valid JSON."
-                    });
-                    $mdDialog.cancel();
-                }
-                $mdDialog.hide({
-                    'pipeline': fragment
-                });
+            // We need to localize (update) the given pipeline file.
+            var data = new FormData();
+            var options = {
+                '@id': 'http://localhost/options',
+                '@type': 'http://linkedpipes.com/ontology/UpdateOptions',
+                'http://etl.linkedpipes.com/ontology/local': false,
+                'http://etl.linkedpipes.com/ontology/importTemplates': $scope.importTemplates,
+                'http://etl.linkedpipes.com/ontology/updateTemplates': $scope.updateTemplates
             };
-            reader.readAsText($scope.file, 'UTF-8');
+            data.append('options', new Blob([JSON.stringify(options)], {
+                type: "application/ld+json"
+            }), 'options.jsonld');
+            // data.append('pipeline', new Blob([reader.result], {
+            //     type: "application/ld+json"
+            // }), $scope.file.name);
+            data.append('pipeline', $scope.file);
+
+            var config = {
+                'transformRequest': angular.identity,
+                'headers': {
+                    // By this angular add Content-Type itself.
+                    'Content-Type': undefined,
+                    'accept': 'application/ld+json'
+                }
+            };
+
+            $http.post('/resources/localize', data, config).then(
+                function (response) {
+                    templateService.load(true).then(() => {
+                        $scope.importing = false;
+                        $mdDialog.hide({
+                            'pipeline': response.data
+                        });
+                    }, () => {
+                        statusService.getFailed({
+                            'title': "Can't update templates.",
+                            'response': response
+                        });
+                        $mdDialog.hide({
+                            'pipeline': response.data
+                        });
+                    });
+                }, function (response) {
+                    $scope.importing = false;
+                    statusService.getFailed({
+                        'title': "Can't load the pipeline.",
+                        'response': response
+                    });
+                });
         }
 
         $scope.repository = jsonldService.createRepository({
@@ -72,10 +138,11 @@ define([], function () {
                 'data': {
                     'property': '@type',
                     'operation': 'in',
-                    'value': 'http://etl.linkedpipes.com/ontology/Reference'
+                    'value': 'http://linkedpipes.com/ontology/Pipeline'
                 }
             },
-            'decorator': function () {},
+            'decorator': function () {
+            },
             'url': '/resources/pipelines'
         });
 
@@ -114,7 +181,6 @@ define([], function () {
 
         };
 
-
         /**
          * Load list of local pipelines on the first opening of pipelines
          * tab.
@@ -139,8 +205,9 @@ define([], function () {
         $scope.onImport = function () {
             if ($scope.activeTab === 0) {
                 // Import from IRI.
-                loadFromIri('/api/v1/proxy?url=' + $scope.url);
+                loadFromIri('/resources/localize?pipeline=' + $scope.url, false);
             } else if ($scope.activeTab === 1) {
+                // Import from a file.
                 importFile();
             } else if ($scope.activeTab === 2) {
                 // Import from IRI on local machine.
@@ -150,7 +217,20 @@ define([], function () {
                         'title': "No pipeline selected for import."
                     });
                 } else {
-                    loadFromIri($scope.pipeline);
+                    // Just get the local pipeline and return it.
+                    $http.get($scope.pipeline).then(function (response) {
+                        $scope.importing = false;
+                        var pipeline = response.data;
+                        $mdDialog.hide({
+                            'pipeline': pipeline
+                        });
+                    }, function (response) {
+                        $scope.importing = false;
+                        statusService.getFailed({
+                            'title': "Can't load the pipeline.",
+                            'response': response
+                        });
+                    });
                 }
             } else {
                 console.error('Invalid active tab: ', $scope.activeTab);
@@ -162,8 +242,9 @@ define([], function () {
         };
 
     }
+
     controler.$inject = ['$scope', '$mdDialog', '$http',
-        'services.status', 'services.jsonld'];
+        'template.service', 'services.status', 'services.jsonld'];
 
     return function init(app) {
         app.controller('components.pipelines.import.dialog', controler);

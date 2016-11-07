@@ -302,6 +302,9 @@ define([], function () {
          * reorganize function to remove the null values.
          * If given resource is a connection then also remove all its verticies.
          *
+         * If given resource is a component also remove the referenced
+         * configuration graph.
+         *
          * @param model
          * @param iri Resource URI.
          */
@@ -323,6 +326,11 @@ define([], function () {
                     service.connection.setVertices(model, graph[index], []);
                 }
                 graph[index] = null;
+                // It might have been a component with regerence.
+                var graphIri = this.getComponentConfigurationUri(resource);
+                if (graphIri !== undefined){
+                    this.deleteGraph(model, graphIri);
+                }
                 break;
             }
         };
@@ -535,9 +543,8 @@ define([], function () {
         };
 
         service.getComponentConfigurationUri = function (component) {
-            if (component['http://linkedpipes.com/ontology/configurationGraph']) {
-                return component['http://linkedpipes.com/ontology/configurationGraph']['@id'];
-            }
+            return jsonld.getReference(component,
+                'http://linkedpipes.com/ontology/configurationGraph');
         };
 
         service.getComponentConfigurationGraph = function (model, component) {

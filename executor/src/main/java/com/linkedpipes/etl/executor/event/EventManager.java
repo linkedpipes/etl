@@ -1,14 +1,13 @@
 package com.linkedpipes.etl.executor.event;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
+
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Designed to handle publishing of event in the application.
- *
- * @author Petr Škoda
  */
 public class EventManager {
 
@@ -64,7 +63,8 @@ public class EventManager {
         event.setResource(iriPrefix + counter);
         counter += 1;
         // Notify listeners and also remove null.
-        final List<WeakReference<EventListener>> nullReferences = new LinkedList();
+        final List<WeakReference<EventListener>> nullReferences
+                = new LinkedList();
         for (WeakReference<EventListener> reference : listeners) {
             final EventListener listener = reference.get();
             if (listener != null) {

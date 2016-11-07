@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.filehasher;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class FileHasherVocabulary {
 

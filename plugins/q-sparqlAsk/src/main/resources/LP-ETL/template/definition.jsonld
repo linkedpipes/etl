@@ -1,0 +1,29 @@
+[
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/q-sparqlAsk/0.0.0",
+        "@type": "http://linkedpipes.com/ontology/JarTemplate",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL ask",
+        "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/q-sparqlAsk/0.0.0"},
+        "http://linkedpipes.com/ontology/color": "#FFFFCC",
+        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Quality"},
+        "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
+        "http://linkedpipes.com/ontology/supportControl" : true,
+        "http://linkedpipes.com/ontology/port": [
+            {"@id": "http://etl.linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/input"}
+        ],
+        "http://linkedpipes.com/ontology/keyword": [
+            "SPARQL", "ask", "quality", "check"
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/q-sparqlask"}
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/q-sparqlAsk/0.0.0/input",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Input",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
+            "http://linkedpipes.com/ontology/Port",
+            "http://linkedpipes.com/ontology/Input"
+        ],
+        "http://linkedpipes.com/ontology/binding": "InputRdf"
+    }
+]

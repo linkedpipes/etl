@@ -8,16 +8,13 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
-import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-/**
- *
- * @author Petr Škoda
- */
+import java.io.File;
+
 public class Executor {
 
     /**
@@ -32,12 +29,11 @@ public class Executor {
     private static Appender<ILoggingEvent> createRollingFileAppender(
             File logDirectory, String logFileName, LoggerContext loggerContext,
             String levelFilter) {
-        final File coreLogDirectory = new File(logDirectory, "core");
-        coreLogDirectory.mkdirs();
+        logDirectory.mkdirs();
 
         final RollingFileAppender newAppender = new RollingFileAppender();
         newAppender.setContext(loggerContext);
-        newAppender.setFile(coreLogDirectory.getPath() + File.separator
+        newAppender.setFile(logDirectory.getPath() + File.separator
                 + logFileName + ".log");
         {
             final TimeBasedRollingPolicy rollingPolicy
@@ -47,7 +43,7 @@ public class Executor {
             // it's one of the rare cases, where a sub-component
             // knows about its parent.
             rollingPolicy.setParent(newAppender);
-            rollingPolicy.setFileNamePattern(coreLogDirectory.getPath()
+            rollingPolicy.setFileNamePattern(logDirectory.getPath()
                     + File.separator
                     + logFileName + ".%d{yyyy-MM-dd}.%i.log");
             rollingPolicy.setMaxHistory(7);
@@ -99,7 +95,7 @@ public class Executor {
         //
         logbackLogger.addAppender(createRollingFileAppender(
                 new File(logDirectory, "executor"),
-                "core",
+                "executor",
                 loggerContext,
                 configuration.getLogCoreFilter()));
     }
@@ -108,7 +104,7 @@ public class Executor {
         initLogger();
         final AbstractApplicationContext context
                 = new ClassPathXmlApplicationContext(
-                        "spring/context-executor.xml");
+                "spring/context-executor.xml");
         context.registerShutdownHook();
         context.start();
     }

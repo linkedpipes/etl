@@ -6,14 +6,16 @@
     <version>0.0.0</version>
     <packaging>pom</packaging>
     <name>lp-pom-component</name>
+    <description>Base POM for LinkedPipes ETL components.</description>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Sesame baseline version. Higher version (up to 3.0.0), may be acessinble at runtime. -->
+        <!-- Libraries. -->
         <sesame.version>4.0.0</sesame.version>
+        <lp.version>0.0.0</lp.version>
     </properties>
 
     <dependencyManagement>
@@ -21,25 +23,25 @@
             <dependency>
                 <groupId>com.linkedpipes</groupId>
                 <artifactId>api-commons</artifactId>
-                <version>0.0.0</version>
+                <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
                 <artifactId>api-component-v1</artifactId>
-                <version>0.0.0</version>
+                <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
                 <artifactId>dataunit-sesame</artifactId>
-                <version>0.0.0</version>
+                <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
                 <artifactId>dataunit-system</artifactId>
-                <version>0.0.0</version>
+                <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
             <!-- Core libraries. -->
@@ -47,6 +49,12 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.4</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>3.5</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

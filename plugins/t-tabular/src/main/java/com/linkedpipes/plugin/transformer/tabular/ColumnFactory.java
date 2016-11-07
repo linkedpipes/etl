@@ -1,23 +1,24 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import com.linkedpipes.plugin.transformer.tabular.TabularConfiguration.Column;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collections;
-import org.openrdf.model.IRI;
+import java.util.List;
 
 /**
  *
- * @author Petr Škoda
  */
 class ColumnFactory {
 
@@ -63,10 +64,21 @@ class ColumnFactory {
 
             final UrlTemplate predicate;
             if (column.getPropertyUrl() == null) {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Missing predicate for column: '{}'", column.getName());
             } else {
-                predicate = new UrlTemplate(column.getPropertyUrl());
+                // We need to test if we got absolute IRI or not.
+                String predicateAsString = column.getPropertyUrl();
+                try {
+                    if (!URI.create(predicateAsString).isAbsolute()) {
+                        predicateAsString = configuration.getBaseUri()
+                                + predicateAsString;
+                    }
+                } catch (IllegalArgumentException ex) {
+                    throw exceptionFactory.failure("Invalid IRI: '{}'",
+                            ex);
+                }
+                predicate = new UrlTemplate(predicateAsString);
             }
 
             if (column.isSupressOutput()) {
@@ -87,7 +99,7 @@ class ColumnFactory {
                 try {
                     type = valueFactory.createIRI(column.getDatatype());
                 } catch (RuntimeException ex) {
-                    throw exceptionFactory.failed(
+                    throw exceptionFactory.failure(
                             "Invalid column type '{}' for colum: '{}'",
                             column.getDatatype(), column.getName(), ex);
                 }
@@ -96,7 +108,7 @@ class ColumnFactory {
                         column.getName(), column.isRequired(),
                         aboutUrl, predicate));
             } else {
-                throw exceptionFactory.failed(
+                throw exceptionFactory.failure(
                         "Invalid configuration for column {}", column.getName());
             }
         }
@@ -136,7 +148,7 @@ class ColumnFactory {
                     header.set(counter - 1, name);
                 } else {
                     LOG.info("Header: {}", header);
-                    throw exceptionFactory.failed(
+                    throw exceptionFactory.failure(
                             "Header must not contains null values.");
                 }
             }

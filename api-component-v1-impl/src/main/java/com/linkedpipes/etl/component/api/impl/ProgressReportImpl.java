@@ -1,16 +1,11 @@
 package com.linkedpipes.etl.component.api.impl;
 
 import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.Plugin;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
 
 import java.util.Collection;
 
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-
-/**
- *
- * @author Škoda Petr
- */
 class ProgressReportImpl implements ProgressReport {
 
     private static class ReportProgress extends AbstractEvent {
@@ -59,11 +54,11 @@ class ProgressReportImpl implements ProgressReport {
 
     private long reportNext;
 
-    private final Plugin.Context context;
+    private final Component.Context context;
 
     private final String componentIri;
 
-    ProgressReportImpl(Plugin.Context context, String componentIri) {
+    ProgressReportImpl(Component.Context context, String componentIri) {
         this.context = context;
         this.componentIri = componentIri;
     }

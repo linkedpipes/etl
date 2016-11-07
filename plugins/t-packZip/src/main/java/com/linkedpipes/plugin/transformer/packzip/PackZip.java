@@ -38,7 +38,7 @@ public final class PackZip implements Component.Sequential {
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+            throw exceptionFactory.failure("Missing property: {}",
                     PackZipVocabulary.HAS_FILE_NAME);
         }
         //
@@ -53,7 +53,7 @@ public final class PackZip implements Component.Sequential {
                 progressReport.entryProcessed();
             }
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't create archive.", ex);
+            throw exceptionFactory.failure("Can't create archive.", ex);
         }
         progressReport.done();
     }
@@ -79,7 +79,7 @@ public final class PackZip implements Component.Sequential {
                 zos.write(buffer, 0, len);
             }
         } catch (Exception ex) {
-            throw exceptionFactory.failed("", ex);
+            throw exceptionFactory.failure("", ex);
         }
     }
 

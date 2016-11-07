@@ -87,7 +87,6 @@ define([
     };
 
     service.update = function () {
-        console.time('executionProgress.update');
         var components = this.execution.getComponents();
         for (var iri in components) {
             var component = components[iri];
@@ -99,7 +98,6 @@ define([
             }
             updateVisual(cell, component, this.execution, this.enabled);
         }
-        console.timeEnd('executionProgress.update');
     };
 
     service.onComponentClick = function (component) {
@@ -142,11 +140,12 @@ define([
         }
         // Construct path to data unit debug.
         var execIri = this.execution.getIri();
-        var ftpPath = this.infoService.get().path.ftp + '/' +
-                execIri.substring(
-                        execIri.lastIndexOf('executions/') + 11) + '/';
-        // Open in new tab.
-        window.open(ftpPath + dataUnit.debug, '_blank');
+        this.infoService.fetch().then((info) => {
+            var ftpPath = info.path.ftp + '/' +
+                execIri.substring(execIri.lastIndexOf('executions/') + 11)
+                + '/';
+            window.open(ftpPath + dataUnit.debug, '_blank');
+        });
     };
 
     /**

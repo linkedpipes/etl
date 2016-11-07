@@ -1,13 +1,14 @@
 package com.linkedpipes.plugin.transformer.textHolder;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  *
@@ -26,10 +27,12 @@ public final class TextHolder implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getFileName() == null
-                || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.missingConfigurationProperty(
+        if (configuration.getFileName() == null) {
+            throw exceptionFactory.failure("Missing property: {}",
                     TextHolderVocabulary.HAS_FILE_NAME);
+        }
+        if (configuration.getFileName().isEmpty()) {
+            throw exceptionFactory.failure("File name must not be empty.");
         }
         //
         final File outputFile = outputFiles.createFile(
@@ -39,7 +42,7 @@ public final class TextHolder implements Component.Sequential {
                     configuration.getContent().getBytes(
                             Charset.forName("UTF-8")));
         } catch (IOException ex) {
-            throw exceptionFactory.failed("Can't write content to file.", ex);
+            throw exceptionFactory.failure("Can't write content to file.", ex);
         }
     }
 

@@ -1,0 +1,11 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-dcatAp11Distribution/0.0.0/configuration",
+        "@type" : ["http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/Configuration"],
+        "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/genDistroIRI" : true,
+        "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/getDatasetIRIFromInput" : true,
+        "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/languagesFromDataset" : true,
+        "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/modifiedFromDataset" : true,
+        "http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/modifiedNow" : true
+    }
+]

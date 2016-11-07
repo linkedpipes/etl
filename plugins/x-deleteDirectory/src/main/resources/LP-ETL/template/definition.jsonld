@@ -1,0 +1,16 @@
+[
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/x-deleteDirectory/0.0.0",
+        "@type": "http://linkedpipes.com/ontology/JarTemplate",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Delete directory",
+        "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/x-deleteDirectory/0.0.0"},
+        "http://linkedpipes.com/ontology/color": "#FFAAF3",
+        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Executor"},
+        "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
+        "http://linkedpipes.com/ontology/supportControl" : true,
+        "http://linkedpipes.com/ontology/port": [ ],
+        "http://linkedpipes.com/ontology/keyword": [
+            "directory", "clear", "delete"
+        ]
+    }
+]

@@ -1,0 +1,16 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiUri": "",
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKey" : "",
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadToCkan" : true,
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#datasetID" : "",
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#filename" : "",
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#organizationId" : "",
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadLanguage" : "cs",
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateVirtuosoExample" : true,
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateExample" : true,
+        "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#overwrite" : true
+    }
+]

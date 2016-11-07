@@ -8,7 +8,6 @@ import org.openrdf.model.impl.SimpleValueFactory;
 /**
  * Template for IRI.
  *
- * @author Petr Škoda
  */
 class UrlTemplate {
 

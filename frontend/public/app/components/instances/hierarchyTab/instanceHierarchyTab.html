@@ -1,0 +1,17 @@
+<div class="layout-padding">
+    List of ancestors, starting with the core template.
+    <md-list flex>
+        <md-list-item class="md-1-line" ng-repeat="template in parent._parents">
+            <div class="md-list-item-text" layout="column">
+                <p>{{::template.label}}</p>
+            </div>
+            <md-divider></md-divider>
+        </md-list-item>
+        <md-list-item class="md-1-line">
+            <div class="md-list-item-text" layout="column">
+                <p>{{::parent.label}}</p>
+            </div>
+            <md-divider></md-divider>
+        </md-list-item>
+    </md-list>
+</div>

@@ -1,0 +1,6 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-htmlCssUv/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Configuration"]
+    }
+]

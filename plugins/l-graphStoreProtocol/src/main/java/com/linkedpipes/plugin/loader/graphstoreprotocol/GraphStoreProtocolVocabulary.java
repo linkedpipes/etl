@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
 /**
  *
- * @author Petr Škoda
  */
 public final class GraphStoreProtocolVocabulary {
 

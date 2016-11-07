@@ -152,6 +152,12 @@ define([
         } else {
             this.getComponentMenuMappingDom().css('display', 'none');
         }
+        // Create template.
+        if (this.API.createTemplate(component)) {
+            componentMenuDom.find('#createTemplate').css('display', 'inline');
+        } else {
+            componentMenuDom.find('#createTemplate').css('display', 'none');
+        }
     };
 
     service.menuComponentUpdateHeight = function (height) {
@@ -418,6 +424,14 @@ define([
             'port': link.attributes.source.port
         });
     };
+
+    service.onCreateTemplate = function() {
+        var component = this.pipelineCanvas.getResource(
+            this.componentMenu.view.model.id);
+        var cell = this.canvas.API.getGraph().getCell(
+            this.componentMenu.view.model.id);
+        this.API.onCreateComponent(cell, component);
+    }
 
     function directiveFactory() {
         // Used to store directive data outstide the scope.

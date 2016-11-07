@@ -1,0 +1,60 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/graph> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/repository> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/authentification> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/user> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/password> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/checkSize> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/endpointSelect> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/endpoint> ,
+        <http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/replace> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/graph>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#graph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#graphControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/repository>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#repository> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#repositoryControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/authentification>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#authentification> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#authentificationControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/user>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#user> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#userControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#passwordControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/checkSize>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#checkSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#checkSizeControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/endpointSelect>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointSelect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointSelectControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/endpoint>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointControl> .
+
+<http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc/replace>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#replace> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#replaceControl> .
+

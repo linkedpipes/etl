@@ -1,0 +1,40 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.source.hide">
+        <label>Predicate for input values</label>
+        <textarea id="source" ng-model="dialog.source.value"
+                  ng-disabled="dialog.source.disabled || dialog.source.inherit"/>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.regexp.hide">
+        <label>Regular expression with groups</label>
+        <textarea id="regexp" ng-model="dialog.regexp.value"
+                  ng-disabled="dialog.regexp.disabled || dialog.regexp.inherit"/>
+    </md-input-container>
+    <md-switch ng-model="dialog.preserveMetadata.value"
+               ng-disabled="dialog.$control.disabled || dialog.$control.inherit">
+        Preserve language tag/datatype
+    </md-switch>
+    <div ng-hide="dialog.binding.disabled || dialog.binding.inherit || dialog.binding.hide">
+        <section ng-repeat="item in dialog.binding.value"
+                 style="margin-top: 0em;margin-bottom: -2em;"
+                 layout="row">
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Group</label>
+                <input ng-model="item.group.value">
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Predicate</label>
+                <input ng-model="item.target.value"
+                       placeholder="http://example.com/property">
+            </md-input-container>
+            <button ng-click="onDelete($index)"
+                    class="md-icon-button md-accent md-button md-ink-ripple">
+                <md-icon md-svg-icon="clear" class="lp-icon"></md-icon>
+            </button>
+        </section>
+        <button ng-click="onAdd()"
+                class="md-icon-button md-primary md-button md-ink-ripple">
+            <md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon>
+        </button>
+    </div>
+</div>

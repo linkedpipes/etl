@@ -1,0 +1,75 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.fileName.hide"
+                            flex-gt-sm>
+            <label>Output file name</label>
+            <input ng-model="dialog.fileName.value"
+                   ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
+                   placeholder="my.csv">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.sheetFilter.hide"
+                            flex-gt-sm>
+            <label>Sheet filter</label>
+            <input ng-model="dialog.sheetFilter.value"
+                   ng-disabled="dialog.sheetFilter.disabled || dialog.sheetFilter.inherit"
+                   placeholder="[0-9]+">
+        </md-input-container>
+    </div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.rowStart.hide"
+                            flex-gt-sm>
+            <label>Row start</label>
+            <input type="number" ng-model="dialog.rowStart.value"
+                   ng-disabled="dialog.rowStart.disabled || dialog.rowStart.inherit"
+                   placeholder="1" min="1">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.rowEnd.hide"
+                            flex-gt-sm>
+            <label>Row end</label>
+            <input type="number" ng-model="dialog.rowEnd.value"
+                   ng-disabled="dialog.rowEnd.disabled || dialog.rowEnd.inherit"
+                   placeholder="42" min="1">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.columnStart.hide"
+                            flex-gt-sm>
+            <label>Column start</label>
+            <input type="number" ng-model="dialog.columnStart.value"
+                   ng-disabled="dialog.columnStart.disabled || dialog.columnStart.inherit"
+                   placeholder="1" min="1">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.columnEnd.hide"
+                            flex-gt-sm>
+            <label>Column end</label>
+            <input type="number" ng-model="dialog.columnEnd.value"
+                   ng-disabled="dialog.columnEnd.disabled || dialog.columnEnd.inherit"
+                   placeholder="42" min="1">
+        </md-input-container>
+    </div>
+    <md-switch ng-model="dialog.header.value"
+               ng-disabled="dialog.header.disabled || dialog.header.inherit"
+               ng-hide="dialog.header.hide">
+        Virtual columns with header
+    </md-switch>
+    <md-switch ng-model="dialog.numericParse.value"
+               ng-disabled="dialog.numericParse.disabled || dialog.numericParse.inherit"
+               ng-hide="dialog.numericParse.hide">
+        Determine type (as date) for numeric cells
+    </md-switch>
+    <md-switch ng-model="dialog.skipEmptyRows.value"
+               ng-disabled="dialog.skipEmptyRows.disabled || dialog.skipEmptyRows.inherit"
+               ng-hide="dialog.skipEmptyRows.hide">
+        Skip empty rows
+    </md-switch>
+    <md-switch ng-model="dialog.includeSheetName.value"
+               ng-disabled="dialog.includeSheetName.disabled || dialog.includeSheetName.inherit"
+               ng-hide="dialog.includeSheetName.hide">
+        Add sheet name as a column
+    </md-switch>
+</div>

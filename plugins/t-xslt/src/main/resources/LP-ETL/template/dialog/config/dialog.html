@@ -1,0 +1,16 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.extension.hide" flex>
+        <label>Transformed file extension</label>
+        <input ng-model="dialog.extension.value"
+               ng-disabled="dialog.extension.disabled || dialog.extension.inherit"
+               placeholder="xml">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.xslt.hide" flex>
+        <label>XSLT Template</label>
+        <textarea id="xslt" ng-model="dialog.xslt.value"
+                  ng-disabled="dialog.xslt.disabled || dialog.xslt.inherit"
+                  placeholder="&lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;"
+                  md-select-on-focus/>
+    </md-input-container>
+</div>

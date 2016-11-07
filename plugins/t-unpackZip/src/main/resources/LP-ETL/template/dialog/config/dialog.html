@@ -1,0 +1,9 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container ng-hide="dialog.usePrefix.hide" flex>
+        <md-switch ng-disabled="dialog.usePrefix.disabled || dialog.usePrefix.inherit"
+                   ng-model="dialog.usePrefix.value">
+            Unpack each file to separate directory
+        </md-switch>
+    </md-input-container>
+</div>

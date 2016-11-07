@@ -1,0 +1,18 @@
+@prefix th: <http://plugins.linkedpipes.com/ontology/t-filesRenamer#> .
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-filesRenamer/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-filesRenamer#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-filesRenamer/0.0.0/configuration/desc/pattern> ,
+        <http://linkedpipes.com/resources/components/t-filesRenamer/0.0.0/configuration/desc/replaceWith> .
+
+<http://linkedpipes.com/resources/components/t-filesRenamer/0.0.0/configuration/desc/pattern>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesRenamer#pattern> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesRenamer#patternControl> .
+
+<http://linkedpipes.com/resources/components/t-filesRenamer/0.0.0/configuration/desc/replaceWith>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesRenamer#replaceWith> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesRenamer#replaceWithControl> .

@@ -1,0 +1,11 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-templatedXlsToCsv/1.0.0/configuration/desc/prefix> .
+
+<http://linkedpipes.com/resources/components/t-templatedXlsToCsv/1.0.0/configuration/desc/prefix>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#prefix> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#prefixControl> .
