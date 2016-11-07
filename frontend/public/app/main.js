@@ -30,7 +30,8 @@ requirejs.config({
         // https://github.com/omichelsen/angular-clipboard
         'angular-clipboard' : 'libraries/angular-clipboard/1.4.2/angular-clipboard',
         // Custom modules.
-        'jsonld': '/app/modules/jsonld'
+        'jsonld': '/app/modules/jsonld',
+        'lp': '/app/modules/lp'
     },
     map: {
         'backbone': {

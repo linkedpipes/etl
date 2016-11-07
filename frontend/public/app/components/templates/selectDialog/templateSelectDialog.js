@@ -1,4 +1,4 @@
-define([], function () {
+define(["lp"], function (lp) {
     "use strict";
 
     const ICONS = {
@@ -51,7 +51,7 @@ define([], function () {
             }
             const result = [];
             componentCore.inputs.forEach(function (port) {
-                if (port.content === sourcePort.content) {
+                if (lp.dataunit.compatible(sourcePort.content, port.content)) {
                     const record = {
                         "label": component.label,
                         "parent": component.core ? "" : componentCore.label,
