@@ -2,7 +2,7 @@
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0",
         "@type": "http://linkedpipes.com/ontology/JarTemplate",
-        "http://www.w3.org/2004/02/skos/core#prefLabel": "tabularChunked",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Tabular chunked",
         "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/t-tabularChunked/0.0.0"},
         "http://linkedpipes.com/ontology/color": "#CED8F6",
         "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Transformer"},
