@@ -26,6 +26,7 @@
         <module>t-rdfToFile</module>
         <module>t-rdfToFileChunked</module>
         <module>t-sparqlConstruct</module>
+        <module>t-sparqlConstructChunked</module>
         <module>t-sparqlSelect</module>
         <module>t-sparqlUpdate</module>
         <module>t-tabular</module>
