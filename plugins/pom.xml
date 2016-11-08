@@ -30,6 +30,7 @@
         <module>t-sparqlSelect</module>
         <module>t-sparqlUpdate</module>
         <module>t-tabular</module>
+        <module>t-tabularChunked</module>
         <module>t-unpack</module>
         <module>t-unpackZip</module>
         <module>t-xslt</module>
