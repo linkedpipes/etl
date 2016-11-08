@@ -17,19 +17,19 @@ define([], function () {
         },
         "directory": {
             "$type": "str",
-            "$label": "User name"
+            "$label": "Target directory"
         },
         "createDirectory": {
             "$type": "bool",
-            "$label": "Password"
+            "$label": "Create target directory"
         },
         "userName": {
             "$type": "str",
-            "$label": "Target directory"
+            "$label": "User name"
         },
         "password": {
             "$type": "str",
-            "$label": "Create target directory"
+            "$label": "Password"
         }
     };
 
