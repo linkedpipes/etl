@@ -132,7 +132,7 @@ function postImportPipeline(request, response, url) {
         // Get pipeline.
         gRequest.get({
             // Include mapping and templates.
-            'url': request.query.pipeline + '&templates=true&mappings=true',
+            'url': request.query.pipeline,
             'headers': {
                 'Accept': 'application/ld+json'
             }
