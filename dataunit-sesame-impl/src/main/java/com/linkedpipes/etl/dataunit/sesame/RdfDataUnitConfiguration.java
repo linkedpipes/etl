@@ -32,6 +32,8 @@ public final class RdfDataUnitConfiguration implements PojoLoader.Loadable {
      */
     private final Collection<String> types = new LinkedList<>();
 
+    private String workingDirectory;
+
     public RdfDataUnitConfiguration(String resourceUri) {
         this.resourceIri = resourceUri;
     }
@@ -57,6 +59,10 @@ public final class RdfDataUnitConfiguration implements PojoLoader.Loadable {
         return types;
     }
 
+    public String getWorkingDirectory() {
+        return workingDirectory;
+    }
+
     @Override
     public PojoLoader.Loadable load(String predicate, String value)
             throws RdfException {
@@ -69,6 +75,9 @@ public final class RdfDataUnitConfiguration implements PojoLoader.Loadable {
                 return null;
             case LINKEDPIPES.HAS_PORT_SOURCE:
                 sourceDataUnitIris.add(value);
+                return null;
+            case LINKEDPIPES.HAS_WORKING_DIRECTORY:
+                workingDirectory = value;
                 return null;
             default:
                 return null;
