@@ -9,6 +9,7 @@
     <description>Plugins master build project.</description>
 
     <modules>
+        <module>t-chunkedToGraph</module>
         <module>t-excelToCsv</module>
         <module>t-filesFilter</module>
         <module>l-filesToScp</module>
