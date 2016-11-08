@@ -19,7 +19,7 @@ public final class LoaderScpVocabulary {
     public static final String HAS_PORT = PREFIX + "port";
 
     public static final String HAS_TARGET_DIRECTORY
-            = PREFIX + "targetDirectory";
+            = PREFIX + "directory";
 
     public static final String HAS_CREATE_DIRECTORY
             = PREFIX + "createDirectory";
