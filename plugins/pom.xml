@@ -24,6 +24,7 @@
         <module>t-graphMerger</module>
         <module>t-packZip</module>
         <module>t-rdfToFile</module>
+        <module>t-rdfToFileChunked</module>
         <module>t-sparqlConstruct</module>
         <module>t-sparqlSelect</module>
         <module>t-sparqlUpdate</module>
