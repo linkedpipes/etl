@@ -17,9 +17,6 @@
 
     // Information about data unit compatibility.
     const dataunitCompatibility = {};
-    dataunitCompatibility[vocabulary.DataUnitSesameChunked] = {};
-    dataunitCompatibility[vocabulary.DataUnitSesameChunked]
-        [vocabulary.DataUnitSesameSingleGraph] = true;
 
     /**
      * Check if given source can be connected to given target port.
