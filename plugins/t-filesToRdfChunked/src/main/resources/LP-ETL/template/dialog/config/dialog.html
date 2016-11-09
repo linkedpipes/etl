@@ -18,10 +18,10 @@
             <md-option value="application/xhtml+xml">RDFa</md-option>
         </md-select>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.commitSize.hide">
-        <label>Commit size</label>
-        <input type="number" ng-model="dialog.commitSize.value"
-               placeholder="100000" min="10000" step="10000"
-               ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit">
+    <md-input-container class="md-block" ng-hide="dialog.chunkSize.hide">
+        <label>Files per chunk</label>
+        <input type="number" ng-model="dialog.chunkSize.value"
+               min="1" step="1"
+               ng-disabled="dialog.chunkSize.disabled || dialog.chunkSize.inherit">
     </md-input-container>
 </div>

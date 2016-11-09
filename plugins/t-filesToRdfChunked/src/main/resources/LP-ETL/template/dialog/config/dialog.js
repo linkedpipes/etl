@@ -5,11 +5,11 @@ define([], function () {
         "$namespace" :
             "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
         "$type": "Configuration",
-        "commitSize" : {
+        "chunkSize" : {
             "$type" : "int",
-            "$property" : "commitSize",
-            "$control": "commitSizeControl",
-            "$label" : "Commit size"
+            "$property" : "chunkSize",
+            "$control": "chunkSizeControl",
+            "$label" : "Files per chunk"
         },
         "mimeType" : {
             "$type" : "str",
