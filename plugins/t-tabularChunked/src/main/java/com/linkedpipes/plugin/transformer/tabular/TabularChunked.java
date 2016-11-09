@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- *
+ * Chunked version of tabular.
  */
 public class TabularChunked implements Component.Sequential {
 
@@ -31,6 +32,9 @@ public class TabularChunked implements Component.Sequential {
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
+    @Component.Inject
+    public ProgressReport progressReport;
+
     @Override
     public void execute() throws LpException {
         final RdfOutput output = new RdfOutput(outputRdfDataUnit,
@@ -40,10 +44,9 @@ public class TabularChunked implements Component.Sequential {
         final Mapper mapper = new Mapper(output, configuration,
                 ColumnFactory.createColumnList(configuration, exceptionFactory),
                 exceptionFactory);
-        // TODO We could use some table group URI from user?
         mapper.initialize(null);
+        progressReport.start(inputFilesDataUnit.size());
         for (Entry entry : inputFilesDataUnit) {
-            LOG.info("Processing file: {}", entry.toFile());
             output.onFileStart();
             final String table;
             switch (configuration.getEncodeType()) {
@@ -63,7 +66,9 @@ public class TabularChunked implements Component.Sequential {
             }
             mapper.onTableEnd();
             output.onFileEnd();
+            progressReport.entryProcessed();
         }
+        progressReport.done();
     }
 
 }
