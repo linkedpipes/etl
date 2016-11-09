@@ -9,7 +9,8 @@
         },
         "http://www.w3.org/ns/csvw#dialect" : {
             "@id" : "http://localhost/resources/configuration/dialect"
-        }
+        },
+        "http://plugins.linkedpipes.com/ontology/t-tabular#chunkSize" : "1000"
     },
     {
         "@id": "http://localhost/resources/configuration/schema",
