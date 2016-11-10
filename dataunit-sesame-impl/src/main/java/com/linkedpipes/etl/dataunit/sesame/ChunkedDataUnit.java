@@ -31,7 +31,7 @@ class ChunkedDataUnit implements ChunkedStatements, WritableChunkedStatements,
 
         @Override
         public Collection<Statement> toStatements() throws LpException {
-            LOG.debug("Loading: {} ... ", file);
+            LOG.info("Loading: {} ... ", file);
             final List<Statement> statements = new LinkedList<>();
             try (InputStream stream = new FileInputStream(file);
                  Reader reader = new InputStreamReader(stream, "UTF-8")) {
@@ -47,7 +47,7 @@ class ChunkedDataUnit implements ChunkedStatements, WritableChunkedStatements,
             } catch (IOException ex) {
                 throw ExceptionFactory.failure("Can't load chunk.", ex);
             }
-            LOG.debug("Loading: {} ... done", file);
+            LOG.info("Loading: {} ... done", file);
             return statements;
         }
     }
