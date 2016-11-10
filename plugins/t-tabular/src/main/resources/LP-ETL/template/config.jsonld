@@ -21,6 +21,7 @@
         "http://www.w3.org/ns/csvw#delimeter" : ",",
         "http://www.w3.org/ns/csvw#encoding" : "UTF-8",
         "http://www.w3.org/ns/csvw#header" : true,
-        "http://www.w3.org/ns/csvw#quoteChar" : "\""
+        "http://www.w3.org/ns/csvw#quoteChar" : "\"",
+        "http://www.w3.org/ns/csvw#trim" : false
     }
 ]
