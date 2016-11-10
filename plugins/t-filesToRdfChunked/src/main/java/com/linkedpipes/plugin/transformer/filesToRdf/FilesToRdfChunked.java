@@ -11,6 +11,8 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.AbstractRDFHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 public final class FilesToRdfChunked implements Component.Sequential {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(FilesToRdfChunked.class);
 
     @Component.InputPort(id = "InputFiles")
     public FilesDataUnit inputFiles;
@@ -61,6 +66,7 @@ public final class FilesToRdfChunked implements Component.Sequential {
         //
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
+            LOG.debug("Loading: {}", entry.getFileName());
             if (defaultFormat == null) {
                 final RDFFormat format = Rio.getParserFormatForFileName(
                         entry.getFileName()).orElseGet(null);
