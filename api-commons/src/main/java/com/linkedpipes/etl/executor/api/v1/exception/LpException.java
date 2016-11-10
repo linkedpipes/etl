@@ -21,7 +21,7 @@ public class LpException extends Exception {
         // Extract cause if given.
         if (args.length > 0) {
             if (args[args.length - 1] instanceof Throwable) {
-                this.initCause((Exception) args[args.length - 1]);
+                this.initCause((Throwable) args[args.length - 1]);
             }
         }
         this.message = messages;
