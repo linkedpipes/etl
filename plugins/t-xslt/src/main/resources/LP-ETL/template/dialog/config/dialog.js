@@ -7,7 +7,7 @@ define([], function () {
         "$control": {
             "$predicate": "auto"
         },
-        "xslt": {
+        "template": {
             "$type": "str",
             "$label": "XSLT Template"
         },
