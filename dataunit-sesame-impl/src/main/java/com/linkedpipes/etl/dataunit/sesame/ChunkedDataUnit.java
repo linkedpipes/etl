@@ -12,6 +12,8 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.AbstractRDFHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
@@ -29,6 +31,7 @@ class ChunkedDataUnit implements ChunkedStatements, WritableChunkedStatements,
 
         @Override
         public Collection<Statement> toStatements() throws LpException {
+            LOG.debug("Loading: {} ... ", file);
             final List<Statement> statements = new LinkedList<>();
             try (InputStream stream = new FileInputStream(file);
                  Reader reader = new InputStreamReader(stream, "UTF-8")) {
@@ -44,9 +47,13 @@ class ChunkedDataUnit implements ChunkedStatements, WritableChunkedStatements,
             } catch (IOException ex) {
                 throw ExceptionFactory.failure("Can't load chunk.", ex);
             }
+            LOG.debug("Loading: {} ... done", file);
             return statements;
         }
     }
+
+    private static final Logger LOG
+            = LoggerFactory.getLogger(ChunkedDataUnit.class);
 
     private final String id;
 
