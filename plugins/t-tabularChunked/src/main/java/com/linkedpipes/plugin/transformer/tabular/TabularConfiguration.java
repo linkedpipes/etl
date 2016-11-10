@@ -278,7 +278,7 @@ public class TabularConfiguration {
         private int skipRows = 0;
 
         @RdfToPojo.Property(uri = TabularVocabulary.HAS_TRIM)
-        private boolean trim = true;
+        private boolean trim = false;
 
         public Dialect() {
         }
