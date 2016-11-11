@@ -1,0 +1,11 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0/configuration/desc/query> .
+
+<http://linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0/configuration/desc/query>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl> .

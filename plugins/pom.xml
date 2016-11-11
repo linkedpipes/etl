@@ -31,6 +31,7 @@
         <module>t-sparqlLinkerChunked</module>
         <module>t-sparqlSelect</module>
         <module>t-sparqlUpdate</module>
+        <module>t-sparqlUpdateChunked</module>
         <module>t-tabular</module>
         <module>t-tabularChunked</module>
         <module>t-unpack</module>
