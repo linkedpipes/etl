@@ -34,12 +34,11 @@
         "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlLinkerChunked/0.0.0/reference",
         "http://www.w3.org/2004/02/skos/core#prefLabel": "Reference",
         "@type": [
-            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/Chunked",
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
             "http://linkedpipes.com/ontology/Port",
             "http://linkedpipes.com/ontology/Input"
         ],
-        "http://linkedpipes.com/ontology/binding": "ReferenceRdf",
-        "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
+        "http://linkedpipes.com/ontology/binding": "ReferenceRdf"
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlLinkerChunked/0.0.0/configuration",

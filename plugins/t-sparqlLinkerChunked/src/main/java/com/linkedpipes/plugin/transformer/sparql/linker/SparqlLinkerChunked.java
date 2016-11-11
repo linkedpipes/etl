@@ -12,6 +12,8 @@ import org.openrdf.query.GraphQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.repository.util.Repositories;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.helpers.AbstractRDFHandler;
 import org.openrdf.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,7 @@ public final class SparqlLinkerChunked implements Component.Sequential {
     public ChunkedStatements dataRdf;
 
     @Component.InputPort(id = "ReferenceRdf")
-    public ChunkedStatements referenceRdf;
+    public SingleGraphDataUnit referenceRdf;
 
     @Component.ContainsConfiguration
     @Component.InputPort(id = "Configuration")
@@ -64,43 +66,49 @@ public final class SparqlLinkerChunked implements Component.Sequential {
             throw exceptionFactory.failure("Missing property: {}",
                     SparqlConstructVocabulary.HAS_QUERY);
         }
-        // We always perform inserts.
-        progressReport.start(dataRdf.size() * referenceRdf.size());
-        LOG.info("data size: {}", dataRdf.size());
-        LOG.info("reference size: {}", referenceRdf.size());
-        List<Statement> outputBuffer = new ArrayList<>(10000);
-        for (ChunkedStatements.Chunk reference: referenceRdf) {
-            Collection<Statement> referenceRdf = reference.toStatements();
-            for (ChunkedStatements.Chunk data : dataRdf) {
-                LOG.info("processing ..");
-                // Prepare repository and load data.
-                final Repository repository =
-                        new SailRepository(new MemoryStore());
-                repository.initialize();
-                LOG.info("\tloading ..");
-                final Collection<Statement> statements = data.toStatements();
-                Repositories.consume(repository, (connection) -> {
-                    connection.add(statements);
-                    connection.add(referenceRdf);
-                });
-                LOG.info("\tquerying ..");
-                // Execute query and store result.
-                Repositories.consume(repository, (connection) -> {
-                    final GraphQueryResult result =
-                            connection.prepareGraphQuery(
-                                    configuration.getQuery()).evaluate();
-                    while (result.hasNext()) {
-                        outputBuffer.add(result.next());
-                    }
-                });
-                outputRdf.submit(outputBuffer);
-                LOG.info("\tcleanup ..");
-                // Cleanup.
-                outputBuffer.clear();
-                repository.shutDown();
-                progressReport.entryProcessed();
-                LOG.info("\tdone ..");
-            }
+        progressReport.start(dataRdf.size());
+        final List<Statement> outputBuffer = new ArrayList<>(10000);
+        // Load reference data.
+        final List<Statement> reference = new ArrayList<>(10000);
+        referenceRdf.execute((connection) -> {
+            connection.export(new AbstractRDFHandler() {
+                @Override
+                public void handleStatement(Statement st)
+                        throws RDFHandlerException {
+                    reference.add(st);
+                }
+            }, referenceRdf.getGraph());
+        });
+        //
+        for (ChunkedStatements.Chunk data : dataRdf) {
+            LOG.info("processing ..");
+            // Prepare repository and load data.
+            final Repository repository =
+                    new SailRepository(new MemoryStore());
+            repository.initialize();
+            LOG.info("\tloading ..");
+            final Collection<Statement> statements = data.toStatements();
+            Repositories.consume(repository, (connection) -> {
+                connection.add(statements);
+                connection.add(reference);
+            });
+            LOG.info("\tquerying ..");
+            // Execute query and store result.
+            Repositories.consume(repository, (connection) -> {
+                final GraphQueryResult result =
+                        connection.prepareGraphQuery(
+                                configuration.getQuery()).evaluate();
+                while (result.hasNext()) {
+                    outputBuffer.add(result.next());
+                }
+            });
+            outputRdf.submit(outputBuffer);
+            LOG.info("\tcleanup ..");
+            // Cleanup.
+            outputBuffer.clear();
+            repository.shutDown();
+            progressReport.entryProcessed();
+            LOG.info("\tdone ..");
         }
         progressReport.done();
     }
