@@ -14,4 +14,6 @@ public final class XsltVocabulary {
 
     public static final String EXTENSION = PREFIX + "extension";
 
+    public static final String SKIP_ON_ERROR = PREFIX  + "skipOnError";
+
 }

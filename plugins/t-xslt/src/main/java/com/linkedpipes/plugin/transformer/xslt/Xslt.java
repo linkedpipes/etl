@@ -1,20 +1,13 @@
 package com.linkedpipes.plugin.transformer.xslt;
 
+import com.linkedpipes.etl.component.api.Component;
+import com.linkedpipes.etl.component.api.service.ExceptionFactory;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import java.io.File;
-import java.io.StringReader;
-import javax.xml.transform.stream.StreamSource;
-import net.sf.saxon.s9api.Processor;
-import net.sf.saxon.s9api.QName;
-import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.Serializer;
-import net.sf.saxon.s9api.XdmAtomicValue;
-import net.sf.saxon.s9api.XsltCompiler;
-import net.sf.saxon.s9api.XsltExecutable;
-import net.sf.saxon.s9api.XsltTransformer;
+import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import net.sf.saxon.s9api.*;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -22,9 +15,10 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -133,8 +127,13 @@ public final class Xslt implements Component.Sequential {
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
-                throw exceptionFactory.failure(
-                        "Can't transform file.", ex);
+                if (configuration.isSkipOnError()) {
+                    LOG.error("Can't transform file: {}",
+                            entry.getFileName(), ex);
+                } else {
+                    throw exceptionFactory.failure(
+                            "Can't transform file.", ex);
+                }
             } finally {
                 // Clear document cache.
                 try {

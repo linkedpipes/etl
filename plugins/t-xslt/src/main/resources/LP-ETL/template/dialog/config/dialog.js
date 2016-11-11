@@ -14,6 +14,10 @@ define([], function () {
         "extension": {
             "$type": "str",
             "$label": "Transformed file extension"
+        },
+        "skipOnError": {
+            "$type" : "bool",
+            "$label": "Skip on error"
         }
     };
 
