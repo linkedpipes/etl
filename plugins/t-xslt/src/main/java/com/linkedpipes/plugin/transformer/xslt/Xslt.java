@@ -121,6 +121,7 @@ public final class Xslt implements Component.Sequential {
             }
             // Transform
             LOG.debug("Transforming ...");
+            boolean deleteFile = false;
             final Serializer output = new Serializer(outputFile);
             try {
                 transformer.setSource(new StreamSource(inputFile));
@@ -130,6 +131,7 @@ public final class Xslt implements Component.Sequential {
                 if (configuration.isSkipOnError()) {
                     LOG.error("Can't transform file: {}",
                             entry.getFileName(), ex);
+                    deleteFile = true;
                 } else {
                     throw exceptionFactory.failure(
                             "Can't transform file.", ex);
@@ -147,6 +149,12 @@ public final class Xslt implements Component.Sequential {
                 } catch (SaxonApiException ex) {
                     LOG.warn("Can't close transformer.", ex);
                 }
+            }
+            // If the transformation fail, we may end up with incomplete
+            // output file. So we need to delete it after the output
+            // streams are closed.
+            if (deleteFile) {
+                outputFile.delete();
             }
             //
             progressReport.entryProcessed();
