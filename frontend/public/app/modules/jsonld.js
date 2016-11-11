@@ -317,7 +317,7 @@
             } else if (item === "false") {
                 result.push(false);
             } else {
-                result.push(value);
+                result.push(item);
             }
         });
         return result;
