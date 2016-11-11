@@ -22,6 +22,12 @@ define([], function () {
             "$property" : "graphUri",
             "$control": "graphUriControl",
             "$label" : "URI of output graph"
+        },
+        "prefixTurtle" : {
+            "$type" : "str",
+            "$property" : "prefixTurtle",
+            "$control" : "prefixTurtleControl",
+            "$label": "Used prefixes as Turtle"
         }
     };
 

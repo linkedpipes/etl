@@ -30,4 +30,12 @@
                placeholder="http://example.com/resource/graph"
                ng-disabled="dialog.graphUri.disabled || dialog.graphUri.inherit">
     </md-input-container>
+
+    <md-input-container class="md-block" ng-hide="dialog.prefixTurtle.hide">
+        <label>Used prefixes as Turtle</label>
+        <textarea ng-model="dialog.prefixTurtle.value"
+                  ng-disabled="dialog.prefixTurtle.disabled || dialog.prefixTurtle.inherit"/>
+    </md-input-container>
+
+
 </div>

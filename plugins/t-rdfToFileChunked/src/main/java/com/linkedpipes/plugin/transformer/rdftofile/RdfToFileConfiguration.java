@@ -18,6 +18,9 @@ public class RdfToFileConfiguration {
     @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_GRAPH_URI)
     private String graphUri;
 
+    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_PREFIX_TEST)
+    private String prefixes;
+
     public RdfToFileConfiguration() {
     }
 
@@ -45,4 +48,11 @@ public class RdfToFileConfiguration {
         this.graphUri = graphUri;
     }
 
+    public String getPrefixes() {
+        return prefixes;
+    }
+
+    public void setPrefixes(String prefixes) {
+        this.prefixes = prefixes;
+    }
 }

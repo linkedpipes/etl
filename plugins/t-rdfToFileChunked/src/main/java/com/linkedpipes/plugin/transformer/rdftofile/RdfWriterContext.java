@@ -55,12 +55,12 @@ public class RdfWriterContext implements RDFWriter {
     @Override
     public void handleNamespace(String string, String string1)
             throws RDFHandlerException {
-        writer.handleNamespace(string, string1);
+         // Ignore namespaces here.
     }
 
     @Override
-    public void handleStatement(Statement stmnt) throws RDFHandlerException {
-        writer.handleStatement(stmnt);
+    public void handleStatement(Statement st) throws RDFHandlerException {
+        writer.handleStatement(st);
     }
 
     @Override

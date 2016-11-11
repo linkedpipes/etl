@@ -17,6 +17,8 @@ public final class RdfToFileVocabulary {
 
     public static final String HAS_GRAPH_URI = PREFIX + "graphUri";
 
+    public static final String HAS_PREFIX_TEST = PREFIX + "prefixTurtle";
+
     private RdfToFileVocabulary() {
     }
 

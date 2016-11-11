@@ -8,16 +8,12 @@ import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
+import org.openrdf.rio.*;
+import org.openrdf.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
@@ -60,15 +56,18 @@ public final class RdfToFileChunked implements Component.Sequential {
              OutputStreamWriter outWriter = new OutputStreamWriter(
                      outStream, Charset.forName(FILE_ENCODE))) {
             RDFWriter writer = Rio.createWriter(rdfFormat.get(), outWriter);
-
             if (rdfFormat.get().supportsContexts()) {
                 writer = new RdfWriterContextRenamer(writer,
                         SimpleValueFactory.getInstance().createIRI(
                                 configuration.getGraphUri()));
             }
             writer = new RdfWriterContext(writer);
-            //
             writer.startRDF();
+            // Add prefixes.
+            if (!configuration.getPrefixes().isEmpty()) {
+                loadPrefixes(configuration.getPrefixes(), writer);
+            }
+            //
             progressReport.start(inputRdf.size());
             for (ChunkedStatements.Chunk chunk : inputRdf) {
                 for (Statement statement : chunk.toStatements()) {
@@ -81,6 +80,40 @@ public final class RdfToFileChunked implements Component.Sequential {
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't write data.", ex);
         }
+    }
+
+    /**
+     * Load prefixes from given turtle to the writer.
+     *
+     * @param turtle
+     * @param writer
+     * @throws LpException
+     */
+    private void loadPrefixes(String turtle, RDFWriter writer)
+            throws LpException {
+        final RDFParser parser = Rio.createParser(RDFFormat.TURTLE);
+        final InputStream stream;
+        try {
+            stream = new ByteArrayInputStream(
+                    turtle.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
+            throw exceptionFactory.failure(
+                    "Unsupported encoding exception.", ex);
+        }
+        try {
+            parser.setRDFHandler(new AbstractRDFHandler() {
+                @Override
+                public void handleNamespace(String prefix, String uri)
+                        throws RDFHandlerException {
+                    writer.handleNamespace(prefix, uri);
+                }
+            });
+            parser.parse(stream, "http://localhost/base");
+        } catch (IOException ex) {
+            throw exceptionFactory.failure(
+                    "Can't read prefixes.", ex);
+        }
+
     }
 
 }
