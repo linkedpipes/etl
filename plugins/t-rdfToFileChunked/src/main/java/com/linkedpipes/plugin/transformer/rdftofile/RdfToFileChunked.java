@@ -64,7 +64,8 @@ public final class RdfToFileChunked implements Component.Sequential {
             writer = new RdfWriterContext(writer);
             writer.startRDF();
             // Add prefixes.
-            if (!configuration.getPrefixes().isEmpty()) {
+            if (configuration.getPrefixes() != null &&
+                    !configuration.getPrefixes().isEmpty()) {
                 loadPrefixes(configuration.getPrefixes(), writer);
             }
             //
