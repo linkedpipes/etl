@@ -70,10 +70,10 @@ public class TabularConfiguration {
         private String name;
 
         @RdfToPojo.Property(uri = TabularVocabulary.HAS_REQUIRED)
-        private boolean required = true;
+        private boolean required = false;
 
         @RdfToPojo.Property(uri = TabularVocabulary.HAS_SUPRESS_OUTPUT)
-        private boolean supressOutput = false;
+        private boolean suppressOutput = false;
 
         /**
          * Inherited property.
@@ -164,12 +164,12 @@ public class TabularConfiguration {
             this.required = required;
         }
 
-        public boolean isSupressOutput() {
-            return supressOutput;
+        public boolean isSuppressOutput() {
+            return suppressOutput;
         }
 
-        public void setSupressOutput(boolean supressOutput) {
-            this.supressOutput = supressOutput;
+        public void setSuppressOutput(boolean suppressOutput) {
+            this.suppressOutput = suppressOutput;
         }
 
         public String getLang() {
