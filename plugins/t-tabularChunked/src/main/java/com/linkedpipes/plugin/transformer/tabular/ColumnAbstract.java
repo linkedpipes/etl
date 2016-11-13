@@ -1,10 +1,11 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.util.List;
 import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
+
+import java.util.List;
 
 /**
  * Default predicate: configuration.url + "#"
@@ -83,7 +84,6 @@ abstract class ColumnAbstract {
      * @param row
      * @param rowNumber
      * @return Must not return null.
-     * @throws NonRecoverableException
      */
     public abstract List<Resource> emit(RdfOutput outputConsumer,
             List<String> row, int rowNumber)
@@ -94,13 +94,16 @@ abstract class ColumnAbstract {
      *
      * @param row
      * @param rowNumber
-     * @return
-     * @throws MissingColumnValue
+     * @return Null if the value is missing.
      */
     protected String getValue(List<String> row, int rowNumber)
             throws MissingColumnValue {
         if (row.size() <= valueIndex) {
-            throw new MissingColumnValue(this.name, rowNumber);
+            if (required) {
+                throw new MissingColumnValue(this.name, rowNumber);
+            } else {
+                return null;
+            }
         } else {
             return row.get(valueIndex);
         }
