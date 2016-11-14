@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpoint": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpointControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }        
+    }
+]

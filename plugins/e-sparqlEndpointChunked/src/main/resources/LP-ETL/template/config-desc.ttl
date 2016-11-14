@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/headerAccept>  ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/endpoint> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/headerAccept>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#headerAccept> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#headerAcceptControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/endpoint>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpointControl> .

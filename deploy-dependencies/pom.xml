@@ -280,12 +280,18 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointChunked/</outputDirectory>
+                                        </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-sparqlEndpointSelect</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointSelect/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>q-sparqlAsk</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/q-sparqlAsk/</outputDirectory>
