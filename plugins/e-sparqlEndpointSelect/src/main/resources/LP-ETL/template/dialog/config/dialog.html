@@ -1,0 +1,26 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-containwr class="md-block" ng-hide="dialog.endpoint.hide">
+        <label>Endpoint URL</label>
+        <input type="url" ng-model="dialog.endpoint.value"
+               placeholder="http://example.com/sparql"
+               ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
+               required>
+    </md-input-containwr>
+    <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
+        <label>File name</label>
+        <input type="text" ng-model="dialog.fileName.value"
+               ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
+               required>
+    </md-input-container>
+    <lp-iri-list label-top="Default graph" label-item="Graph IRI"
+                 ng-model="dialog.defaultGraph.value"
+                 lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"
+                 ng-hide="dialog.defaultGraph.hide"></lp-iri-list>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide">
+        <label>SPARQL SELECT query</label>
+        <textarea id="query" ng-model="dialog.query.value"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
+                  md-select-on-focus/>
+    </md-input-container>
+</div>

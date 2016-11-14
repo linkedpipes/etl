@@ -40,6 +40,7 @@
         <module>x-virtuoso</module>
         <module>e-httpGetFile</module>
         <module>e-sparqlEndpoint</module>
+        <module>e-sparqlEndpointSelect</module>
         <module>e-textHolder</module>
         <module>l-dcatApToCkan</module>
         <module>l-graphStoreProtocol</module>

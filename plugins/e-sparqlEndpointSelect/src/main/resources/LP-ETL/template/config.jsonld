@@ -1,0 +1,18 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#query": "SELECT ?type WHERE { ?s a ?type} LIMIT 10",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#queryControl" : {
+                    "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileName": "table.csv",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileNameControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpoint": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpointControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }        
+    }
+]
