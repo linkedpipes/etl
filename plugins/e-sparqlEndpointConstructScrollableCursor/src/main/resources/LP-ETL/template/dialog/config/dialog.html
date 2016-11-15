@@ -1,0 +1,35 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.endpoint.hide">
+        <label>Endpoint URL</label>
+        <input type="url" ng-model="dialog.endpoint.value"
+               placeholder="http://example.com/sparql"
+               ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
+               required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.selectSize.hide">
+        <label>Commit size</label>
+        <input type="number" ng-model="dialog.selectSize.value"
+               ng-disabled="dialog.selectSize.disabled || dialog.selectSize.inherit"
+               min="1000" step="100">
+    </md-input-container>
+    <lp-iri-list label-top="Default graph" label-item="Graph IRI"
+                 ng-model="dialog.defaultGraph.value"
+                 lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"
+                 ng-hide="dialog.defaultGraph.hide"></lp-iri-list>
+    <md-input-container class="md-block" ng-hide="dialog.prefixes.hide">
+        <label>Query prefixes</label>
+        <textarea ng-model="dialog.prefixes.value"
+                  ng-disabled="dialog.prefixes.disabled || dialog.prefixes.inherit"/>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.outerConstruct.hide">
+        <label>Outer construct clause</label>
+        <textarea ng-model="dialog.outerConstruct.value"
+                  ng-disabled="dialog.outerConstruct.disabled || dialog.outerConstruct.inherit"/>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.innerSelect.hide">
+        <label>Inner select query</label>
+        <textarea ng-model="dialog.innerSelect.value"
+                  ng-disabled="dialog.innerSelect.disabled || dialog.innerSelect.inherit"/>
+    </md-input-container>
+</div>

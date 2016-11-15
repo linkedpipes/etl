@@ -42,6 +42,7 @@
         <module>e-sparqlEndpoint</module>
         <module>e-sparqlEndpointChunked</module>
         <module>e-sparqlEndpointSelect</module>
+        <module>e-sparqlEndpointConstructScrollableCursor</module>
         <module>e-textHolder</module>
         <module>l-dcatApToCkan</module>
         <module>l-graphStoreProtocol</module>
