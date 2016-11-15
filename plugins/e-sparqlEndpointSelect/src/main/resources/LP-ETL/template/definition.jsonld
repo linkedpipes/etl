@@ -21,7 +21,7 @@
         "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/output",
         "http://www.w3.org/2004/02/skos/core#prefLabel": "Output",
         "@type": [
-            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/DirectoryMirror",
+            "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
             "http://linkedpipes.com/ontology/Output"
         ],
         "http://linkedpipes.com/ontology/binding": "OutputFiles",
