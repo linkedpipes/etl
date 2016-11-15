@@ -19,7 +19,7 @@ final class SparqlEndpointSelectScrollableCursorVocabulary {
 
     public static final String HAS_FILE_NAME = PREFIX + "fileName";
 
-    public static final String HAS_SELECT_SIZE = PREFIX + "selectSize";
+    public static final String HAS_PAGE_SIZE = PREFIX + "pageSize";
 
     private SparqlEndpointSelectScrollableCursorVocabulary() {
     }

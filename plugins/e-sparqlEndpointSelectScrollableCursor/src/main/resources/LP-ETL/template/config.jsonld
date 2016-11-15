@@ -26,8 +26,8 @@
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileNameControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
-        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#selectSize": "1000",
-        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#selectSizeControl" : {
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSize": "1000",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSizeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }

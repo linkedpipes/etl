@@ -10,7 +10,7 @@
         <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/endpoint> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/defaultGraph> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/fileName> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/selectSize> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/pageSize> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/outerConstruct>
     a config:ConfigurationMember ;
@@ -42,7 +42,7 @@
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileName> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileNameControl> .
 
-<http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/selectSize>
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/1.0.0/configuration/desc/pageSize>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#selectSize> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#selectSizeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSizeControl> .

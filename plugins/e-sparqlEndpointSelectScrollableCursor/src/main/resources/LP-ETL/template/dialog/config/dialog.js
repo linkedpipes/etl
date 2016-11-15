@@ -16,9 +16,9 @@ define([], function () {
             "$type": "str",
             "$label": "File name"
         },
-        "selectSize": {
+        "pageSize": {
             "$type": "int",
-            "$label": "Select size"
+            "$label": "Page size"
         },
         "defaultGraph": {
             "$type": "value",

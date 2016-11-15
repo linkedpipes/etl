@@ -33,8 +33,8 @@ public class SparqlEndpointSelectScrollableCursorConfiguration {
     private String fileName;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_SELECT_SIZE)
-    private Integer selectSize;
+            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PAGE_SIZE)
+    private Integer pageSize;
 
     public SparqlEndpointSelectScrollableCursorConfiguration() {
     }
@@ -87,11 +87,11 @@ public class SparqlEndpointSelectScrollableCursorConfiguration {
         this.fileName = fileName;
     }
 
-    public Integer getSelectSize() {
-        return selectSize;
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public void setSelectSize(Integer selectSize) {
-        this.selectSize = selectSize;
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

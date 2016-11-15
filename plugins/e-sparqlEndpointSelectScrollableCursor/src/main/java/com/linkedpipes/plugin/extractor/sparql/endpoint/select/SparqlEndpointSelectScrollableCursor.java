@@ -37,6 +37,8 @@ public final class SparqlEndpointSelectScrollableCursor
 
         public boolean solutionHandled = false;
 
+        public boolean bindingHandled = false;
+
         public ResultHandlerWrap(TupleQueryResultHandler wrap) {
             this.wrap = wrap;
         }
@@ -56,12 +58,17 @@ public final class SparqlEndpointSelectScrollableCursor
         @Override
         public void startQueryResult(List<String> bindingNames)
                 throws TupleQueryResultHandlerException {
-            wrap.startQueryResult(bindingNames);
+            if (!bindingHandled) {
+                wrap.startQueryResult(bindingNames);
+                bindingHandled = true;
+            }
         }
 
         @Override
         public void endQueryResult() throws TupleQueryResultHandlerException {
-            wrap.endQueryResult();
+            // no-operation
+            // We call the super.endQueryResult after all is read
+            // from our custom method.
         }
 
         @Override
@@ -70,6 +77,11 @@ public final class SparqlEndpointSelectScrollableCursor
             wrap.handleSolution(bindingSet);
             solutionHandled = true;
         }
+
+         public void handleEnd() throws TupleQueryResultHandlerException {
+            wrap.endQueryResult();
+        }
+
     }
 
     private static final Logger LOG =
@@ -108,8 +120,9 @@ public final class SparqlEndpointSelectScrollableCursor
                 if (!writer.solutionHandled) {
                     break;
                 }
-                offset += configuration.getSelectSize();
+                offset += configuration.getPageSize();
             }
+            writer.handleEnd();
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't save data.", ex);
         } catch (Throwable t) {
@@ -160,7 +173,7 @@ public final class SparqlEndpointSelectScrollableCursor
                 configuration.getOuterSelect() + "\n WHERE { {" +
                 configuration.getInnerSelect() +
                 "\n} }" +
-                "\nLIMIT " + Integer.toString(configuration.getSelectSize()) +
+                "\nLIMIT " + Integer.toString(configuration.getPageSize()) +
                 "\nOFFSET " + Integer.toString(offset);
     }
 
