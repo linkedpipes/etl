@@ -29,8 +29,8 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
     private List<String> defaultGraphs = new ArrayList<>();
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_SELECT_SIZE)
-    private Integer selectSize;
+            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PAGE_SIZE)
+    private Integer pageSize;
 
     public SparqlEndpointConstructScrollableCursorConfiguration() {
     }
@@ -75,11 +75,11 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
         this.defaultGraphs = defaultGraphs;
     }
 
-    public Integer getSelectSize() {
-        return selectSize;
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public void setSelectSize(Integer selectSize) {
-        this.selectSize = selectSize;
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

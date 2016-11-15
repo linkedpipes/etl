@@ -12,9 +12,9 @@ define([], function () {
             "$type": "str",
             "$label": "Endpoint"
         },
-        "selectSize": {
+        "pageSize": {
             "$type": "int",
-            "$label": "Select size"
+            "$label": "Page size"
         },
         "defaultGraph": {
             "$type": "value",

@@ -62,7 +62,7 @@ public final class SparqlEndpointConstructScrollableCursor
                 } else {
                     outputRdf.submit(buffer);
                 }
-                offset += configuration.getSelectSize();
+                offset += configuration.getPageSize();
             }
         } catch (Throwable t) {
             throw exceptionFactory.failure("Can't query remote SPARQL.", t);
@@ -111,7 +111,7 @@ public final class SparqlEndpointConstructScrollableCursor
                 configuration.getOuterConstruct() + "\n } WHERE { {" +
                 configuration.getInnerSelect() +
                 "\n} }" +
-                "\nLIMIT " + Integer.toString(configuration.getSelectSize()) +
+                "\nLIMIT " + Integer.toString(configuration.getPageSize()) +
                 "\nOFFSET " + Integer.toString(offset);
     }
 

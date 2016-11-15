@@ -17,7 +17,7 @@ final class SparqlEndpointConstructScrollableCursorVocabulary {
 
     public static final String HAS_DEFAULT_GRAPH = PREFIX + "defaultGraph";
 
-    public static final String HAS_SELECT_SIZE = PREFIX + "selectSize";
+    public static final String HAS_PAGE_SIZE = PREFIX + "pageSize";
 
     private SparqlEndpointConstructScrollableCursorVocabulary() {
     }

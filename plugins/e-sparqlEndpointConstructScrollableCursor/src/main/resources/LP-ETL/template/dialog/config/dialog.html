@@ -7,10 +7,10 @@
                ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
                required>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.selectSize.hide">
-        <label>Commit size</label>
-        <input type="number" ng-model="dialog.selectSize.value"
-               ng-disabled="dialog.selectSize.disabled || dialog.selectSize.inherit"
+    <md-input-container class="md-block" ng-hide="dialog.pageSize.hide">
+        <label>Page size</label>
+        <input type="number" ng-model="dialog.pageSize.value"
+               ng-disabled="dialog.pageSize.disabled || dialog.pageSize.inherit"
                min="1000" step="100">
     </md-input-container>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
