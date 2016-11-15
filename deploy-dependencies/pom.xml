@@ -292,12 +292,18 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointSelectScrollableCursor</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointSelectScrollableCursor/</outputDirectory>
+                                        </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-sparqlEndpointConstructScrollableCursor</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointConstructScrollableCursor/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>q-sparqlAsk</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/q-sparqlAsk/</outputDirectory>
