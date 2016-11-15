@@ -13,7 +13,20 @@
                ng-disabled="dialog.headerAccept.disabled || dialog.headerAccept.inherit"
                required>
     </md-input-container>
-    <div>
-        Use runtime configuration to set queries to execute.
-    </div>
+    <md-input-container class="md-block" ng-hide="dialog.chunkSize.hide">
+        <label>Chunk size</label>
+        <input type="number" ng-model="dialog.chunkSize.value"
+               lp-disabled="dialog.chunkSize.disabled || dialog.chunkSize.inherit"
+               min="1">
+    </md-input-container>
+    <lp-iri-list label-top="Default graph" label-item="Graph IRI"
+                 ng-model="dialog.defaultGraph.value"
+                 lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"
+                 ng-hide="dialog.defaultGraph.hide"></lp-iri-list>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide">
+        <label>SPARQL CONSTRUCT query with ${VALUES} placeholder</label>
+        <textarea id="query" ng-model="dialog.query.value"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
+                  required md-innerSelect-on-focus/>
+    </md-input-container>
 </div>

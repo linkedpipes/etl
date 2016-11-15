@@ -2,8 +2,8 @@ package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
 final class SparqlEndpointChunkedVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#";
+    private static final String PREFIX =
+            "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -15,9 +15,7 @@ final class SparqlEndpointChunkedVocabulary {
 
     public static final String HAS_HEADER_ACCEPT = PREFIX + "headerAccept";
 
-    public static final String QUERY = PREFIX + "Query";
-
-    public static final String HAS_QUERY_OBJECT = PREFIX + "queryReference";
+    public static final String HAS_CHUNK_SIZE = PREFIX + "chunkSize";
 
     private SparqlEndpointChunkedVocabulary() {
     }

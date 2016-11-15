@@ -4,17 +4,30 @@ define([], function () {
     const DESC = {
         "$namespace" : "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#",
         "$type": "Configuration",
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "query" : {
+            "$type" : "str",
+            "$label" : "Endpoint URL"
+        },
         "endpoint" : {
             "$type" : "str",
-            "$property" : "endpoint",
-            "$control": "endpointControl",
             "$label" : "SPARQL CONSTRUCT query"
+        },
+        "defaultGraph" : {
+            "$type": "value",
+            "$array": true,
+            "$label" : "Default graph"
         },
         "headerAccept" : {
             "$type" : "str",
-            "$property" : "headerAccept",
-            "$control": "headerAcceptControl",
             "$label" : "Used MimeType"
+        },
+        "chunkSize" : {
+            "$type" : "int",
+            "$label" : "Chunk size"
         }
     };
 

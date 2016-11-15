@@ -4,14 +4,15 @@ import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
+import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.query.GraphQuery;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.impl.SimpleDataset;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sparql.SPARQLRepository;
@@ -26,14 +27,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Chunked version of SparqlEndpoint extractor. Takes a set of construct
- * queries on input. Execute each construct and put output to separated
- * chunk.
+ * Takes CSV files on input. The CSV file rows are used as IRIs and mapped
+ * to the given SPARQL as the ${VALUES} placeholder.
+ *
+ * Example query:
+ *  CONSTRUCT { ?obec ?p ?o } WHERE { ?obec ?p ?o ${VALUES} }
+ * where the input CSV file contains column "obec".
+ *
  */
 public final class SparqlEndpointChunked implements Component.Sequential {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(SparqlEndpointChunked.class);
+
+    @Component.InputPort(id = "FilesInput")
+    public FilesDataUnit inputFiles;
 
     @Component.InputPort(id = "OutputRdf")
     public WritableChunkedStatements outputRdf;
@@ -48,42 +56,27 @@ public final class SparqlEndpointChunked implements Component.Sequential {
     @Component.Configuration
     public SparqlEndpointChunkedConfiguration configuration;
 
-    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-
-    private List<Statement> buffer = new ArrayList<>(10000);
-
     @Override
     public void execute() throws LpException {
-        if (configuration.getEndpoint() == null
-                || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    SparqlEndpointChunkedVocabulary.HAS_ENDPOINT);
-        }
-        //
-        final SPARQLRepository repository
-                = new SPARQLRepository(configuration.getEndpoint());
-        // Customize repository.
-        final Map<String, String> headers = new HashMap<>();
-        headers.putAll(repository.getAdditionalHttpHeaders());
-        if (configuration.getTransferMimeType() != null) {
-            headers.put("Accept", configuration.getTransferMimeType());
-        }
-        repository.setAdditionalHttpHeaders(headers);
-        //
+        final Repository repository = createRepository();
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
             throw exceptionFactory.failure("Can't connect to endpoint.", ex);
         }
-        //
+
+        final List<Statement> buffer = new ArrayList<>(50000);
         try {
-            for (SparqlEndpointChunkedConfiguration.Query query
-                    : configuration.getQueries()) {
-                queryRemote(repository, query.getQuery(),
-                        query.getDefaultGraphs());
+            for (FilesDataUnit.Entry entry : inputFiles) {
+                final ValuesSource valuesSource = new ValuesSource(
+                        entry.toFile(), exceptionFactory,
+                        configuration.getChunkSize());
+                valuesSource.readSource((valuesClause) -> {
+                    buffer.clear();
+                    executeQuery(repository, valuesClause, buffer);
+                    outputRdf.submit(buffer);
+                });
             }
-        } catch (Throwable t) {
-            throw exceptionFactory.failure("Can't query remote SPARQL.", t);
         } finally {
             try {
                 repository.shutDown();
@@ -93,20 +86,38 @@ public final class SparqlEndpointChunked implements Component.Sequential {
         }
     }
 
-    public void queryRemote(SPARQLRepository repository, String query,
-            List<String> defaultGraphs) throws LpException {
-        try (RepositoryConnection remoteConnection
-                     = repository.getConnection()) {
-            final GraphQuery preparedQuery
-                    = remoteConnection.prepareGraphQuery(
+    protected Repository createRepository() {
+        final SPARQLRepository repository = new SPARQLRepository(
+                configuration.getEndpoint());
+        // Customize repository.
+        final Map<String, String> headers = new HashMap<>();
+        headers.putAll(repository.getAdditionalHttpHeaders());
+        if (configuration.getTransferMimeType() != null) {
+            headers.put("Accept", configuration.getTransferMimeType());
+        }
+        repository.setAdditionalHttpHeaders(headers);
+        return repository;
+    }
+
+    protected SimpleDataset createDataset() {
+        final SimpleDataset dataset = new SimpleDataset();
+        for (String iri : configuration.getDefaultGraphs()) {
+            dataset.addDefaultGraph(
+                    SimpleValueFactory.getInstance().createIRI(iri));
+        }
+        return dataset;
+    }
+
+    protected void executeQuery(Repository repository, String valueClause,
+            List<Statement> buffer) throws LpException {
+        final String query = configuration.getQuery().replace("${VALUES}",
+                valueClause);
+        LOG.debug("query:\n{}", query);
+        try (final RepositoryConnection connection =
+                     repository.getConnection()) {
+            final GraphQuery preparedQuery = connection.prepareGraphQuery(
                     QueryLanguage.SPARQL, query);
-            // Construct dataset.
-            final SimpleDataset dataset = new SimpleDataset();
-            for (String iri : defaultGraphs) {
-                dataset.addDefaultGraph(valueFactory.createIRI(iri));
-            }
-            preparedQuery.setDataset(dataset);
-            buffer.clear();
+            preparedQuery.setDataset(createDataset());
             preparedQuery.evaluate(new AbstractRDFHandler() {
                 @Override
                 public void handleStatement(Statement st)
@@ -114,8 +125,8 @@ public final class SparqlEndpointChunked implements Component.Sequential {
                     buffer.add(st);
                 }
             });
-            outputRdf.submit(buffer);
         }
     }
+
 
 }

@@ -26,6 +26,10 @@
             <groupId>com.linkedpipes</groupId>
             <artifactId>dataunit-sesame</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>dataunit-system</artifactId>
+        </dependency>
         <!-- OpenRDF. -->
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
@@ -36,6 +40,13 @@
             <artifactId>sesame-repository-sparql</artifactId>
             <version>${sesame.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- Csv. -->
+        <dependency>
+            <groupId>net.sf.supercsv</groupId>
+            <artifactId>super-csv</artifactId>
+            <version>2.3.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

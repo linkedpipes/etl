@@ -2,9 +2,23 @@
     {
         "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration",
         "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#query": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#queryControl" : {
+                    "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpoint": "",
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpointControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        }        
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#defaultGraphControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#headerAcceptControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSize": "10000",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSizeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
     }
 ]

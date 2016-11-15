@@ -3,55 +3,44 @@ package com.linkedpipes.plugin.extractor.sparql.endpoint;
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(uri = SparqlEndpointChunkedVocabulary.CONFIG)
 public class SparqlEndpointChunkedConfiguration {
 
-    @RdfToPojo.Type(uri = SparqlEndpointChunkedVocabulary.QUERY)
-    public static class Query {
-
-        @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_QUERY)
-        private String query = null;
-
-        /**
-         * Default graphs can be specified only via the runtime configuration.
-         */
-        @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_DEFAULT_GRAPH)
-        private List<String> defaultGraphs = new ArrayList<>();
-
-        public String getQuery() {
-            return query;
-        }
-
-        public void setQuery(String query) {
-            this.query = query;
-        }
-
-        public List<String> getDefaultGraphs() {
-            return defaultGraphs;
-        }
-
-        public void setDefaultGraphs(List<String> defaultGraphs) {
-            this.defaultGraphs = defaultGraphs;
-        }
-    }
-
+    /**
+     * Must contains ${VALUES} place holder.
+     */
+    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_QUERY)
+    private String query;
 
     @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
     /**
+     * Default graphs can be specified only via the runtime configuration.
+     */
+    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_DEFAULT_GRAPH)
+    private List<String> defaultGraphs = new ArrayList<>();
+
+    /**
      * Used as a Accept value in header.
      */
     @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_HEADER_ACCEPT)
-    private String transferMimeType = null;
+    private String transferMimeType;
 
-    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_QUERY_OBJECT)
-    private List<Query> queries = new LinkedList<>();
+    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_CHUNK_SIZE)
+    private Integer chunkSize;
 
     public SparqlEndpointChunkedConfiguration() {
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     public String getEndpoint() {
@@ -62,6 +51,13 @@ public class SparqlEndpointChunkedConfiguration {
         this.endpoint = endpoint;
     }
 
+    public List<String> getDefaultGraphs() {
+        return defaultGraphs;
+    }
+
+    public void setDefaultGraphs(List<String> defaultGraphs) {
+        this.defaultGraphs = defaultGraphs;
+    }
 
     public String getTransferMimeType() {
         return transferMimeType;
@@ -71,12 +67,11 @@ public class SparqlEndpointChunkedConfiguration {
         this.transferMimeType = transferMimeType;
     }
 
-    public List<Query> getQueries() {
-        return queries;
+    public Integer getChunkSize() {
+        return chunkSize;
     }
 
-    public void setQueries(
-            List<Query> queries) {
-        this.queries = queries;
+    public void setChunkSize(Integer chunkSize) {
+        this.chunkSize = chunkSize;
     }
 }
