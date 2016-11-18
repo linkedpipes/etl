@@ -14,10 +14,10 @@
     <name>plugin x-virtuoso</name>
 
     <repositories>
-        <repository> <!-- Used for Virtuoso driver build -->
-            <id>maven.eea.sk</id>
-            <name>maven.eea.sk-public</name>
-            <url>http://maven.eea.sk/artifactory/public/</url>
+        <repository>
+            <id>artefacts.linkedpipes.com</id>
+            <name>artefacts.linkedpipes.com</name>
+            <url>http://artefacts.linkedpipes.com/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -45,14 +45,14 @@
         </dependency>
         <!-- Virtuoso. -->
         <dependency>
-            <groupId>eu.comsode</groupId>
-            <artifactId>com.openlinksw.virtuoso.virt_sesame2</artifactId>
-            <version>1.21-7-develop-SNAPSHOT</version>
+            <groupId>com.openlinksw.virtuoso</groupId>
+            <artifactId>virt_sesame2</artifactId>
+            <version>1.21-7-develop</version>
         </dependency>
         <dependency>
-            <groupId>eu.comsode</groupId>
-            <artifactId>com.openlinksw.virtuoso.virtjdbc4_1</artifactId>
-            <version>3.76-7-develop-SNAPSHOT</version>
+            <groupId>com.openlinksw.virtuoso</groupId>
+            <artifactId>virtjdbc4_1</artifactId>
+            <version>3.76-7-develop</version>
         </dependency>
     </dependencies>
 
