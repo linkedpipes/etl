@@ -13,14 +13,6 @@
     <packaging>bundle</packaging>
     <name>plugin x-virtuosoExtractor</name>
 
-    <repositories>
-        <repository> <!-- Used for Virtuoso driver build -->
-            <id>maven.eea.sk</id>
-            <name>maven.eea.sk-public</name>
-            <url>http://maven.eea.sk/artifactory/public/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
@@ -37,12 +29,6 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>dataunit-sesame</artifactId>
-        </dependency>
-        <!-- Virtuoso. -->
-        <dependency>
-            <groupId>eu.comsode</groupId>
-            <artifactId>com.openlinksw.virtuoso.virtjdbc4_1</artifactId>
-            <version>3.76-7-develop-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
