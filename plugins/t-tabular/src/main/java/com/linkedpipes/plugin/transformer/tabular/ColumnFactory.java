@@ -81,7 +81,7 @@ class ColumnFactory {
                 predicate = new UrlTemplate(predicateAsString);
             }
 
-            if (column.isSupressOutput()) {
+            if (column.isSuppressOutput()) {
                 continue;
             }
             if (column.getValueUrl() != null
