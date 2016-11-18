@@ -15,11 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-model</artifactId>
-            <version>${sesame.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-commons</artifactId>
         </dependency>
@@ -35,6 +30,16 @@
             <groupId>com.linkedpipes</groupId>
             <artifactId>dataunit-sesame</artifactId>
         </dependency>
+        <!-- Sesame. -->
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-repository-api</artifactId>
+        </dependency>
+        <!-- -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
