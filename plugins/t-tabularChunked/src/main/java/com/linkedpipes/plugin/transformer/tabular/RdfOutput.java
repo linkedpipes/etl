@@ -56,7 +56,9 @@ class RdfOutput {
     }
 
     private void flushBuffer() throws LpException {
-        dataUnit.submit(buffer);
+        if (!buffer.isEmpty()) {
+            dataUnit.submit(buffer);
+        }
         buffer.clear();
     }
 
