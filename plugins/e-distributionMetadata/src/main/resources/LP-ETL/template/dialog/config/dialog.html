@@ -28,7 +28,7 @@
     <md-input-container class="md-block"
                         ng-hide="dialog.sparqlEndpointUrl.hide">
         <label>SPARQL Endpoint URL</label>
-        <input type="url" ng-model="dialog.sparqlEndpointUrl"
+        <input type="url" ng-model="dialog.sparqlEndpointUrl.value"
                ng-disabled="dialog.sparqlEndpointUrl.disabled || dialog.sparqlEndpointUrl.inherit"
                placeholder="http://ex.org/sparql">
     </md-input-container>
@@ -52,7 +52,7 @@
                ng-model="dialog.schema.value"
                placeholder="http://ex.org/resource/my.schema">
     </md-input-container>
-    <md-switch ng-model="dialog.useDatasetURIfromInput"
+    <md-switch ng-model="dialog.useDatasetURIfromInput.value"
                ng-disabled="dialog.useDatasetURIfromInput.disabled || dialog.useDatasetURIfromInput.inherit"
                ng-hide="dialog.useDatasetURIfromInput.hide"
     >Dataset IRI from dataset
@@ -192,13 +192,12 @@
                    ng-hide="dialog.licenseFromDataset.hide"
                    flex>Use license from dataset
         </md-switch>
-        <md-input-container class="md-block"
-                            ng-hide="dialog.license.hide"
+        <md-input-container class="md-block" ng-hide="dialog.license.hide"
                             flex>
             <label>License IRI</label>
             <input type="url"
                    ng-disabled="dialog.licenseFromDataset.value || dialog.license.disabled || dialog.license.inherit"
-                   ng-model="dialog.license"
+                   ng-model="dialog.license.value"
                    placeholder="https://creativecommons.org/licenses/by/4.0/">
         </md-input-container>
     </div>
