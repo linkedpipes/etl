@@ -8,7 +8,7 @@ public class FilesToRdfConfiguration {
     @RdfToPojo.Property(uri = FilesToRdfVocabulary.HAS_MIME_TYPE)
     private String mimeType = null;
 
-    @RdfToPojo.Property(uri = FilesToRdfVocabulary.HAS_CHUNK_SIZE)
+    @RdfToPojo.Property(uri = FilesToRdfVocabulary.HAS_COMMIT_SIZE)
     private int filesPerChunk = 1;
 
     public FilesToRdfConfiguration() {

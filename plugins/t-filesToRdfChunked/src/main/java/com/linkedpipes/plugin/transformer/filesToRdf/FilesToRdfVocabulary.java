@@ -9,7 +9,7 @@ public final class FilesToRdfVocabulary {
 
     public static final String HAS_MIME_TYPE = PREFIX + "mimeType";
 
-    public static final String HAS_CHUNK_SIZE = PREFIX + "chunkSize";
+    public static final String HAS_COMMIT_SIZE = PREFIX + "commitSize";
 
     private FilesToRdfVocabulary() {
     }
