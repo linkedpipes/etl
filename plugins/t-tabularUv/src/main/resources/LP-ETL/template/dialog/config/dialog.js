@@ -12,6 +12,10 @@ define([], function () {
             "$type": "str",
             "$label": "Key column"
         },
+        "keyColumn": {
+            "$type": "str",
+            "$label": "Key column"
+        },
         "column": {
             "$label": "Mapping",
             "$array": true,
