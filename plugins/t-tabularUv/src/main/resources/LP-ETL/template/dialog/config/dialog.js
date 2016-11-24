@@ -164,7 +164,7 @@ define([], function () {
         }
 
         $scope.onAddColumn = function () {
-            $scope.dialog.columns.value.push({
+            $scope.dialog.column.value.push({
                 'name': {'value': ''},
                 'type': {'value': ''},
                 'lang': {'value': ''},
