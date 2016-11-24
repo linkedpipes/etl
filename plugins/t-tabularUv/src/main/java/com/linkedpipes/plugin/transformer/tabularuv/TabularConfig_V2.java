@@ -225,7 +225,7 @@ public class TabularConfig_V2 {
      * this functionality is secured by
      * {@link ValueGeneratorReplace#compile}
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#columnsAdvanced")
+    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedMapping")
     private List<AdvanceMapping> columnsInfoAdv = new LinkedList<>();
 
     /**
@@ -262,14 +262,14 @@ public class TabularConfig_V2 {
     private boolean generateNew = true;
 
     /**
-     * If false then for blank cells the {@link TabularOntology#URI_BLANK_CELL}
+     * If false then for blank cells the {@link TabularOntology#BLANK_CELL}
      * is inserted.
      */
     @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreBlankCell")
     private boolean ignoreBlankCells = false;
 
     /**
-     * If true then {@link #keyColumn} is interpreted as advanced = tempalte.
+     * If true then {@link #keyColumn} is interpreted as advanced = template.
      */
     @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedKey")
     private boolean advancedKeyColumn = false;
@@ -277,7 +277,7 @@ public class TabularConfig_V2 {
     /**
      * If null no class is set.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsClass")
+    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowClass")
     private String rowsClass = TabularOntology.ROW_CLASS.toString();
 
     /**
