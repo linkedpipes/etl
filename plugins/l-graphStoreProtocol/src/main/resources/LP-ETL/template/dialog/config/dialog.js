@@ -12,7 +12,7 @@ define([], function () {
             "$label": "Target graph IRI"
         },
         "repository": {
-            "$type": "int",
+            "$type": "str",
             "$label": "Repository"
         },
         "authentification": {
