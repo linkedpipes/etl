@@ -14,7 +14,7 @@ requirejs.config({
         // http://stackoverflow.com/questions/29542275/angular-material-requirejs-not-working-together
         'angular-aria': 'libraries/angularjs/1.5.5/angular-aria',
         'angular-animate': 'libraries/angularjs/1.5.5/angular-animate',
-        'angular-material': 'libraries/angularjs.material/1.1.0-rc4/angular-material',
+        'angular-material': 'libraries/angularjs.material/angular-material',
         //
         'angular-file-upload': 'libraries/ng-file-upload/11.2.3/ng-file-upload',
         // https://github.com/alexcrack/angular-ui-notification
