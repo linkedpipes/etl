@@ -45,7 +45,7 @@ public final class FilesToRdfChunked implements Component.Sequential {
     /**
      * Buffer used to store data.
      */
-    private List<Statement> buffer = new ArrayList<>(10000);
+    private List<Statement> buffer = new ArrayList<>(100000);
 
     @Override
     public void execute() throws LpException {
@@ -64,6 +64,7 @@ public final class FilesToRdfChunked implements Component.Sequential {
             }
         }
         //
+        int counter = 0;
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Loading: {}", entry.getFileName());
@@ -79,13 +80,21 @@ public final class FilesToRdfChunked implements Component.Sequential {
             } else {
                 loadFile(entry.toFile(), defaultFormat);
             }
+            counter++;
+            if (counter >= configuration.getFilesPerChunk()) {
+                outputRdf.submit(buffer);
+                buffer.clear();
+                counter = 0;
+            }
             progressReport.entryProcessed();
+        }
+        if (!buffer.isEmpty()) {
+            outputRdf.submit(buffer);
         }
         progressReport.done();
     }
 
     private void loadFile(File file, RDFFormat format) throws LpException {
-        buffer.clear();
         try (InputStream stream = new FileInputStream(file)) {
             final RDFParser parser = Rio.createParser(format);
             parser.setRDFHandler(new AbstractRDFHandler() {
@@ -98,7 +107,6 @@ public final class FilesToRdfChunked implements Component.Sequential {
         } catch (IOException ex) {
             exceptionFactory.failure("Can't load file: {}", file, ex);
         }
-        outputRdf.submit(buffer);
     }
 
 }
