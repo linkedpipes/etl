@@ -2,7 +2,7 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace": "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#",
         "$type": "Configuration",
         "$control": {
             "$predicate": "auto"
@@ -12,7 +12,7 @@ define([], function () {
             "$label": "Endpoint"
         },
         "targetGraphURI": {
-            "$type": "int",
+            "$type": "str",
             "$label": "Target graph IRI"
         },
         "clearGraph": {
