@@ -31,6 +31,13 @@
             <artifactId>commons-compress</artifactId>
             <version>1.10</version>
         </dependency>
+        <!-- Add support for 7zip. -->
+        <dependency>
+            <groupId>org.tukaani</groupId>
+            <artifactId>xz</artifactId>
+            <version>1.5</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

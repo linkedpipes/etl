@@ -9,6 +9,8 @@ import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.slf4j.Logger;
@@ -17,9 +19,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 
-/**
- * @author Škoda Petr
- */
 public final class Unpack implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Unpack.class);
@@ -41,7 +40,7 @@ public final class Unpack implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        LOG.info("Used extension option: {}", configuration.getFormat());
+        LOG.info("Used format option: {}", configuration.getFormat());
         progressReport.start(input.size());
         for (FilesDataUnit.Entry entry : input) {
             final File outputDirectory;
@@ -64,6 +63,15 @@ public final class Unpack implements Component.Sequential {
     private void unpack(FilesDataUnit.Entry inputEntry, File targetDirectory)
             throws LpException {
         final String extension = getExtension(inputEntry);
+        if (ArchiveStreamFactory.SEVEN_Z.equals(extension)) {
+            try {
+                unpackSevenZip(inputEntry.toFile(), targetDirectory);
+                return;
+            } catch (IOException ex) {
+                throw exceptionFactory.failure("Extraction failure: {}",
+                        inputEntry.getFileName(), ex);
+            }
+        }
         try (final InputStream stream = new FileInputStream(
                 inputEntry.toFile())) {
             switch (extension) {
@@ -77,9 +85,8 @@ public final class Unpack implements Component.Sequential {
                     unpackGzip(stream, targetDirectory, inputEntry);
                     break;
                 default:
-                    throw exceptionFactory.failure(
-                            "Unknown file format (" + extension + ") : " +
-                                    inputEntry.getFileName());
+                    throw exceptionFactory.failure("Unknown file format (" +
+                            extension + ") : " + inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
             throw exceptionFactory.failure("Extraction failure: {}",
@@ -88,19 +95,23 @@ public final class Unpack implements Component.Sequential {
     }
 
     /**
-     * Return lower case extension of file, or extension defined by configuration.
+     * Return lower case extension of file, or extension defined by
+     * configuration.
      *
      * @param entry
      * @return
      */
     private String getExtension(FilesDataUnit.Entry entry) {
-        if (configuration.getFormat() == null || configuration.getFormat().isEmpty()) {
+        if (configuration.getFormat() == null ||
+                configuration.getFormat().isEmpty()) {
             LOG.debug("No format setting provided.");
             configuration.setFormat(UnpackVocabulary.FORMAT_DETECT);
         }
         switch (configuration.getFormat()) {
             case UnpackVocabulary.FORMAT_ZIP:
                 return ArchiveStreamFactory.ZIP;
+            case UnpackVocabulary.FORMAT_7ZIP:
+                return ArchiveStreamFactory.SEVEN_Z;
             case UnpackVocabulary.FORMAT_BZIP2:
                 return "bz2";
             case UnpackVocabulary.FORMAT_GZIP:
@@ -108,7 +119,8 @@ public final class Unpack implements Component.Sequential {
             case UnpackVocabulary.FORMAT_DETECT:
             default:
                 final String fileName = entry.getFileName();
-                return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                return fileName.substring(fileName.lastIndexOf(".") + 1)
+                        .toLowerCase();
         }
     }
 
@@ -116,13 +128,15 @@ public final class Unpack implements Component.Sequential {
      * Unpack ZIP archive.
      *
      * @param inputStream
-     * @param targetDirectory
+     * @param directory
      */
-    private static void unpackZip(InputStream inputStream, File targetDirectory) throws IOException, ArchiveException {
-        try (ArchiveInputStream archiveStream = new ArchiveStreamFactory().createArchiveInputStream("zip", inputStream)) {
+    private static void unpackZip(InputStream inputStream,
+            File directory) throws IOException, ArchiveException {
+        try (ArchiveInputStream archive = new ArchiveStreamFactory()
+                .createArchiveInputStream("zip", inputStream)) {
             ZipArchiveEntry entry;
-            while ((entry = (ZipArchiveEntry) archiveStream.getNextEntry()) != null) {
-                final File entryFile = new File(targetDirectory, entry.getName());
+            while ((entry = (ZipArchiveEntry) archive.getNextEntry()) != null) {
+                final File entryFile = new File(directory, entry.getName());
                 // Create directories based on file path.
                 if (entry.getName().endsWith("/")) {
                     if (!entryFile.exists()) {
@@ -134,14 +148,55 @@ public final class Unpack implements Component.Sequential {
                     continue;
                 }
                 // Copy stream to file.
-                copyToFile(archiveStream, entryFile);
+                copyToFile(archive, entryFile);
             }
         }
     }
 
-    private static void unpackBzip2(InputStream inputStream, File targetDirectory, FilesDataUnit.Entry inputEntry) throws IOException {
-        try (final BZip2CompressorInputStream bzip2Stream = new BZip2CompressorInputStream(inputStream, true)) {
-            final String outputFileName = inputEntry.getFileName().substring(0, inputEntry.getFileName().lastIndexOf("."));
+    /**
+     * Unpack 7Zip archive.
+     *
+     * @param inputFile
+     * @param directory
+     */
+    private static void unpackSevenZip(File inputFile,
+            File directory) throws IOException {
+        final SevenZFile sevenZFile = new SevenZFile(inputFile);
+        SevenZArchiveEntry entry = sevenZFile.getNextEntry();
+        while (entry != null) {
+            final File outputFile = new File(directory, entry.getName());
+            outputFile.getParentFile().mkdirs();
+            try (FileOutputStream out = new FileOutputStream(outputFile)) {
+                // Read.
+                final int bufferSize = 64000;
+                byte[] buffer = new byte[bufferSize];
+                while (true) {
+                    int read = sevenZFile.read(buffer, 0, bufferSize);
+                    if (read == -1) {
+                        break;
+                    }
+                    out.write(buffer, 0, read);
+                }
+            }
+            entry = sevenZFile.getNextEntry();
+        }
+        sevenZFile.close();
+    }
+
+    /**
+     * Unpack Bzip2 archive.
+     *
+     * @param inputStream
+     * @param targetDirectory
+     * @param inputEntry
+     */
+    private static void unpackBzip2(InputStream inputStream,
+            File targetDirectory, FilesDataUnit.Entry inputEntry)
+            throws IOException {
+        try (final BZip2CompressorInputStream bzip2Stream
+                     = new BZip2CompressorInputStream(inputStream, true)) {
+            final String outputFileName = inputEntry.getFileName()
+                    .substring(0, inputEntry.getFileName().lastIndexOf("."));
             final File outputFile = new File(targetDirectory, outputFileName);
             outputFile.getParentFile().mkdirs();
             // Copy stream to file.
@@ -149,6 +204,13 @@ public final class Unpack implements Component.Sequential {
         }
     }
 
+    /**
+     * Unpack GZip archive.
+     *
+     * @param inputStream
+     * @param targetDirectory
+     * @param inputEntry
+     */
     private static void unpackGzip(InputStream inputStream,
             File targetDirectory, FilesDataUnit.Entry inputEntry)
             throws IOException {

@@ -1,12 +1,9 @@
 package com.linkedpipes.plugin.transformer.unpack;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class UnpackVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-unpack#";
+    private static final String PREFIX =
+            "http://plugins.linkedpipes.com/ontology/t-unpack#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -17,6 +14,8 @@ public final class UnpackVocabulary {
     public static final String FORMAT_DETECT = PREFIX + "auto";
 
     public static final String FORMAT_ZIP = PREFIX + "zip";
+
+    public static final String FORMAT_7ZIP = PREFIX + "7z";
 
     public static final String FORMAT_BZIP2 = PREFIX + "bzip2";
 
