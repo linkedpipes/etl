@@ -4,7 +4,7 @@
         <label>Format</label>
         <md-select ng-model="dialog.mimeType.value"
                    ng-disabled="dialog.mimeType.disabled || dialog.mimeType.inherit">
-            <md-option value="">Automatic</md-option>
+            <md-option value="null">Automatic</md-option>
             <md-option value="application/rdf+xml">RDF/XML</md-option>
             <md-option value="application/n-triples">N-Triples</md-option>
             <md-option value="text/turtle">Turtle</md-option>
@@ -18,10 +18,10 @@
             <md-option value="application/xhtml+xml">RDFa</md-option>
         </md-select>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.chunkSize.hide">
+    <md-input-container class="md-block" ng-hide="dialog.commitSize.hide">
         <label>Files per chunk</label>
-        <input type="number" ng-model="dialog.chunkSize.value"
+        <input type="number" ng-model="dialog.commitSize.value"
                min="1" step="1"
-               ng-disabled="dialog.chunkSize.disabled || dialog.chunkSize.inherit">
+               ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit">
     </md-input-container>
 </div>

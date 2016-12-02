@@ -5,17 +5,31 @@ define([], function () {
         "$namespace" :
             "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
         "$type": "Configuration",
-        "chunkSize" : {
+        "commitSize" : {
             "$type" : "int",
-            "$property" : "chunkSize",
-            "$control": "chunkSizeControl",
+            "$property" : "commitSize",
+            "$control": "commitSizeControl",
             "$label" : "Files per chunk"
         },
         "mimeType" : {
             "$type" : "str",
             "$property" : "mimeType",
             "$control": "mimeTypeControl",
-            "$label" : "Format"
+            "$label" : "Format",
+            "$onLoad": (value) => {
+                if (value === "") {
+                    return "null";
+                } else {
+                    return value;
+                }
+            },
+            "$onSave": (value) => {
+                if (value === "null") {
+                    return "";
+                } else {
+                    return value;
+                }
+            }
         }
     };
 
