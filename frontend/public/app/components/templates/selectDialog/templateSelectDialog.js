@@ -24,6 +24,7 @@ define(["lp"], function (lp) {
             const componentCore = templateService.getCoreTemplate(component);
             return {
                 "label": component.label,
+                "search": componentCore.search,
                 "parent": component.core ? "" : componentCore.label,
                 "icon": ICONS[componentCore.type],
                 "component": component,
@@ -54,6 +55,7 @@ define(["lp"], function (lp) {
                 if (lp.dataunit.compatible(sourcePort.content, port.content)) {
                     const record = {
                         "label": component.label,
+                        "search": componentCore.search,
                         "parent": component.core ? "" : componentCore.label,
                         "icon": ICONS[componentCore.type],
                         "component": component,
@@ -95,7 +97,7 @@ define(["lp"], function (lp) {
             var query = new RegExp(
                 newValue.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), "i");
             $scope.templates.forEach((template) => {
-                template.visible = query.test(template.label);
+                template.visible = query.test(template.search);
             });
         });
 

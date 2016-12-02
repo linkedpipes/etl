@@ -87,7 +87,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         const id = jsonld.r.getId(resource);
         const label = jsonld.r.getString(resource, SKOS.prefLabel);
         const description = jsonld.r.getString(resource, DCTERMS.description);
-        const keyword = jsonld.r.getStrings(resource, LP.keyword);
+        const keywords = jsonld.r.getStrings(resource, LP.keyword);
+
         const color = jsonld.r.getString(resource, LP.color);
         // const configuration = jsonld.r.getIRIs(resource, LP.configuration);
         const type = jsonld.r.getIRIs(resource, LP.type);
@@ -126,11 +127,17 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             });
         });
 
+        // Construct search string as a label with keywords.
+        let search = i18.str(label);
+        keywords.forEach((item) => {
+           search += "," + item["@value"];
+        });
+
         data.jarTemplate[id] = {
             "id": id,
             "label": i18.str(label),
             "description": i18.str(description),
-            "keyword": keyword,
+            "keyword": keywords,
             "color": i18.str(color),
             "type": type,
             "dialogs": dialogs,
@@ -138,7 +145,9 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             "outputs": outputs,
             "core": true,
             "supportControl": supportControl,
-            "infoLink": infoLink
+            "infoLink": infoLink,
+            "search": search
+
         };
     }
 
