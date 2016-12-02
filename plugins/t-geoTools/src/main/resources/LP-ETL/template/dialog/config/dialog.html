@@ -1,0 +1,40 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.type.hide">
+        <label>Input resource type</label>
+        <input ng-model="dialog.type.value"
+               ng-disabled="dialog.type.disabled || dialog.type.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.coord.hide">
+        <label>Predicate with coordinates</label>
+        <input ng-model="dialog.coord.value"
+               ng-disabled="dialog.coord.disabled || dialog.coord.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.coordType.hide">
+        <label>Predicate with coordinates type</label>
+        <input ng-model="dialog.coordType.value"
+               ng-disabled="dialog.coordType.disabled || dialog.coordType.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.defaultCoordType.hide">
+        <label>Default coordinate type</label>
+        <input ng-model="dialog.defaultCoordType.value"
+               ng-disabled="dialog.defaultCoordType.disabled || dialog.defaultCoordType.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.outputPredicate.hide">
+        <label>Predicate used to connect with new entity</label>
+        <input ng-model="dialog.outputPredicate.value"
+               ng-disabled="dialog.outputPredicate.disabled || dialog.outputPredicate.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.outputCoordType.hide">
+        <label>Type of output coordinates</label>
+        <input ng-model="dialog.outputCoordType.value"
+               ng-disabled="dialog.outputCoordType.disabled || dialog.outputCoordType.inherit">
+    </md-input-container>
+    <md-switch ng-hide="dialog.failOnError.hide"
+               ng-model="dialog.failOnError.value"
+               ng-disabled="dialog.failOnError.disabled || dialog.failOnError.inherit"
+               flex>
+        Fail on error
+    </md-switch>
+
+</div>

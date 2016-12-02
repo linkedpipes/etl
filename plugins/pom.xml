@@ -67,6 +67,7 @@
         <module>x-deleteDirectory</module>
         <module>t-htmlCssUv</module>
         <module>t-modifyDate</module>
+        <module>t-geoTools</module>
     </modules>
 
 </project>

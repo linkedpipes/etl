@@ -1,0 +1,34 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-geoTools/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-geoTools#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#type": "",
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#typeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#coord": "http://www.opengis.net/ont/gml#pos",
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#coordControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#coordType": "",
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#coordTypeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#defaultCoordType": "EPSG:5514",
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#defaultCoordTypeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#outputPredicate": "http://schema.org/geo",
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#outputPredicateControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#outputCoordType": "EPSG:4326",
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#outputCoordTypeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#failOnError": false,
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#failOnErrorControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

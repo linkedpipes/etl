@@ -12,6 +12,14 @@
         <plugins.directory>../plugins</plugins.directory>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>artefacts.linkedpipes.com</id>
+            <name>artefacts.linkedpipes.com</name>
+            <url>http://artefacts.linkedpipes.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <profiles>
         <profile>
             <activation>
@@ -201,6 +209,55 @@
                                             <groupId>com.opencsv</groupId>
                                             <artifactId>opencsv</artifactId>
                                             <version>3.3</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <!-- GeoTools -->
+                                        <dependency>
+                                            <groupId>com.googlecode.efficient-java-matrix-library</groupId>
+                                            <artifactId>core-osgi</artifactId>
+                                            <version>0.26</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>net.sf.geographiclib</groupId>
+                                            <artifactId>GeographicLib-Java-osgi</artifactId>
+                                            <version>1.44</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.geotools</groupId>
+                                            <artifactId>gt-opengis-osgi</artifactId>
+                                            <version>16.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.geotools</groupId>
+                                            <artifactId>gt-osgi</artifactId>
+                                            <version>16.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.hsqldb</groupId>
+                                            <artifactId>hsqldb-osgi</artifactId>
+                                            <version>2.3.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>jgridshift</groupId>
+                                            <artifactId>jgridshift-osgi</artifactId>
+                                            <version>1.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>javax.measure</groupId>
+                                            <artifactId>jsr-275-osgi</artifactId>
+                                            <version>1.0-beta-2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>commons-pool</groupId>
+                                            <artifactId>commons-pool</artifactId>
+                                            <version>1.5.4</version>
                                             <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
                                         </dependency>
                                         <!-- Apache service mix. -->
@@ -601,6 +658,12 @@
                                             <artifactId>t-modifyDate</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-modifyDate/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-geoTools</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-geoTools/</outputDirectory>
                                         </dependency>
                                     </artifactItems>
                                 </configuration>
