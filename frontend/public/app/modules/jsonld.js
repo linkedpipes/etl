@@ -275,7 +275,7 @@
      * @param value
      */
     const setIRIs = function (resource, predicate, value) {
-        if (value === undefined) {
+        if (value === undefined || value === '') {
             delete resource[predicate];
             return;
         }
