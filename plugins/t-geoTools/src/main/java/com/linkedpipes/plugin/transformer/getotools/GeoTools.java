@@ -11,10 +11,7 @@ import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.slf4j.Logger;
@@ -44,6 +41,9 @@ public final class GeoTools implements Component.Sequential {
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(GeoTools.class);
+
+    private static final IRI XSD_DOUBLE = SimpleValueFactory.getInstance()
+            .createIRI("http://www.w3.org/2001/XMLSchema#double");
 
     @Component.InputPort(id = "InputRdf")
     public ChunkedStatements inputRdf;
@@ -84,7 +84,6 @@ public final class GeoTools implements Component.Sequential {
             resources.clear();
             outputBuffer.clear();
             for (Statement s : chunk.toStatements()) {
-                LOG.info("{}", s.getPredicate());
                 // Check for type.
                 if (RDF.TYPE.equals(s.getPredicate())) {
                     final String typeAsStr = s.getObject().stringValue();
@@ -199,13 +198,11 @@ public final class GeoTools implements Component.Sequential {
 
         outputBuffer.add(valueFactory.createStatement(entity,
                 valueFactory.createIRI("http://schema.org/longitude"),
-                valueFactory.createLiteral(doubleToStr(transY),
-                        "http://www.w3.org/2001/XMLSchema#double")));
+                valueFactory.createLiteral(doubleToStr(transY), XSD_DOUBLE)));
 
         outputBuffer.add(valueFactory.createStatement(entity,
                 valueFactory.createIRI("http://schema.org/latitude"),
-                valueFactory.createLiteral(doubleToStr(transX),
-                        "http://www.w3.org/2001/XMLSchema#double")));
+                valueFactory.createLiteral(doubleToStr(transX), XSD_DOUBLE)));
 
     }
 
