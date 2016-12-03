@@ -249,8 +249,15 @@ public final class GeoTools implements Component.Sequential {
         return point;
     }
 
-    private static boolean isValid(Point point) {
-        return point.hasType && point.coord != null && point.coordType != null;
+    private boolean isValid(Point point) {
+        if (!point.hasType || point.coord == null) {
+            return false;
+        }
+        if (configuration.getCoordType() == null) {
+            // We do not load coord type predicate.
+            return true;
+        }
+        return point.coordType != null;
     }
 
 }
