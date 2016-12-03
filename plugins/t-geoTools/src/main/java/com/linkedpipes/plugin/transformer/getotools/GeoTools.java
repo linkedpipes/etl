@@ -43,7 +43,7 @@ public final class GeoTools implements Component.Sequential {
     private static final Logger LOG = LoggerFactory.getLogger(GeoTools.class);
 
     private static final IRI XSD_DOUBLE = SimpleValueFactory.getInstance()
-            .createIRI("http://www.w3.org/2001/XMLSchema#double");
+            .createIRI("http://www.w3.org/2001/XMLSchema#decimal");
 
     @Component.InputPort(id = "InputRdf")
     public ChunkedStatements inputRdf;
