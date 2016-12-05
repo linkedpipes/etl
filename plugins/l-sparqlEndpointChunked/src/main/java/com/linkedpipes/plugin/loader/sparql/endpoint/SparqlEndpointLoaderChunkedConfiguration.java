@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
+@RdfToPojo.Type(uri = SparqlEndpointLoaderVocabulary.CONFIG)
 public class SparqlEndpointLoaderChunkedConfiguration {
 
     @RdfToPojo.Property(
