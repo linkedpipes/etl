@@ -13,6 +13,7 @@ materialicon: whatshot
             <p class="flow-text">LinkedPipes&nbsp;ETL can be installed using the <a href="/installation/">installation guide</a>. The experiments were performed using GitHub commit <a class="" href=" https://github.com/linkedpipes/etl/commit/465011568816326c93e152f4e2084ad0aefad23e">4650115</a>, but should work with further versions as well.</p>
             <p class="flow-text">Once installed, the instance can be populated with the prepared pipelines by <a href="/documentation/#sharing">importing them from their IRIs</a> listed for each dataset.</p>
             <p class="flow-text">The memory available to the Java process of the <code>executor</code> module can be set in the script for running the component using the <code>-Xmx2G</code> parameter (example for 2 GB). </p>
+            <p class="flow-text">For the experimental pipelines, the input data needs to be downloaded to the machine running the LP-ETL instance and the initial Files from local components must point to it.</p>
           </div>
         </div>
     </div>
@@ -23,6 +24,7 @@ materialicon: whatshot
             <div>
                 <ul class="flow-text">
                     <li><a href="/assets/eswc2017/listid-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="http://etl.opendata.cz/eswc2017/listid.unl">Experimental input data</a></li>
                     <li><a href="/assets/eswc2017/listid-full.jsonld">Full pipeline</a></li>
                 </ul>
             </div>
@@ -33,7 +35,8 @@ materialicon: whatshot
             <div>
                 <ul class="flow-text">
                     <li><a href="/assets/eswc2017/ares-experiment.jsonld">Experimental pipeline</a></li>
-                    <li><a href="/assets/eswc2017/ares-full.jsonld">Full pipeline</a></li>
+                    <li><a href="http://etl.opendata.cz/eswc2017/ares.zip">Experimental input data</a> needs to be unzipped.</li>
+                    <li><a href="/assets/eswc2017/ares-full.jsonld">Full pipeline</a> needs the zipped experimental input.</li>
                 </ul>
             </div>
         </div>
@@ -45,6 +48,7 @@ materialicon: whatshot
             <div>
                 <ul class="flow-text">
                     <li><a href="/assets/eswc2017/monitor-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="http://etl.opendata.cz/eswc2017/monitor.zip">Experimental input data</a> needs to be unzipped.</li>
                     <li><a href="/assets/eswc2017/monitor-full.jsonld">Full pipeline</a></li>
                 </ul>
             </div>
@@ -55,11 +59,12 @@ materialicon: whatshot
             <div>
                 <ul class="flow-text">
                     <li><a href="/assets/eswc2017/ruian-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="http://etl.opendata.cz/eswc2017/ruian.zip">Experimental input data</a> needs to be unzipped.</li>
                     <li><a href="/assets/eswc2017/ruian-full.jsonld">Full pipeline</a></li>
                 </ul>
             <p><img class="responsive-img" src="/assets/eswc2017/geocoding.png"/></p>
                 <ul class="flow-text">
-                    <li><a href="/assets/eswc2017/ruian-geo.jsonld">Geocoding pipeline</a></li>
+                    <li><a href="/assets/eswc2017/ruian-geo.jsonld">Geocoding pipeline</a> is dependent on our <a href="http://ruian.linked.opendata.cz:8890/sparql">SPARQL endpoint</a>.</li>
                 </ul>
             </div>
         </div>
@@ -71,6 +76,7 @@ materialicon: whatshot
             <div>
                 <ul class="flow-text">
                     <li><a href="/assets/eswc2017/ctia-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="http://etl.opendata.cz/eswc2017/ctia.csv">Experimental input data</a></li>
                     <li><a href="/assets/eswc2017/ctia-full.jsonld">Full pipeline</a></li>
                 </ul>
             </div>
