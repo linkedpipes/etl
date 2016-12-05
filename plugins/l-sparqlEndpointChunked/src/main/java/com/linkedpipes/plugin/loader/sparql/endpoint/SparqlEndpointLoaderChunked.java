@@ -102,12 +102,12 @@ public class SparqlEndpointLoaderChunked implements Component.Sequential {
             while (iterator.hasNext()) {
                 toAdd.add(iterator.next());
                 if (toAdd.size() >= configuration.getCommitSize()) {
-                    loadData(repository, statements, graph);
+                    loadData(repository, toAdd, graph);
                     toAdd.clear();
                 }
             }
             if (!toAdd.isEmpty()) {
-                loadData(repository, statements, graph);
+                loadData(repository, toAdd, graph);
             }
             progressReport.entryProcessed();
         }
