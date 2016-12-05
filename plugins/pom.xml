@@ -68,6 +68,7 @@
         <module>t-htmlCssUv</module>
         <module>t-modifyDate</module>
         <module>t-geoTools</module>
+        <module>l-sparqlEndpointChunked</module>
     </modules>
 
 </project>

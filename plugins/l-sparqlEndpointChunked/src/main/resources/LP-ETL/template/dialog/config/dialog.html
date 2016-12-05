@@ -1,0 +1,50 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <div class="row">
+        <md-input-container class="md-block" ng-hide="dialog.endpoint.hide"
+                            flex>
+            <label>Endpoint</label>
+            <input type="url" ng-model="dialog.endpoint.value"
+                   ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
+                   placeholder="http://example.com/sparql">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.targetGraphURI.hide"
+                            flex>
+            <label>Target graph IRI</label>
+            <input type="url" ng-model="dialog.targetGraphURI.value"
+                   ng-disabled="dialog.targetGraphURI.disabled || dialog.targetGraphURI.inherit"
+                   placeholder="http://localhost/resource/upload">
+        </md-input-container>
+    </div>
+    <md-switch ng-model="dialog.clearGraph.value"
+               ng-disabled="dialog.clearGraph.disabled || dialog.clearGraph.inherit"
+               ng-hide="dialog.clearGraph.hide">
+        Clear target graph before loading
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.commitSize.hide" flex>
+        <label>Commit size</label>
+        <input type="number" ng-model="dialog.commitSize.value"
+               ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit"
+               placeholder="100000" min="10000" step="10000">
+    </md-input-container>
+    <md-switch ng-model="dialog.useAuthentication.value"
+               ng-disabled="dialog.useAuthentication.disabled || dialog.useAuthentication.inherit"
+               ng-hide="dialog.useAuthentication.hide">Use authentication
+    </md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.useAuthentication.value">
+        <md-input-container class="md-block" ng-hide="dialog.userName.hide"
+                            flex>
+            <label>User name</label>
+            <input ng-model="dialog.userName.value"
+                   ng-disabled="dialog.userName.disabled || dialog.userName.inherit"
+                   placeholder="dba">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.password.hide"
+                            flex>
+            <label>Password</label>
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit">
+        </md-input-container>
+    </div>
+</div>

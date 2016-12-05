@@ -397,6 +397,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-sparqlEndpointChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/l-sparqlEndpointChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-datasetMetadata</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/e-datasetMetadata/</outputDirectory>
