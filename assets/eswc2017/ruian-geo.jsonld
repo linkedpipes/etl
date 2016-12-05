@@ -1,0 +1,459 @@
+[
+  {
+    "@graph": [
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354",
+        "@type": [
+          "http://linkedpipes.com/ontology/Pipeline"
+        ],
+        "http://etl.linkedpipes.com/ontology/version": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#int",
+            "@value": "1"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "RÚIAN Geocoding - Big"
+          }
+        ]
+      },
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/2",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/graph/8"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "120"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "120"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL endpoint select scrollable cursor"
+          }
+        ]
+      },
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/3",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/graph/10"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "580"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "120"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL endpoint chunked"
+          }
+        ]
+      },
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/4",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputFiles"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "FilesInput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/3"
+          }
+        ]
+      },
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/5",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/11"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-geoTools/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "860"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "120"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "GeoTools"
+          }
+        ]
+      },
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/6",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/3"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/5"
+          }
+        ]
+      },
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/components/68200e57-8359-4107-bec1-eaec6d71f7b7",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/components/68200e57-8359-4107-bec1-eaec6d71f7b7/configuration"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1080"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "120"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update endpoint chunked"
+          }
+        ]
+      },
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/connection/f3b412a0-49f8-4e4d-8da1-88afe8cb885b",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/5"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/components/68200e57-8359-4107-bec1-eaec6d71f7b7"
+          }
+        ]
+      }
+    ],
+    "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/11",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-geoTools#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#coord": [
+          {
+            "@id": "http://www.opengis.net/ont/gml#pos"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#defaultCoordType": [
+          {
+            "@value": "EPSG:5514"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#failOnError": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#outputCoordType": [
+          {
+            "@value": "EPSG:4326"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#outputPredicate": [
+          {
+            "@id": "http://schema.org/geo"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-geoTools#type": [
+          {
+            "@id": "http://www.opengis.net/ont/gml#Point"
+          }
+        ]
+      }
+    ],
+    "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/11"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/components/68200e57-8359-4107-bec1-eaec6d71f7b7/configuration",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraph": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#commitSize": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "4000"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#endpoint": [
+          {
+            "@value": "http://ruian.linked.opendata.cz:8890/sparql-auth"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#password": [
+          {
+            "@value": "dba01OD"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#targetGraphURI": [
+          {
+            "@value": "http://ruian.linked.opendata.cz/resource/dataset/geocoding/krovak2WGS84/lp"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#useAuthentication": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userName": [
+          {
+            "@value": "dba"
+          }
+        ]
+      }
+    ],
+    "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/components/68200e57-8359-4107-bec1-eaec6d71f7b7/configuration"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/9",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSize": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "4000"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSizeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#defaultGraphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpoint": [
+          {
+            "@value": "http://ruian.linked.opendata.cz:8890/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpointControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#headerAcceptControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#query": [
+          {
+            "@value": "CONSTRUCT {?point a <http://www.opengis.net/ont/gml#Point>; <http://www.opengis.net/ont/gml#pos> ?o .\n} WHERE \n{\n?point  a <http://www.opengis.net/ont/gml#Point>; <http://www.opengis.net/ont/gml#pos> ?o . \n\n${VALUES}\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/graph/10"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/2/configuration",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#defaultGraph": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#defaultGraphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#endpoint": [
+          {
+            "@value": "http://ruian.linked.opendata.cz:8890/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#endpointControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileName": [
+          {
+            "@value": "table.csv"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelect": [
+          {
+            "@value": "SELECT ?point WHERE {[] <http://ruian.linked.opendata.cz/ontology/adresniBod> ?point. } ORDER BY ?point"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelectControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#outerSelect": [
+          {
+            "@value": "?point"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#outerSelectControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSize": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "100000"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSizeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixes": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixesControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://demo.etl.linkedpipes.com/resources/pipelines/created-1480774710354/graph/8"
+  }
+]

@@ -4,17 +4,76 @@ title: ESWC 2017 paper experiment
 materialicon: whatshot
 ---
 
-<div class="container">
-  <div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-      <h2 class="header center orange-text">Experiment setup for ESWC 2017</h2>
-    </div>
-      <div class="row">
-        <div class="col s12 m12 l12">
-          <div class="icon-block">
+<div class="container" id="index-banner">
+    <h2 class="header center orange-text">Experiment setup for ESWC 2017</h2>
+    <div class="row">
+        <div class="col s12">
+          <div>
             <p class="flow-text">This page describes the steps necessary to reproduce the results described in our ESWC 2017 paper submission.</p>
+            <p class="flow-text">LinkedPipes&nbsp;ETL can be installed using the <a href="/installation/">installation guide</a>. The experiments were performed using GitHub commit <a class="" href=" https://github.com/linkedpipes/etl/commit/465011568816326c93e152f4e2084ad0aefad23e">4650115</a>, but should work with further versions as well.</p>
+            <p class="flow-text">Once installed, the instance can be populated with the prepared pipelines by <a href="/documentation/#sharing">importing them from their IRIs</a> listed for each dataset.</p>
+            <p class="flow-text">The memory available to the Java process of the <code>executor</code> module can be set in the script for running the component using the <code>-Xmx2G</code> parameter (example for 2 GB). </p>
           </div>
         </div>
     </div>
-  </div>
+    <div class="row">
+        <div class="col s12 m6">
+            <h3 class="header center orange-text">LISTID</h3>
+            <p><img class="responsive-img" src="/assets/eswc2017/listid.png"/></p>
+            <div>
+                <ul class="flow-text">
+                    <li><a href="/assets/eswc2017/listid-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="/assets/eswc2017/listid-full.jsonld">Full pipeline</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col s12 m6">
+            <h3 class="header center orange-text">ARES</h3>
+            <p><img class="responsive-img" src="/assets/eswc2017/ares.png"/></p>
+            <div>
+                <ul class="flow-text">
+                    <li><a href="/assets/eswc2017/ares-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="/assets/eswc2017/ares-full.jsonld">Full pipeline</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m6">
+            <h3 class="header center orange-text">MONITOR</h3>
+            <p><img class="responsive-img" src="/assets/eswc2017/monitor.png"/></p>
+            <div>
+                <ul class="flow-text">
+                    <li><a href="/assets/eswc2017/monitor-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="/assets/eswc2017/monitor-full.jsonld">Full pipeline</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col s12 m6">
+            <h3 class="header center orange-text">RÚIAN</h3>
+            <p><img class="responsive-img" src="/assets/eswc2017/ruian.png"/></p>
+            <div>
+                <ul class="flow-text">
+                    <li><a href="/assets/eswc2017/ruian-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="/assets/eswc2017/ruian-full.jsonld">Full pipeline</a></li>
+                </ul>
+            <p><img class="responsive-img" src="/assets/eswc2017/geocoding.png"/></p>
+                <ul class="flow-text">
+                    <li><a href="/assets/eswc2017/ruian-geo.jsonld">Geocoding pipeline</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m6">
+            <h3 class="header center orange-text">CTIA</h3>
+            <p><img class="responsive-img" src="/assets/eswc2017/ctia.png"/></p>
+            <div>
+                <ul class="flow-text">
+                    <li><a href="/assets/eswc2017/ctia-experiment.jsonld">Experimental pipeline</a></li>
+                    <li><a href="/assets/eswc2017/ctia-full.jsonld">Full pipeline</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

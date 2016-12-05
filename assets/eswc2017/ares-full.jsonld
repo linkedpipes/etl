@@ -1,0 +1,2210 @@
+[
+  {
+    "@graph": [
+      {
+        "@id": "http://uv.etl.linkedpipes.com/resources/plugins/uv-l-filesToScp-1.4.0.jar/L-FilesToScp+%28COMSODE+unzipped%29",
+        "http://www.w3.org/2002/07/owl#sameAs": [
+          {
+            "@id": "http://etl.opendata.cz/resources/components/1480578518924"
+          }
+        ]
+      },
+      {
+        "@id": "http://uv.etl.linkedpipes.com/resources/plugins/uv-l-filesToScp-1.4.0.jar/L-FilesToScp+%28COMSODE+zipped%29",
+        "http://www.w3.org/2002/07/owl#sameAs": [
+          {
+            "@id": "http://etl.opendata.cz/resources/components/1480578518954"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.linkedpipes.com/resources/plugins/mapping"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/components/1480578518924",
+        "@type": [
+          "http://linkedpipes.com/ontology/Template"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/components/1480578518924/configuration"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/l-filesToScp/0.0.0"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "L-FilesToScp (COMSODE unzipped)"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/components/1480578518924"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/components/1480578518924/configuration/0",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#directory": [
+          {
+            "@value": "/data/virtuoso/upload-uv/comsode"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/components/1480578518924/configuration"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/components/1480578518954",
+        "@type": [
+          "http://linkedpipes.com/ontology/Template"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/components/1480578518954/configuration"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/l-filesToScp/0.0.0"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "L-FilesToScp (COMSODE zipped)"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/components/1480578518954"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/components/1480578518954/configuration/0",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#directory": [
+          {
+            "@value": "/var/www/dumps"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/components/1480578518954/configuration"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922",
+        "@type": [
+          "http://linkedpipes.com/ontology/Pipeline"
+        ],
+        "http://etl.linkedpipes.com/ontology/tag": [
+          {
+            "@value": "PAPER"
+          }
+        ],
+        "http://etl.linkedpipes.com/ontology/version": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#int",
+            "@value": "1"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "ARES OR transform and dump (chunks)"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/10",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/4"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "Metadata"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/11"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/11",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/55"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1380"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "80"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Load to CKAN"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/12",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputFile"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "FilesInput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/6"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/13",
+        "@type": [
+          "http://linkedpipes.com/ontology/RunAfter"
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/6"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/5"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/14",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "Metadata"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/15"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/4"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/15",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/53"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-distributionMetadata/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1180"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "20"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "DistributionMetadata"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/16",
+        "@type": [
+          "http://linkedpipes.com/ontology/RunAfter"
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/6"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/3"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/17",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "Metadata"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/7"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "DatasetMetadata"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/15"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/18",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/4"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/2"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/19",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/20"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/4"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/2",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/47"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-rdfToFile/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1400"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "20"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "RDF to Files"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/20",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/51"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1120"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "140"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Rewrite the VALUE..."
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "T-VoidStatistics"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/21",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "Metadata"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/7"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/4"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/22",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/42"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-xslt/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "460"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "180"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "XSLT Transformer"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/23",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/color": [
+          {
+            "@value": "#ffff00"
+          }
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/68"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "780"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "20"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Files to RDF Chunked"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/24",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/43"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-filesFromLocal/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "460"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "20"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Files from local"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/25",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/45"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-chunkedToGraph/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1020"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "80"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Chunked merger"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/26",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/color": [
+          {
+            "@value": "#ffff00"
+          }
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/62"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdateChunked/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "740"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "80"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Anonymization of addresses"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/27",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/color": [
+          {
+            "@value": "#ffff00"
+          }
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/61"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdateChunked/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "780"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "160"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Anonymization of roles"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/28",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/60"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-unpackZip/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "460"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "120"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Decompress zip archive"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/29",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/color": [
+          {
+            "@value": "#ffff00"
+          }
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/63"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-rdfToFileChunked/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1380"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "140"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Chunked RDF to file"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/3",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/59"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1720"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "100"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Metadata"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Files to Virtuoso"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/30",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "FilesOutput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/24"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "FilesInput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/28"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/31",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "FilesOutput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/28"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "FilesInput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/22"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/32",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "FilesOutput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/22"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputFiles"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/23"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/33",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/25"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/20"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/34",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/27"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/25"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/35",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/26"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/27"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/36",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputFile"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/29"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "FilesInput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/6"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/37",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/23"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/26"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/38",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputFile"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/29"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "FilesInput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/9"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/39",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/27"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/29"
+          }
+        ],
+        "http://linkedpipes.com/ontology/vertex": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/39/vertex/1"
+          },
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/39/vertex/2"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/39/vertex/1",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1060"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "220"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/39/vertex/2",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1380"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "220"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/4",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/70"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-singleGraphUnion/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1220"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "80"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Graph merger"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/5",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/57"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1720"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "20"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Data"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Files to Virtuoso"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/6",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/49"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.opendata.cz/resources/components/1480578518924"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1560"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "20"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Files to SCP"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/7",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/65"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-datasetMetadata/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1000"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "20"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "DatasetMetadata"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/8",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputFile"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "FilesInput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/9"
+          }
+        ]
+      },
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/9",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/67"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.opendata.cz/resources/components/1480578518954"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1580"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "100"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Files to SCP"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/43",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#path": [
+          {
+            "@value": "/data/arescache.zip"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#pathControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/43"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/60",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-unpackZip#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-unpackZip#usePrefix": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/60"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/61",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "prefix foaf: <http://xmlns.com/foaf/0.1/>\nDELETE {\n   ?entity a ?type .\n    ?entity ?p ?o . \n    ?other ?p2 ?entity .\n\n}\nWHERE {\n    ?entity a ?type .\n    OPTIONAL { ?entity ?p ?o . }\n    OPTIONAL { ?other ?p2 ?entity .}\n    VALUES ?type {\n        foaf:Person \n        <http://linked.opendata.cz/ontology/ares#ClenstviVStatutarnimOrganu>\n        <http://linked.opendata.cz/ontology/ares#ZastavaniFunkceVStatutarnimOrganu>\n        <http://linked.opendata.cz/ontology/ares#ClenstviVPredstavenstvu>\n        <http://linked.opendata.cz/ontology/ares#ZastavaniFunkceVPredstavenstvu>\n        <http://linked.opendata.cz/ontology/ares#ClenstviVDozorciRade>\n        <http://linked.opendata.cz/ontology/ares#ZastavaniFunkceVDozorciRade>\n        \n    }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/61"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/62",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "prefix foaf: <http://xmlns.com/foaf/0.1/>\nprefix schema: <http://schema.org/>\nDELETE {\n   ?entity a schema:PostalAddress ;\n               ?p ?o . \n}\nWHERE {\n    ?entity a schema:PostalAddress ;\n                 ^schema:address ?person .\n     ?person a foaf:Person .\n    OPTIONAL { ?entity ?p ?o . }\n\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/62"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/63",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileName": [
+          {
+            "@value": "MFCR_1-ares-or.trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileType": [
+          {
+            "@value": "application/trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileTypeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri": [
+          {
+            "@id": "http://linked.opendata.cz/resource/dataset/ares/or"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#prefixTurtle": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#prefixTurtleControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/63"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/68",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#chunkSizeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/68"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/41",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-xslt#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-xslt#extension": [
+          {
+            "@value": "rdf"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-xslt#skipOnError": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-xslt#template": [
+          {
+            "@value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"\n    xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n    xmlns:are=\"http://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_answer_or/v_1.0.3\"\n    xmlns:d=\"http://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_datatypes/v_1.0.3\"\n    xmlns:u=\"http://wwwinfo.mfcr.cz/ares/xml_doc/schemas/uvis_datatypes/v_1.0.3\"\n    xmlns:f=\"http://opendata.cz/xslt/functions#\"\n    exclude-result-prefixes=\"xs are d u f\"\n    \n    xmlns:adms=\"http://www.w3.org/ns/adms#\"\n    xmlns:dcterms=\"http://purl.org/dc/terms/\"\n    xmlns:gr=\"http://purl.org/goodrelations/v1#\"\n    xmlns:lex=\"http://purl.org/lex#\"\n    xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n    xmlns:rov=\"http://www.w3.org/ns/regorg#\"\n    xmlns:schema=\"http://schema.org/\"\n    xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\"\n    xmlns:void=\"http://rdfs.org/ns/void#\"\n    xmlns:lodares=\"http://linked.opendata.cz/ontology/ares#\"\n    xmlns:ruianlink=\"http://ruian.linked.opendata.cz/ontology/links/\"\n    xmlns:foaf=\"http://xmlns.com/foaf/0.1/\"\n    version=\"2.0\">\n    \n    <!--\n        Seznam zkratek: http://wwwinfo.mfcr.cz/ares/xml_doc/schemas/documentation/zkr_103.txt\n        XML schéma: http://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_datatypes/v_1.0.3/ares_datatypes_v_1.0.3.xsd\n    -->\n    \n    <xsl:param name=\"namespace\">http://linked.opendata.cz/resource/</xsl:param>\n\t<xsl:variable name=\"beURIprefix\">http://linked.opendata.cz/resource/business-entity/</xsl:variable>\n    <xsl:variable name=\"baseURI\" select=\"concat($namespace, 'domain/ares/')\"/>\n    <xsl:variable name=\"icoScheme\" select=\"concat($namespace, 'concept-scheme/CZ-ICO')\"/>\n    <xsl:variable name=\"druhAkcieScheme\">concept-scheme/druh-akcie</xsl:variable>\n    <xsl:variable name=\"podobaAkcieScheme\">concept-scheme/podoba-akcie</xsl:variable>\n    <xsl:variable name=\"funkceVPredstavenstvuScheme\">concept-scheme/funkce-v-predstavenstvu</xsl:variable>\n    <xsl:variable name=\"funkceVDozorciRadeScheme\">concept-scheme/funkce-v-dozorci-rade</xsl:variable>\n    <xsl:variable name=\"funkceVStatutarnimOrganuScheme\">concept-scheme/funkce-v-statutarnim-organu</xsl:variable>\n    <xsl:variable name=\"kodAngmScheme\">concept-scheme/kod-angm</xsl:variable>\n\t<xsl:variable name=\"ruianPrefix\">http://ruian.linked.opendata.cz/resource/</xsl:variable>\n    <xsl:strip-space elements=\"*\"/>\n    \n    <xsl:output encoding=\"UTF-8\" indent=\"yes\" method=\"xml\" normalization-form=\"NFC\"/>\n    \n\t<xsl:function name=\"f:getClenJmenoURIpart\" as=\"xs:string\">\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:if test=\"$context/d:fo\">\n\t\t\t<xsl:value-of select=\"encode-for-uri(\n\t\t\t\t\t\tlower-case(\n\t\t\t\t\t\t\tconcat(\n\t\t\t\t\t\t\t\tif ($context/d:fo/d:tp) then \n\t\t\t\t\t\t\t\t\tconcat(normalize-space($context/d:fo/d:tp/text()), '-') \n\t\t\t\t\t\t\t\telse '', \n\t\t\t\t\t\t\t\tif ($context/d:fo/d:ot) then \n\t\t\t\t\t\t\t\t\tnormalize-space($context/d:fo/d:ot) \n\t\t\t\t\t\t\t\telse \n\t\t\t\t\t\t\t\t\tconcat(\n\t\t\t\t\t\t\t\t\t\tnormalize-space($context/d:fo/d:p/text()),\n\t\t\t\t\t\t\t\t\t\t'-', \n\t\t\t\t\t\t\t\t\t\tnormalize-space($context/d:fo/d:j/text())\n\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\tif ($context/d:fo/d:tz) then \n\t\t\t\t\t\t\t\t\tconcat('-', normalize-space($context/d:fo/d:tz/text())) \n\t\t\t\t\t\t\t\telse ''\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t)\n\t\t\t\t\t\t)\n\t\t\t\"/>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"$context/d:po/d:ico\">\n\t\t\t<xsl:value-of select=\"normalize-space($context/d:po/d:ico/text())\"/>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"$context/d:po and not ($context/d:po/d:ico)\">\n\t\t\t<xsl:value-of select=\"encode-for-uri(lower-case(normalize-space($context/d:po/d:of/text())))\"/>\n\t\t</xsl:if>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getClenURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:if test=\"$context/d:fo\">\n\t\t\t<xsl:value-of select=\"f:pathIdURI(\n\t\t\t\t\tconcat('person',\n\t\t\t\t\tif ($context/d:fo/d:dn) then concat('/',normalize-space($context/d:fo/d:dn/text())) else ''), \n\t\t\t\t\tf:getClenJmenoURIpart($context))\"/>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"$context/d:po\">\n\t\t\t<xsl:value-of select=\"f:pathIdURI(\n\t\t\t\t\t'business-entity',\n\t\t\t\t\tf:getClenJmenoURIpart($context))\"/>\n\t\t</xsl:if>\n\t</xsl:function>\n    \n\t<xsl:function name=\"f:fixPrice\" as=\"xs:string\">\n\t\t<xsl:param name=\"price\" as=\"xs:string\"/>\n\t\t<xsl:value-of select=\"replace(normalize-space(replace(replace(replace($price,';00',''),'Kč',''),'.-','')),',','.')\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getClenTitle\" as=\"xs:string\">\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:if test=\"$context/d:fo\">\n\t\t\t<xsl:value-of select=\"\n\t\t\t\t\t\t\tconcat(\n\t\t\t\t\t\t\t\tif ($context/d:fo/d:tp) then \n\t\t\t\t\t\t\t\t\tconcat(normalize-space($context/d:fo/d:tp/text()),' ') \n\t\t\t\t\t\t\t\telse '', \n\t\t\t\t\t\t\t\tif ($context/d:fo/d:ot) then \n\t\t\t\t\t\t\t\t\tnormalize-space($context/d:fo/d:ot) \n\t\t\t\t\t\t\t\telse \n\t\t\t\t\t\t\t\t\tconcat(\n\t\t\t\t\t\t\t\t\t\tnormalize-space($context/d:fo/d:p/text()),\n\t\t\t\t\t\t\t\t\t\t' ', \n\t\t\t\t\t\t\t\t\t\tnormalize-space($context/d:fo/d:j/text())\n\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\tif ($context/d:fo/d:tz) then \n\t\t\t\t\t\t\t\t\tconcat(normalize-space($context/d:fo/d:tz/text()),' ') \n\t\t\t\t\t\t\t\telse ''\n\t\t\t\t\t\t\t\t)\n\t\t\t\"/>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"$context/d:po/d:ico\">\n\t\t\t<xsl:value-of select=\"concat(normalize-space($context/d:po/d:ico/text()), ' - ', normalize-space($context/d:po/d:of/text()))\"/>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"$context/d:po and not ($context/d:po/d:ico)\">\n\t\t\t<xsl:value-of select=\"normalize-space($context/d:po/d:of/text())\"/>\n\t\t</xsl:if>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getClenstviVPredstavenstvuURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getClenstviURI($ico, 'clenstvi-v-predstavenstvu', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getPOURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"if ($context/d:ico) then f:icoBasedURI(normalize-space($context/d:ico/text()),'') else f:pathURI(\n\t\t\t\tconcat('business-entity',\n\t\t\t\t\t\t\t'/',\n\t\t\t\t\t\t\tencode-for-uri(\n\t\t\t\t\t\t\t\tlower-case(\n\t\t\t\t\t\t\t\t\tnormalize-space($context/d:of/text())\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t)\n\t\t\t\t\t\t)\n\t\t\t\t)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getProkuraURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:icoBasedDomainURI($ico,'prokura')\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getClenstviURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"clenstvi\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:icoBasedDomainURI(\n\t\t\t\tconcat($ico,\n\t\t\t\t\t\t\t'/',$clenstvi,\n\t\t\t\t\t\t\tif ($context/d:fo) then concat('/',normalize-space($context/d:fo/d:dn/text())) else ''),  \n\t\t\t\t\t\t\tf:getClenJmenoURIpart($context)\n\t\t\t\t\t\t)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getClenstviVDozorciRadeURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getClenstviURI($ico, 'clenstvi-v-dozorci-rade', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getClenstviVStatutarnimOrganuURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getClenstviURI($ico, 'clenstvi-v-statutarnim-organu', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getAkcionarstviURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getClenstviURI($ico, 'akcionarstvi', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getSpolecnictviSVklademURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getClenstviURI($ico, 'spolecnictvi-s-vkladem', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getZastavaniFunkceVPredstavenstvuURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getZastavaniFunkceURI($ico, 'zastavani-funkce-v-predstavenstvu', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getZastavaniFunkceVDozorciRadeURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getZastavaniFunkceURI($ico, 'zastavani-funkce-v-dozorci-rade', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getVkladSpolecnikaURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getZastavaniFunkceURI($ico, 'vklad-spolecnika', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getZastavaniFunkceVStatutarnimOrganuURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:getZastavaniFunkceURI($ico, 'zastavani-funkce-v-statutarnim-organu', $context)\"/>\n\t</xsl:function>\n\n\t<xsl:function name=\"f:getZastavaniFunkceURI\" as=\"xs:anyURI\">\n\t\t<xsl:param name=\"ico\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"funkce\" as=\"xs:string\"/>\n\t\t<xsl:param name=\"context\" as=\"node()\"/>\n\t\t<xsl:value-of select=\"f:icoBasedDomainURI(\n\t\t\t\tconcat($ico,\n\t\t\t\t\t\t\t'/',$funkce,'/', \n\t\t\t\t\t\t\tif ($context/d:fo) then normalize-space($context/d:fo/d:dn/text()) else ''),  \n\t\t\t\t\t\t\tconcat(\n\t\t\t\t\t\t\t\tf:getClenJmenoURIpart($context), \n\t\t\t\t\t\t\t\tif ($context/d:vf/d:dza) then \n\t\t\t\t\t\t\t\t\tconcat('/', normalize-space($context/d:vf/d:dza/text())) \n\t\t\t\t\t\t\t\telse ''\n\t\t\t\t\t\t\t)\n\t\t\t\t\t\t)\"/>\n\t</xsl:function>\n\n    <xsl:function name=\"f:classURI\" as=\"xs:anyURI\">\n        <xsl:param name=\"classLabel\" as=\"xs:string\"/>\n        <xsl:param name=\"id\" as=\"xs:string\"/>\n        <xsl:value-of select=\"f:pathIdURI(encode-for-uri(replace(lower-case(normalize-space($classLabel)), '\\s', '-')), normalize-space($id))\"/>\n    </xsl:function>\n    \n    <xsl:function name=\"f:icoBasedURI\" as=\"xs:anyURI\">\n        <xsl:param name=\"ico\" as=\"xs:string\"/>\n        <xsl:param name=\"fragment\" as=\"xs:string\"/>\n        <xsl:value-of select=\"concat($beURIprefix, 'CZ', normalize-space($ico), if (string-length($fragment) > 0) then concat('/', normalize-space($fragment)) else '')\"/>\n    </xsl:function>\n    \n    <xsl:function name=\"f:icoBasedDomainURI\" as=\"xs:anyURI\">\n        <xsl:param name=\"ico\" as=\"xs:string\"/>\n        <xsl:param name=\"fragment\" as=\"xs:string\"/>\n        <xsl:value-of select=\"concat($baseURI,'business-entity/CZ', normalize-space($ico), '/', normalize-space($fragment))\"/>\n    </xsl:function>\n\n    <xsl:function name=\"f:icoBasedAddressURI\" as=\"xs:anyURI\">\n        <xsl:param name=\"ico\" as=\"xs:string\"/>\n        <xsl:param name=\"context\" as=\"node()\"/>\n        <xsl:value-of select=\"f:icoBasedURI(normalize-space($ico), concat('postal-address/', $context/local-name()))\"/>\n    </xsl:function>\n    \n    <xsl:function name=\"f:pathIdURIWithICOFallback\" as=\"xs:anyURI\">\n        <xsl:param name=\"ico\" as=\"xs:string\"/>\n        <xsl:param name=\"path\" as=\"xs:string\"/>\n        <xsl:param name=\"id\" as=\"node()*\"/>\n        <xsl:param name=\"context\" as=\"node()\"/>\n        <xsl:choose>\n            <xsl:when test=\"$id\">\n                <xsl:value-of select=\"f:pathIdURI($path, normalize-space($id))\"/>\n            </xsl:when>\n            <xsl:otherwise>\n                <xsl:value-of select=\"f:icoBasedURI($ico, concat($path, '/', $context/local-name()))\"/>\n            </xsl:otherwise>\n        </xsl:choose>\n    </xsl:function>\n    \n    <xsl:function name=\"f:pathURI\" as=\"xs:anyURI\">\n        <xsl:param name=\"path\" as=\"xs:string\"/>\n        <xsl:value-of select=\"concat($baseURI, $path)\"/>\n    </xsl:function>\n    \n    <xsl:function name=\"f:pathIdURI\" as=\"xs:anyURI\">\n        <xsl:param name=\"path\" as=\"xs:string\"/>\n        <xsl:param name=\"id\" as=\"xs:string\"/>\n        <xsl:value-of select=\"concat(f:pathURI($path), '/', encode-for-uri(normalize-space($id)))\"/>\n    </xsl:function>\n    \n    <xsl:template match=\"are:ares_odpovedi\">\n        <rdf:RDF>\n            <xsl:apply-templates/>\n        </rdf:RDF>\n    </xsl:template>\n    \n    <xsl:template match=\"are:odpoved\">\n        <xsl:apply-templates/>\n    </xsl:template>\n    \n\t<xsl:template match=\"d:vypis_or\">\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"normalize-space(d:zau/d:ico/text())\"/>\t\t\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:zau\" mode=\"linked\">\n\t\t<!-- Základní údaje -->\n        <xsl:param name=\"ico\"/>\n        <gr:BusinessEntity rdf:about=\"{concat($beURIprefix, 'CZ', normalize-space($ico))}\">\n            <dcterms:valid rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:pod)\"/></dcterms:valid>\n            <rdf:type rdf:resource=\"http://www.w3.org/ns/regorg#RegisteredOrganization\"/>\n            <adms:identifier rdf:resource=\"{f:icoBasedURI($ico,concat('identifier/',$ico))}\"/>\n            <gr:legalName><xsl:value-of select=\"normalize-space(d:of)\"/></gr:legalName>\n\t\t\t<xsl:if test=\"d:dzor\">\n\t\t\t\t<dcterms:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:dzor)\"/></dcterms:issued>\n\t\t\t</xsl:if>\n\t\t\t<xsl:apply-templates>\n\t\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t\t</xsl:apply-templates>\n\t\t\t<xsl:apply-templates select=\"following-sibling::*\">\n\t\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t\t</xsl:apply-templates>\n        </gr:BusinessEntity>\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:ico\">\n\t\t<xsl:param name=\"ico\"/>\n        <adms:Identifier rdf:about=\"{f:icoBasedURI(.,concat('identifier/',.))}\">\n            <skos:notation><xsl:value-of select=\"normalize-space(text())\"/></skos:notation>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(text())\"/></skos:prefLabel>\n            <skos:inScheme rdf:resource=\"{$icoScheme}\"/>\n            <adms:schemeAgency>Český statistický úřad</adms:schemeAgency>\n            <xsl:apply-templates mode=\"identifier\" select=\"../d:dv|../d:ror/d:sz/d:sd\"/>\n        </adms:Identifier>\n    </xsl:template>\n\n\t<xsl:template match=\"d:reg\">\n\t\t<!-- Registrace -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:cin\" mode=\"linked\">\n\t\t<!-- Činnosti -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:cin\">\n\t\t<!-- Činnosti -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:apply-templates>\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:osk\">\n\t\t<!-- Činnosti -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:apply-templates>\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:kap\">\n\t\t<!-- Kapitál -->\n\t\t<xsl:param name=\"ico\"/>\n        <lodares:zakladni-kapital rdf:resource=\"{f:icoBasedDomainURI($ico, 'zakladni-kapital')}\"/>\n        <xsl:if test=\"d:za/d:spl/d:kc and not(contains(d:za/d:spl/d:kc/text(), '%'))\">\n\t\t\t<lodares:zakladni-kapital-splaceno rdf:resource=\"{f:icoBasedDomainURI($ico, 'zakladni-kapital-splaceno')}\"/>\n        </xsl:if>\n        <xsl:if test=\"d:za/d:spl/d:kc and contains(d:za/d:spl/d:kc/text(), '%')\">\n\t\t\t<lodares:zakladni-kapital-splaceno-procent rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\"><xsl:value-of select=\"normalize-space(d:za/d:spl/d:kc//text())\"/></lodares:zakladni-kapital-splaceno-procent>\n        </xsl:if>\n        <xsl:if test=\"d:za/d:spl/d:prc\">\n\t\t\t<lodares:zakladni-kapital-splaceno-procent rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\"><xsl:value-of select=\"normalize-space(d:za/d:spl/d:prc/text())\"/></lodares:zakladni-kapital-splaceno-procent>\n        </xsl:if>\n        <xsl:if test=\"d:akcie\">\n\t\t\t<xsl:for-each select=\"d:akcie/d:em\">\n\t\t\t\t<lodares:emise rdf:resource=\"{f:icoBasedDomainURI($ico, concat('emise/',count(./preceding-sibling::*)+1))}\"/>\n\t\t\t</xsl:for-each>\n        </xsl:if>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:kap\" mode=\"linked\">\n\t\t<!-- Kapitál -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:if test=\"d:za/d:vk/d:kc/text()\">\n\t\t\t<gr:PriceSpecification rdf:about=\"{f:icoBasedDomainURI($ico, 'zakladni-kapital')}\">\n\t\t\t\t<gr:hasCurrency>CZK</gr:hasCurrency>\n\t\t\t\t<gr:hasCurrencyValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#decimal\"><xsl:value-of select=\"f:fixPrice(d:za/d:vk/d:kc/text())\"/></gr:hasCurrencyValue>\n\t\t\t</gr:PriceSpecification>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"d:kj/d:vk/d:kc/text()\">\n\t\t\t<gr:PriceSpecification rdf:about=\"{f:icoBasedDomainURI($ico, 'zakladni-kapital')}\">\n\t\t\t\t<gr:hasCurrency>CZK</gr:hasCurrency>\n\t\t\t\t<gr:hasCurrencyValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#decimal\"><xsl:value-of select=\"f:fixPrice(d:kj/d:vk/d:kc/text())\"/></gr:hasCurrencyValue>\n\t\t\t</gr:PriceSpecification>\n\t\t</xsl:if>\n        <xsl:if test=\"d:za/d:spl/d:kc and not(contains(d:za/d:spl/d:kc/text, '%'))\">\n\t\t\t<gr:PriceSpecification rdf:about=\"{f:icoBasedDomainURI($ico, 'zakladni-kapital-splaceno')}\">\n\t\t\t\t<gr:hasCurrency>CZK</gr:hasCurrency>\n\t\t\t\t<gr:hasCurrencyValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#decimal\"><xsl:value-of select=\"f:fixPrice(d:za/d:spl/d:kc/text())\"/></gr:hasCurrencyValue>\n\t\t\t</gr:PriceSpecification>\n        </xsl:if>\n        <xsl:if test=\"d:akcie\">\n\t\t\t<xsl:for-each select=\"d:akcie/d:em\">\n\t\t\t\t<lodares:Emise rdf:about=\"{f:icoBasedDomainURI($ico, concat('emise/',count(./preceding-sibling::*)+1))}\">\n\t\t\t\t\t<lodares:druh-akcie rdf:resource=\"{f:pathIdURI($druhAkcieScheme, normalize-space(d:da/text()))}\"/>\n\t\t\t\t\t<xsl:if test=\"d:pd\"><lodares:podoba-akcie rdf:resource=\"{f:pathIdURI($podobaAkcieScheme, normalize-space(d:pd/text()))}\"/></xsl:if>\n\t\t\t\t\t<lodares:hodnota-akcie rdf:resource=\"{f:icoBasedDomainURI($ico, concat('emise/',count(./preceding-sibling::*)+1,'/hodnota'))}\"/>\n\t\t\t\t\t<lodares:pocet-akcii rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\"><xsl:value-of select=\"normalize-space(d:pocet/text())\"/></lodares:pocet-akcii>\n\t\t\t\t</lodares:Emise>\n\t\t\t</xsl:for-each>\n        </xsl:if>\n        <xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n        </xsl:apply-templates>\n\t</xsl:template>\n\t\n    <xsl:template mode=\"linked\" match=\"d:akcie\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:for-each select=\"d:em\">\n\t\t\t<gr:PriceSpecification rdf:about=\"{f:icoBasedDomainURI($ico, concat('emise/',count(./preceding-sibling::*)+1,'/hodnota'))}\">\n\t\t\t\t<gr:hasCurrency>CZK</gr:hasCurrency>\n\t\t\t\t<gr:hasCurrencyValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#decimal\"><xsl:value-of select=\"f:fixPrice(d:h/text())\"/></gr:hasCurrencyValue>\n\t\t\t</gr:PriceSpecification>\n\t\t</xsl:for-each>\n\t\t<xsl:apply-templates select=\"d:em/*\" mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:pd\">\n        <!-- Právní forma -->\n        <skos:Concept rdf:about=\"{f:pathIdURI($podobaAkcieScheme, normalize-space(./text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($podobaAkcieScheme)}\"/>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n        </skos:Concept>    \n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:da\">\n        <!-- Právní forma -->\n        <skos:Concept rdf:about=\"{f:pathIdURI($druhAkcieScheme, normalize-space(./text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($druhAkcieScheme)}\"/>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n        </skos:Concept>    \n    </xsl:template>\n\n\t<xsl:template match=\"d:sop\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Statutární orgán - představenstvo -->\n\t\t<lodares:predstavenstvo rdf:resource=\"{f:icoBasedDomainURI($ico, 'predstavenstvo')}\"/>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:sop\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Statutární orgán - představenstvo -->\n\t\t<lodares:Predstavenstvo rdf:about=\"{f:icoBasedDomainURI($ico, 'predstavenstvo')}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"concat(normalize-space(../d:zau/d:of/text()),' - Představenstvo')\"/></dcterms:title>\n\t\t\t<xsl:for-each select=\"d:csp\">\n\t\t\t\t<lodares:clen-predstavenstva rdf:resource=\"{f:getClenstviVPredstavenstvuURI($ico,d:c)}\"/>\n\t\t\t</xsl:for-each>\n\t\t\t<xsl:for-each select=\"d:t\">\n\t\t\t\t<dcterms:description xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(./text())\"/></dcterms:description>\n\t\t\t</xsl:for-each>\n\t\t</lodares:Predstavenstvo>\n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:so\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Statutární orgán -->\n\t\t<lodares:StatutarniOrgan rdf:about=\"{f:icoBasedDomainURI($ico, 'statutarni-organ')}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"concat(normalize-space(../d:zau/d:of/text()),' - Statutární orgán')\"/></dcterms:title>\n\t\t\t<xsl:for-each select=\"d:cso\">\n\t\t\t\t<lodares:clen-statutarniho-organu rdf:resource=\"{f:getClenstviVStatutarnimOrganuURI($ico,d:c)}\"/>\n\t\t\t</xsl:for-each>\n\t\t\t<xsl:for-each select=\"d:t\">\n\t\t\t\t<dcterms:description xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(./text())\"/></dcterms:description>\n\t\t\t</xsl:for-each>\n\t\t</lodares:StatutarniOrgan>\n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:aki\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Akcionáři -->\n\t\t<lodares:Akcionari rdf:about=\"{f:icoBasedDomainURI($ico, 'akcionari')}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"concat(normalize-space(../d:zau/d:of/text()),' - Akcionáři')\"/></dcterms:title>\n\t\t\t<xsl:for-each select=\"d:akr\">\n\t\t\t\t<lodares:akcionarstvi rdf:resource=\"{f:getAkcionarstviURI($ico,.)}\"/>\n\t\t\t</xsl:for-each>\n\t\t</lodares:Akcionari>\n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:dr\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Dozorčí rada -->\n\t\t<lodares:dozorci-rada rdf:resource=\"{f:icoBasedDomainURI($ico, 'dozorci-rada')}\"/>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:so\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Statutární orgán -->\n\t\t<lodares:statutarni-organ rdf:resource=\"{f:icoBasedDomainURI($ico, 'statutarni-organ')}\"/>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:aki\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Akcionáři -->\n\t\t<lodares:akcionari rdf:resource=\"{f:icoBasedDomainURI($ico, 'akcionari')}\"/>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:akr\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Akcionář -->\n\t\t<xsl:variable name=\"currentURI\" select=\"f:getAkcionarstviURI($ico,.)\"/>\n\t\t<lodares:Akcionarstvi rdf:about=\"{$currentURI}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"f:getClenTitle(.)\"/></dcterms:title>\n\t\t\t<xsl:if test=\"d:po\">\n\t\t\t\t<lodares:akcionar rdf:resource=\"{f:getPOURI(d:po)}\"/>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:fo\">\n\t\t\t\t<lodares:akcionar rdf:resource=\"{f:getClenURI(.)}\"/>\n\t\t\t</xsl:if>\n\t\t\t<xsl:for-each select=\"d:t\">\n\t\t\t\t<dcterms:description xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(./text())\"/></dcterms:description>\n\t\t\t</xsl:for-each>\n\t\t</lodares:Akcionarstvi>\n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:ssv\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Statutární orgán -->\n\t\t<lodares:spolecnici-s-vkladem rdf:resource=\"{f:icoBasedDomainURI($ico, 'spolecnici-s-vkladem')}\"/>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:dr\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Dozorčí rada -->\n\t\t<lodares:DozorciRada rdf:about=\"{f:icoBasedDomainURI($ico, 'dozorci-rada')}\">\n\t\t<dcterms:title><xsl:value-of select=\"concat(normalize-space(../d:zau/d:of/text()),' - Dozorčí rada')\"/></dcterms:title>\n\t\t\t<xsl:for-each select=\"d:cdr\">\n\t\t\t\t<lodares:clen-dozorci-rady rdf:resource=\"{f:getClenstviVDozorciRadeURI($ico,d:c)}\"/>\n\t\t\t</xsl:for-each>\n\t\t\t<xsl:for-each select=\"d:t\">\n\t\t\t\t<dcterms:description xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(./text())\"/></dcterms:description>\n\t\t\t</xsl:for-each>\n\t\t</lodares:DozorciRada>\n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:ssv\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Společníci s vkladem -->\n\t\t<lodares:SpolecniciSVkladem rdf:about=\"{f:icoBasedDomainURI($ico, 'spolecnici-s-vkladem')}\">\n\t\t<dcterms:title><xsl:value-of select=\"concat(normalize-space(../d:zau/d:of/text()),' - Společníci s vkladem')\"/></dcterms:title>\n\t\t\t<xsl:for-each select=\"d:ss\">\n\t\t\t\t<lodares:spolecnictvi-s-vkladem rdf:resource=\"{f:getSpolecnictviSVklademURI($ico,.)}\"/>\n\t\t\t</xsl:for-each>\n\t\t</lodares:SpolecniciSVkladem>\n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:ss\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Společnictví s vkladem -->\n\t\t<xsl:variable name=\"currentURI\" select=\"f:getSpolecnictviSVklademURI($ico,.)\"/>\n\t\t<lodares:SpolecnictviSVkladem rdf:about=\"{$currentURI}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"f:getClenTitle(.)\"/></dcterms:title>\n\t\t\t<xsl:if test=\"d:fo\">\n\t\t\t\t<lodares:spolecnik-s-vkladem rdf:resource=\"{f:getClenURI(.)}\"/>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:po\">\n\t\t\t\t<lodares:spolecnik-s-vkladem rdf:resource=\"{f:getPOURI(d:po)}\"/>\n\t\t\t</xsl:if>\n\t\t\t<lodares:vklad rdf:resource=\"{$currentURI}/vklad\"/>\n\n\t\t\t<xsl:if test=\"d:vks/d:spl/d:kc and not(contains(d:vks/d:spl/d:kc/text(), '%'))\">\n\t\t\t\t<lodares:splaceno rdf:resource=\"{$currentURI}/splaceno\"/>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:vks/d:spl/d:kc and contains(d:vks/d:spl/d:kc/text(), '%')\">\n\t\t\t\t<lodares:splaceno-procent rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\"><xsl:value-of select=\"replace(replace(normalize-space(d:vks/d:spl/d:kc/text()),'%',''),',','.')\"/></lodares:splaceno-procent>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:vks/d:spl/d:prc\">\n\t\t\t\t<lodares:splaceno-procent rdf:datatype=\"http://www.w3.org/2001/XMLSchema#decimal\"><xsl:value-of select=\"replace(replace(normalize-space(d:vks/d:spl/d:prc/text()),'%',''),',','.')\"/></lodares:splaceno-procent>\n\t\t\t</xsl:if>\n\n\t\t\t<lodares:obchodni-podil-spolecnika><xsl:value-of select=\"normalize-space(d:vks/d:op/d:t/text())\"/></lodares:obchodni-podil-spolecnika>\n\t\t</lodares:SpolecnictviSVkladem>\n\n\t\t<xsl:if test=\"d:vks/d:vk/d:kc/text()\">\n\t\t\t<gr:PriceSpecification rdf:about=\"{$currentURI}/vklad\">\n\t\t\t\t<gr:hasCurrency>CZK</gr:hasCurrency>\n\t\t\t\t<gr:hasCurrencyValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#decimal\"><xsl:value-of select=\"f:fixPrice(d:vks/d:vk/d:kc/text())\"/></gr:hasCurrencyValue>\n\t\t\t</gr:PriceSpecification>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"d:vks/d:spl/d:kc and not(contains(d:vks/d:spl/d:kc/text(), '%'))\">\n\t\t\t<gr:PriceSpecification rdf:about=\"{$currentURI}/splaceno\">\n\t\t\t\t<gr:hasCurrency>CZK</gr:hasCurrency>\n\t\t\t\t<gr:hasCurrencyValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#decimal\"><xsl:value-of select=\"replace(normalize-space(d:vks/d:spl/d:kc/text()),',','.')\"/></gr:hasCurrencyValue>\n\t\t\t</gr:PriceSpecification>\n\t\t</xsl:if>\n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:cso\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Statutární orgán -->\n\t\t<lodares:ClenstviVStatutarnimOrganu rdf:about=\"{f:getClenstviVStatutarnimOrganuURI($ico, d:c)}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"f:getClenTitle(d:c)\"/></dcterms:title>\n\t\t\t<lodares:clen-predstavenstva rdf:resource=\"{f:getClenURI(d:c)}\"/>\n\t\t\t<xsl:if test=\"d:c/d:cle/d:dza/text()\">\n\t\t\t\t<dcterms:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:c/d:cle/d:dza/text())\"/></dcterms:issued>\n\t\t\t</xsl:if>\n\t\t\t<lodares:zastavani-funkce-v-statutarnim-organu rdf:resource=\"{f:getZastavaniFunkceVStatutarnimOrganuURI($ico, d:c)}\"/>\n\t\t\t<lodares:kod-angm rdf:resource=\"{f:pathIdURI($kodAngmScheme, normalize-space(d:c/d:kan/text()))}\"/>\n\t\t</lodares:ClenstviVStatutarnimOrganu>\n\n\t\t<lodares:ZastavaniFunkceVStatutarnimOrganu rdf:about=\"{f:getZastavaniFunkceVStatutarnimOrganuURI($ico, d:c)}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"normalize-space(d:c/d:f/text())\"/></dcterms:title>\n\t\t\t<xsl:if test=\"d:c/d:vf/d:dza/text()\">\n\t\t\t\t<dcterms:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:c/d:vf/d:dza/text())\"/></dcterms:issued>\n\t\t\t</xsl:if>\n\t\t\t<lodares:funkce-v-statutarnim-organu rdf:resource=\"{f:pathIdURI($funkceVStatutarnimOrganuScheme, normalize-space(d:c/d:f/text()))}\"/>\n\t\t</lodares:ZastavaniFunkceVStatutarnimOrganu>\n\n\t\t<xsl:apply-templates mode=\"linked\" select=\"d:c/d:fo\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:csp\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Statutární orgán - představenstvo -->\n\t\t<lodares:ClenstviVPredstavenstvu rdf:about=\"{f:getClenstviVPredstavenstvuURI($ico, d:c)}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"f:getClenTitle(d:c)\"/></dcterms:title>\n\t\t\t<lodares:clen-predstavenstva rdf:resource=\"{f:getClenURI(d:c)}\"/>\n\t\t\t<xsl:if test=\"d:c/d:cle/d:dza/text()\">\n\t\t\t\t<dcterms:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:c/d:cle/d:dza/text())\"/></dcterms:issued>\n\t\t\t</xsl:if>\n\t\t\t<lodares:zastavani-funkce-v-predstavenstvu rdf:resource=\"{f:getZastavaniFunkceVPredstavenstvuURI($ico, d:c)}\"/>\n\t\t\t<lodares:kod-angm rdf:resource=\"{f:pathIdURI($kodAngmScheme, normalize-space(d:c/d:kan/text()))}\"/>\n\t\t</lodares:ClenstviVPredstavenstvu>\n\n\t\t<lodares:ZastavaniFunkceVPredstavenstvu rdf:about=\"{f:getZastavaniFunkceVPredstavenstvuURI($ico, d:c)}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"normalize-space(d:c/d:f/text())\"/></dcterms:title>\n\t\t\t<xsl:if test=\"d:c/d:vf/d:dza/text()\">\n\t\t\t\t<dcterms:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:c/d:vf/d:dza/text())\"/></dcterms:issued>\n\t\t\t</xsl:if>\n\t\t\t<lodares:funkce-v-predstavenstvu rdf:resource=\"{f:pathIdURI($funkceVPredstavenstvuScheme, normalize-space(d:c/d:f/text()))}\"/>\n\t\t</lodares:ZastavaniFunkceVPredstavenstvu>\n\n\t\t<xsl:apply-templates mode=\"linked\" select=\"d:c/d:fo\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:cdr\" mode=\"linked\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<!-- Dozorčí rada -->\n\t\t<lodares:ClenstviVDozorciRade rdf:about=\"{f:getClenstviVDozorciRadeURI($ico, d:c)}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"f:getClenTitle(d:c)\"/></dcterms:title>\n\t\t\t<lodares:clen-v-dozorci-rade rdf:resource=\"{f:getClenURI(d:c)}\"/>\n\t\t\t<xsl:if test=\"d:c/d:cle/d:dza/text()\">\n\t\t\t\t<dcterms:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:c/d:cle/d:dza/text())\"/></dcterms:issued>\n\t\t\t</xsl:if>\n\t\t\t<lodares:zastavani-funkce-v-dozorci-rade rdf:resource=\"{f:getZastavaniFunkceVDozorciRadeURI($ico, d:c)}\"/>\n\t\t\t<lodares:kod-angm rdf:resource=\"{f:pathIdURI($kodAngmScheme, normalize-space(d:c/d:kan/text()))}\"/>\n\t\t</lodares:ClenstviVDozorciRade>\n\n\t\t<lodares:ZastavaniFunkceVDozorciRade rdf:about=\"{f:getZastavaniFunkceVDozorciRadeURI($ico, d:c)}\">\n\t\t\t<dcterms:title><xsl:value-of select=\"normalize-space(d:c/d:f/text())\"/></dcterms:title>\n\t\t\t<xsl:if test=\"d:c/d:vf/d:dza/text()\">\n\t\t\t\t<dcterms:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:c/d:vf/d:dza/text())\"/></dcterms:issued>\n\t\t\t</xsl:if>\n\t\t\t<lodares:funkce-v-predstavenstvu rdf:resource=\"{f:pathIdURI($funkceVDozorciRadeScheme, normalize-space(d:c/d:f/text()))}\"/>\n\t\t</lodares:ZastavaniFunkceVDozorciRade>\n\n\t\t<xsl:apply-templates mode=\"linked\" select=\"d:c/d:fo\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:po\">\n        <!-- právnická osoba - např. akcionář -->\n\t\t<xsl:param name=\"ico\"/>\n        <gr:BusinessEntity rdf:about=\"{f:getPOURI(.)}\">\n\t\t\t<gr:legalName><xsl:value-of select=\"normalize-space(d:of/text())\"/></gr:legalName>\n\t\t\t<xsl:if test=\"d:ico\">\n\t\t\t\t<adms:identifier rdf:resource=\"{concat(f:getPOURI(.),'/identifier/', normalize-space(d:ico/text()))}\"/>\n\t\t\t</xsl:if>\n\t\t\t<schema:address rdf:resource=\"{concat(f:getPOURI(.),'/hq-address')}\"/>\n        </gr:BusinessEntity>    \n\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:fo\">\n        <!-- Člen představenstva nebo dozorčí rady nebo prokurista nebo společník s vkladem-->\n\t\t<xsl:param name=\"ico\"/>\n        <foaf:Person rdf:about=\"{f:getClenURI(..)}\">\n\t\t\t<xsl:if test=\"d:ot\"><foaf:name><xsl:value-of select=\"normalize-space(d:ot/text())\"/></foaf:name></xsl:if>\n\t\t\t<xsl:if test=\"d:p\"><foaf:familyName><xsl:value-of select=\"normalize-space(d:p/text())\"/></foaf:familyName></xsl:if>\n\t\t\t<xsl:if test=\"d:j\"><foaf:givenName><xsl:value-of select=\"normalize-space(d:j/text())\"/></foaf:givenName></xsl:if>\n\t\t\t<xsl:if test=\"d:dn\"><foaf:dateOfBirth rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\"><xsl:value-of select=\"normalize-space(d:dn/text())\"/></foaf:dateOfBirth></xsl:if>\n\t\t\t<xsl:if test=\"d:tp\">\n\t\t\t\t<foaf:title><xsl:value-of select=\"normalize-space(d:tp/text())\"/></foaf:title>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:tz\">\n\t\t\t\t<foaf:title><xsl:value-of select=\"normalize-space(d:tz/text())\"/></foaf:title>\n\t\t\t</xsl:if>\n\t\t\t<schema:address rdf:resource=\"{concat(f:getClenURI(..),'/address')}\"/>\n        </foaf:Person>    \n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:b[not(parent::d:zau)]\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<schema:PostalAddress rdf:about=\"{concat(f:getClenURI(../..),'/address')}\">\n\t\t\t<schema:streetAddress><xsl:value-of select=\"\n\t\t\tconcat(\n\t\t\t\tnormalize-space(d:nu/text()), \n\t\t\t\tif (d:ca) then \n\t\t\t\t\tconcat(' ', \n\t\t\t\t\t\t\tnormalize-space(d:ca/text())\n\t\t\t\t\t\t\t) \n\t\t\t\telse '',\n\t\t\t\tif (d:cd) then \n\t\t\t\t\t\tconcat(' ', \n\t\t\t\t\t\t\t\tnormalize-space(d:cd/text()),\n\t\t\t\t\t\t\t\tif (d:co) then \n\t\t\t\t\t\t\t\t\tconcat('/',\n\t\t\t\t\t\t\t\t\t\t\t\tnormalize-space(d:co/text())\n\t\t\t\t\t\t\t\t\t\t\t) \n\t\t\t\t\t\t\t\telse ''\n\t\t\t\t\t\t\t\t)\n\t\t\t\telse ''\n\t\t\t)\n\t\t\t\"/></schema:streetAddress>\n\t\t\t<schema:addressLocality><xsl:value-of select=\"normalize-space(d:nok/text())\"/></schema:addressLocality>\n\t\t\t<schema:addressRegion><xsl:value-of select=\"normalize-space(d:n/text())\"/></schema:addressRegion>\n\t\t\t<xsl:if test=\"d:zahr_psc\">\n\t\t\t\t<schema:postalCode><xsl:value-of select=\"normalize-space(d:zahr_psc/text())\"/></schema:postalCode>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:psc\">\n\t\t\t\t<schema:postalCode><xsl:value-of select=\"normalize-space(d:psc/text())\"/></schema:postalCode>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:ns\">\n\t\t\t\t<schema:addressCountry><xsl:value-of select=\"normalize-space(d:ns/text())\"/></schema:addressCountry>\n\t\t\t</xsl:if>\n\t\t\t<xsl:apply-templates mode=\"linked\"/>\n\t\t</schema:PostalAddress>\n    </xsl:template>\n\n\n    <xsl:template mode=\"linked\" match=\"d:f[ancestor::d:csp]\">\n        <!-- Funkce v představenstvu -->\n        <skos:Concept rdf:about=\"{f:pathIdURI($funkceVPredstavenstvuScheme, normalize-space(./text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($funkceVPredstavenstvuScheme)}\"/>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n        </skos:Concept>    \n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:kan[ancestor::d:csp]\">\n        <!-- Kod angm ??? v představenstvu -->\n        <skos:Concept rdf:about=\"{f:pathIdURI($kodAngmScheme, normalize-space(./text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($kodAngmScheme)}\"/>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n        </skos:Concept>    \n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:f[ancestor::d:cdr]\">\n        <!-- Funkce v dozorčí radě -->\n        <skos:Concept rdf:about=\"{f:pathIdURI($funkceVDozorciRadeScheme, normalize-space(./text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($funkceVDozorciRadeScheme)}\"/>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n        </skos:Concept>    \n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:kan[ancestor::d:cdr]\">\n        <!-- Kod angm ??? v dozorčí radě -->\n        <skos:Concept rdf:about=\"{f:pathIdURI($kodAngmScheme, normalize-space(./text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($kodAngmScheme)}\"/>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n        </skos:Concept>    \n    </xsl:template>\n\n\t<xsl:template match=\"d:pro\" mode=\"linked\">\n\t\t<!-- Prokura -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<lodares:Prokura rdf:about=\"{f:getProkuraURI($ico, .)}\">\n\t\t\t<xsl:apply-templates>\n\t\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t\t</xsl:apply-templates>\n\t\t</lodares:Prokura>\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:pra\">\n\t\t<!-- Prokurista -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<lodares:prokurista rdf:resource=\"{f:getClenURI(.)}\"/>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:pro\">\n\t\t<!-- Prokura -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:if test=\"d:t\">\n\t\t\t<lodares:prokura-text xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(d:t/text())\"/></lodares:prokura-text>\n\t\t</xsl:if>\n\t\t<xsl:if test=\"not(d:t)\">\n\t\t\t<xsl:for-each select=\"d:pra\">\n\t\t\t\t<lodares:prokura rdf:resource=\"{f:getProkuraURI($ico, .)}\"/>\n\t\t\t</xsl:for-each>\n\t\t</xsl:if>\n\t</xsl:template>\n\n\t<xsl:template match=\"d:pra\" mode=\"linked\">\n\t\t<!-- Prokurista -->\n\t\t<xsl:param name=\"ico\"/>\n\t\t<xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" select=\"$ico\"/>\n\t\t</xsl:apply-templates>\n\t</xsl:template>\n\n    <xsl:template match=\"d:pp\">\n        <!-- Obor činnosti -->\n        <xsl:param name=\"ico\" tunnel=\"yes\"/>\n        <xsl:apply-templates>\n\t\t\t<xsl:with-param name=\"ico\" tunnel=\"yes\"/>\n        </xsl:apply-templates>\n    </xsl:template>\n\n    <xsl:template match=\"d:pp\" mode=\"linked\">\n        <!-- Obor činnosti -->\n        <xsl:param name=\"ico\" tunnel=\"yes\"/>\n        <xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" tunnel=\"yes\"/>\n        </xsl:apply-templates>\n    </xsl:template>\n\n    <xsl:template match=\"d:t[parent::d:pp]\">\n        <!-- Obor činnosti -->\n        <xsl:param name=\"ico\" tunnel=\"yes\"/>\n        <xsl:variable name=\"schemePath\">concept-scheme/organization-activities</xsl:variable>\n        <rov:orgActivity rdf:resource=\"{f:pathIdURI($schemePath, normalize-space(./text()))}\"/>\n    </xsl:template>\n    \n    <xsl:template match=\"d:t[parent::d:osk]\">\n        <!-- Obor činnosti -->\n\t\t<lodares:ostatni xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(./text())\"/></lodares:ostatni>\n    </xsl:template>\n\n    <xsl:template match=\"d:pfo[d:pfo]\">\n        <!-- Právní forma -->\n        <rov:orgType rdf:resource=\"{f:pathIdURI('concept-scheme/organization-types', normalize-space(d:kpf/text()))}\"/>    \n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:pfo[d:pfo]\">\n        <!-- Právní forma -->\n        <xsl:variable name=\"schemePath\">concept-scheme/organization-types</xsl:variable>\n        <skos:Concept rdf:about=\"{f:pathIdURI($schemePath, d:kpf/text())}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($schemePath)}\"/>\n            <skos:prefLabel xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(d:npf/text())\"/></skos:prefLabel>\n\t\t\t<skos:notation><xsl:value-of select=\"normalize-space(d:kpf/text())\"/></skos:notation>\n        </skos:Concept>    \n    </xsl:template>\n\n    <xsl:template match=\"d:psu\">\n        <!-- Interní příznaky subjektu -->\n        <!-- Není blíže určeno ve XML schématu, hodnoty jako \"NAAANNNNNNNNNNNNNNNNNNNNANNNNN\" -->\n    </xsl:template>\n    \n    <xsl:template match=\"d:s\" mode=\"linked\">\n        <xsl:param name=\"ico\" tunnel=\"yes\"/>\n        <xsl:apply-templates mode=\"linked\">\n\t\t\t<xsl:with-param name=\"ico\" tunnel=\"yes\"/>\n        </xsl:apply-templates>\n    </xsl:template>\n\n    <xsl:template match=\"d:s\">\n        <xsl:param name=\"ico\" tunnel=\"yes\"/>\n        <xsl:apply-templates>\n\t\t\t<xsl:with-param name=\"ico\" tunnel=\"yes\"/>\n        </xsl:apply-templates>\n    </xsl:template>\n\n    <xsl:template match=\"d:ssu\">\n        <!-- Stav subjektu -->\n        <rov:orgStatus rdf:resource=\"{f:pathIdURI('concept-scheme/organization-statuses', normalize-space(./text()))}\"/>\n    </xsl:template>\n    \n    <xsl:template match=\"d:ssu\" mode=\"linked\">\n        <!-- Stav subjektu -->\n\t\t<skos:Concept rdf:about=\"{f:pathIdURI('concept-scheme/organization-statuses', normalize-space(./text()))}\">\n\t\t\t<skos:inScheme rdf:resource=\"{f:pathURI('concept-scheme/organization-statuses')}\"/>\n\t\t\t<skos:prefLabel xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n\t\t</skos:Concept>\n    </xsl:template>\n\n    <!-- Templates for linked resources -->\n    \n    <xsl:template mode=\"linked\" match=\"d:t[parent::d:pp]\">\n        <!-- Obor činnosti -->\n        <xsl:param name=\"ico\" tunnel=\"yes\"/>\n        <xsl:variable name=\"schemePath\">concept-scheme/organization-activities</xsl:variable>\n        <skos:Concept rdf:about=\"{f:pathIdURI($schemePath, normalize-space(./text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($schemePath)}\"/>\n            <skos:prefLabel><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel>\n        </skos:Concept>\n    </xsl:template>\n\n    <xsl:template match=\"d:si\">\n        <xsl:param name=\"ico\" tunnel=\"yes\"/>\n        <schema:address rdf:resource=\"{concat(f:getPOURI(..),'/hq-address')}\"/>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"d:si\">\n\t\t<xsl:param name=\"ico\"/>\n\t\t<schema:PostalAddress rdf:about=\"{concat(f:getPOURI(..),'/hq-address')}\">\n\t\t\t<xsl:if test=\"d:nu\">\n\t\t\t\t<schema:streetAddress><xsl:value-of select=\"\n\t\t\t\tconcat(\n\t\t\t\t\tnormalize-space(d:nu/text()), \n\t\t\t\t\tif (d:ca) then \n\t\t\t\t\t\tconcat(' ', \n\t\t\t\t\t\t\t\tnormalize-space(d:ca/text())\n\t\t\t\t\t\t\t\t) \n\t\t\t\t\telse '',\n\t\t\t\t\tif (d:cd) then \n\t\t\t\t\t\t\tconcat(' ', \n\t\t\t\t\t\t\t\t\tnormalize-space(d:cd/text()),\n\t\t\t\t\t\t\t\t\tif (d:co) then \n\t\t\t\t\t\t\t\t\t\tconcat('/',\n\t\t\t\t\t\t\t\t\t\t\t\t\tnormalize-space(d:co/text())\n\t\t\t\t\t\t\t\t\t\t\t\t) \n\t\t\t\t\t\t\t\t\telse ''\n\t\t\t\t\t\t\t\t\t)\n\t\t\t\t\telse ''\n\t\t\t\t)\n\t\t\t\t\"/></schema:streetAddress>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:nok\">\n\t\t\t\t<schema:addressLocality><xsl:value-of select=\"normalize-space(d:nok/text())\"/></schema:addressLocality>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:n\">\n\t\t\t\t<schema:addressRegion><xsl:value-of select=\"normalize-space(d:n/text())\"/></schema:addressRegion>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:zahr_psc\">\n\t\t\t\t<schema:postalCode><xsl:value-of select=\"normalize-space(d:zahr_psc/text())\"/></schema:postalCode>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:psc\">\n\t\t\t\t<schema:postalCode><xsl:value-of select=\"normalize-space(d:psc/text())\"/></schema:postalCode>\n\t\t\t</xsl:if>\n\t\t\t<xsl:if test=\"d:ns\">\n\t\t\t\t<schema:addressCountry><xsl:value-of select=\"normalize-space(d:ns/text())\"/></schema:addressCountry>\n\t\t\t</xsl:if>\n\t\t\t<xsl:apply-templates mode=\"linked\"/>\n\t\t</schema:PostalAddress>\n    </xsl:template>\n\n<!-- RUIAN START -->\n    <xsl:template mode=\"linked\" match=\"d:au\">\n        <!-- Adresa RUIAN -->\n        <xsl:apply-templates mode=\"linked\"/>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:ka\">\n        <!-- Adresni misto RUIAN -->\n        <ruianlink:adresni-misto>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'adresni-mista/', text())\"/>\n        </ruianlink:adresni-misto>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kob\">\n        <!-- Objekt RUIAN -->\n        <ruianlink:stavebni-objekt>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'stavebni-objekty/', text())\"/>\n        </ruianlink:stavebni-objekt>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kul\">\n        <!-- Ulice RUIAN -->\n        <ruianlink:ulice>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'ulice/', text())\"/>\n        </ruianlink:ulice>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:ko\">\n        <!-- Obec RUIAN -->\n        <ruianlink:obec>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'obce/', text())\"/>\n        </ruianlink:obec>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kco\">\n        <!-- Část obce RUIAN -->\n        <ruianlink:cast-obce>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'casti-obci/', text())\"/>\n        </ruianlink:cast-obce>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kok\">\n        <!-- Okres RUIAN -->\n        <ruianlink:okres>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'okresy/', text())\"/>\n        </ruianlink:okres>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kmc\">\n        <!-- MOMC RUIAN -->\n        <ruianlink:momc>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'momc/', text())\"/>\n        </ruianlink:momc>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kk\">\n        <!-- VUSC RUIAN -->\n        <ruianlink:vusc>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'vusc/', text())\"/>\n        </ruianlink:vusc>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kol\">\n        <!-- RS RUIAN -->\n        <ruianlink:region-soudrznosti>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'regiony-soudrznosti/', text())\"/>\n        </ruianlink:region-soudrznosti>\n    </xsl:template>\n\n    <xsl:template mode=\"linked\" match=\"u:kso\">\n        <!-- Správní obvod RUIAN -->\n        <ruianlink:spravni-obvod>\n\t\t\t<xsl:attribute name=\"rdf:resource\" select=\"concat($ruianPrefix, 'spravni-obvody/', text())\"/>\n        </ruianlink:spravni-obvod>\n    </xsl:template>\n\n <!-- RUIAN END -->\n\n\n    <xsl:template mode=\"linked\" match=\"d:pfo[not(d:pfo)]\">\n        <!-- Právní forma -->\n        <xsl:variable name=\"schemePath\">concept-scheme/organization-types</xsl:variable>\n        <skos:Concept rdf:about=\"{f:pathIdURI($schemePath, normalize-space(d:kpf/text()))}\">\n            <skos:inScheme rdf:resource=\"{f:pathURI($schemePath)}\"/>\n            <xsl:apply-templates mode=\"linked\"/>\n        </skos:Concept>    \n    </xsl:template>\n    \n    <xsl:template mode=\"linked\" match=\"d:kpf[parent::d:pfo]\">\n        <!-- Kód právní formy -->\n        <skos:notation><xsl:value-of select=\"normalize-space(./text())\"/></skos:notation>\n    </xsl:template>\n    \n    <xsl:template mode=\"linked\" match=\"d:npf[parent::d:pfo]\">\n        <!-- Název právní formy -->\n        <skos:prefLabel xml:lang=\"cs\"><xsl:value-of select=\"normalize-space(./text())\"/></skos:prefLabel> \n    </xsl:template>\n    \n    <!-- Catch-all empty template -->\n    <xsl:template mode=\"#all\" match=\"*|text()|@*\"/>\n    \n</xsl:stylesheet>"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/42"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/44",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-chunkedToGraph#Configuration"
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/45"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/46",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileName": [
+          {
+            "@value": "MFCR_1-ares-or-metadata.trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileType": [
+          {
+            "@value": "application/trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileTypeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri": [
+          {
+            "@id": "http://linked.opendata.cz/resource/dataset/ares/or/metadata"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/47"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/48",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectoryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#directory": [
+          {
+            "@value": "/data/virtuoso/upload-uv/comsode"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#hostControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#passwordControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#portControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#targetDirectoryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#userNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/49"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/50",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX void: <http://rdfs.org/ns/void#>\nCONSTRUCT \n{\n?ds a void:Dataset;\n        void:triples ?triples;\n        void:entities ?entities;\n        void:classes ?classes;\n        void:properties ?properties;\n        void:distinctSubjects ?dsubjects;\n        void:distinctObjects ?dobjects\n.\n}\nWHERE \n{\n{ SELECT (COUNT (*) as ?triples) WHERE {?s ?p ?o} }\n{ SELECT (COUNT (distinct ?s) as ?entities) WHERE {?s a ?t} }\n{ SELECT (COUNT (distinct ?t) as ?classes) WHERE {?s a ?t} }\n{ SELECT (COUNT (distinct ?p) as ?properties) WHERE {?s ?p ?o} }\n{ SELECT (COUNT (distinct ?s) as ?dsubjects) WHERE {?s ?p ?o} }\n{ SELECT (COUNT (distinct ?o) as ?dobjects) WHERE {?s ?p ?o} }\nVALUES ?ds { <http://linked.opendata.cz/resource/dataset/ares/or/distribution/rdf> }\n}"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/51"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/52",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#accessURL": [
+          {
+            "@value": "http://internal.opendata.cz/dataset/mfcr-ares-or"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#datasetURI": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#desc_en": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#desc_orig": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#descriptionFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#distributionURI": [
+          {
+            "@value": "http://linked.opendata.cz/resource/dataset/ares/or/distribution/rdf"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#downloadURL": [
+          {
+            "@value": "http://internal.opendata.cz/dump/MFCR_1-ares-or.trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#exampleResources": [
+          {
+            "@value": "http://linked.opendata.cz/resource/business-entity/CZ00007064"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#generateDistroURIFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#issued": [
+          {
+            "@value": "2015-02-26"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#issuedFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#language_orig": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#license": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#licenseFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#mediaType": [
+          {
+            "@value": "application/trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#modified": [
+          {
+            "@value": "2015-02-26"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#originalLanguageFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schema": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schemaFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schemaType": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#sparqlEndpointUrl": [
+          {
+            "@value": "http://internal.opendata.cz/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalEnd": [
+          {
+            "@value": "2015-02-26"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalStart": [
+          {
+            "@value": "2015-02-26"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#titleFromDataset": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#title_en": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#title_orig": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useDatasetURIfromInput": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useNow": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useNowTemporalEnd": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useTemporal": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/53"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/54",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#Configuration"
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/55"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/56",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/x-virtuoso#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraph": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearLoadListControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#directory": [
+          {
+            "@value": "/data/virtuoso/upload-uv/comsode"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#directoryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#fileName": [
+          {
+            "@value": "MFCR_1-ares-or.trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#fileNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#graph": [
+          {
+            "@id": "http://linked.opendata.cz/resource/dataset/ares/or"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateInterval": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "60"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateIntervalControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#uriControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#usernameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/57"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/58",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/x-virtuoso#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraph": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearLoadListControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#directory": [
+          {
+            "@value": "/data/virtuoso/upload-uv/comsode"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#directoryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#fileName": [
+          {
+            "@value": "MFCR_1-ares-or-metadata.trig"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#fileNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#graph": [
+          {
+            "@id": "http://linked.opendata.cz/resource/dataset/ares/or/metadata"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateInterval": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "60"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateIntervalControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#uriControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/x-virtuoso#usernameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/59"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/64",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#contactPoint": [
+          {
+            "@value": "datasets@opendata.cz"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#contactPointName": [
+          {
+            "@value": "Opendata.cz"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#datasetURI": [
+          {
+            "@value": "http://linked.opendata.cz/resource/dataset/ares/or"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#desc_cs": [
+          {
+            "@value": "Obsahuje data o právnických osobách ze systému ARES obsažena ve výpisu ARES z obchodního rejstříku"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#desc_en": [
+          {
+            "@value": "Business entities from ARES - business registry"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#identifier": [
+          {
+            "@value": "MFCR_1"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#issued": [
+          {
+            "@value": "2014-01-01"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#keywords_en": [
+          {
+            "@value": "business-entities"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#keywords_orig": [
+          {
+            "@value": "MFČR"
+          },
+          {
+            "@value": "ekonomické subjekty"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#landingPage": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#language_orig": [
+          {
+            "@value": "cs"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#languages": [
+          {
+            "@value": "http://id.loc.gov/vocabulary/iso639-1/cs"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#license": [
+          {
+            "@value": "http://opendatacommons.org/licenses/pddl/1.0/"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#modified": [
+          {
+            "@value": "2015-02-26"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#periodicity": [
+          {
+            "@value": "R/P1M"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#publisherName": [
+          {
+            "@value": "Opendata.cz"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#publisherURI": [
+          {
+            "@value": "http://opendata.cz"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#schema": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#sources": [
+          {
+            "@value": "http://wwwinfo.mfcr.cz/ares/"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#spatial": [
+          {
+            "@value": "http://ruian.linked.opendata.cz/resource/staty/1"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#temporalEnd": [
+          {
+            "@value": "2015-03-30"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#temporalStart": [
+          {
+            "@value": "2014-01-01"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#themes": [
+          {
+            "@value": "http://eurovoc.europa.eu/813"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#title_cs": [
+          {
+            "@value": "Data o subjektech ze systému ARES - obchodní rejstřík"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#title_en": [
+          {
+            "@value": "Data about business entities from the ARES system - business registry of the Czech Republic"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#useNow": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#useNowTemporalEnd": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#useTemporal": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/65"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/66",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectoryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#directory": [
+          {
+            "@value": "/var/www/dumps"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#hostControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#passwordControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#portControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#targetDirectoryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#userNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/67"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/69",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-singleGraphUnion#Configuration"
+        ]
+      }
+    ],
+    "@id": "http://etl.opendata.cz/resources/pipelines/created-1480578518922/graph/70"
+  }
+]
