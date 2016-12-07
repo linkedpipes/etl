@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.transformer.getotools;
+package com.linkedpipes.plugin.transformer.geotools;
 
 public final class GeoToolsVocabulary {
 

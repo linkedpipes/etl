@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.transformer.getotools;
+package com.linkedpipes.plugin.transformer.geotools;
 
 import com.linkedpipes.etl.component.api.Component;
 import com.linkedpipes.etl.component.api.service.ExceptionFactory;
