@@ -1,0 +1,19 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.subscriptionKey.hide">
+        <label>Subscription key</label>
+        <input ng-model="dialog.subscriptionKey.value"
+               ng-disabled="dialog.subscriptionKey.disabled || dialog.subscriptionKey.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.defaultLanguage.hide">
+        <label>Default source language</label>
+        <input ng-model="dialog.defaultLanguage.value"
+               ng-disabled="dialog.defaultLanguage.disabled || dialog.defaultLanguage.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.targetLanguage.hide">
+        <label>Target language</label>
+        <input ng-model="dialog.targetLanguage.value"
+               ng-disabled="dialog.targetLanguage.disabled || dialog.targetLanguage.inherit"
+                placeholder="es,en,fr,de">
+    </md-input-container>
+</div>

@@ -69,6 +69,7 @@
         <module>t-modifyDate</module>
         <module>t-geoTools</module>
         <module>l-sparqlEndpointChunked</module>
+        <module>t-bingTranslator</module>
     </modules>
 
 </project>
