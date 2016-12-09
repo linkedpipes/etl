@@ -378,7 +378,11 @@ public final class BingTranslator implements Component.Sequential {
      */
     private String createTranslatedLanguageTag(String fromLanguage,
             String toLanguage) {
-        return toLanguage + "-t-" + fromLanguage;
+        if (configuration.isSimpleLangTag()) {
+            return toLanguage;
+        } else {
+            return toLanguage + "-t-" + fromLanguage + "-t0-bing";
+        }
     }
 
     /**

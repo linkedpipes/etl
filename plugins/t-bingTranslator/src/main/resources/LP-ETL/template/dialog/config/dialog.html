@@ -16,4 +16,8 @@
                ng-disabled="dialog.targetLanguage.disabled || dialog.targetLanguage.inherit"
                 placeholder="es,en,fr,de">
     </md-input-container>
+    <md-switch ng-hide="dialog.simpleLangTag.hide"
+               ng-disabled="dialog.simpleLangTag.disabled || dialog.simpleLangTag.inherit"
+               ng-model="dialog.simpleLangTag.value">Use simple language tag
+    </md-switch>
 </div>

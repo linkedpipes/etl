@@ -2,31 +2,34 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-bingTranslator#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-bingTranslator#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "subscriptionKey" : {
-            "$type" : "str",
-            "$label" : "Subscription key"
+        "subscriptionKey": {
+            "$type": "str",
+            "$label": "Subscription key"
         },
-        "defaultLanguage" : {
-            "$type" : "str",
-            "$label" : "Default source language"
+        "defaultLanguage": {
+            "$type": "str",
+            "$label": "Default source language"
         },
-        "targetLanguage" : {
+        "targetLanguage": {
             "$array": true,
-            "$type" : "str",
-            "$label" : "Target language",
-            "$onLoad" : (value) => {
+            "$type": "str",
+            "$label": "Target language",
+            "$onLoad": (value) => {
                 return value.join(",");
             },
-            "$onSave" : (value) => {
+            "$onSave": (value) => {
                 return value.split(",");
             }
+        },
+        "simpleLangTag": {
+            "$type": "bool",
+            "$label": "Use simple language tag"
         }
     };
 

@@ -23,6 +23,9 @@ public class BingTranslatorConfiguration {
     @RdfToPojo.Property(uri = BingTranslatorVocabulary.HAS_TARGET_LANGUAGE)
     private List<String> targetLanguages = new LinkedList<>();
 
+    @RdfToPojo.Property(uri = BingTranslatorVocabulary.HAS_SIMPLE_LANG_TAG)
+    private boolean simpleLangTag = false;
+
     public BingTranslatorConfiguration() {
     }
 
@@ -48,5 +51,13 @@ public class BingTranslatorConfiguration {
 
     public void setTargetLanguages(List<String> targetLanguages) {
         this.targetLanguages = targetLanguages;
+    }
+
+    public boolean isSimpleLangTag() {
+        return simpleLangTag;
+    }
+
+    public void setSimpleLangTag(boolean simpleLangTag) {
+        this.simpleLangTag = simpleLangTag;
     }
 }
