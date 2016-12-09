@@ -14,10 +14,13 @@
         <label>Target language</label>
         <input ng-model="dialog.targetLanguage.value"
                ng-disabled="dialog.targetLanguage.disabled || dialog.targetLanguage.inherit"
-                placeholder="es,en,fr,de">
+               placeholder="es,en,fr,de">
     </md-input-container>
-    <md-switch ng-hide="dialog.simpleLangTag.hide"
-               ng-disabled="dialog.simpleLangTag.disabled || dialog.simpleLangTag.inherit"
-               ng-model="dialog.simpleLangTag.value">Use simple language tag
+    <md-switch ng-hide="dialog.useBCP47.hide"
+               ng-disabled="dialog.useBCP47.disabled || dialog.useBCP47.inherit"
+               ng-model="dialog.useBCP47.value">
+        Use <a href="https://tools.ietf.org/html/bcp47">BCP47</a> extension
+        <a href="https://tools.ietf.org/html/rfc6497">T</a> to indicate
+        machine translation in language tag
     </md-switch>
 </div>

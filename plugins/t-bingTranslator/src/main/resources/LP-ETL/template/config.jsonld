@@ -12,6 +12,10 @@
         "http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguage" : "en",
         "http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguageControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47" : true,
+            "http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47Control" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }
 ]

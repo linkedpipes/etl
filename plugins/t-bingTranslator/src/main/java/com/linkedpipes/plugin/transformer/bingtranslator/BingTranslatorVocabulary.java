@@ -15,7 +15,7 @@ public final class BingTranslatorVocabulary {
 
     public static final String HAS_TARGET_LANGUAGE = PREFIX + "targetLanguage";
 
-    public static final String HAS_SIMPLE_LANG_TAG = PREFIX + "simpleLangTag";
+    public static final String HAS_USE_BCP47 = PREFIX + "useBCP47";
 
     private BingTranslatorVocabulary() {
     }

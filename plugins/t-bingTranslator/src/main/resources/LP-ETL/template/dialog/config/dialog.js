@@ -27,9 +27,9 @@ define([], function () {
                 return value.split(",");
             }
         },
-        "simpleLangTag": {
+        "useBCP47": {
             "$type": "bool",
-            "$label": "Use simple language tag"
+            "$label": "Use BCP47 extension T"
         }
     };
 
