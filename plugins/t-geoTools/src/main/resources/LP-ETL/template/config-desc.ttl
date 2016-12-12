@@ -1,0 +1,47 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-geoTools#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/type> ,
+        <http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/coord> ,
+        <http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/coordType> ,
+        <http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/defaultCoordType> ,
+        <http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/outputPredicate> ,
+        <http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/outputCoordType> ,
+        <http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/failOnError> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/type>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-geoTools#type> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-geoTools#typeControl> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/coord>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-geoTools#coord> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-geoTools#coordControl> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/coordType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-geoTools#coordType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-geoTools#coordTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/defaultCoordType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-geoTools#defaultCoordType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-geoTools#defaultCoordTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/outputPredicate>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-geoTools#outputPredicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-geoTools#outputPredicateControl> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/outputCoordType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-geoTools#outputCoordType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-geoTools#outputCoordTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-geoTools/1.0.0/configuration/desc/failOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-geoTools#failOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-geoTools#failOnErrorControl> .

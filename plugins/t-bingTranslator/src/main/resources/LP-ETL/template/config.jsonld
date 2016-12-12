@@ -1,0 +1,21 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-bingTranslator/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-bingTranslator#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-bingTranslator#subscriptionKey" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-bingTranslator#subscriptionKey" : "",
+        "http://plugins.linkedpipes.com/ontology/t-bingTranslator#subscriptionKeyControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguage" : "en",
+        "http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguageControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47" : true,
+            "http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47Control" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

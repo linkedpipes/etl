@@ -2,6 +2,7 @@
     {
         "@id": "http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration",
         "@type" : ["http://plugins.linkedpipes.com/ontology/t-xslt#Configuration"],
-        "http://plugins.linkedpipes.com/ontology/t-xslt#template": ""
+        "http://plugins.linkedpipes.com/ontology/t-xslt#template": "",
+        "http://plugins.linkedpipes.com/ontology/t-xslt#skipOnError": false
     }
 ]

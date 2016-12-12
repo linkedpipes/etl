@@ -52,12 +52,10 @@ public class HtmlCssUv implements Component.Sequential {
 
     private List<Statement> statements = new LinkedList<>();
 
-    private IRI currentGraph;
-
     final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     private void add(Resource s, IRI p, Value o) {
-        statements.add(valueFactory.createStatement(s, p, o, currentGraph));
+        statements.add(valueFactory.createStatement(s, p, o));
     }
 
     @Override
@@ -66,7 +64,6 @@ public class HtmlCssUv implements Component.Sequential {
                 HtmlCssUvOntology.PREDICATE_SOURCE);
         for (FilesDataUnit.Entry entry : inFilesHtml) {
             LOG.info("Parsing file: {}", entry);
-            currentGraph = outRdfData.createGraph();
             final File entryFile = entry.toFile();
             final IRI rootSubject = valueFactory.createIRI(
                     entryFile.toURI().toString());
@@ -93,6 +90,11 @@ public class HtmlCssUv implements Component.Sequential {
                 add(rootSubject, predicateSource,
                         valueFactory.createLiteral(entry.getFileName()));
             }
+            // Save
+            outRdfData.execute((connection) -> {
+                connection.add(statements, outRdfData.createGraph());
+            });
+            statements.clear();
         }
     }
 
@@ -108,6 +110,9 @@ public class HtmlCssUv implements Component.Sequential {
         while (!states.isEmpty()) {
             final NamedData state = states.pop();
             for (HtmlCssUvConfiguration.Action action : config.getActions()) {
+                if (!action.getName().equals(state.name)) {
+                    continue;
+                }
                 if (action.getType() == null) {
                     throw exceptionFactory.failure("Missing action type!");
                 }

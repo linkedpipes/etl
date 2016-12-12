@@ -2,10 +2,6 @@ package com.linkedpipes.plugin.transformer.unpack;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
 @RdfToPojo.Type(uri = UnpackVocabulary.CONFIG_CLASS)
 public class UnpackConfiguration {
 

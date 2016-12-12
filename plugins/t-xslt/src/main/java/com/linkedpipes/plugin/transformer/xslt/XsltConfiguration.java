@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.transformer.xslt;
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
 /**
- *
  * @author Škoda Petr
  */
 @RdfToPojo.Type(uri = XsltVocabulary.CONFIG_CLASS)
@@ -14,6 +13,9 @@ public class XsltConfiguration {
 
     @RdfToPojo.Property(uri = XsltVocabulary.EXTENSION)
     private String newExtension;
+
+    @RdfToPojo.Property(uri = XsltVocabulary.SKIP_ON_ERROR)
+    private boolean skipOnError = false;
 
     public XsltConfiguration() {
     }
@@ -33,5 +35,12 @@ public class XsltConfiguration {
     public void setNewExtension(String newExtension) {
         this.newExtension = newExtension;
     }
-    
+
+    public boolean isSkipOnError() {
+        return skipOnError;
+    }
+
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
+    }
 }

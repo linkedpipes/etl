@@ -10,9 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/**
- *
- */
 public class FilesFromLocal implements Component.Sequential {
 
     @Component.OutputPort(id = "FilesOutput")
@@ -28,19 +25,19 @@ public class FilesFromLocal implements Component.Sequential {
     public void execute() throws LpException {
         final File source = new File(configuration.getPath());
         if (!source.exists()) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    FilesFromLocalVocabulary.HAS_PATH,
-                    "Source path does not exists."
+            throw exceptionFactory.failure(
+                    "Source directory does not exists: {}",
+                    configuration.getPath()
             );
         }
         //
         if (source.isDirectory()) {
             // Copy all files in a directory.
             final Path rootPath = source.toPath();
-            final File [] files = source.listFiles();
+            final File[] files = source.listFiles();
             if (files == null) {
                 throw exceptionFactory.failure("Method listFiles return null. "
-                        + "Please check privilages.");
+                        + "Please check privileges.");
             }
             for (File file : files) {
                 final Path relativePath = rootPath.relativize(file.toPath());
@@ -56,7 +53,6 @@ public class FilesFromLocal implements Component.Sequential {
      *
      * @param file Path to file to add.
      * @param fileName Name of added file.
-     * @throws LpException
      */
     private void copy(File file, String fileName) throws LpException {
         final File destination = output.createFile(fileName).toFile();

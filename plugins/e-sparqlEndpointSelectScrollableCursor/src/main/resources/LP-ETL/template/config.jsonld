@@ -1,0 +1,34 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#outerConstruct": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#outerSelectControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixes": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixesControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelect": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelectControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#endpoint": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#endpointControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#defaultGraph": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#defaultGraphControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileName": "",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileNameControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSize": "1000",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSizeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

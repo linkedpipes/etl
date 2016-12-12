@@ -1,0 +1,48 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#Configuration> ;
+    config:member
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/outerConstruct>  ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/prefixes> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/innerSelect> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/endpoint> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/defaultGraph> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/fileName> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/pageSize> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/outerConstruct>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#outerConstruct> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#outerConstructControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/prefixes>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#prefixes> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#prefixesControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/innerSelect>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#innerSelect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#innerSelectControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/endpoint>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#endpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#endpointControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/defaultGraph>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#defaultGraph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#defaultGraphControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/fileName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#fileName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#fileNameControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/pageSize>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSizeControl> .

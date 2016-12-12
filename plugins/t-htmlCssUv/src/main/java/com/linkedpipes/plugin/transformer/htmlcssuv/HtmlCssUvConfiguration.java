@@ -68,6 +68,7 @@ public class HtmlCssUvConfiguration {
         SUBJECT_CLASS
     }
 
+    @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Action")
     public static class Action {
 
         /**

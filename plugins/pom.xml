@@ -9,6 +9,7 @@
     <description>Plugins master build project.</description>
 
     <modules>
+        <module>t-chunkedToGraph</module>
         <module>t-excelToCsv</module>
         <module>t-filesFilter</module>
         <module>l-filesToScp</module>
@@ -18,21 +19,31 @@
         <module>e-dcatAp11Distribution</module>
         <module>l-dcatAp11ToCkan</module>
         <module>t-filesToRdf</module>
+        <module>t-filesToRdfChunked</module>
         <module>t-filesToRdfGraph</module>
         <module>t-filesToStatements</module>
         <module>t-graphMerger</module>
         <module>t-packZip</module>
         <module>t-rdfToFile</module>
+        <module>t-rdfToFileChunked</module>
         <module>t-sparqlConstruct</module>
+        <module>t-sparqlConstructChunked</module>
+        <module>t-sparqlLinkerChunked</module>
         <module>t-sparqlSelect</module>
         <module>t-sparqlUpdate</module>
+        <module>t-sparqlUpdateChunked</module>
         <module>t-tabular</module>
+        <module>t-tabularChunked</module>
         <module>t-unpack</module>
         <module>t-unpackZip</module>
         <module>t-xslt</module>
         <module>x-virtuoso</module>
         <module>e-httpGetFile</module>
         <module>e-sparqlEndpoint</module>
+        <module>e-sparqlEndpointChunked</module>
+        <module>e-sparqlEndpointSelect</module>
+        <module>e-sparqlEndpointSelectScrollableCursor</module>
+        <module>e-sparqlEndpointConstructScrollableCursor</module>
         <module>e-textHolder</module>
         <module>l-dcatApToCkan</module>
         <module>l-graphStoreProtocol</module>
@@ -56,6 +67,9 @@
         <module>x-deleteDirectory</module>
         <module>t-htmlCssUv</module>
         <module>t-modifyDate</module>
+        <module>t-geoTools</module>
+        <module>l-sparqlEndpointChunked</module>
+        <module>t-bingTranslator</module>
     </modules>
 
 </project>

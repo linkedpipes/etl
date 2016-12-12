@@ -88,6 +88,8 @@ public class SesamePlugin implements DataUnitFactory, Plugin.PipelineListener {
                             valueFactory.createIRI(resourceIri),
                             sharedRepository,
                             dataUnitConfiguration);
+                case "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/Chunked":
+                    return new ChunkedDataUnit(dataUnitConfiguration);
                 default:
                     break;
             }

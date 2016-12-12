@@ -1,0 +1,32 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.endpoint.hide">
+        <label>Endpoint URL</label>
+        <input type="url" ng-model="dialog.endpoint.value"
+               placeholder="http://example.com/sparql"
+               ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
+               required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.headerAccept.hide">
+        <label>MimeType</label>
+        <input type="text" ng-model="dialog.headerAccept.value"
+               ng-disabled="dialog.headerAccept.disabled || dialog.headerAccept.inherit"
+               required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.chunkSize.hide">
+        <label>Chunk size</label>
+        <input type="number" ng-model="dialog.chunkSize.value"
+               lp-disabled="dialog.chunkSize.disabled || dialog.chunkSize.inherit"
+               min="1">
+    </md-input-container>
+    <lp-iri-list label-top="Default graph" label-item="Graph IRI"
+                 ng-model="dialog.defaultGraph.value"
+                 lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"
+                 ng-hide="dialog.defaultGraph.hide"></lp-iri-list>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide">
+        <label>SPARQL CONSTRUCT query with ${VALUES} placeholder</label>
+        <textarea id="query" ng-model="dialog.query.value"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
+                  required md-innerSelect-on-focus/>
+    </md-input-container>
+</div>

@@ -11,7 +11,21 @@ define([], function () {
         },
         "mimeType" : {
             "$type" : "str",
-            "$label" : "Format"
+            "$label" : "Format",
+            "$onLoad": (value) => {
+                if (value === "") {
+                    return "null";
+                } else {
+                    return value;
+                }
+            },
+            "$onSave": (value) => {
+                if (value === "null") {
+                    return "";
+                } else {
+                    return value;
+                }
+            }
         },
         "softFail" : {
             "$type" : "bool",

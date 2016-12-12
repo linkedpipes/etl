@@ -1,0 +1,10 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide">
+        <label>SPARQL CONSTRUCT query</label>
+        <textarea id="query" ng-model="dialog.query.value"
+                  placeholder="CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 100"
+                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
+                  md-select-on-focus/>
+    </md-input-container>
+</div>

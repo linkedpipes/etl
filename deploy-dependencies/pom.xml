@@ -12,6 +12,14 @@
         <plugins.directory>../plugins</plugins.directory>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>artefacts.linkedpipes.com</id>
+            <name>artefacts.linkedpipes.com</name>
+            <url>http://artefacts.linkedpipes.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <profiles>
         <profile>
             <activation>
@@ -203,6 +211,55 @@
                                             <version>3.3</version>
                                             <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
                                         </dependency>
+                                        <!-- GeoTools -->
+                                        <dependency>
+                                            <groupId>com.googlecode.efficient-java-matrix-library</groupId>
+                                            <artifactId>core-osgi</artifactId>
+                                            <version>0.26</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>net.sf.geographiclib</groupId>
+                                            <artifactId>GeographicLib-Java-osgi</artifactId>
+                                            <version>1.44</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.geotools</groupId>
+                                            <artifactId>gt-opengis-osgi</artifactId>
+                                            <version>16.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.geotools</groupId>
+                                            <artifactId>gt-osgi</artifactId>
+                                            <version>16.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.hsqldb</groupId>
+                                            <artifactId>hsqldb-osgi</artifactId>
+                                            <version>2.3.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>jgridshift</groupId>
+                                            <artifactId>jgridshift-osgi</artifactId>
+                                            <version>1.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>javax.measure</groupId>
+                                            <artifactId>jsr-275-osgi</artifactId>
+                                            <version>1.0-beta-2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>commons-pool</groupId>
+                                            <artifactId>commons-pool</artifactId>
+                                            <version>1.5.4</version>
+                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                        </dependency>
                                         <!-- Apache service mix. -->
                                         <dependency>
                                             <groupId>org.apache.servicemix.bundles</groupId>
@@ -280,6 +337,30 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointSelect</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointSelect/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointSelectScrollableCursor</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointSelectScrollableCursor/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointConstructScrollableCursor</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointConstructScrollableCursor/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>q-sparqlAsk</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/q-sparqlAsk/</outputDirectory>
@@ -313,6 +394,12 @@
                                             <artifactId>l-sparqlEndpoint</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/l-sparqlEndpoint/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-sparqlEndpointChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/l-sparqlEndpointChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -364,6 +451,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesToRdfChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-filesToRdfChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdfGraph</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-filesToRdfGraph/</outputDirectory>
@@ -394,6 +487,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-rdfToFileChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-rdfToFileChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToStatements</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-filesToStatements/</outputDirectory>
@@ -403,6 +502,18 @@
                                             <artifactId>t-sparqlConstruct</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-sparqlConstruct/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlConstructChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-sparqlConstructChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlLinkerChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-sparqlLinkerChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -424,9 +535,21 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlUpdateChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-sparqlUpdateChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-tabular</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-tabular/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-tabularChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-tabularChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -457,6 +580,12 @@
                                             <artifactId>t-excelToCsv</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-excelToCsv/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-chunkedToGraph</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-chunkedToGraph/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
@@ -535,6 +664,18 @@
                                             <artifactId>t-modifyDate</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-modifyDate/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-geoTools</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-geoTools/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-bingTranslator</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-bingTranslator/</outputDirectory>
                                         </dependency>
                                     </artifactItems>
                                 </configuration>

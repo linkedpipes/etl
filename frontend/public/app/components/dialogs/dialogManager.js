@@ -424,6 +424,8 @@ define(["jsonld"], function (jsonld) {
 
     /**
      * Load given configurations into the dialog object.
+     *
+     * @param dialog The output object.
      */
     function load(desc, dialog, instanceConfig, templateConfig) {
         prepareDescription(desc);
