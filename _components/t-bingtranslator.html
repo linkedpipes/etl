@@ -1,0 +1,48 @@
+---
+short: t-bingtranslator
+type: transformer
+color: indigo
+title: Bing translator
+description: Translates literals using Bing machine translation.
+---
+
+<p class="flow-text">
+Transformer, allows the user to automatically translate literals using the <a href="https://www.bing.com/translator">Bing machine translation</a>.
+</p>
+<dl class="flow-text">
+    <dt>Subscription key</dt>
+    <dd>This is the subscription key needed to access the <a href="https://www.microsoft.com/en-us/translator/translatorapi.aspx">Bing translator API</a></dd>
+    <dt>Default source language</dt>
+    <dd>The component takes input language from the input literal language tags. The default source language will be used for literals without language tags.</dd>
+    <dt>Target languages</dt>
+    <dd>Languages to which will the input literals be translated</dd>
+    <dt>Indicate machine translation in language tag</dt>
+    <dd>When switched on, the machine translation will be indicated in the target literal language tag using <a href="https://tools.ietf.org/html/bcp47">BCP47</a> <a href="https://tools.ietf.org/html/rfc6497">extension T</a> like this: <code>&quot;english string&quot;@en-t-cs-t0-bing</code> instead of simple <code>&quot;english string&quot;@en</code></dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF chunked</dd>
+            <dt>Outputs</dt>
+            <dd>RDF chunked</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">available</a></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component translates input literals to other natural languages using the <a href="https://www.microsoft.com/en-us/translator/translatorapi.aspx">Bing translator API</a>.
+        Users need to generate their own subscription keys.
+        The resulting literals are attached to the same subjects using the same literals as the input literals.
+        </p>
+    </div>
+</div>

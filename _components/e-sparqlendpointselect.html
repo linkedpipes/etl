@@ -1,0 +1,41 @@
+---
+short: e-sparqlendpointselect
+type: extractor
+color: red
+title: SPARQL endpoint select
+description: Extracts a CSV table from a SPARQL endpoint according to a SPARQL SELECT query
+---
+
+<p class="flow-text">
+Extractor, allows the user to extract a CSV table from a SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT query</a>.
+</p>
+<dl class="flow-text">
+    <dt>Endpoint URL</dt>
+    <dd>URL of the SPARQL endpoint to be queried</dd>
+    <dt>File name</dt>
+    <dd>File name of the resulting CSV table</dd>
+    <dt>Default graph</dt>
+    <dd>IRIs of default graphs used for the SPARQL query</dd>
+    <dt>SPARQL SELECT query</dt>
+    <dd>Query for extraction of CSV from the endpoint</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component queries a remote SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#select">SPARQL SELECT</a> query.
+    </div>
+</div>

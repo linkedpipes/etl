@@ -1,0 +1,43 @@
+---
+short: t-filestordfsinglegraph
+type: transformer
+color: indigo
+title: Files to RDF single graph
+description: Converts RDF files to RDF data in a single graph.
+---
+
+<p class="flow-text">
+Transformer, allows the user to convert RDF files (Files Data Unit) to RDF data in single graph.
+</p>
+<dl class="flow-text">
+    <dt>Commit size</dt>
+    <dd>Number of triples processed before commiting to database</dd>
+    <dt>Format</dt>
+    <dd><a href="https://www.w3.org/TR/rdf11-new/#section-serializations">RDF serialization</a> of the input file. Can be determined by file extension.</dd>
+    <dt>Skip file on failure</dt>
+    <dd>When a file cannot be loaded, skip it instead of failing</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the serialized RDF files on the input and deserializes it into RDF data in a single RDF graph.
+        It is equivalent to a <a href="./t-filestordf" title="Files to RDF">Files to RDF</a> followed by a <a href="./t-graphmerger" title="Graph merger">Graph merger</a>.
+        </p>
+    </div>
+</div>
