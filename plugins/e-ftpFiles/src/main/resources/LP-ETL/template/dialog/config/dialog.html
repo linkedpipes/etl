@@ -5,8 +5,8 @@
                ng-hide="dialog.passiveMode.hide">
         Use passive mode
     </md-switch>
-
     <div ng-hide="dialog.reference.disabled || dialog.reference.inherit || dialog.reference.hide">
+        Files to download<br/>
         <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.reference.value">
             <md-input-container class="md-block" flex>
                 <label>FTP file address</label>
@@ -20,5 +20,4 @@
         </section>
         <button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
     </div>
-
 </div>
