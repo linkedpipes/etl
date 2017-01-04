@@ -5,8 +5,6 @@ import org.apache.commons.net.io.CopyStreamListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- */
 class ProgressPrinter implements CopyStreamListener {
 
     private static final Logger LOG

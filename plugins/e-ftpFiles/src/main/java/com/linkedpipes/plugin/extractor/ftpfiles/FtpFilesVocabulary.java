@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.extractor.ftpfiles;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class FtpFilesVocabulary {
 
     private FtpFilesVocabulary() {

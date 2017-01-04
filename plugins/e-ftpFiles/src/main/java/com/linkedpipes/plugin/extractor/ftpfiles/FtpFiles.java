@@ -19,9 +19,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * @author Škoda Petr
- */
 public class FtpFiles implements Component.Sequential {
 
     private static final Logger LOG
@@ -76,7 +73,11 @@ public class FtpFiles implements Component.Sequential {
         LOG.debug("Host: {} Path: {} -> {}", host, filePath, file.getName());
         // Connect to remote host.
         final FTPClient client = new FTPClient();
-        client.connect(host);
+        if (sourceUri.getPort() == -1) {
+            client.connect(host);
+        } else {
+            client.connect(host, sourceUri.getPort());
+        }
 
         // Can be used to track progress.
         client.setCopyStreamListener(new ProgressPrinter());
@@ -139,7 +140,10 @@ public class FtpFiles implements Component.Sequential {
 
         LOG.debug("Downloading ...");
         try (FileOutputStream output = new FileOutputStream(file)) {
-            client.retrieveFile("/" + filePath, output);
+            if (!client.retrieveFile("/" + filePath, output)) {
+                throw exceptionFactory.failure(
+                        "Failed to download file. See logs for more detail.");
+            }
             LOG.debug("Downloading ... flush");
             output.flush();
         }

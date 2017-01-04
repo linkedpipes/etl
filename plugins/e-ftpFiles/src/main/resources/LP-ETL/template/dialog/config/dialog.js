@@ -12,17 +12,33 @@ define([], function () {
             "$type" : "bool",
             "$label" : "Use passive mode"
         },
-        "binaryMode" : {
-            "$type" : "bool",
-            "$label" : "Use binary mode"
+        "reference": {
+            "$label": "To download",
+            "$array": true,
+            "$object": {
+                "$type": "Reference",
+                "fileUri" : {
+                    "$type": "str"
+                },
+                "fileName": {
+                    "$type": "str"
+                }
+            }
         },
-        "keepAliveControl" : {
-            "$type" : "int",
-            "$label" : "Control timeout (seconds)"
-        }
     };
 
     function controller($scope, $service) {
+
+        $scope.onAdd = function () {
+            $scope.dialog.reference.value.push({
+                'fileUri': {'value': ''},
+                'fileName': {'value': ''}
+            });
+        };
+
+        $scope.onDelete = function (index) {
+            $scope.dialog.reference.value.splice(index, 1);
+        };
 
         if ($scope.dialog === undefined) {
             $scope.dialog = {};
