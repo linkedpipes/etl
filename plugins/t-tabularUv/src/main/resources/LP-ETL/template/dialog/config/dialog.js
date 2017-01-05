@@ -1,4 +1,4 @@
-define([], function () {
+define(["jsonld"], function (jsonld) {
     "use strict";
 
     const DESC = {
@@ -202,8 +202,34 @@ define([], function () {
             dialogManager.save();
         };
 
+        function i18_str(value) {
+            if (value === undefined) {
+                return undefined;
+            }
+            if (Array.isArray(value)) {
+                const result = [];
+                value.forEach((item) => {
+                    result.push(item["@value"]);
+                });
+                return result;
+            } else if (value["@value"]) {
+                return value["@value"];
+            } else {
+                return value;
+            }
+        }
+
         dialogManager.load();
 
+        // Load rowsClass to rowClass if rowClass is not set.
+        if ($scope.dialog.rowClass.value === undefined) {
+            const instanceTriples = jsonld.triples($service.config.instance);
+            const prefix = 'http://plugins.linkedpipes.com/ontology/t-tabularUv#';
+            const resource = instanceTriples.getResource(
+                instanceTriples.findByType(prefix + 'Configuration'))
+            $scope.dialog.rowClass.value =
+                i18_str(jsonld.r.getString(resource, prefix + 'rowsClass'));
+        }
     }
 
     controller.$inject = ['$scope', '$service'];
