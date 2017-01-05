@@ -1,0 +1,34 @@
+---
+short: t-chunkedtograph
+type: transformer
+color: indigo
+title: Chunked merger
+description: Transforms the RDF Chunked data unit into an RDF single graph data unit.
+---
+
+<p class="flow-text">
+Transformer, allows the user to transform the RDF Chunked data unit into an RDF single graph data unit.
+</p>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF chunked</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the RDF chunked data unit produced by, e.g. <a href="./t-filestordfchunked" title="Files to RDF chunked">Files to RDF chunked</a>, <a href="./e-sparqlendpointchunked" title="SPARQL endpoint chunked">SPARQL endpoint chunked</a> or <a href="./t-tabularchunked" title="Tabular chunked">Tabular chunked</a> and transforms it into a regular RDF single graph data unit, which can be processed further.
+        </p>
+    </div>
+</div>

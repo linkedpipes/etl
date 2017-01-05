@@ -1,0 +1,50 @@
+---
+short: e-sparqlendpointselectscrollablecursor
+type: extractor
+color: red
+title: SPARQL endpoint select scrollable cursor
+description: Extracts a CSV table from a SPARQL endpoint according to a SPARQL SELECT query, using the scrollable cursor technique for OpenLink Virtuoso.
+---
+
+<p class="flow-text">
+Extractor, allows the user to extract a CSV table from a SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT query</a>, using the <a href="https://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtTipsAndTricksHowToHandleBandwidthLimitExceed" title="scrollable cursor">scrollable cursor technique for OpenLink Virtuoso</a>.
+</p>
+<dl class="flow-text">
+    <dt>Endpoint URL</dt>
+    <dd>URL of the SPARQL endpoint to be queried</dd>
+    <dt>File name</dt>
+    <dd>File name of the resulting CSV table</dd>
+    <dt>Page size</dt>
+    <dd>Specifies the size of one page to be returned</dd>
+    <dt>Default graph</dt>
+    <dd>IRIs of default graphs used for the SPARQL query</dd>
+    <dt>Query prefixes</dt>
+    <dd>Prefixes to be defined for the scrollable cursor query</dd>
+    <dt>Outer select clause</dt>
+    <dd>The SELECT clause of the outer paging query. It should be a subset of the SELECT clause of the inner query</dd>
+    <dt>Inner select query</dt>
+    <dd>Ordered SELECT query to be used as a nested query in the outer paging query</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/e-sparqlendpointchunked-1.jsonld">available</a></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component queries a remote SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#select">SPARQL SELECT</a> query, using the <a href="https://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtTipsAndTricksHowToHandleBandwidthLimitExceed" title="scrollable cursor">scrollable cursor technique for OpenLink Virtuoso</a>. This is helpful for getting larger results from an OpenLink Virtuoso SPARQL endpoint which would not return such a large result normally.
+        This component is often used in combination with the <a href="./e-sparqlendpointchunked" title="SPARQL endpoint chunked">SPARQL endpoint chunked</a> component.
+    </div>
+</div>

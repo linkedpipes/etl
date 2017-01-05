@@ -66,7 +66,9 @@ In addition, it allows to specify a custom predicate IRI based on column name.
         The {{page.title}} component takes the input <a href="https://tools.ietf.org/html/rfc4180" title="Comma Separated Values">CSV</a> files and transforms them to an RDF representation according to the <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a> W3C Recommendation.
         Not all aspects are covered by the recommendation, there we add our own functionality.
         This is one of the most complex components we have in LP-ETL.
-        One of the reasons is that tabular data is the most common on the web and therefore we had to cover the most situations.</p>
+        One of the reasons is that tabular data is the most common on the web and therefore we had to cover the most situations.
+        For larger data, which can be processed e.g. row by row in the pipeline, consider using the <a href="./t-tabularchunked" title="Tabular chunked">Tabular chunked</a> version of the component.
+        </p>
         <p class="flow-text">
         We recommend not to use the custom mapping section of the component.
         Instead, we recommend using the default transformation and adjusting the resulting RDF representation using <a href="./t-sparqlconstruct" title="SPARQL Construct">SPARQL Construct</a> and <a href="./t-sparqlupdate" title="SPARQL Update">SPARQL Update</a>.

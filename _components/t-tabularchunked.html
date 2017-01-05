@@ -1,0 +1,40 @@
+---
+short: t-tabularchunked
+type: transformer
+color: indigo
+title: Tabular chunked
+description: Transforms CSV files to RDF data chunks.
+---
+
+<p class="flow-text">
+Transformer. Used to transform CSV files to RDF data chunks according to the <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a> W3C Recommendation.
+This version of the <a href="./t-tabular" title="Tabular">Tabular</a> component produces chunked RDF data for processing of a larger number of independent entities with lower memory consumption.
+
+</p>
+<!--more-->
+<dl class="flow-text">
+    <dt>Rows per chunk</dt>
+    <dd>Determines how many rows of the input CSV files will be saved in one RDF data chunk on the output</dd>
+</dl>
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF chunked</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The core functionality is identical to the non chunked <a href="./t-tabular" title="Tabular">Tabular</a> component.
+        </p>
+    </div>
+</div>

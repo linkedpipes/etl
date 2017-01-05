@@ -1,0 +1,41 @@
+---
+short: t-filestordfchunked
+type: transformer
+color: indigo
+title: Files to RDF chunked
+description: Converts RDF files to RDF data in a chunked fashion, to be further processed in smaller pieces.
+---
+
+<p class="flow-text">
+Transformer, allows the user to convert RDF files (Files Data Unit) to RDF data in chunks, to be processed in smaller pieces.
+</p>
+<dl class="flow-text">
+    <dt>Format</dt>
+    <dd><a href="https://www.w3.org/TR/rdf11-new/#section-serializations">RDF serialization</a> of the input file. Can be determined by file extension.</dd>
+    <dt>Files per chunk</dt>
+    <dd>Determines, how many input files should be stored in one output chunk</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF chunked</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the serialized RDF files on the input and deserializes it into RDF data chunks.
+        It is especially useful if bigger data needs to be processed, e.g. by <a href="./t-sparqlconstructchunked" title="SPARQL Construct chunked">SPARQL Construct chunked</a> queries, and this can be done piece by piece, when the pieces are independent of each other.
+        </p>
+    </div>
+</div>
