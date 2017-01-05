@@ -278,7 +278,13 @@ public class TabularConfig_V2 {
      * If null no class is set.
      */
     @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowClass")
-    private String rowsClass = TabularOntology.ROW_CLASS.toString();
+    private String rowClass = null;
+
+    /**
+     * Older version of rowClass.
+     */
+    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsClass")
+    private String rowsClass = null;
 
     /**
      * Sheet name.
@@ -451,12 +457,20 @@ public class TabularConfig_V2 {
         this.namedCells = namedCells;
     }
 
+    public String getRowClass() {
+        return rowClass;
+    }
+
+    public void setRowClass(String columnClass) {
+        this.rowClass = columnClass;
+    }
+
     public String getRowsClass() {
         return rowsClass;
     }
 
-    public void setRowsClass(String columnClass) {
-        this.rowsClass = columnClass;
+    public void setRowsClass(String rowsClass) {
+        this.rowsClass = rowsClass;
     }
 
     public String getXlsSheetName() {
@@ -564,8 +578,16 @@ public class TabularConfig_V2 {
     }
 
     public TableToRdfConfig getTableToRdfConfig() {
+        String usedRowClass;
+        if (rowsClass != null) {
+            usedRowClass = rowsClass;
+        } else if (rowClass != null) {
+            usedRowClass = rowClass;
+        } else {
+            usedRowClass = TabularOntology.ROW_CLASS.toString();
+        }
         return new TableToRdfConfig(keyColumn, baseURI, columnsInfo,
-                generateNew, rowsClass, ignoreBlankCells, columnsInfoAdv,
+                generateNew, usedRowClass, ignoreBlankCells, columnsInfoAdv,
                 advancedKeyColumn, generateRowTriple, autoAsStrings,
                 generateTableClass, generateLabels, dbfTrimString,
                 ignoreMissingColumn);
