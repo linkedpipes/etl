@@ -174,6 +174,25 @@ define(["jsonld"], function (jsonld) {
     }
 
     /**
+     * Some value may be undefined (ie. strings, booleans), this may case
+     * problems as for example undefined is equal to false (for UI checkbox)
+     *
+     * For this reason we check for undefined values and replace them
+     * with default.
+     */
+    function replaceUndefined(desc, value) {
+        if (desc.$array || value !== undefined) {
+            return value;
+        }
+
+        if (desc.$type === 'bool') {
+            return false;
+        }
+
+        return value;
+    }
+
+    /**
      * Load given RDF instance into target object.
      *
      * @param desc Description.
@@ -205,7 +224,8 @@ define(["jsonld"], function (jsonld) {
             // Load values from instance and template.
             let instanceValue;
             if (descItem.$object === undefined) {
-                instanceValue = select(loadValue(descItem, instance), descItem);
+                instanceValue = replaceUndefined(descItem,
+                    select(loadValue(descItem, instance), descItem));
             } else {
                 const objects = [];
                 const iris = jsonld.r.getIRIs(instance, descItem.$property);
