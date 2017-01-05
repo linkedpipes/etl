@@ -14,7 +14,8 @@
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "SPARQL", "query", "endpoint", "select"
-        ]
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-sparqlendpointselectscrollablecursor"}
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/0.0.0/output",
