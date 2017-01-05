@@ -1,0 +1,37 @@
+---
+short: t-htmlcssuv
+type: transformer
+color: indigo
+title: HTML CSS ODCS
+description: Parses HTML pages using CSS like selectors.
+---
+
+<p class="flow-text">
+Transformer, enables users to parse a HTML page using <a href="https://jsoup.org/" title="jsoup">jsoup</a> CSS like selectors.
+</p>
+<dl class="flow-text">
+    <dt>Class of root subject</dt>
+    <dd>IRI of the root output resource type</dd>
+    <dt>Default has predicate</dt>
+    <dd>Default predicate to be used to connect nested objects</dd>
+    <dt>Generate source info</dt>
+    <dd>Adds information about the source file into the output data</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+</div>

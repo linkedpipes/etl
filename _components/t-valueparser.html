@@ -1,0 +1,46 @@
+---
+short: t-valueparser
+type: transformer
+color: indigo
+title: Value parser
+description: Parses literals containing lists and other structured texts.
+---
+
+<p class="flow-text">
+Transformer, allows the user to parse lists and other structured texts from a literal, creating multiple literals.
+</p>
+<dl class="flow-text">
+    <dt>Predicate for input values</dt>
+    <dd></dd>
+    <dt>Regular expression with groups</dt>
+    <dd></dd>
+    <dt>Preserve language tag/datatype</dt>
+    <dd></dd>
+    <dt>Group name</dt>
+    <dd></dd>    
+    <dt>Group predicate</dt>
+    <dd></dd>    
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component parses structured text and lists possibly present in literals, creating multiple literals instead.
+        </p>
+    </div>
+</div>

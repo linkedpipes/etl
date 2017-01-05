@@ -1,0 +1,37 @@
+---
+short: t-modifydate
+type: transformer
+color: indigo
+title: Modify date
+description: Adds or subtracts days from xsd:date literals.
+---
+
+<p class="flow-text">
+Transformer, allows the user to add or subtract days from a date represented as xsd:date literal.
+</p>
+<dl class="flow-text">
+    <dt>Input predicate</dt>
+    <dd>The predicate used in triples, where the object is the date to be shifted.</dd>
+    <dt>Shift date by</dt>
+    <dd>Number of days to shift the date by. Can be a positive and negative integer.</dd>
+    <dt>Output predicate</dt>
+    <dd>The predicate to be used in output triples to store the shifted date.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+</div>

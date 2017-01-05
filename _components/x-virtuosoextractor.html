@@ -1,0 +1,43 @@
+---
+short: x-virtuosoextractor
+type: other
+color: grey
+title: Virtuoso extractor
+description: Instructs Virtuoso to dump a graph.
+---
+
+<p class="flow-text">
+Special purpose component, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">OpenLink Virtuoso</a> triplestore to dump a named graph to the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
+</p>
+<dl class="flow-text">
+    <dt>Virtuoso JDBC connection string</dt>
+    <dd>JDBC database connection string to connect to the Virtuoso iSQL port (typically <code>1111</code>)</dd>
+    <dt>User name</dt>
+    <dd>User name to Virtuoso</dd>
+    <dt>Password</dt>
+    <dd>Password to Virtuoso. Note that this is plain text and in no way secured</dd>
+    <dt>Source graph IRI</dt>
+    <dd>IRI of the RDF graph to be dumped</dd>
+    <dt>Output path</dt>
+    <dd>Directory on the remote file system (local to Virtuoso) where the files will be dumped</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component instructs a remote instance of <a href="http://virtuoso.openlinksw.com/">OpenLink Virtuoso</a> to dump a named graph using the <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a>.
+        It is recommended to use it together with <a href="./e-ftpfiles" title="Extract from FTP">Extract from FTP</a> or <a href="./e-httpgetfile" title="HTTP get">HTTP get</a> to download larger RDF files (approx. &gt; 5M triples) from Virtuoso, and <a href="./t-unpack" title="Decompress archive">Decompress archive</a> to decompress them, as they get dumped Gzipped.
+        </p>
+    </div>
+</div>
