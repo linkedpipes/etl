@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 @Service
@@ -28,6 +31,8 @@ public class Configuration {
     private String osgiStorageDirectory;
 
     private String storageAddress;
+
+    private List<String> bannedJarPatterns = new ArrayList<>(12);
 
     private final Properties properties = new Properties();
 
@@ -59,6 +64,18 @@ public class Configuration {
         osgiStorageDirectory = getProperty("executor.osgi.working.directory");
         storageAddress = getProperty("storage.uri");
         //
+        try {
+            String value = properties.getProperty(
+                    "executor.banned_jar_iri_patterns")
+                    .replaceAll("\\\"", "\"").trim();
+            // Remove first and last "
+            value = value.substring(1, value.length() - 1);
+            this.bannedJarPatterns
+                    .addAll(Arrays.asList(value.split("\",\"")));
+        } catch (RuntimeException ex) {
+            // This property is obligatory.
+        }
+        //
         validateDirectory(logDirectoryPath);
         validateDirectory(osgiLibDirectoryPath);
         validateDirectory(osgiStorageDirectory);
@@ -88,6 +105,10 @@ public class Configuration {
 
     public String getStorageAddress() {
         return storageAddress;
+    }
+
+    public List<String> getBannedJarPatterns() {
+        return bannedJarPatterns;
     }
 
     private static void validateDirectory(String value) {

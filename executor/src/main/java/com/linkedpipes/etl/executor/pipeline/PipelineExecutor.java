@@ -236,6 +236,12 @@ public class PipelineExecutor implements EventManager.EventListener {
         final Map<String, SequentialComponent> result = new HashMap<>();
         for (PipelineModel.Component component
                 : pipeline.getPipelineModel().getComponents()) {
+            // Load only component that will be executed.
+            if (component.getExecutionType() !=
+                    PipelineModel.ExecutionType.EXECUTE) {
+                continue;
+            }
+            //
             final Component instance;
             try {
                 instance = modules.getComponent(pipeline,

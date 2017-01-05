@@ -44,6 +44,12 @@ executor.osgi.lib.directory =
 # Path to OSGI working directory, used bundles are stored here.
 executor.osgi.working.directory = .felix/
 
+# List of regexp pattern. Every component has an IRI if the IRI match any of
+# the listed patterns then attempt to execute such component cause
+# pipeline to fail.
+# The default value ban components that are working with local resources.
+executor.banned_jar_iri_patterns = ".*e-filesFromLocal.*",".*l-filesToLocal.*",".*x-deleteDirectory.*"
+
 ######################
 #  Executor-monitor  #
 ######################
