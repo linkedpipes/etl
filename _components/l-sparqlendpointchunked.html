@@ -1,0 +1,65 @@
+---
+short: l-sparqlendpointchunked
+type: loader
+color: green
+title: SPARQL endpoint chunked
+description: Allows the user to store chunked RDF data in a SPARQL endpoint using SPARQL Update.
+---
+
+<p class="flow-text">
+Loader, allows the user to store chunked RDF data in a SPARQL endpoint using <a href="https://www.w3.org/TR/sparql11-update/" title="SPARQL 1.1 Update">SPARQL 1.1 Update</a>.
+</p>
+<dl class="flow-text">
+    <dt>SPARQL Update endpoint</dt>
+    <dd>URL of the SPARQL endpoint accepting <a href="https://www.w3.org/TR/sparql11-update/" title="SPARQL 1.1 Update">SPARQL 1.1 Update</a> queries</dd>
+    <dt>Target graph IRI</dt>
+    <dd>IRI of the RDF graph to which the input data will be loaded</dd>
+    <dt>Clear target graph before loading</dt>
+    <dd>When checked, executes SPARQL CLEAR GRAPH on the target graph before loading</dd>
+    <dt>User name</dt>
+    <dd>User name to be used to log in to the SPARQL endpoint</dd>
+    <dt>Password</dt>
+    <dd>Password to be used to log in to the SPARQL endpoint</dd>   
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF chunked - Input</dd>
+            <dd>RDF single graph - Configuration</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the input chunked RDF data and loads it chunk by chunk to a remote SPARQL endpoint using the <a href="https://www.w3.org/TR/sparql11-update/" title="SPARQL 1.1 Update">SPARQL 1.1 Update</a> INSERT DATA query.
+        </p>
+    </div>
+</div>
+<div class="row" id="runtimeconfig">
+<h3 class="orange-text center">Runtime configuration</h3>
+<p class="flow-text">Below you can see sample runtime configuration for the component.
+Note that <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes" title="Blank nodes">RDF blank nodes</a> are not allowed in runtime configurations.
+</p>
+{% highlight turtle %}
+@prefix lse: <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://localhost/resources/configuration> a lse:Configuration ;
+    lse:clearGraph true ;
+    lse:endpoint "http://localhost:3030/fuseki/update" ;
+    lse:password "" ;
+    lse:targetGraphURI "http://localhost/test/graph" ;
+    lse:userName "" .
+{% endhighlight %}
+</div>
