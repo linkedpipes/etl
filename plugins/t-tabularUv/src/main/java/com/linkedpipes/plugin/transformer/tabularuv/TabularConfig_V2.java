@@ -253,13 +253,13 @@ public class TabularConfig_V2 {
     private ParserType tableType = ParserType.CSV;
 
     @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#hasHeader")
-    private boolean hasHeader = true;
+    private boolean hasHeader = false;
 
     /**
      * If false only columns from {@link #columnsInfo} are used.
      */
     @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#generateNew")
-    private boolean generateNew = true;
+    private boolean generateNew = false;
 
     /**
      * If false then for blank cells the {@link TabularOntology#BLANK_CELL}
@@ -302,7 +302,7 @@ public class TabularConfig_V2 {
      * If true then triple with row number is generated for each line.
      */
     @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowTriple")
-    private boolean generateRowTriple = true;
+    private boolean generateRowTriple = false;
 
     @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#tableSubject")
     private boolean useTableSubject = false;
