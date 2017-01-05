@@ -1,0 +1,39 @@
+---
+short: t-templatedxlstocsv
+type: transformer
+color: indigo
+title: Templated XLS to CSV
+description: Transforms Excel files to CSV files using a template, which helps with print formatted files.
+---
+
+<p class="flow-text">
+Transformer, allows the user to transform <a href="https://products.office.com/excel" title="Microsoft Excel">Microsoft Excel</a> files to <a href="https://tools.ietf.org/html/rfc4180" title="Comma Separated Values">CSV</a> files using a template, which helps with print formatted files.
+</p>
+<dl class="flow-text">
+    <dt>Template file prefix</dt>
+    <dd>Prefix used by template files. The part of the template file name after the prefix should match the original file name.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files - Data</dd>
+            <dd>Files - Templates</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the input <a href="https://products.office.com/excel" title="Microsoft Excel">Microsoft Excel</a> files and templates and extracts <a href="https://tools.ietf.org/html/rfc4180" title="Comma Separated Values">CSV</a> files from them.
+        </p>
+    </div>
+</div>
