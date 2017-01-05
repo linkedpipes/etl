@@ -15,6 +15,7 @@
                ng-hide="dialog.includeSourceInformation.hide">
         Generate source info</md-switch>
     <div ng-hide="dialog.action.disabled || dialog.action.inherit || dialog.action.hide">
+        Actions:<br/>
         <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.action.value">
             <md-input-container class="md-block">
                 <label>Name</label>

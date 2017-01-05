@@ -48,11 +48,11 @@ define([], function () {
         }
 
         $scope.onDelete = function (index) {
-            $scope.dialog.records.value.splice(index, 1);
+            $scope.dialog.action.value.splice(index, 1);
         };
 
         $scope.onAdd = function () {
-            $scope.dialog.records.value.push({
+            $scope.dialog.action.value.push({
                 'name': {'value': ''},
                 'type': {'value': 'QUERY'},
                 'data': {'value': ''},
