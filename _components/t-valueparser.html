@@ -11,15 +11,15 @@ Transformer, allows the user to parse lists and other structured texts from a li
 </p>
 <dl class="flow-text">
     <dt>Predicate for input values</dt>
-    <dd></dd>
+    <dd>IRI of the predicate linking to the literal to be processed</dd>
     <dt>Regular expression with groups</dt>
-    <dd></dd>
+    <dd>Regular expression with named groups to match the items of the structured input text, e.g. <code>(?&lt;g&gt;[^\[\],]+)</code></dd>
     <dt>Preserve language tag/datatype</dt>
-    <dd></dd>
+    <dd>Sets the language tag or datatype of the input literal on the output literals</dd>
     <dt>Group name</dt>
-    <dd></dd>    
+    <dd>Name of the regular expression group to store as a new literal</dd>    
     <dt>Group predicate</dt>
-    <dd></dd>    
+    <dd>IRI of the predicate linking to the output literals created from this regular expression group</dd>    
 </dl>
 <!--more-->
 <div class="row" id="characteristics">
@@ -36,6 +36,8 @@ Transformer, allows the user to parse lists and other structured texts from a li
             <dd>RDF single graph</dd>
             <dt>Look in pipeline</dt>
             <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">available</a></dd>            
         </dl>
     </div>
     <div class="col s12 l6">
