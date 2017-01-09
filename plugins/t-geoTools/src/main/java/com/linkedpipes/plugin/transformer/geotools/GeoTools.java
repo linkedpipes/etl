@@ -192,8 +192,13 @@ public final class GeoTools implements Component.Sequential {
             }
         }
         // Create output.
-        final Resource entity = valueFactory.createIRI(
-                subject.stringValue() + "/wgs84");
+        final Resource entity;
+        if (subject instanceof IRI) {
+            entity = valueFactory.createIRI(
+                    subject.stringValue() + "/" + coordType);
+        } else {
+            throw exceptionFactory.failure("Blank nodes are not supported!");
+        }
 
         outputBuffer.add(valueFactory.createStatement(subject,
                 valueFactory.createIRI(configuration.getOutputPredicate()),
