@@ -45,6 +45,12 @@ public final class GeoTools implements Component.Sequential {
     private static final IRI XSD_DOUBLE = SimpleValueFactory.getInstance()
             .createIRI("http://www.w3.org/2001/XMLSchema#decimal");
 
+    public static final IRI GML_POINT = SimpleValueFactory.getInstance()
+            .createIRI("http://www.opengis.net/ont/gml#Point");
+
+    public static final IRI GML_SRS_NAME = SimpleValueFactory.getInstance()
+            .createIRI("http://www.opengis.net/ont/gml#srsName");
+
     @Component.InputPort(id = "InputRdf")
     public ChunkedStatements inputRdf;
 
@@ -193,8 +199,11 @@ public final class GeoTools implements Component.Sequential {
                 valueFactory.createIRI(configuration.getOutputPredicate()),
                 entity));
 
-        outputBuffer.add(valueFactory.createStatement(entity, RDF.TYPE,
-                valueFactory.createIRI("http://schema.org/GeoCoordinates")));
+        outputBuffer.add(valueFactory.createStatement(
+                entity, RDF.TYPE, GML_POINT));
+
+        outputBuffer.add(valueFactory.createStatement(
+                entity, GML_SRS_NAME, valueFactory.createLiteral(coordType)));
 
         outputBuffer.add(valueFactory.createStatement(entity,
                 valueFactory.createIRI("http://schema.org/longitude"),
