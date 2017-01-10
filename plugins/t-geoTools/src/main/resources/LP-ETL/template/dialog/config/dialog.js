@@ -14,23 +14,23 @@ define([], function () {
         },
         "coord": {
             "$type": "iri",
-            "$label" : "Predicate with coordinates"
+            "$label" : "Predicate for coordinates"
         },
         "coordType": {
             "$type": "iri",
-            "$label" : "Predicate with coordinates type"
+            "$label" : "Predicate for coordinate reference system"
         },
         "defaultCoordType": {
             "$type": "str",
-            "$label" : "Default coordinate type"
+            "$label" : "Default coordinate reference system"
         },
         "outputPredicate": {
             "$type": "iri",
-            "$label" : "Predicate used to connect with new entity"
+            "$label" : "Predicate for linking to newly created points"
         },
         "outputCoordType": {
             "$type": "str",
-            "$label" : "Type of output coordinates"
+            "$label" : "Output coordinate reference system"
         },
         "failOnError": {
             "$type": "bool",

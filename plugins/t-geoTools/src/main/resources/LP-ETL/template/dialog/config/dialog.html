@@ -6,27 +6,27 @@
                ng-disabled="dialog.type.disabled || dialog.type.inherit">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.coord.hide">
-        <label>Predicate with coordinates</label>
+        <label>Predicate for coordinates</label>
         <input ng-model="dialog.coord.value"
                ng-disabled="dialog.coord.disabled || dialog.coord.inherit">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.coordType.hide">
-        <label>Predicate with coordinates type</label>
+        <label>Predicate for coordinate reference system</label>
         <input ng-model="dialog.coordType.value"
                ng-disabled="dialog.coordType.disabled || dialog.coordType.inherit">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.defaultCoordType.hide">
-        <label>Default coordinates type</label>
+        <label>Default coordinate reference system</label>
         <input ng-model="dialog.defaultCoordType.value"
                ng-disabled="dialog.defaultCoordType.disabled || dialog.defaultCoordType.inherit">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.outputPredicate.hide">
-        <label>Predicate used to connect output entity with</label>
+        <label>Predicate for linking to newly created points</label>
         <input ng-model="dialog.outputPredicate.value"
                ng-disabled="dialog.outputPredicate.disabled || dialog.outputPredicate.inherit">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.outputCoordType.hide">
-        <label>Type of output coordinates</label>
+        <label>Output coordinate reference system</label>
         <input ng-model="dialog.outputCoordType.value"
                ng-disabled="dialog.outputCoordType.disabled || dialog.outputCoordType.inherit">
     </md-input-container>
