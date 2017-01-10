@@ -12,16 +12,16 @@ Transformer, provides geographical projection transformation features using the 
 <dl class="flow-text">
     <dt>Input resource type</dt>
     <dd>IRI of the type of entities containing the geocoordinates, e.g. <code>http://www.opengis.net/ont/gml#Point</code></dd>
-    <dt>Predicate with coordinates</dt>
+    <dt>Predicate for coordinates</dt>
     <dd>IRI of the predicate connecting the entity of the input resource type to the literal containing the geocoordinates, e.g. the <code>http://www.opengis.net/ont/gml#pos</code> property.
     </dd>
-    <dt>Predicate with coordinates type</dt>
-    <dd>IRI of the predicate connecting the entity containing geocoordinates to a literal containing the source coordinates type, e.g. <code>http://www.opengis.net/ont/gml#srsName</code></dd>
-    <dt>Default coordinates type</dt>
-    <dd>Coordinates type to be used with entities, which do not specify the coordinates type themselves, e.g. <code>EPSG:5514</code></dd>
-    <dt>Predicate used to connect output entity with</dt>
+    <dt>Predicate for coordinate reference system</dt>
+    <dd>IRI of the predicate connecting the entity containing geocoordinates to a literal containing the source coordinates reference system, e.g. <code>http://www.opengis.net/ont/gml#srsName</code></dd>
+    <dt>Default coordinate reference system</dt>
+    <dd>Coordinates reference system to be used with entities, which do not specify the coordinates reference system themselves, e.g. <code>EPSG:5514</code></dd>
+    <dt>Predicate for linking to newly created points</dt>
     <dd>The new entity containing the transformed geocoordinates will be connected to the original entity using this predicate</dd>
-    <dt>Type of output coordinates</dt>
+    <dt>Output coordinate reference system</dt>
     <dd>Target coordinates type, e.g. <code>EPSG:4326</code></dd>
     <dt>Fail on error</dt>
     <dd>Stops execution on error when enabled, continues execution when disabled.</dd>
