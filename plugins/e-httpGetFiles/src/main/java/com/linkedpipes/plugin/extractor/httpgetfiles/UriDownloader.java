@@ -30,9 +30,9 @@ class UriDownloader {
 
         private Map<String, String> headers = new HashMap<>();
 
-        public FileToDownload(URL source, File targer) {
+        public FileToDownload(URL source, File target) {
             this.source = source;
-            this.target = targer;
+            this.target = target;
         }
 
         public void setHeader(String key, String value) {
@@ -122,7 +122,6 @@ class UriDownloader {
         for (int i = 0; i < configuration.getThreads(); ++i) {
             executor.submit(new Worker(toDownload, counter));
         }
-        progressReport.done();
         // Wait till all is done.
         executor.shutdown();
         while (true) {
@@ -134,6 +133,8 @@ class UriDownloader {
                 // Ignore.
             }
         }
+        //
+        progressReport.done();
     }
 
     public Collection<Exception> getExceptions() {
