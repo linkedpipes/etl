@@ -2,6 +2,8 @@ package com.linkedpipes.plugin.extractor.httpgetfiles;
 
 import com.linkedpipes.etl.component.api.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class UriDownloader {
 
@@ -41,15 +44,21 @@ class UriDownloader {
 
         private final ConcurrentLinkedQueue<FileToDownload> workQueue;
 
+        private final AtomicInteger counter;
+
         public Worker(
-                ConcurrentLinkedQueue<FileToDownload> workQueue) {
+                ConcurrentLinkedQueue<FileToDownload> workQueue,
+                AtomicInteger counter) {
             this.workQueue = workQueue;
+            this.counter = counter;
         }
 
         @Override
         public Object call() throws Exception {
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
+                LOG.info("Downloading {}/{} : {}" ,
+                        counter.incrementAndGet(), total, work.source);
                 // Check failure of other threads.
                 if (!configuration.isSkipOnError() &&
                         !exceptions.isEmpty()) {
@@ -79,12 +88,17 @@ class UriDownloader {
         }
     }
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(UriDownloader.class);
+
     private final ProgressReport progressReport;
 
     private final HttpGetFilesConfiguration configuration;
 
     private final ConcurrentLinkedQueue<Exception> exceptions =
             new ConcurrentLinkedQueue<>();
+
+    private long total;
 
     public UriDownloader(ProgressReport progressReport,
             HttpGetFilesConfiguration configuration) {
@@ -97,12 +111,16 @@ class UriDownloader {
      *
      * @param toDownload
      */
-    public void download(ConcurrentLinkedQueue<FileToDownload> toDownload) {
+    public void download(ConcurrentLinkedQueue<FileToDownload> toDownload,
+            long size) {
+        this.total = size;
+        progressReport.start(size);
+        //
         final ExecutorService executor = Executors.newFixedThreadPool(
                 configuration.getThreads());
-        progressReport.start(toDownload.size());
+        AtomicInteger counter = new AtomicInteger();
         for (int i = 0; i < configuration.getThreads(); ++i) {
-            executor.submit(new Worker(toDownload));
+            executor.submit(new Worker(toDownload, counter));
         }
         progressReport.done();
         // Wait till all is done.
@@ -166,20 +184,6 @@ class UriDownloader {
                 return connection;
             }
         }
-        return connection;
-    }
-
-    private HttpURLConnection copyConnectionHeader(URL target,
-            HttpURLConnection originalConnection) throws IOException {
-        final HttpURLConnection connection =
-                (HttpURLConnection) target.openConnection();
-        // Copy properties.
-        originalConnection.getRequestProperties().entrySet()
-                .forEach((entry) -> {
-                    entry.getValue().forEach((value) -> {
-                        connection.addRequestProperty(entry.getKey(), value);
-                    });
-                });
         return connection;
     }
 

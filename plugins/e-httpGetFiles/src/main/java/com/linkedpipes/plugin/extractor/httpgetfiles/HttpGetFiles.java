@@ -100,18 +100,25 @@ public final class HttpGetFiles implements Component.Sequential {
             workQueue.add(job);
         }
         // Execute.
-        progressReport.start(configuration.getReferences());
         final UriDownloader downloader =
                 new UriDownloader(progressReport, configuration);
-        downloader.download(workQueue);
+        downloader.download(workQueue, configuration.getReferences().size());
         if (!downloader.getExceptions().isEmpty()) {
+            int errorCounter = 0;
             for (Exception exception : downloader.getExceptions()) {
+                ++errorCounter;
                 LOG.error("Can't download.", exception);
             }
+            LOG.info("Downloaded {}/{}", errorCounter,
+                    configuration.getReferences());
             if (!configuration.isSkipOnError()) {
                 throw exceptionFactory.failure("Can't download all entities.");
             }
+        } else {
+            LOG.info("Downloaded {}/{}", configuration.getReferences(),
+                    configuration.getReferences());
         }
+
     }
 
     /**
