@@ -193,6 +193,15 @@ class ModuleFacadeImpl implements ModuleFacade,
         componentInfo = resultList.get(0);
         // Then we need to load or get the bundle.
         final String jarFileUri = componentInfo.get("path");
+        // Check if the path is not banned.
+        for (String pattern : configuration.getBannedJarPatterns()) {
+            if (jarFileUri.matches(pattern)) {
+                throw new ModuleException(
+                        "The required component file with IRI: {} , " +
+                        "is banned by the configuration (pattern: {}).",
+                        jarFileUri, pattern);
+            }
+        }
         // TODO Enable reload for updated component versions?
         if (!components.containsKey(jarFileUri)) {
             // We do not download directly from the IRI, instead

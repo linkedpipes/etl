@@ -1,21 +1,23 @@
 <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
 <div>
-    <p>Files to download can be specified via the configuration input.</p>
     <md-switch ng-model="dialog.passiveMode.value"
                ng-disabled="dialog.passiveMode.disabled || dialog.passiveMode.inherit"
                ng-hide="dialog.passiveMode.hide">
         Use passive mode
     </md-switch>
-    <md-switch ng-model="dialog.binaryMode.value"
-               ng-disabled="dialog.binaryMode.disabled || dialog.binaryMode.inherit"
-               ng-hide="dialog.binaryMode.hide">
-        Use binary mode
-    </md-switch>
-    <md-input-container class="md-block" ng-hide="dialog.keepAliveControl.hide">
-        <label>Control timeout (seconds)</label>
-        <input type="number" ng-model="dialog.keepAliveControl.value"
-               ng-disabled="dialog.keepAliveControl.disabled || dialog.keepAliveControl.inherit"
-               placeholder="" min="0" step="10">
-        <md-tooltip>Use 0 to disable the timeout.</md-tooltip>
-    </md-input-container>
+    <div ng-hide="dialog.reference.disabled || dialog.reference.inherit || dialog.reference.hide">
+        Files to download<br/>
+        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.reference.value">
+            <md-input-container class="md-block" flex>
+                <label>FTP file address</label>
+                <input ng-model="item.fileUri.value">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>Target file name</label>
+                <input ng-model="item.fileName.value">
+            </md-input-container>
+            <button ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+        </section>
+        <button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+    </div>
 </div>

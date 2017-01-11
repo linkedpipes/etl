@@ -6,12 +6,29 @@
             </div>
         </div>
         <md-menu style="padding-top: 4px;padding-bottom: 4px">
+            <md-button class="md-icon-button" ng-click="onOpenMenu($mdOpenMenu, $event)">
+                <md-icon md-menu-origin md-svg-src="settings" class="lp-icon"></md-icon>
+            </md-button>
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button ng-click="onDisableAllLoaders()">
+                        <md-icon md-svg-icon="flash_off" class="lp-icon"></md-icon> Disable loaders
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onEnableAllLoaders()">
+                        <md-icon md-svg-icon="flash_on" class="lp-icon"></md-icon> Enable loaders
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <md-menu style="padding-top: 4px;padding-bottom: 4px">
             <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="onOpenMenu($mdOpenMenu, $event)">
                 <md-icon md-menu-origin md-svg-icon="more_vert"></md-icon>
             </md-button>
             <md-menu-content width="3">
                 <md-menu-item>
-                    <md-button ng-click="onPipelineDetail($event)" aria-label="Edit detail">
+                    <md-button ng-click="onPipelineDetail($event)" aria-label="Pipeline detail">
                         <md-icon md-menu-origin md-svg-src="settings" class="lp-icon"></md-icon> Pipeline detail
                     </md-button>
                 </md-menu-item>

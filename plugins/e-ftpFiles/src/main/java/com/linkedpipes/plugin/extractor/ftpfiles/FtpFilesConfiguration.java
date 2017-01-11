@@ -5,9 +5,6 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Škoda Petr
- */
 @RdfToPojo.Type(uri = FtpFilesVocabulary.CONFIG)
 public class FtpFilesConfiguration {
 
@@ -48,10 +45,10 @@ public class FtpFilesConfiguration {
     private boolean usePassiveMode = false;
 
     @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_BINARY_MODE)
-    private boolean useBinaryMode = false;
+    private boolean useBinaryMode = true;
 
     @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_KEEP_ALIVE_CONTROL)
-    private int keepAliveControl = 0;
+    private int keepAliveControl = 5000;
 
     public FtpFilesConfiguration() {
     }
@@ -88,4 +85,5 @@ public class FtpFilesConfiguration {
     public void setKeepAliveControl(int keepAliveControl) {
         this.keepAliveControl = keepAliveControl;
     }
+
 }

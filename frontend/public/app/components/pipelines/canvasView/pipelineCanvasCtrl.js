@@ -386,9 +386,7 @@ define([
         }
 
         $timeout(function () {
-
             // Wait for the end of the initialization.
-
             data.execution.model = executionModel.create(jsonldService);
 
             pipelineCanvas.bind(
@@ -667,6 +665,42 @@ define([
             });
         };
 
+        /**
+         * For all loaders on the pipeline update the activity state
+         * (disable/enable).
+         *
+         * @param disable
+         */
+        function setLoadersDisabled(disable) {
+            const comFacade = pipelineService.component;
+            const components = pipelineService.getComponents(data.pipeline.model);
+            for (let i = 0; i < components.length; ++i) {
+                const component = components[i];
+                // Check for loader type.
+                const templateIri = comFacade.getTemplateIri(component);
+                const template = templateService.getTemplate(templateIri);
+                if (template.type.indexOf("http://etl.linkedpipes.com/ontology/component/type/Loader") === -1) {
+                    continue
+                }
+                // Check state.
+                if (comFacade.isDisabled(component) === disable) {
+                    continue;
+                }
+                //
+                comFacade.setDisabled(component, disable);
+                $scope.canvas.getPaper().trigger('lp:component:changed',
+                    component['@id'], component);
+            }
+        }
+
+        $scope.onDisableAllLoaders = function() {
+            setLoadersDisabled(true);
+        };
+
+        $scope.onEnableAllLoaders = function() {
+            setLoadersDisabled(false);
+        };
+
     }
 
     controler.$inject = [
@@ -706,3 +740,4 @@ define([
     };
 
 });
+

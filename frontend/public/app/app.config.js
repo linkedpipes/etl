@@ -99,6 +99,8 @@ define([], function () {
                 .icon('ic_content_paste', 'libraries/google.design/ic_content_paste_24px.svg')
                 .icon('ic_power_settings_new', 'libraries/google.design/ic_power_settings_new_24px.svg')
                 .icon('info_outline', 'libraries/google.design/ic_info_outline_24px.svg')
+                .icon('flash_off', 'libraries/google.design/ic_flash_off_24px.svg')
+                .icon('flash_on', 'libraries/google.design/ic_flash_on_24px.svg')
                 ;
 
         $mdThemingProvider.theme('default')
