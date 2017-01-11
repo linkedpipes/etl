@@ -1,6 +1,7 @@
 [
     {
         "@id": "http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/e-httpGetFiles#Configuration"]
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-httpGetFiles#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#threads": 1
     }
 ]

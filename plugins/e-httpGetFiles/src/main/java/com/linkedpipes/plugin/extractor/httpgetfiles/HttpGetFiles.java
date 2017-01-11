@@ -6,26 +6,17 @@ import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class HttpGetFiles implements Component.Sequential {
 
     private static final Logger LOG
@@ -57,103 +48,96 @@ public final class HttpGetFiles implements Component.Sequential {
             throw exceptionFactory.failure(
                     "Can't set trust all certificates.", ex);
         }
-        progressReport.start(configuration.getReferences().size());
+        // Prepare work.
+        final ConcurrentLinkedQueue<UriDownloader.FileToDownload> workQueue =
+                new ConcurrentLinkedQueue<>();
         for (HttpGetFilesConfiguration.Reference reference
                 : configuration.getReferences()) {
-            try {
-                download(reference);
-            } catch (Throwable t) {
+            if (reference.getUri() == null
+                    || reference.getUri().isEmpty()) {
                 if (configuration.isSkipOnError()) {
-                    LOG.warn("Skipping file: {} -> {}", reference.getFileName(),
-                            reference.getUri(), t);
+                    continue;
                 } else {
-                    throw t;
+                    throw exceptionFactory.failure("Missing property: {}",
+                            HttpGetFilesVocabulary.HAS_URI);
                 }
             }
-            progressReport.entryProcessed();
-        }
-        progressReport.done();
-    }
-
-    /**
-     * Download and store referenced resource.
-     *
-     * @param reference
-     * @throws LpException
-     */
-    private void download(HttpGetFilesConfiguration.Reference reference)
-            throws LpException {
-        if (reference.getUri() == null
-                || reference.getUri().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    HttpGetFilesVocabulary.HAS_URI);
-        }
-        if (reference.getFileName() == null
-                || reference.getFileName().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    HttpGetFilesVocabulary.HAS_NAME);
-        }
-        LOG.info("Downloading: {} -> {}", reference.getUri(),
-                reference.getFileName());
-        // Prepare target destination.
-        final File destination = output.createFile(
-                reference.getFileName()).toFile();
-        // Download file.
-        HttpURLConnection connection;
-        try {
-            connection = createConnection(reference);
-        } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't open connection.", ex);
-        }
-        if (configuration.isForceFollowRedirect()) {
-            // Check for redirect. We can have multiple redirects
-            // so follow until there is no one.
-            HttpURLConnection oldConnection;
-            try {
-                do {
-                    oldConnection = connection;
-                    connection = followRedirect(oldConnection);
-                } while (connection != oldConnection);
-            } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't resolve redirect.", ex);
+            if (reference.getFileName() == null
+                    || reference.getFileName().isEmpty()) {
+                if (configuration.isSkipOnError()) {
+                    continue;
+                } else {
+                    throw exceptionFactory.failure("Missing property: {}",
+                            HttpGetFilesVocabulary.HAS_NAME);
+                }
             }
+            final File target = output.createFile(
+                    reference.getFileName()).toFile();
+            final URL source;
+            try {
+                source = new URL(reference.getUri());
+            } catch (MalformedURLException ex) {
+                if (configuration.isSkipOnError()) {
+                    LOG.warn("Invalid property: {} on {}");
+                    continue;
+                } else {
+                    throw exceptionFactory.failure("Invalid property: {} on {}",
+                            HttpGetFilesVocabulary.HAS_URI,
+                            reference.getUri(), ex);
+                }
+            }
+            // Prepare and and job.
+            final UriDownloader.FileToDownload job =
+                    new UriDownloader.FileToDownload(source, target);
+            for (HttpGetFilesConfiguration.Header header
+                    : configuration.getHeaders()) {
+                job.setHeader(header.getKey(), header.getValue());
+            }
+            for (HttpGetFilesConfiguration.Header header
+                    : reference.getHeaders()) {
+                job.setHeader(header.getKey(), header.getValue());
+            }
+            workQueue.add(job);
         }
-        // Copy content.
-        try (InputStream inputStream = connection.getInputStream()) {
-            FileUtils.copyInputStreamToFile(inputStream, destination);
-        } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't copy file.", ex);
-        } finally {
-            connection.disconnect();
+        // Execute.
+        progressReport.start(configuration.getReferences());
+        final UriDownloader downloader =
+                new UriDownloader(progressReport, configuration);
+        downloader.download(workQueue);
+        if (!downloader.getExceptions().isEmpty()) {
+            for (Exception exception : downloader.getExceptions()) {
+                LOG.error("Can't download.", exception);
+            }
+            if (!configuration.isSkipOnError()) {
+                throw exceptionFactory.failure("Can't download all entities.");
+            }
         }
     }
 
     /**
      * Add trust to all certificates.
-     *
-     * @throws Exception
      */
     private static void setTrustAllCerts() throws Exception {
         final TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                @Override
-                public java.security.cert.X509Certificate[]
-                        getAcceptedIssuers() {
-                    return null;
-                }
+                new X509TrustManager() {
+                    @Override
+                    public java.security.cert.X509Certificate[]
+                    getAcceptedIssuers() {
+                        return null;
+                    }
 
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] certs,
-                        String authType) {
-                }
+                    @Override
+                    public void checkClientTrusted(
+                            java.security.cert.X509Certificate[] certs,
+                            String authType) {
+                    }
 
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] certs,
-                        String authType) {
+                    @Override
+                    public void checkServerTrusted(
+                            java.security.cert.X509Certificate[] certs,
+                            String authType) {
+                    }
                 }
-            }
         };
         // Install the all-trusting trust manager.
         try {
@@ -166,97 +150,6 @@ public final class HttpGetFiles implements Component.Sequential {
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
             throw ex;
         }
-    }
-
-    /**
-     * Open connection and check for redirect. If there is redirect then
-     * close given connection and return connection to the new location.
-     *
-     * @param connection
-     * @return
-     * @throws IOException
-     * @throws LpException
-     */
-    private HttpURLConnection followRedirect(HttpURLConnection connection)
-            throws IOException, LpException {
-        connection.connect();
-        int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
-                responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-                responseCode == HttpURLConnection.HTTP_SEE_OTHER ) {
-            final String location = connection.getHeaderField("Location");
-            if (location == null) {
-                throw exceptionFactory.failure("Missing Location for redirect.");
-            } else {
-                // Update based on the redirect.
-                connection.disconnect();
-                LOG.debug("Follow redirect: {}", location);
-                return createConnection(new URL(location), connection);
-            }
-        } else {
-            return connection;
-        }
-    }
-
-    /**
-     * Create connection for given reference.
-     *
-     * @param reference
-     * @return
-     * @throws IOException
-     * @throws LpException
-     */
-    private HttpURLConnection createConnection(
-            HttpGetFilesConfiguration.Reference reference)
-            throws IOException, LpException {
-        // Prepare target location.
-        final URL target;
-        try {
-            target = new URL(reference.getUri());
-        } catch (MalformedURLException ex) {
-            throw exceptionFactory.failure("Invalid property: {} on {}",
-                    HttpGetFilesVocabulary.HAS_URI,
-                    reference.getUri(), ex);
-        }
-        // Prepare headers.
-        final Map<String, String> headers = new HashMap<>();
-        for (HttpGetFilesConfiguration.Header header
-                : configuration.getHeaders()) {
-            headers.put(header.getKey(), header.getValue());
-        }
-        for (HttpGetFilesConfiguration.Header header
-                : reference.getHeaders()) {
-            headers.put(header.getKey(), header.getValue());
-        }
-        // Create connection.
-        final HttpURLConnection connection =
-                (HttpURLConnection) target.openConnection();
-        // Set headers.
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            connection.setRequestProperty(entry.getKey(), entry.getValue());
-        }
-        return connection;
-    }
-
-    /**
-     * Create and return connection to given destination. Copy used headers.
-     *
-     * @param target
-     * @param originalConnection
-     * @return
-     * @throws IOException
-     */
-    private HttpURLConnection createConnection(URL target,
-            HttpURLConnection originalConnection) throws IOException {
-        final HttpURLConnection connection =
-                (HttpURLConnection) target.openConnection();
-        // Copy properties.
-        originalConnection.getRequestProperties().entrySet().forEach((entry) -> {
-            entry.getValue().forEach((value) -> {
-                connection.addRequestProperty(entry.getKey(), value);
-            });
-        });
-        return connection;
     }
 
 }

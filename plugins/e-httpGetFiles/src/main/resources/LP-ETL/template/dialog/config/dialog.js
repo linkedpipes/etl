@@ -15,6 +15,10 @@ define([], function () {
         "hardRedirect" : {
             "$type" : "bool",
             "$label" : "Force to follow redirects"
+        },
+        "threads" : {
+            "$type": "int",
+            "$label": "Number of threads used for download"
         }
     };
 
