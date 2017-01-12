@@ -14,8 +14,6 @@
         <module>pom-component</module>
         <!-- API. -->
         <module>api-executor-v1</module>
-        <module>api-commons</module>
-        <module>api-component-v1</module>
         <module>dataunit-sesame</module>
         <module>dataunit-system</module>
         <!-- Implementation. -->

@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
 
 import java.io.File;
 import java.util.List;
@@ -15,9 +15,11 @@ public interface ManageableDataUnit extends DataUnit {
      * Called before data unit is used. Only one initializer method is called!
      * Content of this data unit should be loaded from given directory.
      *
+     * DataUnit initialized by this method is read-only.
+     *
      * @param directory
      */
-    public void initialize(File directory) throws LpException;
+    void initialize(File directory) throws LpException;
 
     /**
      * Called before data unit is used. Only one initializer method is called!
@@ -25,7 +27,7 @@ public interface ManageableDataUnit extends DataUnit {
      *
      * @param dataUnits
      */
-    public void initialize(Map<String, ManageableDataUnit> dataUnits)
+    void initialize(Map<String, ManageableDataUnit> dataUnits)
             throws LpException;
 
     /**
@@ -38,17 +40,14 @@ public interface ManageableDataUnit extends DataUnit {
      * can be shown to user as a content of this data unit. The returned
      * paths must be in scope of the execution.
      *
-     * If given directory contains the data that should be visible
-     * as a content of data unit than it should also be returned.
-     *
      * @param directory
      * @return Optionally additional directories that contains data.
      */
-    public List<File> save(File directory) throws LpException;
+    List<File> save(File directory) throws LpException;
 
     /**
      * Close given data unit. After this call no other method is called.
      */
-    public void close() throws LpException;
+    void close() throws LpException;
 
 }
