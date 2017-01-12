@@ -1,136 +1,115 @@
 package com.linkedpipes.etl.executor.component;
 
-import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
-import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
+import com.linkedpipes.etl.executor.ExecutorException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.event.EventFactory;
-import com.linkedpipes.etl.executor.event.EventManager;
-import com.linkedpipes.etl.executor.execution.ExecutionModel;
-import com.linkedpipes.etl.executor.logging.LoggerFacade;
+import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
+import com.linkedpipes.etl.rdf.utils.RdfSource;
 
 import java.util.Map;
 
 /**
- * Execute component with "EXECUTE" execution type.
+ * The component is initialized with data units and configuration in
+ * the initialization phase.
+ *
+ * In the execution phase the execution interface is detected and
+ * component is executed.
  */
-class ExecuteComponent implements ComponentExecutor, Runnable {
+class ExecuteComponent implements ComponentExecutor {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(ExecuteComponent.class);
+    private final Pipeline pipeline;
 
-    /**
-     * Instance of component to execute.
-     */
-    private final SequentialComponent componentInstance;
+    private final Execution execution;
 
-    /**
-     * Definition of component to execute.
-     */
-    private final ExecutionModel.Component componentExecution;
+    private final PipelineModel.Component component;
 
-    private final PipelineModel.Component componentDefinition;
+    private final ManageableComponent instance;
 
-    private final DataUnitManager dataUnitManager;
+    private final ExecutionContext context;
 
-    private final EventManager eventManager;
-
-    /**
-     * When execution finished is set to true if executor thread
-     * was ended in unexpected way and pipeline should failed.
-     */
-    private boolean unexpectedTermination = true;
-
-    ExecuteComponent(SequentialComponent componentInstance,
-            ExecutionModel.Component componentExecution,
-            PipelineModel.Component componentDefinition,
-            DataUnitManager dataUnitManager,
-            EventManager eventManager) {
-        this.componentInstance = componentInstance;
-        this.componentExecution = componentExecution;
-        this.componentDefinition = componentDefinition;
-        this.dataUnitManager = dataUnitManager;
-        this.eventManager = eventManager;
+    public ExecuteComponent(
+            Pipeline pipeline,
+            Execution execution,
+            PipelineModel.Component component,
+            ManageableComponent instance) {
+        this.pipeline = pipeline;
+        this.execution = execution;
+        this.component = component;
+        this.instance = instance;
+        //
+        context = new ExecutionContext(execution,
+                execution.getComponent(component));
     }
 
-    /**
-     * @return False in case of a normal thread termination.
-     */
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean unexpectedTermination() {
-        return unexpectedTermination;
-    }
-
-    @Override
-    public void execute() {
-        LOG.info("Execution starts for: {}", this.componentDefinition.getIri());
-        // We execute component in an other thread, so if thread in killed
-        // it won't kill the whole pipeline execution.
-        final Thread thread = new Thread(this,
-                componentDefinition.getDefaultLabel());
-        thread.start();
-        while (thread.isAlive()) {
-            try {
-                thread.join();
-            } catch (InterruptedException ex) {
-                // Ignore exception.
-                LOG.debug("Ignored interrupt.", ex);
-            }
-        }
-        if (unexpectedTermination) {
-            eventManager.publish(EventFactory.executionFailed(
-                    "Unexpected termination of component execution thread."));
-        }
-        LOG.info("Execution ends for: {}", this.componentDefinition.getIri());
-    }
-
-    @Override
-    public void run() {
-        // We will consider preparation of the data part of the component
-        // execution.
-        eventManager.publish(EventFactory.componentBegin(componentDefinition));
-        // Prepare data units - we  use this first in order to initialize
-        // data units that are used by this component. As even if
-        // mapped we need to store the debug data. It would be nice
-        // if we could skip this step and initialize only required
-        // data units.
-        final Map<String, ManageableDataUnit> dataUnits;
-        try {
-            dataUnits = dataUnitManager.onComponentStart(componentExecution);
-        } catch (DataUnitManager.DataUnitException ex) {
-            eventManager.publish(EventFactory.executionFailed(
-                    "Can't initialize data units.", ex));
-            unexpectedTermination = false;
-            return;
-        }
-        // Prepare component.
-        try {
-            componentInstance.initialize((Map) dataUnits);
-        } catch (Throwable t) {
-            eventManager.publish(EventFactory.executionFailed(
-                    "Can't initialize component.", t));
-            unexpectedTermination = false;
-            return;
+    public void initialize(DataUnitManager dataUnitManager)
+            throws ExecutorException {
+        if (instance == null) {
+            throw new ExecutorException(
+                    "The component instance is null: {} ({})",
+                    component.getIri(), component.isLoadInstance());
         }
         //
-        MDC.put(LoggerFacade.COMPONENT_MDC, null);
+        final Map<String, DataUnit> dataUnits = (Map)
+                dataUnitManager.onExecuteComponent(component);
+
         try {
-            componentInstance.execute();
-            eventManager.publish(EventFactory.componentFinished(
-                    componentDefinition));
-        } catch (Throwable t) {
-            eventManager.publish(EventFactory.componentFailed(
-                    componentDefinition, t));
-            eventManager.publish(EventFactory.executionFailed(
-                    "Component execution failed."));
+            instance.initialize(dataUnits, context);
+        } catch (LpException ex) {
+            throw new ExecutorException("Can't initialize component.", ex);
         }
-        // Clean up.
-        dataUnitManager.onComponentEnd(componentExecution);
-        MDC.remove(LoggerFacade.COMPONENT_MDC);
-        unexpectedTermination = false;
+        //
+        final ManageableComponent.RuntimeConfiguration runtimeConfig;
+        try {
+            runtimeConfig = instance.getRuntimeConfiguration();
+        } catch (LpException ex) {
+            throw new ExecutorException("Can't get runtime configuration.", ex);
+        }
+        // Prepare and load configuration.
+        final String configGraph =
+                component.getIri() + "/configuration/effective";
+        final RdfSource.TypedTripleWriter writer = pipeline.setConfiguration(
+                component, configGraph);
+        if (runtimeConfig == null) {
+            Configuration.prepareConfiguration(configGraph,
+                    component, null, null, writer, pipeline);
+        } else {
+            Configuration.prepareConfiguration(configGraph, component,
+                    runtimeConfig.getSource(), runtimeConfig.getGraph(),
+                    writer, pipeline);
+        }
+        try {
+            instance.loadConfiguration(configGraph, pipeline.getSource());
+        } catch (LpException ex) {
+            throw new ExecutorException(
+                    "Can't load component configuration", ex);
+        }
+    }
+
+    @Override
+    public void execute() throws ExecutorException {
+        if (instance instanceof SequentialExecution) {
+            final SequentialExecution executable =
+                    (SequentialExecution) instance;
+            try {
+                executable.execute();
+            } catch (LpException ex) {
+                throw new ExecutorException("Component execution failed.", ex);
+            }
+        } else {
+            throw new ExecutorException("Unknown execution interface.");
+        }
+    }
+
+    @Override
+    public void cancel() {
+        context.cancel();
     }
 
 }

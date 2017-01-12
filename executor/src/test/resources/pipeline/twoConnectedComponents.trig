@@ -1,0 +1,122 @@
+@prefix lp : <http://linkedpipes.com/ontology/> .
+@prefix skos : <http://www.w3.org/2004/02/skos/core#> .
+@prefix lpCnf : <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix lpCnfRes : <http://plugins.linkedpipes.com/resource/configuration/> .
+
+<http://pipeline/graph> {
+
+    <http://pipeline> a lp:Pipeline ;
+        skos:prefLabel "Pipeline label" ;
+        lp:component <http://pipeline/component/1> ;
+        lp:component <http://pipeline/component/2> ;
+        lp:connection <http://pipeline/connection/1>
+        .
+
+    <http://pipeline/component/1> a lp:Component ;
+        skos:prefLabel "Component 1" ;
+        lp:port <http://pipeline/component/1/1> ,
+            <http://pipeline/component/1/2> ;
+        lp:jarPath "component_1_path" ;
+        lp:requirement lp:InputDirectory ;
+        lp:executionType lp:Execute ;
+        lp:order 1 ;
+        lp:configurationDescription <http://pipeline/component/1/desc> ;
+        lp:configuration <http://pipeline/component/1/config/1> ,
+            <http://pipeline/component/1/config/2>
+        .
+
+    <http://pipeline/component/2> a lp:Component ;
+        skos:prefLabel "Component 2" ;
+        lp:port <http://pipeline/component/2/1> ;
+        lp:jarPath "component_2_path" ;
+        lp:requirement lp:WorkingDirectory ;
+        lp:executionType lp:Execute ;
+        lp:order 2 ;
+        lp:configurationDescription <http://pipeline/component/2/desc> ;
+        lp:configuration <http://pipeline/component/2/config/1>
+        .
+
+    <http://pipeline/connection/1> a lp:Connection ;
+        lp:sourceComponent <http://pipeline/component/1> ;
+        lp:sourceBinding <http://linkedpipes.com/ontology/components/1/dataunit/2> ;
+        lp:targetComponent <http://pipeline/component/2> ;
+        lp:targetBinding <http://linkedpipes.com/ontology/components/2/dataunit/1>
+        .
+
+    <http://pipeline/component/1/1> a lp:Input ,
+            <http://linkedpipes.com/ontology/dataUnit/files/DirectoryMirror> ;
+        lp:binding <http://linkedpipes.com/ontology/components/1/dataunit/1> ;
+        .
+
+    <http://pipeline/component/1/1> a lp:Output ,
+            <http://linkedpipes.com/ontology/dataUnit/rdf/SingleGraph> ;
+        lp:binding <http://linkedpipes.com/ontology/components/1/dataunit/2> ;
+        lp:requirement lp:WorkingDirectory
+        .
+
+    <http://pipeline/component/2/1> a lp:Input ,
+            <http://linkedpipes.com/ontology/dataUnit/files/DirectoryMirror> ;
+        lp:binding <http://linkedpipes.com/ontology/components/2/dataunit/1> ;
+        .
+
+    <http://pipeline/component/1/config/2> a lp:Configuration ;
+        lp:order 2 ;
+        lp:configurationGraph <http://pipeline/configuration/1/2> .
+
+    <http://pipeline/component/1/config/1> a lp:Configuration ;
+        lp:order 1 ;
+        lp:configurationGraph <http://pipeline/configuration/1/1> .
+
+    <http://pipeline/component/2/config/1> a lp:Configuration ;
+        lp:order 1 ;
+        lp:configurationGraph <http://pipeline/configuration/2/1> .
+
+
+    <http://pipeline/component/1/desc>
+        a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+        lpCnf:type <http://descriptionr/c/1> ;
+        lpCnf:member <http://pipeline/component/1/desc/member/1> ;
+        lpCnf:member <http://pipeline/component/1/desc/member/2> .
+
+    <http://pipeline/component/1/desc/member/1>
+        lpCnf:property <http://value/1> ;
+        lpCnf:control <http://control/1> .
+
+    <http://pipeline/component/1/desc/member/2>
+        lpCnf:property <http://value/2> ;
+        lpCnf:control <http://control/2> .
+
+    <http://pipeline/component/2/desc>
+        a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+        lpCnf:type <http://descriptionr/c/2> ;
+        lpCnf:member <http://pipeline/component/2/desc/member/1> .
+
+    <http://pipeline/component/2/desc/member/1>
+        lpCnf:property <http://value/1> ;
+        lpCnf:control <http://control/1> .
+
+}
+
+<http://pipeline/configuration/1/1> {
+    <http://pipeline/resource> a <http://descriptionr/c/1> ;
+        <http://value/1> "1-1" ;
+        <http://control/1> lpCnfRes:None ;
+        <http://value/2> "1-2-0", "1-2-1" ;
+        <http://control/2> lpCnfRes:Force .
+}
+
+<http://pipeline/configuration/1/2> {
+    <http://pipeline/resource> a <http://descriptionr/c/1> ;
+        <http://value/1> "2-1" ;
+        <http://control/1> lpCnfRes:None ;
+        <http://value/2> "2-2" ;
+        <http://control/2> lpCnfRes:Forced .
+}
+
+<http://pipeline/configuration/2/1> {
+    <http://pipeline/resource> a <http://descriptionr/c/2> ;
+        <http://value/1> "a" ;
+        <http://control/1> lpCnfRes:None ;
+        <http://value/2> "b" ;
+        <http://control/2> lpCnfRes:None .
+}

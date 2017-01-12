@@ -30,7 +30,6 @@ public class Executor {
             File logDirectory, String logFileName, LoggerContext loggerContext,
             String levelFilter) {
         logDirectory.mkdirs();
-
         final RollingFileAppender newAppender = new RollingFileAppender();
         newAppender.setContext(loggerContext);
         newAppender.setFile(logDirectory.getPath() + File.separator
@@ -44,8 +43,7 @@ public class Executor {
             // knows about its parent.
             rollingPolicy.setParent(newAppender);
             rollingPolicy.setFileNamePattern(logDirectory.getPath()
-                    + File.separator
-                    + logFileName + ".%d{yyyy-MM-dd}.%i.log");
+                    + File.separator + logFileName + ".%d{yyyy-MM-dd}.%i.log");
             rollingPolicy.setMaxHistory(7);
             newAppender.setRollingPolicy(rollingPolicy);
             // File split policy.
@@ -100,7 +98,12 @@ public class Executor {
                 configuration.getLogCoreFilter()));
     }
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * Start the executor in the server mode. In server mode the
+     * executor expose the HTTP interface that can be used to execute
+     * given pipelines.
+     */
+    private static void initializeString() {
         initLogger();
         final AbstractApplicationContext context
                 = new ClassPathXmlApplicationContext(
@@ -108,4 +111,9 @@ public class Executor {
         context.registerShutdownHook();
         context.start();
     }
+
+    public static void main(String[] args) {
+        initializeString();
+    }
+
 }

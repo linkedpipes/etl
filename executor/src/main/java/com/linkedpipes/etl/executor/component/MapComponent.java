@@ -1,44 +1,31 @@
 package com.linkedpipes.etl.executor.component;
 
+import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.execution.ExecutionModel;
-import com.linkedpipes.etl.executor.execution.ExecutionModel.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 
 /**
- * Execute component with "MAP" execution type.
+ * Represent an execution of a component that is mapped from another
+ * execution. Such component is not executed, however the references
+ * to the data units from another execution must be created.
  */
 class MapComponent implements ComponentExecutor {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(MapComponent.class);
+    private final PipelineModel.Component component;
 
-    private final DataUnitManager dataunits;
-
-    private final ExecutionModel.Component componentExecution;
-
-    MapComponent(DataUnitManager dataunits, Component componentExecution) {
-        this.dataunits = dataunits;
-        this.componentExecution = componentExecution;
+    public MapComponent(PipelineModel.Component component) {
+        this.component = component;
     }
 
     @Override
-    public void execute() {
-        LOG.info("Mapping starts for: {}", this.componentExecution.getIri());
-        // Get data units belonging to this component that are also used
-        // by other components.
-        try {
-            dataunits.onComponentStart(componentExecution);
-        } catch (DataUnitManager.DataUnitException ex) {
-        }
-        dataunits.onComponentEnd(componentExecution);
-        LOG.info("Mapping ends for: {}", this.componentExecution.getIri());
+    public void initialize(DataUnitManager dataUnitManager)
+            throws ExecutorException {
+        dataUnitManager.onMappedComponent(component);
     }
 
     @Override
-    public boolean unexpectedTermination() {
-        return false;
+    public void execute() throws ExecutorException {
+        // No operation here.
     }
 
 }
