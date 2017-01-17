@@ -1,0 +1,55 @@
+---
+short: l-dcatap11tockan
+type: loader
+color: green
+title: DCAT-AP to CKAN
+description: Loads DCAT-AP v1.1 metadata to CKAN
+---
+
+<p class="flow-text">
+Loader, loads <a href="https://joinup.ec.europa.eu/asset/dcat_application_profile/asset_release/dcat-ap-v11" title="DCAT-AP v1.1">DCAT-AP v1.1</a> metadata to a CKAN catalog.
+</p>
+<dl class="flow-text">
+    <dt>CKAN Action API URL</dt>
+    <dd>URL of the CKAN API of the target catalog, e.g. <code>http://linked.opendata.cz/api/3/action</code></dd>
+    <dt>CKAN API Key</dt>
+    <dd>The API key allowing write access to the CKAN catalog. This can be found on the user detail page in CKAN.</dd>
+    <dt>CKAN dataset ID</dt>
+    <dd>The CKAN dataset ID to be used for the current dataset</dd>
+    <dt>Load language RDF language tag</dt>
+    <dd>Since DCAT-AP supports multilinguality and CKAN does not, this specifies the RDF language tag of the language, in which the metadata should be loaded.</dd>
+    <dt>Profile</dt>
+    <dd>CKAN can be extended with additional metadata fields for datasets (packages) and distributions (resources). If the target CKAN is not extended, choose <code>Pure CKAN</code>.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - EU MDR NALs</dd>
+            <dd>RDF single graph - DCAT-AP v1.1</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">Available</a></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component loads <a href="https://joinup.ec.europa.eu/node/146653" title="DCAT-AP v1.1">DCAT-AP v1.1</a> metadata to a <a href="http://ckan.org/">CKAN</a> open data catalog instance.
+        The typical usage is for metadata created by the <a href="/components/e-dcatap11dataset" title="DCAT-AP Dataset">DCAT-AP Dataset</a> and <a href="/components/e-dcatap11distribution" title="DCAT-AP Distribution">DCAT-AP Distribution</a> components.
+        The component currently uses the <a href="http://publications.europa.eu/mdr/authority/file-type/index.html">File type NAL</a> codelist published by the EU Publications Office to label file types in the CKAN catalog.
+        Therefore, this codelist needs to be provided on its EU MDR NALs input.
+        This can be a local copy, or a fresh download.
+        See the <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a> for a typical usage.
+        </p>
+        <p class="flow-text">Currently, there is only one additional profile intended to be used with CKAN catalogs extended with the <a href="https://github.com/jakubklimek/ckanext-odczdataset">CKAN extension for Czech NKOD</a>.
+        This extension supports all <a href="http://opendata.gov.cz/nastroj:ckan-api">metadata fields required</a> by the <a href="http://data.gov.cz">Czech National Open Data Catalog</a>.
+        </p>
+    </div>
+</div>
