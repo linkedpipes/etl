@@ -1,0 +1,2232 @@
+@prefix at: <http://publications.europa.eu/ontology/authority/> .
+@prefix atold: <http://publications.europa.eu/resource/authority/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+@prefix fn1: <http://www.w3.org/2005/xpath-functions> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://publications.europa.eu/resource/authority/file-type/ARC> a skos:Concept ;
+    at:authority-code "ARC" ;
+    at:deprecated "false" ;
+    at:op-code "ARC" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".sue" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".ark" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".arc" ;
+            dc:source "file-extension" ] ;
+    at:start.use "1986-01-01" ;
+    atold:op-code "ARC" ;
+    dc:identifier "ARC" ;
+    skos:altLabel "Compressed Archive format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ARC"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ATOM> a skos:Concept ;
+    at:authority-code "ATOM" ;
+    at:deprecated "false" ;
+    at:op-code "ATOM" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".atom" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2005-12-01" ;
+    atold:op-code "ATOM" ;
+    dc:identifier "ATOM" ;
+    skos:altLabel "Atom Syndication Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Atom Feed"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/AZW> a skos:Concept ;
+    at:authority-code "AZW" ;
+    at:deprecated "false" ;
+    at:op-code "AZW" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/vnd.amazon.ebook" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "24" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "AMZ" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "amz" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".azw" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "AZW" ;
+    dc:identifier "AZW" ;
+    skos:altLabel "Amazon Kindle eBook format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Amazon Kindle eBook"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/BIN> a skos:Concept ;
+    at:authority-code "BIN" ;
+    at:deprecated "false" ;
+    at:op-code "BIN" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/octet-stream" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".bin" ;
+            dc:source "file-extension" ] ;
+    at:start.use "1996-11-01" ;
+    atold:op-code "BIN" ;
+    dc:identifier "BIN" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Binary Data"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/BMP> a skos:Concept ;
+    at:authority-code "BMP" ;
+    at:deprecated "false" ;
+    at:op-code "BMP" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".dib" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".bmp" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".bm" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "image/bmp" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "1996-04-01" ;
+    atold:op-code "BMP" ;
+    dc:identifier "BMP" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Bitmap Image File"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/CSS> a skos:Concept ;
+    at:authority-code "CSS" ;
+    at:deprecated "false" ;
+    at:op-code "CSS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".css" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "text/css" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "CSS" ;
+    dc:identifier "CSS" ;
+    skos:altLabel "Cascading Style Sheet"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "CSS"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/CSV> a skos:Concept ;
+    at:authority-code "CSV" ;
+    at:deprecated "false" ;
+    at:op-code "CSV" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".csv" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "text/csv" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2013-05-21" ;
+    atold:op-code "CSV" ;
+    dc:identifier "CSV" ;
+    skos:altLabel "Comma-Separated Values"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "CSV"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/DBF> a skos:Concept ;
+    at:authority-code "DBF" ;
+    at:deprecated "false" ;
+    at:op-code "DBF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".dbf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-09-18" ;
+    atold:op-code "DBF" ;
+    dc:identifier "DBF" ;
+    skos:altLabel "dBase File"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "DBF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/DCR> a skos:Concept ;
+    at:authority-code "DCR" ;
+    at:deprecated "false" ;
+    at:op-code "DCR" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".dcr" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/x-director" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "1988-01-01" ;
+    atold:op-code "DCR" ;
+    dc:identifier "DCR" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "DCR File"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/DMP> a skos:Concept ;
+    at:authority-code "DMP" ;
+    at:deprecated "false" ;
+    at:op-code "DMP" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".dmp" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2004-01-01" ;
+    atold:op-code "DMP" ;
+    dc:identifier "DMP" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Oracle Dump"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/DOC> a skos:Concept ;
+    at:authority-code "DOC" ;
+    at:deprecated "false" ;
+    at:op-code "DOC" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/msword" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "doc" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "29" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".doc" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "DOC" ;
+    dc:identifier "DOC" ;
+    skos:altLabel "Microsoft Word"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Word DOC"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/DOCX> a skos:Concept ;
+    at:authority-code "DOCX" ;
+    at:deprecated "false" ;
+    at:op-code "DOCX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "22" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "docx" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".docx" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "DOCX" ;
+    dc:identifier "DOCX" ;
+    skos:altLabel "Office Open XML Document"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Word DOCX"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/DTD_SGML> a skos:Concept ;
+    at:authority-code "DTD_SGML" ;
+    at:deprecated "false" ;
+    at:op-code "DTD_SGML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".dtd" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/sgml-dtd" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "DTD_SGML" ;
+    dc:identifier "DTD_SGML" ;
+    skos:altLabel "SGML Document Type Definition (DTD)"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "SGML DTD"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/DTD_XML> a skos:Concept ;
+    at:authority-code "DTD_XML" ;
+    at:deprecated "false" ;
+    at:op-code "DTD_XML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".dtd" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xml-dtd" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "DTD_XML" ;
+    dc:identifier "DTD_XML" ;
+    skos:altLabel "XML Document Type Definition (DTD)"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XML DTD"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/E00> a skos:Concept ;
+    at:authority-code "E00" ;
+    at:deprecated "false" ;
+    at:op-code "E00" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".e00" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-09-18" ;
+    atold:op-code "E00" ;
+    dc:identifier "E00" ;
+    skos:altLabel "ESRI Arc/Info interchange file"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "E00"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ECW> a skos:Concept ;
+    at:authority-code "ECW" ;
+    at:deprecated "false" ;
+    at:op-code "ECW" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".ecw" ;
+            dc:source "file-extension" ] ;
+    at:start.use "1998-01-01" ;
+    atold:op-code "ECW" ;
+    dc:identifier "ECW" ;
+    skos:altLabel "Enhanced Compressed Wavelet"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ECW"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/EPS> a skos:Concept ;
+    at:authority-code "EPS" ;
+    at:deprecated "false" ;
+    at:op-code "EPS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/postscript" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".eps" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "EPS" ;
+    dc:identifier "EPS" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Encapsulated Postscript"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/EPUB> a skos:Concept ;
+    at:authority-code "EPUB" ;
+    at:deprecated "false" ;
+    at:op-code "EPUB" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "EPUB" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "epub" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/epub+zip" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".epub" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "21" ;
+            dc:source "priority-weight-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "EPUB" ;
+    dc:identifier "EPUB" ;
+    skos:altLabel "eBook standard of the International Digital Publishing Forum (IDPF)"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "EPUB"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/FMX2> a skos:Concept ;
+    at:authority-code "FMX2" ;
+    at:deprecated "true" ;
+    at:end.use "1999-03-31" ;
+    at:op-code "FMX2" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "20" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "fmx2" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xml;type=fmx2,text/sgml;type=fmx2" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "FMXV2" ;
+            dc:source "eudor-type-cellar" ] ;
+    at:start.use "1989-01-01" ;
+    atold:op-code "FMX2" ;
+    dc:identifier "FMX2" ;
+    skos:altLabel "Formalized Exchange of Electronic Publications (Formex), version 2"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Formex 2"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/FMX3> a skos:Concept ;
+    at:authority-code "FMX3" ;
+    at:deprecated "true" ;
+    at:end.use "2004-04-30" ;
+    at:op-code "FMX3" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "33" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "FMXV3" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "fmx3" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xml;type=fmx3,text/sgml;type=fmx3" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "1999-04-01" ;
+    atold:op-code "FMX3" ;
+    dc:identifier "FMX3" ;
+    skos:altLabel "Formalized Exchange of Electronic Publications (Formex), version 3"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Formex 3"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/FMX4> a skos:Concept ;
+    at:authority-code "FMX4" ;
+    at:deprecated "false" ;
+    at:op-code "FMX4" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/xml;type=fmx4" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "fmx4" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "FMXV4" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "18" ;
+            dc:source "priority-weight-cellar" ] ;
+    at:start.use "2004-05-01" ;
+    atold:op-code "FMX4" ;
+    dc:identifier "FMX4" ;
+    skos:altLabel "Formalized Exchange of Electronic Publications (Formex), version 4"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Formex 4"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/GDB> a skos:Concept ;
+    at:authority-code "GDB" ;
+    at:deprecated "false" ;
+    at:op-code "GDB" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".gdb" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2008-02-06" ;
+    atold:op-code "GDB" ;
+    dc:identifier "GDB" ;
+    skos:altLabel "Environmental Systems Research Institute File Geodatabase"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Esri File Geodatabase"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/GIF> a skos:Concept ;
+    at:authority-code "GIF" ;
+    at:deprecated "false" ;
+    at:op-code "GIF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "gif" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "GIF" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".gif" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "image/gif" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "2" ;
+            dc:source "priority-weight-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "GIF" ;
+    dc:identifier "GIF" ;
+    skos:altLabel "Graphics Interchange Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "GIF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/GML> a skos:Concept ;
+    at:authority-code "GML" ;
+    at:deprecated "false" ;
+    at:op-code "GML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".gml .xml" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2000-05-01" ;
+    atold:op-code "GML" ;
+    dc:identifier "GML" ;
+    skos:altLabel "Geography Markup Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "GML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/GMZ> a skos:Concept ;
+    at:authority-code "GMZ" ;
+    at:deprecated "false" ;
+    at:op-code "GMZ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".gmz" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-09-03" ;
+    atold:op-code "GMZ" ;
+    dc:identifier "GMZ" ;
+    skos:altLabel "Zipped Geography Markup Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Zipped GML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/GRID_ASCII> a skos:Concept ;
+    at:authority-code "GRID_ASCII" ;
+    at:deprecated "false" ;
+    at:op-code "GRID_ASCII" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".asc" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-08-21" ;
+    atold:op-code "GRID_ASCII" ;
+    dc:identifier "GRID_ASCII" ;
+    skos:altLabel "Environmental Systems Research Institute ASCII grid"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Esri ASCII grid"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/GZIP> a skos:Concept ;
+    at:authority-code "GZIP" ;
+    at:deprecated "false" ;
+    at:op-code "GZIP" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".gz" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/x-gzip" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "GZIP" ;
+    dc:identifier "GZIP" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "GNU zip"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/HDF> a skos:Concept ;
+    at:authority-code "HDF" ;
+    at:deprecated "false" ;
+    at:op-code "HDF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".he2" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".hdf4" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".he5" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".hdf5" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".hdf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".h5" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/x-hdf" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".h4" ;
+            dc:source "file-extension" ] ;
+    at:start.use "1990-01-01" ;
+    atold:op-code "HDF" ;
+    dc:identifier "HDF" ;
+    skos:altLabel "Hierarchical Data Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "HDF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/HTML> a skos:Concept ;
+    at:authority-code "HTML" ;
+    at:deprecated "false" ;
+    at:op-code "HTML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "HTML" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "32" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".html" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "html" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "text/html" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".htm" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "HTML" ;
+    dc:identifier "HTML" ;
+    skos:altLabel "HyperText Mark-up Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "HTML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/HTML_SIMPL> a skos:Concept ;
+    at:authority-code "HTML_SIMPL" ;
+    at:deprecated "false" ;
+    at:op-code "HTML_SIMPL" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "text/html;type=simplified" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".htm" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".html" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "html_simplified" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "31" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "HTML" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "HTML_SIMPL" ;
+    dc:identifier "HTML_SIMPL" ;
+    skos:altLabel "HyperText Mark-up Language, simplified"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "HTML simplified"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/INDD> a skos:Concept ;
+    at:authority-code "INDD" ;
+    at:deprecated "false" ;
+    at:op-code "INDD" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".indd" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "INDD" ;
+    dc:identifier "INDD" ;
+    skos:altLabel "Adobe InDesign Document"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "INDD"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/JPEG> a skos:Concept ;
+    at:authority-code "JPEG" ;
+    at:deprecated "false" ;
+    at:op-code "JPEG" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "image/jpeg" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "17" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".jpeg" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "jepg" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "JPEG" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".jpg" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "JPEG" ;
+    dc:identifier "JPEG" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "JPEG"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/JPEG2000> a skos:Concept ;
+    at:authority-code "JPEG2000" ;
+    at:deprecated "false" ;
+    at:op-code "JPEG2000" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".jpg2" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".jp2" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2000-01-01" ;
+    atold:op-code "JPEG2000" ;
+    dc:identifier "JPEG2000" ;
+    skos:altLabel "Joint Photographic Experts Group 2000"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "JPEG 2000"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/JSON> a skos:Concept ;
+    at:authority-code "JSON" ;
+    at:deprecated "false" ;
+    at:op-code "JSON" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".json" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2006-07-01" ;
+    atold:op-code "JSON" ;
+    dc:identifier "JSON" ;
+    skos:altLabel "JavaScript Object Notation"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "JSON"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/JSON_LD> a skos:Concept ;
+    at:authority-code "JSON_LD" ;
+    at:deprecated "false" ;
+    at:op-code "JSON_LD" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".jsonld" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2011-12-27" ;
+    atold:op-code "JSON_LD" ;
+    dc:identifier "JSON_LD" ;
+    skos:altLabel "JavaScript Object Notation for Linked Data"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "JSON-LD"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/KML> a skos:Concept ;
+    at:authority-code "KML" ;
+    at:deprecated "false" ;
+    at:op-code "KML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".kml" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-09-18" ;
+    atold:op-code "KML" ;
+    dc:identifier "KML" ;
+    skos:altLabel "Keyhole Markup Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "KML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/KMZ> a skos:Concept ;
+    at:authority-code "KMZ" ;
+    at:deprecated "false" ;
+    at:op-code "KMZ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".kmz" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-11-27" ;
+    atold:op-code "KMZ" ;
+    dc:identifier "KMZ" ;
+    skos:altLabel "Keyhole Markup Language, Zipped"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "KMZ"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/LAS> a skos:Concept ;
+    at:authority-code "LAS" ;
+    at:deprecated "false" ;
+    at:op-code "LAS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".las" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2003-05-09" ;
+    atold:op-code "LAS" ;
+    dc:identifier "LAS" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "LASer file"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/LAZ> a skos:Concept ;
+    at:authority-code "LAZ" ;
+    at:deprecated "false" ;
+    at:op-code "LAZ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".laz" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2003-05-09" ;
+    atold:op-code "LAZ" ;
+    dc:identifier "LAZ" ;
+    skos:altLabel "Compressed LASer file"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Compressed LAS file"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/MAP_PRVW> a skos:Concept ;
+    at:authority-code "MAP_PRVW" ;
+    at:deprecated "false" ;
+    at:op-code "MAP_PRVW" ;
+    at:start.use "2010-01-01" ;
+    atold:op-code "MAP_PRVW" ;
+    dc:identifier "MAP_PRVW" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ArcGIS Map Preview"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/MAP_SRVC> a skos:Concept ;
+    at:authority-code "MAP_SRVC" ;
+    at:deprecated "false" ;
+    at:op-code "MAP_SRVC" ;
+    at:start.use "2010-01-01" ;
+    atold:op-code "MAP_SRVC" ;
+    dc:identifier "MAP_SRVC" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ArcGIS Map Service"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/MDB> a skos:Concept ;
+    at:authority-code "MDB" ;
+    at:deprecated "false" ;
+    at:op-code "MDB" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".mdb" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-09-18" ;
+    atold:op-code "MDB" ;
+    dc:identifier "MDB" ;
+    skos:altLabel "Microsoft Access Database"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "MDB"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/METS> a skos:Concept ;
+    at:authority-code "METS" ;
+    at:deprecated "false" ;
+    at:op-code "METS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xml;type=mets" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2003-10-27" ;
+    atold:op-code "METS" ;
+    dc:identifier "METS" ;
+    skos:altLabel "Metadata Encoding and Transmission Standard – Logical METS container"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "METS XML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/METS_ZIP> a skos:Concept ;
+    at:authority-code "METS_ZIP" ;
+    at:deprecated "false" ;
+    at:op-code "METS_ZIP" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".zip" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/zip;type=mets" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2003-10-27" ;
+    atold:op-code "METS_ZIP" ;
+    dc:identifier "METS_ZIP" ;
+    skos:altLabel "Metadata Encoding and Transmission Standard – Physical METS container"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "METS package"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/MOBI> a skos:Concept ;
+    at:authority-code "MOBI" ;
+    at:deprecated "false" ;
+    at:op-code "MOBI" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/x-mobipocket-ebook" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "16" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".prc" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "mobi" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "MOBI" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".mobi" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "MOBI" ;
+    dc:identifier "MOBI" ;
+    skos:altLabel "Mobipocket eBook format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Mobipocket eBook"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/MOP> a skos:Concept ;
+    at:authority-code "MOP" ;
+    at:deprecated "false" ;
+    at:op-code "MOP" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".mop" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-09-18" ;
+    atold:op-code "MOP" ;
+    dc:identifier "MOP" ;
+    skos:altLabel "MOPAC Input Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "MOP"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/MSG_HTTP> a skos:Concept ;
+    at:authority-code "MSG_HTTP" ;
+    at:deprecated "false" ;
+    at:op-code "MSG_HTTP" ;
+    at:start.use "2014-06-01" ;
+    atold:op-code "MSG_HTTP" ;
+    dc:identifier "MSG_HTTP" ;
+    skos:altLabel "HTTP Message Syntax and Routing"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "HTTP Message"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/MXD> a skos:Concept ;
+    at:authority-code "MXD" ;
+    at:deprecated "false" ;
+    at:op-code "MXD" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".mxd" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-09-18" ;
+    atold:op-code "MXD" ;
+    dc:identifier "MXD" ;
+    skos:altLabel "ArcGIS Map Document"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "MXD"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/NETCDF> a skos:Concept ;
+    at:authority-code "NETCDF" ;
+    at:deprecated "false" ;
+    at:op-code "NETCDF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/x-netcdf" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".cdf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".nc" ;
+            dc:source "file-extension" ] ;
+    at:start.use "1990-01-01" ;
+    atold:op-code "NETCDF" ;
+    dc:identifier "NETCDF" ;
+    skos:altLabel "Network Common Data Form"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "NetCDF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/OCTET> a skos:Concept ;
+    at:authority-code "OCTET" ;
+    at:deprecated "false" ;
+    at:op-code "OCTET" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/octet-stream" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".zoo" ;
+            dc:source "file-extension" ] ;
+    at:start.use "1996-11-01" ;
+    atold:op-code "OCTET" ;
+    dc:identifier "OCTET" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Octet Stream"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ODB> a skos:Concept ;
+    at:authority-code "ODB" ;
+    at:deprecated "false" ;
+    at:op-code "ODB" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".odb" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2009-01-16" ;
+    atold:op-code "ODB" ;
+    dc:identifier "ODB" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "OpenDocument Database"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ODC> a skos:Concept ;
+    at:authority-code "ODC" ;
+    at:deprecated "false" ;
+    at:op-code "ODC" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".odc" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2005-05-01" ;
+    atold:op-code "ODC" ;
+    dc:identifier "ODC" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "OpenDocument Chart"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ODF> a skos:Concept ;
+    at:authority-code "ODF" ;
+    at:deprecated "false" ;
+    at:op-code "ODF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".odf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "ODF" ;
+    dc:identifier "ODF" ;
+    skos:altLabel "OpenDocument Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ODF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ODG> a skos:Concept ;
+    at:authority-code "ODG" ;
+    at:deprecated "false" ;
+    at:op-code "ODG" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".odg" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2006-05-31" ;
+    atold:op-code "ODG" ;
+    dc:identifier "ODG" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "OpenDocument Image"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ODS> a skos:Concept ;
+    at:authority-code "ODS" ;
+    at:deprecated "false" ;
+    at:op-code "ODS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".ods" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-11-27" ;
+    atold:op-code "ODS" ;
+    dc:identifier "ODS" ;
+    skos:altLabel "OpenDocument Spreadsheet"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ODS"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ODT> a skos:Concept ;
+    at:authority-code "ODT" ;
+    at:deprecated "false" ;
+    at:op-code "ODT" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/vnd.oasis.opendocument.text" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".odt" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "ODT" ;
+    dc:identifier "ODT" ;
+    skos:altLabel "Open Document Text"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ODT"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/OP_DATPRO> a skos:Concept ;
+    at:op-code "OP_DATPRO" ;
+    atold:op-code "OP_DATPRO" ;
+    dc:identifier "OP_DATPRO" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "НЕОКОНЧАТЕЛНИ ДАННИ"@bg,
+        "Předběžné údaje"@cs,
+        "Midlertidige data"@da,
+        "Vorläufige Daten"@de,
+        "Προσωρινά δεδομένα"@el,
+        "Provisional data"@en,
+        "Datos provisionales"@es,
+        "Esialgsed andmed"@et,
+        "Alustavat tiedot"@fi,
+        "Données provisoires"@fr,
+        "Sonraí sealadacha"@ga,
+        "Privremeni podaci"@hr,
+        "Ideiglenes adatok"@hu,
+        "Dati provvisori"@it,
+        "Laikinieji duomenys"@lt,
+        "Provizoriski dati"@lv,
+        "Dejta provviżorja"@mt,
+        "Voorlopige gegevens"@nl,
+        "Dane tymczasowe"@pl,
+        "Dados provisórios"@pt,
+        "Date provizorii"@ro,
+        "Predbežné údaje"@sk,
+        "Začasni podatki"@sl,
+        "Tillfälliga uppgifter"@sv .
+
+<http://publications.europa.eu/resource/authority/file-type/OVF> a skos:Concept ;
+    at:authority-code "OVF" ;
+    at:deprecated "false" ;
+    at:op-code "OVF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".ovf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2007-09-10" ;
+    atold:op-code "OVF" ;
+    dc:identifier "OVF" ;
+    skos:altLabel "Open Virtualization Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "OVF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/OWL> a skos:Concept ;
+    at:authority-code "OWL" ;
+    at:deprecated "false" ;
+    at:op-code "OWL" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".owl" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".owx" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".rdf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "OWL" ;
+    dc:identifier "OWL" ;
+    skos:altLabel "Web Ontology Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "OWL"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PDF> a skos:Concept ;
+    at:authority-code "PDF" ;
+    at:deprecated "false" ;
+    at:op-code "PDF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/pdf;type=pdf1x" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".pdf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PDF" ;
+    dc:identifier "PDF" ;
+    skos:altLabel "Portable Document Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PDF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PDF1X> a skos:Concept ;
+    at:authority-code "PDF1X" ;
+    at:deprecated "false" ;
+    at:op-code "PDF1X" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/pdf,application/pdf;type=pdf1x" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "28" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "PDF" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "pdf1x" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".pdf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PDF1X" ;
+    dc:identifier "PDF1X" ;
+    skos:altLabel "PDF printing format extension"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PDF1X"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PDFA1A> a skos:Concept ;
+    at:authority-code "PDFA1A" ;
+    at:deprecated "false" ;
+    at:op-code "PDFA1A" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/pdf;type=pdfa1a" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "pdfa1a" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "27" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".pdf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "PDF" ;
+            dc:source "eudor-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PDFA1A" ;
+    dc:identifier "PDFA1A" ;
+    skos:altLabel "PDF archiving format, Level A conformance"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PDF/A-1a"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PDFA1B> a skos:Concept ;
+    at:authority-code "PDFA1B" ;
+    at:deprecated "false" ;
+    at:op-code "PDFA1B" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "PDF" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/pdf;type=pdfa1b" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "26" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "pdfa1b" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".pdf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PDFA1B" ;
+    dc:identifier "PDFA1B" ;
+    skos:altLabel "PDF archiving format, Level B conformance"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PDF/A-1b"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PDFX> a skos:Concept ;
+    at:authority-code "PDFX" ;
+    at:deprecated "false" ;
+    at:op-code "PDFX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/pdf;type=pdfx" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "pdfx" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".pdf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "PDF" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "25" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PDFX" ;
+    dc:identifier "PDFX" ;
+    skos:altLabel "PDF printing format, Blind eXchange"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PDF/X"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PNG> a skos:Concept ;
+    at:authority-code "PNG" ;
+    at:deprecated "false" ;
+    at:op-code "PNG" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "PNG" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "1" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "png" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".png" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "image/png" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PNG" ;
+    dc:identifier "PNG" ;
+    skos:altLabel "Portable Network Graphics"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PNG"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PPS> a skos:Concept ;
+    at:authority-code "PPS" ;
+    at:deprecated "false" ;
+    at:op-code "PPS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".pps" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/vnd.ms-powerpoint" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PPS" ;
+    dc:identifier "PPS" ;
+    skos:altLabel "Microsoft PowerPoint Slide Show"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PowerPoint Slide Show"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PPSX> a skos:Concept ;
+    at:authority-code "PPSX" ;
+    at:deprecated "false" ;
+    at:op-code "PPSX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "ppsx" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "15" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/vnd.openxmlformats-officedocument.presentationml.slideshow" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".ppsx" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PPSX" ;
+    dc:identifier "PPSX" ;
+    skos:altLabel "PowerPoint Open XML Slide Show"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PowerPoint PPSX"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PPT> a skos:Concept ;
+    at:authority-code "PPT" ;
+    at:deprecated "false" ;
+    at:op-code "PPT" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "ppt" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "14" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/vnd.ms-powerpoint" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".ppt" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PPT" ;
+    dc:identifier "PPT" ;
+    skos:altLabel "Microsoft PowerPoint Presentation"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PowerPoint PPT"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PPTX> a skos:Concept ;
+    at:authority-code "PPTX" ;
+    at:deprecated "false" ;
+    at:op-code "PPTX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "application/vnd.openxmlformats-officedocument.presentationml.presentation" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "pptx" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".pptx" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "13" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PPTX" ;
+    dc:identifier "PPTX" ;
+    skos:altLabel "Office Open XML Presentation"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PowerPoint PPTX"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PS> a skos:Concept ;
+    at:authority-code "PS" ;
+    at:deprecated "false" ;
+    at:op-code "PS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".ps" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PS" ;
+    dc:identifier "PS" ;
+    skos:altLabel "PostScript File"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PS"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/PSD> a skos:Concept ;
+    at:authority-code "PSD" ;
+    at:deprecated "false" ;
+    at:op-code "PSD" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".psd" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "PSD" ;
+    dc:identifier "PSD" ;
+    skos:altLabel "Adobe Photoshop Document"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "PSD"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RDF> a skos:Concept ;
+    at:authority-code "RDF" ;
+    at:deprecated "false" ;
+    at:op-code "RDF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".rdf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "RDF" ;
+    dc:identifier "RDF" ;
+    skos:altLabel "Resource Description Framework (RDF)"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RDF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RDFA> a skos:Concept ;
+    at:authority-code "RDFA" ;
+    at:deprecated "false" ;
+    at:op-code "RDFA" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".rdfa" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2006-03-10" ;
+    atold:op-code "RDFA" ;
+    dc:identifier "RDFA" ;
+    skos:altLabel "Resource Description Framework in Attributes"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RDFa"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RDF_N_QUADS> a skos:Concept ;
+    at:authority-code "RDF_N_QUADS" ;
+    at:deprecated "false" ;
+    at:op-code "RDF_N_QUADS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".nq" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-04-09" ;
+    atold:op-code "RDF_N_QUADS" ;
+    dc:identifier "RDF_N_QUADS" ;
+    skos:altLabel "Resource Description Framework N-Quads"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RDF N-Quads"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RDF_N_TRIPLES> a skos:Concept ;
+    at:authority-code "RDF_N_TRIPLES" ;
+    at:deprecated "false" ;
+    at:op-code "RDF_N_TRIPLES" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".nt" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2008-02-17" ;
+    atold:op-code "RDF_N_TRIPLES" ;
+    dc:identifier "RDF_N_TRIPLES" ;
+    skos:altLabel "Resource Description Framework N-Triples"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RDF N-Triples"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RDF_TRIG> a skos:Concept ;
+    at:authority-code "RDF_TRIG" ;
+    at:deprecated "false" ;
+    at:op-code "RDF_TRIG" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".trig" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-04-09" ;
+    atold:op-code "RDF_TRIG" ;
+    dc:identifier "RDF_TRIG" ;
+    skos:altLabel "Resource Description Framework TriG"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RDF TriG"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> a skos:Concept ;
+    at:authority-code "RDF_TURTLE" ;
+    at:deprecated "false" ;
+    at:op-code "RDF_TURTLE" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".ttl" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "RDF_TURTLE" ;
+    dc:identifier "RDF_TURTLE" ;
+    skos:altLabel "Terse RDF Triple Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RDF Turtle"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RDF_XML> a skos:Concept ;
+    at:authority-code "RDF_XML" ;
+    at:deprecated "false" ;
+    at:op-code "RDF_XML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".rdf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "12" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "RDF" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/rdf+xml" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "rdf" ;
+            dc:source "mime-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "RDF_XML" ;
+    dc:identifier "RDF_XML" ;
+    skos:altLabel "Resource Description Framework XML syntax"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RDF XML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/REST> a skos:Concept ;
+    at:authority-code "REST" ;
+    at:deprecated "false" ;
+    at:op-code "REST" ;
+    at:start.use "2010-01-01" ;
+    atold:op-code "REST" ;
+    dc:identifier "REST" ;
+    skos:altLabel "Esri Representational State Transfer"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Esri REST"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RSS> a skos:Concept ;
+    at:authority-code "RSS" ;
+    at:deprecated "false" ;
+    at:op-code "RSS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".rss" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-11-27" ;
+    atold:op-code "RSS" ;
+    dc:identifier "RSS" ;
+    skos:altLabel "Really Simple Syndication"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RSS feed"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/RTF> a skos:Concept ;
+    at:authority-code "RTF" ;
+    at:deprecated "false" ;
+    at:op-code "RTF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "rtf" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".rtf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "11" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "text/rtf" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "RTF" ;
+    dc:identifier "RTF" ;
+    skos:altLabel "Rich Text Format File"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "RTF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/SCHEMA_XML> a skos:Concept ;
+    at:authority-code "SCHEMA_XML" ;
+    at:deprecated "false" ;
+    at:op-code "SCHEMA_XML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".xsd" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "SCHEMA_XML" ;
+    dc:identifier "SCHEMA_XML" ;
+    skos:altLabel "XML Schema"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XML schema"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/SDMX> a skos:Concept ;
+    at:authority-code "SDMX" ;
+    at:deprecated "false" ;
+    at:op-code "SDMX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".edi" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2001-01-01" ;
+    atold:op-code "SDMX" ;
+    dc:identifier "SDMX" ;
+    skos:altLabel "Statistical Data and Metadata eXchange"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "SDMX"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/SGML> a skos:Concept ;
+    at:authority-code "SGML" ;
+    at:deprecated "false" ;
+    at:op-code "SGML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".sgm" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "text/sgml" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "10" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "sgml" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "SGML" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".sgml" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "SGML" ;
+    dc:identifier "SGML" ;
+    skos:altLabel "Standard Generalized Mark-up Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "SGML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/SHP> a skos:Concept ;
+    at:authority-code "SHP" ;
+    at:deprecated "false" ;
+    at:op-code "SHP" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".shp" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".dbf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".shx" ;
+            dc:source "file-extension" ] ;
+    at:start.use "1998-07-01" ;
+    atold:op-code "SHP" ;
+    dc:identifier "SHP" ;
+    skos:altLabel "Environmental Systems Research Institute Shape"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Esri Shape"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/SKOS_XML> a skos:Concept ;
+    at:authority-code "SKOS_XML" ;
+    at:deprecated "false" ;
+    at:op-code "SKOS_XML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".rdf" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/rdf+xml;type=skos" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "SKOS_XML" ;
+    dc:identifier "SKOS_XML" ;
+    skos:altLabel "Simple Knowledge Organization System"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "SKOS"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/SPARQLQ> a skos:Concept ;
+    at:authority-code "SPARQLQ" ;
+    at:deprecated "false" ;
+    at:op-code "SPARQLQ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "sparqlq" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/sparql-query" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "9" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".rq" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "SPARQLQ" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".sparqlq" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "SPARQLQ" ;
+    dc:identifier "SPARQLQ" ;
+    skos:altLabel "SPARQL Query"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "SPARQL"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/SPARQLQRES> a skos:Concept ;
+    at:authority-code "SPARQLQRES" ;
+    at:deprecated "false" ;
+    at:op-code "SPARQLQRES" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".srx" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "sparqlqr" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "8" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".sparqlqr" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/sparql-results+xml" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "SPARQLQR" ;
+            dc:source "eudor-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "SPARQLQRES" ;
+    dc:identifier "SPARQLQRES" ;
+    skos:altLabel "SPARQL Query Results"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "SPARQL results"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TAB> a skos:Concept ;
+    at:authority-code "TAB" ;
+    at:deprecated "false" ;
+    at:op-code "TAB" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tab" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2000-03-26" ;
+    atold:op-code "TAB" ;
+    dc:identifier "TAB" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "MapInfo TAB file"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TAB_RSTR> a skos:Concept ;
+    at:authority-code "TAB_RSTR" ;
+    at:deprecated "false" ;
+    at:op-code "TAB_RSTR" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tab" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2000-03-26" ;
+    atold:op-code "TAB_RSTR" ;
+    dc:identifier "TAB_RSTR" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "MapInfo TAB raster file"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TAR> a skos:Concept ;
+    at:authority-code "TAR" ;
+    at:deprecated "false" ;
+    at:op-code "TAR" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tar" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/x-tar" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "TAR" ;
+    dc:identifier "TAR" ;
+    skos:altLabel "Tape Archive"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "TAR"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TAR_GZ> a skos:Concept ;
+    at:authority-code "TAR_GZ" ;
+    at:deprecated "false" ;
+    at:op-code "TAR_GZ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tar.gz" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "TAR_GZ" ;
+    dc:identifier "TAR_GZ" ;
+    skos:altLabel "Compressed Tarball File"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "TAR GZ"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TAR_XZ> a skos:Concept ;
+    at:authority-code "TAR_XZ" ;
+    at:deprecated "false" ;
+    at:op-code "TAR_XZ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tar.xz" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "TAR_XZ" ;
+    dc:identifier "TAR_XZ" ;
+    skos:altLabel "XZ Compressed Tar Archive"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "TAR XZ"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TIFF> a skos:Concept ;
+    at:authority-code "TIFF" ;
+    at:deprecated "false" ;
+    at:op-code "TIFF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "7" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".tiff" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "TIFF" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".tif" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "tiff" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "image/tiff,image/tiff-fx" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "TIFF" ;
+    dc:identifier "TIFF" ;
+    skos:altLabel "Tagged Image Format File"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "TIFF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TIFF_FX> a skos:Concept ;
+    at:authority-code "TIFF_FX" ;
+    at:deprecated "false" ;
+    at:op-code "TIFF_FX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tiff" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".tif" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "image/tiff-fx" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2005-02-01" ;
+    atold:op-code "TIFF_FX" ;
+    dc:identifier "TIFF_FX" ;
+    skos:altLabel "Tagged Image Format File Fax eXtended"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "TIFF FX"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TMX> a skos:Concept ;
+    at:authority-code "TMX" ;
+    at:deprecated "false" ;
+    at:op-code "TMX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xml" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "1997-11-25" ;
+    atold:op-code "TMX" ;
+    dc:identifier "TMX" ;
+    skos:altLabel "Translation Memory eXchange"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "TMX"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TSV> a skos:Concept ;
+    at:authority-code "TSV" ;
+    at:deprecated "false" ;
+    at:op-code "TSV" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tsv" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".tab" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2013-10-02" ;
+    atold:op-code "TSV" ;
+    dc:identifier "TSV" ;
+    skos:altLabel "Tab-Separated Value"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "TSV"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/TXT> a skos:Concept ;
+    at:authority-code "TXT" ;
+    at:deprecated "false" ;
+    at:op-code "TXT" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "txt" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "30" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "TXT" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "text/plain" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".txt" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "TXT" ;
+    dc:identifier "TXT" ;
+    skos:altLabel "Text file"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Plain text"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/WARC_GZ> a skos:Concept ;
+    at:authority-code "WARC_GZ" ;
+    at:deprecated "false" ;
+    at:op-code "WARC_GZ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".warc.gz" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2009-05-15" ;
+    atold:op-code "WARC_GZ" ;
+    dc:identifier "WARC_GZ" ;
+    skos:altLabel "Compressed Web Archive format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "WARC GZ"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/WORLD> a skos:Concept ;
+    at:authority-code "WORLD" ;
+    at:deprecated "false" ;
+    at:op-code "WORLD" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".tfw" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".jgw" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2001-03-26" ;
+    atold:op-code "WORLD" ;
+    dc:identifier "WORLD" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "World file"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XHTML> a skos:Concept ;
+    at:authority-code "XHTML" ;
+    at:deprecated "false" ;
+    at:op-code "XHTML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "HTML" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xhtml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "xhtml" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xht" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".htm" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xhtml+xml" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "36" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".html" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "XHTML" ;
+    dc:identifier "XHTML" ;
+    skos:altLabel "Extensible Hypertext Markup Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XHTML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XHTML_SIMPL> a skos:Concept ;
+    at:authority-code "XHTML_SIMPL" ;
+    at:deprecated "false" ;
+    at:op-code "XHTML_SIMPL" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".html" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "xhtml_simplified" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "35" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xhtml+xml;type=simplified" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xht" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xhtml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "HTML" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".htm" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "XHTML_SIMPL" ;
+    dc:identifier "XHTML_SIMPL" ;
+    skos:altLabel "Extensible Hypertext Markup Language, simplified"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XHTML simplified"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XLIFF> a skos:Concept ;
+    at:authority-code "XLIFF" ;
+    at:deprecated "false" ;
+    at:op-code "XLIFF" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".xlf" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2001-05-30" ;
+    atold:op-code "XLIFF" ;
+    dc:identifier "XLIFF" ;
+    skos:altLabel "XML Localisation Interchange File Format"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XLIFF"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XLS> a skos:Concept ;
+    at:authority-code "XLS" ;
+    at:deprecated "false" ;
+    at:op-code "XLS" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "6" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "xls" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xls" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/vnd.ms-excel" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "XLS" ;
+    dc:identifier "XLS" ;
+    skos:altLabel "Microsof Excel Workbook"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Excel XLS"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XLSX> a skos:Concept ;
+    at:authority-code "XLSX" ;
+    at:deprecated "false" ;
+    at:op-code "XLSX" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "5" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xlsx" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "xlsx" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "DOC" ;
+            dc:source "eudor-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "XLSX" ;
+    dc:identifier "XLSX" ;
+    skos:altLabel "Office Open XML Workbook"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "Excel XLSX"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XML> a skos:Concept ;
+    at:authority-code "XML" ;
+    at:deprecated "false" ;
+    at:op-code "XML" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xml" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "xml" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "XML" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xml" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "34" ;
+            dc:source "priority-weight-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "XML" ;
+    dc:identifier "XML" ;
+    skos:altLabel "Extensible Markup Language"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XML"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XSLFO> a skos:Concept ;
+    at:authority-code "XSLFO" ;
+    at:deprecated "false" ;
+    at:op-code "XSLFO" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code ".fo" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "XSLFO" ;
+    dc:identifier "XSLFO" ;
+    skos:altLabel "Extensible Stylesheet Language – Formatting Objects"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XSL-FO"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XSLT> a skos:Concept ;
+    at:authority-code "XSLT" ;
+    at:deprecated "false" ;
+    at:op-code "XSLT" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "4" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "xslt" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xsl" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "XSLT" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/xslt+xml" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "true" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xslt" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "XSLT" ;
+    dc:identifier "XSLT" ;
+    skos:altLabel "Extensible Stylesheet Language Transformations"@en ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XSLT"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/XYZ> a skos:Concept ;
+    at:authority-code "XYZ" ;
+    at:deprecated "false" ;
+    at:op-code "XYZ" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "chemical/x-pdb" ;
+            dc:source "manifestation-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".xyz" ;
+            dc:source "file-extension" ] ;
+    at:start.use "2010-10-10" ;
+    atold:op-code "XYZ" ;
+    dc:identifier "XYZ" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "XYZ Chemical File"@en .
+
+<http://publications.europa.eu/resource/authority/file-type/ZIP> a skos:Concept ;
+    at:authority-code "ZIP" ;
+    at:deprecated "false" ;
+    at:op-code "ZIP" ;
+    at:op-mapped-code [ a at:MappedCode ;
+            at:legacy-code "false" ;
+            dc:source "is-textual-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "zip" ;
+            dc:source "mime-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "ZIP" ;
+            dc:source "eudor-type-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code ".zip" ;
+            dc:source "file-extension" ],
+        [ a at:MappedCode ;
+            at:legacy-code "3" ;
+            dc:source "priority-weight-cellar" ],
+        [ a at:MappedCode ;
+            at:legacy-code "application/zip" ;
+            dc:source "manifestation-type-cellar" ] ;
+    at:start.use "2012-09-01" ;
+    atold:op-code "ZIP" ;
+    dc:identifier "ZIP" ;
+    skos:inScheme atold:file-type ;
+    skos:prefLabel "ZIP"@en .
+
+atold:file-type a skos:ConceptScheme ;
+    rdfs:label "Filetypes Authority Table"@en ;
+    at:prefLabel "Filetypes Authority Table"@en ;
+    at:table.id "file-type" ;
+    at:table.version.number "20160615-0" .
+

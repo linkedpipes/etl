@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -22,11 +21,11 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.FOAF;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.QueryResults;
@@ -45,136 +44,97 @@ import org.openrdf.query.impl.SimpleDataset;
  *
  * @author Klímek Jakub
  */
-public final class DcatAp11ToCkan implements Component.Sequential {
+public final class dcatAp11ToCkan implements Component.Sequential {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DcatAp11ToCkan.class);
+    private static final Logger LOG = LoggerFactory.getLogger(dcatAp11ToCkan.class);
 
     @Component.InputPort(id = "Metadata")
     public SingleGraphDataUnit metadata;
 
+    @Component.InputPort(id = "Codelists", optional = true)
+    public SingleGraphDataUnit codelists;
+
     @Component.Configuration
-    public DcatAp11ToCkanConfiguration configuration;
+    public dcatAp11ToCkanConfiguration configuration;
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
-    @Override
-    public void execute() throws LpException {
-        // Load files.
-        LOG.debug("Querying metadata");
+    @Component.Inject
+    public ProgressReport progressReport;
 
-        String datasetID = configuration.getDatasetID();
-        String orgID = configuration.getOrgID();
-        String apiURI = configuration.getApiUri();
+    private CloseableHttpClient queryClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+    private CloseableHttpClient createClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+    private CloseableHttpClient postClient = HttpClients.createDefault();
 
-        if (datasetID == null || datasetID.isEmpty() || apiURI == null || apiURI.isEmpty() || configuration.getApiKey() == null || configuration.getApiKey().isEmpty() ) {
-            throw exceptionFactory.failure("Missing required settings.");
-        }
+    private String apiURI;
 
-        String datasetURI = executeSimpleSelectQuery("SELECT ?d WHERE {?d a <" + DcatAp11ToCkanVocabulary.DCAT_DATASET_CLASS + ">}", "d");
-        String title = executeSimpleSelectQuery("SELECT ?title WHERE {<" + datasetURI + "> <" + DCTERMS.TITLE + "> ?title FILTER(LANGMATCHES(LANG(?title), \"" + configuration.getLoadLanguage() + "\"))}", "title");
-        String description = executeSimpleSelectQuery("SELECT ?description WHERE {<" + datasetURI + "> <" + DCTERMS.DESCRIPTION + "> ?description FILTER(LANGMATCHES(LANG(?description), \"" + configuration.getLoadLanguage() + "\"))}", "description");
-        String curatorName = executeSimpleSelectQuery("SELECT ?name WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + DcatAp11ToCkanVocabulary.VCARD_FN + "> ?name }", "name");
-        String contactPoint = executeSimpleSelectQuery("SELECT ?contact WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + DcatAp11ToCkanVocabulary.VCARD_HAS_EMAIL + "> ?contact }", "contact");
-        String issued = executeSimpleSelectQuery("SELECT ?issued WHERE {<" + datasetURI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
-        String modified = executeSimpleSelectQuery("SELECT ?modified WHERE {<" + datasetURI + "> <" + DCTERMS.MODIFIED + "> ?modified }", "modified");
-        String publisher_uri = executeSimpleSelectQuery("SELECT ?publisher_uri WHERE {<" + datasetURI + "> <" + DCTERMS.PUBLISHER + "> ?publisher_uri }", "publisher_uri");
-        String publisher_name = executeSimpleSelectQuery("SELECT ?publisher_name WHERE {<" + datasetURI + "> <" + DCTERMS.PUBLISHER + ">/<" + FOAF.NAME + "> ?publisher_name FILTER(LANGMATCHES(LANG(?publisher_name), \"" + configuration.getLoadLanguage() + "\"))}", "publisher_name");
+    private String fixKeyword(String keyword) {
+        return keyword.replace(",","")
+                .replace(".","")
+                .replace("/","-")
+                .replace(":","-")
+                .replace(";","-")
+                .replace("§", "paragraf");
+    }
 
-        LinkedList<String> keywords = new LinkedList<>();
-        for (Map<String, Value> map : executeSelectQuery("SELECT ?keyword WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_KEYWORD + "> ?keyword FILTER(LANGMATCHES(LANG(?keyword), \"" + configuration.getLoadLanguage() + "\"))}")) {
-            keywords.add(map.get("keyword").stringValue());
-        }
-
-        LinkedList<String> distributions = new LinkedList<>();
-        for (Map<String, Value> map : executeSelectQuery("SELECT ?distribution WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_DISTRIBUTION + "> ?distribution }")) {
-            distributions.add(map.get("distribution").stringValue());
-        }
-
-        boolean exists = false;
-        Map<String, String> resUrlIdMap = new HashMap<>();
-        Map<String, String> resDistroIdMap = new HashMap<>();
-        Map<String, JSONObject> resourceList = new HashMap<>();
-        Map<String, String> organizations = new HashMap<>();
-        List<String> organizationList = new LinkedList<>();
-
-        LOG.debug("Querying for the dataset in CKAN");
-        CloseableHttpClient queryClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
-        HttpGet httpGet = new HttpGet(apiURI + "/package_show?id=" + datasetID);
+    private Map<String, String> getOrganizations() {
         CloseableHttpResponse queryResponse = null;
+        List<String> organizationList = new LinkedList<>();
+        Map<String, String> organizations = new HashMap<>();
+        HttpGet httpGetOrg = new HttpGet(apiURI + "/organization_list");
+
+        LOG.debug("Querying CKAN for organizations");
+
         try {
-            queryResponse = queryClient.execute(httpGet);
+            queryResponse = queryClient.execute(httpGetOrg);
             if (queryResponse.getStatusLine().getStatusCode() == 200) {
-                LOG.info("Dataset found");
-                exists = true;
-
-                if (!configuration.isOverwrite()) {
-                    JSONObject response = new JSONObject(EntityUtils.toString(queryResponse.getEntity())).getJSONObject("result");
-                    JSONArray resourcesArray = response.getJSONArray("resources");
-                    for (int i = 0; i < resourcesArray.length(); i++) {
-                        try {
-                            String id = resourcesArray.getJSONObject(i).getString("id");
-                            resourceList.put(id, resourcesArray.getJSONObject(i));
-
-                            String url = resourcesArray.getJSONObject(i).getString("url");
-                            resUrlIdMap.put(url, id);
-
-                            if (resourcesArray.getJSONObject(i).has("distro_url")) {
-                                String distro = resourcesArray.getJSONObject(i).getString("distro_url");
-                                resDistroIdMap.put(distro, id);
-                            }
-                        } catch (JSONException e) {
-                            LOG.error(e.getLocalizedMessage(), e);
-                        }
-                    }
+                JSONArray response = new JSONObject(EntityUtils.toString(queryResponse.getEntity())).getJSONArray("result");
+                for (Object o : response) {
+                    organizationList.add(o.toString());
                 }
+                LOG.info("Organization list downloaded, found " + organizationList.size() + " organizations.");
 
             } else {
                 String ent = EntityUtils.toString(queryResponse.getEntity());
-                LOG.info("Dataset not found: " + ent);
+                LOG.info("Organizations not downloaded: " + ent);
             }
-        } catch (ClientProtocolException e) {
-            LOG.error(e.getLocalizedMessage(), e);
-        } catch (IOException e) {
-            LOG.error(e.getLocalizedMessage(), e);
-        } catch (ParseException e) {
-            LOG.error(e.getLocalizedMessage(), e);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             LOG.error(e.getLocalizedMessage(), e);
         } finally {
             if (queryResponse != null) {
                 try {
                     queryResponse.close();
-                    //queryClient.close();
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
                 }
             }
         }
 
-        if (configuration.isCreateCkanOrg()) {
-            LOG.debug("Querying CKAN for organizations");
+        LOG.debug("Querying for organization details.");
 
-            HttpGet httpGetOrg = new HttpGet(apiURI + "/organization_list");
+        for (String organization : organizationList) {
+            HttpGet httpGetOrgDetail = new HttpGet(apiURI + "/organization_show?id=" + organization);
             try {
-                queryResponse = queryClient.execute(httpGetOrg);
+                queryResponse = queryClient.execute(httpGetOrgDetail);
                 if (queryResponse.getStatusLine().getStatusCode() == 200) {
-                    LOG.info("Organization list downloaded");
-                    JSONArray response = new JSONObject(EntityUtils.toString(queryResponse.getEntity())).getJSONArray("result");
-                    for (Object o : response) {
-                        organizationList.add(o.toString());
+                    LOG.info("Organization " + organization + " downloaded");
+
+                    JSONObject response = new JSONObject(EntityUtils.toString(queryResponse.getEntity())).getJSONObject("result");
+                    JSONArray org_extras = response.getJSONArray("extras");
+                    for (Object extra : org_extras) {
+                        String extraKey = ((JSONObject) extra).getString("key");
+                        String extraValue = ((JSONObject) extra).getString("value");
+                        if (extraKey.equals("uri")) {
+                            organizations.put(extraValue, organization);
+                            break;
+                        }
                     }
                 } else {
                     String ent = EntityUtils.toString(queryResponse.getEntity());
-                    LOG.info("Organizations not downloaded: " + ent);
+                    LOG.info("Organization " + organization + " not downloaded: " + ent);
                 }
-            } catch (ClientProtocolException e) {
-                LOG.error(e.getLocalizedMessage(), e);
-            } catch (IOException e) {
-                LOG.error(e.getLocalizedMessage(), e);
-            } catch (ParseException e) {
-                LOG.error(e.getLocalizedMessage(), e);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 LOG.error(e.getLocalizedMessage(), e);
             } finally {
                 if (queryResponse != null) {
@@ -185,54 +145,98 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                     }
                 }
             }
+        }
 
-            for (String organization : organizationList) {
-                HttpGet httpGetOrgDetail = new HttpGet(apiURI + "/organization_show?id=" + organization);
-                try {
-                    queryResponse = queryClient.execute(httpGetOrgDetail);
-                    if (queryResponse.getStatusLine().getStatusCode() == 200) {
-                        LOG.info("Organization " + organization + " downloaded");
-                        JSONObject response = new JSONObject(EntityUtils.toString(queryResponse.getEntity())).getJSONObject("result");
-                        JSONArray org_extras = response.getJSONArray("extras");
-                        for (Object extra : org_extras) {
-                            String extraKey = ((JSONObject) extra).getString("key");
-                            String extraValue = ((JSONObject) extra).getString("value");
-                            if (extraKey.equals("uri")) {
-                                organizations.put(extraValue, organization);
-                                break;
-                            }
-                        }
-                    } else {
-                        String ent = EntityUtils.toString(queryResponse.getEntity());
-                        LOG.info("Organization " + organization + " not downloaded: " + ent);
+        return organizations;
+    }
+
+    @Override
+    public void execute() throws LpException {
+
+        apiURI = configuration.getApiUri();
+        String datasetID = configuration.getDatasetID();
+
+        if (datasetID == null || datasetID.isEmpty() || apiURI == null || apiURI.isEmpty() || configuration.getApiKey() == null || configuration.getApiKey().isEmpty() ) {
+            throw exceptionFactory.failure("Missing required settings.");
+        }
+
+        Map<String, String> organizations = getOrganizations();
+
+        LOG.debug("Querying metadata for datasets");
+
+        LinkedList<String> datasets = new LinkedList<>();
+        for (Map<String,Value> map: executeSelectQuery("SELECT ?d WHERE {?d a <" + dcatAp11ToCkanVocabulary.DCAT_DATASET_CLASS + ">}")) {
+            datasets.add(map.get("d").stringValue());
+        }
+
+        int current = 0;
+        int total = datasets.size();
+
+        LOG.info("Found " + total + " datasets");
+
+        progressReport.start(total);
+
+        current++;
+
+        String datasetURI = datasets.getFirst();
+
+        CloseableHttpResponse queryResponse = null;
+
+        LOG.info("Processing dataset " + current + "/" + total + ": " + datasetURI);
+
+        boolean datasetExists = false;
+
+        Map<String, String> resUrlIdMap = new HashMap<>();
+        Map<String, String> resDistroIdMap = new HashMap<>();
+        Map<String, JSONObject> resourceList = new HashMap<>();
+
+        LOG.debug("Querying for the dataset " + datasetID + " in CKAN");
+        HttpGet httpGet = new HttpGet(apiURI + "/package_show?id=" + datasetID);
+        try {
+            queryResponse = queryClient.execute(httpGet);
+            if (queryResponse.getStatusLine().getStatusCode() == 200) {
+                LOG.debug("Dataset found");
+                datasetExists = true;
+
+                JSONObject response = new JSONObject(EntityUtils.toString(queryResponse.getEntity())).getJSONObject("result");
+                JSONArray resourcesArray = response.getJSONArray("resources");
+                for (int i = 0; i < resourcesArray.length(); i++) {
+                    String id = resourcesArray.getJSONObject(i).getString("id");
+                    resourceList.put(id, resourcesArray.getJSONObject(i));
+
+                    String url = resourcesArray.getJSONObject(i).getString("url");
+                    resUrlIdMap.put(url, id);
+
+                    if (resourcesArray.getJSONObject(i).has("distro_url")) {
+                        String distro = resourcesArray.getJSONObject(i).getString("distro_url");
+                        resDistroIdMap.put(distro, id);
                     }
-                } catch (ClientProtocolException e) {
-                    LOG.error(e.getLocalizedMessage(), e);
+                }
+            } else {
+                String ent = EntityUtils.toString(queryResponse.getEntity());
+                LOG.debug("Dataset not found: " + ent);
+            }
+        } catch (Exception e) {
+            LOG.error(e.getLocalizedMessage(), e);
+        } finally {
+            if (queryResponse != null) {
+                try {
+                    queryResponse.close();
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
-                } catch (ParseException e) {
-                    LOG.error(e.getLocalizedMessage(), e);
-                } catch (JSONException e) {
-                    LOG.error(e.getLocalizedMessage(), e);
-                } finally {
-                    if (queryResponse != null) {
-                        try {
-                            queryResponse.close();
-                        } catch (IOException e) {
-                            LOG.error(e.getLocalizedMessage(), e);
-                        }
-                    }
                 }
             }
         }
 
-        try {
-            queryClient.close();
-        } catch (IOException e) {
-            LOG.error(e.getLocalizedMessage(), e);
+        LinkedList<String> keywords = new LinkedList<>();
+        for (Map<String, Value> map : executeSelectQuery("SELECT ?keyword WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_KEYWORD + "> ?keyword FILTER(LANGMATCHES(LANG(?keyword), \"" + configuration.getLoadLanguage() + "\"))}")) {
+            keywords.add(map.get("keyword").stringValue());
         }
 
-        if (configuration.isCreateCkanOrg() && !organizations.containsKey(publisher_uri)) {
+        String publisher_uri = executeSimpleSelectQuery("SELECT ?publisher_uri WHERE {<" + datasetURI + "> <" + DCTERMS.PUBLISHER + "> ?publisher_uri }", "publisher_uri");
+        String publisher_name = executeSimpleSelectQuery("SELECT ?publisher_name WHERE {<" + datasetURI + "> <" + DCTERMS.PUBLISHER + ">/<" + FOAF.NAME + "> ?publisher_name FILTER(LANGMATCHES(LANG(?publisher_name), \"" + configuration.getLoadLanguage() + "\"))}", "publisher_name");
+
+        if (publisher_uri != null && !publisher_uri.isEmpty() && !organizations.containsKey(publisher_uri)) {
             LOG.debug("Creating organization " + publisher_uri);
             JSONObject root = new JSONObject();
 
@@ -251,7 +255,6 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             org_extras.put(new JSONObject().put("key", "uri").put("value", publisher_uri));
             root.put("extras", org_extras);
 
-            CloseableHttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
             HttpPost httpPost = new HttpPost(apiURI + "/organization_create");
             httpPost.addHeader(new BasicHeader("Authorization", configuration.getApiKey()));
 
@@ -262,10 +265,10 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             CloseableHttpResponse response = null;
 
             try {
-                response = client.execute(httpPost);
+                response = postClient.execute(httpPost);
                 if (response.getStatusLine().getStatusCode() == 200) {
-                    LOG.info("Organization created OK");
-                    LOG.info("Response: " + EntityUtils.toString(response.getEntity()));
+                    LOG.debug("Organization created OK");
+                    //LOG.info("Response: " + EntityUtils.toString(response.getEntity()));
                     organizations.put(publisher_uri, orgname);
                 } else if (response.getStatusLine().getStatusCode() == 409) {
                     String ent = EntityUtils.toString(response.getEntity());
@@ -276,15 +279,12 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                     LOG.error("Response:" + ent);
                     throw exceptionFactory.failure("Error creating organization: " + ent);
                 }
-            } catch (ClientProtocolException e) {
-                LOG.error(e.getLocalizedMessage(), e);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.error(e.getLocalizedMessage(), e);
             } finally {
                 if (response != null) {
                     try {
                         response.close();
-                        client.close();
                     } catch (IOException e) {
                         LOG.error(e.getLocalizedMessage(), e);
                         throw exceptionFactory.failure("Error creating dataset");
@@ -299,49 +299,122 @@ public final class DcatAp11ToCkan implements Component.Sequential {
 
         JSONArray tags = new JSONArray();
         for (String keyword : keywords) {
-            tags.put(new JSONObject().put("name", keyword));
+            String safekeyword = fixKeyword(keyword);
+            if (safekeyword.length() >= 2) {
+                tags.put(new JSONObject().put("name", safekeyword));
+            }
         }
+        root.put("tags", tags);
 
         JSONArray resources = new JSONArray();
 
         if (!datasetID.isEmpty()) {
             root.put("name", datasetID);
         }
+
+        String title = executeSimpleSelectQuery("SELECT ?title WHERE {<" + datasetURI + "> <" + DCTERMS.TITLE + "> ?title FILTER(LANGMATCHES(LANG(?title), \"" + configuration.getLoadLanguage() + "\"))}", "title");
         if (!title.isEmpty()) {
             root.put("title", title);
         }
+        String description = executeSimpleSelectQuery("SELECT ?description WHERE {<" + datasetURI + "> <" + DCTERMS.DESCRIPTION + "> ?description FILTER(LANGMATCHES(LANG(?description), \"" + configuration.getLoadLanguage() + "\"))}", "description");
         if (!description.isEmpty()) {
             root.put("notes", description);
         }
+        String contactPoint = executeSimpleSelectQuery("SELECT ?contact WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + dcatAp11ToCkanVocabulary.VCARD_HAS_EMAIL + "> ?contact }", "contact");
         if (!contactPoint.isEmpty()) {
             root.put("maintainer_email", contactPoint);
         }
+        String curatorName = executeSimpleSelectQuery("SELECT ?name WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + dcatAp11ToCkanVocabulary.VCARD_FN + "> ?name }", "name");
         if (!curatorName.isEmpty()) {
             root.put("maintainer", curatorName);
         }
+        String issued = executeSimpleSelectQuery("SELECT ?issued WHERE {<" + datasetURI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
         if (!issued.isEmpty()) {
             root.put("metadata_created", issued);
         }
+        String modified = executeSimpleSelectQuery("SELECT ?modified WHERE {<" + datasetURI + "> <" + DCTERMS.MODIFIED + "> ?modified }", "modified");
         if (!modified.isEmpty()) {
             root.put("metadata_modified", modified);
         }
 
+        if (configuration.getProfile().equals(dcatAp11ToCkanVocabulary.PROFILES_NKOD.stringValue())) {
+            if (!publisher_uri.isEmpty()) {
+                root.put("publisher_uri", publisher_uri);
+            }
+            if (!publisher_name.isEmpty()) {
+                root.put("publisher_name", publisher_name);
+            }
+
+            String periodicity = executeSimpleSelectQuery("SELECT ?periodicity WHERE {<" + datasetURI + "> <"+ DCTERMS.ACCRUAL_PERIODICITY + "> ?periodicity }", "periodicity");
+            if (!periodicity.isEmpty()) {
+                root.put("frequency", periodicity);
+            }
+            String temporalStart = executeSimpleSelectQuery("SELECT ?temporalStart WHERE {<" + datasetURI + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
+            if (!temporalStart.isEmpty()) {
+                root.put("temporal_start", temporalStart);
+            }
+            String temporalEnd = executeSimpleSelectQuery("SELECT ?temporalEnd WHERE {<" + datasetURI + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_ENDDATE  + "> ?temporalEnd }", "temporalEnd");
+            if (!temporalEnd.isEmpty()) {
+                root.put("temporal_end", temporalEnd);
+            }
+            String schemaURL = executeSimpleSelectQuery("SELECT ?schema WHERE {<" + datasetURI + "> <"+ FOAF.PAGE + "> ?schema }", "schema");
+            if (!schemaURL.isEmpty()) {
+                root.put("schema", schemaURL);
+            }
+            String spatial = executeSimpleSelectQuery("SELECT ?spatial WHERE {<" + datasetURI + "> <"+ DCTERMS.SPATIAL + "> ?spatial }", "spatial");
+            if (!spatial.isEmpty()) {
+                root.put("spatial_uri", spatial);
+            }
+            LinkedList<String> themes = new LinkedList<>();
+            for (Map<String,Value> map: executeSelectQuery("SELECT ?theme WHERE {<" + datasetURI + "> <"+ dcatAp11ToCkanVocabulary.DCAT_THEME + "> ?theme }")) {
+                themes.add(map.get("theme").stringValue());
+            }
+            String concatThemes = "";
+            for (String theme: themes) { concatThemes += theme + " ";}
+            if (!concatThemes.isEmpty())  root.put("theme", concatThemes);
+
+        }
+
         //Distributions
+
+        LinkedList<String> distributions = new LinkedList<>();
+        for (Map<String, Value> map : executeSelectQuery("SELECT ?distribution WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_DISTRIBUTION + "> ?distribution }")) {
+            distributions.add(map.get("distribution").stringValue());
+        }
+
         for (String distribution : distributions) {
             JSONObject distro = new JSONObject();
 
             String dtitle = executeSimpleSelectQuery("SELECT ?title WHERE {<" + distribution + "> <" + DCTERMS.TITLE + "> ?title FILTER(LANGMATCHES(LANG(?title), \"" + configuration.getLoadLanguage() + "\"))}", "title");
-            String ddescription = executeSimpleSelectQuery("SELECT ?description WHERE {<" + distribution + "> <" + DCTERMS.DESCRIPTION + "> ?description FILTER(LANGMATCHES(LANG(?description), \"" + configuration.getLoadLanguage() + "\"))}", "description");
-            String dissued = executeSimpleSelectQuery("SELECT ?issued WHERE {<" + distribution + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
-            String dmodified = executeSimpleSelectQuery("SELECT ?modified WHERE {<" + distribution + "> <" + DCTERMS.MODIFIED + "> ?modified }", "modified");
-            String dwnld = executeSimpleSelectQuery("SELECT ?dwnld WHERE {<" + distribution + "> <" + DcatAp11ToCkanVocabulary.DCAT_DOWNLOADURL + "> ?dwnld }", "dwnld");
-
             if (!dtitle.isEmpty()) {
                 distro.put("name", dtitle);
             }
+            String ddescription = executeSimpleSelectQuery("SELECT ?description WHERE {<" + distribution + "> <" + DCTERMS.DESCRIPTION + "> ?description FILTER(LANGMATCHES(LANG(?description), \"" + configuration.getLoadLanguage() + "\"))}", "description");
             if (!ddescription.isEmpty()) {
                 distro.put("description", ddescription);
             }
+            //DCAT-AP v1.1: has to be an IRI from http://publications.europa.eu/mdr/authority/file-type/index.html
+            String dformat = executeSimpleSelectQuery("SELECT ?format WHERE {<" + distribution + "> <"+ DCTERMS.FORMAT + "> ?format }", "format");
+            if (!dformat.isEmpty() && codelists != null) {
+                String formatlabel = executeSimpleCodelistSelectQuery("SELECT ?formatlabel WHERE {<" + dformat + "> <"+ SKOS.PREF_LABEL + "> ?formatlabel FILTER(LANGMATCHES(LANG(?formatlabel), \"en\"))}", "formatlabel");
+                if (!formatlabel.isEmpty()) {
+                    distro.put("format", formatlabel);
+                }
+            }
+
+
+            String dwnld = executeSimpleSelectQuery("SELECT ?dwnld WHERE {<" + distribution + "> <" + dcatAp11ToCkanVocabulary.DCAT_DOWNLOADURL + "> ?dwnld }", "dwnld");
+            String access = executeSimpleSelectQuery("SELECT ?acc WHERE {<" + distribution + "> <" + dcatAp11ToCkanVocabulary.DCAT_ACCESSURL + "> ?acc }", "acc");
+
+            //we prefer downloadURL, but only accessURL is mandatory
+            if (dwnld == null || dwnld.isEmpty()) {
+                dwnld = access;
+                if (dwnld == null || dwnld.isEmpty()) {
+                    LOG.warn("Empty download and access URLs: " + datasetURI);
+                    continue;
+                }
+            }
+
             if (!dwnld.isEmpty()) {
                 distro.put("url", dwnld);
             }
@@ -361,11 +434,40 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                 resourceList.remove(id);
             }
 
+            String dissued = executeSimpleSelectQuery("SELECT ?issued WHERE {<" + distribution + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
             if (!dissued.isEmpty()) {
                 distro.put("created", dissued);
             }
+            String dmodified = executeSimpleSelectQuery("SELECT ?modified WHERE {<" + distribution + "> <" + DCTERMS.MODIFIED + "> ?modified }", "modified");
             if (!dmodified.isEmpty()) {
                 distro.put("last_modified", dmodified);
+            }
+
+            if (configuration.getProfile().equals(dcatAp11ToCkanVocabulary.PROFILES_NKOD.stringValue())) {
+                String dtemporalStart = executeSimpleSelectQuery("SELECT ?temporalStart WHERE {<" + distribution + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
+                if (!dtemporalStart.isEmpty()) {
+                    distro.put("temporal_start", dtemporalStart);
+                }
+                String dtemporalEnd = executeSimpleSelectQuery("SELECT ?temporalEnd WHERE {<" + distribution + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_ENDDATE  + "> ?temporalEnd }", "temporalEnd");
+                if (!dtemporalEnd.isEmpty()) {
+                    distro.put("temporal_end", dtemporalEnd);
+                }
+                String dspatial = executeSimpleSelectQuery("SELECT ?spatial WHERE {<" + distribution + "> <"+ DCTERMS.SPATIAL + "> ?spatial }", "spatial");
+                if (!dspatial.isEmpty()) {
+                    root.put("spatial_uri", dspatial);
+                }
+                String dschemaURL = executeSimpleSelectQuery("SELECT ?schema WHERE {<" + distribution + "> <"+ DCTERMS.CONFORMS_TO + "> ?schema }", "schema");
+                if (!dschemaURL.isEmpty()) {
+                    distro.put("describedBy", dschemaURL);
+                }
+                String dlicense = executeSimpleSelectQuery("SELECT ?license WHERE {<" + distribution + "> <"+ DCTERMS.LICENSE + "> ?license }", "license");
+                if (!dlicense.isEmpty()) {
+                    distro.put("license_link", dlicense);
+                }
+                String dmimetype = executeSimpleSelectQuery("SELECT ?format WHERE {<" + distribution + "> <"+ dcatAp11ToCkanVocabulary.DCAT_MEDIATYPE + "> ?format }", "format");
+                if (!dmimetype.isEmpty()) {
+                    distro.put("mimetype", dmimetype.replaceAll(".*\\/([^\\/]+\\/[^\\/]+)","$1"));
+                }
             }
 
             resources.put(distro);
@@ -376,23 +478,20 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             resources.put(resource.getValue());
         }
 
-        root.put("tags", tags);
         root.put("resources", resources);
 
-        if (!exists) {
+        //Create new dataset
+        if (!datasetExists) {
             JSONObject createRoot = new JSONObject();
+            CloseableHttpResponse response = null;
 
             createRoot.put("name", datasetID);
             createRoot.put("title", title);
-
-            if (configuration.isCreateCkanOrg()) {
+            if (publisher_uri != null && !publisher_uri.isEmpty()) {
                 createRoot.put("owner_org", organizations.get(publisher_uri));
-            } else {
-                createRoot.put("owner_org", orgID);
             }
 
             LOG.debug("Creating dataset in CKAN");
-            CloseableHttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
             HttpPost httpPost = new HttpPost(apiURI + "/package_create?id=" + datasetID);
             httpPost.addHeader(new BasicHeader("Authorization", configuration.getApiKey()));
 
@@ -402,13 +501,11 @@ public final class DcatAp11ToCkan implements Component.Sequential {
 
             httpPost.setEntity(new StringEntity(json, Charset.forName("utf-8")));
 
-            CloseableHttpResponse response = null;
-
             try {
-                response = client.execute(httpPost);
+                response = createClient.execute(httpPost);
                 if (response.getStatusLine().getStatusCode() == 200) {
-                    LOG.info("Dataset created OK");
-                    LOG.info("Response: " + EntityUtils.toString(response.getEntity()));
+                    LOG.debug("Dataset created OK");
+                    //LOG.info("Response: " + EntityUtils.toString(response.getEntity()));
                 } else if (response.getStatusLine().getStatusCode() == 409) {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Dataset already exists: " + ent);
@@ -418,15 +515,12 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                     LOG.error("Response:" + ent);
                     throw exceptionFactory.failure("Error creating dataset");
                 }
-            } catch (ClientProtocolException e) {
-                LOG.error(e.getLocalizedMessage(), e);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.error(e.getLocalizedMessage(), e);
             } finally {
                 if (response != null) {
                     try {
                         response.close();
-                        client.close();
                     } catch (IOException e) {
                         LOG.error(e.getLocalizedMessage(), e);
                         throw exceptionFactory.failure("Error creating dataset");
@@ -435,43 +529,51 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             }
         }
 
+        //Update existing dataset
         String json = root.toString();
-
         LOG.debug("Posting to CKAN");
-        CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(apiURI + "/package_update?id=" + datasetID);
         httpPost.addHeader(new BasicHeader("Authorization", configuration.getApiKey()));
 
-        LOG.trace(json);
+        LOG.debug(json);
 
         httpPost.setEntity(new StringEntity(json, Charset.forName("utf-8")));
-
         CloseableHttpResponse response = null;
 
         try {
-            response = client.execute(httpPost);
+            response = postClient.execute(httpPost);
             if (response.getStatusLine().getStatusCode() == 200) {
-                LOG.info("Response:" + EntityUtils.toString(response.getEntity()));
+                //LOG.info("Response:" + EntityUtils.toString(response.getEntity()));
             } else {
                 String ent = EntityUtils.toString(response.getEntity());
                 LOG.error("Response:" + ent);
                 throw exceptionFactory.failure("Error updating dataset");
             }
-        } catch (ClientProtocolException e) {
-            LOG.error(e.getLocalizedMessage(), e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error(e.getLocalizedMessage(), e);
         } finally {
             if (response != null) {
                 try {
                     response.close();
-                    client.close();
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
                     throw exceptionFactory.failure("Error updating dataset");
                 }
             }
         }
+
+        progressReport.entryProcessed();
+
+        try {
+            queryClient.close();
+            createClient.close();
+            postClient.close();
+        } catch (IOException e) {
+            LOG.error(e.getLocalizedMessage(), e);
+        }
+
+        progressReport.done();
+
     }
 
     private String executeSimpleSelectQuery(final String queryAsString, String bindingName) throws LpException {
@@ -479,6 +581,22 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(metadata.getGraph());
+            preparedQuery.setDataset(dataset);
+            //
+            final BindingSet binding = QueryResults.singleResult(preparedQuery.evaluate());
+            if (binding == null) {
+                return "";
+            } else {
+                return binding.getValue(bindingName).stringValue();
+            }
+        });
+    }
+
+    private String executeSimpleCodelistSelectQuery(final String queryAsString, String bindingName) throws LpException {
+        return codelists.execute((connection) -> {
+            final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
+            final SimpleDataset dataset = new SimpleDataset();
+            dataset.addDefaultGraph(codelists.getGraph());
             preparedQuery.setDataset(dataset);
             //
             final BindingSet binding = QueryResults.singleResult(preparedQuery.evaluate());

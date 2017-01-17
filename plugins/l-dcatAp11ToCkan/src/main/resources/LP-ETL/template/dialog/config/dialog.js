@@ -17,27 +17,40 @@ define([], function () {
             "$type" : "str",
             "$label" : "CKAN API Key"
         },
-        "createCkanOrg" : {
-            "$type" : "bool",
-            "$label" : "Create/Use CKAN organization from dataset publisher"
-        },
         "datasetID" : {
             "$type" : "str",
             "$label" : "CKAN dataset ID"
-        },
-        "organizationId" : {
-            "$type" : "str",
-            "$label" : "Dataset owner organization ID"
         },
         "loadLanguage" : {
             "$type" : "str",
             "$label" : "Load language (cs|en)"
         },
-        "overwrite" : {
-            "$type" : "bool",
-            "$label" : "Overwrite target CKAN record"
+        "profile" : {
+            "$type": "str",
+            "$label": "CKAN profile"
         }
     };
+
+    const PROFILES = [
+        {
+            "@id": "http://plugins.etl.linkedpipes.com/resource/l-dcatAp11ToCkan/profiles/CKAN",
+            "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Pure CKAN"
+                }
+            ]
+        },
+        {
+            "@id": "http://plugins.etl.linkedpipes.com/resource/l-dcatAp11ToCkan/profiles/CZ-NKOD",
+            "http://www.w3.org/2004/02/skos/core#prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Czech NKOD"
+                }
+            ]
+        }
+    ];
 
     function controller($scope, $service) {
 
@@ -50,6 +63,8 @@ define([], function () {
         $service.onStore = function () {
             dialogManager.save();
         };
+
+        $scope.profiles = PROFILES;
 
         dialogManager.load();
 
