@@ -1,47 +1,35 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc>
+<http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configurationDescription>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiUrl> ,
-        <http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiKey> ,
-        <http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/createCkanOrg> ,
-        <http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/datasetID> ,
-        <http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/organizationId> ,
-        <http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/loadLanguage> ,
-        <http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/overwrite> .
+    config:type <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#Configuration> ; 
+    config:member <http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiUri> ,
+        <http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiKey> ,
+        <http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/datasetID> ,
+        <http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/loadLanguage> ,
+        <http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/profile> .
 
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiUrl>
+<http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiUri>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiUrl> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiUrlControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-textHolder#apiUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-textHolder#apiUriControl> .
 
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiKey>
+<http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/apiKey>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKey> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKeyControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-textHolder#apiKey> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-textHolder#apiKeyControl> .
 
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/createCkanOrg>
+<http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/datasetID>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#createCkanOrg> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#createCkanOrgontrol> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-textHolder#datasetID> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-textHolder#datasetIDControl> .
 
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/datasetID>
+<http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/loadLanguage>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetID> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetIDControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-textHolder#loadLanguage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-textHolder#loadLanguageControl> .
 
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/organizationId>
+<http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/profile>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#organizationId> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#organizationIdControl> .
-
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/loadLanguage>
-    a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#loadLanguage> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#loadLanguageControl> .
-
-<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration/desc/overwrite>
-    a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#overwrite> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#overwriteControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-textHolder#profile> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-textHolder#profileControl> .

@@ -2,8 +2,8 @@
 <div>
     <div layout-gt-sm="row">
         <md-input-container class="md-block"
-                            ng-hide="dialog.apiUrl.hide"
-                            flex-gt-sm>
+                            flex-gt-sm
+                            ng-hide="dialog.apiUrl.hide">
             <label>CKAN Action API URL</label>
             <input type="url" ng-model="dialog.apiUrl.value"
                    ng-disabled="dialog.apiUrl.disabled || dialog.apiUrl.inherit"
@@ -32,20 +32,13 @@
                ng-disabled="dialog.loadLanguage.disabled || dialog.loadLanguage.inherit"
                placeholder="en">
     </md-input-container>
-    <md-switch ng-model="dialog.createCkanOrg.value"
-               ng-disabled="dialog.createCkanOrg.disabled || dialog.createCkanOrg.inherit"
-               ng-hide="dialog.createCkanOrg.hide">Create/Use CKAN organization
-        from dataset publisher
-    </md-switch>
-    <md-input-container class="md-block" ng-hide="dialog.organizationId.hide">
-        <label>Dataset owner organization ID</label>
-        <input ng-model="dialog.organizationId.value"
-               ng-hide="dialog.organizationId.hide"
-               ng-disabled="dialog.createCkanOrg.value || dialog.organizationId.disabled || dialog.organizationId.inherit"
-               placeholder="00000000-0000-0000-0000-000000000000">
+    <md-input-container class="md-block" ng-hide="dialog.profile.hide" flex-gt-sm>
+        <label>Profile</label>
+        <md-select ng-model="dialog.profile.value"
+                   ng-disabled="dialog.profile.disabled || dialog.profile.inherit">
+            <md-option ng-repeat="profile in profiles" value="{{profile['@id']}}">
+                <span ng-repeat="label in profile['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+            </md-option>
+        </md-select>
     </md-input-container>
-    <md-switch ng-model="dialog.overwrite.value"
-               ng-disabled="dialog.overwrite.disabled || dialog.overwrite.inherit"
-               ng-hide="dialog.overwrite.hide">Overwrite target CKAN record
-    </md-switch>
 </div>
