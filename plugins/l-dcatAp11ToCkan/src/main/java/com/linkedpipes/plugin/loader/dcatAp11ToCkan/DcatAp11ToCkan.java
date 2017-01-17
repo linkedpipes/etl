@@ -44,9 +44,9 @@ import org.openrdf.query.impl.SimpleDataset;
  *
  * @author Klímek Jakub
  */
-public final class dcatAp11ToCkan implements Component.Sequential {
+public final class DcatAp11ToCkan implements Component.Sequential {
 
-    private static final Logger LOG = LoggerFactory.getLogger(dcatAp11ToCkan.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DcatAp11ToCkan.class);
 
     @Component.InputPort(id = "Metadata")
     public SingleGraphDataUnit metadata;
@@ -55,7 +55,7 @@ public final class dcatAp11ToCkan implements Component.Sequential {
     public SingleGraphDataUnit codelists;
 
     @Component.Configuration
-    public dcatAp11ToCkanConfiguration configuration;
+    public DcatAp11ToCkanConfiguration configuration;
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
@@ -165,7 +165,7 @@ public final class dcatAp11ToCkan implements Component.Sequential {
         LOG.debug("Querying metadata for datasets");
 
         LinkedList<String> datasets = new LinkedList<>();
-        for (Map<String,Value> map: executeSelectQuery("SELECT ?d WHERE {?d a <" + dcatAp11ToCkanVocabulary.DCAT_DATASET_CLASS + ">}")) {
+        for (Map<String,Value> map: executeSelectQuery("SELECT ?d WHERE {?d a <" + DcatAp11ToCkanVocabulary.DCAT_DATASET_CLASS + ">}")) {
             datasets.add(map.get("d").stringValue());
         }
 
@@ -229,7 +229,7 @@ public final class dcatAp11ToCkan implements Component.Sequential {
         }
 
         LinkedList<String> keywords = new LinkedList<>();
-        for (Map<String, Value> map : executeSelectQuery("SELECT ?keyword WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_KEYWORD + "> ?keyword FILTER(LANGMATCHES(LANG(?keyword), \"" + configuration.getLoadLanguage() + "\"))}")) {
+        for (Map<String, Value> map : executeSelectQuery("SELECT ?keyword WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_KEYWORD + "> ?keyword FILTER(LANGMATCHES(LANG(?keyword), \"" + configuration.getLoadLanguage() + "\"))}")) {
             keywords.add(map.get("keyword").stringValue());
         }
 
@@ -320,11 +320,11 @@ public final class dcatAp11ToCkan implements Component.Sequential {
         if (!description.isEmpty()) {
             root.put("notes", description);
         }
-        String contactPoint = executeSimpleSelectQuery("SELECT ?contact WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + dcatAp11ToCkanVocabulary.VCARD_HAS_EMAIL + "> ?contact }", "contact");
+        String contactPoint = executeSimpleSelectQuery("SELECT ?contact WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + DcatAp11ToCkanVocabulary.VCARD_HAS_EMAIL + "> ?contact }", "contact");
         if (!contactPoint.isEmpty()) {
             root.put("maintainer_email", contactPoint);
         }
-        String curatorName = executeSimpleSelectQuery("SELECT ?name WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + dcatAp11ToCkanVocabulary.VCARD_FN + "> ?name }", "name");
+        String curatorName = executeSimpleSelectQuery("SELECT ?name WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_CONTACT_POINT + ">/<" + DcatAp11ToCkanVocabulary.VCARD_FN + "> ?name }", "name");
         if (!curatorName.isEmpty()) {
             root.put("maintainer", curatorName);
         }
@@ -337,7 +337,7 @@ public final class dcatAp11ToCkan implements Component.Sequential {
             root.put("metadata_modified", modified);
         }
 
-        if (configuration.getProfile().equals(dcatAp11ToCkanVocabulary.PROFILES_NKOD.stringValue())) {
+        if (configuration.getProfile().equals(DcatAp11ToCkanVocabulary.PROFILES_NKOD.stringValue())) {
             if (!publisher_uri.isEmpty()) {
                 root.put("publisher_uri", publisher_uri);
             }
@@ -349,11 +349,11 @@ public final class dcatAp11ToCkan implements Component.Sequential {
             if (!periodicity.isEmpty()) {
                 root.put("frequency", periodicity);
             }
-            String temporalStart = executeSimpleSelectQuery("SELECT ?temporalStart WHERE {<" + datasetURI + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
+            String temporalStart = executeSimpleSelectQuery("SELECT ?temporalStart WHERE {<" + datasetURI + "> <"+ DCTERMS.TEMPORAL + ">/<" + DcatAp11ToCkanVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
             if (!temporalStart.isEmpty()) {
                 root.put("temporal_start", temporalStart);
             }
-            String temporalEnd = executeSimpleSelectQuery("SELECT ?temporalEnd WHERE {<" + datasetURI + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_ENDDATE  + "> ?temporalEnd }", "temporalEnd");
+            String temporalEnd = executeSimpleSelectQuery("SELECT ?temporalEnd WHERE {<" + datasetURI + "> <"+ DCTERMS.TEMPORAL + ">/<" + DcatAp11ToCkanVocabulary.SCHEMA_ENDDATE  + "> ?temporalEnd }", "temporalEnd");
             if (!temporalEnd.isEmpty()) {
                 root.put("temporal_end", temporalEnd);
             }
@@ -366,7 +366,7 @@ public final class dcatAp11ToCkan implements Component.Sequential {
                 root.put("spatial_uri", spatial);
             }
             LinkedList<String> themes = new LinkedList<>();
-            for (Map<String,Value> map: executeSelectQuery("SELECT ?theme WHERE {<" + datasetURI + "> <"+ dcatAp11ToCkanVocabulary.DCAT_THEME + "> ?theme }")) {
+            for (Map<String,Value> map: executeSelectQuery("SELECT ?theme WHERE {<" + datasetURI + "> <"+ DcatAp11ToCkanVocabulary.DCAT_THEME + "> ?theme }")) {
                 themes.add(map.get("theme").stringValue());
             }
             String concatThemes = "";
@@ -378,7 +378,7 @@ public final class dcatAp11ToCkan implements Component.Sequential {
         //Distributions
 
         LinkedList<String> distributions = new LinkedList<>();
-        for (Map<String, Value> map : executeSelectQuery("SELECT ?distribution WHERE {<" + datasetURI + "> <" + dcatAp11ToCkanVocabulary.DCAT_DISTRIBUTION + "> ?distribution }")) {
+        for (Map<String, Value> map : executeSelectQuery("SELECT ?distribution WHERE {<" + datasetURI + "> <" + DcatAp11ToCkanVocabulary.DCAT_DISTRIBUTION + "> ?distribution }")) {
             distributions.add(map.get("distribution").stringValue());
         }
 
@@ -403,8 +403,8 @@ public final class dcatAp11ToCkan implements Component.Sequential {
             }
 
 
-            String dwnld = executeSimpleSelectQuery("SELECT ?dwnld WHERE {<" + distribution + "> <" + dcatAp11ToCkanVocabulary.DCAT_DOWNLOADURL + "> ?dwnld }", "dwnld");
-            String access = executeSimpleSelectQuery("SELECT ?acc WHERE {<" + distribution + "> <" + dcatAp11ToCkanVocabulary.DCAT_ACCESSURL + "> ?acc }", "acc");
+            String dwnld = executeSimpleSelectQuery("SELECT ?dwnld WHERE {<" + distribution + "> <" + DcatAp11ToCkanVocabulary.DCAT_DOWNLOADURL + "> ?dwnld }", "dwnld");
+            String access = executeSimpleSelectQuery("SELECT ?acc WHERE {<" + distribution + "> <" + DcatAp11ToCkanVocabulary.DCAT_ACCESSURL + "> ?acc }", "acc");
 
             //we prefer downloadURL, but only accessURL is mandatory
             if (dwnld == null || dwnld.isEmpty()) {
@@ -443,12 +443,12 @@ public final class dcatAp11ToCkan implements Component.Sequential {
                 distro.put("last_modified", dmodified);
             }
 
-            if (configuration.getProfile().equals(dcatAp11ToCkanVocabulary.PROFILES_NKOD.stringValue())) {
-                String dtemporalStart = executeSimpleSelectQuery("SELECT ?temporalStart WHERE {<" + distribution + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
+            if (configuration.getProfile().equals(DcatAp11ToCkanVocabulary.PROFILES_NKOD.stringValue())) {
+                String dtemporalStart = executeSimpleSelectQuery("SELECT ?temporalStart WHERE {<" + distribution + "> <"+ DCTERMS.TEMPORAL + ">/<" + DcatAp11ToCkanVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
                 if (!dtemporalStart.isEmpty()) {
                     distro.put("temporal_start", dtemporalStart);
                 }
-                String dtemporalEnd = executeSimpleSelectQuery("SELECT ?temporalEnd WHERE {<" + distribution + "> <"+ DCTERMS.TEMPORAL + ">/<" + dcatAp11ToCkanVocabulary.SCHEMA_ENDDATE  + "> ?temporalEnd }", "temporalEnd");
+                String dtemporalEnd = executeSimpleSelectQuery("SELECT ?temporalEnd WHERE {<" + distribution + "> <"+ DCTERMS.TEMPORAL + ">/<" + DcatAp11ToCkanVocabulary.SCHEMA_ENDDATE  + "> ?temporalEnd }", "temporalEnd");
                 if (!dtemporalEnd.isEmpty()) {
                     distro.put("temporal_end", dtemporalEnd);
                 }
@@ -464,7 +464,7 @@ public final class dcatAp11ToCkan implements Component.Sequential {
                 if (!dlicense.isEmpty()) {
                     distro.put("license_link", dlicense);
                 }
-                String dmimetype = executeSimpleSelectQuery("SELECT ?format WHERE {<" + distribution + "> <"+ dcatAp11ToCkanVocabulary.DCAT_MEDIATYPE + "> ?format }", "format");
+                String dmimetype = executeSimpleSelectQuery("SELECT ?format WHERE {<" + distribution + "> <"+ DcatAp11ToCkanVocabulary.DCAT_MEDIATYPE + "> ?format }", "format");
                 if (!dmimetype.isEmpty()) {
                     distro.put("mimetype", dmimetype.replaceAll(".*\\/([^\\/]+\\/[^\\/]+)","$1"));
                 }

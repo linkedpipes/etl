@@ -6,25 +6,25 @@ import com.linkedpipes.etl.component.api.service.RdfToPojo;
  *
  * @author Klímek Jakub
  */
-@RdfToPojo.Type(uri = dcatAp11ToCkanConfigVocabulary.CONFIG_CLASS)
-public class dcatAp11ToCkanConfiguration {
+@RdfToPojo.Type(uri = DcatAp11ToCkanConfigVocabulary.CONFIG_CLASS)
+public class DcatAp11ToCkanConfiguration {
 
-    @RdfToPojo.Property(uri = dcatAp11ToCkanConfigVocabulary.API_URL)
+    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.API_URL)
     private String apiUri;
 
-    @RdfToPojo.Property(uri = dcatAp11ToCkanConfigVocabulary.API_KEY)
+    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.API_KEY)
     private String apiKey ;
 
-    @RdfToPojo.Property(uri = dcatAp11ToCkanConfigVocabulary.DATASET_ID)
+    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.DATASET_ID)
     private String datasetID;
 
-    @RdfToPojo.Property(uri = dcatAp11ToCkanConfigVocabulary.LOAD_LANGUAGE)
+    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.LOAD_LANGUAGE)
     private String loadLanguage;
 
-    @RdfToPojo.Property(uri = dcatAp11ToCkanConfigVocabulary.PROFILE)
+    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.PROFILE)
     private String profile ;
 
-    public dcatAp11ToCkanConfiguration() {
+    public DcatAp11ToCkanConfiguration() {
     }
 
     public String getApiUri() {

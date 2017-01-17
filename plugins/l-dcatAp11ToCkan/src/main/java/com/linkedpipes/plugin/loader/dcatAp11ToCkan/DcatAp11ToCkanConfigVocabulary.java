@@ -4,7 +4,7 @@ package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
  *
  * @author Klímek Jakub
  */
-public class dcatAp11ToCkanConfigVocabulary {
+public class DcatAp11ToCkanConfigVocabulary {
 
     private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#";
 
