@@ -173,7 +173,7 @@ public final class Xslt implements Component.Sequential {
      * @return
      */
     private static String addExtension(String fileName, String extension) {
-        if (extension == null) {
+        if (extension == null || extension.isEmpty()) {
             return fileName;
         } else {
             return fileName + "." + extension;

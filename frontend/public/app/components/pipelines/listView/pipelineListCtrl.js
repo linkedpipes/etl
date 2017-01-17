@@ -29,8 +29,9 @@ define([], function () {
         };
 
         $scope.search.tags.querySearch = function (query) {
+            query = query.toLowerCase();
             return $scope.search.tags.all.filter(function (item) {
-                return item.indexOf(query) !== -1;
+                return item.toLowerCase().indexOf(query) !== -1;
             });
         };
 

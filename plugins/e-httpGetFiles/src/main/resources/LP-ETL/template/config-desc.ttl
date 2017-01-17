@@ -4,7 +4,8 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/hardRedirect> .
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/hardRedirect> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threads> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError>
     a config:ConfigurationMember ;
@@ -15,3 +16,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirect> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirectControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threads>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#threadsControl> .

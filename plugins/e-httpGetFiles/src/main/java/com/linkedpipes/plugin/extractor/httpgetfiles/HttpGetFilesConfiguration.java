@@ -1,13 +1,10 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
+
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author Škoda Petr
- */
 @RdfToPojo.Type(uri = HttpGetFilesVocabulary.CONFIG)
 public class HttpGetFilesConfiguration {
 
@@ -75,8 +72,7 @@ public class HttpGetFilesConfiguration {
             return headers;
         }
 
-        public void setHeaders(
-                List<Header> headers) {
+        public void setHeaders(List<Header> headers) {
             this.headers = headers;
         }
     }
@@ -103,6 +99,9 @@ public class HttpGetFilesConfiguration {
 
     @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_HEADER)
     private List<Header> headers = new LinkedList<>();
+
+    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_THREADS)
+    private int threads = 1;
 
     public HttpGetFilesConfiguration() {
     }
@@ -135,8 +134,15 @@ public class HttpGetFilesConfiguration {
         return headers;
     }
 
-    public void setHeaders(
-            List<Header> headers) {
+    public void setHeaders(List<Header> headers) {
         this.headers = headers;
+    }
+
+    public int getThreads() {
+        return threads;
+    }
+
+    public void setThreads(int threads) {
+        this.threads = threads;
     }
 }

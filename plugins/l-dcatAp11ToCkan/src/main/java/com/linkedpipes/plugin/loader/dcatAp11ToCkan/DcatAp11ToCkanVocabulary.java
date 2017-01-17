@@ -7,7 +7,7 @@ import org.openrdf.model.impl.SimpleValueFactory;
  *
  * @author Klímek Jakub
  */
-public final class DcatAp11ToCkanVocabulary {
+public class DcatAp11ToCkanVocabulary {
 
     public static final String SCHEMA = "http://schema.org/";
 
@@ -22,6 +22,10 @@ public final class DcatAp11ToCkanVocabulary {
     public static final String WDRS = "http://www.w3.org/2007/05/powder-s#";
 
     public static final String VCARD = "http://www.w3.org/2006/vcard/ns#";
+
+    public static final String LODCZCKAN = "http://linked.opendata.cz/ontology/ckan/";
+
+    public static final String PROFILES = "http://plugins.etl.linkedpipes.com/resource/l-dcatAp11ToCkan/profiles/";
 
     public static final IRI DCAT_DISTRIBUTION_CLASS;
 
@@ -67,6 +71,12 @@ public final class DcatAp11ToCkanVocabulary {
 
     public static final IRI DCAT_CONTACT_POINT;
 
+    public static final IRI LODCZCKAN_DATASET_ID;
+
+    public static final IRI PROFILES_CKAN;
+
+    public static final IRI PROFILES_NKOD;
+
     static {
         final SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -92,6 +102,10 @@ public final class DcatAp11ToCkanVocabulary {
         VCARD_VCARD_CLASS = valueFactory.createIRI(VCARD + "VCard");
         VCARD_HAS_EMAIL = valueFactory.createIRI(VCARD + "hasEmail");
         VCARD_FN = valueFactory.createIRI(VCARD + "fn");
+        LODCZCKAN_DATASET_ID = valueFactory.createIRI(LODCZCKAN + "datasetID");
+
+        PROFILES_CKAN = valueFactory.createIRI(PROFILES + "CKAN");
+        PROFILES_NKOD = valueFactory.createIRI(PROFILES + "CZ-NKOD");
     }
 
 }
