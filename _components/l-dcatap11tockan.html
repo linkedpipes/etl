@@ -48,6 +48,10 @@ Loader, loads <a href="https://joinup.ec.europa.eu/asset/dcat_application_profil
         This can be a local copy, or a fresh download.
         See the <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a> for a typical usage.
         </p>
+        <p>
+        Note that when there is information about a dataset publisher in the input data, mainly its name, and there is a matching Organization in the target CKAN, the component will try to register the CKAN dataset in the CKAN organization.
+        When there is no such organization in the target CKAN, the component will try to create one.
+        </p>
         <p class="flow-text">Currently, there is only one additional profile intended to be used with CKAN catalogs extended with the <a href="https://github.com/jakubklimek/ckanext-odczdataset">CKAN extension for Czech NKOD</a>.
         This extension supports all <a href="http://opendata.gov.cz/nastroj:ckan-api">metadata fields required</a> by the <a href="http://data.gov.cz">Czech National Open Data Catalog</a>.
         </p>
