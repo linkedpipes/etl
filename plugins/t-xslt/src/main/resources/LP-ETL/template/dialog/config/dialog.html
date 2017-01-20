@@ -6,6 +6,12 @@
                ng-disabled="dialog.extension.disabled || dialog.extension.inherit"
                placeholder="xml">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.threads.hide">
+        <label>Number of threads used for download</label>
+        <input ng-model="dialog.threads.value"
+               ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
+               type="number" placeholder="1" min="1">
+    </md-input-container>
     <md-switch ng-model="dialog.skipOnError.value"
                ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit"
                ng-hide="dialog.skipOnError.hide">Skip on error
