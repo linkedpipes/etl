@@ -7,6 +7,7 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import net.sf.saxon.s9api.SaxonApiException;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -23,9 +24,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * @author Škoda Petr
- */
 public final class Xslt implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Xslt.class);
@@ -119,8 +117,14 @@ public final class Xslt implements Component.Sequential {
                 configuration.getThreads());
         final AtomicInteger counter = new AtomicInteger();
         for (int i = 0; i < configuration.getThreads(); ++i) {
-            executor.submit(new XsltWorker(workQueue, exceptions, counter,
-                    configuration.isSkipOnError(), size));
+            XsltWorker worker = new XsltWorker(workQueue, exceptions, counter,
+                    configuration.isSkipOnError(), size);
+            try {
+                worker.initialize(configuration.getXsltTemplate());
+            } catch (SaxonApiException ex) {
+                throw exceptionFactory.failure("Can't initialize XSLT.", ex);
+            }
+            executor.submit(worker);
         }
         executor.shutdown();
         while (true) {
@@ -138,14 +142,14 @@ public final class Xslt implements Component.Sequential {
             int errorCounter = 0;
             for (Exception exception : exceptions) {
                 ++errorCounter;
-                LOG.error("Can't download.", exception);
+                LOG.error("Can't transform file.", exception);
             }
-            LOG.info("Downloaded {}/{}", errorCounter, size);
+            LOG.info("Transformed {}/{}", errorCounter, size);
             if (!configuration.isSkipOnError()) {
                 throw exceptionFactory.failure("Can't transform all files.");
             }
         } else {
-            LOG.info("Downloaded {}/{}", size, size);
+            LOG.info("Transformed {}/{}", size, size);
         }
 
     }

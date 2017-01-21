@@ -103,7 +103,7 @@ class XsltWorker implements Callable<Object> {
             boolean deleteFile = false;
             final Serializer output = new Serializer(payload.output);
             try {
-                transformer.setSource(new StreamSource(payload.output));
+                transformer.setSource(new StreamSource(payload.entry.toFile()));
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
