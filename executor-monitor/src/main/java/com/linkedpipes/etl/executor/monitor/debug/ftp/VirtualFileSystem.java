@@ -234,6 +234,8 @@ public class VirtualFileSystem {
                 return null;
             }
         }
+        // Make sure the content of the data unit is loaded.
+        dataUnit.loadDebugDirectories(execution.getDirectory());
         // Search for a directory in the data unit. The file
         // can be in any of the debugging directories.
         for (File directory : dataUnit.getDebugDirectories()) {
