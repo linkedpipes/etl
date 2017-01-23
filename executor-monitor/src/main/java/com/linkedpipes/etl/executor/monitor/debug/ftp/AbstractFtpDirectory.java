@@ -7,6 +7,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
+/**
+ * Represent an abstract directory.
+ */
 abstract class AbstractFtpDirectory implements FtpFile {
 
     /**
@@ -37,9 +40,9 @@ abstract class AbstractFtpDirectory implements FtpFile {
         }
         // Strip the last '/'.
         String shortName = ftpPath;
-        int filelen = ftpPath.length();
-        if (shortName.charAt(filelen - 1) == '/') {
-            shortName = shortName.substring(0, filelen - 1);
+        int fileLength = ftpPath.length();
+        if (shortName.charAt(fileLength - 1) == '/') {
+            shortName = shortName.substring(0, fileLength - 1);
         }
         // Return from the last '/'.
         int slashIndex = shortName.lastIndexOf('/');

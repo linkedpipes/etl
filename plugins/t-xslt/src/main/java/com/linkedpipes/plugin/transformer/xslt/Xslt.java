@@ -7,7 +7,7 @@ import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import net.sf.saxon.s9api.*;
+import net.sf.saxon.s9api.SaxonApiException;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -16,16 +16,14 @@ import org.openrdf.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class Xslt implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(Xslt.class);
@@ -50,18 +48,6 @@ public final class Xslt implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        final Processor processor = new Processor(false);
-        processor.registerExtensionFunction(UUIDGenerator.getInstance());
-
-        final XsltCompiler compiler = processor.newXsltCompiler();
-        final XsltExecutable executable;
-        try {
-            executable = compiler.compile(new StreamSource(
-                    new StringReader(configuration.getXsltTemplate())));
-        } catch (SaxonApiException ex) {
-            throw exceptionFactory.failure(
-                    "Can't compile template.", ex);
-        }
         // Load name mapping from input to output.
         final Map<String, String> nameMapping = new HashMap<>();
         parametersRdf.execute((connection) -> {
@@ -78,27 +64,30 @@ public final class Xslt implements Component.Sequential {
                         binding.getValue("outputName").stringValue());
             }
         });
-        //
-        progressReport.start(inputFiles.size());
+        // Prepare
+        final ConcurrentLinkedQueue<XsltWorker.Payload> workQueue =
+                new ConcurrentLinkedQueue<>();
+        final ConcurrentLinkedQueue<Exception> exceptions =
+                new ConcurrentLinkedQueue<>();
         for (FilesDataUnit.Entry entry : inputFiles) {
-            LOG.debug("Processing: {}", entry.getFileName());
-            final File inputFile = entry.toFile();
+            final XsltWorker.Payload payload = new XsltWorker.Payload();
+            payload.entry = entry;
             // Prepare output name.
-            final File outputFile;
             if (nameMapping.containsKey(entry.getFileName())) {
-                outputFile = outputFiles.createFile(
+                payload.output = outputFiles.createFile(
                         nameMapping.get(entry.getFileName())).toFile();
             } else {
-                outputFile = outputFiles.createFile(addExtension(
+                payload.output = outputFiles.createFile(addExtension(
                         entry.getFileName(),
                         configuration.getNewExtension())).toFile();
             }
             // Prepare transformer.
-            final XsltTransformer transformer = executable.load();
+
             if (parametersRdf != null) {
                 LOG.debug("Reading parameters.");
                 parametersRdf.execute((connection) -> {
-                    final String strQuery = createParametersQuery(entry.getFileName());
+                    final String strQuery =
+                            createParametersQuery(entry.getFileName());
                     final TupleQuery query = connection.prepareTupleQuery(
                             QueryLanguage.SPARQL, strQuery);
                     final SimpleDataset dataset = new SimpleDataset();
@@ -114,52 +103,55 @@ public final class Xslt implements Component.Sequential {
                         //
                         LOG.debug("Parameter: {} = {}", name, value);
                         //
-                        transformer.setParameter(new QName(name),
-                                new XdmAtomicValue(value));
+                        payload.parameter.add(
+                                new XsltWorker.Parameter(name, value));
+
                     }
                 });
             }
-            // Transform
-            LOG.debug("Transforming ...");
-            boolean deleteFile = false;
-            final Serializer output = new Serializer(outputFile);
+            workQueue.add(payload);
+        }
+        // Execute.
+        long size = inputFiles.size();
+        final ExecutorService executor = Executors.newFixedThreadPool(
+                configuration.getThreads());
+        final AtomicInteger counter = new AtomicInteger();
+        for (int i = 0; i < configuration.getThreads(); ++i) {
+            XsltWorker worker = new XsltWorker(workQueue, exceptions, counter,
+                    configuration.isSkipOnError(), size);
             try {
-                transformer.setSource(new StreamSource(inputFile));
-                transformer.setDestination(output);
-                transformer.transform();
+                worker.initialize(configuration.getXsltTemplate());
             } catch (SaxonApiException ex) {
-                if (configuration.isSkipOnError()) {
-                    LOG.error("Can't transform file: {}",
-                            entry.getFileName(), ex);
-                    deleteFile = true;
-                } else {
-                    throw exceptionFactory.failure(
-                            "Can't transform file.", ex);
-                }
-            } finally {
-                // Clear document cache.
-                try {
-                    output.close();
-                } catch (SaxonApiException ex) {
-                    LOG.warn("Can't close output.", ex);
-                }
-                transformer.getUnderlyingController().clearDocumentPool();
-                try {
-                    transformer.close();
-                } catch (SaxonApiException ex) {
-                    LOG.warn("Can't close transformer.", ex);
-                }
+                throw exceptionFactory.failure("Can't initialize XSLT.", ex);
             }
-            // If the transformation fail, we may end up with incomplete
-            // output file. So we need to delete it after the output
-            // streams are closed.
-            if (deleteFile) {
-                outputFile.delete();
+            executor.submit(worker);
+        }
+        executor.shutdown();
+        while (true) {
+            try {
+                if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    break;
+                }
+            } catch (InterruptedException ex) {
+                // Ignore.
             }
-            //
-            progressReport.entryProcessed();
         }
         progressReport.done();
+        // Check exceptions.
+        if (!exceptions.isEmpty()) {
+            int errorCounter = 0;
+            for (Exception exception : exceptions) {
+                ++errorCounter;
+                LOG.error("Can't transform file.", exception);
+            }
+            LOG.info("Transformed {}/{}", errorCounter, size);
+            if (!configuration.isSkipOnError()) {
+                throw exceptionFactory.failure("Can't transform all files.");
+            }
+        } else {
+            LOG.info("Transformed {}/{}", size, size);
+        }
+
     }
 
     /**
@@ -191,12 +183,17 @@ public final class Xslt implements Component.Sequential {
     private static String createNamesQuery() {
         return ""
                 + "SELECT ?fileName ?outputName WHERE {\n"
-                + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
+                +
+                "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
                 + "        \n"
-                + "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> ?fileName ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/outputName> ?outputName .\n"
+                +
+                "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> ?fileName ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/outputName> ?outputName .\n"
                 + "}";
     }
 
@@ -210,18 +207,26 @@ public final class Xslt implements Component.Sequential {
     private static String createParametersQuery(String fileName) {
         return ""
                 + "SELECT ?name ?value WHERE {\n"
-                + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
+                +
+                "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
                 + "        \n"
-                + "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> \""
+                +
+                "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> \""
                 + fileName
                 + "\" ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameter> ?parameter .\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameter> ?parameter .\n"
                 + "        \n"
-                + "    ?parameter a <http://etl.linkedpipes.com/ontology/components/t-xslt/Parameter> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterValue> ?value ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterName> ?name .\n"
+                +
+                "    ?parameter a <http://etl.linkedpipes.com/ontology/components/t-xslt/Parameter> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterValue> ?value ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterName> ?name .\n"
                 + "}";
     }
 

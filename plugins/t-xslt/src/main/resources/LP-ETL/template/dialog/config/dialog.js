@@ -18,6 +18,10 @@ define([], function () {
         "skipOnError": {
             "$type" : "bool",
             "$label": "Skip on error"
+        },
+        "threads" : {
+            "$type": "int",
+            "$label": "Number of threads used for transformation"
         }
     };
 

@@ -101,6 +101,10 @@ public class VirtualFileSystem {
             return result;
         }
 
+        @Override
+        public Object getPhysicalFile() {
+            return null;
+        }
     }
 
     private class ExecutionDirectory extends AbstractFtpDirectory {
@@ -121,6 +125,11 @@ public class VirtualFileSystem {
                         ftpPath + "/" + dataUnit.getDebugName()));
             }
             return result;
+        }
+
+        @Override
+        public Object getPhysicalFile() {
+            return null;
         }
 
     }
@@ -165,6 +174,11 @@ public class VirtualFileSystem {
                 }
             }
             return result;
+        }
+
+        @Override
+        public Object getPhysicalFile() {
+            return null;
         }
 
     }
@@ -220,6 +234,8 @@ public class VirtualFileSystem {
                 return null;
             }
         }
+        // Make sure the content of the data unit is loaded.
+        dataUnit.loadDebugDirectories(execution.getDirectory());
         // Search for a directory in the data unit. The file
         // can be in any of the debugging directories.
         for (File directory : dataUnit.getDebugDirectories()) {
@@ -237,7 +253,12 @@ public class VirtualFileSystem {
      * @return Null in case of an invalid path.
      */
     Path resolvePath(String base, String path) {
-        return resolvePath(base + '/' + path);
+        if (path.startsWith("/")) {
+            // Path from the root element.
+            return resolvePath(path);
+        } else {
+            return resolvePath(base + '/' + path);
+        }
     }
 
     FtpFile getFile(Path path) {
