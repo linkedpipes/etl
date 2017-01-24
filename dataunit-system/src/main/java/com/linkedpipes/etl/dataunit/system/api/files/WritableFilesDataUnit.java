@@ -17,4 +17,11 @@ public interface WritableFilesDataUnit extends FilesDataUnit {
      */
     public File getRootDirectory();
 
+    /**
+     * Add external directory as a reference.
+     *
+     * @param directory
+     */
+    public void addDirectory(File directory);
+
 }

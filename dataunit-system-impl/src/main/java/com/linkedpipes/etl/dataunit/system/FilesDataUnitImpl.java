@@ -203,4 +203,8 @@ public final class FilesDataUnitImpl implements ManageableFilesDataUnit {
         return size;
     }
 
+    @Override
+    public void addDirectory(File directory) {
+        this.readRootDirectories.add(directory);
+    }
 }
