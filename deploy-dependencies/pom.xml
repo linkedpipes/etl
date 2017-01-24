@@ -589,6 +589,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-chunkedToTurtle</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/t-chunkedToTurtle/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-fileHasher</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/t-fileHasher/</outputDirectory>
