@@ -51,6 +51,12 @@
                ng-hide="dialog.clearLoadList.hide">
         Clear Virtuoso load list
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.loaderCount.hide">
+        <label>Number of loaders to use</label>
+        <input ng-model="dialog.loaderCount.value"
+               ng-disabled="dialog.loaderCount.disabled || dialog.loaderCount.inherit"
+               type="number" placeholder="1" min="1">
+    </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.updateInterval.hide">
         <label>Status update interval in seconds</label>
         <input type="number" ng-model="dialog.updateInterval.value"

@@ -44,6 +44,10 @@ define([], function () {
         "updateInterval" : {
             "$type" : "int",
             "$label" : "Status update interval"
+        },
+        "loaderCount" : {
+            "$type" : "int",
+            "$label" : "Number of loaders to use"
         }
     };
 
