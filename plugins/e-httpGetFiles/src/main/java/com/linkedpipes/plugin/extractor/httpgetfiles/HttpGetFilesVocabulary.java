@@ -36,4 +36,7 @@ public final class HttpGetFilesVocabulary {
     public static final String HAS_KEY = PREFIX + "key";
 
     public static final String HAS_VALUE = PREFIX + "value";
+
+    public static final String HAS_DETAIL_LOG = PREFIX + "detailLog";
+
 }
