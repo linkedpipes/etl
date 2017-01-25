@@ -113,12 +113,13 @@ public final class Xslt implements Component.Sequential {
         }
         // Execute.
         long size = inputFiles.size();
+        progressReport.start(size);
         final ExecutorService executor = Executors.newFixedThreadPool(
                 configuration.getThreads());
         final AtomicInteger counter = new AtomicInteger();
         for (int i = 0; i < configuration.getThreads(); ++i) {
             XsltWorker worker = new XsltWorker(workQueue, exceptions, counter,
-                    configuration.isSkipOnError(), size);
+                    configuration.isSkipOnError(), size, progressReport);
             try {
                 worker.initialize(configuration.getXsltTemplate());
             } catch (SaxonApiException ex) {
@@ -136,7 +137,6 @@ public final class Xslt implements Component.Sequential {
                 // Ignore.
             }
         }
-        progressReport.done();
         // Check exceptions.
         if (!exceptions.isEmpty()) {
             int errorCounter = 0;
@@ -151,7 +151,8 @@ public final class Xslt implements Component.Sequential {
         } else {
             LOG.info("Transformed {}/{}", size, size);
         }
-
+        //
+        progressReport.done();
     }
 
     /**

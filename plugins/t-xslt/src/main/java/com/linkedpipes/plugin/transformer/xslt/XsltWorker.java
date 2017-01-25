@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.transformer.xslt;
 
+import com.linkedpipes.etl.component.api.service.ProgressReport;
 import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
 import net.sf.saxon.s9api.*;
 import org.slf4j.Logger;
@@ -61,15 +62,18 @@ class XsltWorker implements Callable<Object> {
 
     private final long workSize;
 
+    private ProgressReport progressReport;
+
     public XsltWorker(ConcurrentLinkedQueue<Payload> workQueue,
             ConcurrentLinkedQueue<Exception> exceptions,
             AtomicInteger counter, boolean isSkipOnError,
-            long workSize) {
+            long workSize, ProgressReport progressReport) {
         this.workQueue = workQueue;
         this.exceptions = exceptions;
         this.counter = counter;
         this.isSkipOnError = isSkipOnError;
         this.workSize = workSize;
+        this.progressReport = progressReport;
     }
 
     public void initialize(String template) throws SaxonApiException {
@@ -125,6 +129,7 @@ class XsltWorker implements Callable<Object> {
             if (deleteFile) {
                 payload.output.delete();
             }
+            progressReport.entryProcessed();
         }
         // Close the transformer.
         try {
