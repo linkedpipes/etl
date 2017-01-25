@@ -1,0 +1,15 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.format.hide" flex>
+        <label>Format</label>
+        <md-select ng-model="dialog.format.value"
+                   ng-disabled="dialog.format.disabled || dialog.format.inherit">
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-streamCompression#gzip">
+                gzip
+            </md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-streamCompression#bzip2">
+                bzip2
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>
