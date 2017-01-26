@@ -13,6 +13,11 @@ import org.slf4j.LoggerFactory;
 import virtuoso.sesame2.driver.VirtuosoRepository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public final class Virtuoso implements Component.Sequential {
 
@@ -115,13 +120,27 @@ public final class Virtuoso implements Component.Sequential {
             LOG.info("Nothing to do. Stopping.");
             return;
         }
-        // Start at least one loader.
-        startLoading();
-        for (int i = 1; i < configuration.getLoaderCount(); ++i) {
-            startLoading();
+        // Start loading.
+        int loaders = configuration.getLoaderCount() > 1 ?
+                configuration.getLoaderCount() : 1;
+        final ExecutorService executor = Executors.newFixedThreadPool(loaders);
+        final List<LoadWorker> workers = new ArrayList<>(loaders);
+        for (int i = 0; i < loaders; ++i) {
+            final LoadWorker worker =
+                    new LoadWorker(configuration, exceptionFactory);
+            executor.submit(worker);
+            workers.add(worker);
         }
-        // Check for status - periodic and final.
         while (true) {
+            // Check workers.
+            try {
+                if (executor.awaitTermination(100, TimeUnit.MILLISECONDS)) {
+                    break;
+                }
+            } catch (InterruptedException ex) {
+                // Ignore.
+            }
+            // Check for status.
             final Connection connectionForStatusCheck = getSqlConnection();
             try (PreparedStatement statement = connectionForStatusCheck
                     .prepareStatement(SQL_QUERY_FINISHED)) {
@@ -152,6 +171,20 @@ public final class Virtuoso implements Component.Sequential {
                 // Do nothing here.
             }
         }
+        // Wait for shutdown.
+        LOG.warn("Awaiting termination ...");
+        executor.shutdown();
+        while (true) {
+            try {
+                if (executor.awaitTermination(100, TimeUnit.MILLISECONDS)) {
+                    break;
+                }
+            } catch (InterruptedException ex) {
+                // Ignore.
+            }
+        }
+        LOG.warn("Awaiting termination ... done");
+        //
         if (configuration.isClearLoadList()) {
             final Connection connectionForDelete = getSqlConnection();
             // Delete from loading table - made optional.
@@ -169,6 +202,13 @@ public final class Virtuoso implements Component.Sequential {
                 }
             }
         }
+        // Check results.
+        for (LoadWorker worker : workers) {
+            if (worker.isFailed()) {
+                throw exceptionFactory.failure(
+                        "Can't load data. See logs for more exception.");
+            }
+        }
     }
 
     private String getClearQuery(String graph) {
@@ -182,28 +222,6 @@ public final class Virtuoso implements Component.Sequential {
                     configuration.getPassword());
         } catch (SQLException ex) {
             throw exceptionFactory.failure("Can't create sql connection.", ex);
-        }
-    }
-
-    private void startLoading() throws LpException {
-        Connection loaderConnection = null;
-        try {
-            loaderConnection = getSqlConnection();
-            try (Statement statementRun = loaderConnection.createStatement()) {
-                final ResultSet resultSetRun =
-                        statementRun.executeQuery("rdf_loader_run()");
-                resultSetRun.close();
-            }
-        } catch (SQLException ex) {
-            throw exceptionFactory.failure("Can't start loading.", ex);
-        } finally {
-            try {
-                if (loaderConnection != null) {
-                    loaderConnection.close();
-                }
-            } catch (SQLException ex) {
-                LOG.warn("Can't close SQL connection.", ex);
-            }
         }
     }
 
