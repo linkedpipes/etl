@@ -15,7 +15,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "gzip", "gz", "bz2"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-streamCompression"}
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-streamcompression"}
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-streamCompression/0.0.0/input",
