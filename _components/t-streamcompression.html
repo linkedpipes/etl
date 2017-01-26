@@ -1,0 +1,38 @@
+---
+short: t-streamcompression
+type: transformer
+color: indigo
+title: Stream compression
+description: Compresses input files using gzip or bzip2.
+---
+
+<p class="flow-text">
+Transformer, compresses input files using gzip or bzip2.
+</p>
+<dl class="flow-text">
+    <dt>Format</dt>
+    <dd>Output compression format. Can be gzip or bzip2.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component compresses input files using gzip or bzip2 stream compression.
+        </p>
+    </div>
+</div>
