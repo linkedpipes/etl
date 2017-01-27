@@ -7,6 +7,8 @@ import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserCsvConfig;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserDbfConfig;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserType;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserXlsConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
  */
 @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#Configuration")
 public class TabularConfig_V2 {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TabularConfig_V2.class);
 
     public enum ColumnType {
         String,
@@ -594,7 +598,17 @@ public class TabularConfig_V2 {
     }
 
     public ParserCsvConfig getParserCsvConfig() {
-        return new ParserCsvConfig(quoteChar, delimiterChar,
+        char effectiveDelimiter;
+        if (delimiterChar == null) {
+            LOG.warn("Property delimiterChar is not set, '{}' is used as "
+                    + "default.", this.delimiterChar);
+            effectiveDelimiter = ',';
+        } else if (delimiterChar.equals("\\t")) {
+            effectiveDelimiter = '\t';
+        } else {
+            effectiveDelimiter = delimiterChar.charAt(0);
+        }
+        return new ParserCsvConfig(quoteChar, effectiveDelimiter,
                 encoding, linesToIgnore,
                 rowsLimit == null || rowsLimit == -1 ? null : rowsLimit,
                 hasHeader, staticRowCounter);
