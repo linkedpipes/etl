@@ -44,13 +44,13 @@ class Parser {
                     CsvContext context, CsvPreference preference) -> false;
             // Quote char is never used.
             csvPreference = new CsvPreference.Builder(' ',
-                    dialect.getDelimeter().charAt(0),
+                    dialect.getEffectiveDelimiter(),
                     "\\n").useQuoteMode(customQuoteMode).build();
             // Line terminators are also part of the configuration!
         } else {
             csvPreference = new CsvPreference.Builder(
                     dialect.getQuoteChar().charAt(0),
-                    dialect.getDelimeter().charAt(0),
+                    dialect.getEffectiveDelimiter(),
                     "\\n").build();
         }
     }

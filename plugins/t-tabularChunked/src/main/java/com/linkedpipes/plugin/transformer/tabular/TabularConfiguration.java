@@ -303,6 +303,14 @@ public class TabularConfiguration {
             return delimeter;
         }
 
+        public char getEffectiveDelimiter() {
+            if (delimeter.equals("\\t")) {
+                return '\t';
+            } else {
+                return delimeter.charAt(0);
+            }
+        }
+
         public void setDelimeter(String delimeter) {
             this.delimeter = delimeter;
         }
