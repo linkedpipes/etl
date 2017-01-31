@@ -33,7 +33,7 @@
     </md-input-container>
     <div layout="row">
         <md-input-container class="md-block" flex-gt-sm>
-            <label>Rows skipped</label>
+            <label>Rows skipped (after header)</label>
             <input type="number" ng-model="dialog.skipRows" placeholder="0" min="0">
         </md-input-container>
         <md-input-container class="md-block" flex-gt-sm>
@@ -41,6 +41,10 @@
             <input type="number" ng-model="dialog.rowLimit" placeholder="-1" min="-1">
         </md-input-container>
     </div>
+    <md-input-container class="md-block" flex>
+        <label>Skip lines (before header)</label>
+        <input type="number" ng-model="dialog.skipLines" placeholder="0" min="0">
+    </md-input-container>
     <md-switch ng-model="dialog.normalOutput">{{dialog.normalOutput ? "Table and row entities" : "Data only"}}</md-switch>
     <md-switch ng-model="dialog.useBaseUri">{{dialog.useBaseUri ? "Specified row and property IRI base" : "Default row and property IRIs"}}</md-switch>
     <md-input-container class="md-block" flex-gt-sm ng-show="dialog.useBaseUri">

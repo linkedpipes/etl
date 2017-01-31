@@ -425,6 +425,9 @@ public class TabularConfiguration {
     @RdfToPojo.Property(uri = TabularVocabulary.HAS_ENCODE_TYPE)
     private String encodeType = "";
 
+    @RdfToPojo.Property(uri = TabularVocabulary.HAS_SKIP_LINES)
+    private int skipLines = 0;
+
     public TabularConfiguration() {
     }
 
@@ -498,5 +501,13 @@ public class TabularConfiguration {
 
     public void setEncodeType(String encodeType) {
         this.encodeType = encodeType;
+    }
+
+    public int getSkipLines() {
+        return skipLines;
+    }
+
+    public void setSkipLines(int skipLines) {
+        this.skipLines = skipLines;
     }
 }
