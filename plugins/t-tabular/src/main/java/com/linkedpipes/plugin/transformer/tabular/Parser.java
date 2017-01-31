@@ -33,10 +33,13 @@ class Parser {
 
     private final ExceptionFactory exceptionFactory;
 
+    private final int ignoreLines;
+
     Parser(TabularConfiguration configuration,
             ExceptionFactory exceptionFactory) {
         this.dialect = configuration.getDialect();
         this.exceptionFactory = exceptionFactory;
+        this.ignoreLines = configuration.getSkipLines();
         // We will use quates only if they are provided
         if (dialect.getQuoteChar() == null || dialect.getQuoteChar().isEmpty()) {
             // We do not use quates.
@@ -66,10 +69,17 @@ class Parser {
                 = new BufferedReader(inputStreamReader);
                 final CsvListReader csvListReader
                 = new CsvListReader(bufferedReader, csvPreference)) {
+            // Ignore initial lines.
+            int line = 0;
+            while (ignoreLines > 0 && line < ignoreLines) {
+                line++;
+                csvListReader.read();
+            }
+            //
             List<String> header;
             List<String> row;
             if (dialect.isHeader()) {
-                header = Arrays.asList(csvListReader.getHeader(true));
+                header = Arrays.asList(csvListReader.getHeader(false));
                 row = csvListReader.read();
                 // TODO Should we really trim header?
                 if (dialect.isTrim()) {

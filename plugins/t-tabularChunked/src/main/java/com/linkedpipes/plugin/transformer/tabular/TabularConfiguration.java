@@ -428,6 +428,9 @@ public class TabularConfiguration {
     @RdfToPojo.Property(uri = TabularVocabulary.HAS_CHUNK_SIZE)
     private int chunkSize = 10000;
 
+    @RdfToPojo.Property(uri = TabularVocabulary.HAS_SKIP_LINES)
+    private int skipLines = 0;
+
     public TabularConfiguration() {
     }
 
@@ -509,5 +512,13 @@ public class TabularConfiguration {
 
     public void setChunkSize(int chunkSize) {
         this.chunkSize = chunkSize;
+    }
+
+    public int getSkipLines() {
+        return skipLines;
+    }
+
+    public void setSkipLines(int skipLines) {
+        this.skipLines = skipLines;
     }
 }
