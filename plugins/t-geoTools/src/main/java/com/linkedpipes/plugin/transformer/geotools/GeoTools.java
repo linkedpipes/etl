@@ -234,8 +234,8 @@ public final class GeoTools implements Component.Sequential {
         // EPSG:5514 --> EPSG:5514
         final int crsIndex = type.lastIndexOf("crs:");
         if (crsIndex != -1) {
-            type = type.substring(type.lastIndexOf("crs:") + 4);
-            type.replaceFirst("::", ":");
+            type = type.substring(type.lastIndexOf("crs:") + 4)
+                    .replaceFirst("::", ":");
         }
         return type;
     }
