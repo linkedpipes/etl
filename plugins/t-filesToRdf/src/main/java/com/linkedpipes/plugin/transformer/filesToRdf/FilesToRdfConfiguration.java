@@ -1,18 +1,14 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = FilesToRdfVocabulary.CONFIG)
+@RdfToPojo.Type(iri = FilesToRdfVocabulary.CONFIG)
 public class FilesToRdfConfiguration {
 
-    @RdfToPojo.Property(uri = FilesToRdfVocabulary.HAS_COMMIT_SIZE)
+    @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 10000;
 
-    @RdfToPojo.Property(uri = FilesToRdfVocabulary.HAS_MIME_TYPE)
+    @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_MIME_TYPE)
     private String mimeType = null;
 
     public FilesToRdfConfiguration() {

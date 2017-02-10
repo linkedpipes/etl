@@ -1,36 +1,30 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.rio.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
-import org.openrdf.model.IRI;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class FilesToRdf implements Component.Sequential {
+public final class FilesToRdf implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(FilesToRdf.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableGraphListDataUnit outputRdf;
 
     @Component.Configuration
@@ -44,7 +38,7 @@ public final class FilesToRdf implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        // Prepare parsers and inserters.
+        // Prepare parsers and inverters.
         final StatementInserter rdfInserter = new StatementInserter(
                 configuration.getCommitSize(), outputRdf);
         final RDFFormat defaultFormat;
@@ -54,7 +48,7 @@ public final class FilesToRdf implements Component.Sequential {
         } else {
             final Optional<RDFFormat> optionalFormat
                     = Rio.getParserFormatForMIMEType(
-                            configuration.getMimeType());
+                    configuration.getMimeType());
             if (optionalFormat.isPresent()) {
                 defaultFormat = optionalFormat.get();
             } else {
@@ -81,13 +75,17 @@ public final class FilesToRdf implements Component.Sequential {
             } else {
                 format = defaultFormat;
             }
-            LOG.debug("Loading: {} -> {} : {}", file.getFileName(), outputGraph, format);
+            LOG.debug("Loading: {} -> {} : {}", file.getFileName(), outputGraph,
+                    format);
             final RDFParser rdfParser = Rio.createParser(format);
             rdfParser.setRDFHandler(rdfInserter);
-            try (final InputStream fileStream = new FileInputStream(file.toFile())) {
+            try (final InputStream fileStream = new FileInputStream(
+                    file.toFile())) {
                 rdfParser.parse(fileStream, "http://localhost/base/");
             } catch (IOException | RDFHandlerException | RDFParseException ex) {
-                throw exceptionFactory.failure("Can't parse file: {}", file.getFileName(), ex);
+                throw exceptionFactory
+                        .failure("Can't parse file: {}", file.getFileName(),
+                                ex);
             }
             progressReport.entryProcessed();
         }
