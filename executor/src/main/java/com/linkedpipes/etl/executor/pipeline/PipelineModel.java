@@ -6,12 +6,10 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represent key aspects of the pipeline in form of POJO.
@@ -65,9 +63,6 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
         public RdfLoader.Loadable load(String predicate, String object)
                 throws RdfUtilsException {
             switch (predicate) {
-//                case LP_EXEC.HAS_DEBUG_SUFFIX:
-//                    this.debug = object;
-//                    break;
                 case LP_EXEC.HAS_LOAD_PATH:
                     this.loadPath = object;
                     break;
@@ -118,18 +113,18 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
         }
 
         public boolean isInput() {
-            return types.contains("http://linkedpipes.com/ontology/Input");
+            return types.contains(LP_PIPELINE.INPUT);
         }
 
         public boolean isOutput() {
-            return types.contains("http://linkedpipes.com/ontology/Output");
+            return types.contains(LP_PIPELINE.OUTPUT);
         }
 
         @Override
         public RdfLoader.Loadable load(String predicate, String object)
                 throws RdfUtilsException {
             switch (predicate) {
-                case "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
+                case RDF.TYPE:
                     types.add(object);
                     break;
                 case LP_PIPELINE.HAS_BINDING:
@@ -178,10 +173,6 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
             return null;
         }
 
-        public Integer getOrder() {
-            return order;
-        }
-
         public String getConfigurationGraph() {
             return configurationGraph;
         }
@@ -217,6 +208,13 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
                     return null;
                 default:
                     return null;
+            }
+        }
+
+        public void afterLoad() throws ExecutorException {
+            if (configurationType == null) {
+                throw new ExecutorException("Missing configuration type: {}",
+                        iri);
             }
         }
 
@@ -306,7 +304,7 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
                 case SKOS.PREF_LABEL:
                     label = object;
                     return null;
-                case LP_EXEC.HAS_ORDER:
+                case LP_EXEC.HAS_ORDER_EXEC:
                     try {
                         order = Integer.parseInt(object);
                     } catch (NumberFormatException ex) {
@@ -339,7 +337,7 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
                             new Configuration(object);
                     configurations.add(configuration);
                     return configuration;
-                case LP_PIPELINE.HAS_JAR_PATH:
+                case LP_PIPELINE.HAS_JAR_URL:
                     jarPath = object;
                     return null;
                 case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
@@ -362,12 +360,13 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
                 throw new ExecutorException(
                         "Missing configuration description: {}", iri);
             }
+            configurationDescription.afterLoad();
             for (Configuration configuration : configurations) {
                 configuration.afterLoad();
             }
             //
             Collections.sort(configurations, (left, right) -> {
-                return Integer.compare(left.order, right.order);
+                return Integer.compare(right.order, left.order);
             });
         }
     }
@@ -481,10 +480,7 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
         for (Component component : components) {
             component.afterLoad();
         }
-        //
-        Collections.sort(components, (left, right) -> {
-            return Integer.compare(left.order, right.order);
-        });
+        Collections.sort(components, Comparator.comparingInt(x -> x.order));
     }
 
 }

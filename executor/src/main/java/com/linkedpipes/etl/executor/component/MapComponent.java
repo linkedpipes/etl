@@ -2,6 +2,7 @@ package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
+import com.linkedpipes.etl.executor.execution.Execution;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 
 /**
@@ -11,21 +12,32 @@ import com.linkedpipes.etl.executor.pipeline.PipelineModel;
  */
 class MapComponent implements ComponentExecutor {
 
-    private final PipelineModel.Component component;
+    private final Execution execution;
 
-    public MapComponent(PipelineModel.Component component) {
-        this.component = component;
+    private final Execution.Component execComponent;
+
+    public MapComponent(Execution execution,
+            PipelineModel.Component component) {
+        this.execution = execution;
+        this.execComponent = execution.getComponent(component);
     }
 
     @Override
-    public void initialize(DataUnitManager dataUnitManager)
-            throws ExecutorException {
-        dataUnitManager.onMappedComponent(component);
-    }
-
-    @Override
-    public void execute() throws ExecutorException {
-        // No operation here.
+    public boolean execute(DataUnitManager dataUnitManager) {
+        try {
+            dataUnitManager.onComponentWillExecute(execComponent);
+        } catch (ExecutorException ex) {
+            execution.onCantPrepareDataUnits(execComponent, ex);
+            return false;
+        }
+        try {
+            dataUnitManager.onComponentDidExecute(execComponent);
+        } catch (ExecutorException ex) {
+            execution.onCantSaveDataUnits(execComponent, ex);
+            return false;
+        }
+        execution.onComponentMapped(execComponent);
+        return true;
     }
 
 }

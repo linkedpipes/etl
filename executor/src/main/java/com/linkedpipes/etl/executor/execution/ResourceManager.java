@@ -30,18 +30,24 @@ public class ResourceManager {
         final File directory = new File(executionRoot, "definition");
         for (File file : directory.listFiles()) {
             final String fileName = file.getName();
-            if (fileName.startsWith("pipeline")) {
+            // @TODO Rename to pipeline
+            if (fileName.startsWith("definition")) {
                 return file;
             }
         }
         return null;
     }
 
-//    public File resolveExecutionPath(String execution, String path) {
-//        final String executionId = execution.substring(
-//                execution.indexOf("executions/") + 11);
-//        return new File(root, executionId + "/" + path);
-//    }
+    /**
+     * @param execution
+     * @param path
+     * @return Path to another execution.
+     */
+    public File resolveExecutionPath(String execution, String path) {
+        final String executionId = execution.substring(
+                execution.indexOf("executions/") + 11);
+        return new File(root, executionId + "/" + path);
+    }
 
     /**
      * @return Path to input directory, the directory may not exist.
@@ -79,26 +85,32 @@ public class ResourceManager {
         return file;
     }
 
-//    public File getPipelineFile() {
-//        final File file = new File(executionRoot, "pipeline.jsonld");
-//        file.getParentFile().mkdir();
-//        return file;
-//    }
-//
-//    public File getExecutionFile() {
-//        final File file = new File(executionRoot, "execution.jsonld");
-//        file.getParentFile().mkdir();
-//        return file;
-//    }
+    /**
+     * @return Output file for the pipeline execution.
+     */
+    public File getPipelineFile() {
+        final File file = new File(executionRoot, "pipeline.trig");
+        file.getParentFile().mkdir();
+        return file;
+    }
 
-//    /**
-//     * Return given path as relative to the execution root directory.
-//     *
-//     * @param path
-//     * @return
-//     */
-//    public String relative(File path) {
-//        return executionRoot.toPath().relativize(path.toPath()).toString();
-//    }
+    /**
+     * @return Output file for original execution file.
+     */
+    public File getExecutionFileV1() {
+        final File file = new File(executionRoot, "execution-v1.jsonld");
+        file.getParentFile().mkdir();
+        return file;
+    }
+
+    /**
+     * Return given path as relative to the execution root directory.
+     *
+     * @param path
+     * @return
+     */
+    public String relative(File path) {
+        return executionRoot.toPath().relativize(path.toPath()).toString();
+    }
 
 }

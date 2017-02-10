@@ -40,9 +40,9 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             LoggerFactory.getLogger(ModuleFacade.class);
 
     private static final String EXPORT_PACKAGE_LIST = ""
-//            + "" // javax additional - FIND BUNDLE WITH THIS !
-//            + "javax.servlet;version=\"2.4.0\","
-//            + "javax.servlet.http;version=\"2.4.0\","
+            + "" // javax additional - FIND BUNDLE WITH THIS !
+            + "javax.servlet;version=\"2.4.0\","
+            + "javax.servlet.http;version=\"2.4.0\","
             + "" // slf4j
             + "org.slf4j;version=\"1.7.21\","
             + "org.slf4j.helpers;version=\"1.7.21\","
@@ -61,7 +61,17 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             + "org.apache.log4j.api;version=\"1.7.18\","
             + "org.apache.log4j.xml;version=\"1.7.18\","
             + "" // core API
-            + "";
+            + "com.linkedpipes.etl.executor.api.v1;version=\"1.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.component;version=\"1.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.dataunit;version=\"1.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.event;version=\"1.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.rdf;version=\"1.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.service;version=\"1.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.vocabulary;version=\"1.0.0\","
+            + "com.linkedpipes.etl.rdf.utils;version=\"1.0.0\","
+            + "com.linkedpipes.etl.rdf.utils.entity;version=\"1.0.0\","
+            + "com.linkedpipes.etl.rdf.utils.pojo;version=\"1.0.0\","
+            + "com.linkedpipes.etl.rdf.utils.vocabulary;version=\"1.0.0\"";
 
     private Framework framework;
 
@@ -130,6 +140,9 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
         } catch (LpException ex) {
             throw new ModuleException("Can't create component from bundle.",
                     ex);
+        }
+        if (manageableComponent == null) {
+            throw new ModuleException("Can't load bundle: {}", jar);
         }
         return manageableComponent;
     }
@@ -214,13 +227,13 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
         // Load libraries.
         scanDirectory(configuration.getOsgiLibDirectory(), (file) -> {
             if (file.getPath().endsWith(".jar")) {
-                LOG.debug("Installing: {}", file);
                 try {
                     libraries.add(context.installBundle(
                             file.toURI().toString()));
                 } catch (BundleException ex) {
+                    LOG.error("Can't load bundle: {}", file, ex);
                     springContext.stop();
-                    throw new RuntimeException(ex);
+                    throw new RuntimeException(file.toString(), ex);
                 }
             }
         });
@@ -229,8 +242,8 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             try {
                 bundle.start();
             } catch (BundleException ex) {
-                LOG.error("Can't start bundle: {}", bundle.getSymbolicName(),
-                        ex);
+                LOG.error("Can't start bundle: {}",
+                        bundle.getSymbolicName(), ex);
                 springContext.stop();
                 throw new RuntimeException(ex);
             }
@@ -274,7 +287,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
 
     protected static String getJarPathQuery(String component, String graph) {
         return "SELECT ?jar WHERE { GRAPH <" + graph + "> { " +
-                " <" + component + "> <" + LP_PIPELINE.HAS_JAR_PATH +
+                " <" + component + "> <" + LP_PIPELINE.HAS_JAR_URL +
                 "> ?jar }}";
     }
 

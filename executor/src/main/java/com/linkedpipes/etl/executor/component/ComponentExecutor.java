@@ -14,22 +14,16 @@ import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 public interface ComponentExecutor {
 
     /**
-     * Initialize execution.
-     *
      * @param dataUnitManager
+     * @return True if pipeline can continue
      */
-    void initialize(DataUnitManager dataUnitManager) throws ExecutorException;
-
-    /**
-     *
-     */
-    void execute() throws ExecutorException;
+    boolean execute(DataUnitManager dataUnitManager);
 
     /**
      * Cancel the component execution.
      */
     default void cancel() {
-        // Do nothing.
+        // By default do nothing.
     }
 
     /**
@@ -47,9 +41,9 @@ public interface ComponentExecutor {
                 return new ExecuteComponent(pipeline, execution,
                         component, instance);
             case MAP:
-                return new MapComponent(component);
+                return new MapComponent(execution, component);
             case SKIP:
-                return new SkipComponent();
+                return new SkipComponent(execution, component);
         }
         throw new ExecutorException("Unknown execution type: {} for {}",
                 component.getExecutionType(), component.getIri());

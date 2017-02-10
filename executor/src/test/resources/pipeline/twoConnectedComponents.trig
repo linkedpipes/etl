@@ -16,10 +16,10 @@
         skos:prefLabel "Component 1" ;
         lp:port <http://pipeline/component/1/1> ,
             <http://pipeline/component/1/2> ;
-        lp:jarPath "component_1_path" ;
+        <http://linkedpipes.com/ontology/jar> "component_1_path" ;
         lp:requirement lp:InputDirectory ;
-        lp:executionType lp:Execute ;
-        lp:order 1 ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        <http://linkedpipes.com/ontology/executionOrder>1 ;
         lp:configurationDescription <http://pipeline/component/1/desc> ;
         lp:configuration <http://pipeline/component/1/config/1> ,
             <http://pipeline/component/1/config/2>
@@ -28,10 +28,10 @@
     <http://pipeline/component/2> a lp:Component ;
         skos:prefLabel "Component 2" ;
         lp:port <http://pipeline/component/2/1> ;
-        lp:jarPath "component_2_path" ;
+        <http://linkedpipes.com/ontology/jar> "component_2_path" ;
         lp:requirement lp:WorkingDirectory ;
-        lp:executionType lp:Execute ;
-        lp:order 2 ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        <http://linkedpipes.com/ontology/executionOrder> 2 ;
         lp:configurationDescription <http://pipeline/component/2/desc> ;
         lp:configuration <http://pipeline/component/2/config/1>
         .
@@ -48,7 +48,7 @@
         lp:binding <http://linkedpipes.com/ontology/components/1/dataunit/1> ;
         .
 
-    <http://pipeline/component/1/1> a lp:Output ,
+    <http://pipeline/component/1/2> a lp:Output ,
             <http://linkedpipes.com/ontology/dataUnit/rdf/SingleGraph> ;
         lp:binding <http://linkedpipes.com/ontology/components/1/dataunit/2> ;
         lp:requirement lp:WorkingDirectory
@@ -60,17 +60,16 @@
         .
 
     <http://pipeline/component/1/config/2> a lp:Configuration ;
-        lp:order 2 ;
-        lp:configurationGraph <http://pipeline/configuration/1/2> .
+        <http://linkedpipes.com/ontology/configuration/order> 1 ;
+        <http://linkedpipes.com/ontology/configuration/graph> <http://pipeline/configuration/1/2> .
 
     <http://pipeline/component/1/config/1> a lp:Configuration ;
-        lp:order 1 ;
-        lp:configurationGraph <http://pipeline/configuration/1/1> .
+        <http://linkedpipes.com/ontology/configuration/order> 2 ;
+        <http://linkedpipes.com/ontology/configuration/graph> <http://pipeline/configuration/1/1> .
 
     <http://pipeline/component/2/config/1> a lp:Configuration ;
-        lp:order 1 ;
-        lp:configurationGraph <http://pipeline/configuration/2/1> .
-
+        <http://linkedpipes.com/ontology/configuration/order> 1 ;
+        <http://linkedpipes.com/ontology/configuration/graph> <http://pipeline/configuration/2/1> .
 
     <http://pipeline/component/1/desc>
         a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;

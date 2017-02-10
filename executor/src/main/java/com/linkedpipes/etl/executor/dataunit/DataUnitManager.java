@@ -1,15 +1,15 @@
 package com.linkedpipes.etl.executor.dataunit;
 
 import com.linkedpipes.etl.executor.ExecutorException;
+import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.execution.Execution;
-import com.linkedpipes.etl.executor.module.ModuleFacade;
-import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,42 +17,83 @@ import java.util.Map;
  */
 public class DataUnitManager {
 
+    public interface DataUnitInstanceSource {
+
+        /**
+         * @param iri
+         * @return Instance for data unit of given IRI.
+         */
+        ManageableDataUnit getDataUnit(String iri) throws ExecutorException;
+
+    }
+
     private static final Logger LOG =
             LoggerFactory.getLogger(DataUnitManager.class);
 
-    private final Pipeline pipeline;
+    private final Map<Execution.DataUnit, DataUnitContainer> dataUnits
+            = new HashMap<>();
 
-    private final Execution execution;
+    /**
+     * Map of instances. Given to data units for initialization.
+     */
+    private final Map<String, ManageableDataUnit> instances = new HashMap<>();
 
-    private final ModuleFacade moduleFacade;
-
-    public DataUnitManager(Pipeline pipeline, Execution execution,
-            ModuleFacade moduleFacade) {
-        this.pipeline = pipeline;
-        this.execution = execution;
-        this.moduleFacade = moduleFacade;
+    public DataUnitManager() {
     }
 
     /**
-     * Take care about proper handling of data units for mapped component.
-     *
-     * @param component
+     * @param dataUnitInstanceSource Source of data unit instances.
+     * @param dataUnits Data units to bindToPipeline.
      */
-    public void onMappedComponent(PipelineModel.Component component)
-            throws ExecutorException {
-        LOG.info("onMappedComponent {}", component.getIri());
+    public void initialize(DataUnitInstanceSource dataUnitInstanceSource,
+            Collection<Execution.DataUnit> dataUnits) throws ExecutorException {
+        // Create instances of data units.
+        for (Execution.DataUnit dataUnit : dataUnits) {
+            createDataUnitContainer(dataUnitInstanceSource, dataUnit);
+        }
     }
 
     /**
-     * Prepare and return inputs for given component.
+     * Close all opened data units.
+     */
+    public void close() {
+        for (DataUnitContainer container : dataUnits.values()) {
+            try {
+                container.close();
+            } catch (ExecutorException ex) {
+                LOG.info("Can't close data unit: {}", ex);
+            }
+        }
+    }
+
+    /**
+     * Prepare data unit used by given component.
      *
      * @param component
-     * @return
+     * @return Data units referred by given component.
      */
-    public Map<String, ManageableDataUnit> onExecuteComponent(
-            PipelineModel.Component component) throws ExecutorException {
-        LOG.info("onExecuteComponent {}", component.getIri());
-        return Collections.EMPTY_MAP;
+    public Map<String, DataUnit> onComponentWillExecute(
+            Execution.Component component) throws ExecutorException {
+        final Map<String, DataUnit> usedDataUnits = new HashMap<>();
+        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+            final DataUnitContainer container = dataUnits.get(dataUnit);
+            if (container == null) {
+                throw new ExecutorException("Missing data unit: {} for {}",
+                        dataUnit.getDataUnitIri(), component.getComponentIri());
+            }
+            //
+            final File dataDirectory = dataUnit.getLoadDirectory();
+            if (dataDirectory == null) {
+                // Load from sources.
+                container.initialize(instances);
+            } else {
+                // Load from file.
+                container.initialize(dataDirectory);
+            }
+            usedDataUnits.put(dataUnit.getDataUnitIri(),
+                    container.getInstance());
+        }
+        return usedDataUnits;
     }
 
     /**
@@ -60,13 +101,42 @@ public class DataUnitManager {
      *
      * @param component
      */
-    public void onComponentExecuted(PipelineModel.Component component)
+    public void onComponentDidExecute(Execution.Component component)
             throws ExecutorException {
-        LOG.info("onComponentExecuted {}", component.getIri());
+        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+            final DataUnitContainer container = dataUnits.get(dataUnit);
+            if (container == null) {
+                throw new ExecutorException("Missing data unit: {} for {}",
+                        dataUnit.getDataUnitIri(), component.getComponentIri());
+            }
+            //
+            container.save();
+            // TODO Check for usage and save if not used any more.
+        }
     }
 
-    public void close() {
-        LOG.info("close");
+    /**
+     * Create {@link DataUnitContainer} and add it to {@link #dataUnits}.
+     *
+     * If the data unit should not be used during the execution, then
+     * nothing happen.
+     *
+     * @param dataUnitInstanceSource
+     * @param dataUnit
+     */
+    private void createDataUnitContainer(
+            DataUnitInstanceSource dataUnitInstanceSource,
+            Execution.DataUnit dataUnit) throws ExecutorException {
+        final String iri = dataUnit.getDataUnitIri();
+        final ManageableDataUnit instance;
+        try {
+            instance = dataUnitInstanceSource.getDataUnit(iri);
+        } catch (ExecutorException ex) {
+            throw new ExecutorException("Can't instantiate data unit: {}",
+                    iri, ex);
+        }
+        dataUnits.put(dataUnit, new DataUnitContainer(instance, dataUnit));
+        instances.put(iri, instance);
     }
 
 }

@@ -26,7 +26,6 @@ class ExecutionContext implements Component.Context {
 
     @Override
     public void sendMessage(Event message) {
-        // Deal with MDC as we are getting outside the code of a component.
         MDC.remove(LoggerFacade.SYSTEM_MDC);
         execution.onEvent(component, message);
         MDC.put(LoggerFacade.SYSTEM_MDC, null);
@@ -40,6 +39,5 @@ class ExecutionContext implements Component.Context {
     public void cancel() {
         cancelled = true;
     }
-
 
 }

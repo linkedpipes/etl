@@ -62,7 +62,7 @@ public class Configuration {
         logCoreFilter = getProperty("executor.log.core.level");
         osgiLibDirectoryPath = getProperty("executor.osgi.lib.directory");
         osgiStorageDirectory = getProperty("executor.osgi.working.directory");
-        storageAddress = getProperty("storage.iri");
+        storageAddress = getProperty("storage.uri");
         //
         try {
             String value = properties.getProperty(

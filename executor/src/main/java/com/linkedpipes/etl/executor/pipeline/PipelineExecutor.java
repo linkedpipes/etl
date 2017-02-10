@@ -11,16 +11,17 @@ import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
-import org.slf4j.MDC;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Execute pipeline in given directory.
- */
 public class PipelineExecutor {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(PipelineExecutor.class);
 
     private final ResourceManager resources;
 
@@ -30,146 +31,150 @@ public class PipelineExecutor {
 
     private Pipeline pipeline;
 
-    private Execution execution;
+    private final Execution execution;
 
-    private DataUnitManager dataUnitManager;
+    private final DataUnitManager dataUnitManager = new DataUnitManager();
 
-    private boolean cancel = false;
+    private boolean cancelExecution = false;
 
     /**
-     * Current executor, we need to access to this objects because of
-     * cancel.
+     * Current component executor, we need to access to this
+     * objects because of {@link #cancelExecution()}.
      */
     private ComponentExecutor executor = null;
 
-    /**
-     * @param directory
-     * @param modules
-     */
-    public PipelineExecutor(File directory, ModuleFacade modules) {
-        // We assume that the directory we are executing is in the
-        // directory with other executions.
-        this.resources =
-                new ResourceManager(directory.getParentFile(), directory);
-        this.loggerFacade.setSystemAppender(resources.getExecutionLogFile());
-        this.moduleFacade = modules;
-    }
+    private final Map<String, ManageableComponent>
+            componentsInstances = new HashMap<>();
 
     /**
-     * Execute pipeline.
+     * @param directory
+     * @param iri Execution IRI.
+     * @param modules
      */
+    public PipelineExecutor(File directory, String iri, ModuleFacade modules) {
+        // We assume that the directory we are executing is in the
+        // directory with other executions.
+        this.resources = new ResourceManager(
+                directory.getParentFile(), directory);
+        this.loggerFacade.setSystemAppender(resources.getExecutionLogFile());
+        this.moduleFacade = modules;
+        this.execution = new Execution(resources, iri);
+    }
+
     public void execute() {
-        MDC.put(LoggerFacade.SYSTEM_MDC, null);
-        // Initialize.
-        try {
-            initialize();
-        } catch (ExecutorException ex) {
-            if (execution == null) {
-                // TODO Report pipeline loading failure in a generic way.
-                throw new UnsupportedOperationException(ex);
-            } else {
-                execution.onInitializationFailed(ex);
-            }
-            terminate();
-        }
-        try {
-            onPipelineBegin();
-        } catch (ExecutorException ex) {
-            execution.onObserverBeginFailed(ex);
-            terminate();
-        }
-        // Load components.
-        final Map<String, ManageableComponent> components;
-        try {
-            components = loadComponents();
-        } catch (ExecutorException ex) {
-            execution.onComponentsLoadingFailed(ex);
-            terminate();
-            return;
-        }
-        // Execute components.
-        for (PipelineModel.Component pplComponent
-                : pipeline.getModel().getComponents()) {
-            final Execution.Component execComponent =
-                    execution.getComponent(pplComponent);
-            final ManageableComponent instance =
-                    components.get(pplComponent.getIri());
-            // Get component executor.
-            try {
-                executor = ComponentExecutor.create(pipeline,
-                        execution, pplComponent, instance);
-            } catch (ExecutorException ex) {
-                executor = null;
-                execution.onInvalidComponent(execComponent, ex);
-                break;
-            }
-            // Now we know the executor is not null. But the execution
-            // might have been cancelled before the executor was assigned.
-            if (cancel) {
-                break;
-            }
-            // Execute component, we also have to properly work
-            // with the MDC.
-            try {
-                execution.onComponentInitialize(execComponent);
-                MDC.remove(LoggerFacade.SYSTEM_MDC);
-                executor.initialize(dataUnitManager);
-                MDC.put(LoggerFacade.SYSTEM_MDC, null);
-                execution.onComponentBegin(execComponent);
-                MDC.remove(LoggerFacade.SYSTEM_MDC);
-                executor.execute();
-                MDC.put(LoggerFacade.SYSTEM_MDC, null);
-            } catch (ExecutorException ex) {
-                execution.onComponentFailed(execComponent, ex);
-                break;
-            } finally {
-                executor = null;
-            }
-            execution.onComponentEnd(execComponent);
-            if (cancel) {
-                break;
-            }
+        execution.onInitializationBegin();
+        if (initialize()) {
+            execution.onComponentsExecutionBegin();
+            executeComponents();
+            execution.onComponentsExecutionEnd();
         }
         terminate();
     }
 
-    /**
-     * Cause pipeline to stop as soon as possible.
-     */
-    public void cancel() {
-        if (cancel) {
+    public synchronized void cancelExecution() {
+        if (cancelExecution) {
             return;
         }
-        // First set cancel flag.
-        cancel = true;
+        cancelExecution = true;
         // Notify the executor if it's not null.
         final ComponentExecutor currentExecutor = executor;
         if (currentExecutor != null) {
             currentExecutor.cancel();
         }
-        execution.onCancel();
+        execution.onCancelRequest();
     }
 
-    protected void initialize() throws ExecutorException {
+    public Execution getExecution() {
+        return execution;
+    }
+
+    private boolean initialize() {
+        try {
+            loadPipeline();
+        } catch (ExecutorException ex) {
+            execution.onInvalidPipeline(ex);
+            return false;
+        }
+        try {
+            preparePipelineDefinition();
+        } catch (ExecutorException ex) {
+            execution.onCantPreparePipeline(ex);
+            return false;
+        }
+        try {
+            notifyObserversOnBeginning();
+        } catch (ExecutorException ex) {
+            execution.onObserverBeginFailed(ex);
+            return false;
+        }
+        try {
+            loadDataUnits();
+        } catch (ExecutorException ex) {
+            execution.onDataUnitsLoadingFailed(ex);
+            return false;
+        }
+        try {
+            loadComponents();
+        } catch (ExecutorException ex) {
+            execution.onComponentsLoadingFailed(ex);
+            return false;
+        }
+        return true;
+    }
+
+    private void loadPipeline() throws ExecutorException {
+        final File definitionFile = locatePipelineDefinitionFile();
+        this.pipeline = new Pipeline();
+        execution.bindToPipeline(pipeline);
+        final File workingDirectory =
+                resources.getWorkingDirectory("pipeline_repository");
+        this.pipeline.load(definitionFile, workingDirectory);
+        execution.onPipelineLoaded();
+    }
+
+    private File locatePipelineDefinitionFile() throws ExecutorException {
         final File definitionFile = resources.getDefinitionFile();
         if (definitionFile == null) {
             throw new ExecutorException("Missing definition file!");
         }
-        this.pipeline = new Pipeline();
-        this.pipeline.load(definitionFile,
-                resources.getWorkingDirectory("pipeline_repository"));
-        execution = new Execution(pipeline, resources);
-        execution.onExecutionBegin();
-        dataUnitManager = new DataUnitManager(
-                pipeline, execution, moduleFacade);
+        return definitionFile;
     }
 
     /**
-     * @return Instantiated component used in a pipeline.
+     * Resolve requirements and update pipeline for out execution
+     * environment.
      */
-    protected Map<String, ManageableComponent> loadComponents()
-            throws ExecutorException {
-        final Map<String, ManageableComponent> instances = new HashMap<>();
+    private void preparePipelineDefinition() throws ExecutorException {
+        try {
+            RequirementProcessor.handle(pipeline.getSource(),
+                    pipeline.getPipelineGraph(), resources);
+        } catch (LpException ex) {
+            throw new ExecutorException("Can't update pipeline.", ex);
+        }
+    }
+
+    private void notifyObserversOnBeginning() throws ExecutorException {
+        try {
+            for (PipelineExecutionObserver observer :
+                    moduleFacade.getPipelineListeners()) {
+                observer.onPipelineBegin(pipeline.getPipelineIri(),
+                        pipeline.getPipelineGraph(), pipeline.getSource());
+            }
+        } catch (LpException ex) {
+            throw new ExecutorException("Observer error.", ex);
+        }
+    }
+
+    private void loadDataUnits() throws ExecutorException {
+        final DataUnitManager.DataUnitInstanceSource dataUnitInstanceSource =
+                (iri) -> {
+                    return moduleFacade.getDataUnit(pipeline, iri);
+                };
+        dataUnitManager.initialize(dataUnitInstanceSource,
+                execution.getUsedDataUnits());
+    }
+
+    private void loadComponents() throws ExecutorException {
         for (PipelineModel.Component component :
                 pipeline.getModel().getComponents()) {
             if (!component.isLoadInstance()) {
@@ -180,55 +185,81 @@ public class PipelineExecutor {
                 instance = moduleFacade.getComponent(pipeline,
                         component.getIri());
             } catch (ModuleException ex) {
-                throw new ExecutorException("Can't initialize component: {}",
+                throw new ExecutorException(
+                        "Can't bindToPipeline component: {}",
                         component.getLabel(), ex);
             }
-            instances.put(component.getIri(), instance);
+            componentsInstances.put(component.getIri(), instance);
         }
-        return instances;
+    }
+
+    private void executeComponents() {
+        for (PipelineModel.Component pplComponent
+                : pipeline.getModel().getComponents()) {
+            if (!executeComponent(pplComponent)) {
+                break;
+            }
+            if (cancelExecution) {
+                break;
+            }
+        }
     }
 
     /**
-     * Must be called after the execution.
+     * @param pplComponent
+     * @return False if execution failed.
      */
-    protected void terminate() {
+    private boolean executeComponent(PipelineModel.Component pplComponent) {
         try {
-            onPipelineEnd();
+            executor = getExecutor(pplComponent);
         } catch (ExecutorException ex) {
-            execution.onObserverEndFailed(ex);
+            executor = null;
+            final Execution.Component execComponent =
+                    execution.getComponent(pplComponent);
+            execution.onInvalidComponent(execComponent, ex);
+            return false;
+        }
+        final boolean canContinue = executor.execute(dataUnitManager);
+        executor = null;
+        if (!canContinue) {
+            return false;
+        }
+        return true;
+    }
+
+    private ComponentExecutor getExecutor(PipelineModel.Component component)
+            throws ExecutorException {
+        final ManageableComponent instance =
+                componentsInstances.get(component.getIri());
+        return ComponentExecutor.create(pipeline,
+                execution, component, instance);
+    }
+
+    private void terminate() {
+        notifyObserversOnEnding();
+        try {
+            pipeline.save(resources.getPipelineFile());
+        } catch (ExecutorException ex) {
+            LOG.info("Can't save pipeline.", ex);
         }
         dataUnitManager.close();
         pipeline.close();
         execution.onExecutionEnd();
         execution.close();
         loggerFacade.destroyAll();
-        MDC.remove(LoggerFacade.SYSTEM_MDC);
     }
 
-    /**
-     * Notify observers that the pipeline execution is about to begin.
-     */
-    protected void onPipelineBegin() throws ExecutorException {
-        for (PipelineExecutionObserver observer :
-                moduleFacade.getPipelineListeners()) {
-            try {
-                observer.onPipelineBegin(pipeline.getPipelineIri(),
-                        pipeline.getPipelineGraph(), pipeline.getSource());
-            } catch (LpException ex) {
-                throw new ExecutorException("Observer error.", ex);
+    private void notifyObserversOnEnding() {
+        try {
+            for (PipelineExecutionObserver observer :
+                    moduleFacade.getPipelineListeners()) {
+                observer.onPipelineEnd();
             }
+        } catch (ExecutorException ex) {
+            execution.onObserverEndFailed(ex);
         }
     }
 
-    /**
-     * Notify observers that the pipeline execution has finished.
-     */
-    protected void onPipelineEnd() throws ExecutorException {
-        for (PipelineExecutionObserver observer :
-                moduleFacade.getPipelineListeners()) {
-            observer.onPipelineEnd();
-        }
-    }
 
 }
 

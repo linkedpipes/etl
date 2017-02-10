@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,8 +14,8 @@ public class PipelineTest {
         final File directory =
                 Files.createTempDirectory("lp-test").toFile();
         final File file = new File(Thread.currentThread()
-                .getContextClassLoader().
-                        getResource("pipeline/twoConnectedComponents.trig")
+                .getContextClassLoader()
+                .getResource("pipeline/twoConnectedComponents.trig")
                 .getPath());
         //
         final Pipeline pipeline = new Pipeline();
@@ -37,9 +38,9 @@ public class PipelineTest {
                 component1.getExecutionType());
         Assert.assertEquals(2,
                 component1.getConfigurations().size());
-        Assert.assertEquals("http://pipeline/configuration/1",
+        Assert.assertEquals("http://pipeline/configuration/1/1",
                 component1.getConfigurations().get(0).getConfigurationGraph());
-        Assert.assertEquals("http://pipeline/configuration/2",
+        Assert.assertEquals("http://pipeline/configuration/1/2",
                 component1.getConfigurations().get(1).getConfigurationGraph());
         Assert.assertEquals(2,
                 component1.getDataUnits().size());
@@ -54,7 +55,7 @@ public class PipelineTest {
                 component2.getExecutionType());
         Assert.assertEquals(1,
                 component2.getConfigurations().size());
-        Assert.assertEquals("http://pipeline/configuration/3",
+        Assert.assertEquals("http://pipeline/configuration/2/1",
                 component2.getConfigurations().get(0).getConfigurationGraph());
         Assert.assertEquals(1,
                 component2.getDataUnits().size());
@@ -71,7 +72,9 @@ public class PipelineTest {
                 connection.getTargetBinding());
         Assert.assertEquals("http://pipeline/component/2",
                 connection.getTargetComponent());
-
+        //
+        pipeline.close();
+        FileUtils.deleteDirectory(directory);
     }
 
 }

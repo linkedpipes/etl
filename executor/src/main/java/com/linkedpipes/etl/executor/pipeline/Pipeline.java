@@ -9,13 +9,18 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.repository.util.Repositories;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +50,7 @@ public class Pipeline {
             throws ExecutorException {
         // Check for definition file.
         final RDFFormat rdfFormat = Rio.getParserFormatForFileName(
-                file.getName()).orElseGet(null);
+                file.getName()).orElse(null);
         if (rdfFormat == null) {
             throw new ExecutorException("Invalid definition format.");
         }
@@ -100,8 +105,25 @@ public class Pipeline {
         return model;
     }
 
+    /**
+     * Save content of the pipeline definition into given file.
+     *
+     * @param path
+     */
+    public void save(File path) throws ExecutorException {
+        final RDFFormat format = Rio.getWriterFormatForFileName(
+                path.getName()).orElseThrow(() -> new ExecutorException(""));
+        try (final OutputStream stream = new FileOutputStream(path)) {
+            final RDFWriter writer = Rio.createWriter(format, stream);
+            Repositories.consume(repository, (connection) -> {
+                connection.export(writer);
+            });
+        } catch (RuntimeException | IOException ex) {
+            throw new ExecutorException("Can't save pipeline.", ex);
+        }
+    }
+
     public void close() {
-        // TOTO Add optional dump?
         if (repository != null) {
             repository.shutDown();
         }

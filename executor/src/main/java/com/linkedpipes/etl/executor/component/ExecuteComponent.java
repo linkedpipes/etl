@@ -5,11 +5,16 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.component.configuration.Configuration;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.Map;
 
@@ -22,15 +27,20 @@ import java.util.Map;
  */
 class ExecuteComponent implements ComponentExecutor {
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ExecuteComponent.class);
+
     private final Pipeline pipeline;
 
-    private final Execution execution;
+    private final PipelineModel.Component pplComponent;
 
-    private final PipelineModel.Component component;
+    private final Execution.Component execComponent;
 
     private final ManageableComponent instance;
 
     private final ExecutionContext context;
+
+    private final Execution execution;
 
     public ExecuteComponent(
             Pipeline pipeline,
@@ -38,62 +48,67 @@ class ExecuteComponent implements ComponentExecutor {
             PipelineModel.Component component,
             ManageableComponent instance) {
         this.pipeline = pipeline;
-        this.execution = execution;
-        this.component = component;
+        this.pplComponent = component;
+        this.execComponent = execution.getComponent(component);
         this.instance = instance;
+        this.execution = execution;
         //
         context = new ExecutionContext(execution,
                 execution.getComponent(component));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initialize(DataUnitManager dataUnitManager)
-            throws ExecutorException {
-        if (instance == null) {
-            throw new ExecutorException(
-                    "The component instance is null: {} ({})",
-                    component.getIri(), component.isLoadInstance());
-        }
-        //
-        final Map<String, DataUnit> dataUnits = (Map)
-                dataUnitManager.onExecuteComponent(component);
-
+    public boolean execute(DataUnitManager dataUnitManager) {
         try {
-            instance.initialize(dataUnits, context);
-        } catch (LpException ex) {
-            throw new ExecutorException("Can't initialize component.", ex);
+            execution.onComponentInitialize(execComponent);
+            MDC.remove(LoggerFacade.SYSTEM_MDC);
+            final Map<String, DataUnit> dataUnits =
+                    dataUnitManager.onComponentWillExecute(execComponent);
+            initialize(dataUnits);
+            MDC.put(LoggerFacade.SYSTEM_MDC, null);
+            execution.onComponentBegin(execComponent);
+            MDC.remove(LoggerFacade.SYSTEM_MDC);
+            execute();
+            MDC.put(LoggerFacade.SYSTEM_MDC, null);
+        } catch (ExecutorException ex) {
+            try {
+                dataUnitManager.onComponentDidExecute(execComponent);
+            } catch (ExecutorException e) {
+                LOG.error("Can't save data unit after component failed.", e);
+            }
+            execution.onComponentFailed(execComponent, ex);
+            return false;
         }
-        //
-        final ManageableComponent.RuntimeConfiguration runtimeConfig;
+        execution.onComponentEnd(execComponent);
         try {
-            runtimeConfig = instance.getRuntimeConfiguration();
-        } catch (LpException ex) {
-            throw new ExecutorException("Can't get runtime configuration.", ex);
+            dataUnitManager.onComponentDidExecute(execComponent);
+        } catch (ExecutorException ex) {
+            execution.onCantSaveDataUnits(execComponent, ex);
+            return false;
         }
-        // Prepare and load configuration.
-        final String configGraph =
-                component.getIri() + "/configuration/effective";
-        final RdfSource.TypedTripleWriter writer = pipeline.setConfiguration(
-                component, configGraph);
-        if (runtimeConfig == null) {
-            Configuration.prepareConfiguration(configGraph,
-                    component, null, null, writer, pipeline);
-        } else {
-            Configuration.prepareConfiguration(configGraph, component,
-                    runtimeConfig.getSource(), runtimeConfig.getGraph(),
-                    writer, pipeline);
-        }
-        try {
-            instance.loadConfiguration(configGraph, pipeline.getSource());
-        } catch (LpException ex) {
-            throw new ExecutorException(
-                    "Can't load component configuration", ex);
-        }
+        return true;
     }
 
     @Override
-    public void execute() throws ExecutorException {
+    public void cancel() {
+        context.cancel();
+    }
+
+    public void initialize(Map<String, DataUnit> dataUnits)
+            throws ExecutorException {
+        if (instance == null) {
+            throw new ExecutorException("The component instance is null: {}",
+                    pplComponent.getIri());
+        }
+        try {
+            instance.initialize(dataUnits, context);
+        } catch (LpException ex) {
+            throw new ExecutorException("Can't bindToPipeline component.", ex);
+        }
+        configureComponent();
+    }
+
+    private void execute() throws ExecutorException {
         if (instance instanceof SequentialExecution) {
             final SequentialExecution executable =
                     (SequentialExecution) instance;
@@ -103,13 +118,40 @@ class ExecuteComponent implements ComponentExecutor {
                 throw new ExecutorException("Component execution failed.", ex);
             }
         } else {
+
             throw new ExecutorException("Unknown execution interface.");
         }
     }
 
-    @Override
-    public void cancel() {
-        context.cancel();
+    /**
+     * Prepare configuration for this component and load the configuration
+     * into the component.
+     */
+    private void configureComponent() throws ExecutorException {
+        final ManageableComponent.RuntimeConfiguration runtimeConfig;
+        try {
+            runtimeConfig = instance.getRuntimeConfiguration();
+        } catch (LpException ex) {
+            throw new ExecutorException("Can't get runtime configuration.", ex);
+        }
+        final String configGraph =
+                pplComponent.getIri() + "/configuration/effective";
+        final RdfSource.TypedTripleWriter writer = pipeline.setConfiguration(
+                pplComponent, configGraph);
+        if (runtimeConfig == null) {
+            Configuration.prepareConfiguration(configGraph,
+                    pplComponent, null, null, writer, pipeline);
+        } else {
+            Configuration.prepareConfiguration(configGraph, pplComponent,
+                    runtimeConfig.getSource(), runtimeConfig.getGraph(),
+                    writer, pipeline);
+        }
+        try {
+            instance.loadConfiguration(configGraph, pipeline.getSource());
+        } catch (LpException ex) {
+            throw new ExecutorException(
+                    "Can't load component configuration", ex);
+        }
     }
 
 }
