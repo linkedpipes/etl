@@ -4,27 +4,23 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-component</artifactId>
-        <version>0.0.0</version>
+        <version>1.0.0</version>
         <relativePath>../../pom-component/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
     <artifactId>e-textHolder</artifactId>
-    <version>0.0.0</version>
+    <version>1.0.0</version>
     <packaging>bundle</packaging>
     <name>plugin e-textHolder</name>
 
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-commons</artifactId>
+            <artifactId>api-executor-v1</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-component-v1</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-system</artifactId>
+            <artifactId>dataunit-core</artifactId>
         </dependency>
     </dependencies>
 

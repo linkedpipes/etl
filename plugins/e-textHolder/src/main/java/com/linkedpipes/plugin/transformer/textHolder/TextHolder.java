@@ -1,22 +1,19 @@
 package com.linkedpipes.plugin.transformer.textHolder;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class TextHolder implements Component.Sequential {
+public final class TextHolder implements Component, SequentialExecution {
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Configuration
@@ -27,23 +24,18 @@ public final class TextHolder implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getFileName() == null) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    TextHolderVocabulary.HAS_FILE_NAME);
-        }
-        if (configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.failure("File name must not be empty.");
-        }
-        //
         final File outputFile = outputFiles.createFile(
                 configuration.getFileName()).toFile();
+        final byte[] content;
         try {
-            Files.write(outputFile.toPath(),
-                    configuration.getContent().getBytes(
-                            Charset.forName("UTF-8")));
+            content = configuration.getContent().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw exceptionFactory.failure("Can't resolved encoding.", ex);
+        }
+        try {
+            Files.write(outputFile.toPath(), content);
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't write content to file.", ex);
         }
     }
-
 }
