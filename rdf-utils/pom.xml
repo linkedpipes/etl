@@ -10,7 +10,7 @@
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
     <artifactId>rdf-utils</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <description>Contains utilities for working with RDF data.</description>
 
     <dependencies>

@@ -148,7 +148,7 @@ public class EntityMerger {
         }
         //
         final Map<String, List<ValueType>> values = new HashMap<>();
-        final Map<String, List<Reference>> entities = new HashMap<>();
+        final Map<String, List<Reference>> entitiesToCopy = new HashMap<>();
         final Map<String, List<Reference>> entitiesToMerge = new HashMap<>();
         // Iterate over object and merge.
         for (final Reference ref : references) {
@@ -164,10 +164,10 @@ public class EntityMerger {
                         values.get(p).add(value);
                         // If reference add info about reference.
                         if (valueInfo.isIri(value)) {
-                            if (!entities.containsKey(p)) {
-                                entities.put(p, new ArrayList<>(4));
+                            if (!entitiesToCopy.containsKey(p)) {
+                                entitiesToCopy.put(p, new ArrayList<>(4));
                             }
-                            entities.get(p).add(new Reference(
+                            entitiesToCopy.get(p).add(new Reference(
                                     converter.asString(o),
                                     ref.graph,
                                     ref.source));
@@ -198,7 +198,7 @@ public class EntityMerger {
                 writer.add(iri, entry.getKey(), value);
             }
         }
-        for (Map.Entry<String, List<Reference>> entry : entities.entrySet()) {
+        for (Map.Entry<String, List<Reference>> entry : entitiesToCopy.entrySet()) {
             for (Reference value : entry.getValue()) {
                 RdfUtils.copyEntityRecursive(value.resource,
                         value.graph, value.source, writer, type);

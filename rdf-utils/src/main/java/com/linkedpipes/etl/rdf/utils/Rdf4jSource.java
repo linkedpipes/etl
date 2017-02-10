@@ -143,6 +143,12 @@ public class Rdf4jSource implements RdfSource<Value> {
      */
     private final boolean closeOnShutdown;
 
+    /**
+     *
+     * @param repository Initialized repository.
+     * @param closeOnShutdown True if shutdown the repository on close, ie.
+     * the repository is not shared by multiple sources.
+     */
     protected Rdf4jSource(Repository repository, boolean closeOnShutdown) {
         this.repository = repository;
         this.closeOnShutdown = closeOnShutdown;

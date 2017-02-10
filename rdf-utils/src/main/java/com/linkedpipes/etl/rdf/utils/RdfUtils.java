@@ -56,8 +56,8 @@ public class RdfUtils {
                 source.sparqlSelect(queryAsString, String.class);
         if (result.size() != 1) {
             throw new RdfUtilsException(
-                    "Invalid number of results: {} (1 expected)",
-                    result.size());
+                    "Invalid number of results: {} (1 expected) for:\n{}",
+                    result.size(), queryAsString);
         }
         return result.get(0).get(binding);
     }

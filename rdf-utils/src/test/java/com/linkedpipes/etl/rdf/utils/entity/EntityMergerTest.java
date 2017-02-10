@@ -6,15 +6,13 @@ import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import org.eclipse.rdf4j.RDF4JConfigException;
 import org.eclipse.rdf4j.model.Value;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EntityMergerTest {
 
@@ -190,6 +188,57 @@ public class EntityMergerTest {
         Assert.assertNotNull(testObject.reference);
         Assert.assertEquals("a", testObject.reference.value1);
         Assert.assertEquals("b", testObject.reference.value2);
+        //
+        target.shutdown();
+        source.shutdown();
+    }
+
+    @Test
+    public void emptyReferenceList() throws Exception {
+        try {
+            EntityMerger.merge(Collections.EMPTY_LIST,
+                    null, null, null, Value.class);
+            Assert.fail();
+        } catch (RDF4JConfigException ex) {
+            // OK
+        } catch (Exception ex) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void missingDescription() throws Exception {
+        final RdfSource<Value> source = Rdf4jSource.createInMemory();
+        //
+        final RdfBuilder A = RdfBuilder.create(source, "http://graph/A");
+        A.entity("http://res/A")
+                .iri(RDF.TYPE, "http://config/type")
+                .string("http://value/1", "a");
+        A.commit();
+        //
+        final RdfBuilder B = RdfBuilder.create(source, "http://graph/B");
+        B.entity("http://res/B")
+                .string("http://value/1", "b");
+        B.commit();
+        //
+        final List<EntityMerger.Reference> references = new ArrayList<>(3);
+        references.add(new EntityMerger.Reference(
+                "http://res/A", "http://graph/A", source));
+        references.add(new EntityMerger.Reference(
+                "http://res/B", "http://graph/B", source));
+        final EntityMerger.ControlFactory descriptorFactory =
+                Mockito.mock(EntityMerger.ControlFactory.class);
+        //
+        final RdfSource target = Rdf4jSource.createInMemory();
+        try {
+            EntityMerger.merge(references, descriptorFactory,
+                    "http://res/target",
+                    target.getTypedTripleWriter("http://graph/target"),
+                    Value.class);
+            Assert.fail();
+        } catch (RdfUtilsException ex) {
+            // OK
+        }
         //
         target.shutdown();
         source.shutdown();
