@@ -6,25 +6,26 @@
     <version>0.0.0</version>
     <packaging>pom</packaging>
     <name>lp-pom-parent</name>
+    <description>Parent project for core parts of the LinkedPipes ETL.
+    </description>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8
+        <project.reporting.outputEncoding>
+            UTF-8
         </project.reporting.outputEncoding>
         <!-- Libraries. -->
-        <slf4j.version>1.7.12</slf4j.version>
-        <logback.version>1.1.3</logback.version>
-        <jackson.version>2.6.2</jackson.version>
-        <springframework.version>4.2.5.RELEASE</springframework.version>
-        <sesame.version>4.0.0</sesame.version>
-        <jetty.version>9.3.7.v20160115</jetty.version>
-        <lp.version>0.0.0</lp.version>
+        <slf4j.version>1.7.21</slf4j.version>
+        <logback.version>1.1.7</logback.version>
+        <jackson.version>2.7.2</jackson.version>
+        <springframework.version>4.3.4.RELEASE</springframework.version>
+        <rdf4j.version>2.1.4</rdf4j.version>
+        <jetty.version>9.3.14.v20161028</jetty.version>
     </properties>
 
     <dependencies>
-        <!-- Logging API. -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -150,7 +151,13 @@
                 <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
                 <version>1.2.8</version>
             </dependency>
-            <!-- Tests. -->
+            <!-- Test. -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.10.19</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -174,7 +181,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-pmd-plugin</artifactId>
-                        <version>3.5</version>
+                        <version>3.6</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -188,50 +195,17 @@
                             <linkXRef>false</linkXRef>
                             <!-- Output to the console. -->
                             <verbose>true</verbose>
-                            <!-- Number of token to search for cpd - copy and paste. -->
-                            <minimumTokens>100</minimumTokens>
+                            <!--
+                            Minimum number of tokens required to declare
+                            code to be value copy/paste.
+                            -->
+                            <minimumTokens>50</minimumTokens>
                             <failOnViolation>false</failOnViolation>
                             <rulesets>
                                 <ruleset>/rulesets/java/basic.xml</ruleset>
                                 <ruleset>/rulesets/java/braces.xml</ruleset>
-                                <!-- TODO: We can reference our own here: http://pmd.sourceforge.net/pmd-4.3.0/howtomakearuleset.html -->
                             </rulesets>
                         </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>2.16</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.puppycrawl.tools</groupId>
-                                <artifactId>checkstyle</artifactId>
-                                <version>6.10.1</version>
-                            </dependency>
-                            <!-- Contains our checkstyle file. -->
-                            <dependency>
-                                <groupId>com.linkedpipes</groupId>
-                                <artifactId>build-checkstyle</artifactId>
-                                <version>0.0.0</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>validate</id>
-                                <phase>validate</phase>
-                                <configuration>
-                                    <configLocation>checkstyle.xml
-                                    </configLocation>
-                                    <encoding>UTF-8</encoding>
-                                    <consoleOutput>true</consoleOutput>
-                                    <failsOnError>true</failsOnError>
-                                    <linkXRef>false</linkXRef>
-                                </configuration>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -252,7 +226,10 @@
                         </instructions>
                     </configuration>
                 </plugin>
-                <!-- Felix plugin with support for declarative services via annotations. -->
+                <!--
+                Felix plugin with support for declarative services via
+                annotations.
+                -->
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-scr-plugin</artifactId>
