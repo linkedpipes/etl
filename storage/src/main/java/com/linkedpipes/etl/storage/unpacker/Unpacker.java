@@ -281,6 +281,9 @@ class Unpacker {
                             .getConfigurationDescription(template));
                     addedConfigurations.add(templateIri);
                 }
+                // Add configuration description.
+                pipelineObject.addAll(
+                        templates.getConfigurationDescription(template));
             }
             toUnpack = pipelineObject.getTyped(COMPONENT, TEMPLATE);
         }
@@ -442,57 +445,6 @@ class Unpacker {
         });
     }
 
-    /**
-     * Convert connections to port. Remove all connections and runAfter objects.
-     * <p>
-     * TODO Move this after the execution type is set as we need to ignore components that are not executed or mapped.
-     *
-     * @return
-     */
-    private void connectionsToPorts() {
-        pipelineObject.getTyped(CONNECTION).forEach((connection) -> {
-            final RdfObjects.Entity source =
-                    connection.getReference(vf.createIRI(
-                            "http://linkedpipes.com/ontology/sourceComponent"));
-            final Value sourceBinding =
-                    connection.getProperty(vf.createIRI(
-                            "http://linkedpipes.com/ontology/sourceBinding"));
-            final RdfObjects.Entity target =
-                    connection.getReference(vf.createIRI(
-                            "http://linkedpipes.com/ontology/targetComponent"));
-            final Value targetBinding =
-                    connection.getProperty(vf.createIRI(
-                            "http://linkedpipes.com/ontology/targetBinding"));
-            // We add the HAS_SOURCE only if the source component is enabled.
-            try {
-                Value disabled = source.getProperty(HAS_DISABLED);
-                if (disabled instanceof Literal) {
-                    Literal literal = (Literal) disabled;
-                    if (literal.booleanValue()) {
-                        // It is disabled -> skip.
-                        return;
-                    }
-                }
-            } catch (Exception ex) {
-                // It's not disabled.
-            }
-            //
-            final RdfObjects.Entity sourcePort = getPort(source, sourceBinding);
-            final RdfObjects.Entity targetPort = getPort(target, targetBinding);
-            //
-            targetPort.add(HAS_SOURCE, sourcePort);
-        });
-    }
-
-    private void removeConnectionAndRunAfter() {
-        pipelineObject.getTyped(CONNECTION).forEach((item) -> {
-            pipelineObject.remove(item);
-        });
-        pipelineObject.getTyped(RUN_AFTER).forEach((item) -> {
-            pipelineObject.remove(item);
-        });
-    }
-
     private void addPortSourceForMapped() {
         for (UnpackOptions.ExecutionMapping execMap
                 : options.getExecutionMapping()) {
@@ -543,12 +495,15 @@ class Unpacker {
                     }
                     builder.add("http://linkedpipes.com/ontology/execution",
                             executionIri);
+
                     builder.add("http://linkedpipes.com/ontology/debug",
                             sourcePort.getProperty(vf.createIRI(
                                     "http://etl.linkedpipes.com/ontology/debug")));
+
                     builder.add("http://linkedpipes.com/ontology/loadPath",
                             sourcePort.getProperty(vf.createIRI(
                                     "http://etl.linkedpipes.com/ontology/dataPath")));
+
                     builder.add("http://linkedpipes.com/ontology/debugPath",
                             sourcePort.getProperty(vf.createIRI(
                                     "http://etl.linkedpipes.com/ontology/dataPath")));
@@ -576,27 +531,6 @@ class Unpacker {
         }
         // TODO Use custom exception !
         throw new RuntimeException("Missing port.");
-    }
-
-    /**
-     * Add the uriFragment and requirement to each port.
-     */
-    private void addStaticToPorts() {
-        // TODO We could add reference to the RdfObject.Entry instead.
-
-        // TODO Add PORT type - check if used ..
-        Integer counter = 0;
-        for (RdfObjects.Entity port : pipelineObject.getTyped(INPUT, OUTPUT)) {
-            port.add(
-                    vf.createIRI("http://linkedpipes.com/ontology/uriFragment"),
-                    vf.createLiteral("" + ++counter));
-            //
-            port.add(
-                    vf.createIRI(
-                            "http://linkedpipes.com/ontology/requirement"),
-                    vf.createIRI(
-                            "http://linkedpipes.com/resources/requirement/debug"));
-        }
     }
 
     private void addExecutionMetadata() {
@@ -683,76 +617,12 @@ class Unpacker {
         pipelineObject.addAll(toAdd);
     }
 
-    private void addRequirementObjects() {
-        final Collection<Statement> toAdd = new ArrayList<>(16);
-        final IRI workingDir = vf.createIRI(
-                "http://linkedpipes.com/resources/requirement/workingDirectory");
-        toAdd.add(vf.createStatement(
-                workingDir, RDF.TYPE,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/Requirement"),
-                pipelineIri
-        ));
-        toAdd.add(vf.createStatement(
-                workingDir, RDF.TYPE,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/TempDirectory"),
-                pipelineIri
-        ));
-        toAdd.add(vf.createStatement(
-                workingDir,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/target"),
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/workingDirectory"),
-                pipelineIri
-        ));
-        final IRI pplInput = vf.createIRI(
-                "http://etl.linkedpipes.com/resources/components/e-pipelineInput/inputDirectory");
-        toAdd.add(vf.createStatement(
-                pplInput, RDF.TYPE,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/Requirement"),
-                pipelineIri
-        ));
-        toAdd.add(vf.createStatement(
-                pplInput, RDF.TYPE,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/InputDirectory"),
-                pipelineIri
-        ));
-        toAdd.add(vf.createStatement(
-                pplInput,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/target"),
-                vf.createIRI(
-                        "http://linkedpipes.com/resources/components/e-pipelineInput/inputDirectory"),
-                pipelineIri
-        ));
-        final IRI debugDir = vf.createIRI(
-                "http://linkedpipes.com/resources/requirement/debug");
-        toAdd.add(vf.createStatement(
-                debugDir, RDF.TYPE,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/Requirement"),
-                pipelineIri
-        ));
-        toAdd.add(vf.createStatement(
-                debugDir, RDF.TYPE,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/TempDirectory"),
-                pipelineIri
-        ));
-        toAdd.add(vf.createStatement(
-                debugDir,
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/requirements/target"),
-                vf.createIRI(
-                        "http://linkedpipes.com/ontology/debugDirectory"),
-                pipelineIri
-        ));
-        //
-        pipelineObject.addAll(toAdd);
+    private void addComponentTypeToJarType() {
+        final Collection<RdfObjects.Entity> components =
+                pipelineObject.getTyped(JAR_TEMPLATE);
+        components.forEach((component) -> {
+            component.add(RDF.TYPE, COMPONENT);
+        });
     }
 
     private Collection<Statement> collect() {
@@ -816,19 +686,9 @@ class Unpacker {
         // Add execution type to all components.
         unpacker.fillExecutionType();
 
-        // Convert connections to ports.
-        // Connection and runAfter edges are removed.
-        unpacker.connectionsToPorts();
-
-        // Remove connection and runAfter edges.
-        unpacker.removeConnectionAndRunAfter();
-
         // In case of debug-from we need to replaces some port sources
         // with directories.
         unpacker.addPortSourceForMapped();
-
-        // Add uriFragment and debug directory to ports.
-        unpacker.addStaticToPorts();
 
         // Add execution metadata.
         unpacker.addExecutionMetadata();
@@ -839,8 +699,7 @@ class Unpacker {
         // Add information about used repository.
         unpacker.addRepositoryInfo();
 
-        // Add static resources (requirements).
-        unpacker.addRequirementObjects();
+        unpacker.addComponentTypeToJarType();
 
         // Return collected pipeline.
         return unpacker.collect();
