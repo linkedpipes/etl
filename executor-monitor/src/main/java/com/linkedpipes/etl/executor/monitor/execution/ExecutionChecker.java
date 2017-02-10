@@ -46,11 +46,13 @@ class ExecutionChecker {
             throws OperationFailed, ExecutionMismatch {
         //
         final File definitionFile
-                = new File(execution.getDirectory(), "execution.jsonld");
+                = new File(execution.getDirectory(), "execution-v1.jsonld");
         if (!definitionFile.exists()) {
             // No execution directory, the execution must be queued.
+            LOG.info(" {} : loadQueued", execution.getId());
             loadQueued(execution);
         } else {
+            LOG.info(" {} : checkExecution", execution.getId());
             try (InputStream input = new FileInputStream(definitionFile)) {
                 checkExecution(execution, input);
             } catch (IOException ex) {
@@ -170,8 +172,11 @@ class ExecutionChecker {
 
         // Check.
         if (lastChange != null && execution.getLastChange() != null
+                && !lastChange.equals(execution.getLastChange())
                 && lastChange.before(execution.getLastChange())) {
             // We have newer data already loaded.
+            LOG.info(" newer data are already available : {} data from: {}",
+                    execution.getLastChange(), lastChange);
             return;
         }
 
@@ -277,6 +282,8 @@ class ExecutionChecker {
         } else {
             execution.setExecutionStatementsFull(null);
         }
+
+        LOG.info(" {} : {} ", execution.getId(), execution.getStatus());
 
         // For now set change time to every reload.
         execution.setLastChange(checkStart);

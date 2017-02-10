@@ -18,6 +18,9 @@ import java.util.*;
 @Service
 public class ExecutionFacade {
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ExecutionFacade.class);
+
     /**
      * General exception form used to report failures.
      */
@@ -120,7 +123,7 @@ public class ExecutionFacade {
         if (statements == null) {
             // Stream content from a file.
             final File executionFile
-                    = new File(execution.getDirectory(), "execution.jsonld");
+                    = new File(execution.getDirectory(), "execution-v1.jsonld");
             streamFile(executionFile, RDFFormat.JSONLD, format, stream);
         } else {
             // Serialize from the memory.
@@ -200,6 +203,16 @@ public class ExecutionFacade {
     }
 
     /**
+     * Force execution update from a directory.
+     *
+     * @param execution
+     */
+    public void updateFromFile(Execution execution)
+            throws OperationFailed, ExecutionMismatch {
+        ExecutionChecker.updateFromDirectory(execution);
+    }
+
+    /**
      * Must be called when an executor is assigned to the execution.
      *
      * @param execution
@@ -232,6 +245,7 @@ public class ExecutionFacade {
      */
     public void detachExecutor(Execution execution) {
         storage.checkExecution(execution);
+        LOG.info(" detaching: {} {}", execution.getId(), execution.getStatus());
         if (execution.getStatus() != Execution.StatusType.FINISHED) {
             execution.setStatus(Execution.StatusType.DANGLING);
             ExecutionChecker.updateGenerated(execution);
