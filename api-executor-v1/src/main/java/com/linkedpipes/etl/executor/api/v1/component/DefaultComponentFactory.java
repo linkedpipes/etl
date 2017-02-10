@@ -107,11 +107,9 @@ public class DefaultComponentFactory implements ComponentFactory {
                 LOG.info("Can't load class: {}", className, ex);
                 return null;
             }
-            if (!Component.class.isAssignableFrom(clazz)) {
-                continue;
+            if (Component.class.isAssignableFrom(clazz)) {
+                info.classes.add(clazz);
             }
-            // Add to a record.
-            info.classes.add(clazz);
         }
         return info;
     }

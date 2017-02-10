@@ -86,7 +86,8 @@ class DefaultFilesDataUnit
     public Entry createFile(String fileName) throws LpException {
         final File output = new File(writeDirectory, fileName);
         if (output.exists()) {
-            throw new LpException("File already exists.");
+            throw new LpException("File already exists: {} ({})",
+                    fileName, output);
         }
         output.getParentFile().mkdirs();
         return new Entry(output, writeDirectory);

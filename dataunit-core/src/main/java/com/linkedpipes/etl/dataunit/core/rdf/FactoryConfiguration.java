@@ -10,7 +10,7 @@ import java.net.URI;
 /**
  * Configuration for {@link RdfDataUnitFactory}.
  */
-public class FactoryConfiguration implements RdfLoader.Loadable<String> {
+class FactoryConfiguration implements RdfLoader.Loadable<String> {
 
     private String directory;
 
