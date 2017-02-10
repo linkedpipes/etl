@@ -10,7 +10,7 @@ import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
@@ -98,22 +98,17 @@ public class Executor {
                 configuration.getLogCoreFilter()));
     }
 
-    /**
-     * Start the executor in the server mode. In server mode the
-     * executor expose the HTTP interface that can be used to execute
-     * given pipelines.
-     */
-    private static void initializeString() {
+    private static void startExecutorService() {
         initLogger();
-        final AbstractApplicationContext context
+        final ConfigurableApplicationContext context
                 = new ClassPathXmlApplicationContext(
-                "spring/context-executor.xml");
+                "spring/context-service.xml");
         context.registerShutdownHook();
         context.start();
     }
 
     public static void main(String[] args) {
-        initializeString();
+        startExecutorService();
     }
 
 }
