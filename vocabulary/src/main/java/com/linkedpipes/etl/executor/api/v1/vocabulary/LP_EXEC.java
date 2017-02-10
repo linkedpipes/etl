@@ -9,19 +9,22 @@ public final class LP_EXEC {
     private static final String PREFIX = "http://linkedpipes.com/ontology/";
 
     /**
-     * TODO Change to resource
+     * Update
      */
-    public static final String TYPE_EXECUTE = PREFIX + "Execute";
+    public static final String TYPE_EXECUTE =
+            "http://linkedpipes.com/resources/execution/type/execute";
 
     /**
-     * TODO Change to resource
+     * TODO Update
      */
-    public static final String TYPE_MAPPED = PREFIX + "Mapped";
+    public static final String TYPE_MAPPED =
+            "http://linkedpipes.com/resources/execution/type/mapped";
 
     /**
-     * TODO Change to resource
+     * TODO Update
      */
-    public static final String TYPE_SKIP = PREFIX + "Skip";
+    public static final String TYPE_SKIP =
+            "http://linkedpipes.com/resources/execution/type/skip";
 
     /**
      * The working directory is assigned under this predicate.
@@ -50,7 +53,8 @@ public final class LP_EXEC {
      * Dataunit can have a data source, in such case the content
      * is loaded from the source instead of loading from sources.
      */
-    public static final String HAS_SOURCE = PREFIX + "source";
+    public static final String HAS_SOURCE =
+            "http://linkedpipes.com/ontology/dataSource";
 
     /**
      * Component has a reference to the configuration entity.
@@ -60,7 +64,12 @@ public final class LP_EXEC {
     /**
      * Represent ordering of elements.
      */
-    public static final String HAS_ORDER = PREFIX + "order";
+    public static final String HAS_ORDER =
+            "http://linkedpipes.com/ontology/configuration/order";
+
+    // @TODO Merge with HAS_ORDER
+    public static final String HAS_ORDER_EXEC =
+            "http://linkedpipes.com/ontology/executionOrder";
 
     /**
      * Type of execution that should be used for given component.

@@ -16,36 +16,44 @@ public final class LP_PIPELINE {
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
+    // @TODO Update to ../dataUnit/files/DirectoryMirror
     public static final String FILE_DATA_UNIT =
-            PREFIX + "dataUnit/files/DirectoryMirror";
+            PREFIX + "dataUnit/system/1.0/files/DirectoryMirror";
 
     public static final String SINGLE_GRAPH_DATA_UNIT =
-            PREFIX + "dataUnit/rdf/SingleGraph";
+            PREFIX + "dataUnit/sesame/1.0/rdf/SingleGraph";
 
     public static final String GRAPH_LIST_DATA_UNIT =
-            PREFIX + "dataUnit/rdf/DirectoryMirror";
+            PREFIX + "dataUnit/sesame/1.0/rdf/GraphList";
 
     public static final String CHUNKED_TRIPLES_DATA_UNIT =
-            PREFIX + "dataUnit/rdf/ChunkedTriples";
+            PREFIX + "dataUnit/sesame/1.0/rdf/Chunked";
+
+    public static final String RDF_REPOSITORY =
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository";
 
     /**
      * Define requirement for working directory.
-     * TODO As a resource?
      */
     public static final String WORKING_DIRECTORY =
-            PREFIX + "WorkingDirectory";
+            "http://linkedpipes.com/resources/requirement/workingDirectory";
 
     /**
      * Define requirement for input directory.
-     * TODO As a resource?
      */
     public static final String INPUT_DIRECTORY =
-            PREFIX + "InputDirectory";
+            "http://linkedpipes.com/ontology/requirements/InputDirectory";
+
+    /**
+     * Input port.
+     */
+    public static final String INPUT = "http://linkedpipes.com/ontology/Input";
 
     /**
      * Output port.
      */
-    public static final String OUTPUT = PREFIX + "Output";
+    public static final String OUTPUT =
+            "http://linkedpipes.com/ontology/Output";
 
     /**
      * Pipeline has a component.
@@ -102,14 +110,17 @@ public final class LP_PIPELINE {
     /**
      * Path to JAR of given component.
      */
-    public static final String HAS_JAR_PATH = PREFIX + "jarPath";
+    public static final String HAS_JAR_URL =
+            "http://linkedpipes.com/ontology/jar";
 
     /**
      * Reference to a graph with a configuration, used to reference
      * configuration by frontend.
+     *
+     * TODO: Change to lp:configurationGraph
      */
     public static final String HAS_CONFIGURATION_GRAPH =
-            PREFIX + "configurationGraph";
+            "http://linkedpipes.com/ontology/configuration/graph";
 
     /**
      * Component has a template.

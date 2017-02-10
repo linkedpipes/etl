@@ -52,7 +52,8 @@ public class LP_OBJECTS {
     /**
      * Point to type the object describe.
      */
-    public static final String HAS_DESCRIBE = PREFIX + "type";
+    public static final String HAS_DESCRIBE =
+            "http://plugins.linkedpipes.com/ontology/configuration/type";
 
     /**
      * Description has member entities.
