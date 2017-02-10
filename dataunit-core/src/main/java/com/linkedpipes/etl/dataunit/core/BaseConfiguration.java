@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.dataunit.core;
 
-import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
@@ -45,15 +44,6 @@ public class BaseConfiguration implements RdfLoader.Loadable<String> {
                 break;
         }
         return null;
-    }
-
-    /**
-     * Validate entity after it has been loaded.
-     */
-    public void validate() throws LpException {
-        if (binding == null) {
-            throw new LpException("Missing 'binding' property for: {}", iri);
-        }
     }
 
     /**

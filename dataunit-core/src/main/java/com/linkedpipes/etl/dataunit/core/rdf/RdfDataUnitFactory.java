@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.URI;
 
+import static com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE.RDF_REPOSITORY;
+
 /**
  * The factory is also used to store and hold shared repository.
  */
@@ -92,8 +94,7 @@ public class RdfDataUnitFactory
             final String resource = RdfUtils.sparqlSelectSingle(definition,
                     getConfigurationQuery(pipeline, graph), "r");
             final FactoryConfiguration config = new FactoryConfiguration();
-            RdfLoader.load(definition, configuration,
-                    resource, graph, String.class);
+            RdfLoader.load(definition, config, resource, graph, String.class);
             // Save at the end.
             this.configuration = config;
         } catch (RdfUtilsException ex) {
@@ -113,21 +114,20 @@ public class RdfDataUnitFactory
 
     @Override
     public void onPipelineEnd() {
-        configuration = null;
-        //
         if (repository == null) {
             return;
         }
         try {
-            LOG.info("Saving repository ... ");
+            LOG.info("Closing repository ... ");
             repository.shutDown();
-            LOG.info("Saving repository ... done");
+            repository = null;
+            LOG.info("Closing repository ... done");
         } catch (RepositoryException ex) {
             LOG.error("Can't close repository.", ex);
-            repository = null;
             return;
         }
         // Delete the directory.
+        LOG.info("Deleting content ...");
         final File workingDirectory = configuration.getDirectory();
         FileUtils.deleteQuietly(workingDirectory);
         // It may take some time before the file is released.
@@ -138,13 +138,14 @@ public class RdfDataUnitFactory
             }
             FileUtils.deleteQuietly(workingDirectory);
         }
-        LOG.info("Working directory deleted.");
+        LOG.info("Deleting content ... done");
     }
 
     private String getConfigurationQuery(String pipeline, String graph) {
         return "SELECT ?r WHERE { GRAPH <" + graph + "> { " +
-                " <" + pipeline + ">" + LP_PIPELINE.HAS_REPOSITORY + "> ?r ." +
-                "} }";
+                " <" + pipeline + "> <" + LP_PIPELINE.HAS_REPOSITORY +
+                "> ?r ." +
+                " ?r a <" + RDF_REPOSITORY + "> . } }";
     }
 
 }
