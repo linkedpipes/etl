@@ -4,11 +4,11 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-parent</artifactId>
-        <version>0.0.0</version>
+        <version>1.0.0</version>
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
     <artifactId>storage</artifactId>
-    <version>0.0.0</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>lp-storage</name>
     <description>Provides a storage for pipelines and components.</description>
@@ -77,48 +77,48 @@
         </dependency>
         <!-- Sesame as our choice for core RDF. -->
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-model</artifactId>
-            <version>${sesame.version}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model</artifactId>
+            <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-api</artifactId>
-            <version>${sesame.version}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-api</artifactId>
+            <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-sail</artifactId>
-            <version>${sesame.version}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sail</artifactId>
+            <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-sparql</artifactId>
-            <version>${sesame.version}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sparql</artifactId>
+            <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-sail-nativerdf</artifactId>
-            <version>${sesame.version}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-nativerdf</artifactId>
+            <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-sail-memory</artifactId>
-            <version>${sesame.version}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-memory</artifactId>
+            <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-jsonld</artifactId>
-            <version>${sesame.version}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-jsonld</artifactId>
+            <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
-        <!-- HTTP related, particulary: Multipart file upload. -->
+        <!-- HTTP related, particularly: Multipart file upload. -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -147,7 +147,8 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.linkedpipes.etl.storage.Storage</mainClass>
+                            <mainClass>com.linkedpipes.etl.storage.Storage
+                            </mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
@@ -160,12 +161,12 @@
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <outputDirectory>${project.build.directory}/lib
+                            </outputDirectory>
                             <!-- The two lines below tell Maven not to include test scoped dependencies. -->
                             <includeScope>runtime</includeScope>
                             <excludeScope>provided</excludeScope>
@@ -175,51 +176,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <activation>
-                <property>
-                    <name>!noDeploy</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.8</version>
-                        <executions>
-                            <execution>
-                                <id>copy-dependencies</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}/..">
-                                            <fileset dir="{project.build.directory}/../deploy">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
-                                        <copy todir="${deploy.directory}">
-                                            <fileset dir="${project.build.directory}">
-                                                <include name="storage.jar"/>
-                                            </fileset>
-                                        </copy>
-                                        <mkdir dir="${deploy.directory}/lib"/>
-                                        <copy todir="${deploy.directory}/lib">
-                                            <fileset dir="${project.build.directory}/lib" />
-                                        </copy>
-                                        <chmod perm="u+x" file="${deploy.directory}/../storage.sh" />
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

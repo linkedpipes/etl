@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Statement;
 
 import java.io.File;
 import java.util.Collections;

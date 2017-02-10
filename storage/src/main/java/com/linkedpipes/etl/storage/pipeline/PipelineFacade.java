@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

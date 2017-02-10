@@ -5,8 +5,8 @@ import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.ExecutionM
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.OperationFailed;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.UnknownExecution;
 import org.apache.commons.io.FileUtils;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

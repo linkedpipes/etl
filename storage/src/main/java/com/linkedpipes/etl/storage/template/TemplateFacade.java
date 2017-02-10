@@ -3,8 +3,8 @@ package com.linkedpipes.etl.storage.template;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.mapping.MappingFacade;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

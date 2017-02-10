@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 /**
  * Represent a thin template that can modify basic component
