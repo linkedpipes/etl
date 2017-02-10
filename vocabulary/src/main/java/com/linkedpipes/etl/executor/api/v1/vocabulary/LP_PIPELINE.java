@@ -16,13 +16,21 @@ public final class LP_PIPELINE {
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
-    // @TODO Update to ../dataUnit/files/DirectoryMirror
+    /**
+     * TODO Update to ../dataUnit/files/DirectoryMirror
+     */
     public static final String FILE_DATA_UNIT =
             PREFIX + "dataUnit/system/1.0/files/DirectoryMirror";
 
+    /**
+     * TODO Update to rdf4j
+     */
     public static final String SINGLE_GRAPH_DATA_UNIT =
             PREFIX + "dataUnit/sesame/1.0/rdf/SingleGraph";
 
+    /**
+     * TODO Update to rdf4j
+     */
     public static final String GRAPH_LIST_DATA_UNIT =
             PREFIX + "dataUnit/sesame/1.0/rdf/GraphList";
 

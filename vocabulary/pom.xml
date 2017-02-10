@@ -6,9 +6,10 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-parent</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.0</version>
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
     <artifactId>vocabulary</artifactId>
+    <name>lp-vocabulary</name>
     <packaging>jar</packaging>
 </project>

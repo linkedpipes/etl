@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
-public class LP_OBJECTS {
+public final class LP_OBJECTS {
 
     private LP_OBJECTS() {
 

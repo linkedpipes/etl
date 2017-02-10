@@ -8,21 +8,12 @@ public final class LP_EXEC {
 
     private static final String PREFIX = "http://linkedpipes.com/ontology/";
 
-    /**
-     * Update
-     */
     public static final String TYPE_EXECUTE =
             "http://linkedpipes.com/resources/execution/type/execute";
 
-    /**
-     * TODO Update
-     */
     public static final String TYPE_MAPPED =
             "http://linkedpipes.com/resources/execution/type/mapped";
 
-    /**
-     * TODO Update
-     */
     public static final String TYPE_SKIP =
             "http://linkedpipes.com/resources/execution/type/skip";
 
@@ -67,7 +58,9 @@ public final class LP_EXEC {
     public static final String HAS_ORDER =
             "http://linkedpipes.com/ontology/configuration/order";
 
-    // @TODO Merge with HAS_ORDER
+    /**
+     * TODO Merge with HAS_ORDER
+     */
     public static final String HAS_ORDER_EXEC =
             "http://linkedpipes.com/ontology/executionOrder";
 
