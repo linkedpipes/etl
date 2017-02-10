@@ -129,13 +129,13 @@ class DefaultFilesDataUnit
     }
 
     @Override
-    public List<File> save(File directory) throws LpException {
+    public void save(File directory) throws LpException {
         final Path dirPath = directory.toPath();
         final List<String> directories = readDirectories.stream().map(
                 (file) -> dirPath.relativize(file.toPath()).toString()
         ).collect(Collectors.toList());
         JsonUtils.save(new File(directory, "data.json"), directories);
-        return readDirectories;
+        JsonUtils.save(new File(directory, "debug.json"), directories);
     }
 
     @Override

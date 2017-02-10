@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
+import com.linkedpipes.etl.dataunit.core.JsonUtils;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.eclipse.rdf4j.model.IRI;
@@ -47,7 +48,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
     public void initialize(File directory) throws LpException {
         execute((connection) -> {
             try {
-                connection.add(new File(directory, "data.ttl"),
+                connection.add(new File(directory, "data/data.ttl"),
                         "http://localhost/",
                         RDFFormat.TURTLE,
                         graph);
@@ -76,8 +77,10 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
     }
 
     @Override
-    public List<File> save(File directory) throws LpException {
-        final File dataFile = new File(directory, "data.ttl");
+    public void save(File directory) throws LpException {
+        final File dataDirectory = new File(directory, "data");
+        dataDirectory.mkdirs();
+        final File dataFile = new File(dataDirectory, "data.ttl");
         execute((connection) -> {
             try (FileOutputStream stream = new FileOutputStream(dataFile)) {
                 final RDFWriter writer =
@@ -88,7 +91,10 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
                 throw new LpException("Can't write data to file.", ex);
             }
         });
-        return Arrays.asList(directory);
+        final List<String> debugDirectories = Arrays.asList(
+                directory.toPath().relativize(dataDirectory.toPath())
+                        .toString());
+        JsonUtils.save(new File(directory, "debug.json"), debugDirectories);
     }
 
     @Override

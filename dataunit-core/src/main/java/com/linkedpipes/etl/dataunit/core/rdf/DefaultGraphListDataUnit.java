@@ -80,13 +80,14 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
     }
 
     @Override
-    public List<File> save(File directory) throws LpException {
+    public void save(File directory) throws LpException {
         // Save metadata file.
         final List<String> directories = graphs.stream().map(
                 (item) -> item.stringValue()).collect(Collectors.toList());
         JsonUtils.save(new File(directory, "data.json"), directories);
         // Save data file.
         final File dataDirectory = new File(directory, "data");
+        dataDirectory.mkdirs();
         final File dataFile = new File(dataDirectory, "data.trig");
         execute((connection) -> {
             try (FileOutputStream stream = new FileOutputStream(dataFile)) {
@@ -97,7 +98,11 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
                 throw new LpException("Can't write data to file.", ex);
             }
         });
-        return Arrays.asList(dataDirectory);
+        //
+        final List<String> debugDirectories = Arrays.asList(
+                directory.toPath().relativize(dataDirectory.toPath())
+                        .toString());
+        JsonUtils.save(new File(directory, "debug.json"), debugDirectories);
     }
 
     @Override

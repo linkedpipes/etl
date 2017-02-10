@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.api.v1.dataunit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,14 +35,13 @@ public interface ManageableDataUnit extends DataUnit {
      *
      * This method can be called multiple times.
      *
-     * The method must return list of directories that contains data that
-     * can be shown to user as a content of this data unit. The returned
-     * paths must be in scope of the execution.
+     * The method must also create a "debug.json" file in
+     * given directory, that contains reference to directories
+     * with debug data for the user.
      *
      * @param directory
-     * @return Optionally additional directories that contains data.
      */
-    List<File> save(File directory) throws LpException;
+    void save(File directory) throws LpException;
 
     /**
      * Close given data unit. After this call no other method is called.
