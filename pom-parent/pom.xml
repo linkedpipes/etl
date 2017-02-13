@@ -23,6 +23,7 @@
         <springframework.version>4.3.4.RELEASE</springframework.version>
         <rdf4j.version>2.1.4</rdf4j.version>
         <jetty.version>9.3.14.v20161028</jetty.version>
+        <lp.version>0.0.0</lp.version>
     </properties>
 
     <dependencies>
