@@ -1,16 +1,16 @@
-package com.linkedpipes.etl.component.test;
+package com.linkedpipes.etl.test;
 
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MockedExceptionFactory implements ExceptionFactory {
+class MockedExceptionFactory implements ExceptionFactory {
 
     public static class MockedLpException extends LpException {
 
-        public MockedLpException(String message) {
-            super(message);
+        public MockedLpException() {
+            super("");
         }
 
     }
@@ -21,7 +21,7 @@ public class MockedExceptionFactory implements ExceptionFactory {
     @Override
     public LpException failure(String message, Object... args) {
         LOG.error("Exception: " + message, args);
-        return new MockedLpException("failure");
+        return new MockedLpException();
     }
 
 }

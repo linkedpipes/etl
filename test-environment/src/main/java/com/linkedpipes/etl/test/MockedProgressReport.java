@@ -1,12 +1,12 @@
-package com.linkedpipes.etl.component.test;
+package com.linkedpipes.etl.test;
 
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-final class MockedProgressReport implements ProgressReport {
+class MockedProgressReport implements ProgressReport {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(MockedProgressReport.class);
