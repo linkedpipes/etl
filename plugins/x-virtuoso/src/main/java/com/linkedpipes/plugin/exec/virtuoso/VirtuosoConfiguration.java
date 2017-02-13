@@ -6,14 +6,13 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 public class VirtuosoConfiguration {
 
     @RdfToPojo.Property(iri = VirtuosoVocabulary.VIRTUOSO_URI)
-    private String virtuosoUrl =
-            "jdbc:virtuoso://localhost:1111/charset=UTF-8/";
+    private String virtuosoUrl = "";
 
     @RdfToPojo.Property(iri = VirtuosoVocabulary.USERNAME)
-    private String username = "dba";
+    private String username = "";
 
     @RdfToPojo.Property(iri = VirtuosoVocabulary.PASSWORD)
-    private String password = "dba";
+    private String password = "";
 
     @RdfToPojo.Property(iri = VirtuosoVocabulary.CLEAR_GRAPH)
     private boolean clearDestinationGraph = false;
@@ -32,6 +31,9 @@ public class VirtuosoConfiguration {
 
     @RdfToPojo.Property(iri = VirtuosoVocabulary.CLEAR_LOAD_GRAPH)
     private boolean clearLoadList = true;
+
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.LOADER_COUNT)
+    private int loaderCount = 1;
 
     public VirtuosoConfiguration() {
     }
@@ -106,5 +108,13 @@ public class VirtuosoConfiguration {
 
     public void setClearLoadList(boolean clearLoadList) {
         this.clearLoadList = clearLoadList;
+    }
+
+    public int getLoaderCount() {
+        return loaderCount;
+    }
+
+    public void setLoaderCount(int loaderCount) {
+        this.loaderCount = loaderCount;
     }
 }

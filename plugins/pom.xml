@@ -70,6 +70,8 @@
         <module>t-geoTools</module>
         <module>l-sparqlEndpointChunked</module>
         <module>t-bingTranslator</module>
+        <module>t-chunkedToTurtle</module>
+        <module>t-streamCompression</module>
     </modules>
 
 </project>

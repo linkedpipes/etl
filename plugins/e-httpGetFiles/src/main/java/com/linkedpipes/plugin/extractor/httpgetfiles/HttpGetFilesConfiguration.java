@@ -103,6 +103,9 @@ public class HttpGetFilesConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_THREADS)
     private int threads = 1;
 
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_DETAIL_LOG)
+    private boolean detailLogging = false;
+
     public HttpGetFilesConfiguration() {
     }
 
@@ -144,5 +147,13 @@ public class HttpGetFilesConfiguration {
 
     public void setThreads(int threads) {
         this.threads = threads;
+    }
+
+    public boolean isDetailLogging() {
+        return detailLogging;
+    }
+
+    public void setDetailLogging(boolean detailLogging) {
+        this.detailLogging = detailLogging;
     }
 }

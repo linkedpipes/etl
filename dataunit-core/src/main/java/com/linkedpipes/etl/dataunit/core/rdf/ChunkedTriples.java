@@ -3,6 +3,7 @@ package com.linkedpipes.etl.dataunit.core.rdf;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.eclipse.rdf4j.model.Statement;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -35,5 +36,12 @@ public interface ChunkedTriples extends Iterable<ChunkedTriples.Chunk> {
     }
 
     long size();
+
+    /**
+     * TODO Move to special interface
+     *
+     * @return Directories with content of the chunked data unit.
+     */
+    Collection<File> getSourceDirectories();
 
 }

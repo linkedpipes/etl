@@ -82,6 +82,8 @@ public final class TabularVocabulary {
     public static final String HAS_ENCODE_TYPE = LOCAL_PREFIX +
             "encodeType";
 
+    public static final String HAS_SKIP_LINES = LOCAL_PREFIX + "skipLines";
+
     private TabularVocabulary() {
     }
 

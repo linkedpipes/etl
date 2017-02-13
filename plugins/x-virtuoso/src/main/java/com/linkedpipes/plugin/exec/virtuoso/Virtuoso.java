@@ -20,15 +20,13 @@ public final class Virtuoso implements Component, SequentialExecution {
 
     private static final String SQL_LD_DIR = "ld_dir (?, ?, ?)";
 
-    private static final String SQL_QUERY_WAITING
-            =
+    private static final String SQL_QUERY_WAITING =
             "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state <> 2";
 
-    private static final String SQL_DELETE_LOAD_LIST
-            = "delete from DB.DBA.load_list where ll_file like ?";
+    private static final String SQL_DELETE_LOAD_LIST =
+            "delete from DB.DBA.load_list where ll_file like ?";
 
-    private static final String SQL_QUERY_FINISHED
-            =
+    private static final String SQL_QUERY_FINISHED =
             "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state = 2";
 
     @Component.Configuration
@@ -50,7 +48,7 @@ public final class Virtuoso implements Component, SequentialExecution {
                     .failure("Can't connect to Virtuoso repository.", ex);
         }
         try {
-            uploadData(virtuosoRepository);
+            loadToRepository(virtuosoRepository);
         } finally {
             try {
                 virtuosoRepository.shutDown();
@@ -60,7 +58,7 @@ public final class Virtuoso implements Component, SequentialExecution {
         }
     }
 
-    private void uploadData(VirtuosoRepository virtuosoRepository)
+    public void loadToRepository(VirtuosoRepository virtuosoRepository)
             throws LpException {
         // Delete data if set.
         if (configuration.isClearDestinationGraph()) {

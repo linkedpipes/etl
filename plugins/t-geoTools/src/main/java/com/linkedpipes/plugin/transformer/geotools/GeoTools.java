@@ -40,9 +40,6 @@ public final class GeoTools implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(GeoTools.class);
 
-    private static final IRI XSD_DOUBLE = SimpleValueFactory.getInstance()
-            .createIRI("http://www.w3.org/2001/XMLSchema#decimal");
-
     public static final IRI GML_POINT = SimpleValueFactory.getInstance()
             .createIRI("http://www.opengis.net/ont/gml#Point");
 
@@ -66,6 +63,8 @@ public final class GeoTools implements Component, SequentialExecution {
 
     private CoordinateReferenceSystem targetCrs = null;
 
+    private Value targetCrsName;
+
     private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     private boolean printTypeWarning = false;
@@ -74,7 +73,10 @@ public final class GeoTools implements Component, SequentialExecution {
     public void execute() throws LpException {
         //
         try {
-            targetCrs = CRS.decode(configuration.getOutputCoordType());
+            String crsName  = configuration.getOutputCoordType();
+            // TODO Check for EPSG:5514 ?
+            targetCrsName = valueFactory.createLiteral(crsName);
+            targetCrs = CRS.decode(crsName);
         } catch (Exception ex) {
             throw exceptionFactory.failure("Can't create output CRS: {}",
                     configuration.getOutputCoordType(), ex);
@@ -120,6 +122,8 @@ public final class GeoTools implements Component, SequentialExecution {
                 }
             }
             // Check all remaining resources and process them.
+            final String defaultCoordType =
+                    getType(configuration.getCoordType());
             for (Map.Entry<Resource, Point> entry : resources.entrySet()) {
                 final Point point = entry.getValue();
                 if (!point.hasType || point.coord == null) {
@@ -127,8 +131,8 @@ public final class GeoTools implements Component, SequentialExecution {
                 }
                 //
                 if (point.coordType == null) {
-                    process(entry.getKey(), point.coord,
-                            configuration.getCoordType(), outputBuffer);
+                    process(entry.getKey(), point.coord, defaultCoordType
+                            , outputBuffer);
                 } else {
                     process(entry.getKey(), point.coord,
                             point.coordType, outputBuffer);
@@ -206,15 +210,12 @@ public final class GeoTools implements Component, SequentialExecution {
                 entity, RDF.TYPE, GML_POINT));
 
         outputBuffer.add(valueFactory.createStatement(
-                entity, GML_SRS_NAME, valueFactory.createLiteral(coordType)));
+                entity, GML_SRS_NAME, targetCrsName));
 
+        final String value = doubleToStr(transX) + " " + doubleToStr(transY);
         outputBuffer.add(valueFactory.createStatement(entity,
-                valueFactory.createIRI("http://schema.org/longitude"),
-                valueFactory.createLiteral(doubleToStr(transY), XSD_DOUBLE)));
-
-        outputBuffer.add(valueFactory.createStatement(entity,
-                valueFactory.createIRI("http://schema.org/latitude"),
-                valueFactory.createLiteral(doubleToStr(transX), XSD_DOUBLE)));
+                valueFactory.createIRI("http://www.opengis.net/ont/gml#pos"),
+                valueFactory.createLiteral(value)));
 
     }
 
@@ -223,10 +224,18 @@ public final class GeoTools implements Component, SequentialExecution {
     }
 
     private static String getType(Value type) {
+        return getType(type.stringValue());
+    }
+
+    private static String getType(String type) {
         // urn:ogc:def:crs:EPSG::5514 --> EPSG:5514
-        String typeAsStr = type.stringValue();
-        typeAsStr = typeAsStr.substring(typeAsStr.lastIndexOf("crs:") + 4);
-        return typeAsStr.replaceFirst("::", ":");
+        // EPSG:5514 --> EPSG:5514
+        final int crsIndex = type.lastIndexOf("crs:");
+        if (crsIndex != -1) {
+            type = type.substring(type.lastIndexOf("crs:") + 4)
+                    .replaceFirst("::", ":");
+        }
+        return type;
     }
 
     private DirectPosition2D createDirectPosition(double x, double y,

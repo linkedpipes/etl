@@ -13,7 +13,7 @@ public class ParserCsvConfig {
 
     final String quoteChar;
 
-    final String delimiterChar;
+    final char delimiterChar;
 
     final String encoding;
 
@@ -25,7 +25,7 @@ public class ParserCsvConfig {
 
     final boolean checkStaticRowCounter;
 
-    public ParserCsvConfig(String quoteChar, String delimiterChar,
+    public ParserCsvConfig(String quoteChar, char delimiterChar,
             String encoding, Integer numberOfStartLinesToIgnore,
             Integer rowLimit, boolean hasHeader,
             boolean checkStaticRowCounter) {
@@ -36,13 +36,7 @@ public class ParserCsvConfig {
         } else {
             this.quoteChar = quoteChar;
         }
-        if (delimiterChar == null) {
-            this.delimiterChar = ",";
-            LOG.warn("Property delimiterChar is not set, '{}' is used as "
-                    + "default.", this.delimiterChar);
-        } else {
-            this.delimiterChar = delimiterChar;
-        }
+        this.delimiterChar = delimiterChar;
         if (encoding == null) {
             this.encoding = "UTF-8";
             LOG.warn("Property encoding is not set, '{}' is used as default.",

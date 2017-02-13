@@ -45,12 +45,12 @@ public class ParserCsv implements Parser {
             };
             // Quate char is never used.
             csvPreference = new CsvPreference.Builder(' ',
-                    config.delimiterChar.charAt(0),
+                    config.delimiterChar,
                     "\\n").useQuoteMode(customQuoteMode).build();
         } else {
             csvPreference = new CsvPreference.Builder(
                     config.quoteChar.charAt(0),
-                    config.delimiterChar.charAt(0),
+                    config.delimiterChar,
                     "\\n").build();
         }
         if (!config.checkStaticRowCounter || rowNumber == 0) {

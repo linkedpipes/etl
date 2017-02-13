@@ -8,7 +8,7 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import net.sf.saxon.s9api.*;
+import net.sf.saxon.s9api.SaxonApiException;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQuery;
@@ -17,11 +17,14 @@ import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.stream.StreamSource;
 import java.io.File;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Xslt implements Component, SequentialExecution {
 
@@ -47,18 +50,6 @@ public final class Xslt implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        final Processor processor = new Processor(false);
-        processor.registerExtensionFunction(UUIDGenerator.getInstance());
-
-        final XsltCompiler compiler = processor.newXsltCompiler();
-        final XsltExecutable executable;
-        try {
-            executable = compiler.compile(new StreamSource(
-                    new StringReader(configuration.getXsltTemplate())));
-        } catch (SaxonApiException ex) {
-            throw exceptionFactory.failure(
-                    "Can't compile template.", ex);
-        }
         // Load name mapping from input to output.
         final Map<String, String> nameMapping = new HashMap<>();
         parametersRdf.execute((connection) -> {
@@ -75,23 +66,27 @@ public final class Xslt implements Component, SequentialExecution {
                         binding.getValue("outputName").stringValue());
             }
         });
-        //
-        progressReport.start(inputFiles.size());
+        // Prepare
+        final ConcurrentLinkedQueue<XsltWorker.Payload> workQueue =
+                new ConcurrentLinkedQueue<>();
+        final ConcurrentLinkedQueue<Exception> exceptions =
+                new ConcurrentLinkedQueue<>();
         for (FilesDataUnit.Entry entry : inputFiles) {
-            LOG.debug("Processing: {}", entry.getFileName());
-            final File inputFile = entry.toFile();
+            final XsltWorker.Payload payload = new XsltWorker.Payload();
+            payload.entry = entry;
             // Prepare output name.
             final File outputFile;
             if (nameMapping.containsKey(entry.getFileName())) {
                 outputFile = outputFiles.createFile(
                         nameMapping.get(entry.getFileName()));
+                nameMapping.get(entry.getFileName());
             } else {
-                outputFile = outputFiles.createFile(addExtension(
+                payload.output = outputFiles.createFile(addExtension(
                         entry.getFileName(),
                         configuration.getNewExtension()));
             }
             // Prepare transformer.
-            final XsltTransformer transformer = executable.load();
+
             if (parametersRdf != null) {
                 LOG.debug("Reading parameters.");
                 parametersRdf.execute((connection) -> {
@@ -112,51 +107,55 @@ public final class Xslt implements Component, SequentialExecution {
                         //
                         LOG.debug("Parameter: {} = {}", name, value);
                         //
-                        transformer.setParameter(new QName(name),
-                                new XdmAtomicValue(value));
+                        payload.parameter.add(
+                                new XsltWorker.Parameter(name, value));
+
                     }
                 });
             }
-            // Transform
-            LOG.debug("Transforming ...");
-            boolean deleteFile = false;
-            final Serializer output = new Serializer(outputFile);
-            try {
-                transformer.setSource(new StreamSource(inputFile));
-                transformer.setDestination(output);
-                transformer.transform();
-            } catch (SaxonApiException ex) {
-                if (configuration.isSkipOnError()) {
-                    LOG.error("Can't transform file: {}",
-                            entry.getFileName(), ex);
-                    deleteFile = true;
-                } else {
-                    throw exceptionFactory.failure(
-                            "Can't transform file.", ex);
-                }
-            } finally {
-                // Clear document cache.
-                try {
-                    output.close();
-                } catch (SaxonApiException ex) {
-                    LOG.warn("Can't close output.", ex);
-                }
-                transformer.getUnderlyingController().clearDocumentPool();
-                try {
-                    transformer.close();
-                } catch (SaxonApiException ex) {
-                    LOG.warn("Can't close transformer.", ex);
-                }
-            }
-            // If the transformation fail, we may end up with incomplete
-            // output file. So we need to delete it after the output
-            // streams are closed.
-            if (deleteFile) {
-                outputFile.delete();
-            }
-            //
-            progressReport.entryProcessed();
+            workQueue.add(payload);
         }
+        // Execute.
+        long size = inputFiles.size();
+        progressReport.start(size);
+        final ExecutorService executor = Executors.newFixedThreadPool(
+                configuration.getThreads());
+        final AtomicInteger counter = new AtomicInteger();
+        for (int i = 0; i < configuration.getThreads(); ++i) {
+            XsltWorker worker = new XsltWorker(workQueue, exceptions, counter,
+                    configuration.isSkipOnError(), size, progressReport);
+            try {
+                worker.initialize(configuration.getXsltTemplate());
+            } catch (SaxonApiException ex) {
+                throw exceptionFactory.failure("Can't initialize XSLT.", ex);
+            }
+            executor.submit(worker);
+        }
+        executor.shutdown();
+        while (true) {
+            try {
+                if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    break;
+                }
+            } catch (InterruptedException ex) {
+                // Ignore.
+            }
+        }
+        // Check exceptions.
+        if (!exceptions.isEmpty()) {
+            int errorCounter = 0;
+            for (Exception exception : exceptions) {
+                ++errorCounter;
+                LOG.error("Can't transform file.", exception);
+            }
+            LOG.info("Transformed {}/{}", errorCounter, size);
+            if (!configuration.isSkipOnError()) {
+                throw exceptionFactory.failure("Can't transform all files.");
+            }
+        } else {
+            LOG.info("Transformed {}/{}", size, size);
+        }
+        //
         progressReport.done();
     }
 

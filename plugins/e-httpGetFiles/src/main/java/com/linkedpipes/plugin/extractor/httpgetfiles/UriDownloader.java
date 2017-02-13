@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.extractor.httpgetfiles;
 
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,14 +70,28 @@ class UriDownloader {
                 try {
                     connection = createConnection(work.source, work.headers);
                 } catch (IOException ex) {
+                    LOG.error("Can't create connection to: {}", ex);
                     exceptions.add(ex);
                     progressReport.entryProcessed();
+                    continue;
+                }
+                if (configuration.isDetailLogging()) {
+                    logDetails(connection);
+                }
+                if (connection.getResponseCode() < 200 ||
+                        connection.getResponseCode() > 299) {
+                    final Exception ex = new Exception(
+                            "Invalid response code: " +
+                                    connection.getResponseCode());
+                    LOG.error("Can't download file: {}", ex);
+                    exceptions.add(ex);
                     continue;
                 }
                 // Copy content.
                 try (InputStream inputStream = connection.getInputStream()) {
                     FileUtils.copyInputStreamToFile(inputStream, work.target);
                 } catch (IOException ex) {
+                    LOG.error("Can't download file: {}", ex);
                     exceptions.add(ex);
                     continue;
                 } finally {
@@ -86,6 +101,7 @@ class UriDownloader {
             }
             return null;
         }
+
     }
 
     private static final Logger LOG =
@@ -187,5 +203,33 @@ class UriDownloader {
         }
         return connection;
     }
+
+    /**
+     * Log details about the connection.
+     * 
+     * @param connection
+     */
+    private static void logDetails(HttpURLConnection connection) {
+        final InputStream errStream = connection.getErrorStream();
+        if (errStream != null) {
+            try {
+                LOG.info("Error stream: {}",
+                        IOUtils.toString(errStream, "UTF-8"));
+            } catch (Throwable ex) {
+                // Ignore.
+            }
+        }
+        try {
+            LOG.info(" response code: {}", connection.getResponseCode());
+        } catch (IOException ex) {
+            LOG.warn("Can't read status code.");
+        }
+        for (String header : connection.getHeaderFields().keySet()) {
+            for (String value : connection.getHeaderFields().get(header)) {
+                LOG.info(" header: {} : {}", header, value);
+            }
+        }
+    }
+
 
 }

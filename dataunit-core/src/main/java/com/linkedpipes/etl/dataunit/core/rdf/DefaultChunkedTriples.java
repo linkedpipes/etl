@@ -154,7 +154,12 @@ class DefaultChunkedTriples implements ChunkedTriples, WritableChunkedTriples,
 
     @Override
     public Iterator<ChunkedTriples.Chunk> iterator() {
-        return null;
+        return new ChunkIterator(readDirectories.iterator(), this);
+    }
+
+    @Override
+    public Collection<File> getSourceDirectories() {
+        return Collections.unmodifiableCollection(readDirectories);
     }
 
     protected void merge(DefaultChunkedTriples source) throws LpException {

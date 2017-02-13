@@ -19,6 +19,10 @@ define([], function () {
         "threads" : {
             "$type": "int",
             "$label": "Number of threads used for download"
+        },
+        "detailLog" : {
+            "$type" : "bool",
+            "$label" : "Detail log"
         }
     };
 

@@ -1,0 +1,7 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-streamCompression/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-streamCompression#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-streamCompression#format": "gzip"
+    }
+]

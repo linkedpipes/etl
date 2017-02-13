@@ -303,6 +303,14 @@ public class TabularConfiguration {
             return delimeter;
         }
 
+        public char getEffectiveDelimiter() {
+            if (delimeter.equals("\\t")) {
+                return '\t';
+            } else {
+                return delimeter.charAt(0);
+            }
+        }
+
         public void setDelimeter(String delimeter) {
             this.delimeter = delimeter;
         }
@@ -420,6 +428,9 @@ public class TabularConfiguration {
     @RdfToPojo.Property(iri = TabularVocabulary.HAS_CHUNK_SIZE)
     private int chunkSize = 10000;
 
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_LINES)
+    private int skipLines = 0;
+
     public TabularConfiguration() {
     }
 
@@ -501,5 +512,13 @@ public class TabularConfiguration {
 
     public void setChunkSize(int chunkSize) {
         this.chunkSize = chunkSize;
+    }
+
+    public int getSkipLines() {
+        return skipLines;
+    }
+
+    public void setSkipLines(int skipLines) {
+        this.skipLines = skipLines;
     }
 }

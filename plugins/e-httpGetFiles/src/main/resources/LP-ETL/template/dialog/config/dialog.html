@@ -25,4 +25,11 @@
             not set and download failed the component fail.
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.detailLog.value"
+               ng-hide="dialog.detailLog.hide"
+               ng-disabled="dialog.detailLog.disabled || dialog.detailLog.inherit">
+        Detail log
+        <md-tooltip>If set aditional information are logged for every download.
+        </md-tooltip>
+    </md-switch>
 </div>

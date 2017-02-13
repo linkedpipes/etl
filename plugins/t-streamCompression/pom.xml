@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.linkedpipes</groupId>
+        <artifactId>pom-component</artifactId>
+        <version>0.0.0</version>
+        <relativePath>../../pom-component/pom.xml</relativePath>
+    </parent>
+    <groupId>com.linkedpipes</groupId>
+    <artifactId>t-streamCompression</artifactId>
+    <version>0.0.0</version>
+    <packaging>bundle</packaging>
+    <name>plugin t-streamCompression</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>api-executor-v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>dataunit-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.10</version>
+        </dependency>
+        <!-- Required by commons-compress. -->
+        <dependency>
+            <groupId>org.tukaani</groupId>
+            <artifactId>xz</artifactId>
+            <version>1.5</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

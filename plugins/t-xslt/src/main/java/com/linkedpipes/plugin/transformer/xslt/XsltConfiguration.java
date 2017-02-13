@@ -14,6 +14,9 @@ public class XsltConfiguration {
     @RdfToPojo.Property(iri = XsltVocabulary.SKIP_ON_ERROR)
     private boolean skipOnError = false;
 
+    @RdfToPojo.Property(iri = XsltVocabulary.THREADS)
+    private int threads = 1;
+
     public XsltConfiguration() {
     }
 
@@ -39,5 +42,13 @@ public class XsltConfiguration {
 
     public void setSkipOnError(boolean skipOnError) {
         this.skipOnError = skipOnError;
+    }
+
+    public int getThreads() {
+        return threads;
+    }
+
+    public void setThreads(int threads) {
+        this.threads = threads;
     }
 }

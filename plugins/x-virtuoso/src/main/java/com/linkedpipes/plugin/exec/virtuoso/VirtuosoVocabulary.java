@@ -26,4 +26,6 @@ public final class VirtuosoVocabulary {
 
     public static final String CLEAR_LOAD_GRAPH = PREFIX + "clearSqlLoadTable";
 
+    public static final String LOADER_COUNT = PREFIX + "loaderCount";
+
 }

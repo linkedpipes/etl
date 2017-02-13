@@ -678,8 +678,11 @@ define(['jquery'], function (jQuery) {
                     var isNew = true;
                     for (var i = 0; i < repository.data.length; i++) {
                         if (repository.data[i].iri === item.iri) {
-                            // Replace original value.
-                            repository.data[i] = item;
+                            // Copy values, do not replace.
+                            // https://github.com/linkedpipes/etl/issues/293
+                            for (var key in item) {
+                                repository.data[i][key] = item[key];
+                            }
                             isNew = false;
                             break;
                         }

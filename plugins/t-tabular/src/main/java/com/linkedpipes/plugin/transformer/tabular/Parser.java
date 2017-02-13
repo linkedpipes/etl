@@ -30,10 +30,13 @@ class Parser {
 
     private final ExceptionFactory exceptionFactory;
 
+    private final int ignoreLines;
+
     Parser(TabularConfiguration configuration,
             ExceptionFactory exceptionFactory) {
         this.dialect = configuration.getDialect();
         this.exceptionFactory = exceptionFactory;
+        this.ignoreLines = configuration.getSkipLines();
         // We will use quates only if they are provided
         if (dialect.getQuoteChar() == null ||
                 dialect.getQuoteChar().isEmpty()) {
@@ -42,13 +45,13 @@ class Parser {
                     CsvContext context, CsvPreference preference) -> false;
             // Quote char is never used.
             csvPreference = new CsvPreference.Builder(' ',
-                    dialect.getDelimeter().charAt(0),
+                    dialect.getEffectiveDelimiter(),
                     "\\n").useQuoteMode(customQuoteMode).build();
             // Line terminators are also part of the configuration!
         } else {
             csvPreference = new CsvPreference.Builder(
                     dialect.getQuoteChar().charAt(0),
-                    dialect.getDelimeter().charAt(0),
+                    dialect.getEffectiveDelimiter(),
                     "\\n").build();
         }
     }
@@ -57,17 +60,24 @@ class Parser {
             throws UnsupportedEncodingException, IOException, LpException,
             ColumnAbstract.MissingColumnValue {
         try (final FileInputStream fileInputStream
-                     = new FileInputStream(entry.toFile());
-             final InputStreamReader inputStreamReader
-                     = getInputStream(fileInputStream);
-             final BufferedReader bufferedReader
-                     = new BufferedReader(inputStreamReader);
-             final CsvListReader csvListReader
-                     = new CsvListReader(bufferedReader, csvPreference)) {
+                = new FileInputStream(entry.toFile());
+                final InputStreamReader inputStreamReader
+                = getInputStream(fileInputStream);
+                final BufferedReader bufferedReader
+                = new BufferedReader(inputStreamReader);
+                final CsvListReader csvListReader
+                = new CsvListReader(bufferedReader, csvPreference)) {
+            // Ignore initial lines.
+            int line = 0;
+            while (ignoreLines > 0 && line < ignoreLines) {
+                line++;
+                csvListReader.read();
+            }
+            //
             List<String> header;
             List<String> row;
             if (dialect.isHeader()) {
-                header = Arrays.asList(csvListReader.getHeader(true));
+                header = Arrays.asList(csvListReader.getHeader(false));
                 row = csvListReader.read();
                 // TODO Should we really trim header?
                 if (dialect.isTrim()) {

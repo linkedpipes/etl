@@ -6,6 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,12 @@ public class FileDecode implements Component, SequentialExecution {
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
+    @Component.Inject
+    public ProgressReport progressReport;
+
     @Override
     public void execute() throws LpException {
+        progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
             final File outputFile = outputFiles.createFile(
                     entry.getFileName());
@@ -49,7 +54,9 @@ public class FileDecode implements Component, SequentialExecution {
                             entry, ex);
                 }
             }
+            progressReport.entryProcessed();
         }
+        progressReport.done();
     }
 
 }

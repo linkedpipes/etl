@@ -13,4 +13,6 @@ public final class XsltVocabulary {
 
     public static final String SKIP_ON_ERROR = PREFIX + "skipOnError";
 
+    public static final String THREADS = PREFIX + "threads";
+
 }
