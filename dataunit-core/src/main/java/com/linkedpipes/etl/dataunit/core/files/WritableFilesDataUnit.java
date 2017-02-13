@@ -12,7 +12,7 @@ public interface WritableFilesDataUnit {
      * @param fileName
      * @return Path to yet not existing file, in the data unit storage.
      */
-    FilesDataUnit.Entry createFile(String fileName) throws LpException;
+    File createFile(String fileName) throws LpException;
 
     /**
      * @return Write root directory.

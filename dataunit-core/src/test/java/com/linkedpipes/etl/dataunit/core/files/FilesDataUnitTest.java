@@ -29,12 +29,12 @@ public class FilesDataUnitTest {
         //
         Assert.assertEquals(0, files.size());
         // This does not create the file.
-        final File a = files.createFile("directory-a/a").toFile();
+        final File a = files.createFile("directory-a/a");
         Assert.assertEquals(0, files.size());
         // This does create.
         FileUtils.writeStringToFile(a, "");
         Assert.assertEquals(1, files.size());
-        final File b = files.createFile("directory-b/b").toFile();
+        final File b = files.createFile("directory-b/b");
         FileUtils.writeStringToFile(b, "");
         Assert.assertEquals(2, files.size());
         //
@@ -61,11 +61,11 @@ public class FilesDataUnitTest {
                 getTempDirectory(),
                 Arrays.asList("http://dataunit/a", "http://dataunit/b"));
         //
-        FileUtils.writeStringToFile(a.createFile("dir/a").toFile(), "");
-        FileUtils.writeStringToFile(a.createFile("1").toFile(), "");
+        FileUtils.writeStringToFile(a.createFile("dir/a"), "");
+        FileUtils.writeStringToFile(a.createFile("1"), "");
         Assert.assertEquals(2, a.size());
-        FileUtils.writeStringToFile(b.createFile("dir/b").toFile(), "");
-        FileUtils.writeStringToFile(b.createFile("1").toFile(), "");
+        FileUtils.writeStringToFile(b.createFile("dir/b"), "");
+        FileUtils.writeStringToFile(b.createFile("1"), "");
         Assert.assertEquals(2, a.size());
         //
         final Map<String, ManageableDataUnit> dataUnits = new HashMap<>();
@@ -85,7 +85,7 @@ public class FilesDataUnitTest {
     public void saveAndLoad() throws Exception {
         final DefaultFilesDataUnit a = new DefaultFilesDataUnit(
                 null, null, getTempDirectory(), Collections.EMPTY_LIST);
-        final File file = a.createFile("dir/a").toFile();
+        final File file = a.createFile("dir/a");
         FileUtils.writeStringToFile(file, "");
         Assert.assertEquals(1, a.size());
         //
@@ -107,7 +107,7 @@ public class FilesDataUnitTest {
     public void createExisting() throws Exception {
         final DefaultFilesDataUnit a = new DefaultFilesDataUnit(
                 null, null, getTempDirectory(), Collections.EMPTY_LIST);
-        FileUtils.writeStringToFile(a.createFile("dir/a").toFile(), "");
+        FileUtils.writeStringToFile(a.createFile("dir/a"), "");
         try {
             a.createFile("dir/a");
             Assert.assertTrue(false);

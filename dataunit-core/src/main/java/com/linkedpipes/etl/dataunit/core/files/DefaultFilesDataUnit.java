@@ -83,14 +83,14 @@ class DefaultFilesDataUnit
     }
 
     @Override
-    public Entry createFile(String fileName) throws LpException {
+    public File createFile(String fileName) throws LpException {
         final File output = new File(writeDirectory, fileName);
         if (output.exists()) {
             throw new LpException("File already exists: {} ({})",
                     fileName, output);
         }
         output.getParentFile().mkdirs();
-        return new Entry(output, writeDirectory);
+        return output;
     }
 
     @Override
