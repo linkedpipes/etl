@@ -1,12 +1,12 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.transformer.tabular.TabularConfiguration.Column;
-import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,7 +109,8 @@ class ColumnFactory {
                         aboutUrl, predicate));
             } else {
                 throw exceptionFactory.failure(
-                        "Invalid configuration for column {}", column.getName());
+                        "Invalid configuration for column {}",
+                        column.getName());
             }
         }
         return result;

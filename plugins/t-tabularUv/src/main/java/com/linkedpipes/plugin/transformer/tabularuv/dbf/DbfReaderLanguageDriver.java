@@ -1,12 +1,8 @@
 package com.linkedpipes.plugin.transformer.tabularuv.dbf;
 
-import java.io.Closeable;
-import java.io.DataInput;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 import org.jamel.dbf.exception.DbfException;
+
+import java.io.*;
 
 public class DbfReaderLanguageDriver implements Closeable {
 

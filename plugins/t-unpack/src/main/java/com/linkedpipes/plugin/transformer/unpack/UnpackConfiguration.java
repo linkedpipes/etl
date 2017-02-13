@@ -1,14 +1,14 @@
 package com.linkedpipes.plugin.transformer.unpack;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-@RdfToPojo.Type(uri = UnpackVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = UnpackVocabulary.CONFIG_CLASS)
 public class UnpackConfiguration {
 
-    @RdfToPojo.Property(uri = UnpackVocabulary.HAS_USE_PREFIX)
+    @RdfToPojo.Property(iri = UnpackVocabulary.HAS_USE_PREFIX)
     private boolean usePrefix = true;
 
-    @RdfToPojo.Property(uri = UnpackVocabulary.HAS_FORMAT)
+    @RdfToPojo.Property(iri = UnpackVocabulary.HAS_FORMAT)
     private String format;
 
     public UnpackConfiguration() {

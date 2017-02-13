@@ -1,11 +1,11 @@
 package com.linkedpipes.plugin.loader.scp;
 
 import com.jcraft.jsch.*;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.AfterExecution;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,26 +13,21 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 
 /**
- *
  * Used library: http://www.jcraft.com/jsch/examples/ SCP protocol:
  * https://blogs.oracle.com/janp/entry/how_the_scp_protocol_works
  *
  * JSCH also supports SFTP, example on the project site and on
  * http://stackoverflow.com/questions/2346764/java-sftp-transfer-library
- *
  */
-public final class LoaderScp implements Component.Sequential {
+public final class LoaderScp implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(LoaderScp.class);
 
-    @Component.OutputPort(id = "FilesInput")
+    @Component.OutputPort(iri = "FilesInput")
     public FilesDataUnit input;
 
     @Component.Configuration
     public LoaderScpConfiguration configuration;
-
-    @Component.Inject
-    public AfterExecution cleanUp;
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
@@ -71,7 +66,7 @@ public final class LoaderScp implements Component.Sequential {
             throw exceptionFactory.failure("Can't create session.", ex);
         }
         // Enable connection to machines with unknown host
-        // key - this is potential secutiry risk!
+        // key - this is potential security risk!
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);
@@ -80,8 +75,15 @@ public final class LoaderScp implements Component.Sequential {
         } catch (JSchException ex) {
             throw exceptionFactory.failure("Can't connect to host", ex);
         }
-        cleanUp.addAction(() -> session.disconnect());
+        try {
+            upload(session, targetFile);
+        } finally {
+            session.disconnect();
+        }
+    }
 
+    public void upload(Session session, String targetFile)
+            throws LpException {
         if (configuration.isCreateDirectory()) {
             try {
                 secureCreateDirectory(session, targetFile);
@@ -104,11 +106,11 @@ public final class LoaderScp implements Component.Sequential {
         // -d - means directory transfer
         ((ChannelExec) channel).setCommand("scp -r -t -d " + targetFile);
         try (OutputStream remoteOut = channel.getOutputStream();
-                InputStream remoteIn = channel.getInputStream()) {
+             InputStream remoteIn = channel.getInputStream()) {
             channel.connect();
             resonseCheck(remoteIn);
             // Send content of files data unit.
-            for (File rootDirectory : input.getReadRootDirectories()) {
+            for (File rootDirectory : input.getReadDirectories()) {
                 sendDirectoryContent(remoteOut, remoteIn, rootDirectory);
             }
         } catch (IOException | JSchException | LpException ex) {
@@ -126,8 +128,6 @@ public final class LoaderScp implements Component.Sequential {
      *
      * @param session
      * @param targetPath
-     * @throws JSchException
-     * @throws IOException
      */
     private static void secureCreateDirectory(Session session,
             String targetPath) throws JSchException, IOException,
@@ -150,8 +150,6 @@ public final class LoaderScp implements Component.Sequential {
      * @param remoteOut
      * @param remoteIn
      * @param sourceDirectory
-     * @throws IOException
-     * @throws LpException
      */
     private void sendDirectoryContent(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory)
@@ -174,8 +172,6 @@ public final class LoaderScp implements Component.Sequential {
      * @param remoteIn
      * @param sourceDirectory
      * @param directoryName
-     * @throws IOException
-     * @throws LpException
      */
     private void sendDirectory(OutputStream remoteOut,
             InputStream remoteIn, File sourceDirectory, String directoryName)
@@ -202,13 +198,10 @@ public final class LoaderScp implements Component.Sequential {
     }
 
     /**
-     *
      * @param remoteOut
      * @param remoteIn
      * @param sourceFile
      * @param fileName Must not include '/'.
-     * @throws java.io.IOException
-     * @throws LpException
      */
     private void sendFile(OutputStream remoteOut, InputStream remoteIn,
             File sourceFile, String fileName) throws IOException, LpException {
@@ -224,14 +217,14 @@ public final class LoaderScp implements Component.Sequential {
         resonseCheck(remoteIn);
         // Copy file.
         try (FileInputStream sourceFileStream
-                = new FileInputStream(sourceFile)) {
+                     = new FileInputStream(sourceFile)) {
             IOUtils.copy(sourceFileStream, remoteOut);
         }
         remoteOut.flush();
         // Write '\0' as the end of file.
         remoteOut.write(0);
         remoteOut.flush();
-        // Check satus.
+        // Check status.
         resonseCheck(remoteIn);
         LOG.debug("Sending file: {} ... done", fileName);
     }
@@ -240,10 +233,9 @@ public final class LoaderScp implements Component.Sequential {
      * Check response from SCP server. Throws exception in case of error.
      *
      * @param stream
-     * @throws IOException
-     * @throws LpException
      */
-    private void resonseCheck(InputStream stream) throws IOException, LpException{
+    private void resonseCheck(InputStream stream)
+            throws IOException, LpException {
         final int response = stream.read();
         switch (response) {
             case -1: // No response from server.
@@ -268,7 +260,6 @@ public final class LoaderScp implements Component.Sequential {
      *
      * @param stream
      * @return
-     * @throws IOException
      */
     private static String readResponseLine(InputStream stream)
             throws IOException {

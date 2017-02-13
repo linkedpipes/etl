@@ -1,17 +1,14 @@
 package com.linkedpipes.plugin.transformer.packzip.filesrenamer;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = FilesRenamerVocabulary.CONFIGURATION)
+@RdfToPojo.Type(iri = FilesRenamerVocabulary.CONFIGURATION)
 public class FilesRenamerConfiguration {
 
-    @RdfToPojo.Property(uri = FilesRenamerVocabulary.HAS_PATTERN)
+    @RdfToPojo.Property(iri = FilesRenamerVocabulary.HAS_PATTERN)
     private String pattern;
 
-    @RdfToPojo.Property(uri = FilesRenamerVocabulary.HAS_REPLACE_WITH)
+    @RdfToPojo.Property(iri = FilesRenamerVocabulary.HAS_REPLACE_WITH)
     private String replaceWith;
 
     public FilesRenamerConfiguration() {

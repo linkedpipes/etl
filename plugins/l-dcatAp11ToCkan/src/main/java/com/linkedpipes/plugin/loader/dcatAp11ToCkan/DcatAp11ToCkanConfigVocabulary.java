@@ -1,12 +1,9 @@
 package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 
-/**
- *
- * @author Klímek Jakub
- */
 public final class DcatAp11ToCkanConfigVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#";
+    private static final String PREFIX =
+            "http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 

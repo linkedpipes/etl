@@ -1,41 +1,38 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import org.openrdf.OpenRDFException;
-import org.openrdf.query.GraphQuery;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sparql.SPARQLRepository;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.OpenRDFException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.GraphQueryResult;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.query.impl.SimpleDataset;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class SparqlEndpoint implements Component.Sequential {
+public final class SparqlEndpoint implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(SparqlEndpoint.class);
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
     @Component.Inject
@@ -89,20 +86,20 @@ public final class SparqlEndpoint implements Component.Sequential {
     }
 
     public void queryRemote(SPARQLRepository repository) throws LpException {
-        final IRI graph = outputRdf.getGraph();
+        final IRI graph = outputRdf.getWriteGraph();
         try (RepositoryConnection localConnection
-                = outputRdf.getRepository().getConnection()) {
+                     = outputRdf.getRepository().getConnection()) {
             localConnection.begin();
             // We can't use Repositories.graphQuery (Repositories.get) here,
             // as Virtuoso fail with
             // 'No permission to execute procedure DB.DBA.SPARUL_RUN'
             // as sesame try to execute given action in a transaction.
             try (RepositoryConnection remoteConnection
-                    = repository.getConnection()) {
+                         = repository.getConnection()) {
                 final GraphQuery preparedQuery
                         = remoteConnection.prepareGraphQuery(
-                                QueryLanguage.SPARQL,
-                                configuration.getQuery());
+                        QueryLanguage.SPARQL,
+                        configuration.getQuery());
                 // Construct dataset.
                 final SimpleDataset dataset = new SimpleDataset();
                 for (String iri : configuration.getDefaultGraphs()) {

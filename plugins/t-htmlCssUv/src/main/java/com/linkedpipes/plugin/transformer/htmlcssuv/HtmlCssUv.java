@@ -1,16 +1,17 @@
 package com.linkedpipes.plugin.transformer.htmlcssuv;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- */
-public class HtmlCssUv implements Component.Sequential {
+public class HtmlCssUv implements Component, SequentialExecution {
 
     public static final String WEB_PAGE_NAME = "webPage";
 
@@ -33,10 +32,10 @@ public class HtmlCssUv implements Component.Sequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(HtmlCssUv.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inFilesHtml;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableGraphListDataUnit outRdfData;
 
     @Component.Configuration

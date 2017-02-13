@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-component</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.0</version>
         <relativePath>../../pom-component/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
     <artifactId>e-textHolder</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.0</version>
     <packaging>bundle</packaging>
     <name>plugin e-textHolder</name>
 

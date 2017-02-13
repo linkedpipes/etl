@@ -1,21 +1,15 @@
 package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 
-import org.junit.Test;
-import org.openrdf.rio.RDFFormat;
-
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.test.TestEnvironment;
-import com.linkedpipes.etl.component.test.TestUtils;
+import com.linkedpipes.etl.test.TestEnvironment;
+import com.linkedpipes.etl.test.TestUtils;
+import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author Klímek Jakub
- */
 public class DcatAp11ToCkanTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DcatAp11ToCkanTest.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(DcatAp11ToCkanTest.class);
 
     //@Test
     public void loadTest() throws Exception {
@@ -27,7 +21,9 @@ public class DcatAp11ToCkanTest {
         component.configuration.setLoadLanguage("en");
         component.configuration.setDatasetID("test1");
 
-        try (final TestEnvironment env = TestEnvironment.create(component, TestUtils.getTempDirectory())) {
+        try (final TestEnvironment env = TestEnvironment
+                .create(component, TestUtils
+                        .getTempDirectory())) {
             TestUtils.load(env.bindSingleGraphDataUnit("Metadata"),
                     TestUtils.fileFromResource("input.ttl"), RDFFormat.TURTLE);
 

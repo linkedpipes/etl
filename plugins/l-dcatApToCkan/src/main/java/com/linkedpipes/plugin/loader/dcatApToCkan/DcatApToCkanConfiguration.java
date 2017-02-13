@@ -1,42 +1,39 @@
 package com.linkedpipes.plugin.loader.dcatApToCkan;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Klímek Jakub
- */
-@RdfToPojo.Type(uri = DcatApToCkanConfigVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = DcatApToCkanConfigVocabulary.CONFIG_CLASS)
 public class DcatApToCkanConfiguration {
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.API_URL)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.API_URL)
     private String apiUri = "";
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.API_KEY)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.API_KEY)
     private String apiKey = "";
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.LOAD_TO_CKAN)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.LOAD_TO_CKAN)
     private boolean loadToCKAN = true;
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.DATASET_ID)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.DATASET_ID)
     private String datasetID = "";
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.FILENAME)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.FILENAME)
     private String filename = "ckan-api.json";
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.ORG_ID)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.ORG_ID)
     private String orgID = "";
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.LOAD_LANGUAGE)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.LOAD_LANGUAGE)
     private String loadLanguage = "cs";
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.GENERATE_VIRTUOSO_EXAMPLE)
+    @RdfToPojo.Property(
+            iri = DcatApToCkanConfigVocabulary.GENERATE_VIRTUOSO_EXAMPLE)
     private boolean generateVirtuosoTurtleExampleResource = true;
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.GENERATE_EXAMPLE)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.GENERATE_EXAMPLE)
     private boolean generateExampleResource = true;
 
-    @RdfToPojo.Property(uri = DcatApToCkanConfigVocabulary.OVERWRITE)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.OVERWRITE)
     private boolean overwrite = false;
 
     public DcatApToCkanConfiguration() {
@@ -102,8 +99,10 @@ public class DcatApToCkanConfiguration {
         return generateVirtuosoTurtleExampleResource;
     }
 
-    public void setGenerateVirtuosoTurtleExampleResource(boolean generateVirtuosoTurtleExampleResource) {
-        this.generateVirtuosoTurtleExampleResource = generateVirtuosoTurtleExampleResource;
+    public void setGenerateVirtuosoTurtleExampleResource(
+            boolean generateVirtuosoTurtleExampleResource) {
+        this.generateVirtuosoTurtleExampleResource =
+                generateVirtuosoTurtleExampleResource;
     }
 
     public boolean isGenerateExampleResource() {

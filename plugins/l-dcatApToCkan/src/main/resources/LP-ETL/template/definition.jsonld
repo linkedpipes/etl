@@ -13,7 +13,7 @@
         ],
         "http://linkedpipes.com/ontology/supportControl" : true,
         "http://linkedpipes.com/ontology/configurationDescription": [
-            {"@id": "http://etl.linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configurationDescription"}
+            {"@id": "http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc"}
         ]
     },
     {

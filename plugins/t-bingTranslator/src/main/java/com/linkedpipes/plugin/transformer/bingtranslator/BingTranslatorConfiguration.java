@@ -1,29 +1,29 @@
 package com.linkedpipes.plugin.transformer.bingtranslator;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@RdfToPojo.Type(uri = BingTranslatorVocabulary.CONFIG)
+@RdfToPojo.Type(iri = BingTranslatorVocabulary.CONFIG)
 public class BingTranslatorConfiguration {
 
-    @RdfToPojo.Property(uri = BingTranslatorVocabulary.HAS_SUBSCRIPTION_KEY)
+    @RdfToPojo.Property(iri = BingTranslatorVocabulary.HAS_SUBSCRIPTION_KEY)
     private String subscriptionKey;
 
     /**
      * Default language, used for literal without language.
      */
-    @RdfToPojo.Property(uri = BingTranslatorVocabulary.HAS_DEFAULT_LANGUAGE)
+    @RdfToPojo.Property(iri = BingTranslatorVocabulary.HAS_DEFAULT_LANGUAGE)
     private String defaultLanguage;
 
     /**
      * Target languages to translate into.
      */
-    @RdfToPojo.Property(uri = BingTranslatorVocabulary.HAS_TARGET_LANGUAGE)
+    @RdfToPojo.Property(iri = BingTranslatorVocabulary.HAS_TARGET_LANGUAGE)
     private List<String> targetLanguages = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = BingTranslatorVocabulary.HAS_USE_BCP47)
+    @RdfToPojo.Property(iri = BingTranslatorVocabulary.HAS_USE_BCP47)
     private boolean useBCP47 = false;
 
     public BingTranslatorConfiguration() {

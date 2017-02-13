@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.loader.local;
 
-/**
- *
- */
 public final class LoaderLocalVocabulary {
 
     private static final String PREFIX

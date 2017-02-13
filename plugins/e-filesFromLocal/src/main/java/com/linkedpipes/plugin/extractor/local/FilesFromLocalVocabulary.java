@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.extractor.local;
 
-/**
- *
- */
 public final class FilesFromLocalVocabulary {
 
     private static final String PREFIX

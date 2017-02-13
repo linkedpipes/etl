@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class RdfToFileVocabulary {
 
     private static final String PREFIX

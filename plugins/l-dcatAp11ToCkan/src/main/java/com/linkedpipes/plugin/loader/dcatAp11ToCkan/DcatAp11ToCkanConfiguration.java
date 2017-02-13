@@ -1,33 +1,29 @@
 package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Klímek Jakub
- */
-@RdfToPojo.Type(uri = DcatAp11ToCkanConfigVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = DcatAp11ToCkanConfigVocabulary.CONFIG_CLASS)
 public class DcatAp11ToCkanConfiguration {
 
-    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.API_URL)
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.API_URL)
     private String apiUri;
 
-    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.API_KEY)
-    private String apiKey ;
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.API_KEY)
+    private String apiKey;
 
-    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.CREATE_CKAN_ORG)
-    private boolean createCkanOrg ;
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.CREATE_CKAN_ORG)
+    private boolean createCkanOrg;
 
-    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.DATASET_ID)
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.DATASET_ID)
     private String datasetID;
 
-    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.ORG_ID)
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.ORG_ID)
     private String orgID;
 
-    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.LOAD_LANGUAGE)
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.LOAD_LANGUAGE)
     private String loadLanguage;
 
-    @RdfToPojo.Property(uri = DcatAp11ToCkanConfigVocabulary.OVERWRITE)
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.OVERWRITE)
     private boolean overwrite;
 
     public DcatAp11ToCkanConfiguration() {

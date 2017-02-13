@@ -16,15 +16,11 @@
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-commons</artifactId>
+            <artifactId>api-executor-v1</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-component-v1</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-system</artifactId>
+            <artifactId>dataunit-core</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -48,13 +44,10 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>test-environment</artifactId>
-            <version>0.0.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

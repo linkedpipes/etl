@@ -1,17 +1,9 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +12,11 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.quote.QuoteMode;
 import org.supercsv.util.CsvContext;
 
-/**
- *
- */
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 class Parser {
 
     private static final Logger LOG = LoggerFactory.getLogger(Parser.class);
@@ -38,7 +32,8 @@ class Parser {
         this.dialect = configuration.getDialect();
         this.exceptionFactory = exceptionFactory;
         // We will use quates only if they are provided
-        if (dialect.getQuoteChar() == null || dialect.getQuoteChar().isEmpty()) {
+        if (dialect.getQuoteChar() == null ||
+                dialect.getQuoteChar().isEmpty()) {
             // We do not use quates.
             final QuoteMode customQuoteMode = (String csvColumn,
                     CsvContext context, CsvPreference preference) -> false;
@@ -59,13 +54,13 @@ class Parser {
             throws UnsupportedEncodingException, IOException, LpException,
             ColumnAbstract.MissingColumnValue {
         try (final FileInputStream fileInputStream
-                = new FileInputStream(entry.toFile());
-                final InputStreamReader inputStreamReader
-                = getInputStream(fileInputStream);
-                final BufferedReader bufferedReader
-                = new BufferedReader(inputStreamReader);
-                final CsvListReader csvListReader
-                = new CsvListReader(bufferedReader, csvPreference)) {
+                     = new FileInputStream(entry.toFile());
+             final InputStreamReader inputStreamReader
+                     = getInputStream(fileInputStream);
+             final BufferedReader bufferedReader
+                     = new BufferedReader(inputStreamReader);
+             final CsvListReader csvListReader
+                     = new CsvListReader(bufferedReader, csvPreference)) {
             List<String> header;
             List<String> row;
             if (dialect.isHeader()) {
@@ -126,7 +121,6 @@ class Parser {
      *
      * @param fileInputStream
      * @return
-     * @throws UnsupportedEncodingException
      */
     private InputStreamReader getInputStream(FileInputStream fileInputStream)
             throws UnsupportedEncodingException {

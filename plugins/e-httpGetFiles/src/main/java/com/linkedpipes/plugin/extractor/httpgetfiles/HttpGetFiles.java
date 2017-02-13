@@ -1,11 +1,12 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,19 +18,19 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public final class HttpGetFiles implements Component.Sequential {
+public final class HttpGetFiles implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(HttpGetFiles.class);
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
     @Component.Configuration
@@ -72,7 +73,7 @@ public final class HttpGetFiles implements Component.Sequential {
                 }
             }
             final File target = output.createFile(
-                    reference.getFileName()).toFile();
+                    reference.getFileName());
             final URL source;
             try {
                 source = new URL(reference.getUri());

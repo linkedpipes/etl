@@ -1,39 +1,39 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfToPojo.Type(uri = SparqlEndpointSelectScrollableCursorVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlEndpointSelectScrollableCursorVocabulary.CONFIG)
 public class SparqlEndpointSelectScrollableCursorConfiguration {
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_ENDPOINT)
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PREFIXES)
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PREFIXES)
     private String prefixes;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_OUTER_SELECT)
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_OUTER_SELECT)
     private String outerSelect;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_INNER_SELECT)
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_INNER_SELECT)
     private String innerSelect;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_FILE_NAME)
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_FILE_NAME)
     private String fileName;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PAGE_SIZE)
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PAGE_SIZE)
     private Integer pageSize;
 
     public SparqlEndpointSelectScrollableCursorConfiguration() {

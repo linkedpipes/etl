@@ -1,32 +1,29 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = SparqlEndpointLoaderVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlEndpointLoaderVocabulary.CONFIG)
 public class SparqlEndpointLoaderConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_ENDPOINT)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_AUTH)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_AUTH)
     private boolean useAuthentification = true;
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_USERNAME)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_USERNAME)
     private String userName;
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_PASSWORD)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_PASSWORD)
     private String password;
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_CLEAR_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_CLEAR_GRAPH)
     private boolean clearDestinationGraph = false;
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_TAGET_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_TAGET_GRAPH)
     private String targetGraphName;
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderVocabulary.HAS_COMMIT_SIZE)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 100000;
 
     public SparqlEndpointLoaderConfiguration() {

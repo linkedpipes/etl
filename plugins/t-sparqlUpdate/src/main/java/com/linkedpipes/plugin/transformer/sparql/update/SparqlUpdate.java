@@ -1,32 +1,30 @@
 package com.linkedpipes.plugin.transformer.sparql.update;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import org.openrdf.model.IRI;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.Update;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.query.impl.SimpleDataset;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class SparqlUpdate implements Component.Sequential {
+public final class SparqlUpdate implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SparqlUpdate.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SparqlUpdate.class);
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -34,18 +32,21 @@ public final class SparqlUpdate implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        final IRI inputGraph = inputRdf.getGraph();
-        final IRI outputGraph = outputRdf.getGraph();
+        final IRI inputGraph = inputRdf.getReadGraph();
+        final IRI outputGraph = outputRdf.getWriteGraph();
         LOG.info("Update: {} -> {}", inputGraph, outputGraph);
         LOG.info("Query: {}", configuration.getQuery());
         // Copy data.
         inputRdf.execute((connection) -> {
-            connection.add(connection.getStatements(null, null, null, true, inputGraph), outputGraph);
+            connection.add(connection
+                            .getStatements(null, null, null, true, inputGraph),
+                    outputGraph);
             LOG.info("Input size: {}", connection.size(outputGraph));
         });
         // Perform update.
         inputRdf.execute((connection) -> {
-            final Update update = connection.prepareUpdate(QueryLanguage.SPARQL, configuration.getQuery());
+            final Update update = connection.prepareUpdate(QueryLanguage.SPARQL,
+                    configuration.getQuery());
             final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(outputGraph);
             dataset.addDefaultRemoveGraph(outputGraph);

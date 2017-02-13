@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.templatedxlstocsv;
 
-/**
- *
- */
 public final class XlsToCsvVocabulary {
 
     private static final String PREFIX

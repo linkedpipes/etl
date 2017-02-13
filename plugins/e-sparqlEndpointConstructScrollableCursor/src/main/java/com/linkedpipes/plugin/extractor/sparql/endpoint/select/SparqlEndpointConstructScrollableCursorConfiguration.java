@@ -1,35 +1,35 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfToPojo.Type(uri = SparqlEndpointConstructScrollableCursorVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlEndpointConstructScrollableCursorVocabulary.CONFIG)
 public class SparqlEndpointConstructScrollableCursorConfiguration {
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENDPOINT)
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PREFIXES)
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PREFIXES)
     private String prefixes;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_OUTER_CONSTRUCT)
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_OUTER_CONSTRUCT)
     private String outerConstruct;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_INNER_SELECT)
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_INNER_SELECT)
     private String innerSelect;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PAGE_SIZE)
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PAGE_SIZE)
     private Integer pageSize;
 
     public SparqlEndpointConstructScrollableCursorConfiguration() {

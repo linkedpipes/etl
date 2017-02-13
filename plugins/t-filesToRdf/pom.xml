@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-component</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.0</version>
         <relativePath>../../pom-component/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
     <artifactId>t-filesToRdf</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.0</version>
     <packaging>bundle</packaging>
     <name>plugin t-filesToRdf</name>
 
@@ -22,7 +22,6 @@
             <groupId>com.linkedpipes</groupId>
             <artifactId>dataunit-core</artifactId>
         </dependency>
-        <!-- OpenRDF. -->
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-model</artifactId>

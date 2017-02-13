@@ -1,14 +1,15 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import org.openrdf.model.Resource;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
 /**
  * https://www.w3.org/TR/2015/REC-csv2rdf-20151217/#bib-tabular-data-model
@@ -96,11 +97,6 @@ class Mapper {
         this.exceptionFactory = exceptionFactory;
     }
 
-    /**
-     *
-     * @param outputMode
-     * @param tableGroupUri If null then blank node is used.
-     */
     public void initialize(String tableGroupUri) throws LpException {
         if (this.outputMode == Mode.STANDARD) {
             // 1
@@ -122,7 +118,6 @@ class Mapper {
     }
 
     /**
-     *
      * @param tableResource Table resource if null blank node is used.
      * @param tableUri Source table URI.
      * @return
@@ -183,7 +178,6 @@ class Mapper {
     }
 
     /**
-     *
      * @param row Row from the CSV file.
      * @return True if next line should be processed if it exists.
      */
@@ -234,7 +228,8 @@ class Mapper {
                 column.emit(consumer, row, rowNumber);
             } else {
                 // In standard mode add links from table.
-                for (Resource resource : column.emit(consumer, row, rowNumber)) {
+                for (Resource resource : column
+                        .emit(consumer, row, rowNumber)) {
                     consumer.submit(R, CSVW.HAS_DESCRIBES, resource);
                 }
             }

@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.packzip.filesrenamer;
 
-/**
- *
- */
 final class FilesRenamerVocabulary {
 
     private static final String PREFIX

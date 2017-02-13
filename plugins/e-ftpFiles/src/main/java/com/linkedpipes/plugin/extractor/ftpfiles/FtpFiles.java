@@ -1,11 +1,12 @@
 package com.linkedpipes.plugin.extractor.ftpfiles;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
@@ -19,19 +20,19 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class FtpFiles implements Component.Sequential {
+public class FtpFiles implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(FtpFiles.class);
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
     @Component.Configuration
@@ -54,7 +55,7 @@ public class FtpFiles implements Component.Sequential {
                 continue;
             }
             final File file = output.createFile(
-                    reference.getFileName()).toFile();
+                    reference.getFileName());
             // Download.
             try {
                 downloadFile(url, file);

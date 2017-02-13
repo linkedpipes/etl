@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.transformer.packzip;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class PackZipVocabulary {
 
     private static final String PREFIX

@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
-/**
- *
- */
 public final class GraphStoreProtocolVocabulary {
 
     private static final String PREFIX

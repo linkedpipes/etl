@@ -1,14 +1,11 @@
 package com.linkedpipes.plugin.transformer.templatedxlstocsv;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = XlsToCsvVocabulary.CONFIGURATION)
+@RdfToPojo.Type(iri = XlsToCsvVocabulary.CONFIGURATION)
 public class XlsToCsvConfiguration {
 
-    @RdfToPojo.Property(uri = XlsToCsvVocabulary.HAS_PREFIX)
+    @RdfToPojo.Property(iri = XlsToCsvVocabulary.HAS_PREFIX)
     private String template_prefix = "SABLONA_";
 
     public XlsToCsvConfiguration() {

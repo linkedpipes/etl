@@ -16,32 +16,23 @@
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-commons</artifactId>
+            <artifactId>api-executor-v1</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-component-v1</artifactId>
+            <artifactId>dataunit-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-system</artifactId>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-sesame</artifactId>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-api</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-        </dependency>
-        <!-- OpenRDF. -->
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-api</artifactId>
         </dependency>
         <!-- DBF, CSV, Apache POI -->
         <dependency>

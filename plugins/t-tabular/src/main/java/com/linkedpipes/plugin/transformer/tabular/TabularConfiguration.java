@@ -1,23 +1,23 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * https://www.w3.org/TR/2015/REC-tabular-metadata-20151217/
- *
  */
-@RdfToPojo.Type(uri = TabularVocabulary.TABLE)
+@RdfToPojo.Type(iri = TabularVocabulary.TABLE)
 public class TabularConfiguration {
 
-    @RdfToPojo.Type(uri = TabularVocabulary.SCHEMA)
+    @RdfToPojo.Type(iri = TabularVocabulary.SCHEMA)
     public static class Schema {
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_COLUMN)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_COLUMN)
         private List<Column> columns = new LinkedList<>();
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_PRIMARY_KEY)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_PRIMARY_KEY)
         private String primaryKey; // Reference to column.
 
         /**
@@ -26,7 +26,7 @@ public class TabularConfiguration {
          *
          * Can be used to define subject of the output.
          */
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_ABOUT_URL)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_ABOUT_URL)
         private String aboutUrl;
 
         public Schema() {
@@ -63,22 +63,22 @@ public class TabularConfiguration {
      * If name and titles are missing name for the column is determined as
      * "_col.[N]", where N is the row number.
      */
-    @RdfToPojo.Type(uri = TabularVocabulary.COLUMN)
+    @RdfToPojo.Type(iri = TabularVocabulary.COLUMN)
     public static class Column {
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_NAME)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_NAME)
         private String name;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_REQUIRED)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_REQUIRED)
         private boolean required = false;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_SUPRESS_OUTPUT)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_SUPRESS_OUTPUT)
         private boolean suppressOutput = false;
 
         /**
          * Inherited property.
          */
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_LANG)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_LANG)
         private String lang;
 
         /**
@@ -102,7 +102,7 @@ public class TabularConfiguration {
          * ! Can be string or complex type. ! For now we suppose it's just
          * string.
          */
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_SUPRESS_DATATYPE)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_SUPRESS_DATATYPE)
         private String datatype;
 
         /**
@@ -111,14 +111,14 @@ public class TabularConfiguration {
          *
          * Can be used to define subject of the output.
          */
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_ABOUT_URL)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_ABOUT_URL)
         private String aboutUrl;
 
         /**
          * Inherited property.
          * URI Template.
          */
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_PROPERTY_URL)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_PROPERTY_URL)
         private String propertyUrl;
 
         /**
@@ -127,7 +127,7 @@ public class TabularConfiguration {
          *
          * Can be used to define value of this column as a URL.
          */
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_VALUE_URL)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_VALUE_URL)
         private String valueUrl;
 
         public Column() {
@@ -238,46 +238,46 @@ public class TabularConfiguration {
 
     }
 
-    @RdfToPojo.Type(uri = TabularVocabulary.DIALECT)
+    @RdfToPojo.Type(iri = TabularVocabulary.DIALECT)
     public static class Dialect {
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_COMMENT_PREFIX)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_COMMENT_PREFIX)
         private String commentPrefix = "#";
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_DOUBLE_QUOTE)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_DOUBLE_QUOTE)
         private String doubleQuote;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_DELIMETER)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_DELIMETER)
         private String delimeter = ",";
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_ENCODING)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_ENCODING)
         private String encoding = "UTF-8";
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_HEADER)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_HEADER)
         private boolean header = false;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_HEADER_ROW_COUNT)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_HEADER_ROW_COUNT)
         private String headerRowCount;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_QUOTE_CHAR)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_QUOTE_CHAR)
         private String quoteChar = "\"";
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_SKIP_BLANK_ROWS)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_BLANK_ROWS)
         private boolean skipBlankRows = false;
 
         /**
          * Non zero value will cause number and source number to differ.
          */
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_SKIP_COLUMNS)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_COLUMNS)
         private Integer skipColumns = 0;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_SKIP_INITIAL_SPACE)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_INITIAL_SPACE)
         private boolean skipInitialSpace = false;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_SKIP_ROWS)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_ROWS)
         private int skipRows = 0;
 
-        @RdfToPojo.Property(uri = TabularVocabulary.HAS_TRIM)
+        @RdfToPojo.Property(iri = TabularVocabulary.HAS_TRIM)
         private boolean trim = false;
 
         public Dialect() {
@@ -381,40 +381,34 @@ public class TabularConfiguration {
 
     }
 
-    /**
-     * Can be inherit from {@link TableGroup}.
-     */
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_TABLE_SCHEMA)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_TABLE_SCHEMA)
     private Schema tableSchema = new Schema();
 
-    /**
-     * Can be inherit from {@link TableGroup}.
-     */
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_DIALECT)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_DIALECT)
     private Dialect dialect = new Dialect();
 
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_NORMAL_MODE)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_NORMAL_MODE)
     private boolean standardMode = false;
 
     /**
      * If set, user given columns are ignored.
      */
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_FULL_MAPPING)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_FULL_MAPPING)
     private boolean fullMapping = true;
 
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_ROW_LIMIT)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_ROW_LIMIT)
     private int rowLimit = -1;
 
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_USE_BASE_URI)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_USE_BASE_URI)
     private boolean useBaseUri = false;
 
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_BASE_URI)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_BASE_URI)
     private String baseUri;
 
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_GENERETE_NULL_HEADER)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_GENERETE_NULL_HEADER)
     private boolean generateNullHeaderName = false;
 
-    @RdfToPojo.Property(uri = TabularVocabulary.HAS_ENCODE_TYPE)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_ENCODE_TYPE)
     private String encodeType = "";
 
     public TabularConfiguration() {

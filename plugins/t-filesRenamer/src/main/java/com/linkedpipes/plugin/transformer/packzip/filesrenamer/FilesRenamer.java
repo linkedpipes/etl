@@ -1,25 +1,24 @@
 package com.linkedpipes.plugin.transformer.packzip.filesrenamer;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-/**
- *
- */
-public class FilesRenamer implements Component.Sequential {
+public class FilesRenamer implements Component, SequentialExecution {
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.InputPort(id = "OutputFiles")
+    @Component.InputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Configuration
@@ -40,7 +39,7 @@ public class FilesRenamer implements Component.Sequential {
             final String newName = pattern.matcher(entry.getFileName())
                     .replaceAll(configuration.getReplaceWith());
             // Copy file.
-            final File targetFile = outputFiles.createFile(newName).toFile();
+            final File targetFile = outputFiles.createFile(newName);
             targetFile.getParentFile().mkdirs();
             try {
                 Files.copy(entry.toFile().toPath(), targetFile.toPath());

@@ -1,10 +1,8 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
+import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
 import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +11,12 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.quote.QuoteMode;
 import org.supercsv.util.CsvContext;
 
-import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
-import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
+import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Parse csv file.
- *
- * @author Škoda Petr
  */
 public class ParserCsv implements Parser {
 
@@ -28,7 +25,6 @@ public class ParserCsv implements Parser {
     private final ParserCsvConfig config;
 
     private final TableToRdf tableToRdf;
-
 
     private int rowNumber = 0;
 
@@ -61,9 +57,12 @@ public class ParserCsv implements Parser {
             rowNumber = config.hasHeader ? 2 : 1;
         }
         try (FileInputStream fileInputStream = new FileInputStream(inFile);
-                InputStreamReader inputStreamReader = getInputStream(fileInputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                CsvListReader csvListReader = new CsvListReader(bufferedReader, csvPreference)) {
+             InputStreamReader inputStreamReader = getInputStream(
+                     fileInputStream);
+             BufferedReader bufferedReader = new BufferedReader(
+                     inputStreamReader);
+             CsvListReader csvListReader = new CsvListReader(bufferedReader,
+                     csvPreference)) {
             // ignore initial ? lines
             for (int i = 0; i < config.numberOfStartLinesToIgnore; ++i) {
                 bufferedReader.readLine();
@@ -118,13 +117,13 @@ public class ParserCsv implements Parser {
      *
      * @param fileInputStream
      * @return
-     * @throws UnsupportedEncodingException
      */
     private InputStreamReader getInputStream(FileInputStream fileInputStream)
             throws UnsupportedEncodingException {
         if (config.encoding.compareToIgnoreCase("UTF-8") == 0) {
             return new InputStreamReader(
-                    new BOMInputStream(fileInputStream, false), config.encoding);
+                    new BOMInputStream(fileInputStream, false),
+                    config.encoding);
         } else {
             return new InputStreamReader(fileInputStream, config.encoding);
         }

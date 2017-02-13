@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ class UriDownloader {
         public Object call() throws Exception {
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
-                LOG.info("Downloading {}/{} : {}" ,
+                LOG.info("Downloading {}/{} : {}",
                         counter.incrementAndGet(), total, work.source);
                 // Check failure of other threads.
                 if (!configuration.isSkipOnError() &&

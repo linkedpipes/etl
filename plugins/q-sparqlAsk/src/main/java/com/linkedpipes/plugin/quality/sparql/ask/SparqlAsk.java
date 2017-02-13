@@ -1,19 +1,17 @@
 package com.linkedpipes.plugin.quality.sparql.ask;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.query.BooleanQuery;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.impl.SimpleDataset;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.query.BooleanQuery;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 
-/**
- *
- */
-public final class SparqlAsk implements Component.Sequential {
+public final class SparqlAsk implements Component, SequentialExecution {
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
     @Component.Configuration
@@ -37,7 +35,7 @@ public final class SparqlAsk implements Component.Sequential {
                         QueryLanguage.SPARQL,
                         configuration.getQuery());
                 final SimpleDataset dataset = new SimpleDataset();
-                dataset.addDefaultGraph(inputRdf.getGraph());
+                dataset.addDefaultGraph(inputRdf.getReadGraph());
                 query.setDataset(dataset);
                 return query.evaluate();
             });

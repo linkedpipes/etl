@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-/**
- *
- */
 public final class TabularVocabulary {
 
     private static final String PREFIX = "http://www.w3.org/ns/csvw#";
@@ -80,7 +77,7 @@ public final class TabularVocabulary {
     public static final String HAS_GENERETE_NULL_HEADER = LOCAL_PREFIX
             + "generateNullHeaderNames";
 
-    public static  final String HAS_ENCODE_TYPE = LOCAL_PREFIX +
+    public static final String HAS_ENCODE_TYPE = LOCAL_PREFIX +
             "encodeType";
 
     private TabularVocabulary() {

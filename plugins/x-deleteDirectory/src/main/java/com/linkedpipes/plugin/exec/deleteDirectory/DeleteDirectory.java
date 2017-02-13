@@ -1,18 +1,15 @@
 package com.linkedpipes.plugin.exec.deleteDirectory;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class DeleteDirectory implements Component.Sequential {
+public final class DeleteDirectory implements Component, SequentialExecution {
 
     @Component.Configuration
     public DeleteDirectoryConfiguration configuration;

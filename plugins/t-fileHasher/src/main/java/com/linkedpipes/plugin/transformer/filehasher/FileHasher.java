@@ -1,32 +1,31 @@
 package com.linkedpipes.plugin.transformer.filehasher;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
 
-/**
- *
- */
-public class FileHasher implements Component.Sequential {
+public class FileHasher implements Component, SequentialExecution {
 
     private static final int BUFFER_SIZE = 4096;
 
-    @Component.OutputPort(id = "InputFiles")
+    @Component.OutputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Inject
@@ -56,23 +55,23 @@ public class FileHasher implements Component.Sequential {
                 connection.add(vf.createStatement(root,
                         vf.createIRI(FileHasherVocabulary.HAS_FILE_NAME),
                         vf.createLiteral(entry.getFileName())
-                ), outputRdf.getGraph());
+                ), outputRdf.getWriteGraph());
                 connection.add(vf.createStatement(root,
                         vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM),
-                        checkSumNode), outputRdf.getGraph());
+                        checkSumNode), outputRdf.getWriteGraph());
                 // Checksum object.
                 connection.add(vf.createStatement(checkSumNode,
                         RDF.TYPE,
                         vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM)
-                ), outputRdf.getGraph());
+                ), outputRdf.getWriteGraph());
                 connection.add(vf.createStatement(checkSumNode,
                         vf.createIRI(FileHasherVocabulary.HAS_ALGORITHM),
                         vf.createIRI(FileHasherVocabulary.SHA1)
-                ), outputRdf.getGraph());
+                ), outputRdf.getWriteGraph());
                 connection.add(vf.createStatement(checkSumNode,
                         vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM_VALUE),
                         vf.createLiteral(checkSum, typeHexBinary)
-                ), outputRdf.getGraph());
+                ), outputRdf.getWriteGraph());
                 connection.commit();
             });
         }
@@ -84,8 +83,6 @@ public class FileHasher implements Component.Sequential {
      *
      * @param file
      * @return
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
      */
     protected String computeChecksum(File file)
             throws NoSuchAlgorithmException, IOException {

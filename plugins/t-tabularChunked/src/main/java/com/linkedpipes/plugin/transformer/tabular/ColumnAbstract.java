@@ -1,17 +1,15 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.List;
 
 /**
  * Default predicate: configuration.url + "#"
  * + URLEncoder.encode(column.name, "UTF-8"));
- *
- *
  */
 abstract class ColumnAbstract {
 

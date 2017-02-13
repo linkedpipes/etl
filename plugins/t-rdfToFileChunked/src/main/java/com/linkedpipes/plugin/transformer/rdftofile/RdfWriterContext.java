@@ -1,14 +1,12 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import org.openrdf.model.Statement;
-import org.openrdf.rio.*;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.*;
 
 import java.util.Collection;
 
 /**
  * Support cancel and progress report.
- *
- * @author Škoda Petr
  */
 public class RdfWriterContext implements RDFWriter {
 
@@ -55,7 +53,7 @@ public class RdfWriterContext implements RDFWriter {
     @Override
     public void handleNamespace(String string, String string1)
             throws RDFHandlerException {
-         // Ignore namespaces here.
+        // Ignore namespaces here.
     }
 
     @Override

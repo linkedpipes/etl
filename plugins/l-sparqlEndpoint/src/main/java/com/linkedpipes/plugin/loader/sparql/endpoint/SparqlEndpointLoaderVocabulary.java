@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
-/**
- *
- */
 final class SparqlEndpointLoaderVocabulary {
 
     private static final String PREFIX

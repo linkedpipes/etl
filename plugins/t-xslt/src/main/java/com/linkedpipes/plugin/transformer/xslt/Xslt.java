@@ -1,18 +1,19 @@
 package com.linkedpipes.plugin.transformer.xslt;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import net.sf.saxon.s9api.*;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,21 +23,17 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class Xslt implements Component.Sequential {
+public final class Xslt implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Xslt.class);
 
-    @Component.InputPort(id = "FilesInput")
+    @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit inputFiles;
 
-    @Component.InputPort(id = "Parameters", optional = true)
+    @Component.InputPort(iri = "Parameters")
     public SingleGraphDataUnit parametersRdf;
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Configuration
@@ -69,7 +66,7 @@ public final class Xslt implements Component.Sequential {
             final TupleQuery query = connection.prepareTupleQuery(
                     QueryLanguage.SPARQL, strQuery);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(parametersRdf.getGraph());
+            dataset.addDefaultGraph(parametersRdf.getReadGraph());
             query.setDataset(dataset);
             final TupleQueryResult result = query.evaluate();
             while (result.hasNext()) {
@@ -87,22 +84,23 @@ public final class Xslt implements Component.Sequential {
             final File outputFile;
             if (nameMapping.containsKey(entry.getFileName())) {
                 outputFile = outputFiles.createFile(
-                        nameMapping.get(entry.getFileName())).toFile();
+                        nameMapping.get(entry.getFileName()));
             } else {
                 outputFile = outputFiles.createFile(addExtension(
                         entry.getFileName(),
-                        configuration.getNewExtension())).toFile();
+                        configuration.getNewExtension()));
             }
             // Prepare transformer.
             final XsltTransformer transformer = executable.load();
             if (parametersRdf != null) {
                 LOG.debug("Reading parameters.");
                 parametersRdf.execute((connection) -> {
-                    final String strQuery = createParametersQuery(entry.getFileName());
+                    final String strQuery =
+                            createParametersQuery(entry.getFileName());
                     final TupleQuery query = connection.prepareTupleQuery(
                             QueryLanguage.SPARQL, strQuery);
                     final SimpleDataset dataset = new SimpleDataset();
-                    dataset.addDefaultGraph(parametersRdf.getGraph());
+                    dataset.addDefaultGraph(parametersRdf.getReadGraph());
                     query.setDataset(dataset);
                     final TupleQueryResult result = query.evaluate();
                     while (result.hasNext()) {
@@ -191,12 +189,17 @@ public final class Xslt implements Component.Sequential {
     private static String createNamesQuery() {
         return ""
                 + "SELECT ?fileName ?outputName WHERE {\n"
-                + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
+                +
+                "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
                 + "        \n"
-                + "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> ?fileName ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/outputName> ?outputName .\n"
+                +
+                "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> ?fileName ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/outputName> ?outputName .\n"
                 + "}";
     }
 
@@ -210,18 +213,26 @@ public final class Xslt implements Component.Sequential {
     private static String createParametersQuery(String fileName) {
         return ""
                 + "SELECT ?name ?value WHERE {\n"
-                + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
+                +
+                "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
                 + "        \n"
-                + "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> \""
+                +
+                "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> \""
                 + fileName
                 + "\" ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameter> ?parameter .\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameter> ?parameter .\n"
                 + "        \n"
-                + "    ?parameter a <http://etl.linkedpipes.com/ontology/components/t-xslt/Parameter> ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterValue> ?value ;\n"
-                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterName> ?name .\n"
+                +
+                "    ?parameter a <http://etl.linkedpipes.com/ontology/components/t-xslt/Parameter> ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterValue> ?value ;\n"
+                +
+                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterName> ?name .\n"
                 + "}";
     }
 

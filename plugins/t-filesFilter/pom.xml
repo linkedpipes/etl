@@ -16,15 +16,11 @@
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-commons</artifactId>
+            <artifactId>api-executor-v1</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-component-v1</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-system</artifactId>
+            <artifactId>dataunit-core</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

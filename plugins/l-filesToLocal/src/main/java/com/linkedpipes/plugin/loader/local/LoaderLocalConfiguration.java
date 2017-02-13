@@ -1,14 +1,11 @@
 package com.linkedpipes.plugin.loader.local;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = LoaderLocalVocabulary.CONFIG)
+@RdfToPojo.Type(iri = LoaderLocalVocabulary.CONFIG)
 public class LoaderLocalConfiguration {
 
-    @RdfToPojo.Property(uri = LoaderLocalVocabulary.HAS_PATH)
+    @RdfToPojo.Property(iri = LoaderLocalVocabulary.HAS_PATH)
     private String path;
 
     public LoaderLocalConfiguration() {

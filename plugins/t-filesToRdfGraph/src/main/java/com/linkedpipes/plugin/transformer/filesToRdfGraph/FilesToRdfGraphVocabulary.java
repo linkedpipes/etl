@@ -1,9 +1,7 @@
 package com.linkedpipes.plugin.transformer.filesToRdfGraph;
 
 /**
- * We reuse same vocabulary as files to RDF.
- *
- * @author Škoda Petr
+ * Reuse of files to RDF.
  */
 public final class FilesToRdfGraphVocabulary {
 

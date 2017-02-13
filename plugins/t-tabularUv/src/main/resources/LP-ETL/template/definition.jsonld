@@ -14,6 +14,9 @@
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "csv", "tabular", "uv"
+        ],
+        "http://linkedpipes.com/ontology/configurationDescription": [
+            {"@id": "http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc"}
         ]
     },
     {

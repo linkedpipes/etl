@@ -25,7 +25,7 @@ public final class TextHolder implements Component, SequentialExecution {
     @Override
     public void execute() throws LpException {
         final File outputFile = outputFiles.createFile(
-                configuration.getFileName()).toFile();
+                configuration.getFileName());
         final byte[] content;
         try {
             content = configuration.getContent().getBytes("UTF-8");

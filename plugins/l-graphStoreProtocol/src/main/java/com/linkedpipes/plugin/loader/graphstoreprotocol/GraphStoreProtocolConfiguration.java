@@ -1,11 +1,8 @@
 package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = GraphStoreProtocolVocabulary.CONFIG)
+@RdfToPojo.Type(iri = GraphStoreProtocolVocabulary.CONFIG)
 public class GraphStoreProtocolConfiguration {
 
     public static enum RepositoryType {
@@ -14,31 +11,31 @@ public class GraphStoreProtocolConfiguration {
         BLAZEGRAPH
     }
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_GRAPH)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_GRAPH)
     private String targetGraph;
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_TYPE)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_TYPE)
     private RepositoryType repository = RepositoryType.FUSEKI;
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_AUTH)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_AUTH)
     private boolean useAuthentification = false;
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_USER)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_USER)
     private String userName = "";
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_PASSWORD)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_PASSWORD)
     private String password = "";
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_CHECK_SIZE)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_CHECK_SIZE)
     private boolean checkSize = false;
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_SELECT)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_SELECT)
     private String endpointSelect;
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_CRUD)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_CRUD)
     private String endpoint;
 
-    @RdfToPojo.Property(uri = GraphStoreProtocolVocabulary.HAS_REPLACE)
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_REPLACE)
     private boolean replace = false;
 
     public GraphStoreProtocolConfiguration() {

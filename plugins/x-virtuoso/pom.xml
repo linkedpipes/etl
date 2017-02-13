@@ -24,35 +24,26 @@
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-commons</artifactId>
+            <artifactId>api-executor-v1</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-component-v1</artifactId>
+            <artifactId>dataunit-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-system</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-sesame</artifactId>
-        </dependency>
-        <!-- OpenRDF. -->
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-api</artifactId>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-api</artifactId>
         </dependency>
         <!-- Virtuoso. -->
         <dependency>
             <groupId>com.openlinksw.virtuoso</groupId>
-            <artifactId>virt_sesame2</artifactId>
-            <version>1.21-7-develop</version>
+            <artifactId>virt_rdf4j</artifactId>
+            <version>20170111</version>
         </dependency>
         <dependency>
             <groupId>com.openlinksw.virtuoso</groupId>
-            <artifactId>virtjdbc4_1</artifactId>
-            <version>3.76-7-develop</version>
+            <artifactId>virtjdbc4</artifactId>
+            <version>20170111</version>
         </dependency>
     </dependencies>
 

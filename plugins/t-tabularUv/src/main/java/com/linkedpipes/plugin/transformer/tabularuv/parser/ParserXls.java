@@ -1,34 +1,20 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnType;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.NamedCell_V1;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
+import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
-import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
-/**
- *
- * @author Škoda Petr
- */
 public class ParserXls implements Parser {
 
     private static final Logger LOG = LoggerFactory.getLogger(
@@ -62,7 +48,8 @@ public class ParserXls implements Parser {
         final List<Integer> toProcess = new LinkedList<>();
         for (Integer index = 0; index < wb.getNumberOfSheets(); ++index) {
             if (config.sheetName == null || config.sheetName.isEmpty()
-                    || config.sheetName.compareTo(wb.getSheetName(index)) == 0) {
+                    ||
+                    config.sheetName.compareTo(wb.getSheetName(index)) == 0) {
                 // add
                 toProcess.add(index);
             }
@@ -78,13 +65,12 @@ public class ParserXls implements Parser {
      *
      * @param wb
      * @param sheetIndex
-     * @throws com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public void parseSheet(Workbook wb, Integer sheetIndex)
             throws ParseFailed, LpException {
 
-        LOG.debug("parseSheet({}, {})", wb.getSheetName(sheetIndex), sheetIndex);
+        LOG.debug("parseSheet({}, {})", wb.getSheetName(sheetIndex),
+                sheetIndex);
 
         // for every row
         final Sheet sheet = wb.getSheetAt(sheetIndex);
@@ -233,7 +219,8 @@ public class ParserXls implements Parser {
                     // See comment before types generation for more info.
                     int columnIndex = 0;
                     for (int i = 0; i < columnEnd; i++) {
-                        columnNames.add("col" + Integer.toString(++columnIndex));
+                        columnNames
+                                .add("col" + Integer.toString(++columnIndex));
                     }
                     tableHeaderSize = columnNames.size();
                 } else {
@@ -332,7 +319,6 @@ public class ParserXls implements Parser {
      *
      * @param cell
      * @return
-     * @throws IllegalArgumentException
      */
     private String getCellValue(Cell cell) throws IllegalArgumentException {
         switch (cell.getCellType()) {
@@ -350,7 +336,8 @@ public class ParserXls implements Parser {
                 throw new IllegalArgumentException("Wrong cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " + Integer.toString(cell.getColumnIndex()));
+                        + " column: " +
+                        Integer.toString(cell.getColumnIndex()));
             case Cell.CELL_TYPE_NUMERIC:
                 if (config.advancedDoubleParser) {
                     // Check for Date
@@ -387,7 +374,8 @@ public class ParserXls implements Parser {
                 throw new IllegalArgumentException("Unknown cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " + Integer.toString(cell.getColumnIndex()));
+                        + " column: " +
+                        Integer.toString(cell.getColumnIndex()));
         }
     }
 
@@ -396,7 +384,6 @@ public class ParserXls implements Parser {
      *
      * @param cell
      * @return
-     * @throws IllegalArgumentException
      */
     private ColumnType getCellType(Cell cell) throws IllegalArgumentException {
         switch (cell.getCellType()) {
@@ -408,7 +395,8 @@ public class ParserXls implements Parser {
                 throw new IllegalArgumentException("Cell type is error.");
             case Cell.CELL_TYPE_FORMULA:
                 throw new IllegalArgumentException(
-                        "The cell contains a formula: " + cell.getCellFormula());
+                        "The cell contains a formula: " +
+                                cell.getCellFormula());
             case Cell.CELL_TYPE_NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
                     return ColumnType.Date;

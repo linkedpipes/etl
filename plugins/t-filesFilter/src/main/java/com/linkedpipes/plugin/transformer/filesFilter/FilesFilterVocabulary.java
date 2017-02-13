@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.filesFilter;
 
-/**
- *
- */
 public final class FilesFilterVocabulary {
 
     private static final String PREFIX

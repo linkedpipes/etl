@@ -1,13 +1,13 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+
 import java.util.List;
-import org.openrdf.model.Resource;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
  * Used to create resources.
- *
  */
 public class ResourceTemplate {
 

@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class HttpGetFilesVocabulary {
 
     private HttpGetFilesVocabulary() {

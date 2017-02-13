@@ -1,12 +1,8 @@
 package com.linkedpipes.plugin.loader.dcatApToCkan;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
-/**
- *
- * @author Klímek Jakub
- */
 public final class DcatApToCkanVocabulary {
 
     public static final String SCHEMA = "http://schema.org/";

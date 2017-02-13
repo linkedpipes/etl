@@ -1,11 +1,11 @@
 package com.linkedpipes.plugin.transformer.tabularuv.dbf;
 
-import java.io.DataInput;
-import java.io.IOException;
-
 import org.jamel.dbf.exception.DbfException;
 import org.jamel.dbf.structure.DbfHeader;
 import org.jamel.dbf.utils.DbfUtils;
+
+import java.io.DataInput;
+import java.io.IOException;
 
 public class DbfHeaderLanguageDriver extends DbfHeader {
 

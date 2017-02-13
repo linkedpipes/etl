@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.exec.virtuosoExtractor;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class VirtuosoExtractorVocabulary {
 
     private static final String PREFIX

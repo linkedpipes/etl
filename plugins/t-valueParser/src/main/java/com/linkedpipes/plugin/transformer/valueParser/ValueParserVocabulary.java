@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.valueParser;
 
-/**
- * @author Škoda Petr
- */
 final class ValueParserVocabulary {
 
     private static final String PREFIX

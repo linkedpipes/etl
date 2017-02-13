@@ -1,18 +1,18 @@
 @prefix th: <http://plugins.linkedpipes.com/ontology/e-textHolder#> .
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration/desc/fileName>,
         <http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration/desc/content> .
 
-<http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration/desc/fileName>
+<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> .
 
-<http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration/desc/content>
+<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-textHolder#content> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> .

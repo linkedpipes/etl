@@ -1,20 +1,17 @@
 package com.linkedpipes.plugin.transformer.xslt;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = XsltVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = XsltVocabulary.CONFIG_CLASS)
 public class XsltConfiguration {
 
-    @RdfToPojo.Property(uri = XsltVocabulary.TEMPLATE)
+    @RdfToPojo.Property(iri = XsltVocabulary.TEMPLATE)
     private String xsltTemplate = "";
 
-    @RdfToPojo.Property(uri = XsltVocabulary.EXTENSION)
+    @RdfToPojo.Property(iri = XsltVocabulary.EXTENSION)
     private String newExtension;
 
-    @RdfToPojo.Property(uri = XsltVocabulary.SKIP_ON_ERROR)
+    @RdfToPojo.Property(iri = XsltVocabulary.SKIP_ON_ERROR)
     private boolean skipOnError = false;
 
     public XsltConfiguration() {

@@ -1,12 +1,9 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class VirtuosoVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/x-virtuoso#";
+    private static final String PREFIX =
+            "http://plugins.linkedpipes.com/ontology/x-virtuoso#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -24,7 +21,8 @@ public final class VirtuosoVocabulary {
 
     public static final String TARGET_GRAPH = PREFIX + "graph";
 
-    public static final String STATUS_UPDATE_INTERVAL = PREFIX + "updateInterval";
+    public static final String STATUS_UPDATE_INTERVAL =
+            PREFIX + "updateInterval";
 
     public static final String CLEAR_LOAD_GRAPH = PREFIX + "clearSqlLoadTable";
 
