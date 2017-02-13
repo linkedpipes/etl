@@ -146,7 +146,6 @@ public class ExecutorFacade {
                 = new LinkedMultiValueMap<>();
         headers.add("Accept", "application/ld+json");
         final ResponseEntity<String> response;
-        LOG.info("Checking: {}", executor.getAddress());
         try {
             response = restTemplate.exchange(
                     executor.getAddress() + "/api/v1/executions",
@@ -170,7 +169,6 @@ public class ExecutorFacade {
         // Check if there was any response.
         final String body = response.getBody();
         if (body == null) {
-            LOG.info("  empty body");
             // Is not executing -> detach any possibly attached execution.
             if (executor.getExecution() != null) {
                 // However the execution may finished in mean time, so
@@ -201,7 +199,6 @@ public class ExecutorFacade {
                 executionFacade.update(executor.getExecution(), stream);
             }
             executor.setLastCheck(new Date());
-            LOG.info("  execution checked: {}", executor.getExecution().getId());
         } catch (ExecutionFacade.UnknownExecution | ExecutionFacade.ExecutionMismatch ex) {
             // The execution in the stream is unknown. Detach the execution
             // and wait for other refresh.
@@ -209,16 +206,12 @@ public class ExecutorFacade {
                 executionFacade.detachExecutor(executor.getExecution());
                 executor.setExecution(null);
             }
-            //
-            LOG.warn("Executor change the execution.", ex);
         } catch (ExecutionFacade.OperationFailed ex) {
             // Unset execution, it will be discovered in the next check.
             if (executor.getExecution() != null) {
                 executionFacade.detachExecutor(executor.getExecution());
                 executor.setExecution(null);
             }
-            //
-            LOG.error("Can't update execution.", ex);
         }
     }
 
