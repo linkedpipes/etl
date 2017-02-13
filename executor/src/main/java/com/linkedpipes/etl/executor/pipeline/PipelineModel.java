@@ -358,7 +358,8 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
             }
             if (configurationDescription == null) {
                 throw new ExecutorException(
-                        "Missing configuration description: {}", iri);
+                        "Missing configuration description: {} jar: {}",
+                        iri, jarPath);
             }
             configurationDescription.afterLoad();
             for (Configuration configuration : configurations) {
