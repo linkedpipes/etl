@@ -7,23 +7,18 @@
     <packaging>pom</packaging>
     <name>LinkedPipes</name>
     <description>Master build project.</description>
-
     <modules>
-        <module>build-checkstyle</module>
         <module>pom-parent</module>
         <module>pom-component</module>
-        <!-- API. -->
+        <module>vocabulary</module>
+        <module>rdf-utils</module>
         <module>api-executor-v1</module>
         <module>dataunit-core</module>
         <module>executor</module>
         <module>executor-monitor</module>
         <module>storage</module>
-        <!-- Plugins. -->
-        <module>plugins</module>
-        <!-- Deploy. -->
-        <module>deploy-dependencies</module>
         <module>test-environment</module>
-        <module>frontend</module>
+        <module>plugins</module>
+        <module>deploy-dependencies</module>
     </modules>
-
 </project>

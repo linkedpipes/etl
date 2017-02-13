@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-parent</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.0</version>
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
     <artifactId>dataunit-core</artifactId>
@@ -15,19 +15,19 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-executor-v1</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>rdf-utils</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>vocabulary</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- RDF4J. -->

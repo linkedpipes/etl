@@ -5,28 +5,35 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-parent</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.0</version>
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
     <artifactId>executor</artifactId>
     <name>lp-executor</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <deploy.directory>../deploy/executor/</deploy.directory>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-executor-v1</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>rdf-utils</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>vocabulary</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
         </dependency>
         <!-- RDF4J -->
         <dependency>
@@ -175,5 +182,53 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>deploy</id>
+            <activation>
+                <property>
+                    <name>!noDeploy</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${deploy.directory}"/>
+                                        <copy todir="${deploy.directory}/..">
+                                            <fileset dir="{project.build.directory}/../deploy">
+                                                <include name="*.*"/>
+                                            </fileset>
+                                        </copy>
+                                        <copy todir="${deploy.directory}">
+                                            <fileset dir="${project.build.directory}">
+                                                <include name="executor.jar"/>
+                                            </fileset>
+                                        </copy>
+                                        <mkdir dir="${deploy.directory}/lib"/>
+                                        <copy todir="${deploy.directory}/lib">
+                                            <fileset dir="${project.build.directory}/lib"/>
+                                        </copy>
+                                        <chmod perm="u+x" file="${deploy.directory}/../executor.sh"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 

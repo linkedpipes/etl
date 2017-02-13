@@ -4,11 +4,11 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-parent</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.0</version>
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
     <artifactId>executor-monitor</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.0</version>
     <packaging>jar</packaging>
     <name>lp-executor-monitor</name>
     <description>Provides overview for local executors.</description>
@@ -18,12 +18,6 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>com.linkedpipes</groupId>-->
-            <!--<artifactId>api-executor-v1</artifactId>-->
-            <!--<version>1.0.0</version>-->
-            <!--<scope>compile</scope>-->
-        <!--</dependency>-->
         <!-- FTP server -->
         <dependency>
             <groupId>org.apache.ftpserver</groupId>
@@ -136,7 +130,7 @@
             <version>${rdf4j.version}</version>
             <scope>compile</scope>
         </dependency>
-        <!-- HTTP related, particulary: Multipart file upload. -->
+        <!-- HTTP related, particularly: Multipart file upload. -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -189,6 +183,7 @@
     </build>
     <profiles>
         <profile>
+            <id>deploy</id>
             <activation>
                 <property>
                     <name>!noDeploy</name>
