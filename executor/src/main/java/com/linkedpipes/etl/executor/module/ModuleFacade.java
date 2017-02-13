@@ -61,17 +61,17 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             + "org.apache.log4j.api;version=\"1.7.18\","
             + "org.apache.log4j.xml;version=\"1.7.18\","
             + "" // core API
-            + "com.linkedpipes.etl.executor.api.v1;version=\"1.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.component;version=\"1.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.dataunit;version=\"1.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.event;version=\"1.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.rdf;version=\"1.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.service;version=\"1.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.vocabulary;version=\"1.0.0\","
-            + "com.linkedpipes.etl.rdf.utils;version=\"1.0.0\","
-            + "com.linkedpipes.etl.rdf.utils.entity;version=\"1.0.0\","
-            + "com.linkedpipes.etl.rdf.utils.pojo;version=\"1.0.0\","
-            + "com.linkedpipes.etl.rdf.utils.vocabulary;version=\"1.0.0\"";
+            + "com.linkedpipes.etl.executor.api.v1;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.component;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.dataunit;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.event;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.rdf;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.service;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.vocabulary;version=\"0.0.0\","
+            + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\","
+            + "com.linkedpipes.etl.rdf.utils.entity;version=\"0.0.0\","
+            + "com.linkedpipes.etl.rdf.utils.pojo;version=\"0.0.0\","
+            + "com.linkedpipes.etl.rdf.utils.vocabulary;version=\"0.0.0\"";
 
     private Framework framework;
 
