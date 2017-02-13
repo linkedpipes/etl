@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.linkedpipes</groupId>
         <artifactId>pom-parent</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.0</version>
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
     <artifactId>api-executor-v1</artifactId>
     <name>lp-api-executor-v1</name>
-    <version>1.0.0</version>
+    <version>0.0.0</version>
     <packaging>jar</packaging>
     <description>Contains definition of API for Java components.</description>
     <dependencies>
@@ -23,13 +23,13 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>rdf-utils</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>vocabulary</artifactId>
-            <version>1.0.0</version>
+            <version>${lp.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- Test. -->

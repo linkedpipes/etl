@@ -21,6 +21,9 @@ public class DefaultServiceFactory implements ServiceFactory {
         if (serviceType.equals(ProgressReport.class)) {
             return new DefaultProgressReport(context, component);
         }
+        if (serviceType.equals(DefinitionReader.class)) {
+            return new DefaultDefinitionReader(component, graph, definition);
+        }
         if (serviceType.equals(WorkingDirectory.class)) {
             try {
                 return createWorkingDirectory(component, graph, definition);

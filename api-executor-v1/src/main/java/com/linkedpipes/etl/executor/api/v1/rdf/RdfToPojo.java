@@ -48,6 +48,14 @@ public interface RdfToPojo {
 
         private String language;
 
+        public LangString() {
+        }
+
+        public LangString(String value, String language) {
+            this.value = value;
+            this.language = language;
+        }
+
         @Override
         public void setValue(String value, String language) {
             this.value = value;

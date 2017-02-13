@@ -39,9 +39,8 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        final SequentialExecution exec = (SequentialExecution) component;
         try {
-            exec.execute();
+            component.execute();
         } catch (Throwable t) {
             throw new LpException("Execution failed.", t);
         }
