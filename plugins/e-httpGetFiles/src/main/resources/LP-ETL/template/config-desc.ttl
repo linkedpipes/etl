@@ -6,24 +6,36 @@
     config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/hardRedirect> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threads> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/detailLog> .
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/detailLog> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/header> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#skipOnError> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#skipOnErrorControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#skipOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#skipOnErrorControl> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/hardRedirect>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirect> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirectControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#hardRedirect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#hardRedirectControl> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threads>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#threads> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#threadsControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threadsControl> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/detailLog>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#detailLog> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#detailLogControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#detailLog> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#detailLogControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/header>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#header> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#headerControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#reference> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#referenceControl> .
