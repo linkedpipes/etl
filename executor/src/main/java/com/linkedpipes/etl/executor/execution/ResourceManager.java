@@ -77,15 +77,6 @@ public class ResourceManager {
     }
 
     /**
-     * @return Path to execution output directory.
-     */
-    public File getExecutionOutputDirectory() {
-        final File file = new File(executionRoot, "execution");
-        file.getParentFile().mkdir();
-        return file;
-    }
-
-    /**
      * @return Output file for the pipeline execution.
      */
     public File getPipelineFile() {
