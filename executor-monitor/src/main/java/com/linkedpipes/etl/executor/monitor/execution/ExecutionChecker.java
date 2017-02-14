@@ -46,7 +46,7 @@ class ExecutionChecker {
             throws OperationFailed, ExecutionMismatch {
         //
         final File definitionFile
-                = new File(execution.getDirectory(), "execution-v1.jsonld");
+                = new File(execution.getDirectory(), "execution.jsonld");
         if (!definitionFile.exists()) {
             // No execution directory, the execution must be queued.
             LOG.info(" {} : loadQueued", execution.getId());

@@ -98,7 +98,7 @@ public class ResourceManager {
      * @return Output file for original execution file.
      */
     public File getExecutionFileV1() {
-        final File file = new File(executionRoot, "execution-v1.jsonld");
+        final File file = new File(executionRoot, "execution.jsonld");
         file.getParentFile().mkdir();
         return file;
     }

@@ -123,7 +123,7 @@ public class ExecutionFacade {
         if (statements == null) {
             // Stream content from a file.
             final File executionFile
-                    = new File(execution.getDirectory(), "execution-v1.jsonld");
+                    = new File(execution.getDirectory(), "execution.jsonld");
             streamFile(executionFile, RDFFormat.JSONLD, format, stream);
         } else {
             // Serialize from the memory.
