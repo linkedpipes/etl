@@ -2,9 +2,10 @@ package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.EntityMerger;
+import com.linkedpipes.etl.rdf.utils.entity.EntityControl;
+import com.linkedpipes.etl.rdf.utils.entity.EntityControlFactory;
 
-class DefaultControlFactory implements EntityMerger.ControlFactory {
+class DefaultControlFactory implements EntityControlFactory {
 
     /**
      * Source with definitions.

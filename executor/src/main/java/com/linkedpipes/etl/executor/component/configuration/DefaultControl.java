@@ -4,7 +4,9 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.EntityMerger;
+import com.linkedpipes.etl.rdf.utils.entity.EntityControl;
+import com.linkedpipes.etl.rdf.utils.entity.EntityMergeType;
+import com.linkedpipes.etl.rdf.utils.entity.EntityReference;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import java.util.*;
 /**
  * Control loading of RDF data into entities.
  */
-class DefaultControl implements EntityMerger.Control {
+class DefaultControl implements EntityControl {
 
     /**
      * Represent a control of given property.
@@ -45,7 +47,7 @@ class DefaultControl implements EntityMerger.Control {
      * For pair definitionGraph-resource store list of properties and their
      * merge type.
      */
-    private final Map<String, Map<String, EntityMerger.MergeType>>
+    private final Map<String, Map<String, EntityMergeType>>
             control = new HashMap<>();
 
     /**
@@ -70,15 +72,15 @@ class DefaultControl implements EntityMerger.Control {
     }
 
     @Override
-    public void init(List<EntityMerger.Reference> references)
+    public void init(List<EntityReference> references)
             throws RdfUtilsException {
         prepareControlObject(references);
         loadComplexProperties(references);
         // Load controlledPredicates from entities.
         final List<Map<String, Configuration.Status>> controlsInReferences =
                 new ArrayList<>(references.size());
-        for (EntityMerger.Reference ref : references) {
-            controlsInReferences.add(loadControlUseDefaults(ref));
+        for (EntityReference ref : references) {
+            controlsInReferences.add(loadControlInferDefaults(ref));
         }
         // Build predicate list.
         final Set<String> allPredicates = new HashSet<>();
@@ -115,7 +117,7 @@ class DefaultControl implements EntityMerger.Control {
                 loadFrom.add(lastLoad);
             } else {
                 LOG.info("Predicate: {}", predicate);
-                for (EntityMerger.Reference ref : references) {
+                for (EntityReference ref : references) {
                     LOG.info("\tref: {} {}", ref.getResource(),
                             ref.getGraph());
                 }
@@ -124,14 +126,12 @@ class DefaultControl implements EntityMerger.Control {
             }
             //
             int counter = 0;
-            for (EntityMerger.Reference ref : references) {
+            for (EntityReference ref : references) {
                 final String key = ref.getGraph() + "-" + ref.getResource();
                 if (loadFrom.contains(counter)) {
-                    control.get(key).put(predicate,
-                            EntityMerger.MergeType.LOAD);
+                    control.get(key).put(predicate, EntityMergeType.LOAD);
                 } else {
-                    control.get(key).put(predicate,
-                            EntityMerger.MergeType.SKIP);
+                    control.get(key).put(predicate, EntityMergeType.SKIP);
                 }
                 ++counter;
             }
@@ -149,15 +149,14 @@ class DefaultControl implements EntityMerger.Control {
     }
 
     @Override
-    public EntityMerger.MergeType onProperty(String property)
+    public EntityMergeType onProperty(String property)
             throws RdfUtilsException {
         if (ALWAYS_LOAD_PROPERTIES.contains(property)) {
-            return EntityMerger.MergeType.LOAD;
+            return EntityMergeType.LOAD;
         }
-        final EntityMerger.MergeType type =
-                control.get(currentKey).get(property);
+        final EntityMergeType type = control.get(currentKey).get(property);
         if (type == null) {
-            return EntityMerger.MergeType.SKIP;
+            return EntityMergeType.SKIP;
         } else {
             return type;
         }
@@ -200,9 +199,9 @@ class DefaultControl implements EntityMerger.Control {
         }
     }
 
-    private void prepareControlObject(List<EntityMerger.Reference> references) {
+    private void prepareControlObject(List<EntityReference> references) {
         control.clear();
-        for (EntityMerger.Reference ref : references) {
+        for (EntityReference ref : references) {
             final String key = ref.getGraph() + "-" + ref.getResource();
             control.put(key, new HashMap<>());
         }
@@ -215,34 +214,46 @@ class DefaultControl implements EntityMerger.Control {
      * @param references
      */
     private void loadComplexProperties(
-            List<EntityMerger.Reference> references) throws RdfUtilsException {
-        for (EntityMerger.Reference ref : references) {
+            List<EntityReference> references) throws RdfUtilsException {
+        for (EntityReference ref : references) {
             final String key = ref.getGraph() + "-" + ref.getResource();
             for (String predicate : complexPredicates) {
-                control.get(key).put(predicate,
-                        EntityMerger.MergeType.MERGE);
+                control.get(key).put(predicate, EntityMergeType.MERGE);
             }
         }
     }
 
-    private Map<String, Configuration.Status> loadControlUseDefaults(
-            EntityMerger.Reference reference) throws RdfUtilsException {
-        final Map<String, Configuration.Status> output =
+    private Map<String, Configuration.Status> loadControlInferDefaults(
+            EntityReference reference) throws RdfUtilsException {
+        final Map<String, Configuration.Status> controls =
                 loadControl(reference);
-        addDefaultControl(output);
-        return output;
+        // Not all properties must have control values set (invalid
+        // configuration, runtime configuration, ... )m so for those
+        // we use NONE as default.
+        final Set<String> properties =
+                loadControlledExistingProperties(reference);
+        for (String property : properties) {
+            if (controls.containsKey(property)) {
+                continue;
+            }
+            controls.put(property, Configuration.Status.NONE);
+        }
+        return controls;
     }
 
-    private void addDefaultControl(Map<String, Configuration.Status> controls) {
-        // Properties can be missing because of invalid "inheritance control"
-        // (backward compatibility) or user does not provide them
-        // (to simplify the pipeline).
-        for (PropertyControl controlledPredicate : controlledPredicates) {
-            if (!controls.containsKey(controlledPredicate.predicate)) {
-                controls.put(controlledPredicate.predicate,
-                        Configuration.Status.NONE);
-            }
+    private Set<String> loadControlledExistingProperties(
+            EntityReference reference) throws RdfUtilsException {
+        final String query = buildLoadExistingControlledPropertiesQuery(
+                controlledPredicates, reference.getGraph(),
+                reference.getResource());
+        final List<Map<String, String>> queryResult = RdfUtils.sparqlSelect(
+                reference.getSource(), query);
+        final Set<String> output = new HashSet<>();
+        for (Map<String, String> entry : queryResult) {
+            final String control = entry.get("property");
+            output.add(control);
         }
+        return output;
     }
 
     /**
@@ -250,7 +261,7 @@ class DefaultControl implements EntityMerger.Control {
      * @return For each predicate control value.
      */
     private Map<String, Configuration.Status> loadControl(
-            EntityMerger.Reference reference) throws RdfUtilsException {
+            EntityReference reference) throws RdfUtilsException {
         final String query = buildLoadControlsQuery(controlledPredicates,
                 reference.getGraph(), reference.getResource());
         final List<Map<String, String>> queryResult = RdfUtils.sparqlSelect(
@@ -302,6 +313,23 @@ class DefaultControl implements EntityMerger.Control {
         for (PropertyControl item : controlDefinitions) {
             builder.append("  ( <").append(item.predicate).append("> <")
                     .append(item.control).append("> )\n");
+        }
+        builder.append("} }");
+        return builder.toString();
+    }
+
+    private static String buildLoadExistingControlledPropertiesQuery(
+            List<PropertyControl> controlDefinitions,
+            String graph, String resource) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("SELECT ?property WHERE { " +
+                "GRAPH <" + graph + "> {\n" +
+                "  <" + resource + "> a ?type ;\n" +
+                "  ?property ?value .\n" +
+                "}\n" +
+                "VALUES( ?property ) {\n");
+        for (PropertyControl item : controlDefinitions) {
+            builder.append("  ( <").append(item.predicate).append("> )\n");
         }
         builder.append("} }");
         return builder.toString();

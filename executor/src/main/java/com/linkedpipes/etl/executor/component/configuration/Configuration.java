@@ -7,6 +7,7 @@ import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.entity.EntityMerger;
+import com.linkedpipes.etl.rdf.utils.entity.EntityReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class Configuration {
             String runtimeGraph, RdfSource.TypedTripleWriter writer,
             Pipeline pipeline)
             throws ExecutorException {
-        final List<EntityMerger.Reference> references = new ArrayList<>(3);
+        final List<EntityReference> references = new ArrayList<>(3);
         final PipelineModel.ConfigurationDescription description =
                 component.getConfigurationDescription();
         final RdfSource pplSource = pipeline.getSource();
@@ -69,8 +70,7 @@ public class Configuration {
                         configurationType, graph, ex);
             }
             // Create a reference to the configuration.
-            references.add(new EntityMerger.Reference(
-                    resource, graph, pplSource));
+            references.add(new EntityReference(resource, graph, pplSource));
         }
         // Get definitionGraph and resource for runtime configuration if
         // provided.
@@ -87,8 +87,8 @@ public class Configuration {
                         "Can't get runtime configuration object.", ex);
             }
             //
-            references.add(new EntityMerger.Reference(
-                    resource, runtimeGraph, runtimeSource));
+            references.add(new EntityReference(resource, runtimeGraph,
+                    runtimeSource));
         }
         // Merge.
         final DefaultControlFactory controlFactory =

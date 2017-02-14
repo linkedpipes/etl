@@ -1,11 +1,12 @@
 package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.EntityMerger;
+import com.linkedpipes.etl.rdf.utils.entity.EntityMergeType;
+import com.linkedpipes.etl.rdf.utils.entity.EntityReference;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.junit.Assert;
 import org.junit.Test;
