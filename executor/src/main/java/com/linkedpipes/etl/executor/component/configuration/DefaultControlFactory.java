@@ -27,7 +27,7 @@ class DefaultControlFactory implements EntityControlFactory {
     }
 
     @Override
-    public EntityMerger.Control create(String type) throws RdfUtilsException {
+    public EntityControl create(String type) throws RdfUtilsException {
         final DefaultControl control = new DefaultControl();
         control.loadDefinition(definitionSource, definitionGraph, type);
         return control;

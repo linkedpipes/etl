@@ -3,11 +3,17 @@ package com.linkedpipes.etl.dataunit.core.rdf;
 import com.linkedpipes.etl.dataunit.core.JsonUtils;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
+import com.linkedpipes.etl.rdf.utils.RdfSource;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
@@ -21,7 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
-        implements SingleGraphDataUnit, WritableSingleGraphDataUnit {
+        implements SingleGraphDataUnit, WritableSingleGraphDataUnit,
+        RuntimeConfiguration {
 
     private final static String QUERY_COPY
             = "INSERT {?s ?p ?o} WHERE {?s ?p ?o}";
@@ -102,6 +109,18 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         // No operation here.
     }
 
+    @Override
+    public void write(RdfSource.TripleWriter writer) throws LpException {
+        execute((connection) -> {
+            final RepositoryResult<Statement> statements =
+                    connection.getStatements(null, null, null, graph);
+            while (statements.hasNext()) {
+                final Statement statement = statements.next();
+                writeStatement(statement, writer);
+            }
+        });
+    }
+
     protected void merge(DefaultSingleGraphDataUnit source) throws LpException {
         // TODO Check that we use the same repository.
         try {
@@ -117,6 +136,30 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         } catch (LpException ex) {
             throw new LpException("Can't merge with: {}",
                     source.getIri(), ex);
+        }
+    }
+
+    private void writeStatement(Statement statement,
+            RdfSource.TripleWriter writer) throws LpException {
+        final String subject = statement.getSubject().stringValue();
+        final String predicate = statement.getPredicate().stringValue();
+        final Value object = statement.getObject();
+        if (object instanceof IRI) {
+            writer.iri(subject, predicate, object.stringValue());
+        } else if (object instanceof Literal) {
+            final Literal literal = (Literal) object;
+            if (literal.getLanguage().isPresent()) {
+                writer.string(subject, predicate, literal.stringValue(),
+                        literal.getLanguage().get());
+            } else {
+                writer.typed(subject, predicate, literal.stringValue(),
+                        literal.getDatatype().stringValue());
+            }
+        } else {
+            throw new LpException("Invalid statement: {} {} {}",
+                    statement.getSubject(),
+                    statement.getPredicate(),
+                    statement.getObject());
         }
     }
 

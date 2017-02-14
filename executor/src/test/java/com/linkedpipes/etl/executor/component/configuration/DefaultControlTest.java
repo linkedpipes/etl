@@ -51,23 +51,23 @@ public class DefaultControlTest {
         final DefaultControl control = new DefaultControl();
         control.loadDefinition(source, "http://graph", "http://type");
 
-        final List<EntityMerger.Reference> refs = new LinkedList<>();
-        refs.add(new EntityMerger.Reference("http://config",
+        final List<EntityReference> refs = new LinkedList<>();
+        refs.add(new EntityReference("http://config",
                 "http://config/1", source));
-        refs.add(new EntityMerger.Reference("http://config",
+        refs.add(new EntityReference("http://config",
                 "http://config/2", otherSource));
         control.init(refs);
 
         control.onReference("http://config", "http://config/1");
-        Assert.assertEquals(EntityMerger.MergeType.SKIP,
+        Assert.assertEquals(EntityMergeType.SKIP,
                 control.onProperty("http://value/1"));
-        Assert.assertEquals(EntityMerger.MergeType.LOAD,
+        Assert.assertEquals(EntityMergeType.LOAD,
                 control.onProperty("http://value/2"));
 
         control.onReference("http://config", "http://config/2");
-        Assert.assertEquals(EntityMerger.MergeType.LOAD,
+        Assert.assertEquals(EntityMergeType.LOAD,
                 control.onProperty("http://value/1"));
-        Assert.assertEquals(EntityMerger.MergeType.SKIP,
+        Assert.assertEquals(EntityMergeType.SKIP,
                 control.onProperty("http://value/2"));
 
         source.shutdown();

@@ -2,22 +2,12 @@ package com.linkedpipes.etl.executor.api.v1.component;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 
 import java.util.Map;
 
 public interface ManageableComponent {
-
-    /**
-     * Represent the runtime configuration.
-     */
-    interface RuntimeConfiguration {
-
-        RdfSource getSource();
-
-        String getGraph();
-
-    }
 
     /**
      * Provide component with access to data units, so it can initialize

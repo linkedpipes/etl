@@ -4,6 +4,8 @@ import org.eclipse.rdf4j.model.IRI;
 
 /**
  * Store all triples in a single graph.
+ *
+ * Can be used as a runtime configuration.
  */
 public interface SingleGraphDataUnit extends Rdf4jDataUnit {
 

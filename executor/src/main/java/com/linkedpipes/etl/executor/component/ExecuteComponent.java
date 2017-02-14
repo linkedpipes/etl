@@ -5,6 +5,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.component.configuration.Configuration;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.Execution;
@@ -12,6 +13,8 @@ import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -26,6 +29,9 @@ import java.util.Map;
  * component is executed.
  */
 class ExecuteComponent implements ComponentExecutor {
+
+    private static final String RUNTIME_CONFIGURATION_GRAPH
+            = "http://localhost/runtimeConfiguration";
 
     private static final Logger LOG =
             LoggerFactory.getLogger(ExecuteComponent.class);
@@ -128,24 +134,29 @@ class ExecuteComponent implements ComponentExecutor {
      * into the component.
      */
     private void configureComponent() throws ExecutorException {
-        final ManageableComponent.RuntimeConfiguration runtimeConfig;
+        final RuntimeConfiguration runtimeConfig;
         try {
             runtimeConfig = instance.getRuntimeConfiguration();
         } catch (LpException ex) {
             throw new ExecutorException("Can't get runtime configuration.", ex);
         }
+
         final String configGraph =
                 pplComponent.getIri() + "/configuration/effective";
         final RdfSource.TypedTripleWriter writer = pipeline.setConfiguration(
                 pplComponent, configGraph);
+
         if (runtimeConfig == null) {
             Configuration.prepareConfiguration(configGraph,
                     pplComponent, null, null, writer, pipeline);
         } else {
+            RdfSource runtimeSource = wrapRuntimeConfiguration(runtimeConfig);
             Configuration.prepareConfiguration(configGraph, pplComponent,
-                    runtimeConfig.getSource(), runtimeConfig.getGraph(),
+                    runtimeSource, RUNTIME_CONFIGURATION_GRAPH,
                     writer, pipeline);
+            runtimeSource.shutdown();
         }
+
         try {
             instance.loadConfiguration(configGraph, pipeline.getSource());
         } catch (LpException ex) {
@@ -153,5 +164,22 @@ class ExecuteComponent implements ComponentExecutor {
                     "Can't load component configuration", ex);
         }
     }
+
+    private RdfSource wrapRuntimeConfiguration(
+            RuntimeConfiguration runtimeConfiguration)
+            throws ExecutorException {
+        final RdfSource source = Rdf4jSource.createInMemory();
+        final RdfSource.TripleWriter writer =
+                source.getTripleWriter(RUNTIME_CONFIGURATION_GRAPH);
+        try {
+            runtimeConfiguration.write(writer);
+            writer.submit();
+        } catch (LpException | RdfUtilsException ex) {
+            throw new ExecutorException(
+                    "Can't copy runtime configuration.", ex);
+        }
+        return source;
+    }
+
 
 }

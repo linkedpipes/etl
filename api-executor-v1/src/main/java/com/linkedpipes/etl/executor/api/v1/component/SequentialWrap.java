@@ -2,6 +2,7 @@ package com.linkedpipes.etl.executor.api.v1.component;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ServiceFactory;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
@@ -68,7 +69,15 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     @Override
     public RuntimeConfiguration getRuntimeConfiguration() throws LpException {
-        return null;
+        final Object fieldValue = getConfigurationObject();
+        if (fieldValue == null) {
+            return null;
+        }
+        if (fieldValue instanceof RuntimeConfiguration) {
+            return (RuntimeConfiguration) fieldValue;
+        }
+        throw new LpException("Invalid configuration object type: {}",
+                fieldValue.getClass());
     }
 
     /**
@@ -182,6 +191,22 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
                         ex);
             }
         }
+    }
+
+    private Object getConfigurationObject() throws LpException {
+        for (Field field : component.getClass().getFields()) {
+            final Component.ContainsConfiguration annotation =
+                    field.getAnnotation(Component.ContainsConfiguration.class);
+            if (annotation == null) {
+                continue;
+            }
+            try {
+                return field.get(component);
+            } catch (IllegalAccessException ex) {
+                throw new LpException("Can't get runtime configuration.", ex);
+            }
+        }
+        return null;
     }
 
 }
