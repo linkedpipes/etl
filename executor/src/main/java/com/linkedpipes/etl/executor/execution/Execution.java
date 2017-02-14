@@ -182,7 +182,6 @@ public class Execution {
     }
 
     public void onEvent(Execution.Component component, Event event) {
-        LOG.info("onEvent");
         v1Execution.onEvent(component, event);
     }
 

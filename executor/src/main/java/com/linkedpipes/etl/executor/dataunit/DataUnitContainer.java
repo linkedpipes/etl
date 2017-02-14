@@ -132,8 +132,7 @@ class DataUnitContainer {
      */
     public void close() throws ExecutorException {
         if (status == Status.NEW) {
-            LOG.warn("Data unit not initialized: {}",
-                    metadata.getDataUnitIri());
+            // Can hapen if pipeline fail.
             return;
         }
         if (status == Status.CLOSED) {
