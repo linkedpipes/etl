@@ -91,7 +91,7 @@ class UriDownloader {
                 try (InputStream inputStream = connection.getInputStream()) {
                     FileUtils.copyInputStreamToFile(inputStream, work.target);
                 } catch (IOException ex) {
-                    LOG.error("Can't download file: {}", ex);
+                    LOG.error("Can't download file: {}", work.target, ex);
                     exceptions.add(ex);
                     continue;
                 } finally {
