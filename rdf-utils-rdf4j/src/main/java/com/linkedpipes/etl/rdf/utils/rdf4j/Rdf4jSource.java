@@ -90,8 +90,12 @@ public class Rdf4jSource implements RdfSource<Value> {
                     clazz.getName());
         }
         try (RepositoryConnection connection = repository.getConnection()) {
+            Resource subject = null;
+            if (resource != null) {
+                subject = VF.createIRI(resource);
+            }
             final RepositoryResult<Statement> result =
-                    connection.getStatements(VF.createIRI(resource),
+                    connection.getStatements(subject,
                             null, null, VF.createIRI(graph));
             while (result.hasNext()) {
                 final Statement s = result.next();

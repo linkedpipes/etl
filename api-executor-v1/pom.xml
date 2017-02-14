@@ -47,6 +47,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>rdf-utils-rdf4j</artifactId>
+            <version>${lp.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-model</artifactId>
             <version>${rdf4j.version}</version>

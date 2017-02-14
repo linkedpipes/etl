@@ -12,6 +12,7 @@
         <module>pom-component</module>
         <module>vocabulary</module>
         <module>rdf-utils</module>
+        <module>rdf-utils-rdf4j</module>
         <module>api-executor-v1</module>
         <module>dataunit-core</module>
         <module>executor</module>

@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.rdf.utils.entity;
 
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import org.eclipse.rdf4j.RDF4JConfigException;
 import org.eclipse.rdf4j.model.Value;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,14 +47,14 @@ public class EntityMergerTest {
     /**
      * Helper class for testing.
      */
-    private static class StaticDescriptor implements EntityMerger.Control {
+    private static class StaticDescriptor implements            EntityControl {
 
-        private Map<String, EntityMerger.MergeType> strategy = new HashMap<>();
+        private Map<String, EntityMergeType> strategy = new HashMap<>();
 
         private String currentObject;
 
         @Override
-        public void init(List<EntityMerger.Reference> references)
+        public void init(List<EntityReference> references)
                 throws RdfUtilsException {
             // No operation here.
         }
@@ -66,9 +65,9 @@ public class EntityMergerTest {
         }
 
         @Override
-        public EntityMerger.MergeType onProperty(String property) {
+        public EntityMergeType onProperty(String property) {
             return strategy.getOrDefault(currentObject + "|" + property,
-                    EntityMerger.MergeType.SKIP);
+                    EntityMergeType.SKIP);
         }
     }
 
@@ -91,25 +90,25 @@ public class EntityMergerTest {
                 .string("http://value/2", "b");
         B.commit();
         //
-        final List<EntityMerger.Reference> references = new ArrayList<>(3);
-        references.add(new EntityMerger.Reference(
+        final List<EntityReference> references = new ArrayList<>(3);
+        references.add(new EntityReference(
                 "http://res/A", "http://graph/A", source));
-        references.add(new EntityMerger.Reference(
+        references.add(new EntityReference(
                 "http://res/B", "http://graph/B", source));
         // Mock merger.
         final StaticDescriptor descriptor = new StaticDescriptor();
         descriptor.strategy.put("http://res/A|http://value/1",
-                EntityMerger.MergeType.SKIP);
+                EntityMergeType.SKIP);
         descriptor.strategy.put("http://res/A|http://value/2",
-                EntityMerger.MergeType.LOAD);
+                EntityMergeType.LOAD);
         descriptor.strategy.put("http://res/A|http://value/reference",
-                EntityMerger.MergeType.LOAD);
+                EntityMergeType.LOAD);
         descriptor.strategy.put("http://res/B|http://value/1",
-                EntityMerger.MergeType.LOAD);
+                EntityMergeType.LOAD);
         descriptor.strategy.put("http://res/B|http://value/2",
-                EntityMerger.MergeType.SKIP);
-        final EntityMerger.ControlFactory descriptorFactory =
-                Mockito.mock(EntityMerger.ControlFactory.class);
+                EntityMergeType.SKIP);
+        final EntityControlFactory descriptorFactory =
+                Mockito.mock(EntityControlFactory.class);
         Mockito.when(descriptorFactory.create(Mockito.anyString()))
                 .thenReturn(descriptor);
         //
@@ -151,28 +150,28 @@ public class EntityMergerTest {
                 .string("http://value/2", "b");
         B.commit();
         //
-        final List<EntityMerger.Reference> references = new ArrayList<>(3);
-        references.add(new EntityMerger.Reference(
+        final List<EntityReference> references = new ArrayList<>(3);
+        references.add(new EntityReference(
                 "http://res/A", "http://graph/A", source));
-        references.add(new EntityMerger.Reference(
+        references.add(new EntityReference(
                 "http://res/B", "http://graph/B", source));
         // Mock merger.
         final StaticDescriptor descriptor = new StaticDescriptor();
         descriptor.strategy.put("http://res/A|http://value/reference",
-                EntityMerger.MergeType.MERGE);
+                EntityMergeType.MERGE);
         descriptor.strategy.put("http://res/A/1|http://value/1",
-                EntityMerger.MergeType.LOAD);
+                EntityMergeType.LOAD);
         descriptor.strategy.put("http://res/A/1|http://value/2",
-                EntityMerger.MergeType.SKIP);
+                EntityMergeType.SKIP);
         descriptor.strategy.put("http://res/B|http://value/reference",
-                EntityMerger.MergeType.MERGE);
+                EntityMergeType.MERGE);
         descriptor.strategy.put("http://res/B/1|http://value/1",
-                EntityMerger.MergeType.SKIP);
+                EntityMergeType.SKIP);
         descriptor.strategy.put("http://res/B/1|http://value/2",
-                EntityMerger.MergeType.LOAD);
+                EntityMergeType.LOAD);
         //
-        final EntityMerger.ControlFactory descriptorFactory =
-                Mockito.mock(EntityMerger.ControlFactory.class);
+        final EntityControlFactory descriptorFactory =
+                Mockito.mock(EntityControlFactory.class);
         Mockito.when(descriptorFactory.create(Mockito.anyString()))
                 .thenReturn(descriptor);
         //
@@ -199,7 +198,7 @@ public class EntityMergerTest {
             EntityMerger.merge(Collections.EMPTY_LIST,
                     null, null, null, Value.class);
             Assert.fail();
-        } catch (RDF4JConfigException ex) {
+        } catch (RdfUtilsException ex) {
             // OK
         } catch (Exception ex) {
             Assert.fail();
@@ -221,13 +220,13 @@ public class EntityMergerTest {
                 .string("http://value/1", "b");
         B.commit();
         //
-        final List<EntityMerger.Reference> references = new ArrayList<>(3);
-        references.add(new EntityMerger.Reference(
+        final List<EntityReference> references = new ArrayList<>(3);
+        references.add(new EntityReference(
                 "http://res/A", "http://graph/A", source));
-        references.add(new EntityMerger.Reference(
+        references.add(new EntityReference(
                 "http://res/B", "http://graph/B", source));
-        final EntityMerger.ControlFactory descriptorFactory =
-                Mockito.mock(EntityMerger.ControlFactory.class);
+        final EntityControlFactory descriptorFactory =
+                Mockito.mock(EntityControlFactory.class);
         //
         final RdfSource target = Rdf4jSource.createInMemory();
         try {

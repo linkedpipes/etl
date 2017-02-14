@@ -9,11 +9,41 @@
         <version>0.0.0</version>
         <relativePath>../pom-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>rdf-utils</artifactId>
+    <artifactId>rdf-utils-rdf4j</artifactId>
     <packaging>bundle</packaging>
-    <description>Contains utilities for working with RDF data.</description>
+    <description>
+        Implementation of rdf-utils with RDF4j.
+        We need to extract this from rdf-utils as the RDF4j is used in the
+        component space as well as in the core space, while the rdf-utils
+        is shared.
+    </description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>rdf-utils</artifactId>
+            <version>${lp.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- RDF4J. -->
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model</artifactId>
+            <version>${rdf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sail</artifactId>
+            <version>${rdf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-memory</artifactId>
+            <version>${rdf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Test. -->
         <dependency>
             <groupId>junit</groupId>
