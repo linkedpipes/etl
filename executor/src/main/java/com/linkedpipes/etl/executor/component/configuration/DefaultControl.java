@@ -78,7 +78,7 @@ class DefaultControl implements EntityMerger.Control {
         final List<Map<String, Configuration.Status>> controlsInReferences =
                 new ArrayList<>(references.size());
         for (EntityMerger.Reference ref : references) {
-            controlsInReferences.add(loadControl(ref));
+            controlsInReferences.add(loadControlUseDefaults(ref));
         }
         // Build predicate list.
         final Set<String> allPredicates = new HashSet<>();
@@ -221,6 +221,26 @@ class DefaultControl implements EntityMerger.Control {
             for (String predicate : complexPredicates) {
                 control.get(key).put(predicate,
                         EntityMerger.MergeType.MERGE);
+            }
+        }
+    }
+
+    private Map<String, Configuration.Status> loadControlUseDefaults(
+            EntityMerger.Reference reference) throws RdfUtilsException {
+        final Map<String, Configuration.Status> output =
+                loadControl(reference);
+        addDefaultControl(output);
+        return output;
+    }
+
+    private void addDefaultControl(Map<String, Configuration.Status> controls) {
+        // Properties can be missing because of invalid "inheritance control"
+        // (backward compatibility) or user does not provide them
+        // (to simplify the pipeline).
+        for (PropertyControl controlledPredicate : controlledPredicates) {
+            if (!controls.containsKey(controlledPredicate.predicate)) {
+                controls.put(controlledPredicate.predicate,
+                        Configuration.Status.NONE);
             }
         }
     }
