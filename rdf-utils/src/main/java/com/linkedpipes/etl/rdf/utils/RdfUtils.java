@@ -5,10 +5,10 @@ import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Main access point to the RDF triple utilities.
- */
 public class RdfUtils {
+
+    private RdfUtils() {
+    }
 
     /**
      * @param source
