@@ -101,9 +101,15 @@ class DefaultFilesDataUnit
     @Override
     public void initialize(File directory) throws LpException {
         final File file = new File(directory, "data.json");
-        JsonUtils.loadCollection(file, String.class).stream().forEach(
-                (entry) -> readDirectories.add(new File(directory, entry))
-        );
+        if (file.exists()) {
+            JsonUtils.loadCollection(file, String.class).stream().forEach(
+                    (entry) -> readDirectories.add(new File(directory, entry))
+            );
+        } else {
+            initializeVersion1(directory);
+        }
+
+
     }
 
     @Override
@@ -167,6 +173,15 @@ class DefaultFilesDataUnit
             return Collections.EMPTY_LIST.iterator();
         }
         return new DirectoryIterator(directoryIterator);
+    }
+
+    private void initializeVersion1(File directory) throws LpException {
+        // Initialization from older format.
+        final File dataDirectory = new File(directory, "data");
+        final File file = new File(dataDirectory, "data.json");
+        JsonUtils.loadCollection(file, String.class).stream().forEach(
+                (entry) -> readDirectories.add(new File(dataDirectory, entry))
+        );
     }
 
     private void merge(DefaultFilesDataUnit source) {
