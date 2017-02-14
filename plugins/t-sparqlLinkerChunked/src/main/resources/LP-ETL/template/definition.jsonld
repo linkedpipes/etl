@@ -19,7 +19,7 @@
         ],
         "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-sparqllinkerchunked"},
         "http://linkedpipes.com/ontology/configurationDescription": [
-            {"@id": "http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/0.0.0/configuration/desc"}
+            {"@id": "http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc"}
         ]
     },
     {
