@@ -4,8 +4,8 @@
 <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration/desc/fileName>,
-        <http://linkedpipes.com/resources/components/e-textHolder/1.0.0/configuration/desc/content> .
+    config:member <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName>,
+        <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content> .
 
 <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName>
     a config:ConfigurationMember ;
