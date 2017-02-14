@@ -106,8 +106,7 @@ class DataUnitContainer {
      */
     public void save() throws ExecutorException {
         if (status == Status.NEW) {
-            LOG.warn("Data unit not initialized: {}",
-                    metadata.getDataUnitIri());
+            // This may happen for unused data units (if pipeline fail).
             return;
         }
         if (this.status == Status.CLOSED) {
