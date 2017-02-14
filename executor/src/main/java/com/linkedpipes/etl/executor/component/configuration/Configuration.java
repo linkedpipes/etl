@@ -81,14 +81,11 @@ public class Configuration {
             try {
                 resource = RdfUtils.sparqlSelectSingle(runtimeSource,
                         query, "resource");
+                references.add(new EntityReference(resource, runtimeGraph,
+                        runtimeSource));
             } catch (RdfUtilsException ex) {
-                pplSource.shutdown();
-                throw new ExecutorException(
-                        "Can't get runtime configuration object.", ex);
+                // The runtime configuration may not be provided.
             }
-            //
-            references.add(new EntityReference(resource, runtimeGraph,
-                    runtimeSource));
         }
         // Merge.
         final DefaultControlFactory controlFactory =
