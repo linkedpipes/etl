@@ -3,15 +3,15 @@
 <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-sparqlSelect#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-sparqlSelect/1.0.0/configuration/desc/query> ;
-        <http://linkedpipes.com/resources/components/t-sparqlSelect/1.0.0/configuration/desc/fileName> .
+    config:member <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/query> ;
+        <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/fileName> .
 
-<http://linkedpipes.com/resources/components/t-sparqlSelect/1.0.0/configuration/desc/query>
+<http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-sparqlSelect#query> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-sparqlSelect#queryControl> .
 
-<http://linkedpipes.com/resources/components/t-sparqlSelect/1.0.0/configuration/desc/fileName>
+<http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/fileName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-sparqlSelect#fileName> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-sparqlSelect#fileNameControl> .
