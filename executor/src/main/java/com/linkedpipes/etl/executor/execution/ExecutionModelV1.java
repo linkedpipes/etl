@@ -34,6 +34,7 @@ class ExecutionModelV1 {
 
     private enum Status {
         MAPPED("http://etl.linkedpipes.com/resources/status/mapped"),
+        QUEUED("http://etl.linkedpipes.com/resources/status/queued"),
         INITIALIZING(
                 "http://etl.linkedpipes.com/resources/status/initializing"),
         RUNNING("http://etl.linkedpipes.com/resources/status/running"),
@@ -51,14 +52,21 @@ class ExecutionModelV1 {
         }
     }
 
+    public static final String LP_PREFIX = "http://linkedpipes.com/ontology/";
+
+    public static final String ETL_PREFIX =
+            "http://etl.linkedpipes.com/ontology/";
+
     private static final Logger LOG =
             LoggerFactory.getLogger(ExecutionModelV1.class);
 
-    private final IRI iri;
+    private final IRI executionIri;
 
     private final ResourceManager resourceManager;
 
-    private final ArrayList<Statement> statements = new ArrayList<>(1024);
+    private List<Statement> pipelineStatements = Collections.EMPTY_LIST;
+
+    private List<List<Statement>> eventsStatements = new LinkedList<>();
 
     private final ValueFactory vf = SimpleValueFactory.getInstance();
 
@@ -73,7 +81,7 @@ class ExecutionModelV1 {
     private boolean pipelineFailed = false;
 
     public ExecutionModelV1(String iri, ResourceManager resourceManager) {
-        this.iri = vf.createIRI(iri);
+        this.executionIri = vf.createIRI(iri);
         this.resourceManager = resourceManager;
         //
         createExecutionRecord();
@@ -81,48 +89,50 @@ class ExecutionModelV1 {
 
     protected void createExecutionRecord() {
         status = Status.RUNNING;
-        statements.add(vf.createStatement(iri, RDF.TYPE,
-                vf.createIRI("http://etl.linkedpipes.com/ontology/Execution"),
-                iri));
+        final List<Statement> statements = new ArrayList<>(1);
+        statements.add(vf.createStatement(executionIri, RDF.TYPE,
+                vf.createIRI(ETL_PREFIX + "Execution"),
+                executionIri));
+        pipelineStatements = statements;
     }
 
     public void bindToPipeline(PipelineModel pipeline) {
-        statements.add(vf.createStatement(iri,
-                vf.createIRI("http://etl.linkedpipes.com/ontology/pipeline"),
+        final List<Statement> statements = new ArrayList<>(1024);
+        statements.addAll(pipelineStatements);
+
+        pipelineStatements.add(vf.createStatement(executionIri,
+                vf.createIRI(ETL_PREFIX + "pipeline"),
                 vf.createIRI(pipeline.getIri()),
-                iri));
+                executionIri));
         for (PipelineModel.Component component : pipeline.getComponents()) {
             if (component.getExecutionType() ==
                     PipelineModel.ExecutionType.SKIP) {
                 continue;
             }
             final IRI componentIri = vf.createIRI(component.getIri());
-            statements.add(vf.createStatement(iri,
-                    vf.createIRI("http://linkedpipes.com/ontology/component"),
-                    componentIri,
-                    iri));
+            statements.add(vf.createStatement(executionIri,
+                    vf.createIRI(LP_PREFIX + "component"),
+                    componentIri, executionIri));
             statements.add(vf.createStatement(componentIri,
-                    RDF.TYPE,
-                    vf.createIRI(LP_PIPELINE.COMPONENT),
-                    iri));
+                    RDF.TYPE, vf.createIRI(LP_PIPELINE.COMPONENT),
+                    executionIri));
             statements.add(vf.createStatement(componentIri,
-                    vf.createIRI("http://linkedpipes.com/ontology/order"),
+                    vf.createIRI(LP_PREFIX + "order"),
                     vf.createLiteral(component.getOrder()),
-                    iri));
+                    executionIri));
             for (PipelineModel.DataUnit dataUnit : component.getDataUnits()) {
                 final IRI dataUnitIri = vf.createIRI(dataUnit.getIri());
-                statements.add(vf.createStatement(componentIri, vf.createIRI(
-                        "http://etl.linkedpipes.com/ontology/dataUnit"),
-                        dataUnitIri,
-                        iri));
+                statements
+                        .add(vf.createStatement(componentIri,
+                                vf.createIRI(ETL_PREFIX + "dataUnit"),
+                                dataUnitIri, executionIri));
                 statements.add(vf.createStatement(dataUnitIri, RDF.TYPE,
-                        vf.createIRI(
-                                "http://etl.linkedpipes.com/ontology/DataUnit"),
-                        iri));
+                        vf.createIRI(ETL_PREFIX + "DataUnit"),
+                        executionIri));
                 statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
-                        "http://etl.linkedpipes.com/ontology/binding"),
+                        ETL_PREFIX + "binding"),
                         vf.createLiteral(dataUnit.getBinding()),
-                        iri));
+                        executionIri));
                 //
                 final PipelineModel.DataSource source =
                         dataUnit.getDataSource();
@@ -130,24 +140,31 @@ class ExecutionModelV1 {
                     statements.add(vf.createStatement(dataUnitIri,
                             vf.createIRI(LP_EXEC.HAS_EXECUTION),
                             vf.createIRI(source.getExecution()),
-                            iri));
+                            executionIri));
                     statements.add(vf.createStatement(dataUnitIri,
                             vf.createIRI(LP_EXEC.HAS_LOAD_PATH),
                             vf.createLiteral(source.getLoadPath()),
-                            iri));
+                            executionIri));
                 }
             }
+            //
+            componentStatus.put(component.getIri(), Status.QUEUED);
         }
+        pipelineStatements = statements;
         status = Status.RUNNING;
         lastChange = new Date();
     }
 
     public void onEvent(Execution.Component component, Event event) {
-        final IRI eventIri = createBaseEvent(null);
-        statements.add(vf.createStatement(eventIri,
+        final int index = ++eventCounter;
+        final IRI eventIri = createEventIri(index);
+        final List<Statement> eventStatements =
+                createBaseEvent(eventIri, index, null);
+
+        eventStatements.add(vf.createStatement(eventIri,
                 vf.createIRI("http://linkedpipes.com/ontology/component"),
                 vf.createIRI(component.getComponentIri()),
-                iri));
+                executionIri));
 
         event.setIri(eventIri.stringValue());
 
@@ -155,27 +172,28 @@ class ExecutionModelV1 {
 
             @Override
             public void iri(String s, String p, String o) {
-                statements.add(vf.createStatement(vf.createIRI(s),
-                        vf.createIRI(p), vf.createIRI(o), iri));
+                eventStatements.add(vf.createStatement(vf.createIRI(s),
+                        vf.createIRI(p), vf.createIRI(o), executionIri));
             }
 
             @Override
             public void typed(String s, String p, String o, String type) {
-                statements.add(vf.createStatement(vf.createIRI(s),
+                eventStatements.add(vf.createStatement(vf.createIRI(s),
                         vf.createIRI(p),
                         vf.createLiteral(o, vf.createIRI(type)),
-                        iri));
+                        executionIri));
             }
 
             @Override
             public void string(String s, String p, String o, String language) {
                 if (language == null) {
-                    statements.add(vf.createStatement(vf.createIRI(s),
-                            vf.createIRI(p), vf.createLiteral(o), iri));
+                    eventStatements.add(vf.createStatement(vf.createIRI(s),
+                            vf.createIRI(p), vf.createLiteral(o),
+                            executionIri));
                 } else {
-                    statements.add(vf.createStatement(vf.createIRI(s),
+                    eventStatements.add(vf.createStatement(vf.createIRI(s),
                             vf.createIRI(p),
-                            vf.createLiteral(o, language), iri));
+                            vf.createLiteral(o, language), executionIri));
                 }
             }
 
@@ -185,6 +203,7 @@ class ExecutionModelV1 {
             }
 
         });
+        eventsStatements.add(eventStatements);
         lastChange = new Date();
         write();
     }
@@ -196,42 +215,52 @@ class ExecutionModelV1 {
     }
 
     public void onComponentBegin(Execution.Component component) {
-        final IRI event = createBaseEvent("Execution started.");
-        statements.add(vf.createStatement(event, RDF.TYPE, vf.createIRI(
-                "http://linkedpipes.com/ontology/events/ComponentBegin"),
-                iri));
-        statements.add(vf.createStatement(event,
+        final int index = ++eventCounter;
+        final IRI eventIri = createEventIri(index);
+        final List<Statement> eventStatements =
+                createBaseEvent(eventIri, index, "Execution started.");
+        //
+        eventStatements.add(vf.createStatement(eventIri, RDF.TYPE,
+                vf.createIRI(LP_PREFIX + "events/ComponentBegin"),
+                executionIri));
+        eventStatements.add(vf.createStatement(eventIri,
                 vf.createIRI("http://linkedpipes.com/ontology/component"),
                 vf.createIRI(component.getComponentIri()),
-                iri));
+                executionIri));
         // Add information about data units.
         for (Execution.DataUnit dataUnit : component.getDataUnits()) {
             final IRI dataUnitIri = vf.createIRI(dataUnit.getDataUnitIri());
-            statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
+            eventStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
                     vf.createLiteral(dataUnit.getRelativeDataPath()),
-                    iri));
-            statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
+                    executionIri));
+            eventStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/debug"),
                     vf.createLiteral(dataUnit.getVirtualDebugPath()),
-                    iri));
+                    executionIri));
         }
         //
+        eventsStatements.add(eventStatements);
         componentStatus.put(component.getComponentIri(), Status.RUNNING);
         lastChange = new Date();
         write();
     }
 
     public void onComponentEnd(Execution.Component component) {
-        final IRI event = createBaseEvent("Execution completed.");
-        statements.add(vf.createStatement(event, RDF.TYPE, vf.createIRI(
+        final int index = ++eventCounter;
+        final IRI eventIri = createEventIri(index);
+        final List<Statement> eventStatements =
+                createBaseEvent(eventIri, index, "Execution completed.");
+        //
+        eventStatements.add(vf.createStatement(eventIri, RDF.TYPE, vf.createIRI(
                 "http://linkedpipes.com/ontology/events/ComponentEnd"),
-                iri));
-        statements.add(vf.createStatement(event,
+                executionIri));
+        eventStatements.add(vf.createStatement(eventIri,
                 vf.createIRI("http://linkedpipes.com/ontology/component"),
                 vf.createIRI(component.getComponentIri()),
-                iri));
+                executionIri));
         //
+        eventsStatements.add(eventStatements);
         componentStatus.put(component.getComponentIri(), Status.FINISHED);
         lastChange = new Date();
         write();
@@ -241,14 +270,14 @@ class ExecutionModelV1 {
         componentStatus.put(component.getComponentIri(), Status.MAPPED);
         for (Execution.DataUnit dataUnit : component.getDataUnits()) {
             final IRI dataUnitIri = vf.createIRI(dataUnit.getDataUnitIri());
-            statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
+            pipelineStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
                     vf.createLiteral(dataUnit.getRelativeDataPath()),
-                    iri));
-            statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
+                    executionIri));
+            pipelineStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/debug"),
                     vf.createLiteral(dataUnit.getVirtualDebugPath()),
-                    iri));
+                    executionIri));
         }
         lastChange = new Date();
         write();
@@ -256,6 +285,50 @@ class ExecutionModelV1 {
 
     public void onComponentFailed(Execution.Component component,
             LpException exception) {
+        //
+        final int index = ++eventCounter;
+        final IRI eventIri = createEventIri(index);
+        final List<Statement> eventStatements =
+                createBaseEvent(eventIri, index, "Execution failed.");
+        //
+        eventStatements.add(vf.createStatement(eventIri, RDF.TYPE, vf.createIRI(
+                LP_PREFIX + "events/ComponentFailed"),
+                executionIri));
+        eventStatements.add(vf.createStatement(eventIri,
+                vf.createIRI("http://linkedpipes.com/ontology/component"),
+                vf.createIRI(component.getComponentIri()),
+                executionIri));
+        // Get exceptions.
+        LpException lpException = null;
+        Throwable rootCause = exception;
+        while (rootCause.getCause() != null) {
+            if (lpException == null && rootCause instanceof LpException) {
+                lpException = (LpException) rootCause;
+            }
+            rootCause = rootCause.getCause();
+        }
+        // Format into a message.
+        if (lpException != null) {
+            eventStatements.add(vf.createStatement(eventIri,
+                    vf.createIRI(LP_PREFIX + "events/reason"),
+                    vf.createLiteral(lpException.getMessage()),
+                    executionIri));
+        }
+        if (rootCause.getMessage() == null) {
+            eventStatements.add(vf.createStatement(eventIri,
+                    vf.createIRI(LP_PREFIX + "events/rootException"),
+                    vf.createLiteral(rootCause.getClass().getSimpleName()),
+                    executionIri));
+        } else {
+            final String message = rootCause.getClass().getSimpleName() +
+                    " : " + rootCause.getMessage();
+            eventStatements.add(vf.createStatement(eventIri,
+                    vf.createIRI(LP_PREFIX + "events/rootException"),
+                    vf.createLiteral(message),
+                    executionIri));
+        }
+        //
+        eventsStatements.add(eventStatements);
         componentStatus.put(component.getComponentIri(), Status.FAILED);
         pipelineFailed = true;
         lastChange = new Date();
@@ -263,19 +336,31 @@ class ExecutionModelV1 {
     }
 
     public void onExecutionBegin() {
-        final IRI event = createBaseEvent("Execution started.");
-        statements.add(vf.createStatement(event, RDF.TYPE, vf.createIRI(
-                "http://linkedpipes.com/ontology/events/ExecutionBegin"),
-                iri));
+        final int index = ++eventCounter;
+        final IRI eventIri = createEventIri(index);
+        final List<Statement> eventStatements =
+                createBaseEvent(eventIri, index, "Execution begin.");
+        //
+        eventStatements.add(vf.createStatement(eventIri, RDF.TYPE,
+                vf.createIRI(LP_PREFIX + "events/ExecutionBegin"),
+                executionIri));
+        //
+        eventsStatements.add(eventStatements);
         lastChange = new Date();
         write();
     }
 
     public void onExecutionEnd() {
-        final IRI event = createBaseEvent("Execution finished.");
-        statements.add(vf.createStatement(event, RDF.TYPE, vf.createIRI(
-                "http://linkedpipes.com/ontology/events/ExecutionEnd"),
-                iri));
+        final int index = ++eventCounter;
+        final IRI eventIri = createEventIri(index);
+        final List<Statement> eventStatements =
+                createBaseEvent(eventIri, index, "Execution finished.");
+        //
+        eventStatements.add(vf.createStatement(eventIri, RDF.TYPE,
+                vf.createIRI(LP_PREFIX + "events/ExecutionEnd"),
+                executionIri));
+        //
+        eventsStatements.add(eventStatements);
         if (pipelineFailed) {
             status = Status.FAILED;
         } else {
@@ -305,10 +390,18 @@ class ExecutionModelV1 {
         try {
             final RDFWriter writer = Rio.createWriter(format, stream);
             writer.startRDF();
-            for (final Statement statement : statements) {
+
+            final List<Statement> statementsCopy = new ArrayList(
+                    pipelineStatements);
+            for (Statement statement : statementsCopy) {
                 writer.handleStatement(statement);
             }
-            for (final Statement statement : changingValues()) {
+            for (int i = 0; i < eventsStatements.size(); ++i) {
+                for (Statement statement : eventsStatements.get(i)) {
+                    writer.handleStatement(statement);
+                }
+            }
+            for (Statement statement : buildChangingValues()) {
                 writer.handleStatement(statement);
             }
             writer.endRDF();
@@ -317,55 +410,47 @@ class ExecutionModelV1 {
         }
     }
 
-    private IRI createBaseEvent(String label) {
-        int eventIndex = ++eventCounter;
-        final IRI eventIri = vf.createIRI(iri.stringValue() + "/events/" +
-                Integer.toString(eventIndex));
-        statements.add(vf.createStatement(iri,
-                vf.createIRI("http://etl.linkdpipes.com/ontology/event"),
-                eventIri,
-                iri));
-        //
-        statements.add(vf.createStatement(eventIri,
-                RDF.TYPE,
-                vf.createIRI("http://linkedpipes.com/ontology/Event"),
-                iri));
-        statements.add(vf.createStatement(eventIri,
-                vf.createIRI("http://linkedpipes.com/ontology/events/created"),
-                vf.createLiteral(new Date()),
-                iri));
-        statements.add(vf.createStatement(eventIri,
-                vf.createIRI("http://linkedpipes.com/ontology/order"),
-                vf.createLiteral(eventIndex),
-                iri));
-        if (label != null) {
-            statements.add(vf.createStatement(eventIri,
-                    SKOS.PREF_LABEL,
-                    vf.createLiteral(label, "en"),
-                    iri));
-        }
-        return eventIri;
+    private IRI createEventIri(int index) {
+        return vf.createIRI(executionIri.stringValue() + "/events/" +
+                Integer.toString(index));
     }
 
-    /**
-     * @return Generated (updated) statements.
-     */
-    private List<Statement> changingValues() {
+    private List<Statement> createBaseEvent(IRI iri, int order, String label) {
+        final List<Statement> eventStatements = new ArrayList<>(16);
+        eventStatements.add(vf.createStatement(executionIri,
+                vf.createIRI("http://etl.linkdpipes.com/ontology/event"),
+                iri, executionIri));
+        eventStatements.add(vf.createStatement(iri,
+                RDF.TYPE, vf.createIRI(LP_PREFIX + "Event"), iri));
+        eventStatements.add(vf.createStatement(iri,
+                vf.createIRI(LP_PREFIX + "events/created"),
+                vf.createLiteral(new Date()), iri));
+        eventStatements.add(vf.createStatement(iri,
+                vf.createIRI(LP_PREFIX + "order"),
+                vf.createLiteral(order), iri));
+        if (label != null) {
+            eventStatements.add(vf.createStatement(iri,
+                    SKOS.PREF_LABEL, vf.createLiteral(label, "en"), iri));
+        }
+        return eventStatements;
+    }
+
+    private List<Statement> buildChangingValues() {
         ArrayList<Statement> statements = new ArrayList<>(2);
-        statements.add(vf.createStatement(iri,
+        statements.add(vf.createStatement(executionIri,
                 vf.createIRI("http://etl.linkedpipes.com/ontology/lastChange"),
                 vf.createLiteral(lastChange),
-                iri));
-        statements.add(vf.createStatement(iri,
+                executionIri));
+        statements.add(vf.createStatement(executionIri,
                 vf.createIRI("http://etl.linkedpipes.com/ontology/status"),
                 vf.createIRI(status.getIri()),
-                iri));
+                executionIri));
         for (Map.Entry<String, Status> entry : componentStatus.entrySet()) {
             statements.add(vf.createStatement(
                     vf.createIRI(entry.getKey()),
                     vf.createIRI("http://etl.linkedpipes.com/ontology/status"),
                     vf.createIRI(entry.getValue().getIri()),
-                    iri));
+                    executionIri));
         }
         return statements;
     }
