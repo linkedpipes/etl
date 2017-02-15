@@ -82,6 +82,7 @@ public class PipelineExecutor {
         if (cancelExecution) {
             return;
         }
+        MDC.put(LoggerFacade.EXECUTION_MDC, null);
         LOG.info("Execution cancelled!");
         cancelExecution = true;
         // Notify the executor if it's not null.
@@ -91,6 +92,7 @@ public class PipelineExecutor {
             currentExecutor.cancel();
         }
         execution.onCancelRequest();
+        MDC.remove(LoggerFacade.EXECUTION_MDC);
     }
 
     public Execution getExecution() {
