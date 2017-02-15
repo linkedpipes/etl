@@ -22,8 +22,8 @@ public class Executor {
                 = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
         //
         Appender appender = LoggerFacade.createRollingFileAppender(
-                new File(logDirectory, "executor"), "executor", loggerContext,
-                configuration.getLogCoreFilter());
+                new File(logDirectory, "executor"), "executor",
+                loggerContext, "DEBUG");
         logbackLogger.addAppender(appender);
     }
 
