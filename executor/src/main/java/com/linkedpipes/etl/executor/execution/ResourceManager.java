@@ -67,11 +67,14 @@ public class ResourceManager {
         return working;
     }
 
-    /**
-     * @return File with all logs related to the execution.
-     */
-    public File getExecutionLogFile() {
+    public File getExecutionDebugLogFile() {
         final File file = new File(executionRoot, "log/execution.log");
+        file.getParentFile().mkdir();
+        return file;
+    }
+
+    public File getExecutionInfoLogFile() {
+        final File file = new File(executionRoot, "log/execution_info.log");
         file.getParentFile().mkdir();
         return file;
     }

@@ -13,6 +13,7 @@ import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.File;
 import java.util.HashMap;
@@ -54,14 +55,19 @@ public class PipelineExecutor {
     public PipelineExecutor(File directory, String iri, ModuleFacade modules) {
         // We assume that the directory we are executing is in the
         // directory with other executions.
+        MDC.put(LoggerFacade.EXECUTION_MDC, null);
         this.resources = new ResourceManager(
                 directory.getParentFile(), directory);
-        this.loggerFacade.setSystemAppender(resources.getExecutionLogFile());
+        this.loggerFacade.prepareAppendersForExecution(
+                resources.getExecutionDebugLogFile(),
+                resources.getExecutionInfoLogFile());
         this.moduleFacade = modules;
         this.execution = new Execution(resources, iri);
+        MDC.remove(LoggerFacade.EXECUTION_MDC);
     }
 
     public void execute() {
+        MDC.put(LoggerFacade.EXECUTION_MDC, null);
         execution.onInitializationBegin();
         if (initialize()) {
             execution.onComponentsExecutionBegin();
@@ -69,6 +75,7 @@ public class PipelineExecutor {
             execution.onComponentsExecutionEnd();
         }
         terminate();
+        MDC.remove(LoggerFacade.EXECUTION_MDC);
     }
 
     public synchronized void cancelExecution() {
@@ -246,7 +253,7 @@ public class PipelineExecutor {
         pipeline.close();
         execution.onExecutionEnd();
         execution.close();
-        loggerFacade.destroyAll();
+        loggerFacade.destroyExecutionAppenders();
     }
 
     private void notifyObserversOnEnding() {

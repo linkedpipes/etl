@@ -9,7 +9,6 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.component.configuration.Configuration;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.Execution;
-import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
@@ -17,7 +16,6 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import java.util.Map;
 
@@ -67,15 +65,11 @@ class ExecuteComponent implements ComponentExecutor {
     public boolean execute(DataUnitManager dataUnitManager) {
         try {
             execution.onComponentInitializing(execComponent);
-            MDC.remove(LoggerFacade.SYSTEM_MDC);
             final Map<String, DataUnit> dataUnits =
                     dataUnitManager.onComponentWillExecute(execComponent);
             initialize(dataUnits);
-            MDC.put(LoggerFacade.SYSTEM_MDC, null);
             execution.onComponentUserCodeBegin(execComponent);
-            MDC.remove(LoggerFacade.SYSTEM_MDC);
             execute();
-            MDC.put(LoggerFacade.SYSTEM_MDC, null);
         } catch (ExecutorException ex) {
             try {
                 dataUnitManager.onComponentDidExecute(execComponent);
