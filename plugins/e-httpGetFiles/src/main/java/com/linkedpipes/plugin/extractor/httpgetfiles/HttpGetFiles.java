@@ -106,7 +106,7 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         downloader.download(workQueue, configuration.getReferences().size());
         if (!downloader.getExceptions().isEmpty()) {
             LOG.info("Downloaded {}/{}", downloader.getExceptions().size(),
-                    configuration.getReferences());
+                    configuration.getReferences().size());
             if (!configuration.isSkipOnError()) {
                 throw exceptionFactory.failure("Can't download all entities.");
             }
