@@ -10,27 +10,37 @@ public final class LP_EVENTS {
     }
 
     private static final String PREFIX =
-            "http://linkedpipes.com/ontology/events/";
+            "http://linkedpipes.com/ontology/";
 
-    public static final String EXECUTION_BEGIN = PREFIX + "ExecutionBegin";
+    public static final String EXECUTION_BEGIN =
+            PREFIX + "events/ExecutionBegin";
 
-    public static final String EXECUTION_END = PREFIX + "ExecutionEnd";
+    public static final String EXECUTION_END =
+            PREFIX + "events/ExecutionEnd";
 
-    public static final String EXECUTION_FAILED = PREFIX + "ExecutionFailed";
+    public static final String EXECUTION_FAILED =
+            PREFIX + "events/ExecutionFailed";
 
-    public static final String COMPONENT_BEGIN = PREFIX + "ComponentBegin";
+    public static final String COMPONENT_BEGIN =
+            PREFIX + "events/ComponentBegin";
 
-    public static final String COMPONENT_END = PREFIX + "ComponentEnd";
+    public static final String COMPONENT_END =
+            PREFIX + "events/ComponentEnd";
 
-    public static final String COMPONENT_FAILED = PREFIX + "ComponentFailed";
+    public static final String COMPONENT_FAILED =
+            PREFIX + "events/ComponentFailed";
 
-    public static final String HAS_CREATED = PREFIX + "created";
+    public static final String HAS_CREATED =
+            PREFIX + "events/created";
 
-    public static final String HAS_EXCEPTION = PREFIX + "exception";
+    public static final String HAS_EXCEPTION =
+            PREFIX + "events/exception";
 
-    public static final String HAS_ROOT_EXCEPTION = PREFIX + "rootException";
+    public static final String HAS_ROOT_EXCEPTION =
+            PREFIX + "events/rootException";
 
-    public static final String HAS_REASON = PREFIX + "reason";
+    public static final String HAS_REASON =
+            PREFIX + "events/reason";
 
     public static final String PROGRESS_REPORT =
             PREFIX + "progress/ProgressReport";

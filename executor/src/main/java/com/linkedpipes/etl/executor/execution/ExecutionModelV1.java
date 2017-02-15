@@ -68,7 +68,7 @@ class ExecutionModelV1 {
 
     private List<Statement> pipelineStatements = Collections.EMPTY_LIST;
 
-    private List<List<Statement>> eventsStatements = new LinkedList<>();
+    private final List<List<Statement>> eventsStatements = new ArrayList<>();
 
     private final ValueFactory vf = SimpleValueFactory.getInstance();
 
@@ -155,7 +155,6 @@ class ExecutionModelV1 {
             componentStatus.put(component.getIri(), Status.QUEUED);
         }
         pipelineStatements = statements;
-        status = Status.RUNNING;
         lastChange = new Date();
     }
 
@@ -409,7 +408,8 @@ class ExecutionModelV1 {
             for (Statement statement : statementsCopy) {
                 writer.handleStatement(statement);
             }
-            for (int i = 0; i < eventsStatements.size(); ++i) {
+            int eventCount = eventsStatements.size();
+            for (int i = 0; i < eventCount; ++i) {
                 for (Statement statement : eventsStatements.get(i)) {
                     writer.handleStatement(statement);
                 }
@@ -434,16 +434,17 @@ class ExecutionModelV1 {
                 vf.createIRI("http://etl.linkdpipes.com/ontology/event"),
                 iri, executionIri));
         eventStatements.add(vf.createStatement(iri,
-                RDF.TYPE, vf.createIRI(LP_PREFIX + "Event"), iri));
+                RDF.TYPE, vf.createIRI(LP_PREFIX + "Event"), executionIri));
         eventStatements.add(vf.createStatement(iri,
                 vf.createIRI(LP_PREFIX + "events/created"),
-                vf.createLiteral(new Date()), iri));
-        eventStatements.add(vf.createStatement(iri,
+                vf.createLiteral(new Date()), executionIri));
+        eventStatements.add(vf.createStatement(executionIri,
                 vf.createIRI(LP_PREFIX + "order"),
-                vf.createLiteral(order), iri));
+                vf.createLiteral(order), executionIri));
         if (label != null) {
             eventStatements.add(vf.createStatement(iri,
-                    SKOS.PREF_LABEL, vf.createLiteral(label, "en"), iri));
+                    SKOS.PREF_LABEL, vf.createLiteral(label, "en"),
+                    executionIri));
         }
         return eventStatements;
     }
