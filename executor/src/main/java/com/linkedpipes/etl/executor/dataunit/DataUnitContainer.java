@@ -66,7 +66,7 @@ class DataUnitContainer {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
                     metadata.getDataUnitIri(), this.status);
         }
-        LOG.info("bindToPipeline from sources: {}", metadata.getDataUnitIri());
+        LOG.debug("bindToPipeline from sources: {}", metadata.getDataUnitIri());
         //
         try {
             instance.initialize(instances);
@@ -89,7 +89,7 @@ class DataUnitContainer {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
                     metadata.getDataUnitIri(), this.status);
         }
-        LOG.info("bindToPipeline from file: {} {}",
+        LOG.debug("bindToPipeline from file: {} {}",
                 metadata.getDataUnitIri(), directory);
         //
         try {
@@ -114,7 +114,7 @@ class DataUnitContainer {
                     metadata.getDataUnitIri());
         }
         final File saveDirectory = metadata.getSaveDirectory();
-        if (saveDirectory == null){
+        if (saveDirectory == null) {
             return;
         }
         saveDirectory.mkdirs();
@@ -132,7 +132,7 @@ class DataUnitContainer {
      */
     public void close() throws ExecutorException {
         if (status == Status.NEW) {
-            // Can hapen if pipeline fail.
+            // Can happen if pipeline fail.
             return;
         }
         if (status == Status.CLOSED) {
@@ -148,6 +148,19 @@ class DataUnitContainer {
                     metadata.getDataUnitIri(), ex);
         }
         this.status = Status.CLOSED;
+    }
+
+    public void mapByReference(File source)
+            throws ExecutorException {
+        final File saveDirectory = metadata.getSaveDirectory();
+        if (saveDirectory == null) {
+            return;
+        }
+        try {
+            instance.referenceContent(source, saveDirectory);
+        } catch (LpException ex) {
+            throw new ExecutorException("Can't reference content.", ex);
+        }
     }
 
 }

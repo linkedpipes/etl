@@ -263,6 +263,15 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
             return Collections.unmodifiableList(dataUnits);
         }
 
+        public DataUnit getDataUnit(String iri) {
+            for (DataUnit dataUnit : dataUnits) {
+                if (dataUnit.getIri().equals(iri)) {
+                    return dataUnit;
+                }
+            }
+            return null;
+        }
+
         public Integer getOrder() {
             return order;
         }
@@ -482,6 +491,56 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
             component.afterLoad();
         }
         Collections.sort(components, Comparator.comparingInt(x -> x.order));
+    }
+
+    public boolean isDataUnitUsed(Component component, DataUnit dataUnit)
+            throws ExecutorException {
+        switch (component.getExecutionType()) {
+            case EXECUTE:
+                return true;
+            case SKIP:
+                return false;
+            case MAP:
+                break;
+            default:
+                throw new ExecutorException("Invalid execution type: {} ",
+                        component.getExecutionType());
+        }
+        // MAP
+        if (dataUnit.isInput()) {
+            return false;
+        }
+        for (Connection connection : findConnections(component, dataUnit)) {
+            final Component source =
+                    getComponent(connection.getSourceComponent());
+            if (source.getExecutionType() == ExecutionType.EXECUTE) {
+                return true;
+            }
+            final Component target =
+                    getComponent(connection.getTargetComponent());
+            if (target.getExecutionType() == ExecutionType.EXECUTE) {
+                return true;
+            }
+        }
+        return true;
+    }
+
+    private Collection<Connection> findConnections(
+            Component component, DataUnit dataUnit) {
+        final Collection<Connection> output = new LinkedList<>();
+        for (Connection connection : connections) {
+            if (connection.getSourceComponent().equals(component.getIri()) &&
+                    connection.getSourceBinding().equals(dataUnit.getIri())) {
+                output.add(connection);
+                continue;
+            }
+            if (connection.getTargetComponent().equals(component.getIri()) &&
+                    connection.getTargetBinding().equals(dataUnit.getIri())) {
+                output.add(connection);
+                continue;
+            }
+        }
+        return output;
     }
 
 }

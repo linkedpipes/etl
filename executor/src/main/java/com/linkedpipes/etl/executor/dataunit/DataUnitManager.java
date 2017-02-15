@@ -4,6 +4,7 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,11 @@ public class DataUnitManager {
      */
     private final Map<String, ManageableDataUnit> instances = new HashMap<>();
 
-    public DataUnitManager() {
+    private final PipelineModel pipeline;
+
+    public DataUnitManager(
+            PipelineModel pipeline) {
+        this.pipeline = pipeline;
     }
 
     /**
@@ -84,10 +89,8 @@ public class DataUnitManager {
             //
             final File dataDirectory = dataUnit.getLoadDirectory();
             if (dataDirectory == null) {
-                // Load from sources.
                 container.initialize(instances);
             } else {
-                // Load from file.
                 container.initialize(dataDirectory);
             }
             usedDataUnits.put(dataUnit.getDataUnitIri(),
@@ -109,9 +112,25 @@ public class DataUnitManager {
                 throw new ExecutorException("Missing data unit: {} for {}",
                         dataUnit.getDataUnitIri(), component.getComponentIri());
             }
-            //
             container.save();
-            // TODO Check for usage and save if not used any more.
+        }
+    }
+
+    public void onComponentMapByReference(Execution.Component component)
+            throws ExecutorException {
+        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+            final DataUnitContainer container = dataUnits.get(dataUnit);
+            if (container == null) {
+                throw new ExecutorException("Missing data unit: {} for {}",
+                        dataUnit.getDataUnitIri(), component.getComponentIri());
+            }
+            final File sourceFile = dataUnit.getLoadDirectory();
+            if (isDataUnitUsed(component, dataUnit)) {
+                container.initialize(sourceFile);
+                container.save();
+            } else {
+                container.mapByReference(sourceFile);
+            }
         }
     }
 
@@ -137,6 +156,24 @@ public class DataUnitManager {
         }
         dataUnits.put(dataUnit, new DataUnitContainer(instance, dataUnit));
         instances.put(iri, instance);
+    }
+
+    private boolean isDataUnitUsed(Execution.Component component,
+            Execution.DataUnit dataUnit) throws ExecutorException {
+        final PipelineModel.Component pplComponent =
+                pipeline.getComponent(component.getComponentIri());
+        if (pplComponent == null) {
+            throw new ExecutorException(
+                    "Missing component definition: {} for {}",
+                    component.getComponentIri());
+        }
+        final PipelineModel.DataUnit pplDataUnit =
+                pplComponent.getDataUnit(dataUnit.getDataUnitIri());
+        if (pplDataUnit == null) {
+            throw new ExecutorException("Missing definition: {} for {}",
+                    dataUnit.getDataUnitIri(), component.getComponentIri());
+        }
+        return pipeline.isDataUnitUsed(pplComponent, pplDataUnit);
     }
 
 }

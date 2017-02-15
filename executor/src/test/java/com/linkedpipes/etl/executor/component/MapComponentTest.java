@@ -23,9 +23,7 @@ public class MapComponentTest {
         executor.execute(dataUnits);
         //
         Mockito.verify(dataUnits, Mockito.times(1))
-                .onComponentWillExecute(execComponent);
-        Mockito.verify(dataUnits, Mockito.times(1))
-                .onComponentDidExecute(execComponent);
+                .onComponentMapByReference(execComponent);
         Mockito.verify(execution, Mockito.times(1))
                 .onComponentMapped(execComponent);
     }

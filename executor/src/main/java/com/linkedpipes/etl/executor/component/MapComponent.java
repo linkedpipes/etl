@@ -26,15 +26,9 @@ class MapComponent implements ComponentExecutor {
     public boolean execute(DataUnitManager dataUnitManager) {
         execution.onComponentInitializing(execComponent);
         try {
-            dataUnitManager.onComponentWillExecute(execComponent);
+            dataUnitManager.onComponentMapByReference(execComponent);
         } catch (ExecutorException ex) {
             execution.onCantPrepareDataUnits(execComponent, ex);
-            return false;
-        }
-        try {
-            dataUnitManager.onComponentDidExecute(execComponent);
-        } catch (ExecutorException ex) {
-            execution.onCantSaveDataUnits(execComponent, ex);
             return false;
         }
         execution.onComponentMapped(execComponent);

@@ -48,4 +48,23 @@ public interface ManageableDataUnit extends DataUnit {
      */
     void close() throws LpException;
 
+    /**
+     * Used when content of given dataunit is mapped from another execution
+     * but is not used in this execution.
+     *
+     * The content should be referenced, it. the original data must not be
+     * modified. The result should be similar to calling
+     * {@link #initialize(java.io.File)} and {@link #save(java.io.File)},
+     * but the data must stay in the source directory.
+     *
+     * This created dependency of the content of this data unit on the
+     * content of other data unit.
+     *
+     * This function must not change inner state of the instance.
+     *
+     * @param source
+     * @param destination
+     */
+    void referenceContent(File source, File destination) throws LpException;
+
 }

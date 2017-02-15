@@ -36,7 +36,7 @@ public class ChunkIterator implements Iterator<ChunkedTriples.Chunk> {
 
     private void prepareNext() {
         if (fileIterator != null && fileIterator.hasNext()) {
-            nextChunk = dataUnit.createChunk(fileIterator.next());
+            nextChunk = new DefaultChunk(fileIterator.next());
         } else if (directoryIterator.hasNext()) {
             fileIterator = FileUtils.iterateFiles(
                     directoryIterator.next(), null, true);

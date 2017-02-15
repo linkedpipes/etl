@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
-import com.linkedpipes.etl.dataunit.core.JsonUtils;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
@@ -24,7 +23,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         implements SingleGraphDataUnit, WritableSingleGraphDataUnit,
@@ -53,55 +51,21 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
 
     @Override
     public void initialize(File directory) throws LpException {
-        execute((connection) -> {
-            try {
-                connection.add(new File(directory, "data/data.ttl"),
-                        "http://localhost/",
-                        RDFFormat.TURTLE,
-                        graph);
-            } catch (Exception ex) {
-                throw new LpException("Can't read file.", ex);
-            }
-        });
-    }
-
-    @Override
-    public void initialize(Map<String, ManageableDataUnit> dataUnits)
-            throws LpException {
-        for (String source : sources) {
-            if (!dataUnits.containsKey(source)) {
-                throw new LpException("Missing input: {}", source);
-            }
-            final ManageableDataUnit dataunit = dataUnits.get(source);
-            if (dataunit instanceof DefaultSingleGraphDataUnit) {
-                merge((DefaultSingleGraphDataUnit) dataunit);
-            } else {
-                throw new LpException(
-                        "Can't merge with source data unit: {} of {}",
-                        source, dataunit.getClass().getSimpleName());
-            }
+        final List<File> directories = loadDataDirectories(directory);
+        if (directories.size() != 1) {
+            throw new LpException("Invalid number of directories {} in {}",
+                    directories.size(), directory);
         }
+        final File dataDirectory = directories.get(0);
+        loadContentFromTurtle(dataDirectory);
     }
 
     @Override
     public void save(File directory) throws LpException {
         final File dataDirectory = new File(directory, "data");
-        dataDirectory.mkdirs();
-        final File dataFile = new File(dataDirectory, "data.ttl");
-        execute((connection) -> {
-            try (FileOutputStream stream = new FileOutputStream(dataFile)) {
-                final RDFWriter writer =
-                        Rio.createWriter(RDFFormat.TURTLE, stream);
-                connection.export(writer,
-                        Arrays.asList(graph).toArray(new IRI[0]));
-            } catch (IOException ex) {
-                throw new LpException("Can't write data to file.", ex);
-            }
-        });
-        final List<String> debugDirectories = Arrays.asList(
-                directory.toPath().relativize(dataDirectory.toPath())
-                        .toString());
-        JsonUtils.save(new File(directory, "debug.json"), debugDirectories);
+        saveContentAsTurtle(dataDirectory);
+        saveDataDirectories(directory, Arrays.asList(dataDirectory));
+        saveDebugDirectories(directory, Arrays.asList(dataDirectory));
     }
 
     @Override
@@ -121,7 +85,18 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         });
     }
 
-    protected void merge(DefaultSingleGraphDataUnit source) throws LpException {
+    @Override
+    protected void merge(ManageableDataUnit dataunit) throws LpException {
+        if (dataunit instanceof DefaultSingleGraphDataUnit) {
+            merge((DefaultSingleGraphDataUnit) dataunit);
+        } else {
+            throw new LpException(
+                    "Can't merge with source data unit: {} of type {}",
+                    getIri(), dataunit.getClass().getSimpleName());
+        }
+    }
+
+    private void merge(DefaultSingleGraphDataUnit source) throws LpException {
         // TODO Check that we use the same repository.
         try {
             execute((connection) -> {
@@ -161,6 +136,33 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
                     statement.getPredicate(),
                     statement.getObject());
         }
+    }
+
+    private void saveContentAsTurtle(File dataDirectory) throws LpException {
+        dataDirectory.mkdirs();
+        final File file = new File(dataDirectory, "data.ttl");
+        execute((connection) -> {
+            try (FileOutputStream stream = new FileOutputStream(file)) {
+                final RDFWriter writer
+                        = Rio.createWriter(RDFFormat.TURTLE, stream);
+                connection.export(writer, graph);
+            } catch (IOException ex) {
+                throw new LpException("Can't write data to file.", ex);
+            }
+        });
+    }
+
+    private void loadContentFromTurtle(File dataDirectory) throws LpException {
+        execute((connection) -> {
+            try {
+                connection.add(new File(dataDirectory, "data.ttl"),
+                        "http://localhost/base/", RDFFormat.TURTLE,
+                        graph);
+            } catch (IOException ex) {
+                throw new LpException("Can't load data file for {} from {}",
+                        getIri(), dataDirectory);
+            }
+        });
     }
 
 }

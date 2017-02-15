@@ -56,7 +56,7 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
     private FilesDataUnit.Entry getNext() {
         if (fileIterator.hasNext()) {
             final File nextFile = fileIterator.next();
-            return new DefaultFilesDataUnit.Entry(nextFile, currentDirectory);
+            return new DefaultEntry(nextFile, currentDirectory);
         } else if (directoryIterator.hasNext()) {
             currentDirectory = directoryIterator.next();
             fileIterator = FileUtils.iterateFiles(

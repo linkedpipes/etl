@@ -34,7 +34,7 @@ public class PipelineExecutor {
 
     private final Execution execution;
 
-    private final DataUnitManager dataUnitManager = new DataUnitManager();
+    private DataUnitManager dataUnitManager;
 
     private boolean cancelExecution = false;
 
@@ -115,7 +115,7 @@ public class PipelineExecutor {
             return false;
         }
         try {
-            loadDataUnits();
+            initializeDataUnits();
         } catch (ExecutorException ex) {
             execution.onDataUnitsLoadingFailed(ex);
             return false;
@@ -172,7 +172,8 @@ public class PipelineExecutor {
         }
     }
 
-    private void loadDataUnits() throws ExecutorException {
+    private void initializeDataUnits() throws ExecutorException {
+        dataUnitManager = new DataUnitManager(pipeline.getModel());
         final DataUnitManager.DataUnitInstanceSource dataUnitInstanceSource =
                 (iri) -> {
                     return moduleFacade.getDataUnit(pipeline, iri);

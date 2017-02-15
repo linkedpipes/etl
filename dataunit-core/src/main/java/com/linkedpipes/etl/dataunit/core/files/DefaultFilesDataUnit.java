@@ -1,85 +1,37 @@
 package com.linkedpipes.etl.dataunit.core.files;
 
-import com.linkedpipes.etl.dataunit.core.JsonUtils;
+import com.linkedpipes.etl.dataunit.core.BaseDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * TODO Do not require working directory for input data unit.
  */
 class DefaultFilesDataUnit
+        extends BaseDataUnit
         implements FilesDataUnit, WritableFilesDataUnit, ManageableDataUnit {
-
-    /**
-     * Implementation of files data unit entry.
-     */
-    static class Entry implements FilesDataUnit.Entry {
-
-        private final File file;
-
-        private final File root;
-
-        Entry(File file, File root) {
-            this.file = file;
-            this.root = root;
-        }
-
-        @Override
-        public File toFile() {
-            return file;
-        }
-
-        @Override
-        public String getFileName() {
-            return root.toPath().relativize(file.toPath()).toString();
-        }
-
-    }
 
     private static final Logger LOG =
             LoggerFactory.getLogger(DefaultFilesDataUnit.class);
 
-    private final String binding;
-
-    private final String iri;
-
     private final File writeDirectory;
 
-    private final List<File> readDirectories = new LinkedList<>();
-
-    /**
-     * List of data unit sources.
-     */
-    private final Collection<String> sources;
+    private final List<File> dataDirectories = new LinkedList<>();
 
     public DefaultFilesDataUnit(String binding, String iri,
             File writeDirectory, Collection<String> sources) {
-        this.binding = binding;
-        this.iri = iri;
+        super(binding, iri, sources);
         this.writeDirectory = writeDirectory;
-        this.sources = sources;
         //
         if (this.writeDirectory != null) {
             writeDirectory.mkdirs();
-            this.readDirectories.add(writeDirectory);
+            this.dataDirectories.add(writeDirectory);
         }
-    }
-
-    @Override
-    public String getBinding() {
-        return binding;
-    }
-
-    @Override
-    public String getIri() {
-        return iri;
     }
 
     @Override
@@ -100,49 +52,14 @@ class DefaultFilesDataUnit
 
     @Override
     public void initialize(File directory) throws LpException {
-        final File file = new File(directory, "data.json");
-        if (file.exists()) {
-            JsonUtils.loadCollection(file, String.class).stream().forEach(
-                    (entry) -> readDirectories.add(new File(directory, entry))
-            );
-        } else {
-            initializeVersion1(directory);
-        }
-
-
-    }
-
-    @Override
-    public void initialize(Map<String, ManageableDataUnit> dataUnits)
-            throws LpException {
-        //
-        if (writeDirectory == null) {
-            throw new LpException("WriteDirectory is not set for: {}", iri);
-        }
-        // Iterate over sources and add their content.
-        for (String iri : sources) {
-            if (!dataUnits.containsKey(iri)) {
-                throw new LpException("Missing input: {}", iri);
-            }
-            final ManageableDataUnit dataunit = dataUnits.get(iri);
-            if (dataunit instanceof DefaultFilesDataUnit) {
-                merge((DefaultFilesDataUnit) dataunit);
-            } else {
-                throw new LpException(
-                        "Can't merge with source data unit: {} of type {}",
-                        iri, dataunit.getClass().getSimpleName());
-            }
-        }
+        dataDirectories.clear();
+        dataDirectories.addAll(loadDataDirectories(directory));
     }
 
     @Override
     public void save(File directory) throws LpException {
-        final Path dirPath = directory.toPath();
-        final List<String> directories = readDirectories.stream().map(
-                (file) -> dirPath.relativize(file.toPath()).toString()
-        ).collect(Collectors.toList());
-        JsonUtils.save(new File(directory, "data.json"), directories);
-        JsonUtils.save(new File(directory, "debug.json"), directories);
+        saveDataDirectories(directory, dataDirectories);
+        saveDebugDirectories(directory, dataDirectories);
     }
 
     @Override
@@ -152,7 +69,7 @@ class DefaultFilesDataUnit
 
     @Override
     public Collection<File> getReadDirectories() {
-        return Collections.unmodifiableCollection(readDirectories);
+        return Collections.unmodifiableCollection(dataDirectories);
     }
 
     @Override
@@ -168,24 +85,36 @@ class DefaultFilesDataUnit
 
     @Override
     public Iterator<FilesDataUnit.Entry> iterator() {
-        final Iterator<File> directoryIterator = readDirectories.iterator();
+        final Iterator<File> directoryIterator = dataDirectories.iterator();
         if (!directoryIterator.hasNext()) {
             return Collections.EMPTY_LIST.iterator();
         }
         return new DirectoryIterator(directoryIterator);
     }
 
-    private void initializeVersion1(File directory) throws LpException {
-        // Initialization from older format.
-        final File dataDirectory = new File(directory, "data");
-        final File file = new File(dataDirectory, "data.json");
-        JsonUtils.loadCollection(file, String.class).stream().forEach(
-                (entry) -> readDirectories.add(new File(dataDirectory, entry))
-        );
+    @Override
+    protected List<File> loadDataDirectories(File directory)
+            throws LpException {
+        final File dataFile = new File(directory, "data.json");
+        final boolean currentVersion = dataFile.exists();
+        if (currentVersion) {
+            return loadRelativePaths(directory, "data.json");
+        } else {
+            return loadRelativePaths(new File(directory, "data"), "data.json");
+        }
     }
 
-    private void merge(DefaultFilesDataUnit source) {
-        readDirectories.addAll(source.readDirectories);
+    @Override
+    protected void merge(ManageableDataUnit dataunit) throws LpException {
+        if (dataunit instanceof DefaultFilesDataUnit) {
+            final DefaultFilesDataUnit source =
+                    (DefaultFilesDataUnit) dataunit;
+            dataDirectories.addAll(source.dataDirectories);
+        } else {
+            throw new LpException(
+                    "Can't merge with source data unit: {} of type {}",
+                    getIri(), dataunit.getClass().getSimpleName());
+        }
     }
 
 }

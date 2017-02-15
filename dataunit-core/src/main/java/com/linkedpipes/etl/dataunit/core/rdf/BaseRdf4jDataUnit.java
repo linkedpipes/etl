@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
+import com.linkedpipes.etl.dataunit.core.BaseDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -11,24 +12,18 @@ import java.util.Collection;
 /**
  * Base class for RDF4J data units based on RDF4J library.
  */
-abstract class BaseRdf4jDataUnit implements Rdf4jDataUnit, ManageableDataUnit {
+abstract class BaseRdf4jDataUnit
+        extends BaseDataUnit
+        implements Rdf4jDataUnit, ManageableDataUnit {
 
     protected final static ValueFactory VF = SimpleValueFactory.getInstance();
 
-    private final String binding;
-
-    private final String iri;
-
     protected final Repository repository;
-
-    protected final Collection<String> sources;
 
     public BaseRdf4jDataUnit(String binding, String iri,
             Repository repository, Collection<String> sources) {
-        this.binding = binding;
-        this.iri = iri;
+        super(binding, iri, sources);
         this.repository = repository;
-        this.sources = sources;
     }
 
     @Override
@@ -51,15 +46,6 @@ abstract class BaseRdf4jDataUnit implements Rdf4jDataUnit, ManageableDataUnit {
         return repository;
     }
 
-    @Override
-    public String getBinding() {
-        return binding;
-    }
-
-    @Override
-    public String getIri() {
-        return iri;
-    }
 
 }
 
