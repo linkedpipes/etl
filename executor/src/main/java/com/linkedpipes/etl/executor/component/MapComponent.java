@@ -24,6 +24,7 @@ class MapComponent implements ComponentExecutor {
 
     @Override
     public boolean execute(DataUnitManager dataUnitManager) {
+        execution.onComponentInitializing(execComponent);
         try {
             dataUnitManager.onComponentWillExecute(execComponent);
         } catch (ExecutorException ex) {

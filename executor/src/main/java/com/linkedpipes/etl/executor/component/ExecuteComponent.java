@@ -66,13 +66,13 @@ class ExecuteComponent implements ComponentExecutor {
     @Override
     public boolean execute(DataUnitManager dataUnitManager) {
         try {
-            execution.onComponentInitialize(execComponent);
+            execution.onComponentInitializing(execComponent);
             MDC.remove(LoggerFacade.SYSTEM_MDC);
             final Map<String, DataUnit> dataUnits =
                     dataUnitManager.onComponentWillExecute(execComponent);
             initialize(dataUnits);
             MDC.put(LoggerFacade.SYSTEM_MDC, null);
-            execution.onComponentBegin(execComponent);
+            execution.onComponentUserCodeBegin(execComponent);
             MDC.remove(LoggerFacade.SYSTEM_MDC);
             execute();
             MDC.put(LoggerFacade.SYSTEM_MDC, null);

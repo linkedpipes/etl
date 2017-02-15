@@ -206,12 +206,15 @@ public class Execution {
     }
 
     /**
-     * Called once the component is ready for execution.
+     * Called before component initialization, ie. on the begin
+     * of work on any component related stuff, that is directly the
+     * component execution it self.
      *
      * @param component
      */
-    public void onComponentInitialize(Execution.Component component) {
-        LOG.info("onComponentInitialize");
+    public void onComponentInitializing(Execution.Component component) {
+        LOG.info("onComponentInitializing");
+        v1Execution.onComponentBegin(component);
     }
 
     /**
@@ -219,14 +222,13 @@ public class Execution {
      *
      * @param component
      */
-    public void onComponentBegin(Execution.Component component) {
-        LOG.info("onComponentBegin");
-        v1Execution.onComponentBegin(component);
+    public void onComponentUserCodeBegin(Execution.Component component) {
+        LOG.info("onComponentUserCodeBegin");
     }
 
     /**
      * Reports successful end of a component execution, called
-     * after {@link #onComponentBegin(Component)}}.
+     * after {@link #onComponentUserCodeBegin(Component)}}.
      *
      * @param component
      */
@@ -248,7 +250,7 @@ public class Execution {
     }
 
     /**
-     * Alternative to {@link #onComponentInitialize(Component)}.
+     * Alternative to {@link #onComponentInitializing(Component)}.
      * Represents an execution type of a component.
      *
      * @param component
@@ -259,7 +261,7 @@ public class Execution {
     }
 
     /**
-     * Alternative to {@link #onComponentInitialize(Component)}.
+     * Alternative to {@link #onComponentInitializing(Component)}.
      * Represents an execution type of a component.
      *
      * @param component
