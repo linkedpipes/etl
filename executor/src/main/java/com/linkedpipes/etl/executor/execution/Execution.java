@@ -282,14 +282,12 @@ public class Execution {
         v1Execution.onExecutionFailed();
     }
 
-
-    //
-    //
-    //
-    //
-
+    /**
+     * Called with the first cancel request.
+     */
     public void onCancelRequest() {
         LOG.info("onCancelRequest");
+        v1Execution.onExecutionCancelled();
     }
 
     public void onInitializationBegin() {

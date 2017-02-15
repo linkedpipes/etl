@@ -50,12 +50,24 @@ class ExecutionServlet {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void accept(@RequestBody AcceptRequest task,
+    public void execute(@RequestBody AcceptRequest task,
             HttpServletResponse response) {
         if (execute(new File(task.directory), task.iri)) {
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/cancel", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void cancel() {
+        synchronized (lock) {
+            if (executor == null) {
+                return;
+            }
+            executor.cancelExecution();
         }
     }
 

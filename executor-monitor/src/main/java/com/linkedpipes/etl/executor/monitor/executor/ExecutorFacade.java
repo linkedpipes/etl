@@ -81,6 +81,33 @@ public class ExecutorFacade {
         }
     }
 
+    public void cancelExecution(Execution execution, String userRequest) {
+        for (Executor executor : executors) {
+            cancelExecutor(executor, userRequest);
+            if (execution.equals(executor.getExecution())) {
+                cancelExecutor(executor, userRequest);
+                return;
+            }
+        }
+    }
+
+    private void cancelExecutor(Executor executor,
+            String userRequest) {
+        final MultiValueMap<String, String> headers
+                = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+        final HttpEntity request = new HttpEntity<>(userRequest, headers);
+
+        final ResponseEntity<String> response = restTemplate.exchange(
+                executor.getAddress() + "/api/v1/executions/cancel",
+                HttpMethod.POST,
+                request,
+                String.class);
+
+        LOG.info("Cancelling: {} : {}", executor.getAddress(),
+                response.getStatusCode());
+    }
+
     /**
      * Try to start given execution on given executor.
      * <p>

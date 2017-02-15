@@ -82,10 +82,12 @@ public class PipelineExecutor {
         if (cancelExecution) {
             return;
         }
+        LOG.info("Execution cancelled!");
         cancelExecution = true;
         // Notify the executor if it's not null.
         final ComponentExecutor currentExecutor = executor;
         if (currentExecutor != null) {
+            LOG.info("Cancelling component!");
             currentExecutor.cancel();
         }
         execution.onCancelRequest();

@@ -39,6 +39,8 @@ class ExecutionModelV1 {
                 "http://etl.linkedpipes.com/resources/status/initializing"),
         RUNNING("http://etl.linkedpipes.com/resources/status/running"),
         FINISHED("http://etl.linkedpipes.com/resources/status/finished"),
+        CANCELLED("http://etl.linkedpipes.com/resources/status/cancelled"),
+        CANCELLING("http://etl.linkedpipes.com/resources/status/cancelling"),
         FAILED("http://etl.linkedpipes.com/resources/status/failed");
 
         private final String iri;
@@ -79,6 +81,8 @@ class ExecutionModelV1 {
     private final Map<String, Status> componentStatus = new HashMap<>();
 
     private boolean pipelineFailed = false;
+
+    private boolean pipelineCancelled = false;
 
     public ExecutionModelV1(String iri, ResourceManager resourceManager) {
         this.executionIri = vf.createIRI(iri);
@@ -205,6 +209,13 @@ class ExecutionModelV1 {
         });
         eventsStatements.add(eventStatements);
         lastChange = new Date();
+        write();
+    }
+
+    public void onExecutionCancelled() {
+        pipelineCancelled = true;
+        lastChange = new Date();
+        status = Status.CANCELLING;
         write();
     }
 
@@ -363,6 +374,8 @@ class ExecutionModelV1 {
         eventsStatements.add(eventStatements);
         if (pipelineFailed) {
             status = Status.FAILED;
+        } else if (pipelineCancelled) {
+            status = Status.CANCELLED;
         } else {
             status = Status.FINISHED;
         }

@@ -133,6 +133,17 @@ public class ExecutionServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    @RequestMapping(value = "/{id}/cancel", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void cancelExecution(@PathVariable String id,
+            @RequestBody String body,
+            HttpServletRequest request, HttpServletResponse response) {
+        final Execution execution = executionFacade.getExecution(id);
+        executorFacade.cancelExecution(execution, body);
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
     @RequestMapping(value = "/{id}/logs", method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
