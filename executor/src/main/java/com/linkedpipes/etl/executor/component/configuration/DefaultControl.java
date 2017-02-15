@@ -164,7 +164,7 @@ class DefaultControl implements EntityControl {
 
     private void loadControlledProperties(RdfSource source, String graph,
             String type) throws RdfUtilsException {
-        final String query = "SELECT ?property ?control ?complex WHERE { \n" +
+        final String query = "SELECT ?property ?control WHERE { \n" +
                 " GRAPH <" + graph + "> {" +
                 "  ?entity a <" + LP_OBJECTS.DESCRIPTION + "> ;\n" +
                 "   <" + LP_OBJECTS.HAS_DESCRIBE + "> <" + type + "> ;\n" +
@@ -183,7 +183,7 @@ class DefaultControl implements EntityControl {
 
     private void loadComplexProperties(RdfSource source, String graph,
             String type) throws RdfUtilsException {
-        final String query = "SELECT ?property ?control ?complex WHERE { \n" +
+        final String query = "SELECT ?property ?control WHERE { \n" +
                 " GRAPH <" + graph + "> {" +
                 "  ?entity a <" + LP_OBJECTS.DESCRIPTION + "> ;\n" +
                 "   <" + LP_OBJECTS.HAS_DESCRIBE + "> <" + type + "> ;\n" +
