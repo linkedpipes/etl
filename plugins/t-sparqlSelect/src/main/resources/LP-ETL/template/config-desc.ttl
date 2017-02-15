@@ -3,7 +3,7 @@
 <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-sparqlSelect#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/query> ;
+    config:member <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/query> ,
         <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/fileName> .
 
 <http://linkedpipes.com/resources/components/t-sparqlSelect/0.0.0/configuration/desc/query>
