@@ -1,0 +1,33 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<md-subheader class="md-primary">Mandatory</md-subheader>
+<md-switch ng-model="dialog.getDistributionIRIFromInput.value"
+           ng-hide="dialog.getDistributionIRIFromInput.hide"
+           ng-disabled="dialog.getDistributionIRIFromInput.disabled || dialog.getDistributionIRIFromInput.inherit"
+           flex-gt-sm>Get distribution IRI from input
+</md-switch>
+<md-input-container class="md-block"
+                    ng-hide="dialog.distributionIRI.hide"
+                    flex-gt-sm>
+    <label>Distribution IRI</label>
+    <input type="uri"
+           ng-model="dialog.distributionIRI.value"
+           ng-disabled="dialog.getDistributionIRIFromInput.value || dialog.distributionIRI.disabled || dialog.distributionIRI.inherit"
+           placeholder="https://my.distribution.iri">
+</md-input-container>
+<lp-iri-list label-top="Example resources URLs" label-item="Example resource URL"
+             ng-model="dialog.exampleResourceIRIs.value"
+             lp-disabled="dialog.exampleResourceIRIs.disabled || dialog.exampleResourceIRIs.inherit"
+             ng-hide="dialog.exampleResourceIRIs.hide"></lp-iri-list>
+<md-input-container class="md-block" ng-hide="dialog.sparqlEndpointIRI.hide"
+                    flex-gt-sm>
+    <label>SPARQL Endpoint URL</label>
+    <input type="uri" ng-model="dialog.sparqlEndpointIRI.value"
+           ng-disabled="dialog.sparqlEndpointIRI.disabled || dialog.sparqlEndpointIRI.inherit"
+           placeholder="http://lod.eu/sparql">
+</md-input-container>
+<md-switch ng-model="dialog.copyDownloadURLsToDataDumps.value"
+           ng-hide="dialog.copyDownloadURLsToDataDumps.hide"
+           ng-disabled="dialog.copyDownloadURLsToDataDumps.disabled || dialog.copyDownloadURLsToDataDumps.inherit"
+           flex-gt-sm>Copy download URLs to void:dataDump
+</md-switch>
+
