@@ -25,6 +25,14 @@ define([], function () {
             "$type" : "str",
             "$label" : "Load language (cs|en)"
         },
+        "voidExampleResources" : {
+            "$type" : "bool",
+            "$label" : "Generate CKAN resources from VoID example resources"
+        },
+        "voidSparqlEndpoint" : {
+            "$type" : "bool",
+            "$label" : "Generate CKAN resource from VoID SPARQL endpoint"
+        },
         "profile" : {
             "$type": "str",
             "$label": "CKAN profile"
