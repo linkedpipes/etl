@@ -10,7 +10,7 @@ define([], function () {
             "$predicate": "auto"
         },
         "directory" : {
-            "$type" : "bool",
+            "$type" : "str",
             "$label" : "Directory to delete"
         }
     };
