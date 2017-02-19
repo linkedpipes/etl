@@ -61,6 +61,11 @@ public final class LP_OBJECTS {
     public static final String HAS_MEMBER = PREFIX + "member";
 
     /**
+     * Type of member entity description.
+     */
+    public static final String MEMBER = PREFIX + "ConfigurationMember";
+
+    /**
      * Member entity refer to value property.
      */
     public static final String HAS_PROPERTY = PREFIX + "property";
