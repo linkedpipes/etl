@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.test;
+package com.linkedpipes.etl.test.dataunit;
 
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
