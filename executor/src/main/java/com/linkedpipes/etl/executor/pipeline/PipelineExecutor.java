@@ -254,7 +254,9 @@ public class PipelineExecutor {
         } catch (ExecutorException ex) {
             LOG.info("Can't save pipeline.", ex);
         }
-        dataUnitManager.close();
+        if (dataUnitManager != null) {
+            dataUnitManager.close();
+        }
         pipeline.close();
         execution.onExecutionEnd();
         execution.close();
