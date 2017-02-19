@@ -148,6 +148,10 @@ public class Rdf4jSource implements RdfSource<Value> {
         return output;
     }
 
+    public Repository getRepository() {
+        return repository;
+    }
+
     /**
      * @return RDF4J source backed up with InMemory store.
      */

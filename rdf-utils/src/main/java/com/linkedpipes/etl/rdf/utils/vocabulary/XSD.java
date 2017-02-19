@@ -18,4 +18,8 @@ public final class XSD {
     public static final String BOOLEAN =
             "http://www.w3.org/2001/XMLSchema#boolean";
 
+    public static final String STRING =
+            "http://www.w3.org/2001/XMLSchema#string";
+
+
 }
