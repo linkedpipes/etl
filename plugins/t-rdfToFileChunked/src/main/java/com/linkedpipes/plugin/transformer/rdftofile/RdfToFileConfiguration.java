@@ -14,7 +14,7 @@ public class RdfToFileConfiguration {
     @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_GRAPH_URI)
     private String graphUri;
 
-    @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_PREFIX_TEST)
+    @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_PREFIXES)
     private String prefixes;
 
     public RdfToFileConfiguration() {

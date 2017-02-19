@@ -7,5 +7,5 @@
 
 <http://linkedpipes.com/resources/components/t-packZip/0.0.0/configuration/desc/fileName>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#fileName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#fileNameControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-packZip#fileName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-packZip#fileNameControl> .

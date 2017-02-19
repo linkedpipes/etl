@@ -108,7 +108,7 @@ public final class LoaderScp implements Component, SequentialExecution {
         try (OutputStream remoteOut = channel.getOutputStream();
              InputStream remoteIn = channel.getInputStream()) {
             channel.connect();
-            resonseCheck(remoteIn);
+            responseCheck(remoteIn);
             // Send content of files data unit.
             for (File rootDirectory : input.getReadDirectories()) {
                 sendDirectoryContent(remoteOut, remoteIn, rootDirectory);
@@ -131,17 +131,20 @@ public final class LoaderScp implements Component, SequentialExecution {
      */
     private static void secureCreateDirectory(Session session,
             String targetPath) throws JSchException, IOException,
-            SftpException {
-        LOG.debug("secureCreateDirectory ...");
+            SftpException, LpException {
+        LOG.info("secureCreateDirectory ...");
         final Channel channel = session.openChannel("exec");
         // We just execute given command.
         ((ChannelExec) channel).setCommand("mkdir " + targetPath);
         final InputStream remoteIn = channel.getExtInputStream();
         channel.connect();
-        LOG.debug("\tWaiting for response!");
-        LOG.debug("\tResponse: {}", readResponseLine(remoteIn));
+        LOG.info("\tWaiting for response!");
+        LOG.info("\tResponse: {}", readResponseLine(remoteIn));
         channel.disconnect();
-        LOG.debug("secureCreateDirectory ... done");
+        if (channel.getExitStatus() == 1) {
+            throw new LpException("Can't create directory.");
+        }
+        LOG.info("secureCreateDirectory ... done");
     }
 
     /**
@@ -181,7 +184,7 @@ public final class LoaderScp implements Component, SequentialExecution {
         String command = "D0755 0 " + directoryName + "\n";
         remoteOut.write(command.getBytes());
         remoteOut.flush();
-        resonseCheck(remoteIn);
+        responseCheck(remoteIn);
         // Scan for files.
         for (final File file : sourceDirectory.listFiles()) {
             if (file.isDirectory()) {
@@ -193,7 +196,7 @@ public final class LoaderScp implements Component, SequentialExecution {
         }
         remoteOut.write("E\n".getBytes());
         remoteOut.flush();
-        resonseCheck(remoteIn);
+        responseCheck(remoteIn);
         LOG.debug("Sending directory: {} ... done", directoryName);
     }
 
@@ -214,7 +217,7 @@ public final class LoaderScp implements Component, SequentialExecution {
         String command = "C0644 " + fileSize + " " + fileName + "\n";
         remoteOut.write(command.getBytes());
         remoteOut.flush();
-        resonseCheck(remoteIn);
+        responseCheck(remoteIn);
         // Copy file.
         try (FileInputStream sourceFileStream
                      = new FileInputStream(sourceFile)) {
@@ -225,7 +228,7 @@ public final class LoaderScp implements Component, SequentialExecution {
         remoteOut.write(0);
         remoteOut.flush();
         // Check status.
-        resonseCheck(remoteIn);
+        responseCheck(remoteIn);
         LOG.debug("Sending file: {} ... done", fileName);
     }
 
@@ -234,7 +237,7 @@ public final class LoaderScp implements Component, SequentialExecution {
      *
      * @param stream
      */
-    private void resonseCheck(InputStream stream)
+    private void responseCheck(InputStream stream)
             throws IOException, LpException {
         final int response = stream.read();
         switch (response) {
@@ -263,6 +266,9 @@ public final class LoaderScp implements Component, SequentialExecution {
      */
     private static String readResponseLine(InputStream stream)
             throws IOException {
+        if (stream == null) {
+            return "";
+        }
         final StringBuffer buffer = new StringBuffer();
         int value;
         while (true) {

@@ -45,6 +45,14 @@
             <artifactId>virtjdbc4</artifactId>
             <version>20170111</version>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>test-environment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

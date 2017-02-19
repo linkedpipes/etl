@@ -3,29 +3,33 @@
 <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/host> .
+    config:member <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/uri> ,
+        <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/userName> ,
+        <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/password> ,
+        <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/outputPath> ,
+        <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/graph> .
 
-<http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/host>
+<http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/uri>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#host> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#hostControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uriControl> .
 
 <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#userNameControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#userNameControl> .
 
 <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#passwordControl> .
 
 <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/outputPath>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#outputPath> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#outputPathControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#outputPath> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#outputPathControl> .
 
 <http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc/graph>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#graph> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#graph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#graphControl> .

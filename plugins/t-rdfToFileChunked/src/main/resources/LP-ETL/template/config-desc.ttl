@@ -5,7 +5,8 @@
     config:type <http://plugins.linkedpipes.com/ontology/t-rdfToFile#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/fileName> ,
         <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/fileType> ,
-        <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/graphUri> .
+        <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/graphUri> ,
+        <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/prefixTurtle> .
 
 <http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/fileName>
     a config:ConfigurationMember ;
@@ -21,3 +22,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl> .
+
+<http://linkedpipes.com/resources/components/t-rdfToFile/1.0.0/configuration/desc/prefixTurtle>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-rdfToFile#prefixTurtle> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-rdfToFile#prefixTurtleControl> .

@@ -30,17 +30,13 @@
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-repository-api</artifactId>
         </dependency>
-        <!-- Test. -->
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>test-environment</artifactId>
-            <version>0.0.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

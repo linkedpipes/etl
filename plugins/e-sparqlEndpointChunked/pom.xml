@@ -38,6 +38,14 @@
             <version>2.3.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>test-environment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

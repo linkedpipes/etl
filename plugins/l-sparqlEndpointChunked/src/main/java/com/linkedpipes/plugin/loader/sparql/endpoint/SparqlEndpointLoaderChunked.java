@@ -139,7 +139,7 @@ public class SparqlEndpointLoaderChunked implements Component,
     private CloseableHttpClient getHttpClient() {
         final CredentialsProvider credsProvider =
                 new BasicCredentialsProvider();
-        if (configuration.isUseAuthentification()) {
+        if (configuration.isUseAuthentication()) {
             credsProvider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
                     new UsernamePasswordCredentials(

@@ -34,14 +34,12 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-        <!-- Csv. -->
         <dependency>
             <groupId>net.sf.supercsv</groupId>
             <artifactId>super-csv</artifactId>
             <version>2.3.1</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Testing. -->
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>test-environment</artifactId>

@@ -10,7 +10,7 @@ public class SparqlEndpointLoaderChunkedConfiguration {
     private String endpoint;
 
     @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_AUTH)
-    private boolean useAuthentification = true;
+    private boolean useAuthentication = true;
 
     @RdfToPojo.Property(
             iri = SparqlEndpointLoaderChunkedVocabulary.HAS_USERNAME)
@@ -43,12 +43,12 @@ public class SparqlEndpointLoaderChunkedConfiguration {
         this.endpoint = endpoint;
     }
 
-    public boolean isUseAuthentification() {
-        return useAuthentification;
+    public boolean isUseAuthentication() {
+        return useAuthentication;
     }
 
-    public void setUseAuthentification(boolean useAuthentification) {
-        this.useAuthentification = useAuthentification;
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
     }
 
     public String getUserName() {

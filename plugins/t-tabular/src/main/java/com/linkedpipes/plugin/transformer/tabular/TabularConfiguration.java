@@ -413,7 +413,7 @@ public class TabularConfiguration {
     @RdfToPojo.Property(iri = TabularVocabulary.HAS_BASE_URI)
     private String baseUri;
 
-    @RdfToPojo.Property(iri = TabularVocabulary.HAS_GENERETE_NULL_HEADER)
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_GENERATE_NULL_HEADER)
     private boolean generateNullHeaderName = false;
 
     @RdfToPojo.Property(iri = TabularVocabulary.HAS_ENCODE_TYPE)

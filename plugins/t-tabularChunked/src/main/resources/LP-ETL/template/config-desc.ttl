@@ -2,4 +2,71 @@
 
 <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://www.w3.org/ns/csvw#Table> .
+    config:type <http://www.w3.org/ns/csvw#Table> ;
+    config:member
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/tableSchema> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/dialect> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/normalOutput> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/fullMapping> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/rowLimit> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/useBaseUri> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/baseUri> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/generateNullHeaderNames> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/encodeType> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/skipLines> ,
+        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/chunkSize> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/tableSchema>
+    a config:ConfigurationMember ;
+    config:property <http://www.w3.org/ns/csvw#tableSchema> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#tableSchemaControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/dialect>
+    a config:ConfigurationMember ;
+    config:property <http://www.w3.org/ns/csvw#dialect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#dialectControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/normalOutput>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#normalOutput> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#normalOutputControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/fullMapping>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#fullMapping> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#fullMappingControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/rowLimit>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#rowLimit> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#rowLimitControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/useBaseUri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUriControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/baseUri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#baseUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#baseUriControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/generateNullHeaderNames>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#generateNullHeaderNames> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#generateNullHeaderNamesControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/encodeType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#encodeType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#encodeTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/skipLines>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#skipLines> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#skipLinesControl> .
+
+<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/chunkSize>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#chunkSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#chunkSizeControl> .

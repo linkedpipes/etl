@@ -35,6 +35,14 @@
             <artifactId>rdf4j-queryresultio-text</artifactId>
             <version>${rdf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>test-environment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

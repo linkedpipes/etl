@@ -27,14 +27,12 @@
             <artifactId>json</artifactId>
             <version>20151123</version>
         </dependency>
-        <!-- Dependencies provided by core. -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-osgi</artifactId>
             <version>4.4.1</version>
             <scope>provided</scope>
         </dependency>
-        <!-- OpenRDF. -->
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-model</artifactId>
@@ -47,7 +45,6 @@
             <version>${rdf4j.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Test. -->
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>test-environment</artifactId>

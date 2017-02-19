@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.test.TestEnvironment;
 import com.linkedpipes.etl.test.TestUtils;
 import org.eclipse.rdf4j.rio.RDFFormat;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +11,7 @@ public class DcatApToCkanTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(DcatApToCkanTest.class);
 
-    @Test
+//    @Test
     public void transformJsonLd() throws Exception {
         final DcatApToCkan dpu = new DcatApToCkan();
         dpu.configuration = new DcatApToCkanConfiguration();

@@ -31,7 +31,6 @@
             <artifactId>compiler</artifactId>
             <version>0.9.1</version>
         </dependency>
-        <!-- Test. -->
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>test-environment</artifactId>

@@ -11,13 +11,13 @@ public final class DcatApToCkanConfigVocabulary {
 
     public static final String API_KEY = PREFIX + "apiKey";
 
-    public static final String LOAD_TO_CKAN = PREFIX + "loadToCkan";
+    public static final String LOAD_TO_CKAN = PREFIX + "loadToCKAN";
 
     public static final String DATASET_ID = PREFIX + "datasetID";
 
     public static final String FILENAME = PREFIX + "filename";
 
-    public static final String ORG_ID = PREFIX + "organizationId";
+    public static final String ORG_ID = PREFIX + "orgID";
 
     public static final String LOAD_LANGUAGE = PREFIX + "loadLanguage";
 

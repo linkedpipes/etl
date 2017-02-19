@@ -33,14 +33,12 @@
             <version>1.10</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Apache POI. -->
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.poi</artifactId>
             <version>3.11_1</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Testing. -->
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>test-environment</artifactId>

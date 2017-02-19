@@ -9,7 +9,7 @@ public class SparqlEndpointLoaderConfiguration {
     private String endpoint;
 
     @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_AUTH)
-    private boolean useAuthentification = true;
+    private boolean useAuthentication = true;
 
     @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_USERNAME)
     private String userName;
@@ -37,12 +37,12 @@ public class SparqlEndpointLoaderConfiguration {
         this.endpoint = endpoint;
     }
 
-    public boolean isUseAuthentification() {
-        return useAuthentification;
+    public boolean isUseAuthentication() {
+        return useAuthentication;
     }
 
-    public void setUseAuthentification(boolean useAuthentification) {
-        this.useAuthentification = useAuthentification;
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
     }
 
     public String getUserName() {
