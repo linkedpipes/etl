@@ -62,7 +62,7 @@ public class FileHasher implements Component, SequentialExecution {
                 // Checksum object.
                 connection.add(vf.createStatement(checkSumNode,
                         RDF.TYPE,
-                        vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM)
+                        vf.createIRI(FileHasherVocabulary.CHECKSUM)
                 ), outputRdf.getWriteGraph());
                 connection.add(vf.createStatement(checkSumNode,
                         vf.createIRI(FileHasherVocabulary.HAS_ALGORITHM),
