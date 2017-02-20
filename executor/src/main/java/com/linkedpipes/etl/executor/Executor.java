@@ -20,10 +20,11 @@ public class Executor {
                 = (LoggerContext) LoggerFactory.getILoggerFactory();
         final ch.qos.logback.classic.Logger logbackLogger
                 = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+        final String logLevel = configuration.getLogCoreFilter();
         //
         Appender appender = LoggerFacade.createRollingFileAppender(
                 new File(logDirectory, "executor"), "executor",
-                loggerContext, "DEBUG");
+                loggerContext, logLevel);
         logbackLogger.addAppender(appender);
     }
 
