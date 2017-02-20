@@ -46,7 +46,8 @@ public class TestConfigurationDescription {
         try {
             loadDescriptions();
         } catch (Exception ex) {
-            throw new InvalidDescription("Can't load description.", ex);
+            throw new InvalidDescription(
+                    "Can't load configuration description.", ex);
         }
         validateClass(configurationClass);
         validateDescriptorsReference();
@@ -178,7 +179,7 @@ public class TestConfigurationDescription {
             }
         }
         throw new InvalidDescription(
-                "Invalid descriptor reference (from definition): {}",
+                "Missing referenced descriptor (from definition): {}",
                 reference);
     }
 
@@ -223,7 +224,7 @@ public class TestConfigurationDescription {
                 null);
         if (references.size() != 1) {
             throw new InvalidDescription(
-                    "Invalid description references: {}",
+                    "Invalid description references from component: {}",
                     references.size());
         }
         return references.objects().iterator().next().stringValue();
