@@ -359,11 +359,15 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
         }
 
         public void afterLoad() throws ExecutorException {
-            if (order == null) {
-                throw new ExecutorException("Missing execution order: {}", iri);
-            }
             if (executionType == null) {
                 throw new ExecutorException("Missing execution type: {}", iri);
+            } else if (executionType == ExecutionType.SKIP) {
+                // As the component is not executed we do not need
+                // to validate the definition any more.
+                return;
+            }
+            if (order == null) {
+                throw new ExecutorException("Missing execution order: {}", iri);
             }
             if (configurationDescription == null) {
                 throw new ExecutorException(
