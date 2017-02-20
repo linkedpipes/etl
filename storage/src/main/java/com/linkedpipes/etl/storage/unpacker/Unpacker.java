@@ -38,6 +38,8 @@ class Unpacker {
 
     private static Resource CONNECTION;
 
+    private static IRI HAS_CONNECTION;
+
     private static Resource RUN_AFTER;
 
     private static IRI HAS_CONFIG_GRAPH;
@@ -79,6 +81,7 @@ class Unpacker {
         HAS_PORT = vf.createIRI("http://linkedpipes.com/ontology/port");
 
         CONNECTION = vf.createIRI("http://linkedpipes.com/ontology/Connection");
+        HAS_CONNECTION = vf.createIRI("http://linkedpipes.com/ontology/connection");
         RUN_AFTER = vf.createIRI("http://linkedpipes.com/ontology/RunAfter");
 
         HAS_BINDING = vf.createIRI("http://linkedpipes.com/ontology/binding");
@@ -625,6 +628,19 @@ class Unpacker {
         });
     }
 
+    private void referenceConnectionsFromPipeline() {
+        final Collection<Statement> toAdd = new LinkedList<>();
+        pipelineObject.getTyped(CONNECTION, RUN_AFTER).forEach((connection) -> {
+            toAdd.add(vf.createStatement(
+                    pipelineIri,
+                    HAS_CONNECTION,
+                    connection.getResource(),
+                    pipelineIri
+            ));
+        });
+        pipelineObject.addAll(toAdd);
+    }
+
     private Collection<Statement> collect() {
         // TODO Remove usage of repository for pretty print.
         final Collection<Statement> result
@@ -700,6 +716,8 @@ class Unpacker {
         unpacker.addRepositoryInfo();
 
         unpacker.addComponentTypeToJarType();
+
+        unpacker.referenceConnectionsFromPipeline();
 
         // Return collected pipeline.
         return unpacker.collect();
