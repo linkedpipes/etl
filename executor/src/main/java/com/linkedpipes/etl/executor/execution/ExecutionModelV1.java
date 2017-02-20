@@ -8,6 +8,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -24,6 +25,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -53,6 +56,12 @@ class ExecutionModelV1 {
             return iri;
         }
     }
+
+    private final static DateFormat DATE_FORMAT
+            = new SimpleDateFormat("YYYY-MM-dd");
+
+    private final static DateFormat TIME_FORMAT
+            = new SimpleDateFormat("HH:mm:ss.SSS");
 
     public static final String LP_PREFIX = "http://linkedpipes.com/ontology/";
 
@@ -435,10 +444,13 @@ class ExecutionModelV1 {
                 iri, executionIri));
         eventStatements.add(vf.createStatement(iri,
                 RDF.TYPE, vf.createIRI(LP_PREFIX + "Event"), executionIri));
+
         eventStatements.add(vf.createStatement(iri,
                 vf.createIRI(LP_PREFIX + "events/created"),
-                vf.createLiteral(new Date()), executionIri));
-        eventStatements.add(vf.createStatement(executionIri,
+                vf.createLiteral(getNowDateAsString(),
+                        vf.createIRI(XSD.DATETIME)), executionIri));
+
+        eventStatements.add(vf.createStatement(iri,
                 vf.createIRI(LP_PREFIX + "order"),
                 vf.createLiteral(order), executionIri));
         if (label != null) {
@@ -447,6 +459,15 @@ class ExecutionModelV1 {
                     executionIri));
         }
         return eventStatements;
+    }
+
+    private static String getNowDateAsString() {
+        final Date now = new Date();
+        final StringBuilder createdAsString = new StringBuilder(25);
+        createdAsString.append(DATE_FORMAT.format(now));
+        createdAsString.append("T");
+        createdAsString.append(TIME_FORMAT.format(now));
+        return createdAsString.toString();
     }
 
     private List<Statement> buildChangingValues() {
