@@ -68,9 +68,9 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
     	}
 
     	// Optional
-    	for (DcatAp11DatasetConfig.Language l : configuration.getLanguages()) {
-            addIRI(dataset, DCTERMS.LANGUAGE, valueFactory.createIRI(l.getIri()));
-            addIRI(valueFactory.createIRI(l.getIri()), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
+    	for (String l : configuration.getLanguages()) {
+            addIRI(dataset, DCTERMS.LANGUAGE, valueFactory.createIRI(l));
+            addIRI(valueFactory.createIRI(l), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
         }
 
     	String periodicityIRI = configuration.getAccrualPeriodicityIRI();
