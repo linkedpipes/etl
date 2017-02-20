@@ -66,8 +66,7 @@ class DataUnitContainer {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
                     metadata.getDataUnitIri(), this.status);
         }
-        LOG.debug("bindToPipeline from sources: {}", metadata.getDataUnitIri());
-        //
+        LOG.debug("load from sources: {}", metadata.getDataUnitIri());
         try {
             instance.initialize(instances);
         } catch (LpException ex) {
@@ -89,9 +88,7 @@ class DataUnitContainer {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
                     metadata.getDataUnitIri(), this.status);
         }
-        LOG.debug("bindToPipeline from file: {} {}",
-                metadata.getDataUnitIri(), directory);
-        //
+        LOG.debug("load from file: {}", metadata.getDataUnitIri());
         try {
             instance.initialize(directory);
         } catch (LpException ex) {
@@ -157,6 +154,7 @@ class DataUnitContainer {
             return;
         }
         try {
+            LOG.debug("map by reference: {}", metadata.getDataUnitIri());
             instance.referenceContent(source, saveDirectory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't reference content.", ex);
