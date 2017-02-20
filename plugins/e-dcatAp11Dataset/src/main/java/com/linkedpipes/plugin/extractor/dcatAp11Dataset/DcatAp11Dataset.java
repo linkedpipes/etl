@@ -1,9 +1,17 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.plugin.extractor.dcatAp11Dataset.DcatAp11DatasetConfig.LocalizedString;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.Component.Sequential;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.util.Repositories;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,18 +19,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.*;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.util.Repositories;
+public class DcatAp11Dataset implements Component, SequentialExecution {
 
-public class DcatAp11Dataset implements Sequential {
-
-    @Component.OutputPort(id = "Metadata")
+    @Component.OutputPort(iri = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -170,7 +169,7 @@ public class DcatAp11Dataset implements Sequential {
 
     	// Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
-            connection.add(statements, outputRdf.getGraph());
+            connection.add(statements, outputRdf.getWriteGraph());
         });
 
     }

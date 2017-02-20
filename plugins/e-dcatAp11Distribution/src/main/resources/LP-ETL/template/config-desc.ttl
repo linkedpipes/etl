@@ -1,5 +1,5 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
-@prefix dm: <http://linkedpipes.com/resources/components/e-dcatAp11Distribution/0.0.0/configuration/desc> .
+@prefix dm: <http://etl.linkedpipes.com/resource/components/e-dcatAp11Distribution/> .
 
 <http://linkedpipes.com/resources/components/e-dcatAp11Distribution/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;

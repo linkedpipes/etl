@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-/**
- *
- * @author Škoda Petr
- */
 public class ParserDbfConfig {
 
     final String encoding;

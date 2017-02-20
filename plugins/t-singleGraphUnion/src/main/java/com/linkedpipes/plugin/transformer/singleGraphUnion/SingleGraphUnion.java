@@ -1,38 +1,36 @@
 package com.linkedpipes.plugin.transformer.singleGraphUnion;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.Update;
-import org.openrdf.query.impl.SimpleDataset;
-import org.openrdf.repository.RepositoryConnection;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
-/**
- *
- */
-public class SingleGraphUnion implements Component.Sequential {
+public class SingleGraphUnion implements Component, SequentialExecution {
 
     private final static String QUERY_COPY
             = "INSERT {?s ?p ?o} WHERE {?s ?p ?o}";
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Override
     public void execute() throws LpException {
         // TODO: We should use faster merge here!
         try (RepositoryConnection connection
-                = inputRdf.getRepository().getConnection()) {
+                     = inputRdf.getRepository().getConnection()) {
             final Update update = connection.prepareUpdate(
                     QueryLanguage.SPARQL, QUERY_COPY);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(inputRdf.getGraph());
-            dataset.setDefaultInsertGraph(outputRdf.getGraph());
+            dataset.addDefaultGraph(inputRdf.getReadGraph());
+            dataset.setDefaultInsertGraph(outputRdf.getWriteGraph());
             update.setDataset(dataset);
             update.execute();
         }

@@ -1,17 +1,14 @@
 package com.linkedpipes.plugin.transformer.mustache;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = MustacheVocabulary.CONFIG)
+@RdfToPojo.Type(iri = MustacheVocabulary.CONFIG)
 public class MustacheConfiguration {
 
-    @RdfToPojo.Property(uri = MustacheVocabulary.HAS_CLASS)
+    @RdfToPojo.Property(iri = MustacheVocabulary.HAS_CLASS)
     private String resourceClass;
 
-    @RdfToPojo.Property(uri = MustacheVocabulary.HAS_TEMPLATE)
+    @RdfToPojo.Property(iri = MustacheVocabulary.HAS_TEMPLATE)
     private String template;
 
     public MustacheConfiguration() {

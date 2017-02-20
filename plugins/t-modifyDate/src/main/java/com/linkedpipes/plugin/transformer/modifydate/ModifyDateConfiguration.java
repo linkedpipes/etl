@@ -1,20 +1,17 @@
 package com.linkedpipes.plugin.transformer.modifydate;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = ModifyDateVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = ModifyDateVocabulary.CONFIG_CLASS)
 public class ModifyDateConfiguration {
 
-    @RdfToPojo.Property(uri = ModifyDateVocabulary.HAS_INPUT)
+    @RdfToPojo.Property(iri = ModifyDateVocabulary.HAS_INPUT)
     private String inputPredicate = "http://localhost/temp/ontology/date";
 
-    @RdfToPojo.Property(uri = ModifyDateVocabulary.HAS_VALUE)
+    @RdfToPojo.Property(iri = ModifyDateVocabulary.HAS_VALUE)
     private int modifyDay = 1;
 
-    @RdfToPojo.Property(uri = ModifyDateVocabulary.HAS_OUTPUT)
+    @RdfToPojo.Property(iri = ModifyDateVocabulary.HAS_OUTPUT)
     private String outputPredicate = "http://localhost/temp/ontology/date";
 
     public ModifyDateConfiguration() {

@@ -1,9 +1,10 @@
 package com.linkedpipes.etl.executor.web.servlet;
 
+import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineExecutor;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 @RestController
-@RequestMapping(value = "/executions")
+@RequestMapping(value = "/v1/executions")
 class ExecutionServlet {
 
     /**
@@ -36,8 +37,6 @@ class ExecutionServlet {
 
     }
 
-    ;
-
     @Autowired
     private ModuleFacade modules;
 
@@ -51,7 +50,7 @@ class ExecutionServlet {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void accept(@RequestBody AcceptRequest task,
+    public void execute(@RequestBody AcceptRequest task,
             HttpServletResponse response) {
         if (execute(new File(task.directory), task.iri)) {
             response.setStatus(HttpServletResponse.SC_CREATED);
@@ -61,9 +60,22 @@ class ExecutionServlet {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/cancel", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void cancel() {
+        synchronized (lock) {
+            if (executor == null) {
+                return;
+            }
+            executor.cancelExecution();
+        }
+    }
+
+    @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
     public void status(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+            HttpServletResponse response)
+            throws IOException, ExecutorException {
         if (executor == null) {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
@@ -86,11 +98,10 @@ class ExecutionServlet {
                 // Already executing.
                 return false;
             }
-            final PipelineExecutor newExecutor
-                    = new PipelineExecutor(executionDirectory, modules, iri);
+            final PipelineExecutor newExecutor = new PipelineExecutor(
+                    executionDirectory, iri, modules);
             executor = newExecutor;
             taskExecutor.execute(() -> {
-                executor.initialize();
                 executor.execute();
                 // Detach execution object once execution is finished.
                 executor = null;
@@ -105,10 +116,14 @@ class ExecutionServlet {
      * @param stream
      * @param format
      */
-    public void writeStatus(OutputStream stream, RDFFormat format) {
+    public void writeStatus(OutputStream stream, RDFFormat format)
+            throws ExecutorException {
         final PipelineExecutor executorSnapshot = executor;
-        if (executorSnapshot != null) {
-            executorSnapshot.writeStatus(stream, format);
+        if (executorSnapshot != null &&
+                executorSnapshot.getExecution() != null) {
+            executorSnapshot.getExecution()
+                    .writeV1Execution(stream, format);
+        } else {
         }
     }
 

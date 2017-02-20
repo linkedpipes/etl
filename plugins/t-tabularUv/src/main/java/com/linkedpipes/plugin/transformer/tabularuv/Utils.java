@@ -3,10 +3,6 @@ package com.linkedpipes.plugin.transformer.tabularuv;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-/**
- *
- * @author Škoda Petr
- */
 public class Utils {
 
     private Utils() {

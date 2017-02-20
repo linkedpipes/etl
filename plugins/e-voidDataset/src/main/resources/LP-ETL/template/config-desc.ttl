@@ -1,7 +1,7 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
-@prefix dm: <http://linkedpipes.com/resources/components/e-voidDataset/0.0.0/configuration/desc> .
+@prefix dm: <http://etl.linkedpipes.com/ontology/components/e-voidDataset/> .
 
-<http://linkedpipes.com/resources/components/e-voidDataset/0.0.0/configuration/desc>
+<http://etl.linkedpipes.com/resources/components/e-voidDataset/0.0.0/configurationDescription>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://etl.linkedpipes.com/ontology/components/e-voidDataset/Configuration> ;
     config:member dm:getDistributionIRIFromInput,

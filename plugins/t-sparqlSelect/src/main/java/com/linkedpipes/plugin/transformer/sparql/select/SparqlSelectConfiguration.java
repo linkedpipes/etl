@@ -1,18 +1,14 @@
 package com.linkedpipes.plugin.transformer.sparql.select;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = SparqlSelectVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlSelectVocabulary.CONFIG)
 public class SparqlSelectConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlSelectVocabulary.HAS_QUERY)
+    @RdfToPojo.Property(iri = SparqlSelectVocabulary.HAS_QUERY)
     private String query = "INSERT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
-    @RdfToPojo.Property(uri = SparqlSelectVocabulary.HAS_FILE_NAME)
+    @RdfToPojo.Property(iri = SparqlSelectVocabulary.HAS_FILE_NAME)
     private String fileName;
 
     public SparqlSelectConfiguration() {

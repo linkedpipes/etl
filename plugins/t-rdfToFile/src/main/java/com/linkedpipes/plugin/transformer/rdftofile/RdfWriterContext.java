@@ -1,15 +1,13 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import java.util.Collection;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.*;
 
-import org.openrdf.model.Statement;
-import org.openrdf.rio.*;
+import java.util.Collection;
 
 /**
  * Support cancel and progress report.
- *
- * @author Škoda Petr
  */
 public class RdfWriterContext implements RDFWriter {
 

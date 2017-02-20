@@ -5,7 +5,8 @@
     config:type <http://plugins.linkedpipes.com/ontology/e-ftpFiles#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/e-ftpFiles/0.0.0/configuration/desc/passiveMode> ,
         <http://linkedpipes.com/resources/components/e-ftpFiles/0.0.0/configuration/desc/binaryMode> ,
-        <http://linkedpipes.com/resources/components/e-ftpFiles/0.0.0/configuration/desc/keepAliveControl> .
+        <http://linkedpipes.com/resources/components/e-ftpFiles/0.0.0/configuration/desc/keepAliveControl> ,
+        <http://linkedpipes.com/resources/components/e-ftpFiles/0.0.0/configuration/desc/reference> .
 
 <http://linkedpipes.com/resources/components/e-ftpFiles/0.0.0/configuration/desc/passiveMode>
     a config:ConfigurationMember ;
@@ -21,3 +22,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-ftpFiles#keepAliveControl> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-ftpFiles#keepAliveControlControl> .
+
+<http://linkedpipes.com/resources/components/e-ftpFiles/0.0.0/configuration/desc/reference>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-ftpFiles#reference> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-ftpFiles#referenceControl> .

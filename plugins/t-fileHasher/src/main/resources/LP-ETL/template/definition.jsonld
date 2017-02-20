@@ -15,7 +15,10 @@
         "http://linkedpipes.com/ontology/keyword": [
             "hash", "sha1", "check"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-filehasher"}
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-filehasher"},
+        "http://linkedpipes.com/ontology/configurationDescription": [
+            {"@id": "http://linkedpipes.com/resources/components/t-fileHasher/0.0.0/configuration/desc"}
+        ]
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-fileHasher/0.0.0/input",

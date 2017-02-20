@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.storage.template;
 
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Statement;
 
 import java.io.File;
 import java.util.Collection;

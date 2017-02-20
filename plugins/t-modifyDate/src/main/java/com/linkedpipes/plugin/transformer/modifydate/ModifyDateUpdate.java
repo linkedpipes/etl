@@ -1,15 +1,16 @@
 package com.linkedpipes.plugin.transformer.modifydate;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.repository.RepositoryResult;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,18 +20,14 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class ModifyDateUpdate implements Component.Sequential {
+public final class ModifyDateUpdate implements Component, SequentialExecution {
 
     private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -49,17 +46,17 @@ public final class ModifyDateUpdate implements Component.Sequential {
         //
         final List<Statement> result = new LinkedList<>();
         inputRdf.execute((connection) -> {
-            RepositoryResult<Statement> statements =  connection.getStatements(
+            RepositoryResult<Statement> statements = connection.getStatements(
                     null,
                     valueFactory.createIRI(configuration.getInputPredicate()),
-                    null, inputRdf.getGraph());
+                    null, inputRdf.getReadGraph());
             //
             result.clear();
             while (statements.hasNext()) {
                 final Statement st = statements.next();
                 final String date;
                 try {
-                    date =modifyDate(st.getObject().stringValue(),
+                    date = modifyDate(st.getObject().stringValue(),
                             configuration.getModifyDay());
                 } catch (ParseException ex) {
                     throw exceptionFactory.failure("Invalid date: {} for {}:",
@@ -71,7 +68,7 @@ public final class ModifyDateUpdate implements Component.Sequential {
                 result.add(valueFactory.createStatement(st.getSubject(),
                         outputPredicate,
                         valueFactory.createLiteral(date, xsdDate),
-                        outputRdf.getGraph()));
+                        outputRdf.getWriteGraph()));
             }
         });
     }
@@ -82,10 +79,9 @@ public final class ModifyDateUpdate implements Component.Sequential {
      * @param date
      * @param dateShift
      * @return
-     * @throws ParseException
      */
     private static String modifyDate(String date, int dateShift)
-            throws ParseException{
+            throws ParseException {
         final Calendar calendar = new GregorianCalendar();
         calendar.setTime(FORMAT.parse(date));
         calendar.add(Calendar.DATE, dateShift);

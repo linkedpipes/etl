@@ -3,7 +3,7 @@
 <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-mustache#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/class> ;
+    config:member <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/class> ,
         <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/template> .
 
 <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/class>

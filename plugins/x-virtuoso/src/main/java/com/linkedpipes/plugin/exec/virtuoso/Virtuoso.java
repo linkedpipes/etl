@@ -1,46 +1,36 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.AfterExecution;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.Update;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import virtuoso.sesame2.driver.VirtuosoRepository;
+import virtuoso.rdf4j.driver.VirtuosoRepository;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-public final class Virtuoso implements Component.Sequential {
+public final class Virtuoso implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Virtuoso.class);
 
     private static final String SQL_LD_DIR = "ld_dir (?, ?, ?)";
 
-    private static final String SQL_QUERY_WAITING
-            =
+    private static final String SQL_QUERY_WAITING =
             "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state <> 2";
 
-    private static final String SQL_DELETE_LOAD_LIST
-            = "delete from DB.DBA.load_list where ll_file like ?";
+    private static final String SQL_DELETE_LOAD_LIST =
+            "delete from DB.DBA.load_list where ll_file like ?";
 
-    private static final String SQL_QUERY_FINISHED
-            =
+    private static final String SQL_QUERY_FINISHED =
             "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state = 2";
 
     @Component.Configuration
     public VirtuosoConfiguration configuration;
-
-    @Component.Inject
-    public AfterExecution cleanUp;
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
@@ -57,13 +47,19 @@ public final class Virtuoso implements Component.Sequential {
             throw exceptionFactory
                     .failure("Can't connect to Virtuoso repository.", ex);
         }
-        cleanUp.addAction(() -> {
+        try {
+            loadToRepository(virtuosoRepository);
+        } finally {
             try {
                 virtuosoRepository.shutDown();
             } catch (RepositoryException ex) {
                 LOG.warn("Can't close repository.", ex);
             }
-        });
+        }
+    }
+
+    public void loadToRepository(VirtuosoRepository virtuosoRepository)
+            throws LpException {
         // Delete data if set.
         if (configuration.isClearDestinationGraph()) {
             RepositoryConnection repositoryConnection =
@@ -120,27 +116,10 @@ public final class Virtuoso implements Component.Sequential {
             LOG.info("Nothing to do. Stopping.");
             return;
         }
-        // Start loading.
-        int loaders = configuration.getLoaderCount() > 1 ?
-                configuration.getLoaderCount() : 1;
-        final ExecutorService executor = Executors.newFixedThreadPool(loaders);
-        final List<LoadWorker> workers = new ArrayList<>(loaders);
-        for (int i = 0; i < loaders; ++i) {
-            final LoadWorker worker =
-                    new LoadWorker(configuration, exceptionFactory);
-            executor.submit(worker);
-            workers.add(worker);
-        }
+        // Start loading, we use only a single thread call here.
+        startLoading();
+        // Check for status - periodic and final.
         while (true) {
-            // Check workers.
-            try {
-                if (executor.awaitTermination(100, TimeUnit.MILLISECONDS)) {
-                    break;
-                }
-            } catch (InterruptedException ex) {
-                // Ignore.
-            }
-            // Check for status.
             final Connection connectionForStatusCheck = getSqlConnection();
             try (PreparedStatement statement = connectionForStatusCheck
                     .prepareStatement(SQL_QUERY_FINISHED)) {
@@ -171,20 +150,6 @@ public final class Virtuoso implements Component.Sequential {
                 // Do nothing here.
             }
         }
-        // Wait for shutdown.
-        LOG.warn("Awaiting termination ...");
-        executor.shutdown();
-        while (true) {
-            try {
-                if (executor.awaitTermination(100, TimeUnit.MILLISECONDS)) {
-                    break;
-                }
-            } catch (InterruptedException ex) {
-                // Ignore.
-            }
-        }
-        LOG.warn("Awaiting termination ... done");
-        //
         if (configuration.isClearLoadList()) {
             final Connection connectionForDelete = getSqlConnection();
             // Delete from loading table - made optional.
@@ -202,13 +167,6 @@ public final class Virtuoso implements Component.Sequential {
                 }
             }
         }
-        // Check results.
-        for (LoadWorker worker : workers) {
-            if (worker.isFailed()) {
-                throw exceptionFactory.failure(
-                        "Can't load data. See logs for more exception.");
-            }
-        }
     }
 
     private String getClearQuery(String graph) {
@@ -222,6 +180,29 @@ public final class Virtuoso implements Component.Sequential {
                     configuration.getPassword());
         } catch (SQLException ex) {
             throw exceptionFactory.failure("Can't create sql connection.", ex);
+        }
+    }
+
+    private void startLoading() throws LpException {
+        // Start loading.
+        Connection loaderConnection = null;
+        try {
+            loaderConnection = getSqlConnection();
+            try (Statement statementRun = loaderConnection.createStatement()) {
+                final ResultSet resultSetRun =
+                        statementRun.executeQuery("rdf_loader_run()");
+                resultSetRun.close();
+            }
+        } catch (SQLException ex) {
+            throw exceptionFactory.failure("Can't start loading.", ex);
+        } finally {
+            try {
+                if (loaderConnection != null) {
+                    loaderConnection.close();
+                }
+            } catch (SQLException ex) {
+                LOG.warn("Can't close SQL connection.", ex);
+            }
         }
     }
 

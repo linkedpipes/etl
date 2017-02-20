@@ -1,23 +1,24 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.query.GraphQuery;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.impl.SimpleDataset;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sparql.SPARQLRepository;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.helpers.AbstractRDFHandler;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.OpenRDFException;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,23 +32,23 @@ import java.util.Map;
  * to the given SPARQL as the ${VALUES} placeholder.
  *
  * Example query:
- *  CONSTRUCT { ?obec ?p ?o } WHERE { ?obec ?p ?o ${VALUES} }
+ * CONSTRUCT { ?obec ?p ?o } WHERE { ?obec ?p ?o ${VALUES} }
  * where the input CSV file contains column "obec".
- *
  */
-public final class SparqlEndpointChunked implements Component.Sequential {
+public final class SparqlEndpointChunked implements Component,
+        SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(SparqlEndpointChunked.class);
 
-    @Component.InputPort(id = "FilesInput")
+    @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit inputFiles;
 
-    @Component.InputPort(id = "OutputRdf")
-    public WritableChunkedStatements outputRdf;
+    @Component.InputPort(iri = "OutputRdf")
+    public WritableChunkedTriples outputRdf;
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
     @Component.Inject

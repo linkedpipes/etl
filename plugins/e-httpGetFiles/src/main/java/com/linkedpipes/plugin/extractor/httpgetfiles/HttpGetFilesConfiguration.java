@@ -1,20 +1,20 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@RdfToPojo.Type(uri = HttpGetFilesVocabulary.CONFIG)
+@RdfToPojo.Type(iri = HttpGetFilesVocabulary.CONFIG)
 public class HttpGetFilesConfiguration {
 
-    @RdfToPojo.Type(uri = HttpGetFilesVocabulary.HEADER)
+    @RdfToPojo.Type(iri = HttpGetFilesVocabulary.HEADER)
     public static class Header {
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_KEY)
+        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_KEY)
         private String key;
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_VALUE)
+        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_VALUE)
         private String value;
 
         public Header() {
@@ -37,16 +37,16 @@ public class HttpGetFilesConfiguration {
         }
     }
 
-    @RdfToPojo.Type(uri = HttpGetFilesVocabulary.REFERENCE)
+    @RdfToPojo.Type(iri = HttpGetFilesVocabulary.REFERENCE)
     public static class Reference {
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_URI)
+        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_URI)
         private String uri;
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_NAME)
+        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_NAME)
         private String fileName;
 
-        @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_HEADER)
+        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
         private List<Header> headers = new LinkedList<>();
 
         public Reference() {
@@ -77,7 +77,7 @@ public class HttpGetFilesConfiguration {
         }
     }
 
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_REFERENCE)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_REFERENCE)
     private List<Reference> references = new LinkedList<>();
 
     /**
@@ -88,22 +88,22 @@ public class HttpGetFilesConfiguration {
      *
      * If true DPU follow redirect to any location and protocol.
      */
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_FOLLOW_REDIRECT)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_FOLLOW_REDIRECT)
     private boolean forceFollowRedirect = true;
 
     /**
      * If true skip file in case of an error.
      */
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.SKIP_ON_ERROR)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.SKIP_ON_ERROR)
     private boolean skipOnError = false;
 
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_HEADER)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
     private List<Header> headers = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_THREADS)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_THREADS)
     private int threads = 1;
 
-    @RdfToPojo.Property(uri = HttpGetFilesVocabulary.HAS_DETAIL_LOG)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_DETAIL_LOG)
     private boolean detailLogging = false;
 
     public HttpGetFilesConfiguration() {

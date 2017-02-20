@@ -45,6 +45,7 @@ define([
         switch (status) {
             case 'http://etl.linkedpipes.com/resources/status/finished':
             case 'http://etl.linkedpipes.com/resources/status/failed':
+            case 'http://etl.linkedpipes.com/resources/status/cancelled':
                 model.execution.status.running = false;
                 break;
             default:

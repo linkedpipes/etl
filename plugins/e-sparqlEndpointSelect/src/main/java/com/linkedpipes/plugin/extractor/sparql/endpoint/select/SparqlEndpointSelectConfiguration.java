@@ -1,28 +1,29 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfToPojo.Type(uri = SparqlEndpointSelectVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlEndpointSelectVocabulary.CONFIG)
 public class SparqlEndpointSelectConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlEndpointSelectVocabulary.HAS_QUERY)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectVocabulary.HAS_QUERY)
     private String query = "SELECT ?type WHERE { ?s a ?type }";
 
-    @RdfToPojo.Property(uri = SparqlEndpointSelectVocabulary.HAS_ENDPOINT)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
     /**
      * Default graphs can be specified only via the runtime configuration.
      */
-    @RdfToPojo.Property(uri = SparqlEndpointSelectVocabulary.HAS_DEFAULT_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
     /**
      * Used as a Accept value in header.
      */
-    @RdfToPojo.Property(uri = SparqlEndpointSelectVocabulary.HAS_FILE_NAME)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectVocabulary.HAS_FILE_NAME)
     private String fileName = null;
 
     public SparqlEndpointSelectConfiguration() {

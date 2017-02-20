@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.transformer.xslt;
 
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import net.sf.saxon.s9api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

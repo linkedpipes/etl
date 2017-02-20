@@ -3,7 +3,7 @@
 <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-unpack#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/usePrefix> ;
+    config:member <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/usePrefix> ,
         <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/format> .
 
 <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/usePrefix>

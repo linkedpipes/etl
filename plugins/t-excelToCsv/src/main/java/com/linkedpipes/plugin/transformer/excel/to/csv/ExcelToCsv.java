@@ -1,24 +1,22 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
-/**
- *
- */
-public class ExcelToCsv implements Component.Sequential {
+public class ExcelToCsv implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExcelToCsv.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.InputPort(id = "OutputFiles")
+    @Component.InputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Inject

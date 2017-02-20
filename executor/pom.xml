@@ -23,6 +23,50 @@
             <version>${lp.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>rdf-utils</artifactId>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>rdf-utils-rdf4j</artifactId>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>vocabulary</artifactId>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- RDF4J -->
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model</artifactId>
+            <version>${rdf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sail</artifactId>
+            <version>${rdf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-nativerdf</artifactId>
+            <version>${rdf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-memory</artifactId>
+            <version>${rdf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-jsonld</artifactId>
+            <version>${rdf4j.version}</version>
+        </dependency>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -66,49 +110,6 @@
             <version>1.7.18</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Sesame as our choice for core RDF -->
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-model</artifactId>
-            <version>${sesame.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-api</artifactId>
-            <version>${sesame.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-sail</artifactId>
-            <version>${sesame.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-sparql</artifactId>
-            <version>${sesame.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-sail-nativerdf</artifactId>
-            <version>${sesame.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-sail-memory</artifactId>
-            <version>${sesame.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-jsonld</artifactId>
-            <version>${sesame.version}</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- Jetty. -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -134,6 +135,15 @@
         <dependency> <!-- Support for application/xml. -->
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        <!-- Test. -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
         </dependency>
     </dependencies>
 
@@ -169,7 +179,7 @@
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib
                             </outputDirectory>
-                            <!-- The two lines below tell Maven not to include test scoped dependencies. -->
+                            <!-- Do not include test scoped dependencies. -->
                             <includeScope>runtime</includeScope>
                             <excludeScope>provided</excludeScope>
                         </configuration>
@@ -180,6 +190,7 @@
     </build>
     <profiles>
         <profile>
+            <id>deploy</id>
             <activation>
                 <property>
                     <name>!noDeploy</name>
@@ -202,24 +213,20 @@
                                     <target>
                                         <mkdir dir="${deploy.directory}"/>
                                         <copy todir="${deploy.directory}/..">
-                                            <fileset
-                                                    dir="{project.build.directory}/../deploy">
+                                            <fileset dir="{project.build.directory}/../deploy">
                                                 <include name="*.*"/>
                                             </fileset>
                                         </copy>
                                         <copy todir="${deploy.directory}">
-                                            <fileset
-                                                    dir="${project.build.directory}">
+                                            <fileset dir="${project.build.directory}">
                                                 <include name="executor.jar"/>
                                             </fileset>
                                         </copy>
                                         <mkdir dir="${deploy.directory}/lib"/>
                                         <copy todir="${deploy.directory}/lib">
-                                            <fileset
-                                                    dir="${project.build.directory}/lib"/>
+                                            <fileset dir="${project.build.directory}/lib"/>
                                         </copy>
-                                        <chmod perm="u+x"
-                                               file="${deploy.directory}/../executor.sh"/>
+                                        <chmod perm="u+x" file="${deploy.directory}/../executor.sh"/>
                                     </target>
                                 </configuration>
                             </execution>

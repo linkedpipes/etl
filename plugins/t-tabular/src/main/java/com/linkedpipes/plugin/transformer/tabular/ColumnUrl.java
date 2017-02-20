@@ -1,15 +1,15 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
 
 /**
  * Represents a column with IRI value.
- *
  */
 class ColumnUrl extends ColumnAbstract {
 

@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.transformer.textHolder;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class TextHolderVocabulary {
 
     private static final String PREFIX

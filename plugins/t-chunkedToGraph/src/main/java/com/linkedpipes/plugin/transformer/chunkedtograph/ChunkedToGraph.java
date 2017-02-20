@@ -1,26 +1,22 @@
 package com.linkedpipes.plugin.transformer.chunkedtograph;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.ChunkedStatements;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.IRI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.IRI;
 
 /**
  * Convert chunked statements into a single graph repository.
  */
-public final class ChunkedToGraph implements Component.Sequential {
+public final class ChunkedToGraph implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ChunkedToGraph.class);
+    @Component.InputPort(iri = "InputRdf")
+    public ChunkedTriples inputRdf;
 
-    @Component.InputPort(id = "InputRdf")
-    public ChunkedStatements inputRdf;
-
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Inject
@@ -28,11 +24,11 @@ public final class ChunkedToGraph implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        final IRI outputGraph = outputRdf.getGraph();
+        final IRI outputGraph = outputRdf.getWriteGraph();
         progressReport.start(inputRdf.size());
-        for (ChunkedStatements.Chunk chunk : inputRdf) {
+        for (ChunkedTriples.Chunk chunk : inputRdf) {
             outputRdf.execute((connection) -> {
-                connection.add(chunk.toStatements(), outputGraph);
+                connection.add(chunk.toCollection(), outputGraph);
             });
             progressReport.entryProcessed();
         }

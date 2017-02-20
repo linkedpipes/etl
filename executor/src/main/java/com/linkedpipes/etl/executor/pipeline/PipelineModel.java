@@ -1,18 +1,20 @@
 package com.linkedpipes.etl.executor.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.RdfException;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
-import com.linkedpipes.etl.executor.rdf.PojoLoader;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Value;
+import com.linkedpipes.etl.executor.ExecutorException;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
 import java.util.*;
 
 /**
- * Store pipeline definition as loaded from RDF.
+ * Represent key aspects of the pipeline in form of POJO.
  */
-public class PipelineModel implements PojoLoader.Loadable {
+public class PipelineModel implements RdfLoader.Loadable<String> {
 
     public enum ExecutionType {
         /**
@@ -31,12 +33,10 @@ public class PipelineModel implements PojoLoader.Loadable {
         MAP
     }
 
-    public static class DataSource implements PojoLoader.Loadable {
-
-        /**
-         * Debug suffix.
-         */
-        private String debug;
+    /**
+     * Represent a source of data for given DataUnit.
+     */
+    public static class DataSource implements RdfLoader.Loadable<String> {
 
         /**
          * Path to load data from.
@@ -60,17 +60,14 @@ public class PipelineModel implements PojoLoader.Loadable {
         }
 
         @Override
-        public PojoLoader.Loadable load(String predicate, Value object)
-                throws LpException {
+        public RdfLoader.Loadable load(String predicate, String object)
+                throws RdfUtilsException {
             switch (predicate) {
-                case LINKEDPIPES.HAS_DEBUG:
-                    this.debug = object.stringValue();
+                case LP_EXEC.HAS_LOAD_PATH:
+                    this.loadPath = object;
                     break;
-                case LINKEDPIPES.HAS_LOAD_PATH:
-                    this.loadPath = object.stringValue();
-                    break;
-                case LINKEDPIPES.HAS_EXECUTION:
-                    this.execution = object.stringValue();
+                case LP_EXEC.HAS_EXECUTION:
+                    this.execution = object;
                 default:
                     break;
             }
@@ -79,7 +76,10 @@ public class PipelineModel implements PojoLoader.Loadable {
 
     }
 
-    public static class DataUnit implements PojoLoader.Loadable {
+    /**
+     * Represent a dataunit/port.
+     */
+    public static class DataUnit implements RdfLoader.Loadable<String> {
 
         private final String iri;
 
@@ -90,8 +90,6 @@ public class PipelineModel implements PojoLoader.Loadable {
         private DataSource dataSource;
 
         private final Component component;
-
-        private final List<String> sources = new ArrayList<>(2);
 
         public DataUnit(String iri, Component component) {
             this.iri = iri;
@@ -114,54 +112,144 @@ public class PipelineModel implements PojoLoader.Loadable {
             return component;
         }
 
-        public List<String> getSources() {
-            return sources;
-        }
-
         public boolean isInput() {
-            return types.contains("http://linkedpipes.com/ontology/Input");
+            return types.contains(LP_PIPELINE.INPUT);
         }
 
         public boolean isOutput() {
-            return types.contains("http://linkedpipes.com/ontology/Output");
+            return types.contains(LP_PIPELINE.OUTPUT);
         }
 
         @Override
-        public PojoLoader.Loadable load(String predicate, Value object)
-                throws LpException {
+        public RdfLoader.Loadable load(String predicate, String object)
+                throws RdfUtilsException {
             switch (predicate) {
-                case "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
-                    types.add(object.stringValue());
+                case RDF.TYPE:
+                    types.add(object);
                     break;
-                case LINKEDPIPES.HAS_BINDING:
-                    binding = object.stringValue();
+                case LP_PIPELINE.HAS_BINDING:
+                    binding = object;
                     break;
-                case LINKEDPIPES.HAS_SOURCE:
+                case LP_EXEC.HAS_SOURCE:
                     dataSource = new DataSource();
                     return dataSource;
-                case LINKEDPIPES.HAS_PORT_SOURCE:
-                    sources.add(object.stringValue());
-                    return null;
             }
             return null;
         }
 
     }
 
-    public static class Component implements PojoLoader.Loadable {
+    /**
+     * Represent a component configuration.
+     */
+    public static class Configuration implements RdfLoader.Loadable<String> {
 
         private final String iri;
 
-        private final Map<String, String> labels = new HashMap<>();
+        private Integer order;
+
+        private String configurationGraph;
+
+        public Configuration(String iri) {
+            this.iri = iri;
+        }
+
+        @Override
+        public RdfLoader.Loadable load(String predicate, String object)
+                throws RdfUtilsException {
+            switch (predicate) {
+                case LP_EXEC.HAS_ORDER:
+                    try {
+                        order = Integer.parseInt(object);
+                    } catch (NumberFormatException ex) {
+                        throw new RdfUtilsException(
+                                "Value is not an integer: {}", object);
+                    }
+                    return null;
+                case LP_PIPELINE.HAS_CONFIGURATION_GRAPH:
+                    configurationGraph = object;
+                    return null;
+            }
+            return null;
+        }
+
+        public String getConfigurationGraph() {
+            return configurationGraph;
+        }
+
+        public void afterLoad() throws ExecutorException {
+            if (order == null) {
+                throw new ExecutorException("Missing configuration order: {}",
+                        iri);
+            }
+        }
+    }
+
+    /**
+     * Description for a component configuration.
+     */
+    public static class ConfigurationDescription
+            implements RdfLoader.Loadable<String> {
+
+        private final String iri;
+
+        private String configurationType;
+
+        public ConfigurationDescription(String iri) {
+            this.iri = iri;
+        }
+
+        @Override
+        public RdfLoader.Loadable load(String predicate, String object)
+                throws RdfUtilsException {
+            switch (predicate) {
+                case LP_OBJECTS.HAS_DESCRIBE:
+                    configurationType = object;
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+        public void afterLoad() throws ExecutorException {
+            if (configurationType == null) {
+                throw new ExecutorException("Missing configuration type: {}",
+                        iri);
+            }
+        }
+
+        public String getIri() {
+            return iri;
+        }
+
+        public String getConfigurationType() {
+            return configurationType;
+        }
+    }
+
+    /**
+     * Component in a pipeline.
+     */
+    public static class Component implements RdfLoader.Loadable<String> {
+
+        private final String iri;
+
+        private String label;
 
         private final List<DataUnit> dataUnits = new ArrayList<>(2);
+
+        private final List<Configuration> configurations = new ArrayList<>(3);
 
         /**
          * Is not null if component is loaded and successfully validated.
          */
-        private Integer executionOrder;
+        private Integer order;
 
         private ExecutionType executionType;
+
+        private String jarPath;
+
+        private ConfigurationDescription configurationDescription;
 
         public Component(String iri) {
             this.iri = iri;
@@ -172,102 +260,204 @@ public class PipelineModel implements PojoLoader.Loadable {
         }
 
         public List<DataUnit> getDataUnits() {
-            return dataUnits;
+            return Collections.unmodifiableList(dataUnits);
         }
 
-        public Integer getExecutionOrder() {
-            return executionOrder;
+        public DataUnit getDataUnit(String iri) {
+            for (DataUnit dataUnit : dataUnits) {
+                if (dataUnit.getIri().equals(iri)) {
+                    return dataUnit;
+                }
+            }
+            return null;
+        }
+
+        public Integer getOrder() {
+            return order;
         }
 
         public ExecutionType getExecutionType() {
             return executionType;
         }
 
-        public String getDefaultLabel() {
-            if (labels.isEmpty()) {
-                return iri;
-            } else if (labels.containsKey("en")) {
-                return labels.get("en");
-            } else if (labels.containsKey("")) {
-                return labels.get("");
-            } else {
-                return labels.values().iterator().next();
-            }
+        public String getLabel() {
+            return label;
+        }
+
+        public String getJarPath() {
+            return jarPath;
+        }
+
+        public ConfigurationDescription getConfigurationDescription() {
+            return configurationDescription;
+        }
+
+        /**
+         * @return Ordered configuration entities for this component.
+         */
+        public List<Configuration> getConfigurations() {
+            return configurations;
+        }
+
+        /**
+         * @return True if the instance for this component should be loaded.
+         */
+        public boolean isLoadInstance() {
+            return executionType == ExecutionType.EXECUTE;
         }
 
         @Override
-        public PojoLoader.Loadable load(String predicate, Value object)
-                throws LpException {
+        public RdfLoader.Loadable load(String predicate, String object)
+                throws RdfUtilsException {
             switch (predicate) {
-                case "http://www.w3.org/2004/02/skos/core#prefLabel":
-                    final Literal label = (Literal) object;
-                    final String lang = label.getLanguage().orElse("");
-                    labels.put(lang, label.getLabel());
+                case SKOS.PREF_LABEL:
+                    label = object;
                     return null;
-                case LINKEDPIPES.HAS_EXECUTION_ORDER:
+                case LP_EXEC.HAS_ORDER_EXEC:
                     try {
-                        executionOrder = Integer.parseInt(object.stringValue());
+                        order = Integer.parseInt(object);
                     } catch (NumberFormatException ex) {
-                        throw RdfException.invalidProperty(iri,
-                                LINKEDPIPES.HAS_EXECUTION_ORDER,
-                                "Must be an integer.");
+                        throw new RdfUtilsException(
+                                "Value is not an integer: {}", object);
                     }
                     return null;
-                case LINKEDPIPES.HAS_PORT:
-                    final DataUnit newDataUnit = new DataUnit(
-                            object.stringValue(), this);
+                case LP_PIPELINE.HAS_DATA_UNIT:
+                    final DataUnit newDataUnit = new DataUnit(object, this);
                     dataUnits.add(newDataUnit);
                     return newDataUnit;
-                case LINKEDPIPES.HAS_COMPONENT_EXECUTION_TYPE:
-                    switch (object.stringValue()) {
-                        case "http://linkedpipes.com/resources/execution/type/execute":
+                case LP_EXEC.HAS_EXECUTION_TYPE:
+                    switch (object) {
+                        case LP_EXEC.TYPE_EXECUTE:
                             executionType = ExecutionType.EXECUTE;
                             break;
-                        case "http://linkedpipes.com/resources/execution/type/mapped":
+                        case LP_EXEC.TYPE_MAPPED:
                             executionType = ExecutionType.MAP;
                             break;
-                        case "http://linkedpipes.com/resources/execution/type/skip":
+                        case LP_EXEC.TYPE_SKIP:
                             executionType = ExecutionType.SKIP;
                             break;
                         default:
-                            throw RdfException.invalidProperty(iri,
-                                    LINKEDPIPES.HAS_COMPONENT_EXECUTION_TYPE,
-                                    "Invalid executor type");
+                            throw new RdfUtilsException(
+                                    "Invalid exec. type : {} {}", iri, object);
                     }
                     return null;
+                case LP_EXEC.HAS_CONFIGURATION:
+                    final Configuration configuration =
+                            new Configuration(object);
+                    configurations.add(configuration);
+                    return configuration;
+                case LP_PIPELINE.HAS_JAR_URL:
+                    jarPath = object;
+                    return null;
+                case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
+                    configurationDescription =
+                            new ConfigurationDescription(object);
+                    return configurationDescription;
                 default:
                     return null;
             }
         }
 
-        @Override
-        public void afterLoad() throws LpException {
-            if (executionOrder == null) {
-                throw RdfException.invalidProperty(iri, null,
-                        "Incomplete definition - missing executionOrder.");
+        public void afterLoad() throws ExecutorException {
+            if (order == null) {
+                throw new ExecutorException("Missing execution order: {}", iri);
             }
             if (executionType == null) {
-                throw RdfException.invalidProperty(iri, null,
-                        "Incomplete definition - missing executionType.");
+                throw new ExecutorException("Missing execution type: {}", iri);
             }
+            if (configurationDescription == null) {
+                throw new ExecutorException(
+                        "Missing configuration description: {} jar: {}",
+                        iri, jarPath);
+            }
+            configurationDescription.afterLoad();
+            for (Configuration configuration : configurations) {
+                configuration.afterLoad();
+            }
+            //
+            Collections.sort(configurations, (left, right) -> {
+                return Integer.compare(right.order, left.order);
+            });
+        }
+    }
+
+    /**
+     * Connection between components.
+     */
+    public static class Connection implements RdfLoader.Loadable<String> {
+
+        private String sourceComponent;
+
+        private String sourceBinding;
+
+        private String targetComponent;
+
+        private String targetBinding;
+
+        @Override
+        public RdfLoader.Loadable load(String predicate, String object)
+                throws RdfUtilsException {
+            switch (predicate) {
+                case LP_PIPELINE.HAS_SOURCE_BINDING:
+                    sourceBinding = object;
+                    break;
+                case LP_PIPELINE.HAS_SOURCE_COMPONENT:
+                    sourceComponent = object;
+                    break;
+                case LP_PIPELINE.HAS_TARGET_BINDING:
+                    targetBinding = object;
+                    break;
+                case LP_PIPELINE.HAS_TARGET_COMPONENT:
+                    targetComponent = object;
+                    break;
+            }
+            return null;
         }
 
+        public String getSourceComponent() {
+            return sourceComponent;
+        }
+
+        public String getSourceBinding() {
+            return sourceBinding;
+        }
+
+        public String getTargetComponent() {
+            return targetComponent;
+        }
+
+        public String getTargetBinding() {
+            return targetBinding;
+        }
     }
 
     private final String iri;
 
+    private final String graph;
+
     private final List<Component> components = new LinkedList<>();
 
-    public PipelineModel(String iri) {
+    private final List<Connection> connections = new LinkedList<>();
+
+    public PipelineModel(String iri, String graph) {
         this.iri = iri;
+        this.graph = graph;
     }
 
     public String getIri() {
         return iri;
     }
 
+    public String getGraph() {
+        return graph;
+    }
+
     public List<Component> getComponents() {
-        return components;
+        return Collections.unmodifiableList(components);
+    }
+
+    public List<Connection> getConnections() {
+        return Collections.unmodifiableList(connections);
     }
 
     public Component getComponent(String iri) {
@@ -280,16 +470,77 @@ public class PipelineModel implements PojoLoader.Loadable {
     }
 
     @Override
-    public PojoLoader.Loadable load(String predicate, Value object)
-            throws LpException {
+    public RdfLoader.Loadable load(String predicate, String object)
+            throws RdfUtilsException {
         switch (predicate) {
-            case LINKEDPIPES.HAS_COMPONENT:
-                final Component comp = new Component(object.stringValue());
-                components.add(comp);
-                return comp;
+            case LP_PIPELINE.HAS_COMPONENT:
+                final Component component = new Component(object);
+                components.add(component);
+                return component;
+            case LP_PIPELINE.HAS_CONNECTION:
+                final Connection connection = new Connection();
+                connections.add(connection);
+                return connection;
             default:
                 return null;
         }
+    }
+
+    public void afterLoad() throws ExecutorException {
+        for (Component component : components) {
+            component.afterLoad();
+        }
+        Collections.sort(components, Comparator.comparingInt(x -> x.order));
+    }
+
+    public boolean isDataUnitUsed(Component component, DataUnit dataUnit)
+            throws ExecutorException {
+        switch (component.getExecutionType()) {
+            case EXECUTE:
+                return true;
+            case SKIP:
+                return false;
+            case MAP:
+                break;
+            default:
+                throw new ExecutorException("Invalid execution type: {} ",
+                        component.getExecutionType());
+        }
+        // MAP
+        if (dataUnit.isInput()) {
+            return false;
+        }
+        for (Connection connection : findConnections(component, dataUnit)) {
+            final Component source =
+                    getComponent(connection.getSourceComponent());
+            if (source.getExecutionType() == ExecutionType.EXECUTE) {
+                return true;
+            }
+            final Component target =
+                    getComponent(connection.getTargetComponent());
+            if (target.getExecutionType() == ExecutionType.EXECUTE) {
+                return true;
+            }
+        }
+        return true;
+    }
+
+    private Collection<Connection> findConnections(
+            Component component, DataUnit dataUnit) {
+        final Collection<Connection> output = new LinkedList<>();
+        for (Connection connection : connections) {
+            if (connection.getSourceComponent().equals(component.getIri()) &&
+                    connection.getSourceBinding().equals(dataUnit.getIri())) {
+                output.add(connection);
+                continue;
+            }
+            if (connection.getTargetComponent().equals(component.getIri()) &&
+                    connection.getTargetBinding().equals(dataUnit.getIri())) {
+                output.add(connection);
+                continue;
+            }
+        }
+        return output;
     }
 
 }

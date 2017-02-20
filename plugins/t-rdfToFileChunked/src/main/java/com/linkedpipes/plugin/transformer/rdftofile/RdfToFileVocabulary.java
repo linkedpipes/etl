@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class RdfToFileVocabulary {
 
     private static final String PREFIX
@@ -17,7 +13,7 @@ public final class RdfToFileVocabulary {
 
     public static final String HAS_GRAPH_URI = PREFIX + "graphUri";
 
-    public static final String HAS_PREFIX_TEST = PREFIX + "prefixTurtle";
+    public static final String HAS_PREFIXES = PREFIX + "prefixTurtle";
 
     private RdfToFileVocabulary() {
     }

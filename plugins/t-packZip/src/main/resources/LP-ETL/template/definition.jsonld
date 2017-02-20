@@ -15,7 +15,10 @@
         "http://linkedpipes.com/ontology/keyword": [
             "zip", "compress"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-packzip"}
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-packzip"},
+        "http://linkedpipes.com/ontology/configurationDescription": [
+            {"@id": "http://linkedpipes.com/resources/components/t-packZip/0.0.0/configuration/desc"}
+        ]
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-packZip/0.0.0/input",

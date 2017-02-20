@@ -1,13 +1,12 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Distribution;
 
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
-
-@RdfToPojo.Type(uri = DcatAp11DistributionVocabulary.MY + "Configuration")
+@RdfToPojo.Type(iri = DcatAp11DistributionVocabulary.MY + "Configuration")
 public class DcatAp11DistributionConfig {
 
     public String getDistributionIRI() {
@@ -242,51 +241,23 @@ public class DcatAp11DistributionConfig {
         this.distributionTypeIRI = distributionTypeIRI;
     }
 
-    @RdfToPojo.Value
-    public static class LocalizedString {
-
-        @RdfToPojo.Value
-        private String value;
-
-        @RdfToPojo.Lang
-        private String language;
-
+    public static class LocalizedString extends RdfToPojo.LangString {
         public LocalizedString() {
-            value = null;
-            language = null;
         }
 
         public LocalizedString(String value, String language) {
-            this.value = value;
-            this.language = language;
+            super(value, language);
         }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        public String getLanguage() {
-            return language;
-        }
-
-        public void setLanguage(String language) {
-            this.language = language;
-        }
-
     }
 
-    @RdfToPojo.Type(uri = DcatAp11DistributionVocabulary.MY + "LanguageObject")
+    @RdfToPojo.Type(iri = DcatAp11DistributionVocabulary.MY + "LanguageObject")
     public static class Language {
 
         public Language(String iri) {
             this.iri = iri;
         }
 
-        @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "IRI")
+        @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "IRI")
         private String iri;
 
         public Language() {
@@ -303,91 +274,104 @@ public class DcatAp11DistributionConfig {
 
     }
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "datasetIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "datasetIRI")
     private String datasetIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "getDatasetIRIFromInput")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "getDatasetIRIFromInput")
     private Boolean getDatasetIRIFromInput;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "distributionIRI")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "distributionIRI")
     private String distributionIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "genDistroIRI")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "genDistroIRI")
     private Boolean genDistroIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "accessURLs")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "accessURLs")
     private List<String> accessURLs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "formatIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "formatIRI")
     private String formatIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "licenseIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "licenseIRI")
     private String licenseIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "licenseTypeIRI")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "licenseTypeIRI")
     private String licenseTypeIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "descriptions")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "descriptions")
     private List<LocalizedString> descriptions = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "downloadURLs")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "downloadURLs")
     private List<String> downloadURLs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "mediaType")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "mediaType")
     private String mediaType;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "titles")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "titles")
     private List<LocalizedString> titles = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "documentationIRIs")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "documentationIRIs")
     private List<String> documentationIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "languagesFromDataset")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "languagesFromDataset")
     private Boolean languagesFromDataset;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "languages")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "languages")
     private List<String> languages = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "conformsToIRIs")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "conformsToIRIs")
     private List<String> conformsToIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "statusIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "statusIRI")
     private String statusIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "issuedFromDataset")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "issuedFromDataset")
     private Boolean issuedFromDataset;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "issued")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "issued")
     private Date issued;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "modifiedFromDataset")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "modifiedFromDataset")
     private Boolean modifiedFromDataset;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "modifiedNow")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "modifiedNow")
     private Boolean modifiedNow;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "modified")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "modified")
     private Date modified;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "rightsIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "rightsIRI")
     private String rightsIRI;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "byteSize")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "byteSize")
     private Integer byteSize;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "checksum")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "checksum")
     private String checksum;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "spatialIRIs")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "spatialIRIs")
     private List<String> spatialIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "temporalStart")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "temporalStart")
     private Date temporalStart;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "temporalEnd")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "temporalEnd")
     private Date temporalEnd;
 
-    @RdfToPojo.Property(uri = DcatAp11DistributionVocabulary.MY + "distributionTypeIRI")
+    @RdfToPojo.Property(
+            iri = DcatAp11DistributionVocabulary.MY + "distributionTypeIRI")
     private String distributionTypeIRI;
 
 }

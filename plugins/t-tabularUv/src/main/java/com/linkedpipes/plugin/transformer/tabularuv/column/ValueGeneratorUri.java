@@ -1,16 +1,11 @@
 package com.linkedpipes.plugin.transformer.tabularuv.column;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+
 import java.util.List;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-
-/**
- *
- *
- * @author Škoda Petr
- */
 public class ValueGeneratorUri extends ValueGeneratorReplace {
 
     public ValueGeneratorUri(IRI uri, String template) {

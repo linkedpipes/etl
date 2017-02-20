@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.extractor.httpget;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class HttpGetVocabulary {
 
     private static final String PREFIX

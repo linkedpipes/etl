@@ -1,58 +1,52 @@
 package com.linkedpipes.etl.executor.component;
 
-import com.linkedpipes.etl.executor.api.v1.component.SequentialComponent;
+import com.linkedpipes.etl.executor.ExecutorException;
+import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.event.EventManager;
-import com.linkedpipes.etl.executor.execution.ExecutionModel;
-import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
+import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 
 /**
- * Interface and factory for component execution objects.
+ * Interface of component executor. The component executor is responsible
+ * for execution of a component in given way.
  */
 public interface ComponentExecutor {
 
-    public void execute();
-
     /**
-     * If true then the pipeline execution should fail as the executor
-     * thread fail to end properly.
-     *
-     * @return True in case of unexpected termination.
+     * @param dataUnitManager
+     * @return True if pipeline can continue
      */
-    public boolean unexpectedTermination();
+    boolean execute(DataUnitManager dataUnitManager);
 
     /**
-     * @param dataunit
-     * @param events
+     * Cancel the component execution.
+     */
+    default void cancel() {
+        // By default do nothing.
+    }
+
+    /**
      * @param pipeline
      * @param execution
-     * @param componentIri
-     * @param instance
-     * @return Null if no executor for given component can be created.
+     * @param component
+     * @param instance Component instance, can be null.
+     * @return Never return null.
      */
-    public static ComponentExecutor create(DataUnitManager dataunit,
-            EventManager events, PipelineDefinition pipeline,
-            ExecutionModel execution, String componentIri,
-            SequentialComponent instance) {
-        final PipelineModel.Component component
-                = pipeline.getPipelineModel().getComponent(componentIri);
-        final ExecutionModel.Component executionComponent
-                = execution.getComponent(componentIri);
-        if (component == null || executionComponent == null) {
-            return null;
-        }
+    static ComponentExecutor create(Pipeline pipeline, Execution execution,
+            PipelineModel.Component component, ManageableComponent instance)
+            throws ExecutorException {
         switch (component.getExecutionType()) {
             case EXECUTE:
-                return new ExecuteComponent(instance, executionComponent,
-                        component, dataunit, events);
+                return new ExecuteComponent(pipeline, execution,
+                        component, instance);
             case MAP:
-                return new MapComponent(dataunit, executionComponent);
+                return new MapComponent(execution, component);
             case SKIP:
-                return new SkipComponent(executionComponent);
-            default:
-                return null;
+                return new SkipComponent(execution, component);
         }
+        throw new ExecutorException("Unknown execution type: {} for {}",
+                component.getExecutionType(), component.getIri());
     }
 
 }

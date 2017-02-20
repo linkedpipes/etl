@@ -1,21 +1,17 @@
 package com.linkedpipes.plugin.transformer.filesToRdfGraph;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = FilesToRdfGraphVocabulary.CONFIG)
+@RdfToPojo.Type(iri = FilesToRdfGraphVocabulary.CONFIG)
 public class FilesToRdfGraphConfiguration {
 
-    @RdfToPojo.Property(uri = FilesToRdfGraphVocabulary.HAS_COMMIT_SIZE)
+    @RdfToPojo.Property(iri = FilesToRdfGraphVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 10000;
 
-    @RdfToPojo.Property(uri = FilesToRdfGraphVocabulary.HAS_MIME_TYPE)
+    @RdfToPojo.Property(iri = FilesToRdfGraphVocabulary.HAS_MIME_TYPE)
     private String mimeType = null;
 
-    @RdfToPojo.Property(uri = FilesToRdfGraphVocabulary.HAS_SKIP_ON_FAILURE)
+    @RdfToPojo.Property(iri = FilesToRdfGraphVocabulary.HAS_SKIP_ON_FAILURE)
     private boolean skipOnFailure = false;
 
     public FilesToRdfGraphConfiguration() {

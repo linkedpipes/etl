@@ -1,34 +1,28 @@
 package com.linkedpipes.etl.executor.component;
 
-import com.linkedpipes.etl.executor.execution.ExecutionModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
+import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 
 /**
- * Execute component with "SKIP" execution type.
+ * Represent an execution of a component that should be skipped.
  */
 class SkipComponent implements ComponentExecutor {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(SkipComponent.class);
+    private final Execution execution;
 
-    private final ExecutionModel.Component componentExecution;
+    private final Execution.Component execComponent;
 
-    SkipComponent(ExecutionModel.Component componentExecution) {
-        this.componentExecution = componentExecution;
+    public SkipComponent(Execution execution,
+            PipelineModel.Component component) {
+        this.execution = execution;
+        this.execComponent = execution.getComponent(component);
     }
 
     @Override
-    public void execute() {
-        LOG.info("Skipping starts for: {}", this.componentExecution.getIri());
-        // No operation here, two logs are here just to be
-        // consistent with other executors.
-        LOG.info("Skipping end for: {}", this.componentExecution.getIri());
-    }
-
-    @Override
-    public boolean unexpectedTermination() {
-        return false;
+    public boolean execute(DataUnitManager dataUnitManager) {
+        execution.onComponentSkipped(execComponent);
+        return true;
     }
 
 }

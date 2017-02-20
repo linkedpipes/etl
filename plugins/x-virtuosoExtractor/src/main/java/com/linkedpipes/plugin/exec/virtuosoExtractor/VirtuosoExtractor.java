@@ -1,18 +1,15 @@
 package com.linkedpipes.plugin.exec.virtuosoExtractor;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class VirtuosoExtractor implements Component.Sequential {
+public final class VirtuosoExtractor implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(VirtuosoExtractor.class);
@@ -50,7 +47,6 @@ public final class VirtuosoExtractor implements Component.Sequential {
      * Execute given command.
      *
      * @param command
-     * @throws SQLException
      */
     private void executeSqlStatement(String command) throws SQLException {
         LOG.info("Executing statement: {}", command);
@@ -60,7 +56,7 @@ public final class VirtuosoExtractor implements Component.Sequential {
                 configuration.getPassword())) {
             // Execute statement.
             try (Statement statement = connection.createStatement()) {
-                try (ResultSet result = statement.executeQuery(command) ) {
+                try (ResultSet result = statement.executeQuery(command)) {
                     // We don't need the result.
                 }
             }

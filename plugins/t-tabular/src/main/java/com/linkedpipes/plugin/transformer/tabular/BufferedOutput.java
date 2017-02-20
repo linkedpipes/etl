@@ -1,15 +1,12 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
 
 /**
  * Buffered output handler.
@@ -30,7 +27,7 @@ class BufferedOutput implements StatementConsumer {
 
     BufferedOutput(WritableSingleGraphDataUnit dataUnit) {
         this.dataUnit = dataUnit;
-        graph = dataUnit.getGraph();
+        graph = dataUnit.getWriteGraph();
     }
 
     @Override

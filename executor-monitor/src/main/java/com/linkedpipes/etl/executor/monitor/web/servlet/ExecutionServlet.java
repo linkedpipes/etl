@@ -3,12 +3,12 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorFacade;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -130,6 +130,17 @@ public class ExecutionServlet {
             HttpServletRequest request, HttpServletResponse response) {
         final Execution execution = executionFacade.getExecution(id);
         executionFacade.deleteExecution(execution);
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @RequestMapping(value = "/{id}/cancel", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void cancelExecution(@PathVariable String id,
+            @RequestBody String body,
+            HttpServletRequest request, HttpServletResponse response) {
+        final Execution execution = executionFacade.getExecution(id);
+        executorFacade.cancelExecution(execution, body);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 

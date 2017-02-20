@@ -1,25 +1,23 @@
 package com.linkedpipes.plugin.transformer.unpackzip;
 
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import java.io.File;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class UnpackZip implements Component.Sequential {
+import java.io.File;
 
-    @Component.InputPort(id = "FilesInput")
+public final class UnpackZip implements Component, SequentialExecution {
+
+    @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit input;
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
     @Component.Configuration
@@ -37,10 +35,10 @@ public final class UnpackZip implements Component.Sequential {
         for (FilesDataUnit.Entry entry : input) {
             final File outputDirectory;
             if (configuration.isUsePrefix()) {
-                outputDirectory = new File(output.getRootDirectory(),
+                outputDirectory = new File(output.getWriteDirectory(),
                         entry.getFileName());
             } else {
-                outputDirectory = output.getRootDirectory();
+                outputDirectory = output.getWriteDirectory();
             }
             outputDirectory.mkdirs();
             // Unpack.
@@ -55,7 +53,6 @@ public final class UnpackZip implements Component.Sequential {
      *
      * @param zipFile
      * @param targetDirectory
-     * @throws DPUException
      */
     private void unzip(File zipFile, File targetDirectory) throws LpException {
         try {

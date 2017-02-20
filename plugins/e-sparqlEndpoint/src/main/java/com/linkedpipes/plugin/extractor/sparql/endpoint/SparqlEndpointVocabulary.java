@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
-/**
- *
- * @author Škoda Petr
- */
 final class SparqlEndpointVocabulary {
 
     private static final String PREFIX

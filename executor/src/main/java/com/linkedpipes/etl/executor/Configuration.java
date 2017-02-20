@@ -32,7 +32,7 @@ public class Configuration {
 
     private String storageAddress;
 
-    private List<String> bannedJarPatterns = new ArrayList<>(12);
+    private final List<String> bannedJarPatterns = new ArrayList<>(20);
 
     private final Properties properties = new Properties();
 
@@ -46,7 +46,7 @@ public class Configuration {
         }
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
-        try (InputStream stream = new FileInputStream(
+        try (final InputStream stream = new FileInputStream(
                 new File(propertiesFile))) {
             properties.load(stream);
         } catch (IOException ex) {
@@ -70,8 +70,8 @@ public class Configuration {
                     .replaceAll("\\\"", "\"").trim();
             // Remove first and last "
             value = value.substring(1, value.length() - 1);
-            this.bannedJarPatterns
-                    .addAll(Arrays.asList(value.split("\",\"")));
+            this.bannedJarPatterns.addAll(
+                    Arrays.asList(value.split("\",\"")));
         } catch (RuntimeException ex) {
             // This property is obligatory.
         }
@@ -111,10 +111,6 @@ public class Configuration {
         return bannedJarPatterns;
     }
 
-    private static void validateDirectory(String value) {
-        (new File(value)).mkdirs();
-    }
-
     private String getProperty(String name) {
         final String value;
         try {
@@ -131,15 +127,18 @@ public class Configuration {
         }
     }
 
-    protected Integer getPropertyInteger(String name) {
+    private Integer getPropertyInteger(String name) {
         final String value = getProperty(name);
         try {
-            final Integer valueAsInteger = Integer.parseInt(value);
-            return valueAsInteger;
+            return Integer.parseInt(value);
         } catch (Exception ex) {
             LOG.error("Invalid configuration property: '{}'", name);
             throw new RuntimeException(ex);
         }
+    }
+
+    private static void validateDirectory(String value) {
+        (new File(value)).mkdirs();
     }
 
 }

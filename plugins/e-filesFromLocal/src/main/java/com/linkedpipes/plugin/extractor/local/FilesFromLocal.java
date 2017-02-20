@@ -1,18 +1,19 @@
 package com.linkedpipes.plugin.extractor.local;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class FilesFromLocal implements Component.Sequential {
+public class FilesFromLocal implements Component, SequentialExecution {
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
     @Component.Inject
@@ -55,7 +56,7 @@ public class FilesFromLocal implements Component.Sequential {
      * @param fileName Name of added file.
      */
     private void copy(File file, String fileName) throws LpException {
-        final File destination = output.createFile(fileName).toFile();
+        final File destination = output.createFile(fileName);
         try {
             if (file.isDirectory()) {
                 FileUtils.copyDirectory(file, destination);

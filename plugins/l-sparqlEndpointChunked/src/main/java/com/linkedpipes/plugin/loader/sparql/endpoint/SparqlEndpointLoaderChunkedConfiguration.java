@@ -1,35 +1,35 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-@RdfToPojo.Type(uri = SparqlEndpointLoaderChunkedVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlEndpointLoaderChunkedVocabulary.CONFIG)
 public class SparqlEndpointLoaderChunkedConfiguration {
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointLoaderChunkedVocabulary.HAS_ENDPOINT)
+            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
-    @RdfToPojo.Property(uri = SparqlEndpointLoaderChunkedVocabulary.HAS_AUTH)
-    private boolean useAuthentification = true;
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_AUTH)
+    private boolean useAuthentication = true;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointLoaderChunkedVocabulary.HAS_USERNAME)
+            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_USERNAME)
     private String userName;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointLoaderChunkedVocabulary.HAS_PASSWORD)
+            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_PASSWORD)
     private String password;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointLoaderChunkedVocabulary.HAS_CLEAR_GRAPH)
+            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_CLEAR_GRAPH)
     private boolean clearDestinationGraph = false;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointLoaderChunkedVocabulary.HAS_TAGET_GRAPH)
+            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_TAGET_GRAPH)
     private String targetGraphName;
 
     @RdfToPojo.Property(
-            uri = SparqlEndpointLoaderChunkedVocabulary.HAS_COMMIT_SIZE)
+            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 100000;
 
     public SparqlEndpointLoaderChunkedConfiguration() {
@@ -43,12 +43,12 @@ public class SparqlEndpointLoaderChunkedConfiguration {
         this.endpoint = endpoint;
     }
 
-    public boolean isUseAuthentification() {
-        return useAuthentification;
+    public boolean isUseAuthentication() {
+        return useAuthentication;
     }
 
-    public void setUseAuthentification(boolean useAuthentification) {
-        this.useAuthentification = useAuthentification;
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
     }
 
     public String getUserName() {

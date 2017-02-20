@@ -1,20 +1,18 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.openrdf.model.Statement;
-import org.openrdf.model.IRI;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
 
-/**
- *
- */
 public class StatementInserter implements RDFHandler {
 
-    private final int commintSize;
+    private final int commitSize;
 
     private final WritableGraphListDataUnit dataUnit;
 
@@ -24,7 +22,7 @@ public class StatementInserter implements RDFHandler {
 
     public StatementInserter(int commintSize,
             WritableGraphListDataUnit dataUnit) {
-        this.commintSize = commintSize;
+        this.commitSize = commintSize;
         this.dataUnit = dataUnit;
         this.statements = new ArrayList<>(commintSize);
     }
@@ -66,7 +64,7 @@ public class StatementInserter implements RDFHandler {
 
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
-        if (statements.size() >= commintSize) {
+        if (statements.size() >= commitSize) {
             try {
                 dataUnit.execute((connection) -> {
                     connection.begin();
@@ -85,10 +83,6 @@ public class StatementInserter implements RDFHandler {
     @Override
     public void handleComment(String comment) throws RDFHandlerException {
         // No operation here.
-    }
-
-    public IRI getTargetGraph() {
-        return targetGraph;
     }
 
     public void setTargetGraph(IRI targetGraph) {

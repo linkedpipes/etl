@@ -1,8 +1,8 @@
 package com.linkedpipes.plugin.extractor.voidDataset;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 public final class VoidDatasetVocabulary {
 
@@ -12,9 +12,10 @@ public final class VoidDatasetVocabulary {
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema#";
 
-    public static final String MY = "http://etl.linkedpipes.com/ontology/components/e-voidDataset/";
+    public static final String MY =
+            "http://etl.linkedpipes.com/ontology/components/e-voidDataset/";
 
-    public static final IRI DCAT_DOWNLOADURL;
+    public static final IRI DCAT_DOWNLOAD_URL;
 
     public static final IRI DCAT_DISTRIBUTION_CLASS;
 
@@ -34,7 +35,7 @@ public final class VoidDatasetVocabulary {
 
     static {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        DCAT_DOWNLOADURL = valueFactory.createIRI(DCAT + "downloadURL");
+        DCAT_DOWNLOAD_URL = valueFactory.createIRI(DCAT + "downloadURL");
         DCAT_DISTRIBUTION_CLASS = valueFactory.createIRI(DCAT + "Distribution");
         XSD_DATE = valueFactory.createIRI(XSD + "date");
         XSD_HEXBINARY = valueFactory.createIRI(XSD + "hexBinary");

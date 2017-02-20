@@ -1,35 +1,35 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfToPojo.Type(uri = SparqlEndpointChunkedVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlEndpointChunkedVocabulary.CONFIG)
 public class SparqlEndpointChunkedConfiguration {
 
     /**
      * Must contains ${VALUES} place holder.
      */
-    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_QUERY)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_QUERY)
     private String query;
 
-    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_ENDPOINT)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
     /**
      * Default graphs can be specified only via the runtime configuration.
      */
-    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_DEFAULT_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
     /**
      * Used as a Accept value in header.
      */
-    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_HEADER_ACCEPT)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_HEADER_ACCEPT)
     private String transferMimeType;
 
-    @RdfToPojo.Property(uri = SparqlEndpointChunkedVocabulary.HAS_CHUNK_SIZE)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_CHUNK_SIZE)
     private Integer chunkSize;
 
     public SparqlEndpointChunkedConfiguration() {

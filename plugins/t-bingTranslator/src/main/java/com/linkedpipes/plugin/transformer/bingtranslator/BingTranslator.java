@@ -1,11 +1,12 @@
 package com.linkedpipes.plugin.transformer.bingtranslator;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.ChunkedStatements;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -17,10 +18,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -33,7 +34,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
-public final class BingTranslator implements Component.Sequential {
+public final class BingTranslator implements Component, SequentialExecution {
 
     /**
      * The maximum number of entries to translate for one request.
@@ -61,11 +62,11 @@ public final class BingTranslator implements Component.Sequential {
     private static final Logger LOG =
             LoggerFactory.getLogger(BingTranslator.class);
 
-    @Component.InputPort(id = "FilesInput")
-    public ChunkedStatements input;
+    @Component.InputPort(iri = "FilesInput")
+    public ChunkedTriples input;
 
-    @Component.OutputPort(id = "FilesOutput")
-    public WritableChunkedStatements output;
+    @Component.OutputPort(iri = "FilesOutput")
+    public WritableChunkedTriples output;
 
     @Component.Configuration
     public BingTranslatorConfiguration configuration;
@@ -117,9 +118,9 @@ public final class BingTranslator implements Component.Sequential {
                 new HashMap<>();
         // Read chunks.
         progressReport.start(input.size());
-        for (ChunkedStatements.Chunk chunk : input) {
+        for (ChunkedTriples.Chunk chunk : input) {
             // Load values from chunk.
-            for (Statement s : chunk.toStatements()) {
+            for (Statement s : chunk.toCollection()) {
                 if (!(s.getObject() instanceof Literal)) {
                     continue;
                 }

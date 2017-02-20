@@ -4,7 +4,8 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> .
+        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> .
 
 <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize>
     a config:ConfigurationMember ;
@@ -15,3 +16,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFailControl> .

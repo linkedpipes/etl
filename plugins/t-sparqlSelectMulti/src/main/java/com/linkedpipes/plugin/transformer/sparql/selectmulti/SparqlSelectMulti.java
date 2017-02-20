@@ -1,18 +1,19 @@
 package com.linkedpipes.plugin.transformer.sparql.selectmulti;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.IRI;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.impl.SimpleDataset;
-import org.openrdf.query.resultio.TupleQueryResultWriter;
-import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
+import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +24,10 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class SparqlSelectMulti implements Component.Sequential {
+public final class SparqlSelectMulti implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SparqlSelectMulti.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SparqlSelectMulti.class);
 
     /**
      * Used to store configuration of the component.
@@ -50,13 +48,13 @@ public final class SparqlSelectMulti implements Component.Sequential {
 
     }
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.OutputPort(id = "OutputFiles")
+    @Component.OutputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Inject
@@ -92,14 +90,15 @@ public final class SparqlSelectMulti implements Component.Sequential {
 
     private void transform(String queryString, String outputFileName)
             throws LpException {
-        final IRI inputGraph = inputRdf.getGraph();
-        final File outputFile = outputFiles.createFile(outputFileName).toFile();
+        final IRI inputGraph = inputRdf.getReadGraph();
+        final File outputFile = outputFiles.createFile(outputFileName);
         LOG.info("\n{}\n    -> {}", queryString, outputFileName);
-        final SPARQLResultsCSVWriterFactory writerFactory = new SPARQLResultsCSVWriterFactory();
+        final SPARQLResultsCSVWriterFactory writerFactory =
+                new SPARQLResultsCSVWriterFactory();
         // Create output file and write the result.
         inputRdf.execute((connection) -> {
             try (final OutputStream outputStream
-                    = new FileOutputStream(outputFile)) {
+                         = new FileOutputStream(outputFile)) {
                 final TupleQueryResultWriter resultWriter
                         = writerFactory.getWriter(outputStream);
                 final TupleQuery query = connection.prepareTupleQuery(

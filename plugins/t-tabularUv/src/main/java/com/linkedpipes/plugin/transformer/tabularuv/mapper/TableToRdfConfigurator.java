@@ -1,30 +1,27 @@
 package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnInfo_V1;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnType;
 import com.linkedpipes.plugin.transformer.tabularuv.Utils;
+import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGenerator;
 import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGeneratorReplace;
-
-import java.util.*;
-
-import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.model.vocabulary.XMLSchema;
+import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGenerator;
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
+import java.util.*;
 
 /**
  * Configure {@link TableToRdf} class.
- *
- * @author Škoda Petr
  */
 public class TableToRdfConfigurator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TableToRdfConfigurator.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(TableToRdfConfigurator.class);
 
     private TableToRdfConfigurator() {
     }
@@ -36,8 +33,6 @@ public class TableToRdfConfigurator {
      * @param header
      * @param data Contains first data row, or ColumnType if type is already known.
      * @param numberOfLeadingEmpty Number of leading empty columns, this is useful for xsl-like.
-     * @throws com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed
-     * @throws com.linkedpipes.etl.executor.api.v1.exception.LpException
      */
     public static void configure(TableToRdf tableToRdf, List<String> header,
             List<Object> data, int numberOfLeadingEmpty)
@@ -70,7 +65,8 @@ public class TableToRdfConfigurator {
                 if (header.get(index) != null) {
                     columnName = header.get(index);
                 } else {
-                    LOG.info("Generated value used for column with 'null' name.");
+                    LOG.info(
+                            "Generated value used for column with 'null' name.");
                     // use generated one - first is col1, col2 ...
                     columnName = "col" + Integer.toString(index + 1);
                 }
@@ -87,7 +83,7 @@ public class TableToRdfConfigurator {
             // add column name
             tableToRdf.nameToIndex.put(columnName, index);
             // test for key
-            if (config.keyColumn != null  && !config.keyColumn.isEmpty()
+            if (config.keyColumn != null && !config.keyColumn.isEmpty()
                     && !config.advancedKeyColumn
                     && config.keyColumn.compareTo(columnName) == 0) {
                 // we construct tempalte and use it

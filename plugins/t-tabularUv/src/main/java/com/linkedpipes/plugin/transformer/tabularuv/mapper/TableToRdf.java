@@ -1,28 +1,23 @@
 package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.RdfWriter;
-import java.util.ArrayList;
-
 import com.linkedpipes.plugin.transformer.tabularuv.TabularOntology;
-
-import java.util.List;
-import java.util.Map;
-
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.RDF;
+import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGenerator;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGenerator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Parse table data into RDF. Before usage this class must be configured by
  * {@link TableToRdfConfigurator}.
- *
- * @author Škoda Petr
  */
 public class TableToRdf {
 
@@ -66,7 +61,7 @@ public class TableToRdf {
             return;
         } else if (row.size() > nameToIndex.size()) {
             LOG.warn("Row is too big, some data may be invalid!"
-                    + " (size: {} expected: {})", row.size(),
+                            + " (size: {} expected: {})", row.size(),
                     nameToIndex.size());
         }
         // trim string values
@@ -142,7 +137,8 @@ public class TableToRdf {
      */
     protected IRI prepareUri(List<Object> row, int rowNumber) {
         if (keyColumn == null) {
-            return valueFactory.createIRI(baseUri + Integer.toString(rowNumber));
+            return valueFactory
+                    .createIRI(baseUri + Integer.toString(rowNumber));
         } else {
             return (IRI) keyColumn.generateValue(row, valueFactory);
         }

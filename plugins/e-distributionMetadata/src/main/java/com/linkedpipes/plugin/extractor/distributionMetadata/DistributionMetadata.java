@@ -1,22 +1,23 @@
 package com.linkedpipes.plugin.extractor.distributionMetadata;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.impl.SimpleDataset;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.util.Repositories;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.util.Repositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,17 +27,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- */
-public class DistributionMetadata implements Component.Sequential {
+public class DistributionMetadata implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(DistributionMetadata.class);
 
-    @Component.InputPort(id = "DatasetMetadata", optional = true)
+    @Component.InputPort(iri = "DatasetMetadata")
     public SingleGraphDataUnit inputRdf;
 
-    @Component.OutputPort(id = "Metadata")
+    @Component.OutputPort(iri = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -205,7 +203,7 @@ public class DistributionMetadata implements Component.Sequential {
 
         // Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
-            connection.add(statements, outputRdf.getGraph());
+            connection.add(statements, outputRdf.getWriteGraph());
         });
 
     }
@@ -253,7 +251,7 @@ public class DistributionMetadata implements Component.Sequential {
             final TupleQuery preparedQuery = connection.prepareTupleQuery(
                     QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(inputRdf.getGraph());
+            dataset.addDefaultGraph(inputRdf.getReadGraph());
             preparedQuery.setDataset(dataset);
             //
             final TupleQueryResult result = preparedQuery.evaluate();

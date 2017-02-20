@@ -1,27 +1,25 @@
 package com.linkedpipes.plugin.transformer.valueParser;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.repository.RepositoryResult;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Škoda Petr
- */
-public final class ValueParser implements Component.Sequential {
+public final class ValueParser implements Component, SequentialExecution {
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -38,7 +36,7 @@ public final class ValueParser implements Component.Sequential {
         inputRdf.execute((connection -> {
             final RepositoryResult<Statement> result =
                     connection.getStatements(null, source, null,
-                            inputRdf.getGraph());
+                            inputRdf.getReadGraph());
             statements.clear();
             while (result.hasNext()) {
                 statements.add(result.next());
@@ -61,7 +59,7 @@ public final class ValueParser implements Component.Sequential {
                             statement.getSubject(),
                             valueFactory.createIRI(binding.getTarget()),
                             createValue(value, statement.getObject()),
-                            outputRdf.getGraph()));
+                            outputRdf.getWriteGraph()));
                 });
             }
         }

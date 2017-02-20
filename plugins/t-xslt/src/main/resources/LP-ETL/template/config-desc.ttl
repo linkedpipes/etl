@@ -3,14 +3,15 @@
 <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-xslt#Configuration>  ;
-    config:member <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/xslt> ,
+    config:member <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/template> ,
         <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/extension> ,
-        <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/threads> .
+        <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/threads> ,
+        <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/skipOnError> .
 
-<http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/xslt>
+<http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/template>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-xslt#xslt> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-xslt#xsltControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-xslt#template> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xslt#templateControl> .
 
 <http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/extension>
     a config:ConfigurationMember ;
@@ -23,3 +24,7 @@
     config:control <http://plugins.linkedpipes.com/ontology/t-xslt#threadsControl> .
 
 
+<http://linkedpipes.com/resources/components/t-xslt/0.0.0/configuration/desc/skipOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xslt#skipOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xslt#skipOnErrorControl> .

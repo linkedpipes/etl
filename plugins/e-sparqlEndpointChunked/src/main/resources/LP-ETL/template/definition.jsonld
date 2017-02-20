@@ -16,7 +16,10 @@
         "http://linkedpipes.com/ontology/keyword": [
             "SPARQL", "query", "endpoint", "chunked"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-sparqlendpointchunked"}
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-sparqlendpointchunked"},
+        "http://linkedpipes.com/ontology/configurationDescription" : {
+           "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc"
+        }
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/output",

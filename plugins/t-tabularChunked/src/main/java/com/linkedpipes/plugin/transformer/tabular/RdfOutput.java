@@ -1,23 +1,22 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.SimpleValueFactory;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Buffered output handler.
- *
  */
 class RdfOutput {
 
     private final static ValueFactory VALUE_FACTORY
             = SimpleValueFactory.getInstance();
 
-    private final WritableChunkedStatements dataUnit;
+    private final WritableChunkedTriples dataUnit;
 
     private final List<Statement> buffer = new ArrayList<>(10000);
 
@@ -25,7 +24,7 @@ class RdfOutput {
 
     private int linesCounter = 0;
 
-    RdfOutput(WritableChunkedStatements dataUnit, int linesPerChunk) {
+    RdfOutput(WritableChunkedTriples dataUnit, int linesPerChunk) {
         this.dataUnit = dataUnit;
         this.linesPerChunk = linesPerChunk;
     }

@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.mustache;
 
-/**
- *
- */
 public final class MustacheVocabulary {
 
     private static final String PREFIX

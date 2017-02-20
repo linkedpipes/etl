@@ -1,16 +1,17 @@
 package com.linkedpipes.plugin.transformer.sparql.select;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.IRI;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.impl.SimpleDataset;
-import org.openrdf.query.resultio.TupleQueryResultWriter;
-import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
+import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,22 +20,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class SparqlSelect implements Component.Sequential {
+public final class SparqlSelect implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SparqlSelect.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SparqlSelect.class);
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.OutputPort(id = "OutputFiles")
+    @Component.OutputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Configuration
@@ -50,21 +48,27 @@ public final class SparqlSelect implements Component.Sequential {
             throw exceptionFactory.failure("Missing property: {}",
                     SparqlSelectVocabulary.HAS_FILE_NAME, "");
         }
-        if (configuration.getQuery()== null
+        if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
             throw exceptionFactory.failure("Missing property: {}",
                     SparqlSelectVocabulary.HAS_QUERY, "");
         }
         //
-        final IRI inputGraph = inputRdf.getGraph();
-        final File outputFile = outputFiles.createFile(configuration.getFileName()).toFile();
+        final IRI inputGraph = inputRdf.getReadGraph();
+        final File outputFile =
+                outputFiles.createFile(configuration.getFileName());
         LOG.info("{} -> {}", inputGraph, outputFile);
-        final SPARQLResultsCSVWriterFactory writerFactory = new SPARQLResultsCSVWriterFactory();
+        final SPARQLResultsCSVWriterFactory writerFactory =
+                new SPARQLResultsCSVWriterFactory();
         // Create output file and write the result.
         inputRdf.execute((connection) -> {
-            try (final OutputStream outputStream = new FileOutputStream(outputFile)) {
-                final TupleQueryResultWriter resultWriter = writerFactory.getWriter(outputStream);
-                final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, configuration.getQuery());
+            try (final OutputStream outputStream = new FileOutputStream(
+                    outputFile)) {
+                final TupleQueryResultWriter resultWriter =
+                        writerFactory.getWriter(outputStream);
+                final TupleQuery query = connection
+                        .prepareTupleQuery(QueryLanguage.SPARQL,
+                                configuration.getQuery());
                 final SimpleDataset dataset = new SimpleDataset();
                 dataset.addDefaultGraph(inputGraph);
                 // We need to add this else we can not use

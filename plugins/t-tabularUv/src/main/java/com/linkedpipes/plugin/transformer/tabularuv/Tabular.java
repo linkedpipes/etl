@@ -1,38 +1,28 @@
 package com.linkedpipes.plugin.transformer.tabularuv;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserXls;
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserDbf;
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserCsv;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
-
-
+import com.linkedpipes.plugin.transformer.tabularuv.parser.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
-import com.linkedpipes.plugin.transformer.tabularuv.parser.Parser;
-import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-
-/**
- *
- * @author Škoda Petr
- */
-public class Tabular implements Component.Sequential {
+public class Tabular implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tabular.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableGraphListDataUnit outputRdf;
 
     @Component.Configuration

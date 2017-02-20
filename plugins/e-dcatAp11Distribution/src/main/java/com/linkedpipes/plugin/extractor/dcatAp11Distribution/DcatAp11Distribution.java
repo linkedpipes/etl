@@ -1,42 +1,38 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Distribution;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.Component.Sequential;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.extractor.dcatAp11Distribution.DcatAp11DistributionConfig.LocalizedString;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.FOAF;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.SKOS;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.impl.SimpleDataset;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.util.Repositories;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.util.Repositories;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class DcatAp11Distribution implements Sequential {
+public class DcatAp11Distribution implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DcatAp11Distribution.class);
-
-    @Component.InputPort(id = "Dataset", optional = true)
+    @Component.InputPort(iri = "Dataset")
     public SingleGraphDataUnit inputDataset;
 
-    @Component.OutputPort(id = "Metadata")
+    @Component.OutputPort(iri = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -215,7 +211,7 @@ public class DcatAp11Distribution implements Sequential {
 
         // Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
-            connection.add(statements, outputRdf.getGraph());
+            connection.add(statements, outputRdf.getWriteGraph());
         });
 
     }
@@ -288,7 +284,7 @@ public class DcatAp11Distribution implements Sequential {
         return inputDataset.execute((connection) -> {
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(inputDataset.getGraph());
+            dataset.addDefaultGraph(inputDataset.getReadGraph());
             preparedQuery.setDataset(dataset);
             //
             final TupleQueryResult result = preparedQuery.evaluate();
@@ -309,7 +305,7 @@ public class DcatAp11Distribution implements Sequential {
             final List<Map<String, Value>> output = new LinkedList<>();
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(inputDataset.getGraph());
+            dataset.addDefaultGraph(inputDataset.getReadGraph());
             preparedQuery.setDataset(dataset);
             //
             TupleQueryResult result = preparedQuery.evaluate();

@@ -1,14 +1,13 @@
 package com.linkedpipes.etl.executor.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LINKEDPIPES;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
-import com.linkedpipes.etl.executor.rdf.PojoLoader;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.util.Repositories;
+import com.linkedpipes.etl.rdf.utils.RdfBuilder;
+import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 
 import java.io.File;
 import java.util.List;
@@ -19,154 +18,62 @@ import java.util.Map;
  */
 class RequirementProcessor {
 
-    public static class ProcessingFailed extends Exception {
-
-        public ProcessingFailed(Throwable cause) {
-            super(cause);
-        }
-
-    }
-
-    private static class TempDirectory implements PojoLoader.Loadable {
-
-        private String targetProperty;
-
-        @Override
-        public PojoLoader.Loadable load(String predicate, Value object)
-                throws LpException {
-            switch (predicate) {
-                case LINKEDPIPES.REQUIREMENTS.HAS_TARGET_PROPERTY:
-                    targetProperty = object.stringValue();
-                    return null;
-                default:
-                    return null;
-            }
-        }
-
-    }
-
-    private static class InputDirectory implements PojoLoader.Loadable {
-
-        private String targetProperty;
-
-        @Override
-        public PojoLoader.Loadable load(String predicate, Value object)
-                throws LpException {
-            switch (predicate) {
-                case LINKEDPIPES.REQUIREMENTS.HAS_TARGET_PROPERTY:
-                    targetProperty = object.stringValue();
-                    return null;
-                default:
-                    return null;
-            }
-        }
-
-    }
-
     private RequirementProcessor() {
     }
 
-    public static void handle(PipelineDefinition definition,
-            ResourceManager resourceManager) throws ProcessingFailed {
-
-        final String query = "SELECT ?source ?requirement ?type ?value"
-                + " WHERE {\n"
-                + "  ?source <"
-                + LINKEDPIPES.HAS_REQUIREMENT + "> ?requirement .\n"
-                + "  ?requirement a <"
-                + LINKEDPIPES.REQUIREMENTS.REQUIREMENT + "> ;"
-                + "    a ?type. \n"
-                + "  OPTIONAL {\n"
-                + "    ?requirement <"
-                + LINKEDPIPES.REQUIREMENTS.HAS_SOURCE_PROPERTY + "> ?uri. \n"
-                + "    ?source ?uri ?value. \n"
-                + "  }\n"
-                + "}";
-
-        final List<Map<String, String>> queryResult
-                = definition.executeSelect(query);
+    /**
+     * Handle requirements on the pipeline definition.
+     *
+     * @param definition
+     * @param graph
+     * @param resourceManager
+     */
+    public static void handle(RdfSource definition, String graph,
+            ResourceManager resourceManager) throws LpException {
+        final List<Map<String, String>> working;
+        final List<Map<String, String>> input;
+        try {
+            working = RdfUtils.sparqlSelect(definition,
+                    getWorkingDirectoryQuery(graph));
+            input = RdfUtils.sparqlSelect(definition,
+                    getInputDirectoryQuery(graph));
+        } catch (RdfUtilsException ex) {
+            throw new LpException("Can't query requirements.", ex);
+        }
         //
-        for (Map<String, String> item : queryResult) {
-            switch (item.get("type")) {
-                case LINKEDPIPES.REQUIREMENTS.TEMP_DIRECTORY:
-                    handleTempDirectory(
-                            definition,
-                            resourceManager,
-                            item.get("requirement"),
-                            item.get("source"));
-                    break;
-                case LINKEDPIPES.REQUIREMENTS.INPUT_DIRECTORY:
-                    handleInputDirectory(
-                            definition,
-                            resourceManager,
-                            item.get("requirement"),
-                            item.get("source"));
-                    break;
-                default:
-                    break;
-            }
+        final RdfBuilder builder =
+                new RdfBuilder(definition.getTripleWriter(graph));
+        for (Map<String, String> entry : working) {
+            final String iri = entry.get("s");
+            final File file = resourceManager.getWorkingDirectory("temp");
+            builder.entity(iri).iri(LP_EXEC.HAS_WORKING_DIRECTORY,
+                    file.toURI().toString());
         }
-
-    }
-
-    private static void handleTempDirectory(PipelineDefinition definition,
-            ResourceManager resourceManager, String requirement, String source)
-            throws ProcessingFailed {
-        // Read requirements.
-        final TempDirectory tempDirectory = new TempDirectory();
-        try {
-            PojoLoader.load(
-                    definition.getRepository(),
-                    requirement,
-                    definition.getDefinitionGraph(),
-                    tempDirectory);
-        } catch (LpException ex) {
-            throw new ProcessingFailed(ex);
+        final File inputDirectory = resourceManager.getInputDirectory();
+        for (Map<String, String> entry : input) {
+            final String iri = entry.get("s");
+            builder.entity(iri).iri(LP_EXEC.HAS_INPUT_DIRECTORY,
+                    inputDirectory.toURI().toString());
         }
-        // Add triple with path to the temp directory.
-        final File workingDir = resourceManager.getWorkingDirectory("temp");
         try {
-            Repositories.consume(definition.getRepository(), (connection) -> {
-                final ValueFactory vf = SimpleValueFactory.getInstance();
-                connection.add(vf.createStatement(
-                        vf.createIRI(source),
-                        vf.createIRI(tempDirectory.targetProperty),
-                        vf.createIRI(workingDir.toURI().toString())),
-                        vf.createIRI(definition.getDefinitionGraph()));
-            });
-        } catch (RepositoryException ex) {
-            throw new ProcessingFailed(ex);
+            builder.commit();
+        } catch (RdfUtilsException ex) {
+            throw new LpException("Can't create save RDF.", ex);
         }
     }
 
-    private static void handleInputDirectory(PipelineDefinition definition,
-            ResourceManager resourceManager, String requirement, String source)
-            throws ProcessingFailed {
-        // Read requirements.
-        final InputDirectory inputDirectory = new InputDirectory();
-        try {
-            PojoLoader.load(
-                    definition.getRepository(),
-                    requirement,
-                    definition.getDefinitionGraph(),
-                    inputDirectory);
-        } catch (LpException ex) {
-            throw new ProcessingFailed(ex);
-        }
-        // Add triple with path to the temp directory.
-        final File inputDir = resourceManager.getInputDirectory();
-        try {
-            Repositories.consume(definition.getRepository(), (connection) -> {
-                final ValueFactory vf = SimpleValueFactory.getInstance();
-                connection.add(vf.createStatement(
-                        vf.createIRI(source),
-                        vf.createIRI(inputDirectory.targetProperty),
-                        vf.createIRI(inputDir.toURI().toString())),
-                        vf.createIRI(definition.getDefinitionGraph()));
-            });
-        } catch (RepositoryException ex) {
-            throw new ProcessingFailed(ex);
-        }
+    private static String getWorkingDirectoryQuery(String graph) {
+        return "SELECT ?s WHERE { GRAPH <" + graph + "> {\n" +
+                " ?s <" + LP_PIPELINE.HAS_REQUIREMENT + "> " +
+                "<" + LP_PIPELINE.WORKING_DIRECTORY + "> \n" +
+                "}}";
+    }
+
+    private static String getInputDirectoryQuery(String graph) {
+        return "SELECT ?s WHERE { GRAPH <" + graph + "> {\n" +
+                " ?s <" + LP_PIPELINE.HAS_REQUIREMENT + "> " +
+                "<" + LP_PIPELINE.INPUT_DIRECTORY + "> \n" +
+                "}}";
     }
 
 }

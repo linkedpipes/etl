@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.transformer.sparql.construct;
 
-/**
- *
- * @author Škoda Petr
- */
 final class SparqlConstructVocabulary {
 
     private static final String PREFIX

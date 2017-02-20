@@ -1,104 +1,105 @@
 package com.linkedpipes.plugin.extractor.distributionMetadata;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 
-@RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#Configuration")
+@RdfToPojo.Type(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#Configuration")
 public class DistributionMetadataConfig {
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#datasetURI")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#datasetURI")
     private String datasetURI = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#distributionURI")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#distributionURI")
     private String distributionURI = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useDatasetURIfromInput")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useDatasetURIfromInput")
     private boolean useDatasetURIfromInput = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#language_orig")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#language_orig")
     private String language_orig = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#title_orig")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#title_orig")
     private String title_orig = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#title_en")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#title_en")
     private String title_en = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#desc_orig")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#desc_orig")
     private String desc_orig = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#desc_en")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#desc_en")
     private String desc_en = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#license")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#license")
     private String license = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#sparqlEndpointUrl")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#sparqlEndpointUrl")
     private String sparqlEndpointUrl = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#mediaType")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#mediaType")
     private String mediaType = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#downloadURL")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#downloadURL")
     private String downloadURL = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#accessURL")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#accessURL")
     private String accessURL = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#exampleResources")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#exampleResources")
     private Collection<String> exampleResources = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useNow")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useNow")
     private boolean useNow = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#modified")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#modified")
     private Date modified = new Date();
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#issued")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#issued")
     private Date issued = new Date();
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#titleFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#titleFromDataset")
     private boolean titleFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#generateDistroURIFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#generateDistroURIFromDataset")
     private boolean generateDistroURIFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#originalLanguageFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#originalLanguageFromDataset")
     private boolean originalLanguageFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#issuedFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#issuedFromDataset")
     private boolean issuedFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#descriptionFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#descriptionFromDataset")
     private boolean descriptionFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#licenseFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#licenseFromDataset")
     private boolean licenseFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schemaFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schemaFromDataset")
     private boolean schemaFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useTemporal")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useTemporal")
     private boolean useTemporal = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useNowTemporalEnd")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#useNowTemporalEnd")
     private boolean useNowTemporalEnd = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalFromDataset")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalFromDataset")
     private boolean temporalFromDataset = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalEnd")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalEnd")
     private Date temporalEnd = new Date();
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalStart")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#temporalStart")
     private Date temporalStart = new Date();
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schema")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schema")
     private String schema = "";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schemaType")
+    @RdfToPojo.Property(iri ="http://plugins.linkedpipes.com/ontology/e-distributionMetadata#schemaType")
     private String schemaType = "";
 
     public DistributionMetadataConfig() {

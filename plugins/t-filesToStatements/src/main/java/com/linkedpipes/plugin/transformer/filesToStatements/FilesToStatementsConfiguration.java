@@ -1,15 +1,11 @@
 package com.linkedpipes.plugin.transformer.filesToStatements;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = FilesToStatementsVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = FilesToStatementsVocabulary.CONFIG_CLASS)
 public class FilesToStatementsConfiguration {
 
-    @RdfToPojo.Property(uri = FilesToStatementsVocabulary.PREDICATE)
+    @RdfToPojo.Property(iri = FilesToStatementsVocabulary.PREDICATE)
     private String predicate;
 
     public FilesToStatementsConfiguration() {

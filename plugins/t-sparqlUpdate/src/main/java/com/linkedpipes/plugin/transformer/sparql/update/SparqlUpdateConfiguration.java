@@ -1,15 +1,11 @@
 package com.linkedpipes.plugin.transformer.sparql.update;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = SparqlUpdateVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = SparqlUpdateVocabulary.CONFIG_CLASS)
 public class SparqlUpdateConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlUpdateVocabulary.CONFIG_SPARQL)
+    @RdfToPojo.Property(iri = SparqlUpdateVocabulary.CONFIG_SPARQL)
     private String query = "INSERT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
     public SparqlUpdateConfiguration() {

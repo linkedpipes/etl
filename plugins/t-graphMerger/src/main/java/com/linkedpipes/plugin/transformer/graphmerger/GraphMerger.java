@@ -1,22 +1,21 @@
 package com.linkedpipes.plugin.transformer.graphmerger;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.GraphListDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import java.util.Collection;
-import org.openrdf.model.IRI;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.Update;
+import com.linkedpipes.etl.dataunit.core.rdf.GraphListDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.query.impl.SimpleDataset;
 
-/**
- *
- */
-public final class GraphMerger implements Component.Sequential {
+import java.util.Collection;
+
+public final class GraphMerger implements Component, SequentialExecution {
 
     private static final String COPY_QUERY
             = "INSERT { ?s ?p ?o } WHERE { ?s ?p ?o }";
@@ -24,10 +23,10 @@ public final class GraphMerger implements Component.Sequential {
     private static final Logger LOG
             = LoggerFactory.getLogger(GraphMerger.class);
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public GraphListDataUnit inputRdf;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Inject
@@ -35,8 +34,8 @@ public final class GraphMerger implements Component.Sequential {
 
     @Override
     public void execute() throws LpException {
-        final IRI outputGraph = outputRdf.getGraph();
-        final Collection<IRI> inputGraphs = inputRdf.getGraphs();
+        final IRI outputGraph = outputRdf.getWriteGraph();
+        final Collection<IRI> inputGraphs = inputRdf.getReadGraphs();
         progressReport.start(inputGraphs);
         for (final IRI inputGraph : inputGraphs) {
             // Copy data to output graph.

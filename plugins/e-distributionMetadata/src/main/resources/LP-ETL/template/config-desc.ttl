@@ -34,7 +34,8 @@
         <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useTemporal> ,
         <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/useNowTemporalEnd> ,
         <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/temporalFromDataset> ,
-        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/exampleResources> .
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/exampleResources> ,
+        <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/modified> .
 
 <http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/datasetURI>
     a config:ConfigurationMember ;
@@ -185,3 +186,8 @@
     a config:ConfigurationMember ;
     config:property dm:exampleResources ;
     config:control dm:exampleResourcesControl .
+
+<http://linkedpipes.com/resources/components/e-distributionMetadata/0.0.0/configuration/desc/modified>
+    a config:ConfigurationMember ;
+    config:property dm:modified ;
+    config:control dm:modifiedControl .

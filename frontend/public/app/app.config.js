@@ -101,6 +101,7 @@ define([], function () {
                 .icon('info_outline', 'libraries/google.design/ic_info_outline_24px.svg')
                 .icon('flash_off', 'libraries/google.design/ic_flash_off_24px.svg')
                 .icon('flash_on', 'libraries/google.design/ic_flash_on_24px.svg')
+                .icon('stop', 'libraries/google.design/ic_stop_24px.svg')
                 ;
 
         $mdThemingProvider.theme('default')

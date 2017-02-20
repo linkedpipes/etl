@@ -1,264 +1,179 @@
 package com.linkedpipes.etl.executor.dataunit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedpipes.etl.executor.ExecutorException;
+import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import com.linkedpipes.etl.executor.event.EventFactory;
-import com.linkedpipes.etl.executor.event.EventManager;
-import com.linkedpipes.etl.executor.execution.ExecutionModel;
-import com.linkedpipes.etl.executor.module.ModuleFacade;
-import com.linkedpipes.etl.executor.module.ModuleFacade.ModuleException;
-import com.linkedpipes.etl.executor.pipeline.PipelineDefinition;
+import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Manage life cycle of all data units.
+ * This class is responsible for handling dataunit management.
  */
 public class DataUnitManager {
 
-    public static class DataUnitException extends ExecutorException {
+    public interface DataUnitInstanceSource {
 
-        public DataUnitException(String messages, Object... args) {
-            super(messages, args);
-        }
+        /**
+         * @param iri
+         * @return Instance for data unit of given IRI.
+         */
+        ManageableDataUnit getDataUnit(String iri) throws ExecutorException;
 
     }
 
-    /**
-     * Name of subdirectory for data in the data unit directory.
-     */
-    private static final String DATA_DIRECTORY = "data";
+    private static final Logger LOG =
+            LoggerFactory.getLogger(DataUnitManager.class);
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(DataUnitManager.class);
-
-    private final PipelineDefinition pipelineSparql;
-
-    private final ExecutionModel execution;
-
-    private final EventManager events;
-
-    private final Map<String, DataUnitContainer> dataUnits = new HashMap<>();
+    private final Map<Execution.DataUnit, DataUnitContainer> dataUnits
+            = new HashMap<>();
 
     /**
-     * Store direct access to data unit instances.
+     * Map of instances. Given to data units for initialization.
      */
     private final Map<String, ManageableDataUnit> instances = new HashMap<>();
 
-    public DataUnitManager(PipelineDefinition pipelineSparql,
-            ExecutionModel execution, EventManager events) {
-        this.pipelineSparql = pipelineSparql;
-        this.execution = execution;
-        this.events = events;
+    private final PipelineModel pipeline;
+
+    public DataUnitManager(
+            PipelineModel pipeline) {
+        this.pipeline = pipeline;
     }
 
-    public void onExecutionStart(ModuleFacade moduleFacade)
-            throws DataUnitException {
-        // Eager mode. Create instances of data units.
-        // Instances should be an empty classes till the initialization
-        // so it should be ok to do this.
-        for (ExecutionModel.Component comp : this.execution.getComponents()) {
-            for (ExecutionModel.DataUnit dataUnit : comp.getDataUnits()) {
-                createDataUnit(moduleFacade, dataUnit);
-            }
+    /**
+     * @param dataUnitInstanceSource Source of data unit instances.
+     * @param dataUnits Data units to bindToPipeline.
+     */
+    public void initialize(DataUnitInstanceSource dataUnitInstanceSource,
+            Collection<Execution.DataUnit> dataUnits) throws ExecutorException {
+        // Create instances of data units.
+        for (Execution.DataUnit dataUnit : dataUnits) {
+            createDataUnitContainer(dataUnitInstanceSource, dataUnit);
         }
     }
 
-    public void onExecutionEnd() {
-        // Close all data units.
-        boolean failure = false;
+    /**
+     * Close all opened data units.
+     */
+    public void close() {
         for (DataUnitContainer container : dataUnits.values()) {
             try {
-                close(container);
-            } catch (DataUnitException ex) {
-                failure = true;
-                LOG.error("Can't close data unit.", ex);
+                container.close();
+            } catch (ExecutorException ex) {
+                LOG.info("Can't close data unit: {}", ex);
             }
-        }
-        if (failure) {
-            events.publish(EventFactory.executionFailed(
-                    "Failed to save and close data units."));
         }
     }
 
-    public Map<String, ManageableDataUnit> onComponentStart(
-            ExecutionModel.Component component) throws DataUnitException {
-        // Get all data units used by the given component, initialize
-        // them and return them.
-        final Map<String, ManageableDataUnit> usedDataUnits = new HashMap<>();
-        for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
-            if (!dataUnit.isUsedForExecution()) {
-                // Skip those that are not used for execution.
-                continue;
+    /**
+     * Prepare data unit used by given component.
+     *
+     * @param component
+     * @return Data units referred by given component.
+     */
+    public Map<String, DataUnit> onComponentWillExecute(
+            Execution.Component component) throws ExecutorException {
+        final Map<String, DataUnit> usedDataUnits = new HashMap<>();
+        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+            final DataUnitContainer container = dataUnits.get(dataUnit);
+            if (container == null) {
+                throw new ExecutorException("Missing data unit: {} for {}",
+                        dataUnit.getDataUnitIri(), component.getComponentIri());
             }
-            final DataUnitContainer container =
-                    dataUnits.get(dataUnit.getIri());
-            initialize(container);
-            usedDataUnits.put(dataUnit.getIri(), container.getInstance());
-            // If the data unit is input, we want to save the
-            // data here. So the used can see input of a running
-            // component.
-            if (dataUnit.isInput()) {
-                save(container);
+            //
+            final File dataDirectory = dataUnit.getLoadDirectory();
+            if (dataDirectory == null) {
+                container.initialize(instances);
+            } else {
+                container.initialize(dataDirectory);
             }
+            usedDataUnits.put(dataUnit.getDataUnitIri(),
+                    container.getInstance());
         }
         return usedDataUnits;
     }
 
-    public void onComponentEnd(ExecutionModel.Component component) {
-        // Save used components.
-        for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
-            if (!dataUnit.isUsedForExecution()) {
-                // Skip those that are not used for execution.
-                continue;
+    /**
+     * Called when component has been executed.
+     *
+     * @param component
+     */
+    public void onComponentDidExecute(Execution.Component component)
+            throws ExecutorException {
+        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+            final DataUnitContainer container = dataUnits.get(dataUnit);
+            if (container == null) {
+                throw new ExecutorException("Missing data unit: {} for {}",
+                        dataUnit.getDataUnitIri(), component.getComponentIri());
             }
-            //
-            final DataUnitContainer container =
-                    dataUnits.get(dataUnit.getIri());
-            save(container);
+            container.save();
+        }
+    }
+
+    public void onComponentMapByReference(Execution.Component component)
+            throws ExecutorException {
+        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+            final DataUnitContainer container = dataUnits.get(dataUnit);
+            if (container == null) {
+                throw new ExecutorException("Missing data unit: {} for {}",
+                        dataUnit.getDataUnitIri(), component.getComponentIri());
+            }
+            final File sourceFile = dataUnit.getLoadDirectory();
+            if (isDataUnitUsed(component, dataUnit)) {
+                container.initialize(sourceFile);
+                container.save();
+            } else {
+                container.mapByReference(sourceFile);
+            }
         }
     }
 
     /**
-     * If given data unit is used then create and add a container with instance
-     * for it.
+     * Create {@link DataUnitContainer} and add it to {@link #dataUnits}.
      *
-     * @param moduleFacade
+     * If the data unit should not be used during the execution, then
+     * nothing happen.
+     *
+     * @param dataUnitInstanceSource
      * @param dataUnit
      */
-    private void createDataUnit(ModuleFacade moduleFacade,
-            ExecutionModel.DataUnit dataUnit) throws DataUnitException {
-        if (!dataUnit.isUsedForExecution()) {
-            // Skip data units that are not used in the execution.
-            return;
-        }
-        // Create an instance and add to list of data units.
+    private void createDataUnitContainer(
+            DataUnitInstanceSource dataUnitInstanceSource,
+            Execution.DataUnit dataUnit) throws ExecutorException {
+        final String iri = dataUnit.getDataUnitIri();
+        final ManageableDataUnit instance;
         try {
-            final ManageableDataUnit instance = moduleFacade.getDataUnit(
-                    pipelineSparql, dataUnit.getIri());
-            instances.put(dataUnit.getIri(), instance);
-            dataUnits.put(dataUnit.getIri(),
-                    new DataUnitContainer(instance, dataUnit));
-        } catch (ModuleException ex) {
-            throw new DataUnitException("Can't get data unit instance.", ex);
+            instance = dataUnitInstanceSource.getDataUnit(iri);
+        } catch (ExecutorException ex) {
+            throw new ExecutorException("Can't instantiate data unit: {}",
+                    iri, ex);
         }
+        dataUnits.put(dataUnit, new DataUnitContainer(instance, dataUnit));
+        instances.put(iri, instance);
     }
 
-    private void initialize(DataUnitContainer container)
-            throws DataUnitException {
-        // Check for status.
-        switch (container.getStatus()) {
-            case OPEN:
-                // Already initialized.
-                return;
-            case CLOSED:
-                throw new DataUnitException("Can't reopen data unit: {}",
-                        container.getMetadata().getIri());
+    private boolean isDataUnitUsed(Execution.Component component,
+            Execution.DataUnit dataUnit) throws ExecutorException {
+        final PipelineModel.Component pplComponent =
+                pipeline.getComponent(component.getComponentIri());
+        if (pplComponent == null) {
+            throw new ExecutorException(
+                    "Missing component definition: {} for {}",
+                    component.getComponentIri());
         }
-        //
-        final ExecutionModel.DataUnit dataUnit = container.getMetadata();
-        if (dataUnit.isMapped()) {
-            LOG.info("Loading existing data into data unit {} : {} ... ",
-                    dataUnit.getBinding(), dataUnit.getIri());
-            final File dataPath = new File(dataUnit.getLoadPath(),
-                    DATA_DIRECTORY);
-            try {
-                container.getInstance().initialize(dataPath);
-            } catch (LpException ex) {
-                throw new DataUnitException("Can't load data unit: {}",
-                        dataUnit.getIri(), ex);
-            }
-            LOG.info("Loading existing data into data unit {} : {} ... done",
-                    dataUnit.getBinding(), dataUnit.getIri());
-        } else {
-            // We trust ManageableDataUnit and provide it with all
-            // data units.
-            LOG.info("Initializing data unit: {} : {} ...",
-                    dataUnit.getBinding(), dataUnit.getIri());
-            try {
-                container.getInstance().initialize(instances);
-            } catch (LpException ex) {
-                throw new DataUnitException("Can't initialize unit: {}",
-                        dataUnit.getIri(), ex);
-            }
-            LOG.info("Initializing data unit: {} : {} ... done",
-                    dataUnit.getBinding(), dataUnit.getIri());
+        final PipelineModel.DataUnit pplDataUnit =
+                pplComponent.getDataUnit(dataUnit.getDataUnitIri());
+        if (pplDataUnit == null) {
+            throw new ExecutorException("Missing definition: {} for {}",
+                    dataUnit.getDataUnitIri(), component.getComponentIri());
         }
-        // Update container status.
-        container.onInitialized();
-    }
-
-    private void save(DataUnitContainer container) {
-        switch (container.getStatus()) {
-            case SAVED:
-                // Already saved.
-                return;
-            case CLOSED:
-                LOG.warn("Can't save closed data unit: {}",
-                        container.getMetadata().getIri());
-                return;
-        }
-        //
-        final File dataFile = container.getMetadata().getDataPath();
-        final ExecutionModel.DataUnit dataUnit = container.getMetadata();
-        LOG.info("Saving data unit: {} : {} ... ",
-                dataUnit.getBinding(), dataUnit.getIri());
-        if (dataFile != null) {
-            List<File> debugPaths = Collections.EMPTY_LIST;
-            try {
-                final File dataDirectory = new File(dataFile,
-                        DATA_DIRECTORY);
-                dataDirectory.mkdirs();
-                debugPaths = container.getInstance().save(dataDirectory);
-            } catch (Throwable ex) {
-                LOG.error("Can't save data unit : {}",
-                        container.getMetadata().getIri(), ex);
-            }
-            // Save debug paths relative to file we store data it.
-            final ObjectMapper mapper = new ObjectMapper();
-            final File debugFile = new File(dataFile, "/debug.json");
-            final List<String> relativeDebugPaths
-                    = new ArrayList<>(debugPaths.size());
-            for (File file : debugPaths) {
-                relativeDebugPaths.add(dataFile.toPath().relativize(
-                        file.toPath()).toString());
-            }
-            try {
-                mapper.writeValue(debugFile, relativeDebugPaths);
-            } catch (IOException ex) {
-                LOG.error("Can't save data debug paths.", ex);
-            }
-        }
-        LOG.info("Saving data unit: {} : {} ... done",
-                dataUnit.getBinding(), dataUnit.getIri());
-        // Update container status.
-        container.onSave();
-    }
-
-    private void close(DataUnitContainer container) throws DataUnitException {
-        switch (container.getStatus()) {
-            case CLOSED:
-                // Already closed.
-                return;
-        }
-        final ExecutionModel.DataUnit dataUnit = container.getMetadata();
-        LOG.info("Closing data unit: {} : {} ... ",
-                dataUnit.getBinding(), dataUnit.getIri());
-        try {
-            container.getInstance().close();
-        } catch (LpException ex) {
-            throw new DataUnitException(("Can't close data unit : {}"),
-                    container.getMetadata().getIri(), ex);
-        }
-        LOG.info("Closing data unit: {} : {} ... done",
-                dataUnit.getBinding(), dataUnit.getIri());
-        container.onClose();
+        return pipeline.isDataUnitUsed(pplComponent, pplDataUnit);
     }
 
 }

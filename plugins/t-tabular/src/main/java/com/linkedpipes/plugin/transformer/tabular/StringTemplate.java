@@ -10,7 +10,6 @@ import java.util.List;
  *
  * Token {{TABLE_URI}} can be used to reference table resource uri,
  * passed to the initialize function as a fist parameter.
- *
  */
 class StringTemplate {
 
@@ -130,10 +129,8 @@ class StringTemplate {
     }
 
     /**
-     *
      * @param tableUri URI of currently parsed table.
      * @param header Names of columns headers.
-     * @throws InvalidTemplate
      */
     public void initialize(String tableUri, List<String> header)
             throws InvalidTemplate {
@@ -174,13 +171,13 @@ class StringTemplate {
                     tokens.add(createToken(name, header));
                 }
             } else {
-                throw new InvalidTemplate("Invalid template '" + template + "'");
+                throw new InvalidTemplate(
+                        "Invalid template '" + template + "'");
             }
         }
     }
 
     /**
-     *
      * @param row
      * @return Can be null.
      */
@@ -238,7 +235,6 @@ class StringTemplate {
      * @param template
      * @param header
      * @return
-     * @throws InvalidTemplate
      */
     private static Token createToken(String template, List<String> header)
             throws InvalidTemplate {

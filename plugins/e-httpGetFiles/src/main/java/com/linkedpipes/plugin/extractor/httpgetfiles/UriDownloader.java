@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ class UriDownloader {
         public Object call() throws Exception {
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
-                LOG.info("Downloading {}/{} : {}",
+                LOG.debug("Downloading {}/{} : {}",
                         counter.incrementAndGet(), total, work.source);
                 // Check failure of other threads.
                 if (!configuration.isSkipOnError() &&
@@ -91,7 +91,7 @@ class UriDownloader {
                 try (InputStream inputStream = connection.getInputStream()) {
                     FileUtils.copyInputStreamToFile(inputStream, work.target);
                 } catch (IOException ex) {
-                    LOG.error("Can't download file: {}", ex);
+                    LOG.error("Can't download file: {}", work.target, ex);
                     exceptions.add(ex);
                     continue;
                 } finally {
@@ -213,20 +213,20 @@ class UriDownloader {
         final InputStream errStream = connection.getErrorStream();
         if (errStream != null) {
             try {
-                LOG.info("Error stream: {}",
+                LOG.debug("Error stream: {}",
                         IOUtils.toString(errStream, "UTF-8"));
             } catch (Throwable ex) {
                 // Ignore.
             }
         }
         try {
-            LOG.info(" response code: {}", connection.getResponseCode());
+            LOG.debug(" response code: {}", connection.getResponseCode());
         } catch (IOException ex) {
             LOG.warn("Can't read status code.");
         }
         for (String header : connection.getHeaderFields().keySet()) {
             for (String value : connection.getHeaderFields().get(header)) {
-                LOG.info(" header: {} : {}", header, value);
+                LOG.debug(" header: {} : {}", header, value);
             }
         }
     }

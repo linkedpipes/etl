@@ -92,7 +92,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
         final DispatcherServlet dispatcher = new DispatcherServlet(webContext);
         final ServletHolder servlet = new ServletHolder(dispatcher);
         handler.addEventListener(new ContextLoaderListener(webContext));
-        handler.addServlet(servlet, "/api/v1/*");
+        handler.addServlet(servlet, "/api/*");
         handler.setResourceBase(
                 new ClassPathResource("/web/").getURI().toString());
 

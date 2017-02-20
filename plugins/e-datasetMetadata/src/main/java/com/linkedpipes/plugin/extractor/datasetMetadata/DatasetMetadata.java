@@ -1,32 +1,27 @@
 package com.linkedpipes.plugin.extractor.datasetMetadata;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.util.Repositories;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.FOAF;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.SKOS;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.util.Repositories;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 
-/**
- *
- */
-public class DatasetMetadata implements Component.Sequential {
+public class DatasetMetadata implements Component, SequentialExecution {
 
-    @Component.OutputPort(id = "Metadata")
+    @Component.OutputPort(iri = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -85,11 +80,11 @@ public class DatasetMetadata implements Component.Sequential {
         }
 
         if (!isBlank(configuration.getContactPointName())) {
-            final IRI contant = valueFactory.createIRI(configuration.getDatasetURI() + "/contactPoint");
-            statements.add(valueFactory.createStatement(contant, RDF.TYPE, DatasetMetadataVocabulary.VCARD_VCARD_CLASS));
-            statements.add(valueFactory.createStatement(contant, DatasetMetadataVocabulary.VCARD_FN,
+            final IRI contact = valueFactory.createIRI(configuration.getDatasetURI() + "/contactPoint");
+            statements.add(valueFactory.createStatement(contact, RDF.TYPE, DatasetMetadataVocabulary.VCARD_VCARD_CLASS));
+            statements.add(valueFactory.createStatement(contact, DatasetMetadataVocabulary.VCARD_FN,
                     valueFactory.createLiteral(configuration.getContactPointName())));
-            statements.add(valueFactory.createStatement(dataset, DatasetMetadataVocabulary.DCAT_CONTACT_POINT, contant));
+            statements.add(valueFactory.createStatement(dataset, DatasetMetadataVocabulary.DCAT_CONTACT_POINT, contact));
         }
 
         if (!isBlank(configuration.getPeriodicity())) {
@@ -153,7 +148,7 @@ public class DatasetMetadata implements Component.Sequential {
 
         // Add all triples.
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
-            connection.add(statements, outputRdf.getGraph());
+            connection.add(statements, outputRdf.getWriteGraph());
         });
 
     }

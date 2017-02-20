@@ -1,20 +1,20 @@
 package com.linkedpipes.plugin.extractor.ftpfiles;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@RdfToPojo.Type(uri = FtpFilesVocabulary.CONFIG)
+@RdfToPojo.Type(iri = FtpFilesVocabulary.CONFIG)
 public class FtpFilesConfiguration {
 
-    @RdfToPojo.Type(uri = FtpFilesVocabulary.REFERENCE)
+    @RdfToPojo.Type(iri = FtpFilesVocabulary.REFERENCE)
     public static class Reference {
 
-        @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_URI)
+        @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_URI)
         private String uri;
 
-        @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_NAME)
+        @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_NAME)
         private String fileName;
 
         public Reference() {
@@ -38,16 +38,16 @@ public class FtpFilesConfiguration {
 
     }
 
-    @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_REFERENCE)
+    @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_REFERENCE)
     private List<Reference> references = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_PASSIVE_MODE)
+    @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_PASSIVE_MODE)
     private boolean usePassiveMode = false;
 
-    @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_BINARY_MODE)
+    @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_BINARY_MODE)
     private boolean useBinaryMode = true;
 
-    @RdfToPojo.Property(uri = FtpFilesVocabulary.HAS_KEEP_ALIVE_CONTROL)
+    @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_KEEP_ALIVE_CONTROL)
     private int keepAliveControl = 5000;
 
     public FtpFilesConfiguration() {

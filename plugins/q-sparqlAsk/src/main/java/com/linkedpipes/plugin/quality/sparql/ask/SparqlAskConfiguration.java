@@ -1,21 +1,18 @@
 package com.linkedpipes.plugin.quality.sparql.ask;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = SparqlAskVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlAskVocabulary.CONFIG)
 public class SparqlAskConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlAskVocabulary.HAS_SPARQL)
+    @RdfToPojo.Property(iri = SparqlAskVocabulary.HAS_SPARQL)
     private String query = "ASK { ?s ?p ?o }";
 
     /**
      * If true execution fail if ASK return true, else fail if ASK
      * return false.
      */
-    @RdfToPojo.Property(uri = SparqlAskVocabulary.HAS_FAIL_ON_TRUE)
+    @RdfToPojo.Property(iri = SparqlAskVocabulary.HAS_FAIL_ON_TRUE)
     private boolean failOnTrue;
 
     public SparqlAskConfiguration() {

@@ -1,17 +1,16 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.ChunkedStatements;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.rio.*;
-import org.openrdf.rio.helpers.AbstractRDFHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.*;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -20,17 +19,14 @@ import java.util.Optional;
 /**
  * Chunked version of RdfToFile.
  */
-public final class RdfToFileChunked implements Component.Sequential {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RdfToFileChunked.class);
+public final class RdfToFileChunked implements Component, SequentialExecution {
 
     private static final String FILE_ENCODE = "UTF-8";
 
-    @Component.InputPort(id = "InputRdf")
-    public ChunkedStatements inputRdf;
+    @Component.InputPort(iri = "InputRdf")
+    public ChunkedTriples inputRdf;
 
-    @Component.OutputPort(id = "OutputFile")
+    @Component.OutputPort(iri = "OutputFile")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Configuration
@@ -51,7 +47,7 @@ public final class RdfToFileChunked implements Component.Sequential {
                     configuration.getFileName());
         }
         final File outputFile = outputFiles.createFile(
-                configuration.getFileName()).toFile();
+                configuration.getFileName());
         try (FileOutputStream outStream = new FileOutputStream(outputFile);
              OutputStreamWriter outWriter = new OutputStreamWriter(
                      outStream, Charset.forName(FILE_ENCODE))) {
@@ -70,8 +66,8 @@ public final class RdfToFileChunked implements Component.Sequential {
             }
             //
             progressReport.start(inputRdf.size());
-            for (ChunkedStatements.Chunk chunk : inputRdf) {
-                for (Statement statement : chunk.toStatements()) {
+            for (ChunkedTriples.Chunk chunk : inputRdf) {
+                for (Statement statement : chunk.toCollection()) {
                     writer.handleStatement(statement);
                 }
                 progressReport.entryProcessed();
@@ -88,7 +84,6 @@ public final class RdfToFileChunked implements Component.Sequential {
      *
      * @param turtle
      * @param writer
-     * @throws LpException
      */
     private void loadPrefixes(String turtle, RDFWriter writer)
             throws LpException {

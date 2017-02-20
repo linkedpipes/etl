@@ -1,33 +1,30 @@
 package com.linkedpipes.plugin.transformer.sparql.construct;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.Update;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.query.impl.SimpleDataset;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class SparqlConstruct implements Component.Sequential {
+public final class SparqlConstruct implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(SparqlConstruct.class);
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
@@ -46,7 +43,7 @@ public final class SparqlConstruct implements Component.Sequential {
         // We always perform inserts.
         final String query = updateQuery(configuration.getQuery());
         LOG.debug("Query: {}", query);
-        LOG.debug("{} -> {}", inputRdf.getGraph(), outputRdf.getGraph());
+        LOG.debug("{} -> {}", inputRdf.getReadGraph(), outputRdf.getWriteGraph());
         // Execute query - TODO We should check that they share
         // the same repository!
         try {
@@ -54,8 +51,8 @@ public final class SparqlConstruct implements Component.Sequential {
                 final Update update = connection.prepareUpdate(
                         QueryLanguage.SPARQL, query);
                 final SimpleDataset dataset = new SimpleDataset();
-                dataset.addDefaultGraph(inputRdf.getGraph());
-                dataset.setDefaultInsertGraph(outputRdf.getGraph());
+                dataset.addDefaultGraph(inputRdf.getReadGraph());
+                dataset.setDefaultInsertGraph(outputRdf.getWriteGraph());
                 update.setDataset(dataset);
                 update.execute();
             });
@@ -73,6 +70,7 @@ public final class SparqlConstruct implements Component.Sequential {
     static String updateQuery(String query) {
         return query.replaceFirst("(?i)CONSTRUCT\\s*\\{", "INSERT \\{");
     }
-;
+
+    ;
 
 }

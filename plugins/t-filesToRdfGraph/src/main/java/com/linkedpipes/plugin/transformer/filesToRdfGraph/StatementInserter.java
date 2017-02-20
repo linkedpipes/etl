@@ -1,18 +1,15 @@
 package com.linkedpipes.plugin.transformer.filesToRdfGraph;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 public class StatementInserter implements RDFHandler {
 
     private final int commintSize;
@@ -28,7 +25,7 @@ public class StatementInserter implements RDFHandler {
         this.commintSize = commintSize;
         this.dataUnit = dataUnit;
         this.statements = new ArrayList<>(commintSize);
-        this.targetGraph = dataUnit.getGraph();
+        this.targetGraph = dataUnit.getWriteGraph();
     }
 
     @Override

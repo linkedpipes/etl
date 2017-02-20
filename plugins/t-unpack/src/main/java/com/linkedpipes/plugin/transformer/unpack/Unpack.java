@@ -1,11 +1,12 @@
 package com.linkedpipes.plugin.transformer.unpack;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -19,14 +20,14 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 
-public final class Unpack implements Component.Sequential {
+public final class Unpack implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Unpack.class);
 
-    @Component.InputPort(id = "FilesInput")
+    @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit input;
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
     @Component.Configuration
@@ -45,10 +46,10 @@ public final class Unpack implements Component.Sequential {
         for (FilesDataUnit.Entry entry : input) {
             final File outputDirectory;
             if (configuration.isUsePrefix()) {
-                outputDirectory = new File(output.getRootDirectory(),
+                outputDirectory = new File(output.getWriteDirectory(),
                         entry.getFileName());
             } else {
-                outputDirectory = output.getRootDirectory();
+                outputDirectory = output.getWriteDirectory();
             }
             outputDirectory.mkdirs();
             // Unpack.

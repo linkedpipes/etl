@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.Collections;
 import java.util.LinkedList;

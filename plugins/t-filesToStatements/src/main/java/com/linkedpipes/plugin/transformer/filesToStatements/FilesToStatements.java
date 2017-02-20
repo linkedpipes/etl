@@ -1,34 +1,30 @@
 package com.linkedpipes.plugin.transformer.filesToStatements;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableGraphListDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Read content of files and save it in form of literals.
- *
- * @author Škoda Petr
- */
-public final class FilesToStatements implements Component.Sequential {
+public final class FilesToStatements implements Component, SequentialExecution {
 
     private static final int BUFFER_SIZE = 64;
 
-    @Component.OutputPort(id = "InputFiles")
+    @Component.OutputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.InputPort(id = "OutputRdf")
+    @Component.InputPort(iri = "OutputRdf")
     public WritableGraphListDataUnit outputRdf;
 
     @Component.Configuration

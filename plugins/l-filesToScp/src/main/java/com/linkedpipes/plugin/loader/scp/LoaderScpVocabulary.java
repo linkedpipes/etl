@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.loader.scp;
 
-/**
- *
- */
 public final class LoaderScpVocabulary {
 
     private static final String PREFIX

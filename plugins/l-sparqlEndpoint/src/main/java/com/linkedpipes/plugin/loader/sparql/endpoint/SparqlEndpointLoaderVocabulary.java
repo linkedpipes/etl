@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.loader.sparql.endpoint;
 
-/**
- *
- */
 final class SparqlEndpointLoaderVocabulary {
 
     private static final String PREFIX
@@ -12,7 +9,7 @@ final class SparqlEndpointLoaderVocabulary {
 
     public static final String HAS_ENDPOINT = PREFIX + "endpoint";
 
-    public static final String HAS_AUTH = PREFIX + "useAuthentification";
+    public static final String HAS_AUTH = PREFIX + "useAuthentication";
 
     public static final String HAS_USERNAME = PREFIX + "userName";
 

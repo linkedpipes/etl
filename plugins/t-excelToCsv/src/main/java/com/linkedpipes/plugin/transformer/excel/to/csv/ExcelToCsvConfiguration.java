@@ -1,13 +1,11 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = ExcelToCsvVocabulary.CONFIG)
+@RdfToPojo.Type(iri = ExcelToCsvVocabulary.CONFIG)
 public class ExcelToCsvConfiguration {
 
     public static final String FILE_HOLDER = "{FILE}";
@@ -17,16 +15,16 @@ public class ExcelToCsvConfiguration {
     /**
      * Row and column starts from 1 (as visible in excel).
      */
-    @RdfToPojo.Type(uri = ExcelToCsvVocabulary.VIRTUAL_COLUMN)
+    @RdfToPojo.Type(iri = ExcelToCsvVocabulary.VIRTUAL_COLUMN)
     public static class VirtualColumn {
 
-        @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW)
+        @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_ROW)
         private int row;
 
-        @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN)
+        @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_COLUMN)
         private int column;
 
-        @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_NAME)
+        @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_NAME)
         private String name;
 
         public VirtualColumn() {
@@ -67,68 +65,68 @@ public class ExcelToCsvConfiguration {
     /**
      * Pattern used to generate output file name.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_FILE_NAME)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_FILE_NAME)
     private String fileNamePattern = SHEET_HOLDER + "-" + FILE_HOLDER + ".csv";
 
     /**
      * Regexp used to match sheet name.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_SHEET_FILTER)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_SHEET_FILTER)
     private String sheetFilter = ".*";
 
     /**
      * Number of rows to skip.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW_START)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_ROW_START)
     private int rowsStart = 0;
 
     /**
      * Number of initial columns to skip.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN_START)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_COLUMN_START)
     private int columnsStart = 0;
 
     /**
      * Number of rows to read at max.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_ROW_END)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_ROW_END)
     private int rowsEnd = -1;
 
     /**
      * Should be set, it -1 then the number of rows is determined by the
      * header size.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_COLUMN_END)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_COLUMN_END)
     private int columnsEnd = -1;
 
     /**
      * List of virtual columns, column has value of given cell.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_VIRTUAL_COLUMN)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_VIRTUAL_COLUMN)
     private List<VirtualColumn> virtualColumns = new LinkedList<>();
 
     /**
      * True if data has header.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_HEADER)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_HEADER)
     private boolean headerPresented = true;
 
     /**
      * If true then double values are checked to be dates.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_NUMERIC_PARSE)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_NUMERIC_PARSE)
     private boolean numericParse = true;
 
     /**
      * If true empty rows are not put to output.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_SKIP_EMPTY_ROWS)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_SKIP_EMPTY_ROWS)
     private boolean skipEmptyRows = true;
 
     /**
      * If true sheet name is included as special column named 'sheet_name'.
      */
-    @RdfToPojo.Property(uri = ExcelToCsvVocabulary.HAS_INCLUDE_SHEET_NAME)
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_INCLUDE_SHEET_NAME)
     private boolean includeSheetName = false;
 
     public ExcelToCsvConfiguration() {

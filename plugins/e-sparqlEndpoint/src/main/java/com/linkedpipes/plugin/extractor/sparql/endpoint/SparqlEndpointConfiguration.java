@@ -1,32 +1,29 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = SparqlEndpointVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlEndpointVocabulary.CONFIG)
 public class SparqlEndpointConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_QUERY)
+    @RdfToPojo.Property(iri = SparqlEndpointVocabulary.HAS_QUERY)
     private String query = "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
-    @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_ENDPOINT)
+    @RdfToPojo.Property(iri = SparqlEndpointVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
     /**
      * Default graphs can be specified only via the runtime configuration.
      */
-    @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_DEFAULT_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
     /**
      * Used as a Accept value in header.
      */
-    @RdfToPojo.Property(uri = SparqlEndpointVocabulary.HAS_HEADER_ACCEPT)
+    @RdfToPojo.Property(iri = SparqlEndpointVocabulary.HAS_HEADER_ACCEPT)
     private String transferMimeType = null;
 
     public SparqlEndpointConfiguration() {

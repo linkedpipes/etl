@@ -1,16 +1,17 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.AbstractRDFHandler;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,16 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public final class FilesToRdfChunked implements Component.Sequential {
+public final class FilesToRdfChunked implements Component, SequentialExecution {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(FilesToRdfChunked.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.OutputPort(id = "OutputRdf")
-    public WritableChunkedStatements outputRdf;
+    @Component.OutputPort(iri = "OutputRdf")
+    public WritableChunkedTriples outputRdf;
 
     @Component.Configuration
     public FilesToRdfConfiguration configuration;

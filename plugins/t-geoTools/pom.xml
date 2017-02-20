@@ -28,19 +28,15 @@
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-commons</artifactId>
+            <artifactId>api-executor-v1</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-component-v1</artifactId>
+            <artifactId>dataunit-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-sesame</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>dataunit-system</artifactId>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-api</artifactId>
         </dependency>
         <!-- GeoTools. -->
         <dependency>
@@ -49,10 +45,13 @@
             <version>${geotools.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- OpenRDF. -->
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-api</artifactId>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>test-environment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 
