@@ -510,7 +510,6 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
                 throw new ExecutorException("Invalid execution type: {} ",
                         component.getExecutionType());
         }
-        // MAP
         if (dataUnit.isInput()) {
             return false;
         }
@@ -526,20 +525,22 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     private Collection<Connection> findConnections(
             Component component, DataUnit dataUnit) {
         final Collection<Connection> output = new LinkedList<>();
+        final String componentIri = component.getIri();
+        final String binding = dataUnit.getBinding();
         for (Connection connection : connections) {
-            if (connection.getSourceComponent().equals(component.getIri()) &&
-                    connection.getSourceBinding().equals(dataUnit.getIri())) {
+            if (connection.getSourceComponent().equals(componentIri) &&
+                    connection.getSourceBinding().equals(binding)) {
                 output.add(connection);
                 continue;
             }
-            if (connection.getTargetComponent().equals(component.getIri()) &&
-                    connection.getTargetBinding().equals(dataUnit.getIri())) {
+            if (connection.getTargetComponent().equals(componentIri) &&
+                    connection.getTargetBinding().equals(binding)) {
                 output.add(connection);
                 continue;
             }
