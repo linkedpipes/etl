@@ -470,6 +470,88 @@ public final class DcatAp11ToCkan implements Component.Sequential {
                 }
             }
 
+            // RDF SPECIFIC - VOID
+            if (configuration.getVoidSparqlEndpoint() != null && configuration.getVoidSparqlEndpoint()) {
+                String sparqlEndpoint = executeSimpleSelectQuery("SELECT ?sparqlEndpoint WHERE {<" + distribution + "> <" + DcatAp11ToCkanVocabulary.VOID_SPARQLENDPOINT + "> ?sparqlEndpoint }", "sparqlEndpoint");
+                if (!sparqlEndpoint.isEmpty()) {
+                    //Start of Sparql Endpoint resource
+                    JSONObject sparqlEndpointJSON = new JSONObject();
+
+                    sparqlEndpointJSON.put("name", "SPARQL Endpoint");
+                    sparqlEndpointJSON.put("url", sparqlEndpoint);
+                    sparqlEndpointJSON.put("format", "api/sparql");
+                    sparqlEndpointJSON.put("mimetype", "text/turtle");
+                    sparqlEndpointJSON.put("resource_type", "api");
+                    if (!dissued.isEmpty()) {
+                        sparqlEndpointJSON.put("created", dissued);
+                    }
+                    if (!dmodified.isEmpty()) {
+                        sparqlEndpointJSON.put("last_modified", dmodified);
+                    }
+                    if (configuration.getProfile().equals(DcatAp11ToCkanVocabulary.PROFILES_NKOD.stringValue())) {
+                        String dlicense = executeSimpleSelectQuery("SELECT ?license WHERE {<" + distribution + "> <" + DCTERMS.LICENSE + "> ?license }", "license");
+                        if (!dlicense.isEmpty()) {
+                            sparqlEndpointJSON.put("license_link", dlicense);
+                        }
+                        String dtemporalStart = executeSimpleSelectQuery("SELECT ?temporalStart WHERE {<" + distribution + "> <" + DCTERMS.TEMPORAL + ">/<" + DcatAp11ToCkanVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
+                        if (!dtemporalStart.isEmpty()) {
+                            sparqlEndpointJSON.put("temporal_start", dtemporalStart);
+                        }
+                        String dtemporalEnd = executeSimpleSelectQuery("SELECT ?temporalEnd WHERE {<" + distribution + "> <" + DCTERMS.TEMPORAL + ">/<" + DcatAp11ToCkanVocabulary.SCHEMA_ENDDATE + "> ?temporalEnd }", "temporalEnd");
+                        if (!dtemporalEnd.isEmpty()) {
+                            sparqlEndpointJSON.put("temporal_end", dtemporalEnd);
+                        }
+                        String dschemaURL = executeSimpleSelectQuery("SELECT ?schema WHERE {<" + distribution + "> <" + DCTERMS.CONFORMS_TO + "> ?schema }", "schema");
+                        if (!dschemaURL.isEmpty()) {
+                            sparqlEndpointJSON.put("describedBy", dschemaURL);
+                        }
+                    }
+
+                    if (resUrlIdMap.containsKey(sparqlEndpoint)) {
+                        String id = resUrlIdMap.get(sparqlEndpoint);
+                        sparqlEndpointJSON.put("id", id);
+                        resourceList.remove(id);
+                    }
+
+                    resources.put(sparqlEndpointJSON);
+                    // End of Sparql Endpoint resource
+                }
+            }
+
+            if (configuration.getVoidExampleResources() != null && configuration.getVoidExampleResources()) {
+                LinkedList<String> examples = new LinkedList<String>();
+                for (Map<String, Value> map : executeSelectQuery("SELECT ?exampleResource WHERE {<" + distribution + "> <" + DcatAp11ToCkanVocabulary.VOID_EXAMPLERESOURCE + "> ?exampleResource }")) {
+                    examples.add(map.get("exampleResource").stringValue());
+                }
+                for (String example : examples) {
+                    // Start of Example resource html
+                    JSONObject exHTML = new JSONObject();
+
+                    exHTML.put("format", "HTML");
+                    exHTML.put("mimetype", "text/html");
+                    exHTML.put("resource_type", "file");
+                    exHTML.put("name", "Example resource");
+                    exHTML.put("url", example);
+                    if (!dissued.isEmpty()) {
+                        exHTML.put("created", dissued);
+                    }
+                    if (!dmodified.isEmpty()) {
+                        exHTML.put("last_modified", dmodified);
+                    }
+
+                    if (resUrlIdMap.containsKey(example)) {
+                        String id = resUrlIdMap.get(example);
+                        exHTML.put("id", id);
+                        resourceList.remove(id);
+                    }
+
+                    resources.put(exHTML);
+                    // End of html resource
+                }
+            }
+
+            // END OF RDF VOID SPECIFICS
+
             resources.put(distro);
         }
 

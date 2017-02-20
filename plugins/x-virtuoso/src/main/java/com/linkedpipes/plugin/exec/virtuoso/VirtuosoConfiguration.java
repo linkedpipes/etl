@@ -2,15 +2,11 @@ package com.linkedpipes.plugin.exec.virtuoso;
 
 import com.linkedpipes.etl.component.api.service.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
 @RdfToPojo.Type(uri = VirtuosoVocabulary.CONFIG_CLASS)
 public class VirtuosoConfiguration {
 
     @RdfToPojo.Property(uri = VirtuosoVocabulary.VIRTUOSO_URI)
-    private String virtuosoUrl = "jdbc:virtuoso://localhost:1111/charset=UTF-8/";
+    private String virtuosoUrl = "";
 
     @RdfToPojo.Property(uri = VirtuosoVocabulary.USERNAME)
     private String username = "dba";
@@ -35,6 +31,9 @@ public class VirtuosoConfiguration {
 
     @RdfToPojo.Property(uri = VirtuosoVocabulary.CLEAR_LOAD_GRAPH)
     private boolean clearLoadList = true;
+
+    @RdfToPojo.Property(uri = VirtuosoVocabulary.LOADER_COUNT)
+    private int loaderCount = 1;
 
     public VirtuosoConfiguration() {
     }
@@ -109,5 +108,13 @@ public class VirtuosoConfiguration {
 
     public void setClearLoadList(boolean clearLoadList) {
         this.clearLoadList = clearLoadList;
+    }
+
+    public int getLoaderCount() {
+        return loaderCount;
+    }
+
+    public void setLoaderCount(int loaderCount) {
+        this.loaderCount = loaderCount;
     }
 }

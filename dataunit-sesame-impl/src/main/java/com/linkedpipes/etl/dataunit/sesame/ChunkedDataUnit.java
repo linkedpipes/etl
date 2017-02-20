@@ -192,6 +192,11 @@ class ChunkedDataUnit implements ChunkedStatements, WritableChunkedStatements,
         // No-operation here.
     }
 
+    @Override
+    public Collection<File> getSourceDirectories() {
+        return readDirectories;
+    }
+
     ChunkedStatements.Chunk createChunk(File file) {
         return new ChunkImpl(file);
     }

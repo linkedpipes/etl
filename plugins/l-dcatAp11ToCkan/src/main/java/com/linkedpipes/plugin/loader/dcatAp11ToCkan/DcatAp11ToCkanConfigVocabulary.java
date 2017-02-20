@@ -18,6 +18,10 @@ public class DcatAp11ToCkanConfigVocabulary {
 
     public static final String LOAD_LANGUAGE = PREFIX + "loadLanguage";
 
+    public static final String VOID_EXAMPLE_RESOURCES = PREFIX + "voidExampleResources";
+
+    public static final String VOID_SPARQL_ENDPOINT = PREFIX + "voidSparqlEndpoint";
+
     public static final String PROFILE = PREFIX + "profile";
 
 }

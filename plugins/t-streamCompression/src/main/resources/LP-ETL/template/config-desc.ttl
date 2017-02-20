@@ -1,0 +1,11 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-streamCompression/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-streamCompression#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-streamCompression/0.0.0/configuration/desc/format> .
+
+<http://linkedpipes.com/resources/components/t-streamCompression/0.0.0/configuration/desc/format>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-streamCompression#format> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-streamCompression#formatControl> .

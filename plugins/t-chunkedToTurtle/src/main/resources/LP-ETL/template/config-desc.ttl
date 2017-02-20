@@ -1,0 +1,6 @@
+@prefix th: <http://plugins.linkedpipes.com/ontology/t-filesRenamer#> .
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-chunkedToTurtle/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-chunkedToTurtle#Configuration> .

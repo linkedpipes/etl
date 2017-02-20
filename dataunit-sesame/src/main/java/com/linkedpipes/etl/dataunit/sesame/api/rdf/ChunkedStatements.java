@@ -3,6 +3,7 @@ package com.linkedpipes.etl.dataunit.sesame.api.rdf;
 import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import org.openrdf.model.Statement;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -32,5 +33,10 @@ public interface ChunkedStatements extends Iterable<ChunkedStatements.Chunk> {
     }
 
     long size();
+
+    /**
+     * @return Directories with content of the chunked data unit.
+     */
+    Collection<File> getSourceDirectories();
 
 }

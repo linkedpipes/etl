@@ -17,6 +17,7 @@
         <module>e-dcatAp11Dataset</module>
         <module>e-distributionMetadata</module>
         <module>e-dcatAp11Distribution</module>
+        <module>e-voidDataset</module>
         <module>l-dcatAp11ToCkan</module>
         <module>t-filesToRdf</module>
         <module>t-filesToRdfChunked</module>
@@ -70,6 +71,8 @@
         <module>t-geoTools</module>
         <module>l-sparqlEndpointChunked</module>
         <module>t-bingTranslator</module>
+        <module>t-chunkedToTurtle</module>
+        <module>t-streamCompression</module>
     </modules>
 
 </project>
