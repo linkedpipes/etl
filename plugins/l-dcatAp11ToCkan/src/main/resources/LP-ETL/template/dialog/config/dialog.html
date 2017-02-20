@@ -41,4 +41,14 @@
             </md-option>
         </md-select>
     </md-input-container>
+    <md-switch ng-model="dialog.voidExampleResources.value"
+               ng-hide="dialog.voidExampleResources.hide"
+               ng-disabled="dialog.voidExampleResources.disabled || dialog.voidExampleResources.inherit"
+               flex-gt-sm>Generate CKAN resources from VoID example resources
+    </md-switch>
+    <md-switch ng-model="dialog.voidSparqlEndpoint.value"
+               ng-hide="dialog.voidSparqlEndpoint.hide"
+               ng-disabled="dialog.voidSparqlEndpoint.disabled || dialog.voidSparqlEndpoint.inherit"
+               flex-gt-sm>Generate CKAN resource from VoID SPARQL endpoint
+    </md-switch>
 </div>

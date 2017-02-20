@@ -20,6 +20,12 @@ public class DcatAp11ToCkanConfiguration {
     @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.PROFILE)
     private String profile;
 
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.VOID_EXAMPLE_RESOURCES)
+    private Boolean voidExampleResources;
+
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.VOID_SPARQL_ENDPOINT)
+    private Boolean voidSparqlEndpoint;
+
     public DcatAp11ToCkanConfiguration() {
     }
 
@@ -61,5 +67,21 @@ public class DcatAp11ToCkanConfiguration {
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    public Boolean getVoidExampleResources() {
+        return voidExampleResources;
+    }
+
+    public void setVoidExampleResources(Boolean voidExampleResources) {
+        this.voidExampleResources = voidExampleResources;
+    }
+
+    public Boolean getVoidSparqlEndpoint() {
+        return voidSparqlEndpoint;
+    }
+
+    public void setVoidSparqlEndpoint(Boolean voidSparqlEndpoint) {
+        this.voidSparqlEndpoint = voidSparqlEndpoint;
     }
 }

@@ -1,0 +1,8 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-voidDataset/0.0.0/configuration",
+        "@type" : ["http://etl.linkedpipes.com/ontology/components/e-voidDataset/Configuration"],
+        "http://etl.linkedpipes.com/ontology/components/e-voidDataset/getDistributionIRIFromInput" : true,
+        "http://etl.linkedpipes.com/ontology/components/e-voidDataset/copyDownloadURLsToDataDumps" : true
+    }
+]
