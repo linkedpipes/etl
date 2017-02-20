@@ -20,6 +20,10 @@ Loader, loads <a href="https://joinup.ec.europa.eu/asset/dcat_application_profil
     <dd>Since DCAT-AP supports multilinguality and CKAN does not, this specifies the RDF language tag of the language, in which the metadata should be loaded.</dd>
     <dt>Profile</dt>
     <dd>CKAN can be extended with additional metadata fields for datasets (packages) and distributions (resources). If the target CKAN is not extended, choose <code>Pure CKAN</code>.</dd>
+    <dt>Generate CKAN resources from VoID example resources</dt>
+    <dd>If the input metadata contains <code>void:exampleResource</code>, create a CKAN resource from it.</dd>
+    <dt>Generate CKAN resource from VoID SPARQL endpoint</dt>
+    <dd>If the input metadata contains <code>void:sparqlEndpoint</code>, create a CKAN resource from it.</dd>    
 </dl>
 <!--more-->
 <div class="row" id="characteristics">
@@ -42,13 +46,13 @@ Loader, loads <a href="https://joinup.ec.europa.eu/asset/dcat_application_profil
     <div class="col s12 l6">
         <p class="flow-text">
         The {{page.title}} component loads <a href="https://joinup.ec.europa.eu/node/146653" title="DCAT-AP v1.1">DCAT-AP v1.1</a> metadata to a <a href="http://ckan.org/">CKAN</a> open data catalog instance.
-        The typical usage is for metadata created by the <a href="/components/e-dcatap11dataset" title="DCAT-AP Dataset">DCAT-AP Dataset</a> and <a href="/components/e-dcatap11distribution" title="DCAT-AP Distribution">DCAT-AP Distribution</a> components.
+        The typical usage is for metadata created by the <a href="/components/e-dcatap11dataset" title="DCAT-AP Dataset">DCAT-AP Dataset</a>, <a href="/components/e-dcatap11distribution" title="DCAT-AP Distribution">DCAT-AP Distribution</a> and <a href="/components/e-voiddataset" title="VoID Dataset">VoID Dataset</a> components.
         The component currently uses the <a href="http://publications.europa.eu/mdr/authority/file-type/index.html">File type NAL</a> codelist published by the EU Publications Office to label file types in the CKAN catalog.
         Therefore, this codelist needs to be provided on its EU MDR NALs input.
         This can be a local copy, or a fresh download.
         See the <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a> for a typical usage.
         </p>
-        <p>
+        <p class="flow-text">
         Note that when there is information about a dataset publisher in the input data, mainly its name, and there is a matching Organization in the target CKAN, the component will try to register the CKAN dataset in the CKAN organization.
         When there is no such organization in the target CKAN, the component will try to create one.
         </p>

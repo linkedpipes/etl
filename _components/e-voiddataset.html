@@ -1,0 +1,54 @@
+---
+short: e-voiddataset
+type: extractor
+color: red
+title: VoID Dataset
+description: Provides a form to fill in VoID Dataset metadata properties.
+---
+
+<p class="flow-text">
+Extractor, provides a form to fill in <a href="https://www.w3.org/TR/void/">VoID</a> Dataset metadata properties.
+</p>
+<dl class="flow-text">
+    <dt>Get distribution IRI from input</dt>
+    <dd>Gets distribution IRI from input, output of <a href="/components/e-dcatap11distribution" title="DCAT-AP Distribution">DCAT-AP Distribution</a> is expected.</dd>
+    <dt>Distribution IRI</dt>
+    <dd>When used independently, distribution IRI can be set here.</dd>
+    <dt>Example resource URLs</dt>
+    <dd>URLs of <a href="https://www.w3.org/TR/void/#example-resource">example resources</a>.</dd>
+    <dt>SPARQL Endpoint URL</dt>
+    <dd>URL of a <a href="https://www.w3.org/TR/void/#sparql">SPARQL endpoint</a> through which the data is accessible.</dd>
+    <dt>Copy download URLs to <code>void:dataDump</code></dt>
+    <dd>In DCAT, the link to download a file is <code>dcat:downloadURL</code>. This copies it also to <code>void:dataDump</code> for VoID enabled applications.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">Available</a></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component provides a form to fill in <a href="https://www.w3.org/TR/void/" title="VoID">VoID</a> Dataset metadata.
+        The typical usage is in each data preparation pipeline to store and produce distribution related metadata.
+        Though the exact relation of DCAT-AP Distribution and VoID Dataset is not defined, for our purposes we say that for RDF distributions of datasets, they are the same.
+        Therefore, the expected usage is that the IRI of the DCAT-AP distribution describing RDF data is the same as the IRI of the VoID dataset.
+        So far, we support only limited number of VoID properties wiht focus on catalogization in CKAN.
+        It can use the output of the <a href="/components/e-dcatap11distribution" title="DCAT-AP Distribution">DCAT-AP Distribution</a> component to reuse the Distribution IRI and download URLs.
+        Its output can be used by the <a href="/components/l-dcatap11tockan" title="DCAT-AP to CKAN">DCAT-AP to CKAN</a> component for loading the metadata into CKAN.
+        </p>
+    </div>
+</div>
