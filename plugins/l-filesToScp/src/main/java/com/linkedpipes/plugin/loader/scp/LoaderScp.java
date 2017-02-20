@@ -139,12 +139,23 @@ public final class LoaderScp implements Component, SequentialExecution {
         final InputStream remoteIn = channel.getExtInputStream();
         channel.connect();
         LOG.info("\tWaiting for response!");
-        LOG.info("\tResponse: {}", readResponseLine(remoteIn));
+        final String responseLine = readResponseLine(remoteIn);
+        LOG.info("\tResponse status: {} message: {}",
+                channel.getExitStatus(), responseLine);
         channel.disconnect();
-        if (channel.getExitStatus() == 1) {
-            throw new LpException("Can't create directory.");
-        }
+        checkMakeDirResponse(responseLine, channel.getExitStatus());
         LOG.info("secureCreateDirectory ... done");
+    }
+
+    private static void checkMakeDirResponse(String responseLine, int status)
+            throws LpException {
+        if (status == 0) {
+            return;
+        }
+        if (responseLine.contains("File exists")) {
+            return;
+        }
+        throw new LpException("Can't create directory.");
     }
 
     /**
