@@ -1,0 +1,7 @@
+
+<http://my.dataset.cz> a <http://www.w3.org/ns/dcat#Dataset> ;
+	<http://www.w3.org/ns/dcat#distribution> <http://my.dataset.cz/distribution> .
+
+<http://my.dataset.cz/distribution> <http://purl.org/dc/terms/modified> "2017-02-17"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	a <http://www.w3.org/ns/dcat#Distribution> ;
+	<http://www.w3.org/ns/dcat#accessURL> <http://www.accessing.cz> .
