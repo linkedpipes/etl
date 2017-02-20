@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.test.TestEnvironment;
 import com.linkedpipes.etl.test.TestUtils;
-import com.linkedpipes.plugin.extractor.dcatAp11Dataset.DcatAp11DatasetConfig.Language;
 import com.linkedpipes.plugin.extractor.dcatAp11Dataset.DcatAp11DatasetConfig.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,7 @@ public class DcatAp11DatasetTest {
     private static final Logger LOG =
             LoggerFactory.getLogger(DcatAp11DatasetTest.class);
 
-    //    @Test
+    //@Test
     public void fullMetadata() throws Exception {
         final DcatAp11Dataset component = new DcatAp11Dataset();
         component.configuration = new DcatAp11DatasetConfig();
@@ -68,10 +67,8 @@ public class DcatAp11DatasetTest {
             component.configuration.setPublisherTypeIRI(
                     "http://purl.org/adms/publishertype/NationalAuthority");
             component.configuration.setLanguages(Arrays.asList(
-                    new Language(
-                            "http://publications.europa.eu/resource/authority/language/CES"),
-                    new Language(
-                            "http://publications.europa.eu/resource/authority/language/ENG")
+                    "http://publications.europa.eu/resource/authority/language/CES",
+                    "http://publications.europa.eu/resource/authority/language/ENG"
             ));
             component.configuration.setAccrualPeriodicityIRI(
                     "http://publications.europa.eu/resource/authority/frequency/MONTHLY");

@@ -250,30 +250,6 @@ public class DcatAp11DistributionConfig {
         }
     }
 
-    @RdfToPojo.Type(iri = DcatAp11DistributionVocabulary.MY + "LanguageObject")
-    public static class Language {
-
-        public Language(String iri) {
-            this.iri = iri;
-        }
-
-        @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "IRI")
-        private String iri;
-
-        public Language() {
-            iri = null;
-        }
-
-        public String getIri() {
-            return iri;
-        }
-
-        public void setIri(String iri) {
-            this.iri = iri;
-        }
-
-    }
-
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "datasetIRI")
     private String datasetIRI;
 
