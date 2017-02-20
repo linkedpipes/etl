@@ -68,7 +68,6 @@ class ExecuteComponent implements ComponentExecutor {
             final Map<String, DataUnit> dataUnits =
                     dataUnitManager.onComponentWillExecute(execComponent);
             initialize(dataUnits);
-            execution.onComponentUserCodeBegin(execComponent);
             execute();
         } catch (ExecutorException ex) {
             try {
@@ -112,14 +111,32 @@ class ExecuteComponent implements ComponentExecutor {
         if (instance instanceof SequentialExecution) {
             final SequentialExecution executable =
                     (SequentialExecution) instance;
-            try {
-                executable.execute();
-            } catch (LpException ex) {
-                throw new ExecutorException("Component execution failed.", ex);
-            }
+            executeSequential(executable);
         } else {
-
             throw new ExecutorException("Unknown execution interface.");
+        }
+    }
+
+    private void executeSequential(SequentialExecution executable)
+            throws ExecutorException {
+        final SequentialComponentExecutor executor =
+                new SequentialComponentExecutor(executable);
+        final Thread thread = new Thread(executor, pplComponent.getLabel());
+        execution.onComponentUserCodeBegin(execComponent);
+        thread.start();
+        waitForThreadToFinish(thread);
+        if (executor.getException() != null) {
+            throw executor.getException();
+        }
+    }
+
+    private void waitForThreadToFinish(Thread thread) {
+        while (thread.isAlive()) {
+            try {
+                thread.join();
+            } catch (InterruptedException ex) {
+                LOG.debug("Ignored interrupt.", ex);
+            }
         }
     }
 
