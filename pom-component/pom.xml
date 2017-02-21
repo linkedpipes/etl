@@ -40,7 +40,7 @@
                 <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- Core libraries. -->
+            <!-- RDF4J -->
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
                 <artifactId>rdf4j-model</artifactId>
@@ -59,6 +59,7 @@
                 <version>${rdf4j.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <!-- Provided libraries. -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -71,6 +72,13 @@
                 <version>3.5</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient-osgi</artifactId>
+                <version>4.4.1</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Test libraries. -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
