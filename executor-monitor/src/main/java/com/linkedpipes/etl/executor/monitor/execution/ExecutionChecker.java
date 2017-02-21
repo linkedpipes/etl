@@ -49,10 +49,8 @@ class ExecutionChecker {
                 = new File(execution.getDirectory(), "execution.jsonld");
         if (!definitionFile.exists()) {
             // No execution directory, the execution must be queued.
-            LOG.info(" {} : loadQueued", execution.getId());
             loadQueued(execution);
         } else {
-            LOG.info(" {} : checkExecution", execution.getId());
             try (InputStream input = new FileInputStream(definitionFile)) {
                 checkExecution(execution, input);
             } catch (IOException ex) {
