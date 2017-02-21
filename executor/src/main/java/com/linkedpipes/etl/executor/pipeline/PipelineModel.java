@@ -390,6 +390,8 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
      */
     public static class Connection implements RdfLoader.Loadable<String> {
 
+        private final List<String> types = new LinkedList<>();
+
         private String sourceComponent;
 
         private String sourceBinding;
@@ -402,6 +404,9 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
         public RdfLoader.Loadable load(String predicate, String object)
                 throws RdfUtilsException {
             switch (predicate) {
+                case RDF.TYPE:
+                    types.add(object);
+                    break;
                 case LP_PIPELINE.HAS_SOURCE_BINDING:
                     sourceBinding = object;
                     break;
@@ -433,6 +438,11 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
         public String getTargetBinding() {
             return targetBinding;
         }
+
+        public boolean isDataConnection() {
+            return types.contains(LP_PIPELINE.CONNECTION);
+        }
+
     }
 
     private final String iri;
@@ -534,6 +544,9 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
         final String componentIri = component.getIri();
         final String binding = dataUnit.getBinding();
         for (Connection connection : connections) {
+            if (!connection.isDataConnection()) {
+                continue;
+            }
             if (connection.getSourceComponent().equals(componentIri) &&
                     connection.getSourceBinding().equals(binding)) {
                 output.add(connection);
