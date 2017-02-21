@@ -326,7 +326,7 @@
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-voidDataset</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-voidDataset/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-voidDataset/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
