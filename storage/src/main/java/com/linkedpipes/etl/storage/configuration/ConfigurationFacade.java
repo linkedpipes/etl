@@ -6,6 +6,7 @@ import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -208,6 +209,12 @@ public class ConfigurationFacade {
         if (childrenControl == null) {
             childrenControl = NONE;
         }
+        final Value childrenValue =
+                children.getProperty(member.getProperty());
+        if (childrenValue == null) {
+            // In case of missing value ignore.
+            return;
+        }
         switch (childrenControl) {
             case INHERIT:
                 // Preserve value from parent.
@@ -216,7 +223,7 @@ public class ConfigurationFacade {
             case FORCE:
                 // Use children's value and force it to grandchildren.
                 parent.replace(member.getProperty(), children,
-                        children.getProperty(member.getProperty()), true);
+                        childrenValue, true);
                 parent.setIri(member.getControl(), FORCED);
                 break;
             case INHERIT_AND_FORCE:
@@ -231,7 +238,7 @@ public class ConfigurationFacade {
             default:
                 // Use children's value.
                 parent.replace(member.getProperty(), children,
-                        children.getProperty(member.getProperty()), true);
+                        childrenValue, true);
                 parent.setIri(member.getControl(), NONE);
                 break;
         }
