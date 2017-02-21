@@ -2,20 +2,19 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
         "$type": "Configuration",
-        "commitSize" : {
-            "$type" : "int",
-            "$property" : "commitSize",
-            "$control": "commitSizeControl",
-            "$label" : "Commit size"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
-        "mimeType" : {
-            "$type" : "str",
-            "$property" : "mimeType",
-            "$control": "mimeTypeControl",
-            "$label" : "Format",
+        "commitSize": {
+            "$type": "int",
+            "$label": "Commit size"
+        },
+        "mimeType": {
+            "$type": "str",
+            "$label": "Format",
             "$onLoad": (value) => {
                 if (value === "") {
                     return "null";

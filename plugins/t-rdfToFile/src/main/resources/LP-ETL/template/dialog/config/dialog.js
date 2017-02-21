@@ -2,26 +2,23 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-rdfToFile#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-rdfToFile#",
         "$type": "Configuration",
-        "fileName" : {
-            "$type" : "str",
-            "$property" : "fileName",
-            "$control": "fileNameControl",
-            "$label" : "Output file name"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
-        "fileType" : {
-            "$type" : "str",
-            "$property" : "fileType",
-            "$control": "fileTypeControl",
-            "$label" : "Format"
+        "fileName": {
+            "$type": "str",
+            "$label": "Output file name"
         },
-        "graphUri" : {
-            "$type" : "iri",
-            "$property" : "graphUri",
-            "$control": "graphUriControl",
-            "$label" : "URI of output graph"
+        "fileType": {
+            "$type": "str",
+            "$label": "Format"
+        },
+        "graphUri": {
+            "$type": "iri",
+            "$label": "URI of output graph"
         }
     };
 

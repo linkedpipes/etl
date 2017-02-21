@@ -2,20 +2,19 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#",
         "$type": "Configuration",
-        "query" : {
-            "$type" : "str",
-            "$property" : "query",
-            "$control": "queryControl",
-            "$label" : "SPARQL SELECT query"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
-        "fileName" : {
-            "$type" : "str",
-            "$property" : "fileName",
-            "$control": "fileNameControl",
-            "$label" : "Output file name"
+        "query": {
+            "$type": "str",
+            "$label": "SPARQL SELECT query"
+        },
+        "fileName": {
+            "$type": "str",
+            "$label": "Output file name"
         }
     };
 

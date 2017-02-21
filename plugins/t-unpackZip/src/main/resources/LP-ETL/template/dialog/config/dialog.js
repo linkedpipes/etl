@@ -4,8 +4,9 @@ define([], function () {
     const DESC = {
         "$namespace": "http://plugins.linkedpipes.com/ontology/t-unpackZip#",
         "$type": "Configuration",
-        "$control": {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
         "usePrefix": {
             "$type": "bool",

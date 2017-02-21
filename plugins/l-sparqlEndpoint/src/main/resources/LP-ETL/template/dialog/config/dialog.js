@@ -4,8 +4,9 @@ define([], function () {
     const DESC = {
         "$namespace": "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#",
         "$type": "Configuration",
-        "$control": {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
         "endpoint": {
             "$type": "str",

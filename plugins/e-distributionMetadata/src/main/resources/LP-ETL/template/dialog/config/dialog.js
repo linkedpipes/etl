@@ -23,8 +23,9 @@ define([], function () {
     const DESC = {
         "$namespace": "http://plugins.linkedpipes.com/ontology/e-distributionMetadata#",
         "$type": "Configuration",
-        "$control": {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
         "datasetURI": {
             "$type": "str",

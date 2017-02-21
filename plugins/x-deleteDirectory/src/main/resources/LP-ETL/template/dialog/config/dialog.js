@@ -2,16 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/x-deleteDirectory#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/x-deleteDirectory#",
         "$type": "Configuration",
-        "$control" : "control",
-        "$options" : {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
-        "directory" : {
-            "$type" : "str",
-            "$label" : "Directory to delete"
+        "directory": {
+            "$type": "str",
+            "$label": "Directory to delete"
         }
     };
 

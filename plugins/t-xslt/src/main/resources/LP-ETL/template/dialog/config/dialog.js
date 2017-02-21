@@ -4,8 +4,9 @@ define([], function () {
     const DESC = {
         "$namespace": "http://plugins.linkedpipes.com/ontology/t-xslt#",
         "$type": "Configuration",
-        "$control": {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
         "template": {
             "$type": "str",
@@ -16,10 +17,10 @@ define([], function () {
             "$label": "Transformed file extension"
         },
         "skipOnError": {
-            "$type" : "bool",
+            "$type": "bool",
             "$label": "Skip on error"
         },
-        "threads" : {
+        "threads": {
             "$type": "int",
             "$label": "Number of threads used for transformation"
         }

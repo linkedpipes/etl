@@ -2,14 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-templatedXlsToCsv#",
         "$type": "Configuration",
-        "prefix" : {
-            "$type" : "str",
-            "$property" : "prefix",
-            "$control": "prefixControl",
-            "$label" : "Template file prefix"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "prefix": {
+            "$type": "str",
+            "$label": "Template file prefix"
         }
     };
 
