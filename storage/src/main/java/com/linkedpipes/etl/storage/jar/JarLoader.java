@@ -49,7 +49,7 @@ final class JarLoader {
                 return loadFromDefinition(jarFile, jar, entry);
             }
         }
-        // No definition has been found.
+        LOG.warn("No jar-definition found in file: {}", jarFile);
         return null;
     }
 
