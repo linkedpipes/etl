@@ -24,7 +24,7 @@ public final class VirtuosoVocabulary {
     public static final String STATUS_UPDATE_INTERVAL =
             PREFIX + "updateInterval";
 
-    public static final String CLEAR_LOAD_GRAPH = PREFIX + "clearSqlLoadTable";
+    public static final String CLEAR_LOAD_GRAPH = PREFIX + "clearLoadList";
 
     public static final String LOADER_COUNT = PREFIX + "loaderCount";
 
