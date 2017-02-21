@@ -36,7 +36,6 @@ class JarManager {
         if (!componentDirectory.exists()) {
             componentDirectory.mkdirs();
         }
-        // Each JAR file has its directory.
         FileUtils.listFiles(componentDirectory, new String[]{"jar"}, true
         ).forEach((file) -> {
             if (!file.isDirectory() && file.getName().endsWith(".jar")) {
