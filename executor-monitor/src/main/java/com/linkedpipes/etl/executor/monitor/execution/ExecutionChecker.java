@@ -173,8 +173,6 @@ class ExecutionChecker {
                 && !lastChange.equals(execution.getLastChange())
                 && lastChange.before(execution.getLastChange())) {
             // We have newer data already loaded.
-            LOG.info(" newer data are already available : {} data from: {}",
-                    execution.getLastChange(), lastChange);
             return;
         }
 
