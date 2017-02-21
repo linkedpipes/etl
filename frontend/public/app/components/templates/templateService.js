@@ -68,7 +68,7 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                     result.push(item["@value"]);
                 });
                 return result;
-            } else if (value["@value"]) {
+            } else if (value["@value"] != undefined) {
                 return value["@value"];
             } else {
                 return value;
