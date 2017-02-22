@@ -64,7 +64,6 @@ public final class Virtuoso implements Component, SequentialExecution {
         }
         prepareSqlExecutor();
         sqlExecutor.insertLoadRecord(
-                configuration.getLoadDirectoryPath(),
                 configuration.getLoadFileName(),
                 configuration.getTargetGraph());
         final int filesToLoad = sqlExecutor.getFilesToLoad();
@@ -76,7 +75,7 @@ public final class Virtuoso implements Component, SequentialExecution {
                 sqlExecutor, configuration, exceptionFactory);
         loader.loadData(filesToLoad);
         if (configuration.isClearLoadList()) {
-            sqlExecutor.clearLoadList(configuration.getLoadDirectoryPath());
+            sqlExecutor.clearLoadList();
         }
     }
 
@@ -85,6 +84,7 @@ public final class Virtuoso implements Component, SequentialExecution {
                 configuration.getVirtuosoUrl(),
                 configuration.getUsername(),
                 configuration.getPassword(),
+                configuration.getLoadDirectoryPath(),
                 exceptionFactory);
     }
 

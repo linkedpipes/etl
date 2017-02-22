@@ -27,18 +27,21 @@ class SqlExecutor {
 
     private final String password;
 
+    private final String directory;
+
     private final ExceptionFactory exceptionFactory;
 
     public SqlExecutor(String url, String username, String password,
-            ExceptionFactory exceptionFactory) {
+            String directory, ExceptionFactory exceptionFactory) {
         this.url = url;
         this.username = username;
         this.password = password;
+        this.directory = directory;
         this.exceptionFactory = exceptionFactory;
     }
 
-    public void insertLoadRecord(String directory, String fileName,
-            String graph) throws LpException {
+    public void insertLoadRecord(String fileName, String graph)
+            throws LpException {
         try (Connection connection = getSqlConnection()) {
             try (PreparedStatement statement = createLdStatement(
                     connection, directory, fileName, graph)) {
@@ -71,7 +74,7 @@ class SqlExecutor {
     public int getFilesToLoad() throws LpException {
         try (Connection connection = getSqlConnection()) {
             try (PreparedStatement statement =
-                         createQueryWaitingStatement(connection)) {
+                         createQueryWaitingStatement(connection, directory)) {
                 return executeStatementForSingleInt(statement);
             }
         } catch (SQLException ex) {
@@ -80,9 +83,10 @@ class SqlExecutor {
     }
 
     private static PreparedStatement createQueryWaitingStatement(
-            Connection connection) throws SQLException {
+            Connection connection, String directory) throws SQLException {
         final PreparedStatement statement =
                 connection.prepareStatement(SQL_QUERY_WAITING);
+        statement.setString(1, directory + "%");
         return statement;
     }
 
@@ -94,7 +98,7 @@ class SqlExecutor {
         }
     }
 
-    public void clearLoadList(String directory) throws LpException {
+    public void clearLoadList() throws LpException {
         try (Connection connection = getSqlConnection()) {
             try (PreparedStatement statement = prepareClearStatement(
                     connection, directory)) {
