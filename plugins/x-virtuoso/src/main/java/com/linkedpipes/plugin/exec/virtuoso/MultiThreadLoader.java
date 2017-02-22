@@ -26,6 +26,8 @@ class MultiThreadLoader {
 
     private List<LoadWorker> workers;
 
+    private int loadedBeforeStart;
+
     public MultiThreadLoader(
             SqlExecutor sqlExecutor,
             VirtuosoConfiguration configuration,
@@ -36,6 +38,9 @@ class MultiThreadLoader {
     }
 
     public void loadData(int filesToLoad) throws LpException {
+        loadedBeforeStart = sqlExecutor.getFilesLoaded(
+                configuration.getLoadDirectoryPath());
+
         startLoading(filesToLoad);
         while (true) {
             waitBeforeNextCheck();
@@ -65,9 +70,10 @@ class MultiThreadLoader {
             throws LpException {
         final int filesLoaded = executor.getFilesLoaded(
                 configuration.getLoadDirectoryPath());
-        LOG.debug("Processing {}/{} files", filesLoaded,
+        final int loadedFromStart = filesLoaded - loadedBeforeStart;
+        LOG.debug("Processing {}/{} files", loadedFromStart,
                 filesToLoad);
-        if (filesLoaded == filesToLoad) {
+        if (loadedFromStart >= filesToLoad) {
             return true;
         }
         return false;
