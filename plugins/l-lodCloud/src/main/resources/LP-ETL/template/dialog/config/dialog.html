@@ -1,0 +1,54 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block"
+                            flex-gt-sm
+                            ng-hide="dialog.apiUrl.hide">
+            <label>CKAN Action API URL</label>
+            <input type="url" ng-model="dialog.apiUrl.value"
+                   ng-disabled="dialog.apiUrl.disabled || dialog.apiUrl.inherit"
+                   placeholder="http://localhost/api/3/action">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.apiKey.hide"
+                            flex-gt-sm>
+            <label>CKAN API Key</label>
+            <input ng-model="dialog.apiKey.value"
+                   ng-disabled="dialog.apiKey.disabled || dialog.apiKey.inherit"
+                   placeholder="00000000-0000-0000-0000-000000000000">
+        </md-input-container>
+    </div>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.datasetID.hide">
+        <label>CKAN dataset ID</label>
+        <input ng-model="dialog.datasetID.value"
+               ng-disabled="dialog.datasetID.disabled || dialog.datasetID.inherit"
+               placeholder="my-dataset">
+    </md-input-container>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.loadLanguage.hide">
+        <label>Load language RDF language tag</label>
+        <input ng-model="dialog.loadLanguage.value"
+               ng-disabled="dialog.loadLanguage.disabled || dialog.loadLanguage.inherit"
+               placeholder="en">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.profile.hide" flex-gt-sm>
+        <label>Profile</label>
+        <md-select ng-model="dialog.profile.value"
+                   ng-disabled="dialog.profile.disabled || dialog.profile.inherit">
+            <md-option ng-repeat="profile in profiles" value="{{profile['@id']}}">
+                <span ng-repeat="label in profile['http://www.w3.org/2004/02/skos/core#prefLabel'] | filter:{'@language':'en'} ">{{label['@value']}}</span>
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <md-switch ng-model="dialog.voidExampleResources.value"
+               ng-hide="dialog.voidExampleResources.hide"
+               ng-disabled="dialog.voidExampleResources.disabled || dialog.voidExampleResources.inherit"
+               flex-gt-sm>Generate CKAN resources from VoID example resources
+    </md-switch>
+    <md-switch ng-model="dialog.voidSparqlEndpoint.value"
+               ng-hide="dialog.voidSparqlEndpoint.hide"
+               ng-disabled="dialog.voidSparqlEndpoint.disabled || dialog.voidSparqlEndpoint.inherit"
+               flex-gt-sm>Generate CKAN resource from VoID SPARQL endpoint
+    </md-switch>
+</div>

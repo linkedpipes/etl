@@ -1,0 +1,4 @@
+<http://linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#Configuration> ;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKey> "" ;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetID> "" .

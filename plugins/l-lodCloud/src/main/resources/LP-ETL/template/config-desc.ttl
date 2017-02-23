@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configurationDescription>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/l-lodCloud#Configuration> ; 
+    config:member <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/apiKey> ,
+        <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/datasetID> .
+
+<http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/apiKey>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKey> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKeyControl> .
+
+<http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/datasetID>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-lodCloud#datasetID> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-lodCloud#datasetIDControl> .
