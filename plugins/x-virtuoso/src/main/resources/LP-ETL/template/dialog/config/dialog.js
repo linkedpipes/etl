@@ -28,10 +28,6 @@ define([], function () {
             "$type": "bool",
             "$label": "Clear target graph"
         },
-        "clearLoadList": {
-            "$type": "bool",
-            "$label": "Clear Virtuoso load list"
-        },
         "username": {
             "$type": "str",
             "$label": "Virtuoso user name"

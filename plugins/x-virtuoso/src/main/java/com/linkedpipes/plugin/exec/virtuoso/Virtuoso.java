@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import virtuoso.rdf4j.driver.VirtuosoRepository;
 
+import java.sql.SQLException;
+
 public final class Virtuoso implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Virtuoso.class);
@@ -59,33 +61,38 @@ public final class Virtuoso implements Component, SequentialExecution {
     }
 
     private void loadToRepository() throws LpException {
+        prepareSqlExecutor();
+        clearLoadList();
+        fillLoadList();
+        final int filesToLoad = getFilesToLoadCount();
+        if (filesToLoad == 0) {
+            throw exceptionFactory.failure("Nothing to load.");
+        }
         if (configuration.isClearDestinationGraph()) {
             clearDestinationGraph();
         }
-        prepareSqlExecutor();
-        sqlExecutor.insertLoadRecord(
-                configuration.getLoadFileName(),
-                configuration.getTargetGraph());
-        final int filesToLoad = sqlExecutor.getFilesToLoad();
-        LOG.info("Files to load: {}", filesToLoad);
-        if (filesToLoad == 0) {
-            return;
-        }
-        final MultiThreadLoader loader = new MultiThreadLoader(
-                sqlExecutor, configuration, exceptionFactory);
-        loader.loadData(filesToLoad);
-        if (configuration.isClearLoadList()) {
-            sqlExecutor.clearLoadList();
-        }
+        runLoaders(filesToLoad);
+        clearLoadList();
     }
 
-    private void prepareSqlExecutor() {
+    private void prepareSqlExecutor() throws LpException {
+        try {
+            new virtuoso.jdbc4.Driver();
+        } catch (SQLException ex) {
+            throw exceptionFactory.failure("Can't create SQL driver.", ex);
+        }
         sqlExecutor = new SqlExecutor(
                 configuration.getVirtuosoUrl(),
                 configuration.getUsername(),
                 configuration.getPassword(),
                 configuration.getLoadDirectoryPath(),
                 exceptionFactory);
+    }
+
+    private void fillLoadList() throws LpException {
+        sqlExecutor.insertLoadRecord(
+                configuration.getLoadFileName(),
+                configuration.getTargetGraph());
     }
 
     private void clearDestinationGraph() throws LpException {
@@ -110,6 +117,22 @@ public final class Virtuoso implements Component, SequentialExecution {
         return "DEFINE sql:log-enable 3 CLEAR GRAPH <" +
                 configuration.getTargetGraph() +
                 ">";
+    }
+
+    private int getFilesToLoadCount() throws LpException {
+        final int filesToLoad = sqlExecutor.getFilesToLoad();
+        LOG.info("Files to load: {}", filesToLoad);
+        return filesToLoad;
+    }
+
+    private void runLoaders(int filesToLoad) throws LpException {
+        final MultiThreadLoader loader = new MultiThreadLoader(
+                sqlExecutor, configuration, exceptionFactory);
+        loader.loadData(filesToLoad);
+    }
+
+    private void clearLoadList() throws LpException {
+        sqlExecutor.clearLoadList();
     }
 
 }

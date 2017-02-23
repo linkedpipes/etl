@@ -10,7 +10,7 @@ class SqlExecutor {
     private static final String SQL_LD_DIR = "ld_dir (?, ?, ?)";
 
     private static final String SQL_QUERY_WAITING =
-            "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state <> 2";
+            "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state = 0";
 
     private static final String SQL_DELETE_LOAD_LIST =
             "delete from DB.DBA.load_list where ll_file like ?";
@@ -18,8 +18,7 @@ class SqlExecutor {
     private static final String SQL_QUERY_FINISHED =
             "select count(*) from DB.DBA.load_list where ll_file like ? and ll_state = 2";
 
-    public static final String SQL_LOAD =
-            "rdf_loader_run()";
+    public static final String SQL_LOAD = "rdf_loader_run()";
 
     private final String url;
 
@@ -45,7 +44,7 @@ class SqlExecutor {
         try (Connection connection = getSqlConnection()) {
             try (PreparedStatement statement = createLdStatement(
                     connection, directory, fileName, graph)) {
-                statement.executeQuery();
+                statement.executeQuery().close();
             }
         } catch (SQLException ex) {
             throw exceptionFactory.failure("Can't execute ld_dir query.", ex);

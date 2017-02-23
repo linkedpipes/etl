@@ -29,9 +29,6 @@ public class VirtuosoConfiguration {
     @RdfToPojo.Property(iri = VirtuosoVocabulary.STATUS_UPDATE_INTERVAL)
     private int statusUpdateInterval = 10;
 
-    @RdfToPojo.Property(iri = VirtuosoVocabulary.CLEAR_LOAD_GRAPH)
-    private boolean clearLoadList = true;
-
     @RdfToPojo.Property(iri = VirtuosoVocabulary.LOADER_COUNT)
     private int loaderCount = 1;
 
@@ -100,14 +97,6 @@ public class VirtuosoConfiguration {
 
     public void setStatusUpdateInterval(int statusUpdateInterval) {
         this.statusUpdateInterval = statusUpdateInterval;
-    }
-
-    public boolean isClearLoadList() {
-        return clearLoadList;
-    }
-
-    public void setClearLoadList(boolean clearLoadList) {
-        this.clearLoadList = clearLoadList;
     }
 
     public int getLoaderCount() {

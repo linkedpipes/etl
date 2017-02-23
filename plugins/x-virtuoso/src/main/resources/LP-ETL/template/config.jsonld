@@ -29,10 +29,6 @@
         "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateInterval": 10,
         "http://plugins.linkedpipes.com/ontology/x-virtuoso#updateIntervalControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        },
-        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearSqlLoadTable": true,
-        "http://plugins.linkedpipes.com/ontology/x-virtuoso#clearSqlLoadTableControl" : {
-            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }
 ]
