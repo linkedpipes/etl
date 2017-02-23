@@ -240,7 +240,7 @@ public class Execution implements ExecutionObserver {
         try (final OutputStream stream = new FileOutputStream(
                 resourceManager.getExecutionOverviewJsonFile())) {
             objectMapper.writeValue(stream,
-                    executionOverviewModel.toJson(objectMapper));
+                    executionOverviewModel.toJsonLd(objectMapper));
         } catch (IOException ex) {
             LOG.error("Can't save execution overview", ex);
         }

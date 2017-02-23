@@ -98,7 +98,7 @@ public class ResourceManager {
     }
 
     public File getExecutionOverviewJsonFile() {
-        final File file = new File(executionRoot, "execution/overview.json");
+        final File file = new File(executionRoot, "execution/overview.jsonld");
         file.getParentFile().mkdir();
         return file;
     }

@@ -149,7 +149,7 @@ class ExecutionServlet {
         }
         final ObjectMapper objectMapper = new ObjectMapper();
         final ObjectNode jsonRoot = executor.getExecution()
-                .getExecutionOverviewModel().toJson(objectMapper);
+                .getExecutionOverviewModel().toJsonLd(objectMapper);
         objectMapper.writeValue(stream, jsonRoot);
     }
 
