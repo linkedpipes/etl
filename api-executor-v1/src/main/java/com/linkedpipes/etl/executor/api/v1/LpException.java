@@ -7,14 +7,8 @@ import org.slf4j.helpers.MessageFormatter;
  */
 public class LpException extends Exception {
 
-    /**
-     * Store exception description.
-     */
     protected final String message;
 
-    /**
-     * Store arguments for the message.
-     */
     protected final Object[] args;
 
     public LpException(String messages, Object... args) {
