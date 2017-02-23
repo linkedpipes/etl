@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.executor.web.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineExecutor;
@@ -63,11 +65,12 @@ class ExecutionServlet {
     @RequestMapping(value = "/cancel", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public void cancel() {
+        final PipelineExecutor executorSnp = executor;
         synchronized (lock) {
-            if (executor == null) {
+            if (executorSnp == null) {
                 return;
             }
-            executor.cancelExecution();
+            executorSnp.cancelExecution();
         }
     }
 
@@ -76,12 +79,27 @@ class ExecutionServlet {
     public void status(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ExecutorException {
-        if (executor == null) {
+        final PipelineExecutor executorSnp = executor;
+        if (executorSnp == null) {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
             final RDFFormat format = Rio.getParserFormatForMIMEType(
                     request.getHeader("Accept")).orElse(RDFFormat.JSONLD);
-            writeStatus(response.getOutputStream(), format);
+            writeStatus(response.getOutputStream(), format, executorSnp);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/overview", method = RequestMethod.GET)
+    public void statusOverview(HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ExecutorException {
+        final PipelineExecutor executorSnp = executor;
+        if (executorSnp == null) {
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else {
+            // TODO Check for format
+            writeStatusOverview(response.getOutputStream(), executorSnp);
         }
     }
 
@@ -116,15 +134,23 @@ class ExecutionServlet {
      * @param stream
      * @param format
      */
-    public void writeStatus(OutputStream stream, RDFFormat format)
-            throws ExecutorException {
-        final PipelineExecutor executorSnapshot = executor;
-        if (executorSnapshot != null &&
-                executorSnapshot.getExecution() != null) {
-            executorSnapshot.getExecution()
-                    .writeV1Execution(stream, format);
-        } else {
+    private static void writeStatus(OutputStream stream, RDFFormat format,
+            PipelineExecutor executor) throws ExecutorException {
+        if (executor.getExecution() == null) {
+            return;
         }
+        executor.getExecution().writeV1Execution(stream, format);
+    }
+
+    private static void writeStatusOverview(OutputStream stream,
+            PipelineExecutor executor) throws IOException {
+        if (executor.getExecution() == null) {
+            return;
+        }
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectNode jsonRoot = executor.getExecution()
+                .getExecutionOverviewModel().toJson(objectMapper);
+        objectMapper.writeValue(stream, jsonRoot);
     }
 
 }

@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.dataunit;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
-import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Wrap data unit. Add information required for execution.
+ * Wrap data unit. Add information required for ExecutionModel.
  */
 class DataUnitContainer {
 
@@ -33,7 +33,7 @@ class DataUnitContainer {
     /**
      * Execution metadata.
      */
-    private final Execution.DataUnit metadata;
+    private final ExecutionModel.DataUnit metadata;
 
     /**
      * Internal status of the container.
@@ -42,7 +42,7 @@ class DataUnitContainer {
 
     public DataUnitContainer(
             ManageableDataUnit instance,
-            Execution.DataUnit metadata) {
+            ExecutionModel.DataUnit metadata) {
         this.instance = instance;
         this.metadata = metadata;
         this.status = Status.NEW;

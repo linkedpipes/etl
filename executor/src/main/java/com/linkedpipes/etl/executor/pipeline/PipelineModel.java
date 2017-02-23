@@ -288,6 +288,17 @@ public class PipelineModel implements RdfLoader.Loadable<String> {
             return jarPath;
         }
 
+        public boolean shouldExecute() {
+            switch (executionType) {
+                case EXECUTE:
+                    return true;
+                case SKIP:
+                case MAP:
+                default:
+                    return false;
+            }
+        }
+
         public ConfigurationDescription getConfigurationDescription() {
             return configurationDescription;
         }

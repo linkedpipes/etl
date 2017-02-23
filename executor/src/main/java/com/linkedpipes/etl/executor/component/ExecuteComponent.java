@@ -8,7 +8,8 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.component.configuration.Configuration;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.execution.ExecutionObserver;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
@@ -38,51 +39,51 @@ class ExecuteComponent implements ComponentExecutor {
 
     private final PipelineModel.Component pplComponent;
 
-    private final Execution.Component execComponent;
+    private final ExecutionModel.Component execComponent;
 
     private final ManageableComponent instance;
 
     private final ExecutionContext context;
 
-    private final Execution execution;
+    private final ExecutionObserver execution;
 
     public ExecuteComponent(
             Pipeline pipeline,
-            Execution execution,
+            ExecutionObserver execution,
             PipelineModel.Component component,
+            ExecutionModel.Component execComponent,
             ManageableComponent instance) {
         this.pipeline = pipeline;
         this.pplComponent = component;
-        this.execComponent = execution.getComponent(component);
+        this.execComponent = execComponent;
         this.instance = instance;
         this.execution = execution;
         //
-        context = new ExecutionContext(execution,
-                execution.getComponent(component));
+        context = new ExecutionContext(execution, execComponent);
     }
 
     @Override
     public boolean execute(DataUnitManager dataUnitManager) {
         try {
-            execution.onComponentInitializing(execComponent);
+            execution.onExecuteComponentInitializing(execComponent);
             final Map<String, DataUnit> dataUnits =
                     dataUnitManager.onComponentWillExecute(execComponent);
             initialize(dataUnits);
             execute();
+            execution.onExecuteComponentSuccessful(execComponent);
         } catch (ExecutorException ex) {
             try {
                 dataUnitManager.onComponentDidExecute(execComponent);
             } catch (ExecutorException e) {
                 LOG.error("Can't save data unit after component failed.", e);
             }
-            execution.onComponentFailed(execComponent, ex);
+            execution.onExecuteComponentFailed(execComponent, ex);
             return false;
         }
-        execution.onComponentEnd(execComponent);
         try {
             dataUnitManager.onComponentDidExecute(execComponent);
         } catch (ExecutorException ex) {
-            execution.onCantSaveDataUnits(execComponent, ex);
+            execution.onExecuteComponentCantSaveDataUnit(execComponent, ex);
             return false;
         }
         return true;
@@ -120,9 +121,9 @@ class ExecuteComponent implements ComponentExecutor {
     private void executeSequential(SequentialExecution executable)
             throws ExecutorException {
         final SequentialComponentExecutor executor =
-                new SequentialComponentExecutor(executable);
+                new SequentialComponentExecutor(
+                        executable, execution, execComponent);
         final Thread thread = new Thread(executor, pplComponent.getLabel());
-        execution.onComponentUserCodeBegin(execComponent);
         thread.start();
         waitForThreadToFinish(thread);
         if (executor.getException() != null) {

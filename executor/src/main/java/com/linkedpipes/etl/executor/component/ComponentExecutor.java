@@ -4,6 +4,7 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 
@@ -36,14 +37,16 @@ public interface ComponentExecutor {
     static ComponentExecutor create(Pipeline pipeline, Execution execution,
             PipelineModel.Component component, ManageableComponent instance)
             throws ExecutorException {
+        final ExecutionModel.Component execComponent =
+                execution.getModel().getComponent(component);
         switch (component.getExecutionType()) {
             case EXECUTE:
                 return new ExecuteComponent(pipeline, execution,
-                        component, instance);
+                        component, execComponent, instance);
             case MAP:
-                return new MapComponent(execution, component);
+                return new MapComponent(execution, execComponent);
             case SKIP:
-                return new SkipComponent(execution, component);
+                return new SkipComponent();
         }
         throw new ExecutorException("Unknown execution type: {} for {}",
                 component.getExecutionType(), component.getIri());

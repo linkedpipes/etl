@@ -2,8 +2,8 @@ package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.execution.Execution;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.execution.ExecutionObserver;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 
 /**
  * Represent an execution of a component that is mapped from another
@@ -12,26 +12,26 @@ import com.linkedpipes.etl.executor.pipeline.PipelineModel;
  */
 class MapComponent implements ComponentExecutor {
 
-    private final Execution execution;
+    private final ExecutionObserver execution;
 
-    private final Execution.Component execComponent;
+    private final ExecutionModel.Component execComponent;
 
-    public MapComponent(Execution execution,
-            PipelineModel.Component component) {
+    public MapComponent(ExecutionObserver execution,
+            ExecutionModel.Component execComponent) {
         this.execution = execution;
-        this.execComponent = execution.getComponent(component);
+        this.execComponent = execComponent;
     }
 
     @Override
     public boolean execute(DataUnitManager dataUnitManager) {
-        execution.onComponentInitializing(execComponent);
+        execution.onMapComponentBegin(execComponent);
         try {
             dataUnitManager.onComponentMapByReference(execComponent);
         } catch (ExecutorException ex) {
-            execution.onCantPrepareDataUnits(execComponent, ex);
+            execution.onMapComponentFailed(execComponent, ex);
             return false;
         }
-        execution.onComponentMapped(execComponent);
+        execution.onMapComponentSuccessful(execComponent);
         return true;
     }
 

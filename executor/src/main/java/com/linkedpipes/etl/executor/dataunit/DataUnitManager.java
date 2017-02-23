@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.dataunit;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
-import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class DataUnitManager {
     private static final Logger LOG =
             LoggerFactory.getLogger(DataUnitManager.class);
 
-    private final Map<Execution.DataUnit, DataUnitContainer> dataUnits
+    private final Map<ExecutionModel.DataUnit, DataUnitContainer> dataUnits
             = new HashMap<>();
 
     /**
@@ -51,9 +51,10 @@ public class DataUnitManager {
      * @param dataUnits Data units to bindToPipeline.
      */
     public void initialize(DataUnitInstanceSource dataUnitInstanceSource,
-            Collection<Execution.DataUnit> dataUnits) throws ExecutorException {
+            Collection<ExecutionModel.DataUnit> dataUnits)
+            throws ExecutorException {
         // Create instances of data units.
-        for (Execution.DataUnit dataUnit : dataUnits) {
+        for (ExecutionModel.DataUnit dataUnit : dataUnits) {
             createDataUnitContainer(dataUnitInstanceSource, dataUnit);
         }
     }
@@ -78,9 +79,9 @@ public class DataUnitManager {
      * @return Data units referred by given component.
      */
     public Map<String, DataUnit> onComponentWillExecute(
-            Execution.Component component) throws ExecutorException {
+            ExecutionModel.Component component) throws ExecutorException {
         final Map<String, DataUnit> usedDataUnits = new HashMap<>();
-        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+        for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
             final DataUnitContainer container = dataUnits.get(dataUnit);
             if (container == null) {
                 throw new ExecutorException("Missing data unit: {} for {}",
@@ -104,9 +105,9 @@ public class DataUnitManager {
      *
      * @param component
      */
-    public void onComponentDidExecute(Execution.Component component)
+    public void onComponentDidExecute(ExecutionModel.Component component)
             throws ExecutorException {
-        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+        for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
             final DataUnitContainer container = dataUnits.get(dataUnit);
             if (container == null) {
                 throw new ExecutorException("Missing data unit: {} for {}",
@@ -116,9 +117,9 @@ public class DataUnitManager {
         }
     }
 
-    public void onComponentMapByReference(Execution.Component component)
+    public void onComponentMapByReference(ExecutionModel.Component component)
             throws ExecutorException {
-        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+        for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
             final DataUnitContainer container = dataUnits.get(dataUnit);
             if (container == null) {
                 throw new ExecutorException("Missing data unit: {} for {}",
@@ -145,7 +146,7 @@ public class DataUnitManager {
      */
     private void createDataUnitContainer(
             DataUnitInstanceSource dataUnitInstanceSource,
-            Execution.DataUnit dataUnit) throws ExecutorException {
+            ExecutionModel.DataUnit dataUnit) throws ExecutorException {
         final String iri = dataUnit.getDataUnitIri();
         final ManageableDataUnit instance;
         try {
@@ -158,8 +159,8 @@ public class DataUnitManager {
         instances.put(iri, instance);
     }
 
-    private boolean isDataUnitUsed(Execution.Component component,
-            Execution.DataUnit dataUnit) throws ExecutorException {
+    private boolean isDataUnitUsed(ExecutionModel.Component component,
+            ExecutionModel.DataUnit dataUnit) throws ExecutorException {
         final PipelineModel.Component pplComponent =
                 pipeline.getComponent(component.getComponentIri());
         if (pplComponent == null) {

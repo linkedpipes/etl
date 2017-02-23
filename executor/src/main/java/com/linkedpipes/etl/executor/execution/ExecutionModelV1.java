@@ -5,6 +5,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
@@ -167,7 +168,7 @@ class ExecutionModelV1 {
         lastChange = new Date();
     }
 
-    public void onEvent(Execution.Component component, Event event) {
+    public void onEvent(ExecutionModel.Component component, Event event) {
         final int index = ++eventCounter;
         final IRI eventIri = createEventIri(index);
         final List<Statement> eventStatements =
@@ -217,23 +218,23 @@ class ExecutionModelV1 {
         });
         eventsStatements.add(eventStatements);
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
     public void onExecutionCancelled() {
         pipelineCancelled = true;
         lastChange = new Date();
         status = Status.CANCELLING;
-        write();
+        writeToDisk();
     }
 
     public void onExecutionFailed() {
         pipelineFailed = true;
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
-    public void onComponentBegin(Execution.Component component) {
+    public void onComponentBegin(ExecutionModel.Component component) {
         final int index = ++eventCounter;
         final IRI eventIri = createEventIri(index);
         final List<Statement> eventStatements =
@@ -247,7 +248,7 @@ class ExecutionModelV1 {
                 vf.createIRI(component.getComponentIri()),
                 executionIri));
         // Add information about data units.
-        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+        for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
             final IRI dataUnitIri = vf.createIRI(dataUnit.getDataUnitIri());
             eventStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
@@ -262,10 +263,10 @@ class ExecutionModelV1 {
         eventsStatements.add(eventStatements);
         componentStatus.put(component.getComponentIri(), Status.RUNNING);
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
-    public void onComponentEnd(Execution.Component component) {
+    public void onComponentEnd(ExecutionModel.Component component) {
         final int index = ++eventCounter;
         final IRI eventIri = createEventIri(index);
         final List<Statement> eventStatements =
@@ -282,12 +283,12 @@ class ExecutionModelV1 {
         eventsStatements.add(eventStatements);
         componentStatus.put(component.getComponentIri(), Status.FINISHED);
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
-    public void onComponentMapped(Execution.Component component) {
+    public void onComponentMapped(ExecutionModel.Component component) {
         componentStatus.put(component.getComponentIri(), Status.MAPPED);
-        for (Execution.DataUnit dataUnit : component.getDataUnits()) {
+        for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
             final IRI dataUnitIri = vf.createIRI(dataUnit.getDataUnitIri());
             pipelineStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
@@ -299,10 +300,10 @@ class ExecutionModelV1 {
                     executionIri));
         }
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
-    public void onComponentFailed(Execution.Component component,
+    public void onComponentFailed(ExecutionModel.Component component,
             LpException exception) {
         //
         final int index = ++eventCounter;
@@ -351,7 +352,7 @@ class ExecutionModelV1 {
         componentStatus.put(component.getComponentIri(), Status.FAILED);
         pipelineFailed = true;
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
     public void onExecutionBegin() {
@@ -366,7 +367,7 @@ class ExecutionModelV1 {
         //
         eventsStatements.add(eventStatements);
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
     public void onExecutionEnd() {
@@ -388,25 +389,25 @@ class ExecutionModelV1 {
             status = Status.FINISHED;
         }
         lastChange = new Date();
-        write();
+        writeToDisk();
     }
 
-    public void write() {
+    public void writeToDisk() {
         final File outputFile = resourceManager.getExecutionFileV1();
         try (final OutputStream stream = new FileOutputStream(outputFile)) {
-            write(stream, RDFFormat.JSONLD);
+            writeToDisk(stream, RDFFormat.JSONLD);
         } catch (IOException | ExecutorException ex) {
-            LOG.error("Can't write v1 execution.", ex);
+            LOG.error("Can't writeToDisk v1 execution.", ex);
         }
         try (final OutputStream stream = new FileOutputStream(
                 outputFile.toString().replace("jsonld", "trig"))) {
-            write(stream, RDFFormat.TRIG);
+            writeToDisk(stream, RDFFormat.TRIG);
         } catch (IOException | ExecutorException ex) {
-            LOG.error("Can't write v1 execution.", ex);
+            LOG.error("Can't writeToDisk v1 execution.", ex);
         }
     }
 
-    public void write(OutputStream stream, RDFFormat format)
+    public void writeToDisk(OutputStream stream, RDFFormat format)
             throws ExecutorException {
         try {
             final RDFWriter writer = Rio.createWriter(format, stream);
@@ -428,7 +429,7 @@ class ExecutionModelV1 {
             }
             writer.endRDF();
         } catch (RuntimeException ex) {
-            throw new ExecutorException("Can't write v1Execution.", ex);
+            throw new ExecutorException("Can't writeToDisk v1Execution.", ex);
         }
     }
 

@@ -2,22 +2,23 @@ package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.execution.Execution;
+import com.linkedpipes.etl.executor.execution.ExecutionObserver;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 
 /**
  * Implementation of the context given to component for an execution.
  */
 class ExecutionContext implements Component.Context {
 
-    private final Execution execution;
+    private final ExecutionObserver execution;
 
-    private final Execution.Component component;
+    private final ExecutionModel.Component component;
 
     private boolean cancelled = false;
 
     public ExecutionContext(
-            Execution execution,
-            Execution.Component component) {
+            ExecutionObserver execution,
+            ExecutionModel.Component component) {
         this.execution = execution;
         this.component = component;
     }

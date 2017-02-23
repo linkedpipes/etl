@@ -8,6 +8,7 @@ import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.Execution;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
@@ -63,16 +64,16 @@ public class PipelineExecutor {
                 resources.getExecutionInfoLogFile());
         this.moduleFacade = modules;
         this.execution = new Execution(resources, iri);
+        this.execution.onExecutionBegin();
         MDC.remove(LoggerFacade.EXECUTION_MDC);
     }
 
     public void execute() {
         MDC.put(LoggerFacade.EXECUTION_MDC, null);
-        execution.onInitializationBegin();
         if (initialize()) {
-            execution.onComponentsExecutionBegin();
+            execution.onComponentsExecutionModelBegin();
             executeComponents();
-            execution.onComponentsExecutionEnd();
+            execution.onComponentsExecutionModelEnd();
         }
         terminate();
         MDC.remove(LoggerFacade.EXECUTION_MDC);
@@ -103,7 +104,7 @@ public class PipelineExecutor {
         try {
             loadPipeline();
         } catch (ExecutorException ex) {
-            execution.onInvalidPipeline(ex);
+            execution.onInvalidPipeline(pipeline.getModel(), ex);
             return false;
         }
         try {
@@ -136,11 +137,10 @@ public class PipelineExecutor {
     private void loadPipeline() throws ExecutorException {
         final File definitionFile = locatePipelineDefinitionFile();
         this.pipeline = new Pipeline();
-        execution.bindToPipeline(pipeline);
         final File workingDirectory =
                 resources.getWorkingDirectory("pipeline_repository");
         this.pipeline.load(definitionFile, workingDirectory);
-        execution.onPipelineLoaded();
+        execution.onPipelineLoaded(pipeline.getModel());
     }
 
     private File locatePipelineDefinitionFile() throws ExecutorException {
@@ -183,7 +183,7 @@ public class PipelineExecutor {
                     return moduleFacade.getDataUnit(pipeline, iri);
                 };
         dataUnitManager.initialize(dataUnitInstanceSource,
-                execution.getUsedDataUnits());
+                execution.getModel().getDataUnitsForInitialization());
     }
 
     private void loadComponents() throws ExecutorException {
@@ -226,9 +226,9 @@ public class PipelineExecutor {
             executor = getExecutor(pplComponent);
         } catch (ExecutorException ex) {
             executor = null;
-            final Execution.Component execComponent =
-                    execution.getComponent(pplComponent);
-            execution.onInvalidComponent(execComponent, ex);
+            final ExecutionModel.Component execComponent =
+                    execution.getModel().getComponent(pplComponent);
+            execution.onCantCreateComponentExecutor(execComponent, ex);
             return false;
         }
         final boolean canContinue = executor.execute(dataUnitManager);

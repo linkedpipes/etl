@@ -1,17 +1,21 @@
 package com.linkedpipes.etl.executor.execution;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.pipeline.Pipeline;
+import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
+import com.linkedpipes.etl.executor.execution.model.ExecutionOverviewModel;
+import com.linkedpipes.etl.executor.execution.model.ExecutionStatusMonitor;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.Date;
 
 /**
  * Represent an execution model.
@@ -20,362 +24,226 @@ import java.util.*;
  *
  * The model represent the execution state of the pipeline.
  */
-public class Execution {
-
-    /**
-     * Represent a component to execute.
-     */
-    public class Component {
-
-        private final String iri;
-
-        private final PipelineModel.Component component;
-
-        private final List<DataUnit> dataUnits = new ArrayList<>(4);
-
-        public Component(String iri,
-                PipelineModel.Component component) {
-            this.iri = iri;
-            this.component = component;
-        }
-
-        /**
-         * @return IRI of executed component.
-         */
-        public String getComponentIri() {
-            return component.getIri();
-        }
-
-        /**
-         * @return Data units used by the component.
-         */
-        public List<DataUnit> getDataUnits() {
-            return Collections.unmodifiableList(dataUnits);
-        }
-
-    }
-
-    /**
-     * Represent information about data unit in a execution.
-     */
-    public class DataUnit {
-
-        private final PipelineModel.DataUnit dataUnit;
-
-        private File saveDirectory;
-
-        /**
-         * Also used to create data save directory.
-         */
-        private final String debugVirtualPath;
-
-        public DataUnit(PipelineModel.DataUnit dataUnit,
-                String debugVirtualPath) {
-            this.dataUnit = dataUnit;
-            this.debugVirtualPath = debugVirtualPath;
-        }
-
-        /**
-         * @return Path to load content from or null if there is no mapping.
-         */
-        public File getLoadDirectory() {
-            final PipelineModel.DataSource source = dataUnit.getDataSource();
-            if (source == null) {
-                return null;
-            }
-            return resourceManager.resolveExecutionPath(
-                    source.getExecution(), source.getLoadPath());
-        }
-
-        /**
-         * @return IRI of data unit in a pipeline.
-         */
-        public String getDataUnitIri() {
-            return dataUnit.getIri();
-        }
-
-        /**
-         * @return Save directory for given data unit or null if the content
-         * should not be saved.
-         */
-        public File getSaveDirectory() {
-            if (saveDirectory == null) {
-                saveDirectory = resourceManager.getWorkingDirectory(
-                        "save-" + debugVirtualPath);
-            }
-            return saveDirectory;
-        }
-
-        /**
-         * @return Path to the data relative to the execution root.
-         */
-        public String getRelativeDataPath() {
-            return resourceManager.relative(getSaveDirectory());
-        }
-
-        /**
-         * @return Virtual path to the debug directory.
-         */
-        public String getVirtualDebugPath() {
-            return debugVirtualPath;
-        }
-
-    }
+public class Execution implements ExecutionObserver {
 
     private static final Logger LOG = LoggerFactory.getLogger(Execution.class);
 
-    private Pipeline pipeline;
+    private ExecutionModel executionModel;
 
-    private final ResourceManager resourceManager;
+    private final ExecutionModelV1 executionModelV1;
 
-    /**
-     * Under the component IRI store information about component execution.
-     */
-    private final Map<String, Component> components = new HashMap<>();
+    private ExecutionStatusMonitor statusMonitor;
 
-    /**
-     * List of all data units.
-     */
-    private final Map<String, DataUnit> dataUnits = new HashMap<>();
+    private ExecutionOverviewModel executionOverviewModel;
 
-    /**
-     * Execution IRI.
-     */
-    private final String iri;
+    private ResourceManager resourceManager;
 
-    private final ExecutionModelV1 v1Execution;
-
-    public Execution(ResourceManager resourceManager,
-            String executionIri) {
+    public Execution(ResourceManager resourceManager, String iri) {
         this.resourceManager = resourceManager;
-        this.iri = executionIri;
-        this.v1Execution = new ExecutionModelV1(executionIri, resourceManager);
-
+        this.executionModel = new ExecutionModel(resourceManager, iri);
+        this.executionModelV1 = new ExecutionModelV1(iri, resourceManager);
+        this.statusMonitor = new ExecutionStatusMonitor();
+        this.executionOverviewModel = new ExecutionOverviewModel(iri,
+                statusMonitor);
     }
 
-    /**
-     * Close and save the execution.
-     */
+    public ExecutionModel getModel() {
+        return executionModel;
+    }
+
+    public ExecutionOverviewModel getExecutionOverviewModel() {
+        return executionOverviewModel;
+    }
+
     public void close() {
-        LOG.info("close");
+        writeToDisk();
     }
 
-    /**
-     * @return Execution component record for given component.
-     */
-    public Component getComponent(PipelineModel.Component component) {
-        return components.get(component.getIri());
+    @Override
+    public void onExecutionBegin() {
+        executionOverviewModel.onExecutionBegin(new Date());
     }
 
-    public List<DataUnit> getUsedDataUnits() {
-        final List<DataUnit> usedDataUnits = new LinkedList<>();
-        for (Component component : components.values()) {
-            final PipelineModel.ExecutionType execType = pipeline.getModel()
-                    .getComponent(component.getComponentIri())
-                    .getExecutionType();
-            if (execType == PipelineModel.ExecutionType.SKIP) {
-                continue;
-            }
-            usedDataUnits.addAll(component.getDataUnits());
-        }
-        return usedDataUnits;
+    @Override
+    public void onMapComponentBegin(ExecutionModel.Component component) {
+        executionModelV1.onComponentBegin(component);
     }
 
-    public void onEvent(Execution.Component component, Event event) {
-        v1Execution.onEvent(component, event);
-    }
-
-    public void onObserverBeginFailed(LpException exception) {
-        LOG.info("onObserverBeginFailed", exception);
-        v1Execution.onExecutionFailed();
-    }
-
-    public void onDataUnitsLoadingFailed(LpException exception) {
-        LOG.info("onDataUnitsLoadingFailed", exception);
-        v1Execution.onExecutionFailed();
-    }
-
-    public void onComponentsLoadingFailed(LpException exception) {
-        LOG.info("onComponentsLoadingFailed", exception);
-        v1Execution.onExecutionFailed();
-    }
-
-    public void onObserverEndFailed(LpException exception) {
-        LOG.info("onObserverEndFailed", exception);
-        v1Execution.onExecutionFailed();
-    }
-
-    /**
-     * Called before component initialization, ie. on the begin
-     * of work on any component related stuff, that is directly the
-     * component execution it self.
-     *
-     * @param component
-     */
-    public void onComponentInitializing(Execution.Component component) {
-        LOG.info("onComponentInitializing");
-        v1Execution.onComponentBegin(component);
-    }
-
-    /**
-     * Initialization is done, component code is about to be executed.
-     *
-     * @param component
-     */
-    public void onComponentUserCodeBegin(Execution.Component component) {
-        LOG.info("onComponentUserCodeBegin");
-    }
-
-    /**
-     * Reports successful end of a component execution, called
-     * after {@link #onComponentUserCodeBegin(Component)}}.
-     *
-     * @param component
-     */
-    public void onComponentEnd(Execution.Component component) {
-        LOG.info("onComponentEnd");
-        v1Execution.onComponentEnd(component);
-    }
-
-    /**
-     * Alternative to {@link #onComponentEnd(Component)}.
-     *
-     * @param component
-     * @param exception
-     */
-    public void onComponentFailed(Execution.Component component,
+    @Override
+    public void onMapComponentFailed(ExecutionModel.Component component,
             LpException exception) {
-        LOG.info("onComponentFailed", exception);
-        v1Execution.onComponentFailed(component, exception);
+        LOG.error("Component mapping failed.", exception);
+        executionModelV1.onComponentFailed(component, exception);
+        statusMonitor.onMapComponentFailed();
+        writeToDisk();
     }
 
-    /**
-     * Alternative to {@link #onComponentInitializing(Component)}.
-     * Represents an execution type of a component.
-     *
-     * @param component
-     */
-    public void onComponentMapped(Execution.Component component) {
-        LOG.info("onComponentMapped");
-        v1Execution.onComponentMapped(component);
+    @Override
+    public void onMapComponentSuccessful(ExecutionModel.Component component) {
+        executionModelV1.onComponentMapped(component);
+        executionOverviewModel.onComponentExecutionEnd();
+        writeToDisk();
     }
 
-    /**
-     * Alternative to {@link #onComponentInitializing(Component)}.
-     * Represents an execution type of a component.
-     *
-     * @param component
-     */
-    public void onComponentSkipped(Execution.Component component) {
-        LOG.info("onComponentSkipped");
+    @Override
+    public void onExecuteComponentInitializing(
+            ExecutionModel.Component component) {
+        executionModelV1.onComponentBegin(component);
     }
 
-    public void onCantPrepareDataUnits(Execution.Component component,
+    @Override
+    public void onExecuteComponentFailed(ExecutionModel.Component component,
             LpException exception) {
-        LOG.info("onCantPrepareDataUnits", exception);
-        v1Execution.onComponentFailed(component, exception);
+        LOG.error("Component execution failed.", exception);
+        executionModelV1.onComponentFailed(component, exception);
+        statusMonitor.onExecuteComponentFailed();
+        writeToDisk();
     }
 
-    public void onCantSaveDataUnits(Execution.Component component,
+    @Override
+    public void onExecuteComponentSuccessful(
+            ExecutionModel.Component component) {
+        executionModelV1.onComponentEnd(component);
+        executionOverviewModel.onComponentExecutionEnd();
+        writeToDisk();
+    }
+
+    @Override
+    public void onExecuteComponentCantSaveDataUnit(
+            ExecutionModel.Component component, LpException exception) {
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onExecuteComponentCantSaveDataUnit();
+    }
+
+    @Override
+    public void onComponentUserCodeBegin(ExecutionModel.Component component) {
+        // No operation here.
+    }
+
+    @Override
+    public void onComponentUserCodeFailed(ExecutionModel.Component component) {
+        // No operation here.
+    }
+
+    @Override
+    public void onComponentUserCodeSuccessful(
+            ExecutionModel.Component component) {
+        // No operation here.
+    }
+
+    @Override
+    public void onEvent(ExecutionModel.Component component, Event event) {
+        executionModelV1.onEvent(component, event);
+    }
+
+    @Override
+    public void onCantCreateComponentExecutor(
+            ExecutionModel.Component component, LpException exception) {
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onCantCreateComponentExecutor();
+    }
+
+    @Override
+    public void onPipelineLoaded(PipelineModel pipeline) {
+        executionModelV1.bindToPipeline(pipeline);
+        statusMonitor.onPipelineLoaded();
+        executionModel.initialize(pipeline);
+        executionOverviewModel.onPipelineLoaded(pipeline);
+        writeToDisk();
+    }
+
+    @Override
+    public void onInvalidPipeline(PipelineModel pipeline,
             LpException exception) {
-        LOG.info("onCantSaveDataUnits", exception);
-        v1Execution.onExecutionFailed();
-    }
-
-    /**
-     * Called with the first cancel request.
-     */
-    public void onCancelRequest() {
-        LOG.info("onCancelRequest");
-        v1Execution.onExecutionCancelled();
-    }
-
-    public void onInitializationBegin() {
-        LOG.info("onInitializationBegin");
-    }
-
-    /**
-     * Bind to an empty pipeline instance.
-     *
-     * @param pipeline
-     */
-    public void bindToPipeline(Pipeline pipeline) {
-        this.pipeline = pipeline;
-    }
-
-    public void onInvalidPipeline(LpException exception) {
-        LOG.info("onInvalidPipeline", exception);
-        // Try to bing the pipeline to get some information.
-        if (pipeline.getModel() != null) {
-            v1Execution.bindToPipeline(pipeline.getModel());
+        if (pipeline != null) {
+            executionModelV1.bindToPipeline(pipeline);
         }
-        v1Execution.onExecutionFailed();
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onInvalidPipeline();
+        writeToDisk();
     }
 
-    /**
-     * Called once pipeline instance is loaded.
-     */
-    public void onPipelineLoaded() {
-        this.v1Execution.bindToPipeline(pipeline.getModel());
-        //
-        String baseIri = "http://execution/";
-        Integer componentCounter = 0;
-        Integer dataUnitCounter = 0;
-        // Construct the execution model from the pipeline.
-        for (PipelineModel.Component pplComponent :
-                pipeline.getModel().getComponents()) {
-            final Component execComponent = new Component(
-                    baseIri + "/components/" + ++componentCounter,
-                    pplComponent);
-            for (PipelineModel.DataUnit pplDataUnit :
-                    pplComponent.getDataUnits()) {
-                dataUnitCounter++;
-                final DataUnit execDataUnit = new DataUnit(pplDataUnit,
-                        String.format("%03d", dataUnitCounter));
-                execComponent.dataUnits.add(execDataUnit);
-                dataUnits.put(pplDataUnit.getIri(), execDataUnit);
-            }
-            components.put(pplComponent.getIri(), execComponent);
-        }
-    }
-
+    @Override
     public void onCantPreparePipeline(LpException exception) {
-        LOG.info("onCantPreparePipeline", exception);
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onCantPreparePipeline();
     }
 
-    public void onComponentsExecutionBegin() {
-        LOG.info("onComponentsExecutionBegin");
-        v1Execution.onExecutionBegin();
+    @Override
+    public void onObserverBeginFailed(LpException exception) {
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onObserverBeginFailed();
     }
 
-    public void onInvalidComponent(Execution.Component component,
-            LpException exception) {
-        LOG.info("onInvalidComponent", exception);
-        v1Execution.onExecutionFailed();
+    @Override
+    public void onDataUnitsLoadingFailed(LpException exception) {
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onDataUnitsLoadingFailed();
     }
 
-    public void onComponentsExecutionEnd() {
-        LOG.info("onComponentsExecutionEnd");
-        v1Execution.onExecutionBegin();
+    @Override
+    public void onComponentsLoadingFailed(LpException exception) {
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onComponentsLoadingFailed();
     }
 
-    /**
-     * Called at the end of the execution.
-     */
+    @Override
     public void onExecutionEnd() {
-        LOG.info("onExecutionEnd");
-        v1Execution.onExecutionEnd();
+        executionModelV1.onExecutionEnd();
+        statusMonitor.onExecutionEnd();
+        executionOverviewModel.onExecutionEnd(new Date());
+    }
+
+    @Override
+    public void onCancelRequest() {
+        executionModelV1.onExecutionCancelled();
+        statusMonitor.onCancelRequest();
+        executionOverviewModel.onExecutionCancelling();
+        writeToDisk();
+    }
+
+    @Override
+    public void onObserverEndFailed(LpException exception) {
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onObserverEndFailed();
+    }
+
+    @Override
+    public void onComponentsExecutionModelBegin() {
+        executionModelV1.onExecutionBegin();
+        statusMonitor.onComponentsExecutionBegin();
+    }
+
+    @Override
+    public void onComponentsExecutionModelEnd() {
+        // No operation here.
     }
 
     /**
-     * For backward compatibility, write the V1 execution model.
+     * For backward compatibility, writeToDisk the V1 execution model.
      *
      * @param stream
      * @param format
      */
     public void writeV1Execution(OutputStream stream, RDFFormat format)
             throws ExecutorException {
-        v1Execution.write(stream, format);
+        executionModelV1.writeToDisk(stream, format);
+    }
+
+    public void writeToDisk() {
+        executionModelV1.writeToDisk();
+        writeExecutionOverviewToDisk();
+    }
+
+    private void writeExecutionOverviewToDisk() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        try (final OutputStream stream = new FileOutputStream(
+                resourceManager.getExecutionOverviewJsonFile())) {
+            objectMapper.writeValue(stream,
+                    executionOverviewModel.toJson(objectMapper));
+        } catch (IOException ex) {
+            LOG.error("Can't save execution overview", ex);
+        }
     }
 
 }

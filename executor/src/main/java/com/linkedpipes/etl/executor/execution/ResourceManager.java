@@ -97,6 +97,12 @@ public class ResourceManager {
         return file;
     }
 
+    public File getExecutionOverviewJsonFile() {
+        final File file = new File(executionRoot, "execution/overview.json");
+        file.getParentFile().mkdir();
+        return file;
+    }
+
     /**
      * Return given path as relative to the execution root directory.
      *
