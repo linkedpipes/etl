@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.monitor.executor;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
+import com.linkedpipes.etl.executor.monitor.execution.resource.ResourceReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +164,7 @@ public class ExecutorFacade {
     /**
      * Use HTTP to check the executor status and running pipeline.
      * <p>
-     * Can be used for initialization as well as an update.
+     * Can be used for initialization as well as an load.
      *
      * @param executor
      */
@@ -190,6 +191,7 @@ public class ExecutorFacade {
             // Set execution to unresponsive state.
             if (executor.getExecution() != null) {
                 executionFacade.unresponsiveExecutor(executor.getExecution());
+                update(executor.getExecution());
             }
             return;
         }
@@ -200,11 +202,12 @@ public class ExecutorFacade {
             if (executor.getExecution() != null) {
                 // However the execution may finished in mean time, so
                 // we need to check it from the disk first.
+                update(executor.getExecution());
                 try {
                     executionFacade.updateFromFile(executor.getExecution());
                 } catch (ExecutionFacade.OperationFailed |
                         ExecutionFacade.ExecutionMismatch ex) {
-                    LOG.warn("Can't update from file before detach. {}",
+                    LOG.warn("Can't load from file before detach. {}",
                             executor.getExecution().getId());
                 }
                 //
@@ -240,6 +243,23 @@ public class ExecutorFacade {
                 executor.setExecution(null);
             }
         }
+        //
+        if (executor.getExecution() != null) {
+            update(executor.getExecution(), executor);
+        }
+
+    }
+
+    private void update(Execution execution) {
+        final ResourceReader reader = new ResourceReader();
+        reader.update(execution, execution.getOverviewResource());
+        execution.getOverviewResource().setHasExecutor(false);
+    }
+
+    private void update(Execution execution, Executor executor) {
+        final ResourceReader reader = new ResourceReader();
+        reader.update(execution, execution.getOverviewResource(), executor);
+        execution.getOverviewResource().setHasExecutor(true);
     }
 
 }

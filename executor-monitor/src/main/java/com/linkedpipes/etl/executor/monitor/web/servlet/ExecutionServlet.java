@@ -30,9 +30,6 @@ public class ExecutionServlet {
 
     public static class CreateExecution {
 
-        /**
-         * Execution IRI.
-         */
         private String iri;
 
         public CreateExecution(Execution execution) {
@@ -184,6 +181,21 @@ public class ExecutionServlet {
         // TODO Execution in other thread !
         executorFacade.startExecutions();
         return new CreateExecution(execution);
+    }
+
+    @RequestMapping(value = "/{id}/overview", method = RequestMethod.GET,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void getExecutionOverview(@PathVariable String id,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        final Execution execution = executionFacade.getExecution(id);
+        if (execution == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        executionFacade.writeOverview(execution,
+                response.getOutputStream());
     }
 
 }

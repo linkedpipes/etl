@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
+import com.linkedpipes.etl.executor.monitor.execution.resource.ExecutionOverviewResource;
 import org.eclipse.rdf4j.model.Statement;
 
 import java.io.File;
@@ -52,7 +53,7 @@ public class Execution {
     private File directory;
 
     /**
-     * Time of last update (reload, check) of this record.
+     * Time of last load (reload, check) of this record.
      */
     private Date lastCheck;
 
@@ -105,6 +106,9 @@ public class Execution {
      * Store information about execution debug data.
      */
     private DebugData debugData;
+
+    private ExecutionOverviewResource overviewResource =
+            new ExecutionOverviewResource();
 
     Execution() {
 
@@ -219,6 +223,10 @@ public class Execution {
         } else {
             return lastChange != null && date.before(lastChange);
         }
+    }
+
+    public ExecutionOverviewResource getOverviewResource() {
+        return overviewResource;
     }
 
 }

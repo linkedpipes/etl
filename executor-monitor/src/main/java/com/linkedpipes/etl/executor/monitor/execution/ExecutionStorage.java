@@ -4,6 +4,7 @@ import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.ExecutionMismatch;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.OperationFailed;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.UnknownExecution;
+import com.linkedpipes.etl.executor.monitor.execution.resource.ResourceReader;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
@@ -194,7 +195,7 @@ class ExecutionStorage {
                 try {
                     ExecutionChecker.updateFromDirectory(execution);
                 } catch (OperationFailed | ExecutionMismatch ex) {
-                    LOG.warn("Can't update execution.", ex);
+                    LOG.warn("Can't load execution.", ex);
                 }
         }
     }
@@ -268,6 +269,10 @@ class ExecutionStorage {
         } catch (OperationFailed | IOException ex) {
             throw new OperationFailed("Can't create an execution.", ex);
         }
+        //
+        final ResourceReader resourceReader = new ResourceReader();
+        resourceReader.update(execution, execution.getOverviewResource());
+        execution.getOverviewResource().setHasExecutor(false);
         return execution;
     }
 
@@ -279,7 +284,7 @@ class ExecutionStorage {
         final Date now = new Date();
         // Update only such execution that were not updated in last
         // 10 seconds. As the execution could have been updated
-        // from a REST service and we do not want to update it twice.
+        // from a REST service and we do not want to load it twice.
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
         calendar.add(Calendar.SECOND, -10);

@@ -154,6 +154,11 @@ public class ExecutionFacade {
         streamFile(pipelineFile, RDFFormat.JSONLD, format, stream);
     }
 
+    public void writeOverview(Execution execution,
+            OutputStream stream) throws IOException {
+        execution.getOverviewResource().writeToStream(stream);
+    }
+
     /**
      * Create execution from given sources.
      *
@@ -203,7 +208,7 @@ public class ExecutionFacade {
     }
 
     /**
-     * Force execution update from a directory.
+     * Force execution load from a directory.
      *
      * @param execution
      */

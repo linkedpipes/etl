@@ -18,6 +18,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>vocabulary</artifactId>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- FTP server -->
         <dependency>
             <groupId>org.apache.ftpserver</groupId>
