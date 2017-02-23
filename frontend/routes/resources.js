@@ -692,6 +692,11 @@ gApiRouter.get('/executions/:id/pipeline', function (request, response) {
     pipeGet(uri, response);
 });
 
+gApiRouter.get('/executions/:id/overview', function (request, response) {
+    var uri = gMonitorUri + 'executions/' + request.params.id + '/overview';
+    pipeGet(uri, response);
+});
+
 gApiRouter.get('/executions/:id/logs', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/logs';
     pipeGet(uri, response);
