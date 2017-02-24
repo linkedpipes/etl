@@ -67,17 +67,20 @@ public class ExecutionOverviewResource implements LoadableResource {
         if (hasExecutor) {
             return;
         }
+        final ObjectMapper mapper = new ObjectMapper();
         final ObjectNode root = (ObjectNode) overviewRoot;
         switch (root.get("status").asText()) {
             case "http://etl.linkedpipes.com/resources/status/running":
             case "http://etl.linkedpipes.com/resources/status/cancelling":
-                root.put("status",
+                final ObjectNode statusNode = mapper.createObjectNode();
+                root.put("@id",
                         "http://etl.linkedpipes.com/resources/status/unknown");
+                root.set("status", statusNode);
                 break;
             default:
                 break;
         }
-        root.put("status", hasExecutor);
+
     }
 
 }

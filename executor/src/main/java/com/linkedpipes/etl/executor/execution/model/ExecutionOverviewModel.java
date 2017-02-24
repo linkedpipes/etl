@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
 import com.linkedpipes.etl.executor.pipeline.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfFormatter;
+import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
 import java.util.Date;
 
@@ -74,10 +75,24 @@ public class ExecutionOverviewModel {
         final ObjectNode contextNode = mapper.createObjectNode();
         contextNode.put("pipeline", LP_OVERVIEW.HAS_PIPELINE);
         contextNode.put("execution", LP_OVERVIEW.HAS_EXECUTION);
-        contextNode.put("executionStarted", LP_OVERVIEW.HAS_START);
-        contextNode.put("executionFinished", LP_OVERVIEW.HAS_END);
+
+        final ObjectNode startNode = mapper.createObjectNode();
+        startNode.put("@id", LP_OVERVIEW.HAS_START);
+        startNode.put("@type", XSD.DATETIME);
+        contextNode.set("executionStarted", startNode);
+
+        final ObjectNode finishedNode = mapper.createObjectNode();
+        finishedNode.put("@id", LP_OVERVIEW.HAS_END);
+        finishedNode.put("@type", XSD.DATETIME);
+        contextNode.set("executionFinished", finishedNode);
+
         contextNode.put("status", LP_OVERVIEW.HAS_STATUS);
-        contextNode.put("lastChange", LP_OVERVIEW.HAS_LAST_CHANGE);
+
+        final ObjectNode lastChangNode = mapper.createObjectNode();
+        lastChangNode.put("@id", LP_OVERVIEW.HAS_LAST_CHANGE);
+        lastChangNode.put("@type", XSD.DATETIME);
+        contextNode.set("lastChange", lastChangNode);
+
         contextNode.put("pipelineProgress", LP_OVERVIEW.HAS_PIPELINE_PROGRESS);
         contextNode.put("total", LP_OVERVIEW.HAS_PROGRESS_TOTAL);
         contextNode.put("current", LP_OVERVIEW.HAS_PROGRESS_CURRENT);
@@ -86,15 +101,25 @@ public class ExecutionOverviewModel {
         responseNode.set("@context", contextNode);
         responseNode.put("@id", executionIri + "/overview");
 
-        responseNode.put("pipeline", pipelineIri);
-        responseNode.put("execution", executionIri);
+        final ObjectNode pipelineNode = mapper.createObjectNode();
+        pipelineNode.put("@id", pipelineIri);
+        responseNode.set("pipeline", pipelineNode);
+
+        final ObjectNode executionNode = mapper.createObjectNode();
+        executionNode.put("@id", executionIri);
+        responseNode.set("execution", executionNode);
+
         if (pipelineStarted != null) {
             responseNode.put("executionStarted", pipelineStarted);
         }
         if (pipelineFinished != null) {
             responseNode.put("executionFinished", pipelineFinished);
         }
-        responseNode.put("status", statusMonitor.getStatus().getIri());
+
+        final ObjectNode statusNode = mapper.createObjectNode();
+        statusNode.put("@id", statusMonitor.getStatus().getIri());
+        responseNode.set("status", statusNode);
+
         responseNode.put("lastChange", lastChange);
 
         final ObjectNode executionProgressNode = mapper.createObjectNode();
