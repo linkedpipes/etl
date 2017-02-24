@@ -16,6 +16,8 @@ public class LodCloudTest {
     public void loadTest() throws Exception {
         final LodCloud component = new LodCloud();
         component.configuration = new LodCloudConfiguration();
+        component.configuration.setApiKey("e50c8857-9195-43d4-bf0f-66a110715c26");
+        component.configuration.setOrgID("9046f134-ea81-462f-aae3-69854d34fc96");
         component.configuration.setDatasetID("cz-test-4");
         component.configuration.setNamespace("https://gov.cz.linked.opendata.cz/zdroj/datová-schránka/");
         component.configuration.getVocabularies().add("skos");

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class ValidationTest {
 
-    //@Test
+    @Test
     public void verifyConfigurationDescription() throws Exception {
         final TestConfigurationDescription test =
                 new TestConfigurationDescription();

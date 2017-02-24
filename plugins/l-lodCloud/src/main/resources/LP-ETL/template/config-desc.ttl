@@ -1,17 +1,157 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix desc: <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/> .
+@prefix lodcloud: <http://plugins.linkedpipes.com/ontology/l-lodCloud#> .
 
 <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configurationDescription>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/l-lodCloud#Configuration> ; 
-    config:member <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/apiKey> ,
-        <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/datasetID> .
+    config:type lodcloud:Configuration ; 
+    config:member desc:apiKey ,
+        desc:topic ,
+        desc:limitedSparql ,
+        desc:lodNoLinks ,
+        desc:lodUnconnected ,
+        desc:lodNeedsInfo ,
+        desc:lodNeedsFixing ,
+        desc:versionGenerated ,
+        desc:licenseMetadataTag ,
+        desc:provenanceMetadataTag ,
+        desc:publishedTag ,
+        desc:vocabMappingTag ,
+        desc:vocabTag ,
+        desc:version ,
+        desc:licenseId ,
+        desc:organizationId ,
+        desc:shortname ,
+        desc:namespace ,
+        desc:vocabularies ,
+        desc:additionalTags ,
+        desc:links ,
+        desc:mappingFiles ,
+        desc:sparqlEndpointName ,
+        desc:sparqlEndpointDescription ,
+        desc:datasetID .
 
-<http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/apiKey>
+desc:topic
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKey> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKeyControl> .
+    config:property lodcloud:topic ;
+    config:control lodcloud:topicControl .
 
-<http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration/desc/datasetID>
+desc:limitedSparql
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-lodCloud#datasetID> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-lodCloud#datasetIDControl> .
+    config:property lodcloud:limitedSparql ;
+    config:control lodcloud:limitedSparqlControl .
+
+desc:lodNoLinks
+    a config:ConfigurationMember ;
+    config:property lodcloud:lodNoLinks ;
+    config:control lodcloud:lodNoLinksControl .
+
+desc:lodUnconnected
+    a config:ConfigurationMember ;
+    config:property lodcloud:lodUnconnected ;
+    config:control lodcloud:lodUnconnectedControl .
+
+desc:lodNeedsInfo
+    a config:ConfigurationMember ;
+    config:property lodcloud:lodNeedsInfo ;
+    config:control lodcloud:lodNeedsInfoControl .
+
+desc:lodNeedsFixing
+    a config:ConfigurationMember ;
+    config:property lodcloud:lodNeedsFixing ;
+    config:control lodcloud:lodNeedsFixingControl .
+
+desc:versionGenerated
+    a config:ConfigurationMember ;
+    config:property lodcloud:versionGenerated ;
+    config:control lodcloud:versionGeneratedControl .
+
+desc:licenseMetadataTag
+    a config:ConfigurationMember ;
+    config:property lodcloud:licenseMetadataTag ;
+    config:control lodcloud:licenseMetadataTagControl .
+
+desc:provenanceMetadataTag
+    a config:ConfigurationMember ;
+    config:property lodcloud:provenanceMetadataTag ;
+    config:control lodcloud:provenanceMetadataTagControl .
+
+desc:publishedTag
+    a config:ConfigurationMember ;
+    config:property lodcloud:publishedTag ;
+    config:control lodcloud:publishedTagControl .
+
+desc:vocabMappingTag
+    a config:ConfigurationMember ;
+    config:property lodcloud:vocabMappingTag ;
+    config:control lodcloud:vocabMappingTagControl .
+
+desc:vocabTag
+    a config:ConfigurationMember ;
+    config:property lodcloud:vocabTag ;
+    config:control lodcloud:vocabTagControl .
+
+desc:version
+    a config:ConfigurationMember ;
+    config:property lodcloud:version ;
+    config:control lodcloud:versionControl .
+
+desc:licenseId
+    a config:ConfigurationMember ;
+    config:property lodcloud:licenseId ;
+    config:control lodcloud:licenseIdControl .
+
+desc:organizationId
+    a config:ConfigurationMember ;
+    config:property lodcloud:organizationId ;
+    config:control lodcloud:organizationIdControl .
+
+desc:shortname
+    a config:ConfigurationMember ;
+    config:property lodcloud:shortname ;
+    config:control lodcloud:shortnameControl .
+
+desc:namespace
+    a config:ConfigurationMember ;
+    config:property lodcloud:namespace ;
+    config:control lodcloud:namespaceControl .
+
+desc:vocabularies
+    a config:ConfigurationMember ;
+    config:property lodcloud:vocabularies ;
+    config:control lodcloud:vocabulariesControl .
+
+desc:additionalTags
+    a config:ConfigurationMember ;
+    config:property lodcloud:additionalTags ;
+    config:control lodcloud:additionalTagsControl .
+
+desc:links
+    a config:ConfigurationMember ;
+    config:property lodcloud:links ;
+    config:control lodcloud:linksControl .
+
+desc:mappingFiles
+    a config:ConfigurationMember ;
+    config:property lodcloud:mappingFiles ;
+    config:control lodcloud:mappingFilesControl .
+
+desc:sparqlEndpointName
+    a config:ConfigurationMember ;
+    config:property lodcloud:sparqlEndpointName ;
+    config:control lodcloud:sparqlEndpointNameControl .
+
+desc:sparqlEndpointDescription
+    a config:ConfigurationMember ;
+    config:property lodcloud:sparqlEndpointDescription ;
+    config:control lodcloud:sparqlEndpointDescriptionControl .
+
+desc:apiKey
+    a config:ConfigurationMember ;
+    config:property lodcloud:apiKey ;
+    config:control lodcloud:apiKeyControl .
+
+desc:datasetID
+    a config:ConfigurationMember ;
+    config:property lodcloud:datasetID ;
+    config:control lodcloud:datasetIDControl .

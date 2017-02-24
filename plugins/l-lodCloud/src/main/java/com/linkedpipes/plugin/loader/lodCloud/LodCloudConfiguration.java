@@ -148,14 +148,6 @@ public class LodCloudConfiguration {
         this.namespace = namespace;
     }
 
-    public String getSparql_graph_name() {
-        return sparql_graph_name;
-    }
-
-    public void setSparql_graph_name(String sparql_graph_name) {
-        this.sparql_graph_name = sparql_graph_name;
-    }
-
     public Collection<String> getVocabularies() {
         return vocabularies;
     }
@@ -220,8 +212,13 @@ public class LodCloudConfiguration {
         this.datasetID = datasetID;
     }
 
+    @RdfToPojo.Type(iri = LodCloudConfigVocabulary.LINK_COUNT_CLASS)
     public static class LinkCount {
+
+        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.TARGET_DATASET)
         private String targetDataset;
+
+        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.LINK_COUNT)
         private Long linkCount;
         public LinkCount() {
             targetDataset = "";
@@ -245,8 +242,13 @@ public class LodCloudConfiguration {
         }
     }
 
+    @RdfToPojo.Type(iri = LodCloudConfigVocabulary.MAPPING_FILE_CLASS)
     public static class MappingFile {
+
+        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.MAPPING_FORMAT)
         private MappingFormats mappingFormat;
+
+        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.MAPPING_FILE)
         private String mappingFile;
         public MappingFile() {
             setMappingFormat(MappingFormats.OWL);
@@ -384,13 +386,13 @@ public class LodCloudConfiguration {
         gfdl {
             //GNU Free Documentation License
             public String toString() {
-                return "cc-nc" ;
+                return "gfdl" ;
             }
         },
         notspecified {
             //License Not Specified
             public String toString() {
-                return "cc-nc" ;
+                return "notspecified" ;
             }
         },
         odcby {
@@ -446,54 +448,75 @@ public class LodCloudConfiguration {
         }
     }
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.TOPIC)
     private Topics topic;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LIMITED_SPARQL)
     private boolean limitedSparql;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LOD_NOLINKS)
     private boolean lodcloudNolinks;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LOD_UNCONNECTED)
     private boolean lodcloudUnconnected ;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LOD_NEEDS_INFO)
     private boolean lodcloudNeedsInfo;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LOD_NEEDS_FIXING)
     private boolean lodcloudNeedsFixing;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VERSION_GENERATED)
     private boolean versionGenerated;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LICENSE_METADATA_TAG)
     private LicenseMetadataTags licenseMetadataTag ;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.PROVENANCE_METADATA_TAG)
     private ProvenanceMetadataTags provenanceMetadataTag;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.PUBLISHED_TAG)
     private PublishedTags publishedTag;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VOCAB_MAPPING_TAG)
     private VocabMappingsTags vocabMappingTag;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VOCAB_TAG)
     private VocabTags vocabTag;
 
     private final String apiUri = "https://datahub.io/api/3/action";
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VERSION)
     private String version ;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LICENSE_ID)
     private Licenses license_id ;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.ORGANIZATION_ID)
     private String orgID ;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.SHORTNAME)
     private String shortname ;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.NAMESPACE)
     private String namespace ;
 
-    private String sparql_graph_name ;
-
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VOCABULARIES)
     private Collection<String> vocabularies = new LinkedList<>();
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.ADDITIONAL_TAGS)
     private Collection<String> additionalTags = new LinkedList<>();
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LINKS)
     private Collection<LinkCount> links = new LinkedList<>();
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.MAPPING_FILES)
     private Collection<MappingFile> mappingFiles = new LinkedList<>();
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.SPARQL_ENDPOINT_NAME)
     private String sparqlEndpointName ;
 
+    @RdfToPojo.Property(iri = LodCloudConfigVocabulary.SPARQL_ENDPOINT_DESCRIPTION)
     private String sparqlEndpointDescription ;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.API_KEY)
