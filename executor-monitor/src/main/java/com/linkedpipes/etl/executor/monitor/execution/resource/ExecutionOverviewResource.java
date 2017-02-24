@@ -27,10 +27,16 @@ public class ExecutionOverviewResource implements LoadableResource {
         final ObjectNode rootNode = mapper.createObjectNode();
         rootNode.set("@context", contextNode);
         rootNode.put("@id", execution.getIri() + "/overview");
-        rootNode.put("execution", execution.getIri());
-        rootNode.put("status",
-                "http://etl.linkedpipes.com/resources/status/queued");
 
+        final ObjectNode executionNode = mapper.createObjectNode();
+        executionNode.put("@id", execution.getIri());
+        rootNode.set("execution", executionNode);
+
+        final ObjectNode statusNode = mapper.createObjectNode();
+        statusNode.put("@id",
+                "http://etl.linkedpipes.com/resources/status/queued");
+        rootNode.set("status", statusNode);
+        
         overviewRoot = rootNode;
     }
 
