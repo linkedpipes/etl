@@ -1,16 +1,14 @@
 package com.linkedpipes.etl.executor.execution.model;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
+
 enum ExecutionStatus {
-    NONE("http://etl.linkedpipes.com/resources/status/none"),
-    MAPPED("http://etl.linkedpipes.com/resources/status/mapped"),
-    QUEUED("http://etl.linkedpipes.com/resources/status/queued"),
-    INITIALIZING(
-            "http://etl.linkedpipes.com/resources/status/initializing"),
-    RUNNING("http://etl.linkedpipes.com/resources/status/running"),
-    FINISHED("http://etl.linkedpipes.com/resources/status/finished"),
-    CANCELLED("http://etl.linkedpipes.com/resources/status/cancelled"),
-    CANCELLING("http://etl.linkedpipes.com/resources/status/cancelling"),
-    FAILED("http://etl.linkedpipes.com/resources/status/failed");
+    QUEUED(LP_EXEC.STATUS_QUEUED),
+    RUNNING(LP_EXEC.STATUS_RUNNING),
+    FINISHED(LP_EXEC.STATUS_FINISHED),
+    CANCELLED(LP_EXEC.STATUS_CANCELLED),
+    CANCELLING(LP_EXEC.STATUS_CANCELLING),
+    FAILED(LP_EXEC.STATUS_FAILED);
 
     private final String iri;
 

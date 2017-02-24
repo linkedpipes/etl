@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.monitor.execution.resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 
@@ -33,10 +34,9 @@ public class ExecutionOverviewResource implements LoadableResource {
         rootNode.set("execution", executionNode);
 
         final ObjectNode statusNode = mapper.createObjectNode();
-        statusNode.put("@id",
-                "http://etl.linkedpipes.com/resources/status/queued");
+        statusNode.put("@id", LP_EXEC.STATUS_QUEUED);
         rootNode.set("status", statusNode);
-        
+
         overviewRoot = rootNode;
     }
 
@@ -76,11 +76,10 @@ public class ExecutionOverviewResource implements LoadableResource {
         final ObjectMapper mapper = new ObjectMapper();
         final ObjectNode root = (ObjectNode) overviewRoot;
         switch (root.get("status").asText()) {
-            case "http://etl.linkedpipes.com/resources/status/running":
-            case "http://etl.linkedpipes.com/resources/status/cancelling":
+            case LP_EXEC.STATUS_RUNNING:
+            case LP_EXEC.STATUS_CANCELLING:
                 final ObjectNode statusNode = mapper.createObjectNode();
-                root.put("@id",
-                        "http://etl.linkedpipes.com/resources/status/unknown");
+                root.put("@id", LP_EXEC.STATUS_UNKNOWN);
                 root.set("status", statusNode);
                 break;
             default:

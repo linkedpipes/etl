@@ -69,4 +69,26 @@ public final class LP_EXEC {
      */
     public static final String HAS_EXECUTION_TYPE = PREFIX + "executionType";
 
+    public static final String STATUS_QUEUED =
+            "http://etl.linkedpipes.com/resources/status/queued";
+
+    public static final String STATUS_RUNNING =
+            "http://etl.linkedpipes.com/resources/status/running";
+
+    public static final String STATUS_FINISHED =
+            "http://etl.linkedpipes.com/resources/status/finished";
+
+    public static final String STATUS_CANCELLED =
+            "http://etl.linkedpipes.com/resources/status/cancelled";
+
+    public static final String STATUS_CANCELLING =
+            "http://etl.linkedpipes.com/resources/status/cancelling";
+
+    public static final String STATUS_FAILED =
+            "http://etl.linkedpipes.com/resources/status/failed";
+
+    public static final String STATUS_UNKNOWN =
+            "http://etl.linkedpipes.com/resources/status/unknown";
+
+
 }
