@@ -88,11 +88,21 @@ define([], function () {
         "vocabularies" : {
             "$type": "str",
             "$array": true,
+            "$onLoad": function (values) {
+                return values.map(function (v) {
+                    return {"@value": v};
+                });
+            },
             "$label": "Standard prefixes of vocabularies used"
         },
         "additionalTags" : {
             "$type": "str",
             "$array": true,
+            "$onLoad": function (values) {
+                return values.map(function (v) {
+                    return {"@value": v};
+                });
+            },
             "$label": "Additional CKAN tags"
         },
         "links" : {
@@ -220,9 +230,7 @@ define([], function () {
         };
 
         $scope.onTagAdd = function () {
-            $scope.dialog.additionalTags.value.push({"value":""});
-            //
-            console.log('onTagAdd', $scope.dialog.records);
+            $scope.dialog.additionalTags.value.push({'@value': ''});
         };
 
         $scope.onVocabDelete = function (index) {
@@ -230,9 +238,7 @@ define([], function () {
         };
 
         $scope.onVocabAdd = function () {
-            $scope.dialog.vocabularies.value.push({"value":""});
-            //
-            console.log('onVocabAdd', $scope.dialog.records);
+            $scope.dialog.vocabularies.value.push({'@value': ''});
         };
 
         $scope.onDeleteLinkCount = function (index) {

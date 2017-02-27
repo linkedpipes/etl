@@ -132,7 +132,7 @@
         <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="tag in dialog.additionalTags.value">
             <md-input-container class="md-block">
                 <label>Tag</label>
-                <input ng-model="tag.value">
+                <input ng-model="tag['@value']">
             </md-input-container>
             <button ng-click="onTagDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
         </section>
@@ -168,7 +168,7 @@
         <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="vocab in dialog.vocabularies.value">
             <md-input-container class="md-block">
                 <label>Prefix</label>
-                <input ng-model="vocab.value">
+                <input ng-model="vocab['@value']">
             </md-input-container>
             <button ng-click="onVocabDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
         </section>
