@@ -148,19 +148,19 @@ define([], function () {
 
     const LICENSES = [
         {
-            "notation": "odc-pddl" ,
+            "notation": "pddl" ,
             "label": "Open Data Commons Public Domain Dedication and License (PDDL)"
         }, {
-            "notation": "cc-by" ,
+            "notation": "ccby" ,
             "label": "Creative Commons Attribution"
         }, {
-            "notation": "cc-by-sa" ,
+            "notation": "ccbysa" ,
             "label": "Creative Commons Attribution Share-Alike"
         }, {
-            "notation": "cc-zero" ,
+            "notation": "cczero" ,
             "label": "Creative Commons CCZero"
         }, {
-            "notation": "cc-nc" ,
+            "notation": "ccnc" ,
             "label": "Creative Commons Non-Commercial (Any)"
         }, {
             "notation": "gfdl" ,
@@ -169,50 +169,50 @@ define([], function () {
             "notation": "notspecified" ,
             "label": "License Not Specified"
         }, {
-            "notation": "odc-by" ,
+            "notation": "odcby" ,
             "label": "Open Data Commons Attribution License"
         }, {
-            "notation": "odc-odbl" ,
+            "notation": "odcodbl" ,
             "label": "Open Data Commons Open Database License (ODbL)"
         }, {
-            "notation": "other-at" ,
+            "notation": "otherat" ,
             "label": "Other (Attribution)"
         }, {
-            "notation": "other-nc" ,
+            "notation": "othernc" ,
             "label": "Other (Non-Commercial)"
         }, {
-            "notation": "other-closed" ,
+            "notation": "otherclosed" ,
             "label": "Other (Not Open)"
         }, {
-            "notation": "other-open" ,
+            "notation": "otheropen" ,
             "label": "Other (Open)"
         }, {
-            "notation": "other-pd" ,
+            "notation": "otherpd" ,
             "label": "Other (Public Domain)"
         }, {
-            "notation": "uk-ogl" ,
+            "notation": "ukogl" ,
             "label": "UK Open Government Licence (OGL)"
         }
     ];
 
     const PUBLISHEDTAGS = [
-        "published-by-producer",  "published-by-third-party"
+        "PublishedByProducer",  "PublishedByThirdParty"
     ];
 
     const LICENSEMETADATA = [
-        "license-metadata",  "no-license-metadata"
+        "LicenseMetadata",  "NoLicenseMetadata"
     ];
 
     const PROVENANCETAGS = [
-        "provenance-metadata",  "no-provenance-metadata"
+        "ProvenanceMetadata",  "NoProvenanceMetadata"
     ];
 
     const VOCABMAPPINGSTAGS = [
-        "vocab-mappings",  "no-vocab-mappings"
+        "VocabMappings",  "NoVocabMappings"
     ];
 
     const VOCABTAGS = [
-        "no-proprietary-vocab",  "deref-vocab", "no-deref-vocab"
+        "NoProprietaryVocab",  "DerefVocab", "NoDerefVocab"
     ];
 
     const MAPPINGFORMATS = [
