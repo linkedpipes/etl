@@ -1,6 +1,6 @@
 <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
-<div>
-    <div layout-gt-sm="row">
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Datahub.io access">
         <md-input-container class="md-block"
                             ng-hide="dialog.apiKey.hide"
                             flex-gt-sm>
@@ -9,203 +9,212 @@
                    ng-disabled="dialog.apiKey.disabled || dialog.apiKey.inherit"
                    placeholder="00000000-0000-0000-0000-000000000000">
         </md-input-container>
-    </div>
-    <md-input-container class="md-block"
-                        ng-hide="dialog.datasetID.hide">
-        <label>CKAN dataset ID</label>
-        <input ng-model="dialog.datasetID.value"
-               ng-disabled="dialog.datasetID.disabled || dialog.datasetID.inherit"
-               placeholder="my-dataset">
-    </md-input-container>
-    <md-input-container class="md-block"
-                        ng-hide="dialog.organizationId.hide">
-        <label>CKAN owner organization ID</label>
-        <input ng-model="dialog.organizationId.value"
-               ng-disabled="dialog.organizationId.disabled || dialog.organizationId.inherit"
-               placeholder="00000000-0000-0000-0000-000000000000">
-    </md-input-container>
-    <md-input-container class="md-block"
-                        ng-hide="dialog.shortname.hide">
-        <label>Dataset short name - for LOD cloud circle label</label>
-        <input ng-model="dialog.shortname.value"
-               ng-disabled="dialog.shortname.disabled || dialog.shortname.inherit"
-               placeholder="my short dataset">
-    </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.topic.hide" flex-gt-sm>
-        <label>LOD Cloud topic</label>
-        <md-select ng-model="dialog.topic.value"
-                   ng-disabled="dialog.topic.disabled || dialog.topic.inherit">
-            <md-option ng-repeat="topic in topics" value="{{topic}}">
-                <span>{{topic}}</span>
-            </md-option>
-        </md-select>
-    </md-input-container>
-    <md-switch ng-model="dialog.versionGenerated.value"
-               ng-hide="dialog.versionGenerated.hide"
-               ng-disabled="dialog.versionGenerated.disabled || dialog.versionGenerated.inherit"
-               flex-gt-sm>Generate version as current date
-    </md-switch>
-    <md-input-container class="md-block"
-                        ng-hide="dialog.version.hide">
-        <label>Version</label>
-        <input ng-model="dialog.version.value"
-               ng-disabled="dialog.version.disabled || dialog.version.inherit || dialog.versionGenerated.value"
-               placeholder="2017-02-28">
-    </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.licenseId.hide" flex-gt-sm>
-        <label>CKAN license ID</label>
-        <md-select ng-model="dialog.licenseId.value"
-                   ng-disabled="dialog.licenseId.disabled || dialog.licenseId.inherit">
-            <md-option ng-repeat="license in licenses" value="{{license.notation}}">
-                <span>{{license.label}}</span>
-            </md-option>
-        </md-select>
-    </md-input-container>
-    <md-input-container class="md-block"
-                        ng-hide="dialog.sparqlEndpointName.hide">
-        <label>SPARQL endpoint resource name</label>
-        <input ng-model="dialog.sparqlEndpointName.value"
-               ng-disabled="dialog.sparqlEndpointName.disabled || dialog.sparqlEndpointName.inherit"
-               placeholder="SPARQL endpoint">
-    </md-input-container>
-    <md-input-container class="md-block"
-                        ng-hide="dialog.sparqlEndpointDescription.hide">
-        <label>SPARQL endpoint resource description</label>
-        <input ng-model="dialog.sparqlEndpointDescription.value"
-               ng-disabled="dialog.sparqlEndpointDescription.disabled || dialog.sparqlEndpointDescription.inherit"
-               placeholder="SPARQL endpoint hosted by Virtuoso">
-    </md-input-container>
-    <md-input-container class="md-block"
-                        ng-hide="dialog.namespace.hide">
-        <label>RDF namespace</label>
-        <input ng-model="dialog.namespace.value"
-               ng-disabled="dialog.namespace.disabled || dialog.namespace.inherit"
-               placeholder="https://etl.linkedpipes.com/resource/">
-    </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.licenseMetadataTag.hide" flex-gt-sm>
-        <label>License metadata tag</label>
-        <md-select ng-model="dialog.licenseMetadataTag.value"
-                   ng-disabled="dialog.licenseMetadataTag.disabled || dialog.licenseMetadataTag.inherit">
-            <md-option ng-repeat="licensemetadatatag in licensemetadatatags" value="{{licensemetadatatag}}">
-                <span>{{licensemetadatatag}}</span>
-            </md-option>
-        </md-select>
-    </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.provenanceMetadataTag.hide" flex-gt-sm>
-        <label>Provenance metadata tag</label>
-        <md-select ng-model="dialog.provenanceMetadataTag.value"
-                   ng-disabled="dialog.provenanceMetadataTag.disabled || dialog.provenanceMetadataTag.inherit">
-            <md-option ng-repeat="provenancetag in provenancetags" value="{{provenancetag}}">
-                <span>{{provenancetag}}</span>
-            </md-option>
-        </md-select>
-    </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.publishedTag.hide" flex-gt-sm>
-        <label>Published by tag</label>
-        <md-select ng-model="dialog.publishedTag.value"
-                   ng-disabled="dialog.publishedTag.disabled || dialog.publishedTag.inherit">
-            <md-option ng-repeat="publishedtag in publishedtags" value="{{publishedtag}}">
-                <span>{{publishedtag}}</span>
-            </md-option>
-        </md-select>
-    </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.vocabTag.hide" flex-gt-sm>
-        <label>Proprietary vocabulary tag</label>
-        <md-select ng-model="dialog.vocabTag.value"
-                   ng-disabled="dialog.vocabTag.disabled || dialog.vocabTag.inherit">
-            <md-option ng-repeat="vocabtag in vocabtags" value="{{vocabtag}}">
-                <span>{{vocabtag}}</span>
-            </md-option>
-        </md-select>
-    </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.vocabMappingTag.hide" flex-gt-sm>
-        <label>Vocabulary mapping type tag</label>
-        <md-select ng-model="dialog.vocabMappingTag.value"
-                   ng-disabled="dialog.vocabMappingTag.disabled || dialog.vocabMappingTag.inherit">
-            <md-option ng-repeat="vocabmappingstag in vocabmappingstags" value="{{vocabmappingstag}}">
-                <span>{{vocabmappingstag}}</span>
-            </md-option>
-        </md-select>
-    </md-input-container>
-    <div ng-hide="dialog.additionalTags.disabled || dialog.additionalTags.inherit || dialog.additionalTags.hide">
-        Additional tags<br/>
-        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="tag in dialog.additionalTags.value">
-            <md-input-container class="md-block">
-                <label>Tag</label>
-                <input ng-model="tag['@value']">
-            </md-input-container>
-            <button ng-click="onTagDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
-        </section>
-        <button ng-click="onTagAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
-    </div>
-    <md-switch ng-model="dialog.lodNoLinks.value"
-               ng-hide="dialog.lodNoLinks.hide"
-               ng-disabled="dialog.lodNoLinks.disabled || dialog.lodNoLinks.inherit"
-               flex-gt-sm>Dataset has no external RDF links to other LOD cloud datasets
-    </md-switch>
-    <md-switch ng-model="dialog.lodUnconnected.value"
-               ng-hide="dialog.lodUnconnected.hide"
-               ng-disabled="dialog.lodUnconnected.disabled || dialog.lodUnconnected.inherit"
-               flex-gt-sm>Dataset has no external RDF links to or from other LOD cloud datasets
-    </md-switch>
-    <md-switch ng-model="dialog.lodNeedsFixing.value"
-               ng-hide="dialog.lodNeedsFixing.hide"
-               ng-disabled="dialog.lodNeedsFixing.disabled || dialog.lodNeedsFixing.inherit"
-               flex-gt-sm>The dataset is currently broken
-    </md-switch>
-    <md-switch ng-model="dialog.lodNeedsInfo.value"
-               ng-hide="dialog.lodNeedsInfo.hide"
-               ng-disabled="dialog.lodNeedsInfo.disabled || dialog.lodNeedsInfo.inherit"
-               flex-gt-sm>The data provider or data set homepage do not provide minimum information
-    </md-switch>
-    <md-switch ng-model="dialog.limitedSparql.value"
-               ng-hide="dialog.limitedSparql.hide"
-               ng-disabled="dialog.limitedSparql.disabled || dialog.limitedSparql.inherit"
-               flex-gt-sm>Indicates that the SPARQL endpoint does not serve the whole dataset
-    </md-switch>
-    <div ng-hide="dialog.vocabularies.disabled || dialog.vocabularies.inherit || dialog.vocabularies.hide">
-        Prefixes of used vocabularies<br/>
-        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="vocab in dialog.vocabularies.value">
-            <md-input-container class="md-block">
-                <label>Prefix</label>
-                <input ng-model="vocab['@value']">
-            </md-input-container>
-            <button ng-click="onVocabDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
-        </section>
-        <button ng-click="onVocabAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
-    </div>
-    <div ng-hide="dialog.links.disabled || dialog.links.inherit || dialog.links.hide">
-        Linked LOD Cloud datasets and link counts<br/>
-        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="link in dialog.links.value">
-            <md-input-container class="md-block">
-                <label>Target dataset CKAN ID</label>
-                <input ng-model="link.targetDataset.value">
-            </md-input-container>
-            <md-input-container class="md-block" flex>
-                <label>Link count</label>
-                <input ng-model="link.linkCount.value" type="number">
-            </md-input-container>
-            <button ng-click="onDeleteLinkCount($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
-        </section>
-        <button ng-click="onAddLinkCount()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
-    </div>
-    <div ng-hide="dialog.mappingFiles.disabled || dialog.mappingFiles.inherit || dialog.mappingFiles.hide">
-        Vocabulary mapping files and formats<br/>
-        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="mappingFile in dialog.mappingFiles.value">
-            <md-input-container class="md-block" flex-gt-sm>
-                <label>Format</label>
-                <md-select ng-model="mappingFile.mappingFormat.value">
-                    <md-option ng-repeat="mappingformat in mappingformats" value="{{mappingformat}}">
-                        <span>{{mappingformat}}</span>
-                    </md-option>
-                </md-select>
-            </md-input-container>
-            <md-input-container class="md-block" flex>
-                <label>File</label>
-                <input ng-model="mappingFile.mappingFile.value">
-            </md-input-container>
-            <button ng-click="onDeleteMappingFile($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
-        </section>
-        <button ng-click="onAddMappingFile()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
-    </div>
-</div>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.datasetID.hide">
+            <label>CKAN dataset ID</label>
+            <input ng-model="dialog.datasetID.value"
+                   ng-disabled="dialog.datasetID.disabled || dialog.datasetID.inherit"
+                   placeholder="my-dataset">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.organizationId.hide">
+            <label>CKAN owner organization ID</label>
+            <input ng-model="dialog.organizationId.value"
+                   ng-disabled="dialog.organizationId.disabled || dialog.organizationId.inherit"
+                   placeholder="00000000-0000-0000-0000-000000000000">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.licenseId.hide" flex-gt-sm>
+            <label>CKAN license ID</label>
+            <md-select ng-model="dialog.licenseId.value"
+                       ng-disabled="dialog.licenseId.disabled || dialog.licenseId.inherit">
+                <md-option ng-repeat="license in licenses" value="{{license.notation}}">
+                    <span>{{license.label}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </md-tab>
+    <md-tab label="Basics">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.shortname.hide">
+            <label>Dataset short name - for LOD cloud circle label</label>
+            <input ng-model="dialog.shortname.value"
+                   ng-disabled="dialog.shortname.disabled || dialog.shortname.inherit"
+                   placeholder="my short dataset">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.topic.hide" flex-gt-sm>
+            <label>LOD Cloud topic</label>
+            <md-select ng-model="dialog.topic.value"
+                       ng-disabled="dialog.topic.disabled || dialog.topic.inherit">
+                <md-option ng-repeat="topic in topics" value="{{topic}}">
+                    <span>{{topic}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-switch ng-model="dialog.versionGenerated.value"
+                   ng-hide="dialog.versionGenerated.hide"
+                   ng-disabled="dialog.versionGenerated.disabled || dialog.versionGenerated.inherit"
+                   flex-gt-sm>Generate version as current date
+        </md-switch>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.version.hide">
+            <label>Version</label>
+            <input ng-model="dialog.version.value"
+                   ng-disabled="dialog.version.disabled || dialog.version.inherit || dialog.versionGenerated.value"
+                   placeholder="2017-02-28">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.sparqlEndpointName.hide">
+            <label>SPARQL endpoint resource name</label>
+            <input ng-model="dialog.sparqlEndpointName.value"
+                   ng-disabled="dialog.sparqlEndpointName.disabled || dialog.sparqlEndpointName.inherit"
+                   placeholder="SPARQL endpoint">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.sparqlEndpointDescription.hide">
+            <label>SPARQL endpoint resource description</label>
+            <input ng-model="dialog.sparqlEndpointDescription.value"
+                   ng-disabled="dialog.sparqlEndpointDescription.disabled || dialog.sparqlEndpointDescription.inherit"
+                   placeholder="SPARQL endpoint hosted by Virtuoso">
+        </md-input-container>
+        <md-input-container class="md-block"
+                            ng-hide="dialog.namespace.hide">
+            <label>RDF namespace</label>
+            <input ng-model="dialog.namespace.value"
+                   ng-disabled="dialog.namespace.disabled || dialog.namespace.inherit"
+                   placeholder="https://etl.linkedpipes.com/resource/">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.licenseMetadataTag.hide" flex-gt-sm>
+            <label>License metadata tag</label>
+            <md-select ng-model="dialog.licenseMetadataTag.value"
+                       ng-disabled="dialog.licenseMetadataTag.disabled || dialog.licenseMetadataTag.inherit">
+                <md-option ng-repeat="licensemetadatatag in licensemetadatatags" value="{{licensemetadatatag.notation}}">
+                    <span>{{licensemetadatatag.label}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.provenanceMetadataTag.hide" flex-gt-sm>
+            <label>Provenance metadata tag</label>
+            <md-select ng-model="dialog.provenanceMetadataTag.value"
+                       ng-disabled="dialog.provenanceMetadataTag.disabled || dialog.provenanceMetadataTag.inherit">
+                <md-option ng-repeat="provenancetag in provenancetags" value="{{provenancetag.notation}}">
+                    <span>{{provenancetag.label}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.publishedTag.hide" flex-gt-sm>
+            <label>Published by tag</label>
+            <md-select ng-model="dialog.publishedTag.value"
+                       ng-disabled="dialog.publishedTag.disabled || dialog.publishedTag.inherit">
+                <md-option ng-repeat="publishedtag in publishedtags" value="{{publishedtag.notation}}">
+                    <span>{{publishedtag.label}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.vocabTag.hide" flex-gt-sm>
+            <label>Proprietary vocabulary tag</label>
+            <md-select ng-model="dialog.vocabTag.value"
+                       ng-disabled="dialog.vocabTag.disabled || dialog.vocabTag.inherit">
+                <md-option ng-repeat="vocabtag in vocabtags" value="{{vocabtag.notation}}">
+                    <span>{{vocabtag.label}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.vocabMappingTag.hide" flex-gt-sm>
+            <label>Vocabulary mapping type tag</label>
+            <md-select ng-model="dialog.vocabMappingTag.value"
+                       ng-disabled="dialog.vocabMappingTag.disabled || dialog.vocabMappingTag.inherit">
+                <md-option ng-repeat="vocabmappingstag in vocabmappingstags" value="{{vocabmappingstag.notation}}">
+                    <span>{{vocabmappingstag.label}}</span>
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <div ng-hide="dialog.additionalTags.disabled || dialog.additionalTags.inherit || dialog.additionalTags.hide">
+            Additional tags<br/>
+            <md-chips ng-model="dialog.additionalTags.value"
+                      ng-disabled="dialog.additionalTags.disabled || dialog.additionalTags.inherit"
+                      md-transform-chip="transformChip($chip)"
+                      ng-hide="dialog.additionalTags.hide">
+                <md-chip-template>
+                    <span>
+                      <strong>{{$chip['@value']}}</strong>
+                    </span>
+                </md-chip-template>
+            </md-chips>
+        </div>
+        <md-switch ng-model="dialog.lodNoLinks.value"
+                   ng-hide="dialog.lodNoLinks.hide"
+                   ng-disabled="dialog.lodNoLinks.disabled || dialog.lodNoLinks.inherit"
+                   flex-gt-sm>No links to LOD cloud datasets
+        </md-switch>
+        <md-switch ng-model="dialog.lodUnconnected.value"
+                   ng-hide="dialog.lodUnconnected.hide"
+                   ng-disabled="dialog.lodUnconnected.disabled || dialog.lodUnconnected.inherit"
+                   flex-gt-sm>No links to or from LOD cloud datasets
+        </md-switch>
+        <md-switch ng-model="dialog.lodNeedsFixing.value"
+                   ng-hide="dialog.lodNeedsFixing.hide"
+                   ng-disabled="dialog.lodNeedsFixing.disabled || dialog.lodNeedsFixing.inherit"
+                   flex-gt-sm>Dataset is currently broken
+        </md-switch>
+        <md-switch ng-model="dialog.lodNeedsInfo.value"
+                   ng-hide="dialog.lodNeedsInfo.hide"
+                   ng-disabled="dialog.lodNeedsInfo.disabled || dialog.lodNeedsInfo.inherit"
+                   flex-gt-sm>Homepage does not provide minimum info
+        </md-switch>
+        <md-switch ng-model="dialog.limitedSparql.value"
+                   ng-hide="dialog.limitedSparql.hide"
+                   ng-disabled="dialog.limitedSparql.disabled || dialog.limitedSparql.inherit"
+                   flex-gt-sm>SPARQL endpoint does not serve whole dataset
+        </md-switch>
+    </md-tab>
+    <md-tab label="Links and mappings">
+        <div ng-hide="dialog.vocabularies.disabled || dialog.vocabularies.inherit || dialog.vocabularies.hide">
+            Prefixes of used vocabularies
+            <md-chips ng-model="dialog.vocabularies.value"
+                      ng-disabled="dialog.vocabularies.disabled || dialog.vocabularies.inherit"
+                      md-transform-chip="transformChip($chip)"
+                      ng-hide="dialog.vocabularies.hide">
+                <md-chip-template>
+                    <span>
+                      <strong>{{$chip['@value']}}</strong>
+                    </span>
+                </md-chip-template>
+            </md-chips>
+        </div>
+        <br/>
+        <div ng-hide="dialog.links.disabled || dialog.links.inherit || dialog.links.hide">
+            Linked LOD Cloud datasets and link counts<br/>
+            <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="link in dialog.links.value">
+                <md-input-container class="md-block">
+                    <label>Target dataset CKAN ID</label>
+                    <input ng-model="link.targetDataset.value">
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label>Link count</label>
+                    <input ng-model="link.linkCount.value" type="number">
+                </md-input-container>
+                <button ng-click="onDeleteLinkCount($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+            </section>
+            <button ng-click="onAddLinkCount()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+        </div>
+        <div ng-hide="dialog.mappingFiles.disabled || dialog.mappingFiles.inherit || dialog.mappingFiles.hide">
+            Vocabulary mapping files and formats<br/>
+            <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="mappingFile in dialog.mappingFiles.value">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Format</label>
+                    <md-select ng-model="mappingFile.mappingFormat.value">
+                        <md-option ng-repeat="mappingformat in mappingformats" value="{{mappingformat}}">
+                            <span>{{mappingformat}}</span>
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label>File</label>
+                    <input ng-model="mappingFile.mappingFile.value">
+                </md-input-container>
+                <button ng-click="onDeleteMappingFile($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+            </section>
+            <button ng-click="onAddMappingFile()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+        </div>
+    </md-tab>
+</md-tabs>

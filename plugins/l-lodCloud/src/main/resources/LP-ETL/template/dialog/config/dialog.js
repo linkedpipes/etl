@@ -195,24 +195,52 @@ define([], function () {
         }
     ];
 
-    const PUBLISHEDTAGS = [
-        "PublishedByProducer",  "PublishedByThirdParty"
+    const PUBLISHEDTAGS = [{
+        "notation": "PublishedByProducer",
+        "label": "Published by producer"
+    }, {
+        "notation": "PublishedByThirdParty",
+        "label": "Published by third party"
+    }
     ];
 
-    const LICENSEMETADATA = [
-        "LicenseMetadata",  "NoLicenseMetadata"
+    const LICENSEMETADATA = [{
+        "notation": "LicenseMetadata",
+        "label": "Contains license metadata"
+    }, {
+        "notation": "NoLicenseMetadata",
+        "label": "No license metadata"
+    }
     ];
 
-    const PROVENANCETAGS = [
-        "ProvenanceMetadata",  "NoProvenanceMetadata"
+    const PROVENANCETAGS = [{
+        "notation": "ProvenanceMetadata",
+        "label": "Contains provenance metadata"
+    }, {
+        "notation": "NoProvenanceMetadata",
+        "label": "No provenance metadata"
+    }
     ];
 
-    const VOCABMAPPINGSTAGS = [
-        "VocabMappings",  "NoVocabMappings"
+    const VOCABMAPPINGSTAGS = [{
+        "notation": "VocabMappings",
+        "label": "Contains vocabulary mappings"
+    }, {
+        "notation": "NoVocabMappings",
+        "label": "No vocabulary mappings"
+    }
     ];
 
-    const VOCABTAGS = [
-        "NoProprietaryVocab",  "DerefVocab", "NoDerefVocab"
+    const VOCABTAGS = [{
+        "notation": "NoProprietaryVocab",
+        "label": "No proprietary vocabulary"
+    }, {
+        "notation": "DerefVocab",
+        "label": "Dereferencable vocabulary"
+    }, {
+        "notation": "NoDerefVocab",
+        "label": "Non-dereferencable vocabulary"
+    }
     ];
 
     const MAPPINGFORMATS = [
@@ -224,22 +252,6 @@ define([], function () {
         if ($scope.dialog === undefined) {
             $scope.dialog = {};
         }
-
-        $scope.onTagDelete = function (index) {
-            $scope.dialog.additionalTags.value.splice(index, 1);
-        };
-
-        $scope.onTagAdd = function () {
-            $scope.dialog.additionalTags.value.push({'@value': ''});
-        };
-
-        $scope.onVocabDelete = function (index) {
-            $scope.dialog.vocabularies.value.splice(index, 1);
-        };
-
-        $scope.onVocabAdd = function () {
-            $scope.dialog.vocabularies.value.push({'@value': ''});
-        };
 
         $scope.onDeleteLinkCount = function (index) {
             $scope.dialog.links.value.splice(index, 1);
@@ -271,6 +283,15 @@ define([], function () {
 
         $service.onStore = function () {
             dialogManager.save();
+        };
+
+        $scope.transformChip = function (chip) {
+            // If it is an object, it's already a known chip
+            if (angular.isObject(chip)) {
+                return chip;
+            }
+            // Otherwise, create a new one
+            return {"@value": chip};
         };
 
         $scope.topics = TOPICS;
