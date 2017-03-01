@@ -20,7 +20,7 @@
         <repository>
             <id>artefacts.linkedpipes.com</id>
             <name>artefacts.linkedpipes.com</name>
-            <url>http://artefacts.linkedpipes.com/repository/maven-public/</url>
+            <url>https://artefacts.linkedpipes.com/repository/maven-public/</url>
         </repository>
     </repositories>
 
