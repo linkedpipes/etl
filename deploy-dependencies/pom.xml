@@ -174,12 +174,13 @@
                                             <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
                                         </dependency>
                                         <!-- Sesame - it looks for now this is not working. -->
-                                        <!--<dependency>
+                                        <dependency>
                                             <groupId>org.openrdf.sesame</groupId>
-                                            <artifactId>sesame-runtime</artifactId>
-                                            <version>2.8.7</version>
+                                            <artifactId>sesame-runtime-osgi</artifactId>
+                                            <version>4.0.1-SNAPSHOT-custom</version>
                                             <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
-                                        </dependency>-->
+                                            <destFileName>sesame-runtime-osgi-4.0.1-SNAPSHOT-custom.jar</destFileName>
+                                        </dependency>
                                         <!-- Others. -->
                                         <dependency>
                                             <groupId>org.jsoup</groupId>
@@ -696,29 +697,6 @@
                                             <outputDirectory>${deploy.directory}/jars/t-bingTranslator/</outputDirectory>
                                         </dependency>
                                     </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- Copy definition and config component files. -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.8</version>
-                        <executions>
-                            <execution>
-                                <id>copy-dependencies</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <!-- Download sesame from our storage. -->
-                                        <get dest="${deploy.directory}/osgi/external">
-                                            <url url="http://uv.opendata.cz/osgi/sesame/sesame-runtime-osgi-4.0.1-SNAPSHOT-custom.jar"/>
-                                        </get>
-                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
