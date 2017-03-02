@@ -92,6 +92,7 @@ class MultiThreadLoader {
     private void initializeWorkers(int loaders) {
         executor = Executors.newFixedThreadPool(loaders);
         workers = new ArrayList<>(loaders);
+        LOG.info("Using {} loaders", loaders);
         for (int i = 0; i < loaders; ++i) {
             final LoadWorker worker = new LoadWorker(sqlExecutor);
             executor.submit(worker);
