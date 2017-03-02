@@ -233,6 +233,7 @@ public final class Unpack implements Component, SequentialExecution {
      */
     private static void copyToFile(InputStream stream, File file)
             throws IOException {
+        file.getParentFile().mkdirs();
         try (FileOutputStream out = new FileOutputStream(file)) {
             final byte[] buffer = new byte[8196];
             int length;
