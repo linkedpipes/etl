@@ -444,6 +444,12 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-ftpFiles</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-ftpFiles/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdfChunked</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-filesToRdfChunked/</outputDirectory>
