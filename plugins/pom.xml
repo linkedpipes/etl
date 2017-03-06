@@ -75,6 +75,7 @@
         <module>t-bingTranslator</module>
         <module>t-chunkedToTurtle</module>
         <module>t-streamCompression</module>
+        <module>t-jsonToJsonLd</module>
     </modules>
 
 </project>

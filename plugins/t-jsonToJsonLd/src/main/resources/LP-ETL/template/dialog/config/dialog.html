@@ -1,0 +1,14 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.vocabulary.hide">
+        <label>Vocabulary</label>
+        <input ng-model="dialog.vocabulary.value"
+               ng-disabled="dialog.vocabulary.disabled || dialog.vocabulary.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.encoding.hide">
+        <label>Encoding</label>
+        <input ng-model="dialog.encoding.value"
+               ng-disabled="dialog.encoding.disabled || dialog.encoding.inherit">
+    </md-input-container>
+</div>
+

@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#vocabulary" : "http://localhost/ontology/",
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#vocabularyControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#encoding" : "UTF-8",
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#encodingControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]
