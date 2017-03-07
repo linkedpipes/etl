@@ -84,11 +84,21 @@ public final class LoaderScp implements Component, SequentialExecution {
 
     public void upload(Session session, String targetFile)
             throws LpException {
+
         if (configuration.isCreateDirectory()) {
             try {
                 secureCreateDirectory(session, targetFile);
             } catch (JSchException | SftpException | IOException ex) {
                 throw exceptionFactory.failure("Can't create directory.", ex);
+            }
+        }
+
+        if (configuration.isClearDirectory()) {
+            try {
+                deleteDirectory(session, targetFile);
+            } catch (JSchException | SftpException | IOException ex) {
+                throw exceptionFactory
+                        .failure("Can't clear upload directory.", ex);
             }
         }
 
@@ -121,6 +131,24 @@ public final class LoaderScp implements Component, SequentialExecution {
                 channel.disconnect();
             }
         }
+    }
+
+    private static void deleteDirectory(Session session,
+            String targetPath) throws JSchException, IOException,
+            SftpException, LpException {
+        LOG.info("deleteDirectory ...");
+        final Channel channel = session.openChannel("exec");
+        // We just execute given command.
+        ((ChannelExec) channel).setCommand("rm -r " + targetPath + "/*");
+        final InputStream remoteIn = channel.getExtInputStream();
+        channel.connect();
+        LOG.info("\tWaiting for response!");
+        final String responseLine = readResponseLine(remoteIn);
+        LOG.info("\tResponse status: {} message: {}",
+                channel.getExitStatus(), responseLine);
+        channel.disconnect();
+        checkMakeDirResponse(responseLine, channel.getExitStatus());
+        LOG.info("deleteDirectory ... done");
     }
 
     /**

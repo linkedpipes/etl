@@ -24,6 +24,10 @@ define([], function () {
             "$type": "bool",
             "$label": "Create target directory"
         },
+        "clearDirectory": {
+            "$type": "bool",
+            "$label": "Clear target directory"
+        },
         "userName": {
             "$type": "str",
             "$label": "User name"

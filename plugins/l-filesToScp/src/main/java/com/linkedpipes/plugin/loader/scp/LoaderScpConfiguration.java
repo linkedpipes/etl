@@ -23,6 +23,9 @@ public class LoaderScpConfiguration {
     @RdfToPojo.Property(iri = LoaderScpVocabulary.HAS_CREATE_DIRECTORY)
     private boolean createDirectory = false;
 
+    @RdfToPojo.Property(iri = LoaderScpVocabulary.HAS_CLEAR_DIRECTORY)
+    private boolean clearDirectory = false;
+
     public LoaderScpConfiguration() {
     }
 
@@ -74,4 +77,11 @@ public class LoaderScpConfiguration {
         this.createDirectory = createDirectory;
     }
 
+    public boolean isClearDirectory() {
+        return clearDirectory;
+    }
+
+    public void setClearDirectory(boolean clearDirectory) {
+        this.clearDirectory = clearDirectory;
+    }
 }
