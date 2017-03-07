@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,6 +55,7 @@ class UriDownloader {
         public Object call() throws Exception {
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
+                final Date downloadStarted = new Date();
                 LOG.debug("Downloading {}/{} : {}",
                         counter.incrementAndGet(), total, work.source);
                 // Check failure of other threads.
@@ -95,6 +93,11 @@ class UriDownloader {
                     exceptions.add(ex);
                     continue;
                 } finally {
+                    final Date downloadEnded = new Date();
+                    long downloadTime = downloadEnded.getTime() -
+                            downloadStarted.getTime();
+                    LOG.debug("Downloading of: {} takes: {} ms",
+                            work.source, downloadTime);
                     progressReport.entryProcessed();
                     connection.disconnect();
                 }
