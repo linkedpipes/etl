@@ -2,6 +2,7 @@ package com.linkedpipes.etl.rdf.utils;
 
 import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,30 @@ public class RdfUtils {
             RdfLoader.Loadable<ValueType> object, String resource, String graph,
             Class<ValueType> clazz) throws RdfUtilsException {
         RdfLoader.load(source, object, resource, graph, clazz);
+    }
+
+    public static <ValueType> List<ValueType> loadTypedByReflection(
+            RdfSource source, String graph,
+            Class<ValueType> resultType,
+            RdfLoader.DescriptorFactory descriptorFactory)
+            throws RdfUtilsException {
+        final RdfLoader.Descriptor descriptor =
+                descriptorFactory.create(resultType);
+        final String query = "SELECT ?s WHERE { GRAPH <" + graph + "> { " +
+                "?s a <" + descriptor.getType() + "> } }";
+        final List<ValueType> results = new LinkedList<>();
+        for (Map<String, String> queryResult : sparqlSelect(source, query)) {
+            ValueType object;
+            try {
+                object = resultType.newInstance();
+            } catch (IllegalAccessException | InstantiationException ex) {
+                throw  new RdfUtilsException("Can't create result object", ex);
+            }
+            RdfLoader.loadByReflection(source, descriptorFactory, object,
+                    queryResult.get("s"), graph);
+            results.add(object);
+        }
+        return results;
     }
 
     /**
