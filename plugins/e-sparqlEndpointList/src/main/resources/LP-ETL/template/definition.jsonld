@@ -1,0 +1,40 @@
+[
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0",
+        "@type": "http://linkedpipes.com/ontology/JarTemplate",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL endpoint list to single graph",
+        "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/e-sparqlEndpointList/0.0.0"},
+        "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
+        "http://linkedpipes.com/ontology/color": "#F6D8CE",
+        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Extractor"},
+        "http://linkedpipes.com/ontology/supportControl" : true,
+        "http://linkedpipes.com/ontology/port": [
+            {"@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/output"},
+            {"@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration"}
+        ],
+        "http://linkedpipes.com/ontology/keyword": [
+            "SPARQL", "query", "endpoint", "list"
+        ],
+        "http://linkedpipes.com/ontology/configurationDescription" : {
+           "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration/desc"
+        }
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/output",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Output",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
+            "http://linkedpipes.com/ontology/Output"
+        ],
+        "http://linkedpipes.com/ontology/binding": "OutputRdf"
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Configuration",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
+            "http://linkedpipes.com/ontology/Input"
+        ],
+        "http://linkedpipes.com/ontology/binding": "Configuration"
+    }
+]
