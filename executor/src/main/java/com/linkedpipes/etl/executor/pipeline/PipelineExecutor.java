@@ -69,14 +69,20 @@ public class PipelineExecutor {
     }
 
     public void execute() {
+        LOG.info("PipelineExecutor.execute ... ");
         MDC.put(LoggerFacade.EXECUTION_MDC, null);
-        if (initialize()) {
-            execution.onComponentsExecutionModelBegin();
-            executeComponents();
-            execution.onComponentsExecutionModelEnd();
+        try {
+            if (initialize()) {
+                execution.onComponentsExecutionModelBegin();
+                executeComponents();
+                execution.onComponentsExecutionModelEnd();
+            }
+            terminate();
+        } catch (Throwable t) {
+            LOG.error("Uncaught exception!", t);
         }
-        terminate();
         MDC.remove(LoggerFacade.EXECUTION_MDC);
+        LOG.info("PipelineExecutor.execute ... done ");
     }
 
     public synchronized void cancelExecution() {
