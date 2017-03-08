@@ -7,6 +7,8 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
@@ -51,12 +53,10 @@ public final class RdfToFile implements Component, SequentialExecution {
             try (FileOutputStream outStream = new FileOutputStream(outputFile);
                  OutputStreamWriter outWriter = new OutputStreamWriter(
                          outStream, Charset.forName(FILE_ENCODE))) {
-                // Based on data type utilize graph (context) renamer on not.
                 RDFWriter writer = Rio.createWriter(rdfFormat.get(), outWriter);
                 if (rdfFormat.get().supportsContexts()) {
-                    writer = new RdfWriterContextRenamer(writer,
-                            connection.getValueFactory().createIRI(
-                                    configuration.getGraphUri()));
+                    writer = new RdfWriterContextChanger(writer,
+                            getExportGraph());
                 }
                 writer = new RdfWriterContext(writer, progressReport);
                 progressReport
@@ -67,6 +67,14 @@ public final class RdfToFile implements Component, SequentialExecution {
                 throw exceptionFactory.failure("Can't write data.", ex);
             }
         });
+    }
+
+    private IRI getExportGraph() {
+        if (configuration.getGraphUri() == null) {
+            return null;
+        }
+        return SimpleValueFactory.getInstance().createIRI(
+                configuration.getGraphUri());
     }
 
 }

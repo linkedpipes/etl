@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Add support for graph (context) renaming.
  */
-public class RdfWriterContextRenamer implements RDFWriter {
+public class RdfWriterContextChanger implements RDFWriter {
 
     /**
      * Wrap for single statement used to change graph.
@@ -50,14 +50,14 @@ public class RdfWriterContextRenamer implements RDFWriter {
     /**
      * Context used for graphs.
      */
-    private final Resource graph;
+    private final IRI graph;
 
     /**
      * Wrap used to change graph in statements.
      */
     private final StatementWrap statementWrap = new StatementWrap();
 
-    public RdfWriterContextRenamer(RDFWriter writer, Resource graph) {
+    public RdfWriterContextChanger(RDFWriter writer, IRI graph) {
         this.writer = writer;
         this.graph = graph;
     }
