@@ -8,13 +8,29 @@ define([], function () {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "vocabulary": {
+        "context": {
             "$type": "str",
-            "$label": "Vocabulary prefix"
+            "$label": "Context"
         },
         "encoding": {
             "$type": "str",
             "$label": "Name of used encoding"
+        },
+        "fileReference": {
+            "$type": "bool",
+            "$label" : "Add file reference"
+        },
+        "dataPredicate": {
+            "$type": "iri",
+            "$label" : "Data predicate"
+        },
+        "type": {
+            "$type": "iri",
+            "$label" : "Root entity type"
+        },
+        "filePredicate": {
+            "$type": "iri",
+            "$label" : "File name predicate"
         }
     };
 

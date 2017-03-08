@@ -31,29 +31,48 @@ public class JsonToJsonLd implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    private AddContextStream.Configuration streamConfiguration;
+
     @Override
     public void execute() throws LpException {
+        prepareStreamConfiguration();
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry inputEntry : inputFiles) {
-            File outputFile = outputFiles.createFile(inputEntry.getFileName());
-            updateFile(inputEntry, outputFile);
+            processEntry(inputEntry);
             progressReport.entryProcessed();
         }
         progressReport.done();
     }
 
-    private void updateFile(FilesDataUnit.Entry inputEntry, File outputFile)
-            throws LpException {
-        File inputFile = inputEntry.toFile();
-        try (InputStream inputStream = new AddContextStream(
-                configuration.getVocabulary(),
-                configuration.getEncoding(),
-                new FileInputStream(inputFile),
-                inputEntry.getFileName())) {
-            FileUtils.copyInputStreamToFile(inputStream, outputFile);
+    private void prepareStreamConfiguration() {
+        final AddContextStream.Configuration config
+                = new AddContextStream.Configuration();
+        config.useFileName = configuration.isFileReference();
+        config.context = configuration.getContext();
+        config.dataPredicate = configuration.getDataPredicate();
+        config.encoding = configuration.getEncoding();
+        config.fileNamePredicate = configuration.getFilePredicate();
+        config.type = configuration.getType();
+        streamConfiguration = config;
+    }
+
+    private void processEntry(FilesDataUnit.Entry entry) throws LpException {
+        final File outputFile = outputFiles.createFile(
+                entry.getFileName() + ".jsonld");
+        try {
+            updateFile(entry, outputFile);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't update file: {} -> {}",
-                    inputFile, outputFile, ex);
+            throw exceptionFactory.failure("Can't update file: {}",
+                    entry.getFileName(), ex);
+        }
+    }
+
+    private void updateFile(FilesDataUnit.Entry inputEntry, File outputFile)
+            throws IOException {
+        File inputFile = inputEntry.toFile();
+        try (InputStream inputStream = new AddContextStream(streamConfiguration,
+                inputEntry.getFileName(), new FileInputStream(inputFile))) {
+            FileUtils.copyInputStreamToFile(inputStream, outputFile);
         }
     }
 
