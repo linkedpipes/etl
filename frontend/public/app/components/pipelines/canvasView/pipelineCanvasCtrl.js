@@ -541,7 +541,7 @@ define([
                     'data': {
                         'iri': $scope.data.iri,
                         'label': $scope.data.pipelineLabel,
-                        'pipeline': jsonld
+                        'pipeline': jQuery.extend(true, {}, jsonld)
                     }
                 }
             }).then(function (result) {
