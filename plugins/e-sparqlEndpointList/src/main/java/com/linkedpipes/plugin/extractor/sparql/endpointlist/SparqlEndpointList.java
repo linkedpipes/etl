@@ -76,7 +76,6 @@ public final class SparqlEndpointList
         for (Task task : taskLoader.getTasks()) {
             executorService.submit(new TaskExecutor(
                     task, errorConsumer, resultConsumer, progressReport));
-            progressReport.entryProcessed();
         }
         executorService.shutdown();
     }
