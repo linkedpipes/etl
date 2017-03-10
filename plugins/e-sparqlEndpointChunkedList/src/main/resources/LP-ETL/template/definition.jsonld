@@ -16,6 +16,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "SPARQL", "query", "endpoint", "chunked", "list"
         ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-sparqlendpointchunkedlist"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
            "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc"
         }
