@@ -1,6 +1,10 @@
 [
     {
         "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#Configuration"]
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#threads": "1",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#threadsControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
     }
 ]
