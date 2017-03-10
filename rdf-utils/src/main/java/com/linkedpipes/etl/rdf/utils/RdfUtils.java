@@ -40,7 +40,7 @@ public class RdfUtils {
             try {
                 object = resultType.newInstance();
             } catch (IllegalAccessException | InstantiationException ex) {
-                throw  new RdfUtilsException("Can't create result object", ex);
+                throw new RdfUtilsException("Can't create result object", ex);
             }
             RdfLoader.loadByReflection(source, descriptorFactory, object,
                     queryResult.get("s"), graph);
@@ -63,6 +63,16 @@ public class RdfUtils {
         final String query = "SELECT ?s WHERE { GRAPH <" + graph + "> { " +
                 "?s a <" + descriptor.getType() + "> } }";
         final String resource = sparqlSelectSingle(source, query, "s");
+        RdfLoader.loadByReflection(source, descriptorFactory, object,
+                resource, graph);
+    }
+
+    public static void loadByReflection(RdfSource source, Object object,
+            String resource, String graph,
+            RdfLoader.DescriptorFactory descriptorFactory)
+            throws RdfUtilsException {
+        final RdfLoader.Descriptor descriptor =
+                descriptorFactory.create(object.getClass());
         RdfLoader.loadByReflection(source, descriptorFactory, object,
                 resource, graph);
     }
