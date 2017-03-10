@@ -8,6 +8,9 @@ public class SparqlEndpointListConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_USED_THREADS)
     private int usedThreads = 1;
 
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_TIME_LIMIT)
+    private int executionTimeLimit = -1;
+
     public SparqlEndpointListConfiguration() {
     }
 
@@ -19,4 +22,11 @@ public class SparqlEndpointListConfiguration {
         this.usedThreads = usedThreads;
     }
 
+    public int getExecutionTimeLimit() {
+        return executionTimeLimit;
+    }
+
+    public void setExecutionTimeLimit(int executionTimeLimit) {
+        this.executionTimeLimit = executionTimeLimit;
+    }
 }

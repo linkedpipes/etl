@@ -11,6 +11,10 @@ define([], function () {
         "threads": {
             "$type": "int",
             "$label": "Used threads"
+        },
+        "timeLimit" : {
+            "$type": "int",
+            "$label": "Query time limit"
         }
     };
 

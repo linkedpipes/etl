@@ -6,4 +6,10 @@
                ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
                type="number" min="1">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.timeLimit.hide">
+        <label>Query time limit in seconds (-1 for infinite)</label>
+        <input ng-model="dialog.timeLimit.value"
+               ng-disabled="dialog.timeLimit.disabled || dialog.timeLimit.inherit"
+               type="number" min="1">
+    </md-input-container>
 </div>

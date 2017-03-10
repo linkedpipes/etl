@@ -26,6 +26,8 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_USED_THREADS = PREFIX + "threads";
 
+    public static final String HAS_TIME_LIMIT = PREFIX + "timeLimit";
+
     private SparqlEndpointListVocabulary() {
     }
 

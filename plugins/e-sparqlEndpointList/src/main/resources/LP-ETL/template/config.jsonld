@@ -5,6 +5,10 @@
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#threads": "1",
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#threadsControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#timeLimit": "-1",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#timeLimitControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }
 ]

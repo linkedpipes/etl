@@ -38,15 +38,19 @@ class TaskExecutor implements Runnable {
 
     private final ProgressReport progressReport;
 
+    private final int executionTimeLimit;
+
     public TaskExecutor(
             Task task,
             ErrorReportConsumer errorReportConsumer,
             TaskResultConsumer resultConsumer,
-            ProgressReport progressReport) {
+            ProgressReport progressReport,
+            int executionTimeLimit) {
         this.task = task;
         this.errorReportConsumer = errorReportConsumer;
         this.resultConsumer = resultConsumer;
         this.progressReport = progressReport;
+        this.executionTimeLimit = executionTimeLimit;
     }
 
     @Override
@@ -85,6 +89,7 @@ class TaskExecutor implements Runnable {
             GraphQuery preparedQuery = connection.prepareGraphQuery(
                     QueryLanguage.SPARQL, task.getQuery());
             setGraphsToQuery(preparedQuery);
+            preparedQuery.setMaxExecutionTime(executionTimeLimit);
             try (GraphQueryResult result = preparedQuery.evaluate()) {
                 return collectResults(result);
             }

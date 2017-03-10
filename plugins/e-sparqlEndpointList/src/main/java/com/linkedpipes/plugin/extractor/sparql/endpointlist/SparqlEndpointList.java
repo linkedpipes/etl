@@ -75,7 +75,8 @@ public final class SparqlEndpointList
         LOG.info("Number of tasks {}", taskLoader.getTasks().size());
         for (Task task : taskLoader.getTasks()) {
             executorService.submit(new TaskExecutor(
-                    task, errorConsumer, resultConsumer, progressReport));
+                    task, errorConsumer, resultConsumer, progressReport,
+                    configuration.getExecutionTimeLimit()));
         }
         executorService.shutdown();
     }
