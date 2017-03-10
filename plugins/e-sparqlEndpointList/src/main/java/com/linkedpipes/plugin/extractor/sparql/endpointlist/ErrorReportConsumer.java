@@ -43,10 +43,16 @@ class ErrorReportConsumer {
                 valueFactory.createIRI(SparqlEndpointListVocabulary.HAS_TASK),
                 valueFactory.createIRI(task.getIri())));
 
+        IRI exceptionResource = valueFactory.createIRI(
+                resource.stringValue() + "/exception");
+
         statements.add(valueFactory.createStatement(resource,
                 valueFactory.createIRI(
-                        SparqlEndpointListVocabulary.HAS_EXCEPTION_MESSAGE),
-                valueFactory.createLiteral(exception.getMessage())));
+                        SparqlEndpointListVocabulary.HAS_EXCEPTION),
+                exceptionResource));
+
+        statements.addAll(translateException(exceptionResource, exception));
+
 
         LOG.error("Error: {}", task.getIri(), exception);
 
@@ -57,6 +63,27 @@ class ErrorReportConsumer {
         } catch (LpException ex) {
             LOG.error("Can't save information about error.", ex);
         }
+    }
+
+    private List<Statement> translateException(IRI resource, Exception exception) {
+        List<Statement> statements = new ArrayList<>(3);
+
+        statements.add(valueFactory.createStatement(resource,
+                valueFactory.createIRI(RDF.TYPE),
+                valueFactory.createIRI(
+                        SparqlEndpointListVocabulary.EXCEPTION)));
+
+        statements.add(valueFactory.createStatement(resource,
+                valueFactory.createIRI(
+                        SparqlEndpointListVocabulary.HAS_EXCEPTION_MESSAGE),
+                valueFactory.createLiteral(exception.getMessage())));
+
+        statements.add(valueFactory.createStatement(resource,
+                valueFactory.createIRI(
+                        SparqlEndpointListVocabulary.HAS_EXCEPTION_CLASS),
+                valueFactory.createLiteral(exception.getClass().getName())));
+
+        return statements;
     }
 
 }

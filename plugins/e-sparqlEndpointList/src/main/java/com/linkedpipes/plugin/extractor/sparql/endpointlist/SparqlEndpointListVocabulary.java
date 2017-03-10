@@ -21,8 +21,15 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_TASK = PREFIX + "task";
 
+    public static final String HAS_EXCEPTION = PREFIX + "exception";
+
+    public static final String EXCEPTION = PREFIX + "Exception";
+
     public static final String HAS_EXCEPTION_MESSAGE =
-            PREFIX + "exceptionMessage";
+            PREFIX + "message";
+
+    public static final String HAS_EXCEPTION_CLASS =
+            PREFIX + "class";
 
     public static final String HAS_USED_THREADS = PREFIX + "threads";
 
