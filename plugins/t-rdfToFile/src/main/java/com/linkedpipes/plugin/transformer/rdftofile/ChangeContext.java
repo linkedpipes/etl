@@ -1,26 +1,24 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.*;
 
 import java.util.Collection;
 
-/**
- * Support cancel and progress report.
- */
-public class RdfWriterContext implements RDFWriter {
+class ChangeContext implements RDFWriter {
 
-    private final ProgressReport progressReport;
-
-    /**
-     * Underlying RDF writer.
-     */
     private final RDFWriter writer;
 
-    public RdfWriterContext(RDFWriter writer, ProgressReport progressReport) {
+    private ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
+    private final IRI graph;
+
+    public ChangeContext(RDFWriter writer, IRI graph) {
         this.writer = writer;
-        this.progressReport = progressReport;
+        this.graph = graph;
     }
 
     @Override
@@ -61,9 +59,9 @@ public class RdfWriterContext implements RDFWriter {
     }
 
     @Override
-    public void handleStatement(Statement stmnt) throws RDFHandlerException {
-        progressReport.entryProcessed();
-        writer.handleStatement(stmnt);
+    public void handleStatement(Statement st) throws RDFHandlerException {
+        writer.handleStatement(valueFactory.createStatement(
+                st.getSubject(), st.getPredicate(), st.getObject(), graph));
     }
 
     @Override
