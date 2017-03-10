@@ -1,63 +1,22 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.*;
 
 import java.util.Collection;
 
-/**
- * Add support for graph (context) renaming.
- */
-public class RdfWriterContextRenamer implements RDFWriter {
+class ChangeContext implements RDFWriter {
 
-    /**
-     * Wrap for single statement used to change graph.
-     */
-    protected class StatementWrap implements Statement {
-
-        protected Statement statement;
-
-        @Override
-        public Resource getSubject() {
-            return statement.getSubject();
-        }
-
-        @Override
-        public IRI getPredicate() {
-            return statement.getPredicate();
-        }
-
-        @Override
-        public Value getObject() {
-            return statement.getObject();
-        }
-
-        @Override
-        public Resource getContext() {
-            return graph;
-        }
-
-    }
-
-    /**
-     * Underlying RDF writer.
-     */
     private final RDFWriter writer;
 
-    /**
-     * Context used for graphs.
-     */
-    private final Resource graph;
+    private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    /**
-     * Wrap used to change graph in statements.
-     */
-    private final StatementWrap statementWrap = new StatementWrap();
+    private final IRI graph;
 
-    public RdfWriterContextRenamer(RDFWriter writer, Resource graph) {
+    public ChangeContext(RDFWriter writer, IRI graph) {
         this.writer = writer;
         this.graph = graph;
     }
@@ -100,11 +59,9 @@ public class RdfWriterContextRenamer implements RDFWriter {
     }
 
     @Override
-    public void handleStatement(Statement stmnt) throws RDFHandlerException {
-        // Replace graph = use our statement wrap.
-        statementWrap.statement = stmnt;
-        // Call original function.
-        writer.handleStatement(statementWrap);
+    public void handleStatement(Statement st) throws RDFHandlerException {
+        writer.handleStatement(valueFactory.createStatement(
+                st.getSubject(), st.getPredicate(), st.getObject(), graph));
     }
 
     @Override
