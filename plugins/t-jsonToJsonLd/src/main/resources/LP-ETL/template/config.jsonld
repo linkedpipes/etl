@@ -2,7 +2,7 @@
     {
         "@id": "http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration",
         "@type" : ["http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#Configuration"],
-        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#context" : "\"@context\":{\"@vocab\":\"http://localhost/ontology/\"}",
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#context" : "{\"@vocab\":\"http://localhost/ontology/\"}",
         "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#contextControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
