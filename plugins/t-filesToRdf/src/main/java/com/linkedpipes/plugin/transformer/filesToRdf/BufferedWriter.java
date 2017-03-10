@@ -10,7 +10,7 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatementInserter implements RDFHandler {
+class BufferedWriter implements RDFHandler {
 
     private final int commitSize;
 
@@ -20,11 +20,11 @@ public class StatementInserter implements RDFHandler {
 
     private IRI targetGraph;
 
-    public StatementInserter(int commintSize,
+    public BufferedWriter(int commitSize,
             WritableGraphListDataUnit dataUnit) {
-        this.commitSize = commintSize;
+        this.commitSize = commitSize;
         this.dataUnit = dataUnit;
-        this.statements = new ArrayList<>(commintSize);
+        this.statements = new ArrayList<>(commitSize);
     }
 
     @Override
@@ -34,23 +34,12 @@ public class StatementInserter implements RDFHandler {
 
     @Override
     public void endRDF() throws RDFHandlerException {
-        // Commit data in cache.
-        try {
-            dataUnit.execute((connection) -> {
-                connection.begin();
-                connection.add(statements, targetGraph);
-                connection.commit();
-            });
-            statements.clear();
-        } catch (LpException ex) {
-            throw new RDFHandlerException(ex);
-        }
+        flushBuffer();
     }
 
     @Override
     public void handleNamespace(String prefix, String uri)
             throws RDFHandlerException {
-        // No operation here.
         try {
             dataUnit.execute((connection) -> {
                 if (connection.getNamespace(prefix) == null) {
@@ -65,18 +54,8 @@ public class StatementInserter implements RDFHandler {
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
         if (statements.size() >= commitSize) {
-            try {
-                dataUnit.execute((connection) -> {
-                    connection.begin();
-                    connection.add(statements, targetGraph);
-                    connection.commit();
-                });
-                statements.clear();
-            } catch (LpException ex) {
-                throw new RDFHandlerException(ex);
-            }
+            flushBuffer();
         }
-        // We can enforce context here.
         statements.add(st);
     }
 
@@ -85,8 +64,25 @@ public class StatementInserter implements RDFHandler {
         // No operation here.
     }
 
+    public IRI getTargetGraph() {
+        return targetGraph;
+    }
+
     public void setTargetGraph(IRI targetGraph) {
         this.targetGraph = targetGraph;
+    }
+
+    private void flushBuffer() {
+        try {
+            dataUnit.execute((connection) -> {
+                connection.begin();
+                connection.add(statements, targetGraph);
+                connection.commit();
+            });
+            statements.clear();
+        } catch (LpException ex) {
+            throw new RDFHandlerException(ex);
+        }
     }
 
 }
