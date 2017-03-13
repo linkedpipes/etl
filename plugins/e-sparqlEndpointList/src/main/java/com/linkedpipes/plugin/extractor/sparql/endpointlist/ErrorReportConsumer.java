@@ -51,8 +51,8 @@ class ErrorReportConsumer {
                         SparqlEndpointListVocabulary.HAS_EXCEPTION),
                 exceptionResource));
 
-        statements.addAll(translateException(exceptionResource, exception));
-
+        statements.addAll(translateException(exceptionResource,
+                getRootCause(exception)));
 
         LOG.error("Error: {}", task.getIri(), exception);
 
@@ -65,7 +65,15 @@ class ErrorReportConsumer {
         }
     }
 
-    private List<Statement> translateException(IRI resource, Exception exception) {
+    private Throwable getRootCause(Throwable throwable) {
+        while (throwable.getCause() != null) {
+            throwable = throwable.getCause();
+        }
+        return throwable;
+    }
+
+    private List<Statement> translateException(IRI resource,
+            Throwable exception) {
         List<Statement> statements = new ArrayList<>(3);
 
         statements.add(valueFactory.createStatement(resource,
