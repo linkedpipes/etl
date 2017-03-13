@@ -26,6 +26,9 @@ public class ValueParserConfiguration {
         @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_TARGET)
         private String target;
 
+        @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_TYPE)
+        private String type;
+
         public OutputBinding() {
         }
 
@@ -43,6 +46,14 @@ public class ValueParserConfiguration {
 
         public void setTarget(String target) {
             this.target = target;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
         }
     }
 

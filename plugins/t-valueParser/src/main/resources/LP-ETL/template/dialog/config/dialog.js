@@ -30,6 +30,9 @@ define([], function () {
                 },
                 "target": {
                     "$type": "str"
+                },
+                "type": {
+                    "$type": "str"
                 }
             }
         }
@@ -44,7 +47,8 @@ define([], function () {
         $scope.onAdd = function () {
             $scope.dialog.binding.value.push({
                 "group": {"value": ""},
-                "target": {"value": ""}
+                "target": {"value": ""},
+                "type": {"value": "Default"}
             });
         };
 

@@ -28,6 +28,13 @@
                 <input ng-model="item.target.value"
                        placeholder="http://example.com/property">
             </md-input-container>
+            <md-input-container class="md-block" flex>
+                <label>Type</label>
+                <md-select ng-model="item.type.value">
+                    <md-option value="Default">Default</md-option>
+                    <md-option value="ListWithIndexes">Indexed list</md-option>
+                </md-select>
+            </md-input-container>
             <button ng-click="onDelete($index)"
                     class="md-icon-button md-accent md-button md-ink-ripple">
                 <md-icon md-svg-icon="clear" class="lp-icon"></md-icon>
