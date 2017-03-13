@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.extractor.sparql.endpoint;
+package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
@@ -12,10 +12,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Designed to be source of VALUES clauses.
- */
-public class ValuesSource {
+class ValuesReader {
 
     public interface ValueHandler {
 
@@ -32,7 +29,7 @@ public class ValuesSource {
 
     private final int chunkSize;
 
-    public ValuesSource(File inputFile, ExceptionFactory exceptionFactory,
+    public ValuesReader(File inputFile, ExceptionFactory exceptionFactory,
             int chunkSize) {
         this.inputFile = inputFile;
         this.exceptionFactory = exceptionFactory;
@@ -63,7 +60,6 @@ public class ValuesSource {
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't read input file.", ex);
         }
-
     }
 
     protected void handle(List<String> header, List<List<String>> rows,

@@ -2,34 +2,16 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RdfToPojo.Type(iri = SparqlEndpointChunkedListVocabulary.CONFIG)
 public class SparqlEndpointChunkedListConfiguration {
 
-    /**
-     * Must contains ${VALUES} place holder.
-     */
-    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_QUERY)
-    private String query;
-
-    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_ENDPOINT)
-    private String endpoint;
-
-    /**
-     * Default graphs can be specified only via the runtime configuration.
-     */
     @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_DEFAULT_GRAPH)
-    private List<String> defaultGraphs = new ArrayList<>();
+            iri = SparqlEndpointChunkedListVocabulary.HAS_USED_THREADS)
+    private int usedThreads = 1;
 
-    /**
-     * Used as a Accept value in header.
-     */
     @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_HEADER_ACCEPT)
-    private String transferMimeType;
+            iri = SparqlEndpointChunkedListVocabulary.HAS_TIME_LIMIT)
+    private int executionTimeLimit = -1;
 
     @RdfToPojo.Property(
             iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
@@ -38,36 +20,20 @@ public class SparqlEndpointChunkedListConfiguration {
     public SparqlEndpointChunkedListConfiguration() {
     }
 
-    public String getQuery() {
-        return query;
+    public int getUsedThreads() {
+        return usedThreads;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setUsedThreads(int usedThreads) {
+        this.usedThreads = usedThreads;
     }
 
-    public String getEndpoint() {
-        return endpoint;
+    public int getExecutionTimeLimit() {
+        return executionTimeLimit;
     }
 
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public List<String> getDefaultGraphs() {
-        return defaultGraphs;
-    }
-
-    public void setDefaultGraphs(List<String> defaultGraphs) {
-        this.defaultGraphs = defaultGraphs;
-    }
-
-    public String getTransferMimeType() {
-        return transferMimeType;
-    }
-
-    public void setTransferMimeType(String transferMimeType) {
-        this.transferMimeType = transferMimeType;
+    public void setExecutionTimeLimit(int executionTimeLimit) {
+        this.executionTimeLimit = executionTimeLimit;
     }
 
     public Integer getChunkSize() {
