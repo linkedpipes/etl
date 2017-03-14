@@ -116,8 +116,10 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
         });
     }
 
-    private static String getConfigurationQuery() {
-        return "SELECT DISTINCT ?s ?query ?fileName WHERE {\n"
+    private String getConfigurationQuery() {
+        return "SELECT DISTINCT ?s ?query ?fileName" +
+                " FROM <" + configurationRdf.getReadGraph() + "> " +
+                " WHERE {\n"
                 + "  ?s a <" + SparqlSelectMultiVocabulary.CONFIG
                 + "> ;\n"
                 + "    <" + SparqlSelectMultiVocabulary.HAS_FILE_NAME
