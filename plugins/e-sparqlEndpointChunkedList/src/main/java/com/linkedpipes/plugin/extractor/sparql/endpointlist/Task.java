@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
