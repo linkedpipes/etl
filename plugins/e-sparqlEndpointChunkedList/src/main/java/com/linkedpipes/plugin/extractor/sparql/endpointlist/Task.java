@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -34,19 +35,22 @@ public class Task {
             iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
     private int chunkSize;
 
+    private File fileWithChunks;
+
     public Task(String iri) {
         this.iri = iri;
     }
 
-    public Task(Task task, String fileName, String query)
+    public Task(Task task, File fileWithChunks)
             throws UnsupportedEncodingException {
         this.iri = task.iri + "/" + URLEncoder.encode(fileName, "UTF-8");
-        this.query = query;
+        this.query = task.query;
         this.endpoint = task.endpoint;
         this.defaultGraphs = task.defaultGraphs;
         this.transferMimeType = task.transferMimeType;
         this.fileName = task.fileName;
         this.chunkSize = task.chunkSize;
+        this.fileWithChunks = fileWithChunks;
     }
 
     public String getIri() {
@@ -101,4 +105,11 @@ public class Task {
         this.chunkSize = chunkSize;
     }
 
+    public File getFileWithChunks() {
+        return fileWithChunks;
+    }
+
+    public void setFileWithChunks(File fileWithChunks) {
+        this.fileWithChunks = fileWithChunks;
+    }
 }

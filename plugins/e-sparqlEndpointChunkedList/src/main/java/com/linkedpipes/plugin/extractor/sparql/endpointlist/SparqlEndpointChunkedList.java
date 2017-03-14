@@ -120,30 +120,27 @@ public final class SparqlEndpointChunkedList implements Component,
             if (!entry.getFileName().equals(fileNameFilter)) {
                 continue;
             }
-            ValuesReader valuesReader = new ValuesReader(
-                    entry.toFile(), exceptionFactory, task.getChunkSize());
-            valuesReader.readSource((values) -> {
-                waitForSpaceInQueue();
-                Task taskWithValues = createTask(task, entry, values);
-                executorService.submit(new TaskExecutor(taskWithValues,
-                        errorConsumer, resultConsumer, progressReport,
-                        configuration.getExecutionTimeLimit()));
-            });
+            waitForSpaceInQueue();
+            // For now there is just one file for task, in case of multiple
+            // files we still need to use a single task - ie. to have
+            // at most one thread working with given endpoint.
+            //
+            // TODO May cause concurrent reading of a single file.
+            //
+            Task taskInstance = createTask(task, entry);
+            executorService.submit(new TaskExecutor(taskInstance,
+                    errorConsumer, resultConsumer, progressReport,
+                    exceptionFactory, configuration.getExecutionTimeLimit()));
         }
     }
 
-    private Task createTask(Task task, FilesDataUnit.Entry entry,
-            String values) throws LpException {
-        String query = prepareQuery(task, values);
+    private Task createTask(Task task, FilesDataUnit.Entry entry)
+            throws LpException {
         try {
-            return new Task(task, entry.getFileName(), query);
+            return new Task(task, entry.toFile());
         } catch (UnsupportedEncodingException ex) {
             throw new LpException("Unsupported encoding exception.", ex);
         }
-    }
-
-    private String prepareQuery(Task task, String value) {
-        return task.getQuery().replace("${VALUES}", value);
     }
 
     private void waitForSpaceInQueue() {

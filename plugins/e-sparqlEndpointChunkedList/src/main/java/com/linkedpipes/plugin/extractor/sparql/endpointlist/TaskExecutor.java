@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -9,7 +10,6 @@ import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
-import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ class TaskExecutor implements Runnable {
     private static final Logger LOG =
             LoggerFactory.getLogger(TaskExecutor.class);
 
-    private Map<String,String> contextMap = MDC.getCopyOfContextMap();
+    private Map<String, String> contextMap = MDC.getCopyOfContextMap();
 
     private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -38,18 +38,24 @@ class TaskExecutor implements Runnable {
 
     private final ProgressReport progressReport;
 
+    private final ExceptionFactory exceptionFactory;
+
     private final int executionTimeLimit;
+
+    private SPARQLRepository repository;
 
     public TaskExecutor(
             Task task,
             ErrorReportConsumer errorReportConsumer,
             TaskResultConsumer resultConsumer,
             ProgressReport progressReport,
+            ExceptionFactory exceptionFactory,
             int executionTimeLimit) {
         this.task = task;
         this.errorReportConsumer = errorReportConsumer;
         this.resultConsumer = resultConsumer;
         this.progressReport = progressReport;
+        this.exceptionFactory = exceptionFactory;
         this.executionTimeLimit = executionTimeLimit;
     }
 
@@ -57,37 +63,62 @@ class TaskExecutor implements Runnable {
     public void run() {
         MDC.setContextMap(contextMap);
         LOG.info("Executing: {} ...", task.getIri());
-        SPARQLRepository repository = createRepository(
-                task.getEndpoint(), task.getTransferMimeType());
-        repository.initialize();
         try {
-            List<Statement> queryResult = executeQuery(repository);
-            resultConsumer.consume(queryResult);
+            createRepository();
+            executeTask();
+            LOG.info("Executing: {} ... done", task.getIri());
         } catch (Exception ex) {
+            LOG.info("Executing: {} ... failed for runtime", task.getIri(), ex);
             errorReportConsumer.reportError(task, ex);
+        } finally {
+            progressReport.entryProcessed();
+            try {
+                if (repository != null) {
+                    repository.shutDown();
+                }
+            } catch (Exception ex) {
+                LOG.warn("Can't close repository.", ex);
+            }
         }
-        repository.shutDown();
-        progressReport.entryProcessed();
-        LOG.info("Executing: {} ... done", task.getIri());
     }
 
-    private static SPARQLRepository createRepository(
-            String endpoint, String mimeType) {
-        SPARQLRepository repository = new SPARQLRepository(endpoint);
+    private void createRepository() {
+        repository = new SPARQLRepository(task.getEndpoint());
+        setRepositoryHeaders();
+        repository.initialize();
+    }
+
+    private void setRepositoryHeaders() {
         final Map<String, String> headers = new HashMap<>();
         headers.putAll(repository.getAdditionalHttpHeaders());
+        String mimeType  = task.getTransferMimeType();
         if (mimeType != null) {
             headers.put("Accept", mimeType);
         }
         repository.setAdditionalHttpHeaders(headers);
-        return repository;
     }
 
-    private List<Statement> executeQuery(Repository repository)
+    private void executeTask() throws LpException {
+        ValuesReader valuesReader = new ValuesReader(
+                task.getFileWithChunks(),
+                exceptionFactory,
+                task.getChunkSize());
+        valuesReader.readSource((values) -> {
+            String query = prepareQuery(values);
+            List<Statement> queryResult = executeQuery(query);
+            resultConsumer.consume(queryResult);
+        });
+    }
+
+    private String prepareQuery(String value) {
+        return task.getQuery().replace("${VALUES}", value);
+    }
+
+    private List<Statement> executeQuery(String query)
             throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             GraphQuery preparedQuery = connection.prepareGraphQuery(
-                    QueryLanguage.SPARQL, task.getQuery());
+                    QueryLanguage.SPARQL, query);
             setGraphsToQuery(preparedQuery);
             preparedQuery.setMaxExecutionTime(executionTimeLimit);
             try (GraphQueryResult result = preparedQuery.evaluate()) {
