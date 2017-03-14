@@ -43,7 +43,7 @@ public class Task {
 
     public Task(Task task, File fileWithChunks)
             throws UnsupportedEncodingException {
-        this.iri = task.iri + "/" + URLEncoder.encode(fileName, "UTF-8");
+        this.iri = task.iri;
         this.query = task.query;
         this.endpoint = task.endpoint;
         this.defaultGraphs = task.defaultGraphs;
