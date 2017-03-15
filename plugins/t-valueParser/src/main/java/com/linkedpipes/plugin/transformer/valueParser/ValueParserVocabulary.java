@@ -27,7 +27,7 @@ final class ValueParserVocabulary {
 
     public static final String HAS_ORDER = PREFIX + "order";
 
-    public static final String HAS_DEFAULT = PREFIX + "Default";
+    public static final String VALUES = PREFIX + "Values";
 
     private ValueParserVocabulary() {
     }

@@ -78,14 +78,14 @@ public final class ValueParser implements Component, SequentialExecution {
             throws LpException {
         // For backward compatibility.
         if (type == null) {
-            type = ValueParserVocabulary.HAS_DEFAULT;
+            type = ValueParserVocabulary.VALUES;
         }
         switch (type) {
             case ValueParserVocabulary.LIST_WITH_INDEX:
                 return new ListProducer(outputRdf, predicate,
                         configuration.isKeepMetadata(),
                         true);
-            case ValueParserVocabulary.HAS_DEFAULT:
+            case ValueParserVocabulary.VALUES:
                 return new DefaultProducer(outputRdf, predicate,
                         configuration.isKeepMetadata());
             default:
