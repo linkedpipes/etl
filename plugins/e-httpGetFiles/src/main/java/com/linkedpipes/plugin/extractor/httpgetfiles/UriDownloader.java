@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,9 @@ class UriDownloader {
 
         private final ConcurrentLinkedQueue<FileToDownload> workQueue;
 
+        private final Map<String, String> contextMap =
+                MDC.getCopyOfContextMap();
+
         private final AtomicInteger counter;
 
         public Worker(
@@ -53,6 +57,7 @@ class UriDownloader {
 
         @Override
         public Object call() throws Exception {
+            MDC.setContextMap(contextMap);
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
                 final Date downloadStarted = new Date();
@@ -209,7 +214,7 @@ class UriDownloader {
 
     /**
      * Log details about the connection.
-     * 
+     *
      * @param connection
      */
     private static void logDetails(HttpURLConnection connection) {
