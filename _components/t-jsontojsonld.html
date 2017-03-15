@@ -1,0 +1,48 @@
+---
+short: t-jsontojsonld
+type: transformer
+color: indigo
+title: JSON to JSON-LD
+description: Adds a JSON-LD context to JSON files.
+---
+
+<p class="flow-text">
+Transformer, adds a specified <a href="https://www.w3.org/TR/json-ld/#the-context" title="JSON-LD context">JSON-LD context</a> and additional provenance data to input JSON files, making them JSON-LD.
+</p>
+<dl class="flow-text">
+    <dt>Encoding</dt>
+    <dd>Encoding of the input files</dd>
+    <dt>Data predicate</dt>
+    <dd>IRI of the predicate connecting the root entity to the object representing the original JSON data interpreted as JSON-LD.</dd>
+    <dt>Root entity type</dt>
+    <dd>IRI of the type of the newly created root entity.</dd>
+    <dt>Add file reference</dt>
+    <dd>If checked, input file name is added to the output JSON-LD file using the File name predicate.</dd>
+    <dt>File name predicate</dt>
+    <dd>IRI of the predicate used to attach the input file name to the newly created root entity in the output JSON-LD file.</dd>
+    <dt>Context object</dt>
+    <dd>JSON object specifying the <a href="https://www.w3.org/TR/json-ld/#the-context" title="JSON-LD context">JSON-LD context</a>.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the input JSON files and wraps them in a new JSON object (root entity), to which a <a href="https://www.w3.org/TR/json-ld/#the-context" title="JSON-LD context">JSON-LD context</a> is attached, along with the input file name, using the specified predicates, forming a JSON-LD file, which can be later processed by, for example, <a href="/components/t-filestordf/" title="Files to RDF">Files to RDF</a> component.
+        </p>
+    </div>
+</div>
