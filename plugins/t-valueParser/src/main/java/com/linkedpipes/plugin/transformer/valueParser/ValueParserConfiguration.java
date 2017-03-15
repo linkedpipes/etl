@@ -70,7 +70,7 @@ public class ValueParserConfiguration {
     private String regexp;
 
     /**
-     * If true language tags are transfered.
+     * If true language tags are transferred.
      */
     @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_METADATA)
     private boolean keepMetadata = false;
