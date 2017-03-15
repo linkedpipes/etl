@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import com.linkedpipes.etl.storage.rdf.StatementsCollection;
 import com.linkedpipes.etl.storage.template.Template;
@@ -138,6 +139,8 @@ class Unpacker {
      */
     private Set<RdfObjects.Entity> mappedComponents;
 
+    private final Configuration configuration;
+
     /**
      * @param statements Pipeline definition.
      * @param pipelineIriAsString Pipeline resource.
@@ -145,7 +148,7 @@ class Unpacker {
      */
     private Unpacker(Collection<Statement> statements,
             String pipelineIriAsString, TemplateFacade templates,
-            UnpackOptions options) {
+            UnpackOptions options, Configuration configuration) {
         this.pipelineIri = vf.createIRI(pipelineIriAsString);
         this.templates = templates;
         //
@@ -160,6 +163,14 @@ class Unpacker {
         });
         this.pipelineObject = new RdfObjects(pipelineRdf.getStatements());
         this.options = options;
+        this.configuration = configuration;
+    }
+
+    private String getExecutionSourceUrl(String executionIri) {
+        String executionId = executionIri.substring(
+                executionIri.lastIndexOf("/") + 1);
+        return configuration.getExecutorMonitorUrl() + "executions/"
+                + executionId;
     }
 
     /**
@@ -173,7 +184,8 @@ class Unpacker {
             final Collection<Statement> executionRdf;
             final HttpClientBuilder builder = HttpClientBuilder.create();
             try (CloseableHttpClient client = builder.build()) {
-                final HttpGet request = new HttpGet(execution.getExecution());
+                final HttpGet request = new HttpGet(
+                        getExecutionSourceUrl(execution.getExecution()));
                 request.addHeader("Accept",
                         RDFFormat.JSONLD.getDefaultMIMEType());
                 final HttpResponse response = client.execute(request);
@@ -666,9 +678,11 @@ class Unpacker {
             Collection<Statement> statements,
             TemplateFacade templates,
             String pipelineIriAsString,
-            UnpackOptions options) throws BaseException {
+            UnpackOptions options,
+            Configuration configuration) throws BaseException {
         final Unpacker unpacker = new Unpacker(statements,
-                pipelineIriAsString, templates, options);
+                pipelineIriAsString, templates, options,
+                configuration);
 
         // Resolve references to other executions - from options.
         unpacker.downloadExecutions();

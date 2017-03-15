@@ -33,6 +33,8 @@ public class Configuration {
 
     private String domainName;
 
+    private String executorMonitorUrl;
+
     private final Properties properties = new Properties();
 
     @PostConstruct
@@ -67,6 +69,8 @@ public class Configuration {
         templatesDirectory = storageDirectory + File.separator + "templates";
         pipelinesDirectory = storageDirectory + File.separator + "pipelines";
         knowledgeDirectory = storageDirectory + File.separator + "knowledge";
+
+        executorMonitorUrl = getProperty("executor-monitor.webserver.uri");
     }
 
     public int getStoragePort() {
@@ -101,6 +105,10 @@ public class Configuration {
 
     public String getDomainName() {
         return domainName;
+    }
+
+    public String getExecutorMonitorUrl() {
+        return executorMonitorUrl;
     }
 
     public Properties getProperties() {

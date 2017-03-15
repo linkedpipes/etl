@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
@@ -24,6 +25,9 @@ public class UnpackerFacade {
     @Autowired
     private TemplateFacade templates;
 
+    @Autowired
+    private Configuration configuration;
+
     public Collection<Statement> unpack(Collection<Statement> pipelineRdf,
             Collection<Statement> configurationRdf) throws BaseException {
         // Parse options.
@@ -44,7 +48,7 @@ public class UnpackerFacade {
         }
         // Unpack.
         return Unpacker.update(pipelineRdf, templates,
-                pipelineIri, options);
+                pipelineIri, options, configuration);
     }
 
     public Collection<Statement> unpack(Pipeline pipeline,
@@ -54,7 +58,7 @@ public class UnpackerFacade {
         PojoLoader.loadOfType(configurationRdf, UnpackOptions.TYPE, options);
         // Unpack.
         return Unpacker.update(pipelines.getPipelineRdf(pipeline), templates,
-                pipeline.getIri(), options);
+                pipeline.getIri(), options, configuration);
     }
 
 }
