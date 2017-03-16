@@ -1,0 +1,51 @@
+---
+short: l-lodcloud
+type: loader
+color: green
+title: DCAT-AP to datahub.io
+description: Loads DCAT-AP v1.1 metadata to the datahub.io CKAN, from which the LOD cloud diagram is generated.
+---
+
+<p class="flow-text">
+Loader, loads <a href="https://joinup.ec.europa.eu/asset/dcat_application_profile/asset_release/dcat-ap-v11" title="DCAT-AP v1.1">DCAT-AP v1.1</a> metadata to the <a href="https://datahub.io/" title="datahub">datahub.io</a> CKAN, from which the <a href="http://lod-cloud.net/" title="LOD cloud diagram">LOD cloud diagram</a> is generated.
+Helps you with all the <a href="https://www.w3.org/wiki/TaskForces/CommunityProjects/LinkingOpenData/DataSets/CKANmetainformation">additional requried metadata</a>.
+</p>
+<dl class="flow-text">
+    <dt>Datahub.io API Key</dt>
+    <dd>The API key allowing write access to the <a href="https://datahub.io/" title="datahub">datahub.io</a> CKAN catalog. This can be found on the user detail page.</dd>
+    <dt>CKAN dataset ID</dt>
+    <dd>The CKAN dataset ID to be used for the current dataset</dd>
+    <dt>CKAN owner organization ID</dt>
+    <dd>ID of your datahub.io CKAN organization, e.g. <code>9046f134-ea81-462f-aae3-69854d34fc96</code></dd>
+    <dt>CKAN license ID</dt>
+    <dd>ID of the CKAN license, which is different from the license URL specified in DCAT-AP metadata</dd>
+    <dt>Additional metadata</dt>
+    <dd>Follows the <a href="https://www.w3.org/wiki/TaskForces/CommunityProjects/LinkingOpenData/DataSets/CKANmetainformation">additional requried metadata</a> document</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - EU MDR NALs</dd>
+            <dd>RDF single graph - DCAT-AP v1.1</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component loads <a href="https://joinup.ec.europa.eu/node/146653" title="DCAT-AP v1.1">DCAT-AP v1.1</a> metadata to the <a href="https://datahub.io/" title="datahub">datahub.io</a> CKAN instance.
+        The typical usage is for metadata created by the <a href="/components/e-dcatap11dataset" title="DCAT-AP Dataset">DCAT-AP Dataset</a>, <a href="/components/e-dcatap11distribution" title="DCAT-AP Distribution">DCAT-AP Distribution</a> and <a href="/components/e-voiddataset" title="VoID Dataset">VoID Dataset</a> components.
+        The component currently uses the <a href="http://publications.europa.eu/mdr/authority/file-type/index.html">File type NAL</a> codelist published by the EU Publications Office to label file types in the CKAN catalog.
+        Therefore, this codelist needs to be provided on its EU MDR NALs input.
+        This can be a local copy, or a fresh download.
+        The component helps you to correctly fill out the <a href="https://www.w3.org/wiki/TaskForces/CommunityProjects/LinkingOpenData/DataSets/CKANmetainformation">additional requried metadata</a> for the dataset to be included in the next version of the <a href="http://lod-cloud.net/" title="LOD cloud diagram">LOD cloud diagram</a>.
+        </p>
+    </div>
+</div>
