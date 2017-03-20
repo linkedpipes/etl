@@ -14,11 +14,13 @@ import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,9 +81,14 @@ public class PipelineExecutor {
                 executeComponents();
                 execution.onComponentsExecutionModelEnd();
             }
-            terminate();
         } catch (Throwable t) {
             LOG.error("Uncaught exception!", t);
+        } finally {
+            try {
+                terminate();
+            } catch (Throwable t) {
+                LOG.error("Can't cleanup after pipeline execution!", t);
+            }
         }
         MDC.remove(LoggerFacade.EXECUTION_MDC);
         LOG.info("PipelineExecutor.execute ... done ");
@@ -269,9 +276,10 @@ public class PipelineExecutor {
         if (dataUnitManager != null) {
             dataUnitManager.close();
         }
-        pipeline.close();
         execution.onExecutionEnd();
         execution.close();
+        pipeline.closeRepository();
+        afterExecutionCleanUp();
         loggerFacade.destroyExecutionAppenders();
     }
 
@@ -286,6 +294,15 @@ public class PipelineExecutor {
         }
     }
 
+    private void afterExecutionCleanUp() {
+        if (pipeline.getModel().isDeleteWorkingData()) {
+            try {
+                FileUtils.deleteDirectory(resources.getRootWorkingDirectory());
+            } catch (IOException ex) {
+                LOG.error("Can't delete working directory.", ex);
+            }
+        }
+    }
 
 }
 

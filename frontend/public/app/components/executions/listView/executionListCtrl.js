@@ -54,6 +54,12 @@ define([
                                 'executionType': {
                                     '$property': 'http://linkedpipes.com/ontology/execution/type'
                                 },
+                                'saveDebugData': {
+                                    '$property': 'http://linkedpipes.com/ontology/saveDebugData'
+                                },
+                                'deleteWorkingData': {
+                                    '$property': 'http://linkedpipes.com/ontology/deleteWorkingData'
+                                },
                                 '_component': {
                                     '$property': 'http://linkedpipes.com/ontology/execution/targetComponent',
                                     '$oneToOne': {
@@ -243,6 +249,16 @@ define([
                     execution.metadata.executionTypeLabel = '';
                     break;
             }
+
+            console.log(execution.metadata);
+            if (execution.metadata.deleteWorkingData === "true") {
+                execution.metadata.executionTypeLabel += " (No working data)"
+            } else {
+                if (execution.metadata.saveDebugData === "false") {
+                    execution.metadata.executionTypeLabel += " (No debug data)"
+                }
+            }
+
         };
 
         $scope.repository = jsonldService.createRepository({

@@ -77,7 +77,7 @@ public class PipelineTest {
         Assert.assertEquals("http://pipeline/component/2",
                 connection.getTargetComponent());
         //
-        pipeline.close();
+        pipeline.closeRepository();
         FileUtils.deleteDirectory(directory);
     }
 

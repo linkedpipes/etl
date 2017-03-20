@@ -125,7 +125,7 @@ public class Pipeline {
         }
     }
 
-    public void close() {
+    public void closeRepository() {
         if (repository != null) {
             repository.shutDown();
         }

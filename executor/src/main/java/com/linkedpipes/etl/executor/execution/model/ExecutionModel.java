@@ -19,8 +19,7 @@ public class ExecutionModel {
      */
     public class DataUnit {
 
-        private final Port
-                dataUnit;
+        private final Port port;
 
         private final String debugVirtualPathSuffix;
 
@@ -36,15 +35,25 @@ public class ExecutionModel {
                 File saveDirectory,
                 File loadDirectory,
                 String relativeDataPath) {
-            this.dataUnit = dataUnit;
+            this.port = dataUnit;
             this.debugVirtualPathSuffix = debugVirtualPathSuffix;
             this.saveDirectory = saveDirectory;
             this.loadDirectory = loadDirectory;
             this.relativeDataPath = relativeDataPath;
         }
 
+        public DataUnit(
+                Port dataUnit,
+                File loadDirectory) {
+            this.port = dataUnit;
+            this.debugVirtualPathSuffix = null;
+            this.saveDirectory = null;
+            this.loadDirectory = loadDirectory;
+            this.relativeDataPath = null;
+        }
+
         public String getDataUnitIri() {
-            return dataUnit.getIri();
+            return port.getIri();
         }
 
         public String getVirtualDebugPath() {
@@ -61,6 +70,10 @@ public class ExecutionModel {
 
         public String getRelativeDataPath() {
             return relativeDataPath;
+        }
+
+        public Port getPort() {
+            return port;
         }
 
     }
@@ -153,17 +166,10 @@ public class ExecutionModel {
         }
     }
 
-    private DataUnit createDataUnit(Port pplDataUnit) {
-        final String debugVirtualPathSuffix =
-                String.format("%03d", dataUnits.size());
-
-        final File saveDirectory = resourceManager.getWorkingDirectory(
-                        "dataunit-" + debugVirtualPathSuffix);
-
-        final String relativeDataPath = resourceManager.relative(saveDirectory);
+    private DataUnit createDataUnit(Port pplPort) {
 
         final File loadPath;
-        final DataSource source = pplDataUnit.getDataSource();
+        final DataSource source = pplPort.getDataSource();
         if (source == null) {
             loadPath = null;
         } else {
@@ -172,8 +178,21 @@ public class ExecutionModel {
                     source.getDataPath()
             );
         }
-        return new DataUnit(pplDataUnit, debugVirtualPathSuffix,
-                saveDirectory, loadPath, relativeDataPath);
+
+        if (pplPort.isSaveDebugData()) {
+            final String debugVirtualPathSuffix =
+                    String.format("%03d", dataUnits.size());
+            final File saveDirectory = resourceManager.getWorkingDirectory(
+                    "dataunit-" + debugVirtualPathSuffix);
+            final String relativeDataPath = resourceManager.relative(
+                    saveDirectory);
+            return new DataUnit(pplPort, debugVirtualPathSuffix,
+                    saveDirectory, loadPath, relativeDataPath);
+        } else {
+            return new DataUnit(pplPort, loadPath);
+        }
+
+
     }
 
 }

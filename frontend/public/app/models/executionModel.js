@@ -52,6 +52,8 @@ define([
                 model.execution.status.running = true;
                 break;
         }
+        model.execution.deleteWorkingData = jsonld.getBoolean(resource,
+            'http://linkedpipes.com/ontology/deleteWorkingData');
     }
 
     /**
@@ -364,6 +366,14 @@ define([
         return !this.data.execution.status.running;
     };
 
+    service.hasWorkingData = function() {
+        if (this.data.execution.deleteWorkingData === true) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     service.getDataUnit = function (component, bindingName) {
         for (var index in component.dataUnits) {
             var dataUnit = this.data.dataUnits[component.dataUnits[index]];
@@ -389,6 +399,7 @@ define([
                         'components': {},
                         'dataUnits': {},
                         'metadata': {
+                            'hasWorkingData' : void 0
                         },
                         'execution': {
                             'status': {

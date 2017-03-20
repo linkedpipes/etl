@@ -68,7 +68,7 @@ public class DataUnitManager {
             try {
                 container.close();
             } catch (ExecutorException ex) {
-                LOG.info("Can't close data unit: {}", ex);
+                LOG.info("Can't closeRepository data unit: {}", ex);
             }
         }
     }
@@ -114,7 +114,9 @@ public class DataUnitManager {
                 throw new ExecutorException("Missing data unit: {} for {}",
                         dataUnit.getDataUnitIri(), component.getComponentIri());
             }
-            container.save();
+            if (dataUnit.getPort().isSaveDebugData()) {
+                container.save();
+            }
         }
     }
 

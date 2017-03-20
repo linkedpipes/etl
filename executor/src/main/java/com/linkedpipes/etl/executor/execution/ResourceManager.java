@@ -56,6 +56,10 @@ public class ResourceManager {
         return new File(executionRoot, "input");
     }
 
+    public File getRootWorkingDirectory() {
+        return new File(executionRoot, "working");
+    }
+
     /**
      * @param name
      * @return Path to working directory, does not create the directory.

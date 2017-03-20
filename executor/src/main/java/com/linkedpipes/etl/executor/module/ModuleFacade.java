@@ -259,7 +259,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             } catch (BundleException ex) {
                 LOG.error("Can't stop OSGI framework.", ex);
             } catch (InterruptedException ex) {
-                LOG.error("Interrupted when waiting for framework to close.",
+                LOG.error("Interrupted when waiting for framework to closeRepository.",
                         ex);
             }
         }

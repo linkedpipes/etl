@@ -123,6 +123,10 @@ class PipelineLoader {
                                 statement.getObject(), graph));
                         break;
                     default:
+                        output.add(valueFactory.createStatement(
+                                statement.getSubject(),
+                                statement.getPredicate(),
+                                statement.getObject(), graph));
                         break;
                 }
             }

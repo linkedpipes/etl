@@ -141,7 +141,7 @@ class DataUnitContainer {
         try {
             instance.close();
         } catch (LpException ex) {
-            throw new ExecutorException("Can't close data unit: {}",
+            throw new ExecutorException("Can't closeRepository data unit: {}",
                     metadata.getDataUnitIri(), ex);
         }
         this.status = Status.CLOSED;

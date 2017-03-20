@@ -94,6 +94,8 @@ class ExecutionModelV1 {
 
     private boolean pipelineCancelled = false;
 
+    private PipelineModel pplModel;
+
     public ExecutionModelV1(String iri, ResourceManager resourceManager) {
         this.executionIri = vf.createIRI(iri);
         this.resourceManager = resourceManager;
@@ -111,10 +113,16 @@ class ExecutionModelV1 {
     }
 
     public void bindToPipeline(PipelineModel pipeline) {
+        pplModel = pipeline;
         final List<Statement> statements = new ArrayList<>(1024);
         statements.addAll(pipelineStatements);
 
-        pipelineStatements.add(vf.createStatement(executionIri,
+        statements.add(vf.createStatement(executionIri,
+                vf.createIRI(LP_EXEC.HAS_DELETE_WORKING_DATA),
+                vf.createLiteral(pplModel.isDeleteWorkingData()),
+                executionIri));
+
+        statements.add(vf.createStatement(executionIri,
                 vf.createIRI(ETL_PREFIX + "pipeline"),
                 vf.createIRI(pipeline.getIri()),
                 executionIri));
@@ -235,30 +243,36 @@ class ExecutionModelV1 {
     public void onComponentBegin(ExecutionModel.Component component) {
         final int index = ++eventCounter;
         final IRI eventIri = createEventIri(index);
-        final List<Statement> eventStatements =
+        final List<Statement> statements =
                 createBaseEvent(eventIri, index, "Execution started.");
         //
-        eventStatements.add(vf.createStatement(eventIri, RDF.TYPE,
+        statements.add(vf.createStatement(eventIri, RDF.TYPE,
                 vf.createIRI(LP_PREFIX + "events/ComponentBegin"),
                 executionIri));
-        eventStatements.add(vf.createStatement(eventIri,
+        statements.add(vf.createStatement(eventIri,
                 vf.createIRI("http://linkedpipes.com/ontology/component"),
                 vf.createIRI(component.getComponentIri()),
                 executionIri));
-        // Add information about data units.
+        // Add information about data units - so we can see debug data.
         for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
             final IRI dataUnitIri = vf.createIRI(dataUnit.getDataUnitIri());
-            eventStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
+            if (pplModel.isDeleteWorkingData()) {
+                continue;
+            }
+            statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
                     vf.createLiteral(dataUnit.getRelativeDataPath()),
                     executionIri));
-            eventStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
+            if (!dataUnit.getPort().isSaveDebugData()) {
+                continue;
+            }
+            statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/debug"),
                     vf.createLiteral(dataUnit.getVirtualDebugPath()),
                     executionIri));
         }
         //
-        eventsStatements.add(eventStatements);
+        eventsStatements.add(statements);
         componentStatus.put(component.getComponentIri(), Status.RUNNING);
         lastChange = new Date();
         writeToDisk();
@@ -287,11 +301,17 @@ class ExecutionModelV1 {
     public void onComponentMapped(ExecutionModel.Component component) {
         componentStatus.put(component.getComponentIri(), Status.MAPPED);
         for (ExecutionModel.DataUnit dataUnit : component.getDataUnits()) {
+            if (pplModel.isDeleteWorkingData()) {
+                continue;
+            }
             final IRI dataUnitIri = vf.createIRI(dataUnit.getDataUnitIri());
             pipelineStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
                     vf.createLiteral(dataUnit.getRelativeDataPath()),
                     executionIri));
+            if (!dataUnit.getPort().isSaveDebugData()) {
+                continue;
+            }
             pipelineStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/debug"),
                     vf.createLiteral(dataUnit.getVirtualDebugPath()),

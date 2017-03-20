@@ -53,6 +53,8 @@ class Unpacker {
 
     private static IRI HAS_BINDING;
 
+    private static IRI HAS_SAVE_DEBUG_DATA;
+
     private static IRI HAS_ORDER;
 
     private static IRI HAS_EXEC_TYPE;
@@ -86,6 +88,8 @@ class Unpacker {
         RUN_AFTER = vf.createIRI("http://linkedpipes.com/ontology/RunAfter");
 
         HAS_BINDING = vf.createIRI("http://linkedpipes.com/ontology/binding");
+        HAS_SAVE_DEBUG_DATA = vf.createIRI(
+                "http://linkedpipes.com/ontology/saveDebugData");
         HAS_ORDER =
                 vf.createIRI("http://linkedpipes.com/ontology/executionOrder");
         HAS_EXEC_TYPE =
@@ -592,6 +596,13 @@ class Unpacker {
             }
         }
 
+        metadata.add(vf.createIRI(
+                "http://linkedpipes.com/ontology/deleteWorkingData"),
+                vf.createLiteral(options.isDeleteWorkingDirectory()));
+
+        metadata.add(HAS_SAVE_DEBUG_DATA,
+                vf.createLiteral(options.isSaveDebugData()));
+
         //
         pipeline.add(
                 vf.createIRI(
@@ -651,6 +662,23 @@ class Unpacker {
             ));
         });
         pipelineObject.addAll(toAdd);
+    }
+
+    private void setMode() {
+        pipelineObject.getTyped(OUTPUT, INPUT).forEach((port) -> {
+            port.add(HAS_SAVE_DEBUG_DATA, vf.createLiteral(
+                    options.isSaveDebugData()
+            ));
+        });
+
+        final Collection<Statement> toAdd = new LinkedList<>();
+        toAdd.add(vf.createStatement(pipelineIri, vf.createIRI(
+                "http://linkedpipes.com/ontology/deleteWorkingData"),
+                vf.createLiteral(options.isDeleteWorkingDirectory()),
+                pipelineIri
+        ));
+        pipelineObject.addAll(toAdd);
+
     }
 
     private Collection<Statement> collect() {
@@ -732,6 +760,8 @@ class Unpacker {
         unpacker.addComponentTypeToJarType();
 
         unpacker.referenceConnectionsFromPipeline();
+
+        unpacker.setMode();
 
         // Return collected pipeline.
         return unpacker.collect();

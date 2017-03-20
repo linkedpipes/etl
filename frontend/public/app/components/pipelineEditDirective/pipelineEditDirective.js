@@ -63,6 +63,9 @@ define([
             'panning': false,
             'mapping': {
                 'DOM': void 0
+            },
+            'execute': {
+                'DOM': void 0
             }
         },
         /**
@@ -105,6 +108,14 @@ define([
         return this.componentMenu.mapping.DOM;
     };
 
+    service.getComponentMenuExecuteDom = function() {
+        if (this.componentMenu.execute.DOM === undefined) {
+            this.componentMenu.execute.DOM = jQuery('#execute');
+        }
+        return this.componentMenu.execute.DOM;
+    };
+
+
     service.getCanvasDom = function() {
         if (this.canvas.DOM === undefined) {
             this.canvas.DOM = jQuery('#canvas');
@@ -146,10 +157,16 @@ define([
         this.componentMenu.view = view;
         this.componentMenu.component = component;
         this.componentMenu.visible = true;
-        // Mapping
-        if (this.API.mappingAvailable(component)) {
-            this.getComponentMenuMappingDom().css('display', 'inline');
+        // Mapping and execution.
+        if (this.API.debugFromAvailable()) {
+            this.getComponentMenuExecuteDom().css('display', 'inline');
+            if (this.API.mappingAvailable(component)) {
+                this.getComponentMenuMappingDom().css('display', 'inline');
+            } else {
+                this.getComponentMenuMappingDom().css('display', 'none');
+            }
         } else {
+            this.getComponentMenuExecuteDom().css('display', 'none');
             this.getComponentMenuMappingDom().css('display', 'none');
         }
         // Create template.

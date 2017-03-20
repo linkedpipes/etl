@@ -55,6 +55,11 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
+                                <md-button ng-click="onExecuteWithoutDebugData(item)">
+                                    <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon> Execute without debug data
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
                                 <md-button ng-click="onCopy(item)">
                                     <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy
                                 </md-button>
@@ -82,8 +87,13 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
+                                <md-button ng-click="onExecuteWithoutDebugData(item)">
+                                    <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon> Execute without debug data
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
                                 <md-button ng-click="onExport(item, $event)" aria-label="Export">
-                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Export
+                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download without credentials
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>

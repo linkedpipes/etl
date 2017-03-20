@@ -24,6 +24,8 @@ public class Port implements RdfLoader.Loadable<String> {
 
     private DataSource dataSource;
 
+    private boolean saveDebugData;
+
     public Port(String iri, Component component) {
         this.iri = iri;
         this.owner = component;
@@ -45,6 +47,10 @@ public class Port implements RdfLoader.Loadable<String> {
         return types.contains(LP_PIPELINE.INPUT);
     }
 
+    public boolean isSaveDebugData() {
+        return saveDebugData;
+    }
+
     @Override
     public RdfLoader.Loadable load(String predicate, String object)
             throws RdfUtilsException {
@@ -58,6 +64,9 @@ public class Port implements RdfLoader.Loadable<String> {
             case LP_EXEC.HAS_SOURCE:
                 dataSource = new DataSource();
                 return dataSource;
+            case LP_EXEC.HAS_SAVE_DEBUG_DATA:
+                saveDebugData = object.toLowerCase().equals("true");
+                return null;
             default:
                 return null;
         }

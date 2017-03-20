@@ -48,9 +48,21 @@ public final class LP_EXEC {
             "http://linkedpipes.com/ontology/dataSource";
 
     /**
+     * If true save debug data.
+     */
+    public static final String HAS_SAVE_DEBUG_DATA =
+            "http://linkedpipes.com/ontology/saveDebugData";
+
+    /**
      * Component has a reference to the configuration entity.
      */
     public static final String HAS_CONFIGURATION = PREFIX + "configuration";
+
+    /**
+     * Delete working data after pipeline execution.
+     */
+    public static final String HAS_DELETE_WORKING_DATA = PREFIX +
+            "deleteWorkingData";
 
     /**
      * Represent ordering of elements.
