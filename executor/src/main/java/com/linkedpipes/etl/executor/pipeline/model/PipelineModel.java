@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.executor.pipeline;
+package com.linkedpipes.etl.executor.pipeline.model;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
@@ -12,7 +12,7 @@ import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 import java.util.*;
 
 /**
- * Represent key aspects of the pipeline in form of POJO.
+ * Loaded from RDF represent pipeline model.
  */
 public class PipelineModel implements RdfLoader.Loadable<String> {
 

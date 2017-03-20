@@ -12,6 +12,7 @@ import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

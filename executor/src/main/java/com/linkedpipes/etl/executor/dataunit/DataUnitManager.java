@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -6,7 +6,7 @@ import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.Execution;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 
 /**
  * Interface of component executor. The component executor is responsible

@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.execution.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfFormatter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 

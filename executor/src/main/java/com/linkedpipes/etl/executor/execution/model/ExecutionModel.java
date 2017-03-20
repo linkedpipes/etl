@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.execution.model;
 
 import com.linkedpipes.etl.executor.execution.ResourceManager;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 
 import java.io.File;
 import java.util.*;

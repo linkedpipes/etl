@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;

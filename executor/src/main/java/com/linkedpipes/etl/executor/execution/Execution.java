@@ -7,7 +7,7 @@ import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.execution.model.ExecutionOverviewModel;
 import com.linkedpipes.etl.executor.execution.model.ExecutionStatusMonitor;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

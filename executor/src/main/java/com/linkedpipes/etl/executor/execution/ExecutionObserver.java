@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.execution;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 
 public interface ExecutionObserver {
 

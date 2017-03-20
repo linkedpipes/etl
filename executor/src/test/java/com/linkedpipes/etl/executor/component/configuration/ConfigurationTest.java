@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.*;
 import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
