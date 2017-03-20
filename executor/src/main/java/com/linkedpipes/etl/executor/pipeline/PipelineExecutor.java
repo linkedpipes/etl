@@ -12,7 +12,8 @@ import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
-import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -194,9 +195,9 @@ public class PipelineExecutor {
     }
 
     private void loadComponents() throws ExecutorException {
-        for (PipelineModel.Component component :
+        for (Component component :
                 pipeline.getModel().getComponents()) {
-            if (!component.isLoadInstance()) {
+            if (!shouldLoadInstanceForComponent(component)) {
                 continue;
             }
             final ManageableComponent instance;
@@ -212,8 +213,12 @@ public class PipelineExecutor {
         }
     }
 
+    private boolean shouldLoadInstanceForComponent(Component component) {
+        return component.getExecutionType() == ExecutionType.EXECUTE;
+    }
+
     private void executeComponents() {
-        for (PipelineModel.Component pplComponent
+        for (Component pplComponent
                 : pipeline.getModel().getComponents()) {
             if (!executeComponent(pplComponent)) {
                 break;
@@ -228,7 +233,7 @@ public class PipelineExecutor {
      * @param pplComponent
      * @return False if execution failed.
      */
-    private boolean executeComponent(PipelineModel.Component pplComponent) {
+    private boolean executeComponent(Component pplComponent) {
         try {
             executor = getExecutor(pplComponent);
         } catch (ExecutorException ex) {
@@ -246,7 +251,7 @@ public class PipelineExecutor {
         return true;
     }
 
-    private ComponentExecutor getExecutor(PipelineModel.Component component)
+    private ComponentExecutor getExecutor(Component component)
             throws ExecutorException {
         final ManageableComponent instance =
                 componentsInstances.get(component.getIri());

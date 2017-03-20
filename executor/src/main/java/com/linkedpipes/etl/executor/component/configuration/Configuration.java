@@ -2,7 +2,8 @@ package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
@@ -44,19 +45,19 @@ public class Configuration {
      * @param pipeline Pipeline with definitions.
      */
     public static void prepareConfiguration(String iri,
-            PipelineModel.Component component, RdfSource runtimeSource,
+            Component component, RdfSource runtimeSource,
             String runtimeGraph, RdfSource.TypedTripleWriter writer,
             Pipeline pipeline)
             throws ExecutorException {
         final List<EntityReference> references = new ArrayList<>(3);
-        final PipelineModel.ConfigurationDescription description =
+        final ConfigurationDescription description =
                 component.getConfigurationDescription();
         final RdfSource pplSource = pipeline.getSource();
-        final String configurationType = description.getConfigurationType();
+        final String configurationType = description.getDescribedType();
         // Get definitionGraph and resource for each configuration.
-        for (PipelineModel.Configuration configuration
+        for (com.linkedpipes.etl.executor.pipeline.model.Configuration configuration
                 : component.getConfigurations()) {
-            final String graph = configuration.getConfigurationGraph();
+            final String graph = configuration.getGraph();
             final String query = getQueryForConfiguration(
                     configurationType, graph);
             final String resource;

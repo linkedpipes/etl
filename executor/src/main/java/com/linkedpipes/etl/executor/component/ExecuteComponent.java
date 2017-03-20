@@ -11,7 +11,7 @@ import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
@@ -37,7 +37,7 @@ class ExecuteComponent implements ComponentExecutor {
 
     private final Pipeline pipeline;
 
-    private final PipelineModel.Component pplComponent;
+    private final Component pplComponent;
 
     private final ExecutionModel.Component execComponent;
 
@@ -50,7 +50,7 @@ class ExecuteComponent implements ComponentExecutor {
     public ExecuteComponent(
             Pipeline pipeline,
             ExecutionObserver execution,
-            PipelineModel.Component component,
+            Component component,
             ExecutionModel.Component execComponent,
             ManageableComponent instance) {
         this.pipeline = pipeline;

@@ -6,7 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
-import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.*;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
@@ -118,9 +118,9 @@ class ExecutionModelV1 {
                 vf.createIRI(ETL_PREFIX + "pipeline"),
                 vf.createIRI(pipeline.getIri()),
                 executionIri));
-        for (PipelineModel.Component component : pipeline.getComponents()) {
+        for (Component component : pipeline.getComponents()) {
             if (component.getExecutionType() ==
-                    PipelineModel.ExecutionType.SKIP) {
+                    ExecutionType.SKIP) {
                 continue;
             }
             final IRI componentIri = vf.createIRI(component.getIri());
@@ -132,12 +132,11 @@ class ExecutionModelV1 {
                     executionIri));
             statements.add(vf.createStatement(componentIri,
                     vf.createIRI(LP_PREFIX + "order"),
-                    vf.createLiteral(component.getOrder()),
+                    vf.createLiteral(component.getExecutionOrder()),
                     executionIri));
-            for (PipelineModel.DataUnit dataUnit : component.getDataUnits()) {
-                final IRI dataUnitIri = vf.createIRI(dataUnit.getIri());
-                statements
-                        .add(vf.createStatement(componentIri,
+            for (Port port : component.getPorts()) {
+                final IRI dataUnitIri = vf.createIRI(port.getIri());
+                statements.add(vf.createStatement(componentIri,
                                 vf.createIRI(ETL_PREFIX + "dataUnit"),
                                 dataUnitIri, executionIri));
                 statements.add(vf.createStatement(dataUnitIri, RDF.TYPE,
@@ -145,11 +144,10 @@ class ExecutionModelV1 {
                         executionIri));
                 statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                         ETL_PREFIX + "binding"),
-                        vf.createLiteral(dataUnit.getBinding()),
+                        vf.createLiteral(port.getBinding()),
                         executionIri));
                 //
-                final PipelineModel.DataSource source =
-                        dataUnit.getDataSource();
+                final DataSource source =port.getDataSource();
                 if (source != null) {
                     statements.add(vf.createStatement(dataUnitIri,
                             vf.createIRI(LP_EXEC.HAS_EXECUTION),
@@ -157,7 +155,7 @@ class ExecutionModelV1 {
                             executionIri));
                     statements.add(vf.createStatement(dataUnitIri,
                             vf.createIRI(LP_EXEC.HAS_LOAD_PATH),
-                            vf.createLiteral(source.getLoadPath()),
+                            vf.createLiteral(source.getDataPath()),
                             executionIri));
                 }
             }

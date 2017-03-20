@@ -2,6 +2,7 @@ package com.linkedpipes.etl.executor.pipeline;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
@@ -141,7 +142,7 @@ public class Pipeline {
      * @return Writer for given configuration.
      */
     public RdfSource.TypedTripleWriter setConfiguration(
-            PipelineModel.Component component, String graph)
+            Component component, String graph)
             throws ExecutorException {
         LOG.info("setConfiguration {} {}", component.getIri(), graph);
         // TODO Save reference to the entity.

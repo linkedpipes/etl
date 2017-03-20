@@ -1,7 +1,10 @@
 package com.linkedpipes.etl.executor.execution.model;
 
 import com.linkedpipes.etl.executor.execution.ResourceManager;
+import com.linkedpipes.etl.executor.pipeline.model.DataSource;
+import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.Port;
 
 import java.io.File;
 import java.util.*;
@@ -16,7 +19,8 @@ public class ExecutionModel {
      */
     public class DataUnit {
 
-        private final PipelineModel.DataUnit dataUnit;
+        private final Port
+                dataUnit;
 
         private final String debugVirtualPathSuffix;
 
@@ -26,7 +30,8 @@ public class ExecutionModel {
 
         private final String relativeDataPath;
 
-        public DataUnit(PipelineModel.DataUnit dataUnit,
+        public DataUnit(
+                Port dataUnit,
                 String debugVirtualPathSuffix,
                 File saveDirectory,
                 File loadDirectory,
@@ -64,14 +69,15 @@ public class ExecutionModel {
 
         private final String iri;
 
-        private final PipelineModel.Component component;
+        private final com.linkedpipes.etl.executor.pipeline.model.Component
+                component;
 
         private final List<DataUnit> dataUnits = new ArrayList<>(4);
 
         private ExecutionStatus status;
 
         public Component(String iri,
-                PipelineModel.Component component) {
+                com.linkedpipes.etl.executor.pipeline.model.Component component) {
             this.iri = iri;
             this.component = component;
         }
@@ -105,16 +111,17 @@ public class ExecutionModel {
         this.iri = iri;
     }
 
-    public Component getComponent(PipelineModel.Component component) {
+    public Component getComponent(
+            com.linkedpipes.etl.executor.pipeline.model.Component component) {
         return components.get(component.getIri());
     }
 
     public List<DataUnit> getDataUnitsForInitialization() {
         final List<DataUnit> usedDataUnits = new LinkedList<>();
         for (Component component : components.values()) {
-            final PipelineModel.ExecutionType execType =
+            final ExecutionType execType =
                     component.component.getExecutionType();
-            if (execType == PipelineModel.ExecutionType.SKIP) {
+            if (execType == ExecutionType.SKIP) {
                 continue;
             }
             usedDataUnits.addAll(component.getDataUnits());
@@ -123,14 +130,15 @@ public class ExecutionModel {
     }
 
     public void initialize(PipelineModel pipeline) {
-        for (PipelineModel.Component pplComponent : pipeline.getComponents()) {
+        for (com.linkedpipes.etl.executor.pipeline.model.Component pplComponent : pipeline.getComponents()) {
             final Component execComponent = createComponent(pplComponent);
             components.put(pplComponent.getIri(), execComponent);
             initializeComponent(execComponent);
         }
     }
 
-    private Component createComponent(PipelineModel.Component pplComponent) {
+    private Component createComponent(
+            com.linkedpipes.etl.executor.pipeline.model.Component pplComponent) {
         final String componentIri = iri + "/component/" + components.size();
         final Component execComponent =
                 new Component(componentIri, pplComponent);
@@ -138,15 +146,14 @@ public class ExecutionModel {
     }
 
     private void initializeComponent(Component execComponent) {
-        for (PipelineModel.DataUnit pplDataUnit :
-                execComponent.component.getDataUnits()) {
+        for (Port pplDataUnit : execComponent.component.getPorts()) {
             final DataUnit execDataUnit = createDataUnit(pplDataUnit);
             execComponent.dataUnits.add(execDataUnit);
             dataUnits.put(pplDataUnit.getIri(), execDataUnit);
         }
     }
 
-    private DataUnit createDataUnit(PipelineModel.DataUnit pplDataUnit) {
+    private DataUnit createDataUnit(Port pplDataUnit) {
         final String debugVirtualPathSuffix =
                 String.format("%03d", dataUnits.size());
 
@@ -156,13 +163,13 @@ public class ExecutionModel {
         final String relativeDataPath = resourceManager.relative(saveDirectory);
 
         final File loadPath;
-        final PipelineModel.DataSource source = pplDataUnit.getDataSource();
+        final DataSource source = pplDataUnit.getDataSource();
         if (source == null) {
             loadPath = null;
         } else {
             loadPath = resourceManager.resolveExecutionPath(
                     source.getExecution(),
-                    source.getLoadPath()
+                    source.getDataPath()
             );
         }
         return new DataUnit(pplDataUnit, debugVirtualPathSuffix,

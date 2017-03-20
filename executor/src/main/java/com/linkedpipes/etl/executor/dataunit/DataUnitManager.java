@@ -4,13 +4,14 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
-import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -161,20 +162,75 @@ public class DataUnitManager {
 
     private boolean isDataUnitUsed(ExecutionModel.Component component,
             ExecutionModel.DataUnit dataUnit) throws ExecutorException {
-        final PipelineModel.Component pplComponent =
+        final Component pplComponent =
                 pipeline.getComponent(component.getComponentIri());
         if (pplComponent == null) {
             throw new ExecutorException(
                     "Missing component definition: {} for {}",
                     component.getComponentIri());
         }
-        final PipelineModel.DataUnit pplDataUnit =
-                pplComponent.getDataUnit(dataUnit.getDataUnitIri());
-        if (pplDataUnit == null) {
+        final Port pplPort =
+                pplComponent.getPort(dataUnit.getDataUnitIri());
+        if (pplPort == null) {
             throw new ExecutorException("Missing definition: {} for {}",
                     dataUnit.getDataUnitIri(), component.getComponentIri());
         }
-        return pipeline.isDataUnitUsed(pplComponent, pplDataUnit);
+        return isPortUsed(pplComponent, pplPort);
     }
+
+    public boolean isPortUsed(Component component, Port port)
+            throws ExecutorException {
+        switch (component.getExecutionType()) {
+            case EXECUTE:
+                return true;
+            case SKIP:
+                return false;
+            case MAP:
+                break;
+            default:
+                throw new ExecutorException("Invalid execution type: {} ",
+                        component.getExecutionType());
+        }
+        if (port.isInput()) {
+            return false;
+        }
+        for (Connection connection : findConnections(component, port)) {
+            final Component source =
+                    pipeline.getComponent(connection.getSourceComponent());
+            if (source.getExecutionType() == ExecutionType.EXECUTE) {
+                return true;
+            }
+            final Component target =
+                    pipeline.getComponent(connection.getTargetComponent());
+            if (target.getExecutionType() == ExecutionType.EXECUTE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Collection<Connection> findConnections(
+            Component component, Port port) {
+        final Collection<Connection> output = new LinkedList<>();
+        final String componentIri = component.getIri();
+        final String binding = port.getBinding();
+        for (Connection connection : pipeline.getConnections()) {
+            if (!connection.isDataConnection()) {
+                continue;
+            }
+            if (connection.getSourceComponent().equals(componentIri) &&
+                    connection.getSourceBinding().equals(binding)) {
+                output.add(connection);
+                continue;
+            }
+            if (connection.getTargetComponent().equals(componentIri) &&
+                    connection.getTargetBinding().equals(binding)) {
+                output.add(connection);
+                continue;
+            }
+        }
+        return output;
+    }
+
 
 }

@@ -1,5 +1,8 @@
 package com.linkedpipes.etl.executor.pipeline;
 
+import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.Connection;
+import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
@@ -29,39 +32,39 @@ public class PipelineTest {
         Assert.assertEquals(2, model.getComponents().size());
         Assert.assertEquals(1, model.getConnections().size());
         //
-        final PipelineModel.Component component1 =
+        final Component component1 =
                 model.getComponents().get(0);
         Assert.assertEquals("http://pipeline/component/1",
                 component1.getIri());
         Assert.assertEquals("component_1_path",
                 component1.getJarPath());
-        Assert.assertEquals(PipelineModel.ExecutionType.EXECUTE,
+        Assert.assertEquals(ExecutionType.EXECUTE,
                 component1.getExecutionType());
         Assert.assertEquals(2,
                 component1.getConfigurations().size());
         Assert.assertEquals("http://pipeline/configuration/1/1",
-                component1.getConfigurations().get(0).getConfigurationGraph());
+                component1.getConfigurations().get(0).getGraph());
         Assert.assertEquals("http://pipeline/configuration/1/2",
-                component1.getConfigurations().get(1).getConfigurationGraph());
+                component1.getConfigurations().get(1).getGraph());
         Assert.assertEquals(2,
-                component1.getDataUnits().size());
+                component1.getPorts().size());
         //
-        final PipelineModel.Component component2 =
+        final Component component2 =
                 model.getComponents().get(1);
         Assert.assertEquals("http://pipeline/component/2",
                 component2.getIri());
         Assert.assertEquals("component_2_path",
                 component2.getJarPath());
-        Assert.assertEquals(PipelineModel.ExecutionType.EXECUTE,
+        Assert.assertEquals(ExecutionType.EXECUTE,
                 component2.getExecutionType());
         Assert.assertEquals(1,
                 component2.getConfigurations().size());
         Assert.assertEquals("http://pipeline/configuration/2/1",
-                component2.getConfigurations().get(0).getConfigurationGraph());
+                component2.getConfigurations().get(0).getGraph());
         Assert.assertEquals(1,
-                component2.getDataUnits().size());
+                component2.getPorts().size());
         //
-        final PipelineModel.Connection connection =
+        final Connection connection =
                 model.getConnections().get(0);
         Assert.assertEquals(
                 "http://linkedpipes.com/ontology/components/1/dataunit/2",
