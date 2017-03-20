@@ -15,6 +15,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "json", "jsonld", "context"
         ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-jsontojsonld"},
         "http://linkedpipes.com/ontology/configurationDescription": [
             {"@id": "http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc"}
         ]
