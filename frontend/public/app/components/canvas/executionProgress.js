@@ -144,7 +144,7 @@ define([
                 this.$mdDialog.alert()
                 .parent(angular.element(document.querySelector('body')))
                 .clickOutsideToClose(true)
-                .title('There is no debug content.')
+                .title('There is no debug data.')
                 .textContent('')
                 .ok('Ok')
             );

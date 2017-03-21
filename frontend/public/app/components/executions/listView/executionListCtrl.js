@@ -249,16 +249,13 @@ define([
                     execution.metadata.executionTypeLabel = '';
                     break;
             }
-
-            console.log(execution.metadata);
             if (execution.metadata.deleteWorkingData === "true") {
-                execution.metadata.executionTypeLabel += " (No working data)"
+                execution.metadata.executionTypeLabel += " (No working data)";
             } else {
                 if (execution.metadata.saveDebugData === "false") {
-                    execution.metadata.executionTypeLabel += " (No debug data)"
+                    execution.metadata.executionTypeLabel += " (No debug data)";
                 }
             }
-
         };
 
         $scope.repository = jsonldService.createRepository({
