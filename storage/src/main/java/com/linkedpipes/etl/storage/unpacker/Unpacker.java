@@ -536,22 +536,6 @@ class Unpacker {
         }
     }
 
-    /**
-     * @param component
-     * @param binding
-     * @return Port of given binding name for given component.
-     */
-    private static RdfObjects.Entity getPort(
-            RdfObjects.Entity component, Value binding) {
-        for (RdfObjects.Entity port : component.getReferences(HAS_PORT)) {
-            if (port.getProperty(HAS_BINDING).equals(binding)) {
-                return port;
-            }
-        }
-        // TODO Use custom exception !
-        throw new RuntimeException("Missing port.");
-    }
-
     private void addExecutionMetadata() {
         final RdfObjects.Entity pipeline =
                 pipelineObject.getTypeSingle(PIPELINE);
