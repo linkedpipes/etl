@@ -320,10 +320,8 @@ class Unpacker {
 
     /**
      * Use connections and runAfter to build up a dependency tree.
-     *
-     * @return
      */
-    private Map<RdfObjects.Entity, Set<RdfObjects.Entity>> buildDependencies() {
+    private void buildDependencies() {
         dependencies = new TreeMap<>();
         pipelineObject.getTyped(CONNECTION, RUN_AFTER).forEach((connection) -> {
             final RdfObjects.Entity source =
@@ -347,7 +345,6 @@ class Unpacker {
                 dependencies.put(component, Collections.EMPTY_SET);
             }
         });
-        return dependencies;
     }
 
     private void buildMappedSet() {
@@ -715,8 +712,7 @@ class Unpacker {
 
         // Build dependencies list from connections. The component IRI is used
         // to sort the dependencies, so it must not change after this point.
-        final Map<RdfObjects.Entity, Set<RdfObjects.Entity>> dependencies =
-                unpacker.buildDependencies();
+        unpacker.buildDependencies();
 
         // Build list of mapped components.
         unpacker.buildMappedSet();
