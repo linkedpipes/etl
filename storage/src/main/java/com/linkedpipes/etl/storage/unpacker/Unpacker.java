@@ -632,6 +632,32 @@ class Unpacker {
         });
     }
 
+    /**
+     * Remove connections that are not used in pipeline execution.
+     *
+     * Must be called after {@link #fillExecutionType()}.
+     */
+    private void removeUnusedConnections() {
+        // Find all connection that has as a source component,
+        // that is not executed.
+        List<RdfObjects.Entity> toDelete = new LinkedList<>();
+        Collection<RdfObjects.Entity> connections =
+                pipelineObject.getTyped(CONNECTION);
+        connections.forEach((connection) -> {
+            RdfObjects.Entity source = connection.getReference(vf.createIRI(
+                    "http://linkedpipes.com/ontology/sourceComponent"));
+            RdfObjects.Entity execType =  source.getReference(HAS_EXEC_TYPE);
+            if (execType.getResource().stringValue().equals(
+                    "http://linkedpipes.com/resources/execution/type/skip")) {
+                toDelete.add(connection);
+            }
+        });
+        // And remove them.
+        for (RdfObjects.Entity entity : toDelete) {
+            pipelineObject.remove(entity);
+        }
+    }
+
     private void referenceConnectionsFromPipeline() {
         final Collection<Statement> toAdd = new LinkedList<>();
         pipelineObject.getTyped(CONNECTION, RUN_AFTER).forEach((connection) -> {
@@ -738,6 +764,8 @@ class Unpacker {
         unpacker.addRepositoryInfo();
 
         unpacker.addComponentTypeToJarType();
+
+        unpacker.removeUnusedConnections();
 
         unpacker.referenceConnectionsFromPipeline();
 
