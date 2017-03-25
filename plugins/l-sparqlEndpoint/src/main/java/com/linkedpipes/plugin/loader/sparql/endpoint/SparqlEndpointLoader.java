@@ -62,8 +62,8 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
 
     private void clearGraph(SPARQLRepository sparqlRepository)
             throws LpException {
-        try (final CloseableHttpClient httpclient = getHttpClient()) {
-            sparqlRepository.setHttpClient(httpclient);
+        try (final CloseableHttpClient client = getHttpClient()) {
+            sparqlRepository.setHttpClient(client);
             if (configuration.isClearDestinationGraph()) {
                 clearGraph(sparqlRepository,
                         configuration.getTargetGraphName());
@@ -75,15 +75,15 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
 
     private void loadData(SPARQLRepository sparqlRepository)
             throws LpException {
-        try (final CloseableHttpClient httpclient = getHttpClient()) {
-            sparqlRepository.setHttpClient(httpclient);
-            loadData(sparqlRepository);
+        try (final CloseableHttpClient client = getHttpClient()) {
+            sparqlRepository.setHttpClient(client);
+            loadDataFromRepository(sparqlRepository);
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't load data.", ex);
         }
     }
 
-    private void loadData(Repository repository) {
+    private void loadDataFromRepository(Repository repository) {
         final IRI remoteGraph = SimpleValueFactory.getInstance().createIRI(
                 configuration.getTargetGraphName());
         try (final RepositoryConnection remote = repository.getConnection();
