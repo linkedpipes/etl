@@ -22,6 +22,31 @@ import java.net.URL;
 
 public class FtpFiles implements Component, SequentialExecution {
 
+    class ProtocolLogger implements ProtocolCommandListener {
+
+        @Override
+        public void protocolCommandSent(ProtocolCommandEvent event) {
+            LOG.debug("sent: {}, {} -> {}", event.getCommand(),
+                    event.getMessage(), event.getReplyCode());
+        }
+
+        @Override
+        public void protocolReplyReceived(ProtocolCommandEvent event) {
+            if (isNegativeReply(event)) {
+                LOG.error("received: {} -> {}",
+                        event.getMessage(), event.getReplyCode());
+            } else {
+                LOG.debug("received: {} -> {}",
+                        event.getMessage(), event.getReplyCode());
+            }
+        }
+
+        private boolean isNegativeReply(ProtocolCommandEvent event) {
+            return event.getReplyCode() >= 400;
+        }
+
+    }
+
     private static final Logger LOG
             = LoggerFactory.getLogger(FtpFiles.class);
 
@@ -40,6 +65,8 @@ public class FtpFiles implements Component, SequentialExecution {
 
     @Component.Inject
     public ProgressReport progressReport;
+
+    private ProtocolLogger protocolLogger = new ProtocolLogger();
 
     @Override
     public void execute() throws LpException {
@@ -84,20 +111,7 @@ public class FtpFiles implements Component, SequentialExecution {
         client.setCopyStreamListener(new ProgressPrinter());
 
         // Debug.
-        client.addProtocolCommandListener(new ProtocolCommandListener() {
-
-            @Override
-            public void protocolCommandSent(ProtocolCommandEvent event) {
-                LOG.debug("sent: {}, {} -> {}", event.getCommand(),
-                        event.getMessage(), event.getReplyCode());
-            }
-
-            @Override
-            public void protocolReplyReceived(ProtocolCommandEvent event) {
-                LOG.debug("received: {}, {} -> {}", event.getCommand(),
-                        event.getMessage(), event.getReplyCode());
-            }
-        });
+        client.addProtocolCommandListener(protocolLogger);
 
         // Set time out.
         client.setDataTimeout(5000);
