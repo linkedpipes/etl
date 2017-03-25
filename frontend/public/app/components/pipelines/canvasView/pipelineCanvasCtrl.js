@@ -5,7 +5,6 @@ define([
     'app/components/canvas/pipelineCanvas',
     'app/components/canvas/executionProgress',
     'app/components/pipelineEditDirective/pipelineEditDirective',
-    'app/components/templates/templatesRepository',
     'app/components/pipelines/pipelineModelService',
     'app/components/templates/selectDialog/templateSelectDialog',
     'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
@@ -17,7 +16,6 @@ define([
              canvasPipelineFactory,
              executionProgressFactory,
              pipelineEditDirective,
-             templatesRepositoryFactory,
              pipelineModelService,
              selectTemplateDialog,
              importPipelineDialog,
@@ -757,7 +755,6 @@ define([
         canvasPipelineFactory(app);
         executionProgressFactory(app);
         pipelineEditDirective(app);
-        templatesRepositoryFactory(app);
         pipelineModelService(app);
         selectTemplateDialog(app);
         importPipelineDialog(app);
