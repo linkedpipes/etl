@@ -35,6 +35,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         "Input": "http://linkedpipes.com/ontology/Input",
         "Output": "http://linkedpipes.com/ontology/Output",
         "Port": "http://linkedpipes.com/ontology/Port",
+        "RuntimeConfiguration": "http://linkedpipes.com/ontology/RuntimeConfiguration",
+        "TaskList": "http://linkedpipes.com/ontology/TaskList",
         "supportControl": "http://linkedpipes.com/ontology/supportControl",
         "Pipeline" : "http://linkedpipes.com/ontology/Pipeline",
         "Template": "http://etl.linkedpipes.com/ontology/Template",
@@ -107,6 +109,9 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
 
         const inputs = [];
         const outputs = [];
+        let inputDataPortsCount = 0;
+        let runtimeConfigurationPortsCount = 0;
+        let taskListPortsCount = 0;
         jsonld.r.getReferences(graph, resource, LP.port).forEach((port) => {
             const portItem = {
                 "label": i18.str(jsonld.r.getString(port, SKOS.prefLabel)),
@@ -118,6 +123,15 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                 if (item === LP.Port) {
                     return;
                 } else if (item === LP.Input) {
+                    inputs.push(portItem);
+                    inputDataPortsCount++;
+                } else if (item === LP.RuntimeConfiguration) {
+                    portItem["isRuntimeConfiguration"] = true;
+                    inputs.push(portItem);
+                    runtimeConfigurationPortsCount++;
+                } else if (item === LP.TaskList) {
+                    taskListPortsCount++;
+                    portItem["isTaskList"] = true;
                     inputs.push(portItem);
                 } else if (item === LP.Output) {
                     outputs.push(portItem);
@@ -146,8 +160,12 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             "core": true,
             "supportControl": supportControl,
             "infoLink": infoLink,
-            "search": search
-
+            "search": search,
+            "isDisplayLabels" : {
+                "dataInput" :  inputDataPortsCount > 1,
+                "runtimeConfiguration" : runtimeConfigurationPortsCount > 1,
+                "taskList" : taskListPortsCount > 1
+            }
         };
     }
 

@@ -67,6 +67,10 @@ class Unpacker {
 
     private static IRI HAS_SOURCE;
 
+    private static Resource CONFIGURATION;
+
+    private static Resource TASKS;
+
     static {
         final ValueFactory vf = SimpleValueFactory.getInstance();
         PIPELINE = vf.createIRI("http://linkedpipes.com/ontology/Pipeline");
@@ -98,6 +102,9 @@ class Unpacker {
         OUTPUT = vf.createIRI("http://linkedpipes.com/ontology/Output");
         HAS_DISABLED = vf.createIRI("http://linkedpipes.com/ontology/disabled");
         HAS_SOURCE = vf.createIRI("http://linkedpipes.com/ontology/source");
+
+        CONFIGURATION = vf.createIRI("http://linkedpipes.com/ontology/RuntimeConfiguration");
+        TASKS = vf.createIRI("http://linkedpipes.com/ontology/TaskList");
     }
 
     private final IRI pipelineIri;
@@ -168,6 +175,14 @@ class Unpacker {
         this.pipelineObject = new RdfObjects(pipelineRdf.getStatements());
         this.options = options;
         this.configuration = configuration;
+    }
+
+    private Resource[] getPortTypes() {
+        return new Resource[]{INPUT, OUTPUT, CONFIGURATION, TASKS};
+    }
+
+    private Resource[] getConnectionTypes() {
+        return new Resource[]{CONNECTION, RUN_AFTER};
     }
 
     private String getExecutionSourceUrl(String executionIri) {
@@ -323,7 +338,7 @@ class Unpacker {
      */
     private void buildDependencies() {
         dependencies = new TreeMap<>();
-        pipelineObject.getTyped(CONNECTION, RUN_AFTER).forEach((connection) -> {
+        pipelineObject.getTyped(getConnectionTypes()).forEach((connection) -> {
             final RdfObjects.Entity source =
                     connection.getReference(vf.createIRI(
                             "http://linkedpipes.com/ontology/sourceComponent"));
@@ -660,7 +675,7 @@ class Unpacker {
 
     private void referenceConnectionsFromPipeline() {
         final Collection<Statement> toAdd = new LinkedList<>();
-        pipelineObject.getTyped(CONNECTION, RUN_AFTER).forEach((connection) -> {
+        pipelineObject.getTyped(getConnectionTypes()).forEach((connection) -> {
             toAdd.add(vf.createStatement(
                     pipelineIri,
                     HAS_CONNECTION,
@@ -672,7 +687,7 @@ class Unpacker {
     }
 
     private void setMode() {
-        pipelineObject.getTyped(OUTPUT, INPUT).forEach((port) -> {
+        pipelineObject.getTyped(getPortTypes()).forEach((port) -> {
             port.add(HAS_SAVE_DEBUG_DATA, vf.createLiteral(
                     options.isSaveDebugData()
             ));
