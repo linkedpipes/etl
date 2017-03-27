@@ -12,7 +12,8 @@ import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
+import java.io.File;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -60,9 +61,12 @@ public final class SparqlEndpointChunkedList implements Component,
 
     private TaskResultConsumer resultConsumer;
 
+    private Map<String, List<File>> inputFilesByName;
+
     @Override
     public void execute() throws LpException {
         initializeTaskLoader();
+        initializeInputFileMap();
         initializeExecutor();
         initializeConsumers();
         try {
@@ -80,29 +84,50 @@ public final class SparqlEndpointChunkedList implements Component,
         taskLoader.initialize();
     }
 
-    private void initializeConsumers() {
-        errorConsumer = new ErrorReportConsumer(errorOutputRdf);
-        resultConsumer = new TaskResultConsumer(outputRdf);
+    private void initializeInputFileMap() {
+        inputFilesByName = new HashMap<>();
+        for (FilesDataUnit.Entry entry : inputFiles) {
+            getOrCreate(inputFilesByName, entry.getFileName())
+                    .add(entry.toFile());
+        }
+    }
+
+    private <T> List<T> getOrCreate(Map<String, List<T>> map, String key) {
+        if (map.containsKey(key)) {
+            return map.get(key);
+        }
+        List<T> newList = new LinkedList<>();
+        map.put(key, newList);
+        return newList;
     }
 
     private void initializeExecutor() {
         LOG.info("Using {} executors", configuration.getUsedThreads());
         executorService = new ThreadPoolExecutor(
-                1, configuration.getUsedThreads(),
+                configuration.getUsedThreads(),
+                configuration.getUsedThreads(),
                 1, TimeUnit.MINUTES,
                 new LinkedBlockingQueue<>());
     }
 
     private void executeTasks() throws LpException {
-        LOG.info("Number of tasks: {}", taskLoader.getTasks().size());
-        LOG.info("Number of files: {}", inputFiles.size());
-        for (Task task : taskLoader.getTasks()) {
-            submitTask(task);
+        for (Map.Entry<String, List<Task>> entry
+                : groupTaskByEndpoint(taskLoader.getTasks()).entrySet()) {
+            LOG.info("Submitting {} task for {}", entry.getValue().size(),
+                    entry.getKey());
+            submitTasks(entry.getValue());
         }
+        LOG.info("executorService.shutdown");
         executorService.shutdown();
     }
 
+    private void initializeConsumers() {
+        errorConsumer = new ErrorReportConsumer(errorOutputRdf);
+        resultConsumer = new TaskResultConsumer(outputRdf);
+    }
+
     private void awaitExecutorShutdown() {
+        LOG.info("executorService.awaitTermination");
         while (true) {
             try {
                 if (executorService.awaitTermination(10, TimeUnit.SECONDS)) {
@@ -114,33 +139,21 @@ public final class SparqlEndpointChunkedList implements Component,
         }
     }
 
-    private void submitTask(Task task) throws LpException {
-        String fileNameFilter = task.getFileName();
-        for (FilesDataUnit.Entry entry : inputFiles) {
-            if (!entry.getFileName().equals(fileNameFilter)) {
-                continue;
-            }
-            waitForSpaceInQueue();
-            // For now there is just one file for task, in case of multiple
-            // files we still need to use a single task - ie. to have
-            // at most one thread working with given endpoint.
-            //
-            // TODO May cause concurrent reading of a single file.
-            //
-            Task taskInstance = createTask(task, entry);
-            executorService.submit(new TaskExecutor(taskInstance,
-                    errorConsumer, resultConsumer, progressReport,
-                    exceptionFactory, configuration.getExecutionTimeLimit()));
+    private Map<String, List<Task>> groupTaskByEndpoint(
+            Collection<Task> tasks) {
+        Map<String, List<Task>> endpointMap = new HashMap<>();
+        for (Task task : tasks) {
+            getOrCreate(endpointMap, task.getEndpoint()).add(task);
         }
+        return endpointMap;
     }
 
-    private Task createTask(Task task, FilesDataUnit.Entry entry)
-            throws LpException {
-        try {
-            return new Task(task, entry.toFile());
-        } catch (UnsupportedEncodingException ex) {
-            throw new LpException("Unsupported encoding exception.", ex);
-        }
+    private void submitTasks(List<Task> tasks) throws LpException {
+        waitForSpaceInQueue();
+        executorService.submit(new TaskExecutor(tasks,
+                errorConsumer, resultConsumer, progressReport,
+                exceptionFactory, configuration.getExecutionTimeLimit(),
+                inputFilesByName));
     }
 
     private void waitForSpaceInQueue() {
