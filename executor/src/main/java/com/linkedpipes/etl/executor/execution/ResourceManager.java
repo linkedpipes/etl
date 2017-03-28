@@ -2,10 +2,10 @@ package com.linkedpipes.etl.executor.execution;
 
 import java.io.File;
 
-public final class ResourceManager {
+public class ResourceManager {
 
     /**
-     * Root directory of other executions.
+     * Root directory of all executions.
      */
     private final File root;
 
@@ -22,28 +22,47 @@ public final class ResourceManager {
     }
 
     /**
-     * Path to the definition file.
+     * Search and return definition file.
      *
-     * @return
+     * @return Pipeline as given for execution.
      */
     public File getDefinitionFile() {
-        return new File(executionRoot, "definition" + File.separator
-                + "definition.jsonld");
+        final File directory = new File(executionRoot, "definition");
+        for (File file : directory.listFiles()) {
+            final String fileName = file.getName();
+            // @TODO Rename to pipeline
+            if (fileName.startsWith("definition")) {
+                return file;
+            }
+        }
+        return null;
     }
 
+    /**
+     * @param execution
+     * @param path
+     * @return Path to another execution.
+     */
     public File resolveExecutionPath(String execution, String path) {
         final String executionId = execution.substring(
                 execution.indexOf("executions/") + 11);
         return new File(root, executionId + "/" + path);
     }
 
+    /**
+     * @return Path to input directory, the directory may not exist.
+     */
     public File getInputDirectory() {
         return new File(executionRoot, "input");
     }
 
+    public File getRootWorkingDirectory() {
+        return new File(executionRoot, "working");
+    }
+
     /**
      * @param name
-     * @return Path to working directory, the directory may not exist.
+     * @return Path to working directory, does not create the directory.
      */
     public File getWorkingDirectory(String name) {
         counter += 1;
@@ -52,20 +71,38 @@ public final class ResourceManager {
         return working;
     }
 
-    public File getExecutionLogFile() {
+    public File getExecutionDebugLogFile() {
         final File file = new File(executionRoot, "log/execution.log");
         file.getParentFile().mkdir();
         return file;
     }
 
-    public File getPipelineFile() {
-        final File file = new File(executionRoot, "pipeline.jsonld");
+    public File getExecutionInfoLogFile() {
+        final File file = new File(executionRoot, "log/execution_info.log");
         file.getParentFile().mkdir();
         return file;
     }
 
-    public File getExecutionFile() {
+    /**
+     * @return Output file for the pipeline execution.
+     */
+    public File getPipelineFile() {
+        final File file = new File(executionRoot, "pipeline.trig");
+        file.getParentFile().mkdir();
+        return file;
+    }
+
+    /**
+     * @return Output file for original execution file.
+     */
+    public File getExecutionFileV1() {
         final File file = new File(executionRoot, "execution.jsonld");
+        file.getParentFile().mkdir();
+        return file;
+    }
+
+    public File getExecutionOverviewJsonFile() {
+        final File file = new File(executionRoot, "execution/overview.jsonld");
         file.getParentFile().mkdir();
         return file;
     }

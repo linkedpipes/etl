@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class FilesToRdfVocabulary {
 
     private static final String PREFIX

@@ -1,13 +1,12 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.NamedCell_V1;
+
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Configuration for {@link ParserXls}.
- *
- * @author Škoda Petr
  */
 public class ParserXlsConfig {
 

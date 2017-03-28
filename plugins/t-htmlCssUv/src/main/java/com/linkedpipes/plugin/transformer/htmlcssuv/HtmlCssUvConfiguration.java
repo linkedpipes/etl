@@ -1,14 +1,11 @@
 package com.linkedpipes.plugin.transformer.htmlcssuv;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
-
-/**
- */
-@RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Configuration")
+@RdfToPojo.Type(iri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Configuration")
 public class HtmlCssUvConfiguration {
 
     public enum ActionType {
@@ -68,32 +65,32 @@ public class HtmlCssUvConfiguration {
         SUBJECT_CLASS
     }
 
-    @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Action")
+    @RdfToPojo.Type( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#Action")
     public static class Action {
 
         /**
          * Name of action. This value is used to match named output on which
          * this query is executed.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#name")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#name")
         private String name = HtmlCssUv.SUBJECT_URI_TEMPLATE;
 
         /**
          * Determine type of an action.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#type")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#type")
         private ActionType type = ActionType.TEXT;
 
         /**
          * Data for action, based on {@link #type}.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#data")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#data")
         private String actionData = "";
 
         /**
          * Name out output, if any.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#output")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#output")
         private String outputName = "";
 
         public Action() {
@@ -133,27 +130,27 @@ public class HtmlCssUvConfiguration {
 
     }
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#action")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#action")
     private List<Action> actions = new LinkedList<>();
 
     /**
      * Can be null, in such case no value should be generated.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#class")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#class")
     private String classAsStr
             = "http://unifiedviews.eu/ontology/e-htmlCss/Page";
 
     /**
      * Can be null, in such case no value is generated.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#predicate")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#predicate")
     private String hasPredicateAsStr
             = "http://unifiedviews.eu/ontology/e-htmlCss/hasObject";
 
     /**
      * If true then generate triple with information about source file.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-htmlCssUv#includeSourceInformation")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-htmlCssUv#includeSourceInformation")
     private boolean sourceInformation = false;
 
     public HtmlCssUvConfiguration() {

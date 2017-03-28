@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.modifydate;
 
-/**
- * @author Škoda Petr
- */
 public class ModifyDateVocabulary {
 
     private static final String PREFIX =

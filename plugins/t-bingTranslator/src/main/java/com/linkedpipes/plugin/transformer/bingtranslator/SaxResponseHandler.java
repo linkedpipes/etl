@@ -33,7 +33,8 @@ public class SaxResponseHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) {
         if ("TranslatedText".equals(elementName)) {
-            values.add(StringEscapeUtils.unescapeXml(translatedText.toString()));
+            values.add(StringEscapeUtils.unescapeXml(
+                    translatedText.toString()));
         }
         elementName = "";
     }

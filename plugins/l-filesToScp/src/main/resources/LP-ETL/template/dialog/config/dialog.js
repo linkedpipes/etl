@@ -4,8 +4,9 @@ define([], function () {
     const DESC = {
         "$namespace": "http://plugins.linkedpipes.com/ontology/l-filesToScp#",
         "$type": "Configuration",
-        "$control": {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
         "host": {
             "$type": "str",
@@ -22,6 +23,10 @@ define([], function () {
         "createDirectory": {
             "$type": "bool",
             "$label": "Create target directory"
+        },
+        "clearDirectory": {
+            "$type": "bool",
+            "$label": "Clear target directory"
         },
         "userName": {
             "$type": "str",

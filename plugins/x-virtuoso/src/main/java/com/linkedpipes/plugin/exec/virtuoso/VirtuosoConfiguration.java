@@ -1,38 +1,35 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-@RdfToPojo.Type(uri = VirtuosoVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = VirtuosoVocabulary.CONFIG_CLASS)
 public class VirtuosoConfiguration {
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.VIRTUOSO_URI)
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.VIRTUOSO_URI)
     private String virtuosoUrl = "";
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.USERNAME)
-    private String username = "dba";
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.USERNAME)
+    private String username = "";
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.PASSWORD)
-    private String password = "dba";
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.PASSWORD)
+    private String password = "";
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.CLEAR_GRAPH)
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.CLEAR_GRAPH)
     private boolean clearDestinationGraph = false;
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.LOAD_DIRECTORY_PATH)
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.LOAD_DIRECTORY_PATH)
     private String loadDirectoryPath = "";
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.LOAD_FILE_NAME)
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.LOAD_FILE_NAME)
     private String loadFileName = "";
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.TARGET_GRAPH)
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.TARGET_GRAPH)
     private String targetGraph = "";
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.STATUS_UPDATE_INTERVAL)
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.STATUS_UPDATE_INTERVAL)
     private int statusUpdateInterval = 10;
 
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.CLEAR_LOAD_GRAPH)
-    private boolean clearLoadList = true;
-
-    @RdfToPojo.Property(uri = VirtuosoVocabulary.LOADER_COUNT)
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.LOADER_COUNT)
     private int loaderCount = 1;
 
     public VirtuosoConfiguration() {
@@ -100,14 +97,6 @@ public class VirtuosoConfiguration {
 
     public void setStatusUpdateInterval(int statusUpdateInterval) {
         this.statusUpdateInterval = statusUpdateInterval;
-    }
-
-    public boolean isClearLoadList() {
-        return clearLoadList;
-    }
-
-    public void setClearLoadList(boolean clearLoadList) {
-        this.clearLoadList = clearLoadList;
     }
 
     public int getLoaderCount() {

@@ -1,0 +1,34 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.encoding.hide">
+        <label>Encoding</label>
+        <input ng-model="dialog.encoding.value"
+               ng-disabled="dialog.encoding.disabled || dialog.encoding.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.dataPredicate.hide">
+        <label>Data predicate</label>
+        <input ng-model="dialog.dataPredicate.value"
+               ng-disabled="dialog.dataPredicate.disabled || dialog.dataPredicate.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.type.hide">
+        <label>Root entity type</label>
+        <input ng-model="dialog.type.value"
+               ng-disabled="dialog.type.disabled || dialog.type.inherit">
+    </md-input-container>
+    <md-switch ng-model="dialog.fileReference.value"
+               ng-disabled="dialog.fileReference.disabled || dialog.fileReference.inherit"
+               ng-hide="dialog.fileReference.hide">
+        Add file reference
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.filePredicate.hide">
+        <label>File name predicate</label>
+        <input ng-model="dialog.filePredicate.value"
+               ng-disabled="dialog.filePredicate.disabled || dialog.filePredicate.inherit || !dialog.fileReference.value">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.context.hide">
+        <label>Context object</label>
+        <textarea id="query" ng-model="dialog.context.value"
+                  ng-disabled="dialog.context.disabled || dialog.context.inherit"/>
+    </md-input-container>
+</div>
+

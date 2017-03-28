@@ -6,7 +6,8 @@
         "http://plugins.linkedpipes.com/ontology/l-filesToScp#password": "",
         "http://plugins.linkedpipes.com/ontology/l-filesToScp#host": "",
         "http://plugins.linkedpipes.com/ontology/l-filesToScp#port": 22,
-        "http://plugins.linkedpipes.com/ontology/l-filesToScp#targetDirectory": "/tmp/upload/",
-        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory": true
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#directory": "/tmp/upload/",
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory": true,
+        "http://plugins.linkedpipes.com/ontology/l-filesToScp#clearDirectory": false
     }
 ]

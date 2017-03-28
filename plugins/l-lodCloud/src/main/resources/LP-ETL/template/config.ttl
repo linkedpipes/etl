@@ -1,0 +1,14 @@
+<http://linkedpipes.com/resources/components/l-lodCloud/0.0.0/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-lodCloud#Configuration> ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#limitedSparql> false ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodcloudNolinks> false ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodcloudUnconnected> false ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodcloudNeedsInfo> false ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodcloudNeedsFixing> false ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabTag> "DerefVocab" ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabMappingTag> "NoVocabMappings" ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#provenanceMetadataTag> "NoProvenanceMetadata" ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseMetadataTag> "LicenseMetadata" ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#publishedTag> "PublishedByThirdParty" ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseId> "ccby" ;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#versionGenerated> true .

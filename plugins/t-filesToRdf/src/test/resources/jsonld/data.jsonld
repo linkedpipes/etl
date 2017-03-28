@@ -1,6 +1,0 @@
-{
-  "@type": "Person",
-  "@id" : "http://localhost/resource",
-  "http://schema.org/name": "Adam",
-  "http://schema.org/jobTitle": "Professor"
-}

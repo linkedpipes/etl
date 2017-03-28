@@ -408,7 +408,6 @@ gApiRouter.get('/executions', function (request, response) {
     pipeGet(uri, response);
 });
 
-
 // callback(success, result)
 function unpack(pipelineObject, optionsAsString, callback) {
     // pipelineObject.iri
@@ -678,6 +677,11 @@ gApiRouter.get('/executions/:id', function (request, response) {
     pipeGet(uri, response);
 });
 
+gApiRouter.post('/executions/cancel', function (request, response) {
+    var url = gMonitorUri + 'executions/' + request.query.id + '/cancel';
+    request.pipe(gRequest.post(url)).pipe(response);
+});
+
 gApiRouter.delete('/executions/:id', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id;
     gRequest.del(uri).pipe(response);
@@ -685,6 +689,11 @@ gApiRouter.delete('/executions/:id', function (request, response) {
 
 gApiRouter.get('/executions/:id/pipeline', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/pipeline';
+    pipeGet(uri, response);
+});
+
+gApiRouter.get('/executions/:id/overview', function (request, response) {
+    var uri = gMonitorUri + 'executions/' + request.params.id + '/overview';
     pipeGet(uri, response);
 });
 

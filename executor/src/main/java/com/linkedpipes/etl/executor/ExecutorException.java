@@ -1,13 +1,13 @@
 package com.linkedpipes.etl.executor;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
 
 /**
- * A base exception.
+ * Base exception used in the executor.
  */
 public class ExecutorException extends LpException {
 
-    protected ExecutorException(String messages, Object... args) {
+    public ExecutorException(String messages, Object... args) {
         super(messages, args);
     }
 

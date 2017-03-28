@@ -1,11 +1,13 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import org.apache.commons.io.FileUtils;
-import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +17,9 @@ import java.util.*;
 
 @Service
 public class ExecutionFacade {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ExecutionFacade.class);
 
     /**
      * General exception form used to report failures.
@@ -149,6 +154,11 @@ public class ExecutionFacade {
         streamFile(pipelineFile, RDFFormat.JSONLD, format, stream);
     }
 
+    public void writeOverview(Execution execution,
+            OutputStream stream) throws IOException {
+        execution.getOverviewResource().writeToStream(stream);
+    }
+
     /**
      * Create execution from given sources.
      *
@@ -198,6 +208,16 @@ public class ExecutionFacade {
     }
 
     /**
+     * Force execution load from a directory.
+     *
+     * @param execution
+     */
+    public void updateFromFile(Execution execution)
+            throws OperationFailed, ExecutionMismatch {
+        ExecutionChecker.updateFromDirectory(execution);
+    }
+
+    /**
      * Must be called when an executor is assigned to the execution.
      *
      * @param execution
@@ -230,6 +250,7 @@ public class ExecutionFacade {
      */
     public void detachExecutor(Execution execution) {
         storage.checkExecution(execution);
+        LOG.info(" detaching: {} {}", execution.getId(), execution.getStatus());
         if (execution.getStatus() != Execution.StatusType.FINISHED) {
             execution.setStatus(Execution.StatusType.DANGLING);
             ExecutionChecker.updateGenerated(execution);

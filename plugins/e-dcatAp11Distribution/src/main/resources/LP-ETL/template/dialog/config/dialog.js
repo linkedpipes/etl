@@ -70,8 +70,8 @@ define([], function () {
             "$label": "Use languages from dataset"
         },
         "languages": {
-            "$onLoad" : languagesOnLoad,
-            "$onSave" : languagesOnSave,
+            "$onLoad": languagesOnLoad,
+            "$onSave": languagesOnSave,
             "$type": "iri",
             "$array": true,
             "$label": "Languages"

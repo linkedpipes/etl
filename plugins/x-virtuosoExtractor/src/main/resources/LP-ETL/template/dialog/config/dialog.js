@@ -5,7 +5,7 @@ define([], function () {
         "$namespace" :
             "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },

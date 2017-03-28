@@ -2,20 +2,19 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-mustache#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-mustache#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "class" : {
-            "$type" : "str",
-            "$label" : "Entity class IRI"
+        "class": {
+            "$type": "str",
+            "$label": "Entity class IRI"
         },
-        "template" : {
-            "$type" : "str",
-            "$label" : "Mustache template"
+        "template": {
+            "$type": "str",
+            "$label": "Mustache template"
         }
     };
 

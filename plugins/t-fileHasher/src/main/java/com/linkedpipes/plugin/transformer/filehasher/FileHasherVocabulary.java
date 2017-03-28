@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.filehasher;
 
-/**
- *
- */
 public final class FileHasherVocabulary {
 
     private static final String PREFIX

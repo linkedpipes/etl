@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -87,6 +87,10 @@ class UnpackOptions implements PojoLoader.Loadable {
 
     private List<ExecutionMapping> executionMapping = new LinkedList<>();
 
+    private boolean saveDebugData = true;
+
+    private boolean deleteWorkingDirectory = false;
+
     @Override
     public PojoLoader.Loadable load(String predicate, Value value)
             throws PojoLoader.CantLoadException {
@@ -98,6 +102,14 @@ class UnpackOptions implements PojoLoader.Loadable {
                 final ExecutionMapping mapping = new ExecutionMapping();
                 executionMapping.add(mapping);
                 return mapping;
+            case "http://linkedpipes.com/ontology/saveDebugData":
+                saveDebugData = "true".equals(
+                        value.stringValue().toLowerCase());
+                return null;
+            case "http://linkedpipes.com/ontology/deleteWorkingData":
+                deleteWorkingDirectory = "true".equals(
+                        value.stringValue().toLowerCase());
+                return null;
             default:
                 return null;
         }
@@ -111,4 +123,11 @@ class UnpackOptions implements PojoLoader.Loadable {
         return Collections.unmodifiableList(executionMapping);
     }
 
+    public boolean isSaveDebugData() {
+        return saveDebugData;
+    }
+
+    public boolean isDeleteWorkingDirectory() {
+        return deleteWorkingDirectory;
+    }
 }

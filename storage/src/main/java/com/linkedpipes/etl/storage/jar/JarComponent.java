@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.jar;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
-import org.openrdf.model.IRI;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.io.File;
 

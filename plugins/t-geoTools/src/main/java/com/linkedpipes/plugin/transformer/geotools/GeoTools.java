@@ -1,19 +1,20 @@
 package com.linkedpipes.plugin.transformer.geotools;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.ChunkedStatements;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Transform geo coordinates.
- */
-public final class GeoTools implements Component.Sequential {
+public final class GeoTools implements Component, SequentialExecution {
 
     private static class Point {
 
@@ -48,11 +46,11 @@ public final class GeoTools implements Component.Sequential {
     public static final IRI GML_SRS_NAME = SimpleValueFactory.getInstance()
             .createIRI("http://www.opengis.net/ont/gml#srsName");
 
-    @Component.InputPort(id = "InputRdf")
-    public ChunkedStatements inputRdf;
+    @Component.InputPort(iri = "InputRdf")
+    public ChunkedTriples inputRdf;
 
-    @Component.InputPort(id = "OutputRdf")
-    public WritableChunkedStatements outputRdf;
+    @Component.InputPort(iri = "OutputRdf")
+    public WritableChunkedTriples outputRdf;
 
     @Component.Configuration
     public GeoToolsConfiguration configuration;
@@ -88,10 +86,10 @@ public final class GeoTools implements Component.Sequential {
         // We need to load statements.
         final Map<Resource, Point> resources = new HashMap<>();
         final List<Statement> outputBuffer = new ArrayList<>(50000);
-        for (ChunkedStatements.Chunk chunk : inputRdf) {
+        for (ChunkedTriples.Chunk chunk : inputRdf) {
             resources.clear();
             outputBuffer.clear();
-            for (Statement s : chunk.toStatements()) {
+            for (Statement s : chunk.toCollection()) {
                 // Check for type.
                 if (RDF.TYPE.equals(s.getPredicate())) {
                     final String typeAsStr = s.getObject().stringValue();

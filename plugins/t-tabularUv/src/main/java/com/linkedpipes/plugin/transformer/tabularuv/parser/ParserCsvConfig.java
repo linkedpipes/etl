@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for {@link ParserCsv}.
- *
- * @author Škoda Petr
  */
 public class ParserCsvConfig {
 
@@ -29,7 +27,8 @@ public class ParserCsvConfig {
 
     public ParserCsvConfig(String quoteChar, char delimiterChar,
             String encoding, Integer numberOfStartLinesToIgnore,
-            Integer rowLimit, boolean hasHeader, boolean checkStaticRowCounter) {
+            Integer rowLimit, boolean hasHeader,
+            boolean checkStaticRowCounter) {
         if (quoteChar == null) {
             this.quoteChar = "\"";
             LOG.warn("Property quoteChar is not set, '{}' is used as default.",

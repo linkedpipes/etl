@@ -1,12 +1,12 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,16 +15,16 @@ import java.io.IOException;
 /**
  * Chunked version of tabular.
  */
-public class TabularChunked implements Component.Sequential {
+public class TabularChunked implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(TabularChunked.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFilesDataUnit;
 
-    @Component.OutputPort(id = "OutputRdf")
-    public WritableChunkedStatements outputRdfDataUnit;
+    @Component.OutputPort(iri = "OutputRdf")
+    public WritableChunkedTriples outputRdfDataUnit;
 
     @Component.Configuration
     public TabularConfiguration configuration;
@@ -46,7 +46,7 @@ public class TabularChunked implements Component.Sequential {
                 exceptionFactory);
         mapper.initialize(null);
         progressReport.start(inputFilesDataUnit.size());
-        for (Entry entry : inputFilesDataUnit) {
+        for (FilesDataUnit.Entry entry : inputFilesDataUnit) {
             output.onFileStart();
             final String table;
             switch (configuration.getEncodeType()) {

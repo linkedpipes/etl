@@ -1,0 +1,33 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#context" : "{\"@vocab\":\"http://localhost/ontology/\"}",
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#contextControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#encoding" : "UTF-8",
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#encodingControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#fileReference" : true,
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#fileReferenceControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#dataPredicate" :
+        { "@id" : "http://localhost/ontology/data" } ,
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#dataPredicateControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#type" :
+        { "@id" : "http://localhost/ontology/Data" } ,
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#typeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#filePredicate" :
+        { "@id" : "http://localhost/ontology/filePredicate" } ,
+        "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#filePredicateControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

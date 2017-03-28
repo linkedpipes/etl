@@ -91,15 +91,39 @@ define([], function () {
         };
 
         $scope.onExecute = function (pipeline) {
-            $http.post('/resources/executions?pipeline=' + pipeline.iri)
-                .then(function (response) {
-                    $location.path('/executions').search({});
-                }, function (response) {
-                    statusService.postFailed({
-                        'title': "Can't start the execution.",
-                        'response': response
-                    });
+            var configuration = {
+                '@id': '',
+                '@type': 'http://etl.linkedpipes.com/ontology/ExecutionOptions',
+                'http://linkedpipes.com/ontology/saveDebugData' : true,
+                'http://linkedpipes.com/ontology/deleteWorkingData' : false
+            }
+            $http.post('/resources/executions?pipeline=' + pipeline.iri,
+                configuration).then(function (response) {
+                $location.path('/executions').search({});
+            }, function (response) {
+                statusService.postFailed({
+                    'title': "Can't start the execution.",
+                    'response': response
                 });
+            });
+        };
+
+        $scope.onExecuteWithoutDebugData = function(pipeline) {
+            var configuration = {
+                '@id': '',
+                '@type': 'http://etl.linkedpipes.com/ontology/ExecutionOptions',
+                'http://linkedpipes.com/ontology/saveDebugData' : false,
+                'http://linkedpipes.com/ontology/deleteWorkingData' : true
+            }
+            $http.post('/resources/executions?pipeline=' + pipeline.iri,
+                configuration).then(function (response) {
+                $location.path('/executions').search({});
+            }, function (response) {
+                statusService.postFailed({
+                    'title': "Can't start the execution.",
+                    'response': response
+                });
+            });
         };
 
         $scope.onExport = function (pipeline, $event) {

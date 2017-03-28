@@ -1,14 +1,11 @@
 package com.linkedpipes.plugin.transformer.filesFilter;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- */
-@RdfToPojo.Type(uri = FilesFilterVocabulary.CONFIGURATION)
+@RdfToPojo.Type(iri = FilesFilterVocabulary.CONFIGURATION)
 public class FilesFilterConfiguration {
 
-    @RdfToPojo.Property(uri = FilesFilterVocabulary.HAS_PATTERN)
+    @RdfToPojo.Property(iri = FilesFilterVocabulary.HAS_PATTERN)
     private String fileNamePattern = ".*";
 
     public FilesFilterConfiguration() {

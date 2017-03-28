@@ -1,18 +1,19 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.query.*;
-import org.openrdf.query.impl.SimpleDataset;
-import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sparql.SPARQLRepository;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * Use scrollable cursors to execute SPARQL select.
  */
 public final class SparqlEndpointSelectScrollableCursor
-        implements Component.Sequential {
+        implements Component, SequentialExecution {
 
     /**
      * Wrap that enable us to check if there were any results.
@@ -78,7 +79,7 @@ public final class SparqlEndpointSelectScrollableCursor
             solutionHandled = true;
         }
 
-         public void handleEnd() throws TupleQueryResultHandlerException {
+        public void handleEnd() throws TupleQueryResultHandlerException {
             wrap.endQueryResult();
         }
 
@@ -87,11 +88,11 @@ public final class SparqlEndpointSelectScrollableCursor
     private static final Logger LOG =
             LoggerFactory.getLogger(SparqlEndpointSelectScrollableCursor.class);
 
-    @Component.InputPort(id = "OutputFiles")
+    @Component.InputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
     @Component.Inject
@@ -108,7 +109,7 @@ public final class SparqlEndpointSelectScrollableCursor
         //
         LOG.info("Used query: {}", prepareQuery(0));
         final File outputFile = outputFiles.createFile(
-                configuration.getFileName()).toFile();
+                configuration.getFileName());
         try (final OutputStream stream = new FileOutputStream(outputFile)) {
             final ResultHandlerWrap writer = createWriter(stream);
             //

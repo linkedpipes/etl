@@ -1,14 +1,11 @@
 package com.linkedpipes.plugin.exec.deleteDirectory;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = DeleteDirectoryVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = DeleteDirectoryVocabulary.CONFIG_CLASS)
 public class DeleteDirectoryConfiguration {
 
-    @RdfToPojo.Property(uri = DeleteDirectoryVocabulary.HAS_DIRECTORY)
+    @RdfToPojo.Property(iri = DeleteDirectoryVocabulary.HAS_DIRECTORY)
     private String directory = null;
 
     public DeleteDirectoryConfiguration() {

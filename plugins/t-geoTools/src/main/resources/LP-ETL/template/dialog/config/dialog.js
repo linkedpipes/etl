@@ -2,39 +2,39 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-geoTools#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-geoTools#",
         "$type": "Configuration",
-        "$control" : {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
         "type": {
             "$type": "iri",
-            "$label" : "Input resource type"
+            "$label": "Input resource type"
         },
         "coord": {
             "$type": "iri",
-            "$label" : "Predicate for coordinates"
+            "$label": "Predicate for coordinates"
         },
         "coordType": {
             "$type": "iri",
-            "$label" : "Predicate for coordinate reference system"
+            "$label": "Predicate for coordinate reference system"
         },
         "defaultCoordType": {
             "$type": "str",
-            "$label" : "Default coordinate reference system"
+            "$label": "Default coordinate reference system"
         },
         "outputPredicate": {
             "$type": "iri",
-            "$label" : "Predicate for linking to newly created points"
+            "$label": "Predicate for linking to newly created points"
         },
         "outputCoordType": {
             "$type": "str",
-            "$label" : "Output coordinate reference system"
+            "$label": "Output coordinate reference system"
         },
         "failOnError": {
             "$type": "bool",
-            "$label" : "Fail on error"
+            "$label": "Fail on error"
         },
     };
 

@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.loader.scp;
 
-/**
- *
- */
 public final class LoaderScpVocabulary {
 
     private static final String PREFIX
@@ -23,6 +20,9 @@ public final class LoaderScpVocabulary {
 
     public static final String HAS_CREATE_DIRECTORY
             = PREFIX + "createDirectory";
+
+    public static final String HAS_CLEAR_DIRECTORY
+            = PREFIX + "clearDirectory";
 
     private LoaderScpVocabulary() {
     }

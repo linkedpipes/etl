@@ -1,55 +1,75 @@
 package com.linkedpipes.etl.executor.api.v1.component;
 
-import com.linkedpipes.etl.executor.api.v1.RdfException;
-import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 
-import java.util.Map;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Base interface for a component.
+ * Base interface for a component. The component is a base composition unit
+ * of a pipeline.
  */
 public interface Component {
 
     /**
-     * Represent a list of headers that component should implement.
+     * Component execution context.
      */
-    public final class Headers {
+    interface Context {
 
-        private Headers() {
-        }
+        void sendMessage(Event message);
 
         /**
-         * Comma separated list of packages, that are considered to be part
-         * of a component. Only logs from these packages are stored
-         * in a component log file.
+         * @return True if the component has been cancelled.
          */
-        public static final String LOG_PACKAGES = "log.packages";
+        boolean isCancelled();
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface Inject {
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface Configuration {
 
     }
 
     /**
-     * Context given to components.
+     * Mark data unit as an component input.
      */
-    public interface Context {
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface InputPort {
 
-        public void sendMessage(Event message);
+        String iri();
 
     }
 
     /**
-     * Initialize component before execution.
-     *
-     * @param dataUnits
+     * Mark data unit as an component output.
      */
-    public void initialize(Map<String, DataUnit> dataUnits) throws RdfException;
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface OutputPort {
+
+        String iri();
+
+    }
 
     /**
-     * Used to get additional information about the component.
-     *
-     * @param key
-     * @return Stored value or null.
+     * Mark data unit as a source for the runtime configuration. Data from
+     * the data unit are used to load configuration and have highest
+     * priority.
      */
-    public String getHeader(String key);
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface ContainsConfiguration {
+
+    }
 
 }

@@ -1,9 +1,5 @@
 package com.linkedpipes.plugin.exec.virtuosoExtractor;
 
-/**
- *
- * @author Škoda Petr
- */
 public final class VirtuosoExtractorVocabulary {
 
     private static final String PREFIX
@@ -13,7 +9,7 @@ public final class VirtuosoExtractorVocabulary {
 
     public static final String VIRTUOSO_URI = PREFIX + "uri";
 
-    public static final String USERNAME = PREFIX + "username";
+    public static final String USERNAME = PREFIX + "userName";
 
     public static final String PASSWORD = PREFIX + "password";
 

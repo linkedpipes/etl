@@ -1,36 +1,30 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.ChunkedStatements;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.rio.*;
-import org.openrdf.rio.helpers.AbstractRDFHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.*;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
-/**
- * Chunked version of RdfToFile.
- */
-public final class RdfToFileChunked implements Component.Sequential {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RdfToFileChunked.class);
+public final class RdfToFileChunked implements Component, SequentialExecution {
 
     private static final String FILE_ENCODE = "UTF-8";
 
-    @Component.InputPort(id = "InputRdf")
-    public ChunkedStatements inputRdf;
+    @Component.InputPort(iri = "InputRdf")
+    public ChunkedTriples inputRdf;
 
-    @Component.OutputPort(id = "OutputFile")
+    @Component.OutputPort(iri = "OutputFile")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Configuration
@@ -42,64 +36,92 @@ public final class RdfToFileChunked implements Component.Sequential {
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
+    private RDFFormat outputFormat;
+
+    private File outputFile;
+
     @Override
     public void execute() throws LpException {
+        prepareOutputFormat();
+        prepareOutputFile();
+        export();
+    }
+
+    private void prepareOutputFormat() throws LpException {
         Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
                 configuration.getFileType());
         if (!rdfFormat.isPresent()) {
             throw exceptionFactory.failure("Invalid output file type: {}",
                     configuration.getFileName());
         }
-        final File outputFile = outputFiles.createFile(
-                configuration.getFileName()).toFile();
+        outputFormat = rdfFormat.get();
+    }
+
+    private void prepareOutputFile() throws LpException {
+        outputFile = outputFiles.createFile(configuration.getFileName());
+    }
+
+    private void export() throws LpException {
+        reportStart();
         try (FileOutputStream outStream = new FileOutputStream(outputFile);
              OutputStreamWriter outWriter = new OutputStreamWriter(
                      outStream, Charset.forName(FILE_ENCODE))) {
-            RDFWriter writer = Rio.createWriter(rdfFormat.get(), outWriter);
-            if (rdfFormat.get().supportsContexts()) {
-                writer = new RdfWriterContextRenamer(writer,
-                        SimpleValueFactory.getInstance().createIRI(
-                                configuration.getGraphUri()));
-            }
-            writer = new RdfWriterContext(writer);
+            RDFWriter writer = createWriter(outWriter);
             writer.startRDF();
-            // Add prefixes.
-            if (configuration.getPrefixes() != null &&
-                    !configuration.getPrefixes().isEmpty()) {
-                loadPrefixes(configuration.getPrefixes(), writer);
-            }
-            //
-            progressReport.start(inputRdf.size());
-            for (ChunkedStatements.Chunk chunk : inputRdf) {
-                for (Statement statement : chunk.toStatements()) {
-                    writer.handleStatement(statement);
-                }
-                progressReport.entryProcessed();
-            }
-            progressReport.done();
+            writePrefixes(writer);
+            exportChunks(writer);
             writer.endRDF();
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't write data.", ex);
         }
+        reportEnd();
     }
 
-    /**
-     * Load prefixes from given turtle to the writer.
-     *
-     * @param turtle
-     * @param writer
-     * @throws LpException
-     */
-    private void loadPrefixes(String turtle, RDFWriter writer)
+    private void exportChunks(RDFWriter writer) throws LpException {
+        for (ChunkedTriples.Chunk chunk : inputRdf) {
+            for (Statement statement : chunk.toCollection()) {
+                writer.handleStatement(statement);
+            }
+            progressReport.entryProcessed();
+        }
+    }
+
+    private void reportStart() {
+        progressReport.start(inputRdf.size());
+    }
+
+    private void reportEnd() {
+        progressReport.done();
+    }
+
+    private RDFWriter createWriter(OutputStreamWriter streamWriter) {
+        RDFWriter writer = Rio.createWriter(outputFormat, streamWriter);
+
+        if (outputFormat.supportsContexts()) {
+            writer = new ChangeContext(writer, getOutputGraph());
+        }
+
+        return writer;
+    }
+
+    private IRI getOutputGraph() {
+        if (configuration.getGraphUri() == null) {
+            return null;
+        }
+        return SimpleValueFactory.getInstance().createIRI(
+                configuration.getGraphUri());
+    }
+
+    private void writePrefixes(RDFWriter writer)
             throws LpException {
         final RDFParser parser = Rio.createParser(RDFFormat.TURTLE);
         final InputStream stream;
         try {
             stream = new ByteArrayInputStream(
-                    turtle.getBytes("UTF-8"));
+                    configuration.getPrefixes().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException ex) {
-            throw exceptionFactory.failure(
-                    "Unsupported encoding exception.", ex);
+            throw exceptionFactory.failure("Unsupported encoding exception.",
+                    ex);
         }
         try {
             parser.setRDFHandler(new AbstractRDFHandler() {

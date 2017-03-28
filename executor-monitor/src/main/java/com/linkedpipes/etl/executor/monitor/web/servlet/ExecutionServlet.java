@@ -3,12 +3,12 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorFacade;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -30,9 +30,6 @@ public class ExecutionServlet {
 
     public static class CreateExecution {
 
-        /**
-         * Execution IRI.
-         */
         private String iri;
 
         public CreateExecution(Execution execution) {
@@ -133,6 +130,17 @@ public class ExecutionServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    @RequestMapping(value = "/{id}/cancel", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void cancelExecution(@PathVariable String id,
+            @RequestBody String body,
+            HttpServletRequest request, HttpServletResponse response) {
+        final Execution execution = executionFacade.getExecution(id);
+        executorFacade.cancelExecution(execution, body);
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
     @RequestMapping(value = "/{id}/logs", method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
@@ -173,6 +181,21 @@ public class ExecutionServlet {
         // TODO Execution in other thread !
         executorFacade.startExecutions();
         return new CreateExecution(execution);
+    }
+
+    @RequestMapping(value = "/{id}/overview", method = RequestMethod.GET,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void getExecutionOverview(@PathVariable String id,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        final Execution execution = executionFacade.getExecution(id);
+        if (execution == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        executionFacade.writeOverview(execution,
+                response.getOutputStream());
     }
 
 }

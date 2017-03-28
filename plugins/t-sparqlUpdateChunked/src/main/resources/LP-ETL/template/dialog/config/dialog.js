@@ -2,14 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#",
         "$type": "Configuration",
-        "query" : {
-            "$type" : "str",
-            "$property" : "query",
-            "$control": "queryControl",
-            "$label" : "SPARQL UPDATE query"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "query": {
+            "$type": "str",
+            "$label": "SPARQL UPDATE query"
         }
     };
 

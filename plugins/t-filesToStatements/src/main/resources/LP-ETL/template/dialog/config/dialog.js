@@ -2,16 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-filesToStatements#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesToStatements#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "predicate" : {
-            "$type" : "str",
-            "$label" : "Predicate"
+        "predicate": {
+            "$type": "str",
+            "$label": "Predicate"
         }
     };
 

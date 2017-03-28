@@ -54,6 +54,12 @@ define([
                                 'executionType': {
                                     '$property': 'http://linkedpipes.com/ontology/execution/type'
                                 },
+                                'saveDebugData': {
+                                    '$property': 'http://linkedpipes.com/ontology/saveDebugData'
+                                },
+                                'deleteWorkingData': {
+                                    '$property': 'http://linkedpipes.com/ontology/deleteWorkingData'
+                                },
                                 '_component': {
                                     '$property': 'http://linkedpipes.com/ontology/execution/targetComponent',
                                     '$oneToOne': {
@@ -118,8 +124,21 @@ define([
             }
             // Determine detail and icon type.
             switch (execution.status) {
+                case 'http://etl.linkedpipes.com/resources/status/cancelled':
+                    execution.canDelete = true;
+                    execution.canCancel = false;
+                    execution.icon = {
+                        'name': 'done',
+                        'style': {
+                            'color': '#ff9900'
+                        }
+                    };
+                    execution.detailType = 'FULL';
+                    execution.canDelete = true;
+                    break;
                 case 'http://etl.linkedpipes.com/resources/status/queued':
                     execution.canDelete = true;
+                    execution.canCancel = false;
                     execution.icon = {
                         'name': 'hourglass',
                         'style': {
@@ -131,6 +150,7 @@ define([
                 case 'http://etl.linkedpipes.com/resources/status/initializing':
                 case 'http://etl.linkedpipes.com/resources/status/running':
                     execution.canDelete = false;
+                    execution.canCancel = true;
                     execution.icon = {
                         'name': 'run',
                         'style': {
@@ -141,6 +161,7 @@ define([
                     break;
                 case 'http://etl.linkedpipes.com/resources/status/finished':
                     execution.canDelete = true;
+                    execution.canCancel = false;
                     execution.icon = {
                         'name': 'done',
                         'style': {
@@ -151,6 +172,7 @@ define([
                     break;
                 case 'http://etl.linkedpipes.com/resources/status/failed':
                     execution.canDelete = true;
+                    execution.canCancel = false;
                     execution.icon = {
                         'name': 'error',
                         'style': {
@@ -159,6 +181,17 @@ define([
                     };
                     execution.detailType = 'FULL';
                     break;
+                case 'http://etl.linkedpipes.com/resources/status/cancelling':
+                    execution.canDelete = false;
+                    execution.canCancel = false;
+                    execution.icon = {
+                        'name': 'run',
+                        'style': {
+                            'color': '#ff9900'
+                        }
+                    };
+                    execution.detailType = 'PROGRESS';
+                    break;
                 default:
                     execution.detailType = 'NONE';
                     break;
@@ -166,6 +199,8 @@ define([
             // The status above can be override by the status-monitor.
             switch (execution['status-monitor']) {
                 case 'http://etl.linkedpipes.com/resources/status/unresponsive':
+                    execution.canDelete = false;
+                    execution.canCancel = false;
                     execution.icon = {
                         'name': 'help_outline',
                         'style': {
@@ -175,25 +210,13 @@ define([
                     break;
                 case 'http://etl.linkedpipes.com/resources/status/dangling':
                     execution.canDelete = true;
+                    execution.canCancel = false;
                     execution.icon = {
                         'name': 'help_outline',
                         'style': {
                             'color': 'red'
                         }
                     };
-                    break;
-                case 'http://etl.linkedpipes.com/resources/status/running':
-                    // In some cases the pipeline can be finished or failed,
-                    // while it's in fact still running. We use
-                    // monitor-status to solve this.
-                    execution.canDelete = false;
-                    execution.icon = {
-                        'name': 'run',
-                        'style': {
-                            'color': 'blue'
-                        }
-                    };
-                    execution.detailType = 'PROGRESS';
                     break;
                 default:
                     break;
@@ -225,6 +248,13 @@ define([
                     // Can happen for older executions.
                     execution.metadata.executionTypeLabel = '';
                     break;
+            }
+            if (execution.metadata.deleteWorkingData === "true") {
+                execution.metadata.executionTypeLabel += " (No working data)";
+            } else {
+                if (execution.metadata.saveDebugData === "false") {
+                    execution.metadata.executionTypeLabel += " (No debug data)";
+                }
             }
         };
 
@@ -273,6 +303,20 @@ define([
 
         $scope.onDelete = function (execution) {
             $scope.repository.delete(execution);
+        };
+
+        $scope.onCancel = function (execution) {
+            var body = {"reason" : "User request."};
+            $http.post('/resources/executions/cancel?id='
+                + execution.id, body)
+            .then(function () {
+                execution.cancelling = true;
+            }, function (response) {
+                statusService.postFailed({
+                    'title': "Can't cancel the execution.",
+                    'response': response
+                });
+            });
         };
 
         $scope.openMenu = function ($mdOpenMenu, ev) {

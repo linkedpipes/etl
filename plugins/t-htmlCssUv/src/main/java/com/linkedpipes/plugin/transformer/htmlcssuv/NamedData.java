@@ -1,11 +1,10 @@
 package com.linkedpipes.plugin.transformer.htmlcssuv;
 
+import org.eclipse.rdf4j.model.IRI;
 import org.jsoup.select.Elements;
-import org.openrdf.model.IRI;
 
 /**
  * Store processing context.
- *
  */
 class NamedData {
 

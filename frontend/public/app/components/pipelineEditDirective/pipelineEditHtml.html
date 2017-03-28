@@ -22,10 +22,12 @@
             <md-tooltip md-direction="bottom">Run before</md-tooltip>
             <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
         </md-button>
-        <md-button class="md-fab md-mini" style="position:absolute;left:20px;top:55px;" aria-label="Debug to" ng-click="api.onDebugToComponent()">
-            <md-tooltip md-direction="bottom">Debug to this component</md-tooltip>
-            <md-icon md-menu-origin md-svg-src="keyboard_tab"></md-icon>
-        </md-button>
+        <span id="execute" style="display:none;">
+            <md-button class="md-fab md-mini" style="position:absolute;left:20px;top:55px;" aria-label="Debug to" ng-click="api.onDebugToComponent()">
+                <md-tooltip md-direction="bottom">Debug to this component</md-tooltip>
+                <md-icon md-menu-origin md-svg-src="keyboard_tab"></md-icon>
+            </md-button>
+        </span>
         <span id="mapping" style="display:none;">
             <md-button class="md-fab md-mini" style="position:absolute;left:70px;top:55px;" aria-label="Change mapping" ng-click="api.onMappingComponent()">
                 <md-tooltip md-direction="bottom">Enable/disable mapping</md-tooltip>

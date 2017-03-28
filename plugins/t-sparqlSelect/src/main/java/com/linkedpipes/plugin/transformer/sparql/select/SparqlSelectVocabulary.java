@@ -1,12 +1,9 @@
 package com.linkedpipes.plugin.transformer.sparql.select;
 
-/**
- *
- * @author Škoda Petr
- */
 final class SparqlSelectVocabulary {
 
-    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#";
+    private static final String PREFIX =
+            "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 

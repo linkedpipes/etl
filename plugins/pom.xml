@@ -19,6 +19,7 @@
         <module>e-dcatAp11Distribution</module>
         <module>e-voidDataset</module>
         <module>l-dcatAp11ToCkan</module>
+        <module>l-lodCloud</module>
         <module>t-filesToRdf</module>
         <module>t-filesToRdfChunked</module>
         <module>t-filesToRdfGraph</module>
@@ -54,6 +55,7 @@
         <module>q-sparqlAsk</module>
         <module>l-filesToLocal</module>
         <module>e-ftpFiles</module>
+        <module>l-ftpFiles</module>
         <module>e-filesFromLocal</module>
         <module>t-tabularUv</module>
         <module>t-singleGraphUnion</module>
@@ -73,6 +75,10 @@
         <module>t-bingTranslator</module>
         <module>t-chunkedToTurtle</module>
         <module>t-streamCompression</module>
+        <module>t-jsonToJsonLd</module>
+        <module>t-jsonLdFormat</module>
+        <module>e-sparqlEndpointList</module>
+        <module>e-sparqlEndpointChunkedList</module>
     </modules>
 
 </project>

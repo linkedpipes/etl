@@ -9,7 +9,7 @@ final class SparqlEndpointLoaderChunkedVocabulary {
 
     public static final String HAS_ENDPOINT = PREFIX + "endpoint";
 
-    public static final String HAS_AUTH = PREFIX + "useAuthentification";
+    public static final String HAS_AUTH = PREFIX + "useAuthentication";
 
     public static final String HAS_USERNAME = PREFIX + "userName";
 

@@ -1,20 +1,17 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
-import com.linkedpipes.etl.executor.api.v1.RdfException;
-import com.linkedpipes.etl.executor.api.v1.rdf.SparqlSelect;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.rdf.utils.RdfSource;
 
 public interface DataUnitFactory {
 
     /**
-     * Create {@link ManageableDataUnit}. Returned data unit must not be
-     * initialized.
-     *
+     * @param dataUnit Resource of DataUnit to create.
+     * @param graph Graph with the resource.
      * @param definition
-     * @param resourceIri
-     * @param graph
      * @return Null if this factory can not create given type of dataunit.
      */
-    public ManageableDataUnit create(SparqlSelect definition,
-            String resourceIri, String graph) throws RdfException;
+    ManageableDataUnit create(String dataUnit, String graph,
+            RdfSource definition) throws LpException;
 
 }

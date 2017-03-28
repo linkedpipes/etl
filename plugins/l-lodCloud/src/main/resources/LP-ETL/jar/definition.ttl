@@ -1,0 +1,2 @@
+<http://etl.linkedpipes.com/resources/jars/l-lodCloud/0.0.0>
+    a <http://etl.linkedpipes.com/ontology/JarFile> .

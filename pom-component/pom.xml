@@ -12,9 +12,11 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.reporting.outputEncoding>
+            UTF-8
+        </project.reporting.outputEncoding>
         <!-- Libraries. -->
-        <sesame.version>4.0.0</sesame.version>
+        <rdf4j.version>2.2</rdf4j.version>
         <lp.version>0.0.0</lp.version>
     </properties>
 
@@ -22,33 +24,52 @@
         <dependencies>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>api-commons</artifactId>
+                <artifactId>api-executor-v1</artifactId>
                 <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>api-component-v1</artifactId>
+                <artifactId>dataunit-core</artifactId>
                 <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>dataunit-sesame</artifactId>
+                <artifactId>rdf-utils</artifactId>
                 <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>dataunit-system</artifactId>
+                <artifactId>rdf-utils-rdf4j</artifactId>
                 <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- Core libraries. -->
+            <!-- RDF4J -->
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-model</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-repository-api</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-repository-sparql</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Provided libraries. -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+                <version>2.5</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -58,28 +79,22 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-model</artifactId>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient-osgi</artifactId>
+                <version>4.4.1</version>
                 <scope>provided</scope>
-                <version>${sesame.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-repository-api</artifactId>
-                <scope>provided</scope>
-                <version>${sesame.version}</version>
-            </dependency>
-            <!-- Support for tests. -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.1.3</version>
-                <scope>test</scope>
-            </dependency>
+            <!-- Test libraries. -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.linkedpipes</groupId>
+                <artifactId>test-environment</artifactId>
+                <version>${lp.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -95,7 +110,8 @@
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
-                            <Embed-Dependency>*;scope=compile|system</Embed-Dependency>
+                            <Embed-Dependency>*;scope=compile|system
+                            </Embed-Dependency>
                             <Embed-Transitive>false</Embed-Transitive>
                         </instructions>
                     </configuration>

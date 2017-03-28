@@ -1,22 +1,21 @@
 package com.linkedpipes.plugin.transformer.templatedxlstocsv;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import cz.komix.xls2csv.Fact;
 import cz.komix.xls2csv.Xls2Csv;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- */
-public class XlsToCsv implements Component.Sequential {
+public class XlsToCsv implements Component, SequentialExecution {
 
     /**
      * Describe inputs and outputs of a single transformation task.
@@ -29,13 +28,13 @@ public class XlsToCsv implements Component.Sequential {
 
     }
 
-    @Component.InputPort(id = "Xls")
+    @Component.InputPort(iri = "Xls")
     public FilesDataUnit inputXls;
 
-    @Component.InputPort(id = "Templates")
+    @Component.InputPort(iri = "Templates")
     public FilesDataUnit inputTemplates;
 
-    @Component.OutputPort(id = "Output")
+    @Component.OutputPort(iri = "Output")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Inject
@@ -76,7 +75,7 @@ public class XlsToCsv implements Component.Sequential {
             // Iterate output and save.
             for (Fact fact : xls2Csv.getFactBox().getBox()) {
                 String outputFile = fact.createFileName(fileName);
-                fact.saveToFile(outputFiles.createFile(outputFile).toFile(),
+                fact.saveToFile(outputFiles.createFile(outputFile),
                         fileName);
             }
             progressReport.entryProcessed();

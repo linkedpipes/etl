@@ -1,0 +1,96 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix ds: <http://gov.cz.linked.opendata.cz/slovník/datové-schránky/> .
+@prefix s: <http://schema.org/> .
+@prefix at: <http://publications.europa.eu/ontology/authority/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix atold: <http://publications.europa.eu/resource/authority/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/> .
+
+	<http://publications.europa.eu/resource/authority/access-rights/PUBLIC> a dcterms:RightsStatement .
+	
+	<http://publications.europa.eu/resource/authority/frequency/DAILY> a dcterms:Frequency .
+	
+	<http://publications.europa.eu/resource/authority/language/CES> a dcterms:LinguisticSystem .
+	
+	<http://ruian.linked.opendata.cz/resource/staty/1> a dcterms:Location .
+	
+	<http://www.mvcr.cz/> a foaf:Agent ;
+		dcterms:type <http://purl.org/adms/publishertype/NationalAuthority> ;
+		foaf:name "Ministerstvo vnitra České republiky"@cs .
+	
+	<https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky> a <http://www.w3.org/ns/dcat#Dataset> ;
+		dcterms:type <http://publications.europa.eu/resource/authority/dataset-type/CODE_LIST> ;
+		dcterms:accessRights <http://publications.europa.eu/resource/authority/access-rights/PUBLIC> ;
+		dcterms:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/DAILY> ;
+		dcterms:description "Tyto datové zdroje vám umožňují získat seznam datových schránek a detailní informace ke každé z nich."@cs ;
+		dcterms:issued "2017-02-20"^^xsd:date ;
+		dcterms:language <http://publications.europa.eu/resource/authority/language/CES> ;
+		dcterms:modified "2017-02-22"^^xsd:date ;
+		dcterms:publisher <http://www.mvcr.cz/> ;
+		dcterms:source <https://portal.gov.cz/portal/obcan/rejstriky/ogd/x-sds.html> ;
+		dcterms:spatial <http://ruian.linked.opendata.cz/resource/staty/1> ;
+		dcterms:title "Seznam datových schránek"@cs , "List of data boxes"@en ;
+		<http://www.w3.org/ns/dcat#contactPoint> <https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky/contactPoint> ;
+		<http://www.w3.org/ns/dcat#keyword> "datová schránka"@cs , "data box"@en ;
+		<http://www.w3.org/ns/dcat#landingPage> <https://portal.gov.cz/portal/obcan/rejstriky/ogd/x-sds.html> , <https://gov.cz.linked.opendata.cz/dataset/datove-schranky> ;
+		<http://www.w3.org/ns/dcat#theme> <http://publications.europa.eu/resource/authority/data-theme/GOVE> ;
+		foaf:page <https://portal.gov.cz/portal/download/SOVM_datove_soubory.pdf> ;
+		<http://www.w3.org/ns/dcat#distribution> <https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky/distribution> .
+	
+	<https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky/contactPoint> a <http://www.w3.org/2006/vcard/ns#Individual> , <http://www.w3.org/2006/vcard/ns#Kind> ;
+		<http://www.w3.org/2006/vcard/ns#fn> "Jakub Klímek" ;
+		<http://www.w3.org/2006/vcard/ns#hasEmail> "klimek@opendata.cz" .
+	
+	<https://portal.gov.cz/portal/download/SOVM_datove_soubory.pdf> a foaf:Document .
+	
+	<https://gov.cz.linked.opendata.cz/zdroj/katalog> a <http://www.w3.org/ns/dcat#Catalog> ;
+		<http://www.w3.org/ns/dcat#dataset> <https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky> .
+	
+	<http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE> a skos:Concept .
+	
+	<http://publications.europa.eu/resource/authority/file-type/RDF_TRIG> a dcterms:MediaTypeOrExtent .
+	
+	<http://purl.org/adms/licencetype/PublicDomain> a skos:Concept .
+	
+	<http://purl.org/adms/status/Completed> a skos:Concept .
+	
+	<http://www.iana.org/assignments/media-types/application/trig> a dcterms:MediaTypeOrExtent .
+	
+	<https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky/distribution> a <http://www.w3.org/ns/dcat#Distribution> , void:Dataset ;
+		dcterms:type <http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE> ;
+		dcterms:issued "2017-02-20"^^xsd:date ;
+		dcterms:language <http://publications.europa.eu/resource/authority/language/CES> ;
+		dcterms:modified "2017-02-22"^^xsd:date ;
+		dcterms:title "Gzipovaný dump v RDF Trig"@cs , "Gzipped RDF Trig Dump"@en ;
+		dcterms:format <http://publications.europa.eu/resource/authority/file-type/RDF_TRIG> ;
+		dcterms:license <https://portal.gov.cz/portal/ostatni/volny-pristup-k-ds.html> ;
+		adms:status <http://purl.org/adms/status/Completed> ;
+		<http://www.w3.org/ns/dcat#accessURL> <https://gov.cz.linked.opendata.cz/dataset/datove-schranky> ;
+		<http://www.w3.org/ns/dcat#downloadURL> <https://gov.cz.linked.opendata.cz/soubor/datové-schránky/datové-schránky.trig.gz> ;
+		<http://www.w3.org/ns/dcat#mediaType> <http://www.iana.org/assignments/media-types/application/trig> ;
+		void:dataDump <https://gov.cz.linked.opendata.cz/soubor/datové-schránky/datové-schránky.trig.gz> ;
+		void:exampleResource <https://gov.cz.linked.opendata.cz/zdroj/datové-schránky/22ba4zp> ;
+		void:sparqlEndpoint <https://gov.cz.linked.opendata.cz/sparql> ;
+		void:classes "2"^^xsd:integer ;
+		void:distinctObjects "2399459"^^xsd:integer ;
+		void:distinctSubjects "2039744"^^xsd:integer ;
+		void:entities "1414858"^^xsd:integer ;
+		void:properties "12"^^xsd:integer ;
+		void:triples "8048661"^^xsd:integer ;
+		<http://spdx.org/rdf/terms#checksum> <https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky/distribution/checksum> .
+	
+	<https://portal.gov.cz/portal/ostatni/volny-pristup-k-ds.html> a dcterms:LicenseDocument ;
+		dcterms:type <http://purl.org/adms/licencetype/PublicDomain> .
+	
+	<https://gov.cz.linked.opendata.cz/zdroj/datová-sada/datové-schránky/distribution/checksum> a <http://spdx.org/rdf/terms#Checksum> ;
+		<http://spdx.org/rdf/terms#algorithm> <http://spdx.org/rdf/terms#checksumAlgorithm_sha1> ;
+		<http://spdx.org/rdf/terms#checksumValue> "881c1fb248e7e2069530223143450c2d2b1b3f03"^^xsd:hexBinary .

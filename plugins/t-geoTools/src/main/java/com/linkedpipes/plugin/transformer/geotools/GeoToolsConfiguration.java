@@ -1,48 +1,48 @@
 package com.linkedpipes.plugin.transformer.geotools;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-@RdfToPojo.Type(uri = GeoToolsVocabulary.CONFIG)
+@RdfToPojo.Type(iri = GeoToolsVocabulary.CONFIG)
 public class GeoToolsConfiguration {
 
     /**
      * Type of entity to load.
      */
-    @RdfToPojo.Property(uri = GeoToolsVocabulary.HAS_TYPE)
+    @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_TYPE)
     private String type;
 
     /**
      * Predicate with coordinates.
      */
-    @RdfToPojo.Property(uri = GeoToolsVocabulary.HAS_COORD)
+    @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_COORD)
     private String coord;
 
     /**
      * Predicate with coordinates type.
      */
-    @RdfToPojo.Property(uri = GeoToolsVocabulary.HAS_COORD_TYPE)
+    @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_COORD_TYPE)
     private String coordType;
 
     /**
      * If default coordinates type if not provided in data.
      */
-    @RdfToPojo.Property(uri = GeoToolsVocabulary.HAS_DEFAULT_COORD_TYPE)
+    @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_DEFAULT_COORD_TYPE)
     private String defaultCoordType;
 
     /**
      * Predicate used to connect the new entities to the source
      * entities.
      */
-    @RdfToPojo.Property(uri = GeoToolsVocabulary.HAS_OUTPUT_PREDICATE)
+    @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_OUTPUT_PREDICATE)
     private String outputPredicate;
 
     /**
      * Output coordinate types.
      */
-    @RdfToPojo.Property(uri = GeoToolsVocabulary.HAS_OUTPUT_COORD_TYPE)
+    @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_OUTPUT_COORD_TYPE)
     private String outputCoordType;
 
-    @RdfToPojo.Property(uri = GeoToolsVocabulary.HAS_FAIL_ON_ERROR)
+    @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_FAIL_ON_ERROR)
     private boolean failOnError = false;
 
     public GeoToolsConfiguration() {

@@ -3,37 +3,23 @@ package com.linkedpipes.plugin.transformer.mustache;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryResult;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- */
-public final class MustacheComponent implements Component.Sequential {
+import java.io.*;
+import java.util.*;
+
+public final class MustacheComponent implements Component, SequentialExecution {
 
     /**
      * Used to hold metadata about loaded objects.
@@ -66,10 +52,10 @@ public final class MustacheComponent implements Component.Sequential {
     private static final Logger LOG
             = LoggerFactory.getLogger(MustacheComponent.class);
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit input;
 
-    @Component.OutputPort(id = "OutputFiles")
+    @Component.OutputPort(iri = "OutputFiles")
     public WritableFilesDataUnit output;
 
     @Component.Configuration
@@ -111,7 +97,7 @@ public final class MustacheComponent implements Component.Sequential {
             } else {
                 fileName = "output_" + counter;
             }
-            final File outputFile = output.createFile(fileName).toFile();
+            final File outputFile = output.createFile(fileName);
             try (OutputStreamWriter outputStream = new OutputStreamWriter(
                     new FileOutputStream(outputFile), "UTF8")) {
                 mustache.execute(outputStream, object.data).flush();
@@ -127,16 +113,15 @@ public final class MustacheComponent implements Component.Sequential {
      * Load RDF data.
      *
      * @return
-     * @throws NonRecoverableException
      */
     private Collection<ObjectMetadata> loadData() throws LpException {
         final Map<Resource, ObjectMetadata> objectsInfo = new HashMap<>();
         final Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
         // Load basic informations about objects.
         try (RepositoryConnection connection
-                = input.getRepository().getConnection()) {
+                     = input.getRepository().getConnection()) {
             try (RepositoryResult<Statement> result = connection.getStatements(
-                    null, null, null, input.getGraph())) {
+                    null, null, null, input.getReadGraph())) {
                 while (result.hasNext()) {
                     final Statement st = result.next();
                     // Check for interest properties.
@@ -232,7 +217,7 @@ public final class MustacheComponent implements Component.Sequential {
                     result.put(entry.getKey().stringValue(), newData);
                 }
             } else // Values.
-             if (entry.getValue().size() == 1) {
+                if (entry.getValue().size() == 1) {
                     result.put(entry.getKey().stringValue(),
                             getValue(entry.getValue().get(0)));
                 } else {

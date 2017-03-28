@@ -1,16 +1,18 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.AbstractRDFHandler;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,16 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public final class FilesToRdfChunked implements Component.Sequential {
+public final class FilesToRdfChunked implements Component, SequentialExecution {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(FilesToRdfChunked.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
-    @Component.OutputPort(id = "OutputRdf")
-    public WritableChunkedStatements outputRdf;
+    @Component.OutputPort(iri = "OutputRdf")
+    public WritableChunkedTriples outputRdf;
 
     @Component.Configuration
     public FilesToRdfConfiguration configuration;
@@ -42,71 +44,98 @@ public final class FilesToRdfChunked implements Component.Sequential {
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
-    /**
-     * Buffer used to store data.
-     */
+    private RDFFormat defaultFormat;
+
     private List<Statement> buffer = new ArrayList<>(100000);
 
     @Override
     public void execute() throws LpException {
-        final RDFFormat defaultFormat;
-        if (configuration.getMimeType() == null
-                || configuration.getMimeType().isEmpty()) {
+        prepareDefaultFormat();
+        loadFiles();
+    }
+
+    private void prepareDefaultFormat() {
+        String mimeType = configuration.getMimeType();
+        if (mimeType == null || mimeType.isEmpty()) {
             defaultFormat = null;
         } else {
-            final Optional<RDFFormat> optionalFormat
-                    = Rio.getParserFormatForMIMEType(
+            Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(
                     configuration.getMimeType());
-            if (optionalFormat.isPresent()) {
-                defaultFormat = optionalFormat.get();
+            if (format.isPresent()) {
+                defaultFormat = format.get();
             } else {
                 defaultFormat = null;
             }
         }
-        //
-        int counter = 0;
+    }
+
+    private void loadFiles() throws LpException {
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Loading: {}", entry.getFileName());
-            if (defaultFormat == null) {
-                final RDFFormat format = Rio.getParserFormatForFileName(
-                        entry.getFileName()).orElseGet(null);
-                if (format == null) {
-                    throw exceptionFactory.failure(
-                            "Can't determine format for file: {}",
-                            entry.getFileName());
-                }
-                loadFile(entry.toFile(), format);
-            } else {
-                loadFile(entry.toFile(), defaultFormat);
-            }
-            counter++;
-            if (counter >= configuration.getFilesPerChunk()) {
-                outputRdf.submit(buffer);
-                buffer.clear();
-                counter = 0;
-            }
+            loadEntry(entry);
+            flushBufferIfBigEnough();
             progressReport.entryProcessed();
         }
-        if (!buffer.isEmpty()) {
-            outputRdf.submit(buffer);
-        }
+        flushBuffer();
         progressReport.done();
+    }
+
+    private void flushBufferIfBigEnough() throws LpException {
+        if (buffer.size() > configuration.getFilesPerChunk()) {
+            flushBuffer();
+        }
+    }
+
+    private void flushBuffer() throws LpException {
+        if (buffer.isEmpty()) {
+            return;
+        }
+        outputRdf.submit(buffer);
+        buffer.clear();
+    }
+
+    private void loadEntry(FilesDataUnit.Entry entry) throws LpException {
+        RDFFormat format = getFormat(entry.getFileName());
+        loadFile(entry.toFile(), format);
+    }
+
+    private RDFFormat getFormat(String fileName) throws LpException {
+        if (defaultFormat != null) {
+            return defaultFormat;
+        }
+        Optional<RDFFormat> format = Rio.getParserFormatForFileName(fileName);
+        if (!format.isPresent()) {
+            throw exceptionFactory.failure(
+                    "Can't determine format for file: {}", fileName);
+        }
+        return format.get();
     }
 
     private void loadFile(File file, RDFFormat format) throws LpException {
         try (InputStream stream = new FileInputStream(file)) {
-            final RDFParser parser = Rio.createParser(format);
-            parser.setRDFHandler(new AbstractRDFHandler() {
-                @Override
-                public void handleStatement(Statement st) {
-                    buffer.add(st);
-                }
-            });
+            final RDFParser parser = createParser(format);
             parser.parse(stream, "http://localhost/base/");
         } catch (IOException ex) {
             exceptionFactory.failure("Can't load file: {}", file, ex);
         }
+    }
+
+    private final RDFParser createParser(RDFFormat format) {
+        RDFHandler handler = new AbstractRDFHandler() {
+            @Override
+            public void handleStatement(Statement st) {
+                buffer.add(st);
+            }
+        };
+
+        if (format == RDFFormat.JSONLD) {
+            handler = new BlankNodePrefixUpdater(handler);
+        }
+
+        RDFParser parser = Rio.createParser(format);
+        parser.setRDFHandler(handler);
+        return parser;
     }
 
 }

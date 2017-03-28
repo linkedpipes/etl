@@ -1,0 +1,9 @@
+#prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://localhost/graph/01> {
+
+    <http://localhost/resource/01>
+        a <http://localhost/ontolog/Type> ;
+        skos:prefLabel "Resource 01" .
+
+}

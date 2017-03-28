@@ -1,23 +1,22 @@
 package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Optional;
-
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -26,35 +25,33 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.openrdf.model.Literal;
-import org.openrdf.query.Binding;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.sparql.SPARQLRepository;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.query.Binding;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.protocol.HttpClientContext;
 
-/**
- */
-public class GraphStoreProtocol implements Component.Sequential {
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Optional;
+
+public class GraphStoreProtocol implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(GraphStoreProtocol.class);
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
     @Component.Configuration
@@ -85,7 +82,7 @@ public class GraphStoreProtocol implements Component.Sequential {
                 throw exceptionFactory.failure("Can't get graph size.", ex);
             }
         }
-        for (final Entry entry : inputFiles) {
+        for (final FilesDataUnit.Entry entry : inputFiles) {
             final Optional<RDFFormat> rdfFormat
                     = Rio.getParserFormatForFileName(entry.getFileName());
             if (!rdfFormat.isPresent()) {
@@ -139,8 +136,6 @@ public class GraphStoreProtocol implements Component.Sequential {
 
     /**
      * @return Size of a remote graph.
-     * @throws LpException
-     * @throws IOException
      */
     private long getGraphSize() throws LpException, IOException {
         final SPARQLRepository repository = new SPARQLRepository(
@@ -289,14 +284,14 @@ public class GraphStoreProtocol implements Component.Sequential {
             final HttpEntityEnclosingRequestBase emptyRequest
                     = new HttpPut(configuration.getEndpoint());
             try (final CloseableHttpResponse response
-                    = httpClient.execute(emptyRequest, context)) {
+                         = httpClient.execute(emptyRequest, context)) {
             } catch (Exception ex) {
                 LOG.info("Exception during first empty request:", ex);
             }
         }
         //
         try (final CloseableHttpResponse response
-                = httpClient.execute(httpMethod, context)) {
+                     = httpClient.execute(httpMethod, context)) {
             try {
                 LOG.debug("Response:\n {} ",
                         EntityUtils.toString(response.getEntity()));
@@ -324,7 +319,6 @@ public class GraphStoreProtocol implements Component.Sequential {
     }
 
     /**
-     *
      * @return Must be closed after use.
      */
     private CloseableHttpClient getNonAuthHttpClient() {

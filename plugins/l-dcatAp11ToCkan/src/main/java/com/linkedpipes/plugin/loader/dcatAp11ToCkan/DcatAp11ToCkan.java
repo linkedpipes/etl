@@ -1,15 +1,11 @@
 package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.Normalizer;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -20,38 +16,34 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.openrdf.model.Value;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.FOAF;
-import org.openrdf.model.vocabulary.SKOS;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.QueryResults;
-import org.openrdf.query.TupleQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import org.openrdf.query.TupleQueryResult;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.query.impl.SimpleDataset;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.text.Normalizer;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-/**
- *
- * @author Klímek Jakub
- */
-public final class DcatAp11ToCkan implements Component.Sequential {
+public final class DcatAp11ToCkan implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(DcatAp11ToCkan.class);
 
-    @Component.InputPort(id = "Metadata")
+    @Component.InputPort(iri = "Metadata")
     public SingleGraphDataUnit metadata;
 
-    @Component.InputPort(id = "Codelists", optional = true)
+    @Component.InputPort(iri = "Codelists")
     public SingleGraphDataUnit codelists;
 
     @Component.Configuration
@@ -660,9 +652,10 @@ public final class DcatAp11ToCkan implements Component.Sequential {
 
     private String executeSimpleSelectQuery(final String queryAsString, String bindingName) throws LpException {
         return metadata.execute((connection) -> {
-            final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
+            final TupleQuery preparedQuery = connection.prepareTupleQuery(
+                    QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(metadata.getGraph());
+            dataset.addDefaultGraph(metadata.getReadGraph());
             preparedQuery.setDataset(dataset);
             //
             final BindingSet binding = QueryResults.singleResult(preparedQuery.evaluate());
@@ -678,7 +671,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
         return codelists.execute((connection) -> {
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(codelists.getGraph());
+            dataset.addDefaultGraph(codelists.getReadGraph());
             preparedQuery.setDataset(dataset);
             //
             final BindingSet binding = QueryResults.singleResult(preparedQuery.evaluate());
@@ -695,7 +688,7 @@ public final class DcatAp11ToCkan implements Component.Sequential {
             final List<Map<String, Value>> output = new LinkedList<>();
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
-            dataset.addDefaultGraph(metadata.getGraph());
+            dataset.addDefaultGraph(metadata.getReadGraph());
             preparedQuery.setDataset(dataset);
             //
             TupleQueryResult result = preparedQuery.evaluate();

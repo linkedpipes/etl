@@ -3,4 +3,9 @@
 <http://linkedpipes.com/resources/components/x-deleteDirectory/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/x-deleteDirectory#Configuration> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-deleteDirectory#control> .
+    config:member <http://linkedpipes.com/resources/components/x-deleteDirectory/0.0.0/configuration/desc/directory> .
+
+<http://linkedpipes.com/resources/components/x-deleteDirectory/0.0.0/configuration/desc/directory>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-deleteDirectory#directory> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-deleteDirectory#directoryControl> .

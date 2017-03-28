@@ -1,0 +1,41 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/context> ,
+        <http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/encoding> ,
+        <http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/fileReference> ,
+        <http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/dataPredicate> ,
+        <http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/type>,
+        <http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/filePredicate> .
+
+<http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/context>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#context> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#contextControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/encoding>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#encoding> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#encodingControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/fileReference>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#fileReference> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#fileReferenceControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/dataPredicate>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#dataPredicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#dataPredicateControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/type>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#type> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#typeControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonToJsonLd/0.0.0/configuration/desc/filePredicate>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#filePredicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#filePredicateControl> .

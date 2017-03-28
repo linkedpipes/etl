@@ -2,14 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/l-filesToLocal#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/l-filesToLocal#",
         "$type": "Configuration",
-        "path" : {
-            "$type" : "str",
-            "$property" : "path",
-            "$control": "pathControl",
-            "$label" : "Target path"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "path": {
+            "$type": "str",
+            "$label": "Target path"
         }
     };
 

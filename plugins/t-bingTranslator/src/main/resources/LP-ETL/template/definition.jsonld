@@ -16,7 +16,7 @@
             "azure", "bing", "translation"
         ],
         "http://linkedpipes.com/ontology/configurationDescription": [
-            {"@id": "http://etl.linkedpipes.com/resources/components/t-bingTranslator/0.0.0/configurationDescription"}
+            {"@id": "http://linkedpipes.com/resources/components/t-bingTranslator/0.0.0/configuration/desc"}
         ],
         "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-bingTranslator"}
     },

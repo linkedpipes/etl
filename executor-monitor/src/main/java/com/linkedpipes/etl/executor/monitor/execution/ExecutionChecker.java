@@ -4,14 +4,14 @@ import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.ExecutionMismatch;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade.OperationFailed;
 import org.apache.commons.io.FileUtils;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.AbstractRDFHandler;
+import org.eclipse.rdf4j.OpenRDFException;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,6 +170,7 @@ class ExecutionChecker {
 
         // Check.
         if (lastChange != null && execution.getLastChange() != null
+                && !lastChange.equals(execution.getLastChange())
                 && lastChange.before(execution.getLastChange())) {
             // We have newer data already loaded.
             return;
@@ -277,6 +278,8 @@ class ExecutionChecker {
         } else {
             execution.setExecutionStatementsFull(null);
         }
+
+        LOG.info(" {} : {} ", execution.getId(), execution.getStatus());
 
         // For now set change time to every reload.
         execution.setLastChange(checkStart);

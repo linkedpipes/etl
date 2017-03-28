@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnInfo_V1;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +10,6 @@ import java.util.Map;
 
 /**
  * See main configuration for more details about fields meaning.
- *
- * @author Škoda Petr
  */
 public class TableToRdfConfig {
 

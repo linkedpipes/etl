@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-/**
- *
- */
 public final class TabularVocabulary {
 
     private static final String PREFIX = "http://www.w3.org/ns/csvw#";

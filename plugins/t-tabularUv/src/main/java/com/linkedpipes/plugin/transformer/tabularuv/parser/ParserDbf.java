@@ -1,6 +1,14 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
+import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
+import org.jamel.dbf.DbfReader;
+import org.jamel.dbf.structure.DbfField;
+import org.jamel.dbf.structure.DbfHeader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -8,19 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jamel.dbf.DbfReader;
-import org.jamel.dbf.structure.DbfField;
-import org.jamel.dbf.structure.DbfHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
-import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
-
-/**
- *
- * @author Škoda Petr
- */
 public class ParserDbf implements Parser {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParserDbf.class);
@@ -76,7 +71,8 @@ public class ParserDbf implements Parser {
             LOG.debug("Row limit: {}", config.rowLimit);
         }
         while (row != null
-                && (config.rowLimit == null || rowNumPerFile < config.rowLimit)) {
+                &&
+                (config.rowLimit == null || rowNumPerFile < config.rowLimit)) {
             // convert
             for (Object item : row) {
                 if (item instanceof byte[]) {

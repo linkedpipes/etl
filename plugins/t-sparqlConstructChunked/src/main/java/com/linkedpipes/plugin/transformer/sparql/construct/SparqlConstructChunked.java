@@ -1,18 +1,19 @@
 package com.linkedpipes.plugin.transformer.sparql.construct;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.ChunkedStatements;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableChunkedStatements;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-import org.openrdf.model.Statement;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.repository.util.Repositories;
-import org.openrdf.sail.memory.MemoryStore;
+import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.query.GraphQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.repository.util.Repositories;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,17 +25,18 @@ import java.util.List;
  *
  * Use the same vocabulary as SPARQL construct.
  */
-public final class SparqlConstructChunked implements Component.Sequential {
+public final class SparqlConstructChunked implements Component,
+        SequentialExecution {
 
-    @Component.InputPort(id = "InputRdf")
-    public ChunkedStatements inputRdf;
+    @Component.InputPort(iri = "InputRdf")
+    public ChunkedTriples inputRdf;
 
     @Component.ContainsConfiguration
-    @Component.InputPort(id = "Configuration")
+    @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.InputPort(id = "OutputRdf")
-    public WritableChunkedStatements outputRdf;
+    @Component.InputPort(iri = "OutputRdf")
+    public WritableChunkedTriples outputRdf;
 
     @Component.Configuration
     public SparqlConstructConfiguration configuration;
@@ -55,11 +57,11 @@ public final class SparqlConstructChunked implements Component.Sequential {
         // We always perform inserts.
         progressReport.start(inputRdf.size());
         List<Statement> outputBuffer = new ArrayList<>(10000);
-        for (ChunkedStatements.Chunk chunk: inputRdf) {
+        for (ChunkedTriples.Chunk chunk: inputRdf) {
             // Prepare repository and load data.
             final Repository repository = new SailRepository(new MemoryStore());
             repository.initialize();
-            final Collection<Statement> statements = chunk.toStatements();
+            final Collection<Statement> statements = chunk.toCollection();
             Repositories.consume(repository, (connection) -> {
                 connection.add(statements);
             });

@@ -1,7 +1,16 @@
 package com.linkedpipes.plugin.extractor.httpget;
 
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,28 +20,11 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
-
-/**
- *
- * @author Škoda Petr
- */
-public final class HttpGet implements Component.Sequential {
+public final class HttpGet implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpGet.class);
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
     @Component.Inject
@@ -49,7 +41,7 @@ public final class HttpGet implements Component.Sequential {
         if (configuration.getUri() == null
                 || configuration.getUri().isEmpty()) {
             throw exceptionFactory.failure("Missing property: {}",
-                HttpGetVocabulary.HAS_URI);
+                    HttpGetVocabulary.HAS_URI);
         }
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
@@ -78,7 +70,7 @@ public final class HttpGet implements Component.Sequential {
         }
         // Prepare target destination.
         final File destination = output.createFile(
-                configuration.getFileName()).toFile();
+                configuration.getFileName());
         // Download file.
         HttpURLConnection connection;
         try {
@@ -113,30 +105,28 @@ public final class HttpGet implements Component.Sequential {
 
     /**
      * Add trust to all certificates.
-     *
-     * @throws Exception
      */
     private static void setTrustAllCerts() throws Exception {
         final TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                @Override
-                public java.security.cert.X509Certificate[]
-                        getAcceptedIssuers() {
-                    return null;
-                }
+                new X509TrustManager() {
+                    @Override
+                    public java.security.cert.X509Certificate[]
+                    getAcceptedIssuers() {
+                        return null;
+                    }
 
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] certs,
-                        String authType) {
-                }
+                    @Override
+                    public void checkClientTrusted(
+                            java.security.cert.X509Certificate[] certs,
+                            String authType) {
+                    }
 
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] certs,
-                        String authType) {
+                    @Override
+                    public void checkServerTrusted(
+                            java.security.cert.X509Certificate[] certs,
+                            String authType) {
+                    }
                 }
-            }
         };
         // Install the all-trusting trust manager.
         try {
@@ -157,8 +147,6 @@ public final class HttpGet implements Component.Sequential {
      *
      * @param connection
      * @return
-     * @throws IOException
-     * @throws com.linkedpipes.etl.dpu.api.DataProcessingUnit.ExecutionFailed
      */
     private HttpURLConnection followRedirect(HttpURLConnection connection)
             throws IOException, LpException {
@@ -166,10 +154,11 @@ public final class HttpGet implements Component.Sequential {
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
                 responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-                responseCode == HttpURLConnection.HTTP_SEE_OTHER ) {
+                responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
             final String location = connection.getHeaderField("Location");
             if (location == null) {
-                throw exceptionFactory.failure("Missing Location for redirect.");
+                throw exceptionFactory
+                        .failure("Missing Location for redirect.");
             } else {
                 // Update based on the redirect.
                 connection.disconnect();

@@ -2,20 +2,19 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-filesRenamer#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesRenamer#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "pattern" : {
-            "$type" : "str",
-            "$label" : "Full file name RegExp to match"
+        "pattern": {
+            "$type": "str",
+            "$label": "Full file name RegExp to match"
         },
-        "replaceWith" : {
-            "$type" : "bool",
-            "$label" : "Replace RegExp with with"
+        "replaceWith": {
+            "$type": "bool",
+            "$label": "Replace RegExp with with"
         }
     };
 

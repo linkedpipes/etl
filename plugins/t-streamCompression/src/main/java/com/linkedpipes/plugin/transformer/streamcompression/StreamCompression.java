@@ -1,11 +1,12 @@
 package com.linkedpipes.plugin.transformer.streamcompression;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 
@@ -15,12 +16,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
-public final class StreamCompression implements Component.Sequential {
+public final class StreamCompression implements Component, SequentialExecution {
 
-    @Component.InputPort(id = "FilesInput")
+    @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit input;
 
-    @Component.OutputPort(id = "FilesOutput")
+    @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
     @Component.Inject
@@ -43,11 +44,11 @@ public final class StreamCompression implements Component.Sequential {
                 switch (configuration.getFormat()) {
                     case StreamCompressionVocabulary.FORMAT_BZ2:
                         bzip2(inFile, output.createFile(
-                                entry.getFileName() + ".bz2").toFile());
+                                entry.getFileName() + ".bz2"));
                         break;
                     case StreamCompressionVocabulary.FORMAT_GZIP:
                         gzip(inFile, output.createFile(
-                                entry.getFileName() + ".gz").toFile());
+                                entry.getFileName() + ".gz"));
                         break;
                     default:
                         break;

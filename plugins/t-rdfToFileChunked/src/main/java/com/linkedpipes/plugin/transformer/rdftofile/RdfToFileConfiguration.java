@@ -1,24 +1,20 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = RdfToFileVocabulary.CONFIG)
+@RdfToPojo.Type(iri = RdfToFileVocabulary.CONFIG)
 public class RdfToFileConfiguration {
 
-    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_FILE_NAME)
+    @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_FILE_NAME)
     private String fileName;
 
-    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_FILE_TYPE)
+    @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_FILE_TYPE)
     private String fileType;
 
-    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_GRAPH_URI)
+    @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_GRAPH_URI)
     private String graphUri;
 
-    @RdfToPojo.Property(uri = RdfToFileVocabulary.HAS_PREFIX_TEST)
+    @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_PREFIXES)
     private String prefixes;
 
     public RdfToFileConfiguration() {

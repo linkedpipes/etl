@@ -1,27 +1,24 @@
 package com.linkedpipes.plugin.exec.virtuosoExtractor;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = VirtuosoExtractorVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = VirtuosoExtractorVocabulary.CONFIG_CLASS)
 public class VirtuosoExtractorConfiguration {
 
-    @RdfToPojo.Property(uri = VirtuosoExtractorVocabulary.VIRTUOSO_URI)
+    @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.VIRTUOSO_URI)
     private String virtuosoUrl =
             "jdbc:virtuosoExtractor://localhost:1111/charset=UTF-8/";
 
-    @RdfToPojo.Property(uri = VirtuosoExtractorVocabulary.USERNAME)
+    @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.USERNAME)
     private String username = "dba";
 
-    @RdfToPojo.Property(uri = VirtuosoExtractorVocabulary.PASSWORD)
+    @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.PASSWORD)
     private String password = "dba";
 
-    @RdfToPojo.Property(uri = VirtuosoExtractorVocabulary.OUTPUT_PATH)
+    @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.OUTPUT_PATH)
     private String outputPath = "";
 
-    @RdfToPojo.Property(uri = VirtuosoExtractorVocabulary.GRAPH)
+    @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.GRAPH)
     private String graph = "";
 
     public VirtuosoExtractorConfiguration() {

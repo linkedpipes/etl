@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.executor.api.v1.LpException;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,9 +14,11 @@ public interface ManageableDataUnit extends DataUnit {
      * Called before data unit is used. Only one initializer method is called!
      * Content of this data unit should be loaded from given directory.
      *
+     * DataUnit initialized by this method is read-only.
+     *
      * @param directory
      */
-    public void initialize(File directory) throws LpException;
+    void initialize(File directory) throws LpException;
 
     /**
      * Called before data unit is used. Only one initializer method is called!
@@ -25,7 +26,7 @@ public interface ManageableDataUnit extends DataUnit {
      *
      * @param dataUnits
      */
-    public void initialize(Map<String, ManageableDataUnit> dataUnits)
+    void initialize(Map<String, ManageableDataUnit> dataUnits)
             throws LpException;
 
     /**
@@ -34,21 +35,36 @@ public interface ManageableDataUnit extends DataUnit {
      *
      * This method can be called multiple times.
      *
-     * The method must return list of directories that contains data that
-     * can be shown to user as a content of this data unit. The returned
-     * paths must be in scope of the execution.
-     *
-     * If given directory contains the data that should be visible
-     * as a content of data unit than it should also be returned.
+     * The method must also create a "debug.json" file in
+     * given directory, that contains reference to directories
+     * with debug data for the user.
      *
      * @param directory
-     * @return Optionally additional directories that contains data.
      */
-    public List<File> save(File directory) throws LpException;
+    void save(File directory) throws LpException;
 
     /**
      * Close given data unit. After this call no other method is called.
      */
-    public void close() throws LpException;
+    void close() throws LpException;
+
+    /**
+     * Used when content of given dataunit is mapped from another execution
+     * but is not used in this execution.
+     *
+     * The content should be referenced, it. the original data must not be
+     * modified. The result should be similar to calling
+     * {@link #initialize(java.io.File)} and {@link #save(java.io.File)},
+     * but the data must stay in the source directory.
+     *
+     * This created dependency of the content of this data unit on the
+     * content of other data unit.
+     *
+     * This function must not change inner state of the instance.
+     *
+     * @param source
+     * @param destination
+     */
+    void referenceContent(File source, File destination) throws LpException;
 
 }

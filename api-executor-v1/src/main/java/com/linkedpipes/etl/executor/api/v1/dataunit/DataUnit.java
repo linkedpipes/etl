@@ -8,16 +8,11 @@ public interface DataUnit {
     /**
      * @return Name of binding.
      */
-    public String getBinding();
+    String getBinding();
 
     /**
      * @return IRI of the data unit.
      */
-    public String getResourceIri();
-
-    /**
-     * @return True if DataUnit has been initialized.
-     */
-    public boolean isInitialized();
+    String getIri();
 
 }

@@ -138,6 +138,18 @@ define([
                     portBinding);
             return;
         }
+        if (dataUnit.debug === undefined) {
+            // There are no debug data.
+            this.$mdDialog.show(
+                this.$mdDialog.alert()
+                .parent(angular.element(document.querySelector('body')))
+                .clickOutsideToClose(true)
+                .title('There is no debug data.')
+                .textContent('')
+                .ok('Ok')
+            );
+            return;
+        }
         // Construct path to data unit debug.
         var execIri = this.execution.getIri();
         this.infoService.fetch().then((info) => {

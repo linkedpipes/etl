@@ -39,4 +39,8 @@
                ng-disabled="dialog.createDirectory.disabled || dialog.createDirectory.inherit"
                ng-model="dialog.createDirectory.value">Create target directory
     </md-switch>
+    <md-switch ng-hide="dialog.clearDirectory.hide"
+               ng-disabled="dialog.clearDirectory.disabled || dialog.clearDirectory.inherit"
+               ng-model="dialog.clearDirectory.value">Clear target directory
+    </md-switch>
 </div>

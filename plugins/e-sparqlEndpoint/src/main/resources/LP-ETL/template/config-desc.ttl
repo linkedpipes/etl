@@ -3,15 +3,27 @@
 <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/query>  ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/endpoint> .
+    config:member <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/query>  ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/endpoint> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/headerAccept> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/defaultGraph> .
 
-<http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/query>
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#queryControl> .
 
-<http://linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0/configuration/desc/endpoint>
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/headerAccept>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#headerAccept> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#headerAcceptControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/defaultGraph>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#defaultGraph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#defaultGraphControl> .

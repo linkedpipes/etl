@@ -5,7 +5,6 @@ define([
     'app/components/canvas/pipelineCanvas',
     'app/components/canvas/executionProgress',
     'app/components/pipelineEditDirective/pipelineEditDirective',
-    'app/components/templates/templatesRepository',
     'app/components/pipelines/pipelineModelService',
     'app/components/templates/selectDialog/templateSelectDialog',
     'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
@@ -17,7 +16,6 @@ define([
              canvasPipelineFactory,
              executionProgressFactory,
              pipelineEditDirective,
-             templatesRepositoryFactory,
              pipelineModelService,
              selectTemplateDialog,
              importPipelineDialog,
@@ -77,7 +75,8 @@ define([
             'execution': {
                 'iri': $routeParams.execution,
                 'model': void 0,
-                'update': true
+                'update': true,
+                'hasWorkingData': true
             }
         };
 
@@ -139,7 +138,7 @@ define([
             storePipeline(data.pipeline.iri, true, function () {
                 executePipeline(createExecuteConfiguration({
                     'to': component['@id']
-                }), function () {
+                }, false), function () {
                     $location.path('/executions').search({});
                 });
             });
@@ -323,6 +322,10 @@ define([
         //
         var readyComponents = 0;
 
+        function executionHasWorkingDate() {
+            return data.execution.model.hasWorkingData();
+        }
+
         $scope.pipelineEdit.onLink = function () {
 
             $scope.pipelineEdit.bind(
@@ -345,6 +348,9 @@ define([
                     return executionCanvas.isMappingAvailable(
                         component['@id']);
                 }
+            };
+            $scope.pipelineEdit.API.debugFromAvailable = function () {
+                return executionHasWorkingDate();
             };
             $scope.pipelineEdit.API.createTemplate = function (component) {
                 const templateIri = jsonld.r.getIRI(component,
@@ -442,22 +448,31 @@ define([
          *  to - an IRI (as string) of component to run to
          *
          */
-        var createExecuteConfiguration = function (parametr) {
+        var createExecuteConfiguration = function (parameters, withoutDebug) {
             var config = {
                 '@id': '',
                 '@type': 'http://etl.linkedpipes.com/ontology/ExecutionOptions'
             };
 
+            if (withoutDebug) {
+                config['http://linkedpipes.com/ontology/saveDebugData'] = false;
+                config['http://linkedpipes.com/ontology/deleteWorkingData'] = true;
+            } else {
+                config['http://linkedpipes.com/ontology/saveDebugData'] = true;
+                config['http://linkedpipes.com/ontology/deleteWorkingData'] = false;
+            }
+
             // Run-to arguments.
-            if (parametr['to']) {
+            if (parameters['to']) {
                 config['http://etl.linkedpipes.com/ontology/runTo'] =
-                {'@id': parametr['to']}
+                {'@id': parameters['to']}
             }
 
             // We will continue only if there is some mapping from
             // another execution.
-            if (data.execution.iri === undefined) {
-                // No information about execution.
+            if (data.execution.iri === undefined ||
+                !executionHasWorkingDate()) {
+                // No information about execution or there are no working data.
                 return config;
             }
             // Create object with mapping and reference it from
@@ -474,7 +489,7 @@ define([
             // Add components.
             for (var iri in components) {
                 var component = components[iri];
-                if (parametr['to'] === iri) {
+                if (parameters['to'] === iri) {
                     // There is no mapping.
                     continue;
                 }
@@ -508,9 +523,10 @@ define([
 
         $scope.onExecute = function () {
             storePipeline(data.pipeline.iri, true, function () {
-                executePipeline(createExecuteConfiguration({}), function () {
-                    $location.path('/executions').search({});
-                });
+                executePipeline(createExecuteConfiguration({}, false),
+                    function () {
+                        $location.path('/executions').search({});
+                    });
             });
         };
 
@@ -541,13 +557,22 @@ define([
                     'data': {
                         'iri': $scope.data.iri,
                         'label': $scope.data.pipelineLabel,
-                        'pipeline': jsonld
+                        'pipeline': jQuery.extend(true, {}, jsonld)
                     }
                 }
             }).then(function (result) {
                 // No action here.
             }, function () {
                 // No action here.
+            });
+        };
+
+        $scope.onExecuteWithoutDebugData = function () {
+            storePipeline(data.pipeline.iri, true, function () {
+                executePipeline(createExecuteConfiguration({}, true),
+                    function () {
+                        $location.path('/executions').search({});
+                    });
             });
         };
 
@@ -730,7 +755,6 @@ define([
         canvasPipelineFactory(app);
         executionProgressFactory(app);
         pipelineEditDirective(app);
-        templatesRepositoryFactory(app);
         pipelineModelService(app);
         selectTemplateDialog(app);
         importPipelineDialog(app);

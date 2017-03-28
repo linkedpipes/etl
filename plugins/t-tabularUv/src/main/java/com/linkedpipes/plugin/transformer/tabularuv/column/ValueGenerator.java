@@ -1,18 +1,13 @@
 package com.linkedpipes.plugin.transformer.tabularuv.column;
 
+import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+
 import java.util.List;
 import java.util.Map;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
-
-/**
- *
- * @author Škoda Petr
- */
 public interface ValueGenerator {
 
     /**
@@ -20,9 +15,8 @@ public interface ValueGenerator {
      *
      * @param nameToIndex Mapping from names to indexes in row.
      * @param valueFactory
-     * @throws com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed
      */
-    public void compile(Map<String, Integer> nameToIndex,
+    void compile(Map<String, Integer> nameToIndex,
             ValueFactory valueFactory) throws ParseFailed;
 
     /**
@@ -32,12 +26,11 @@ public interface ValueGenerator {
      * @param valueFactory
      * @return
      */
-    public Value generateValue(List<Object> row, ValueFactory valueFactory);
+    Value generateValue(List<Object> row, ValueFactory valueFactory);
 
     /**
-     *
      * @return IRI for generated value.
      */
-    public IRI getUri();
+    IRI getUri();
 
 }

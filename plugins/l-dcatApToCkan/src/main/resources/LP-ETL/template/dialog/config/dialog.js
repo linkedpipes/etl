@@ -37,7 +37,7 @@ define([], function () {
             "$type" : "str",
             "$label" : "Load language (cs|en)"
         },
-        "generateVirtuoso" : {
+        "generateVirtuosoExample" : {
             "$type" : "bool",
             "$label" : "Turtle example resources (for Virtuoso)"
         },

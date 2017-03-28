@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.linkedpipes</groupId>
+    <parent>
+        <groupId>com.linkedpipes</groupId>
+        <artifactId>pom-parent</artifactId>
+        <version>0.0.0</version>
+        <relativePath>../pom-parent/pom.xml</relativePath>
+    </parent>
     <artifactId>dependencies</artifactId>
-    <version>0.0.0</version>
     <packaging>pom</packaging>
     <name>lp-deploy-dependencies</name>
 
@@ -16,12 +20,13 @@
         <repository>
             <id>artefacts.linkedpipes.com</id>
             <name>artefacts.linkedpipes.com</name>
-            <url>http://artefacts.linkedpipes.com/repository/maven-public/</url>
+            <url>https://artefacts.linkedpipes.com/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <profiles>
         <profile>
+            <id>deploy</id>
             <activation>
                 <property>
                     <name>!noDeploy</name>
@@ -58,643 +63,654 @@
                                             <groupId>commons-codec</groupId>
                                             <artifactId>commons-codec</artifactId>
                                             <version>1.9</version>
-                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.santuario</groupId>
                                             <artifactId>xmlsec</artifactId>
                                             <version>2.0.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.servicemix.bundles</groupId>
                                             <artifactId>org.apache.servicemix.bundles.jsch</artifactId>
                                             <version>0.1.49_1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.servicemix.bundles</groupId>
                                             <artifactId>org.apache.servicemix.bundles.poi</artifactId>
                                             <version>3.11_1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.servicemix.bundles</groupId>
                                             <artifactId>org.apache.servicemix.bundles.xmlresolver</artifactId>
                                             <version>1.2_5</version>
-                                            <outputDirectory>${deploy.directory}/osgi/apache-poi</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Apache commons. -->
                                         <dependency>
                                             <groupId>commons-io</groupId>
                                             <artifactId>commons-io</artifactId>
                                             <version>2.4</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>commons-net</groupId>
                                             <artifactId>commons-net</artifactId>
                                             <version>3.5</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.eclipse.birt.runtime</groupId>
                                             <artifactId>org.apache.commons.logging</artifactId>
                                             <version>1.1.1.v201101211721</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-lang3</artifactId>
                                             <version>3.3.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- HttpClient, for example: l-graphStoreProtocol -->
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpclient-osgi</artifactId>
                                             <version>4.5.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/httpcomponents</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpcore-osgi</artifactId>
                                             <version>4.4.4</version>
-                                            <outputDirectory>${deploy.directory}/osgi/httpcomponents</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- OSGI Implementation. -->
                                         <dependency>
                                             <groupId>org.apache.felix</groupId>
                                             <artifactId>org.apache.felix.scr</artifactId>
                                             <version>1.8.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- OSGI. -->
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpclient-osgi</artifactId>
                                             <version>4.4.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpcore-osgi</artifactId>
                                             <version>4.4.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.osgi</groupId>
                                             <artifactId>org.osgi.compendium</artifactId>
                                             <version>5.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.osgi</groupId>
                                             <artifactId>org.osgi.core</artifactId>
                                             <version>5.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Jackson. -->
                                         <dependency>
                                             <groupId>com.fasterxml.jackson.core</groupId>
                                             <artifactId>jackson-annotations</artifactId>
-                                            <version>2.6.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <version>2.8.6</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.fasterxml.jackson.core</groupId>
                                             <artifactId>jackson-core</artifactId>
-                                            <version>2.6.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <version>2.8.6</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.fasterxml.jackson.core</groupId>
                                             <artifactId>jackson-databind</artifactId>
-                                            <version>2.6.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
-                                        </dependency>
-                                        <!-- Sesame - it looks for now this is not working. -->
-                                        <dependency>
-                                            <groupId>org.openrdf.sesame</groupId>
-                                            <artifactId>sesame-runtime-osgi</artifactId>
-                                            <version>4.0.1-SNAPSHOT-custom</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
-                                            <destFileName>sesame-runtime-osgi-4.0.1-SNAPSHOT-custom.jar</destFileName>
+                                            <version>2.8.6</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Others. -->
                                         <dependency>
                                             <groupId>org.jsoup</groupId>
                                             <artifactId>jsoup</artifactId>
                                             <version>1.8.3</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.google.guava</groupId>
                                             <artifactId>guava</artifactId>
                                             <version>18.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.github.jsonld-java</groupId>
                                             <artifactId>jsonld-java</artifactId>
-                                            <version>0.7.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <version>0.8.3</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.mapdb</groupId>
                                             <artifactId>mapdb</artifactId>
                                             <version>1.0.8</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.opencsv</groupId>
                                             <artifactId>opencsv</artifactId>
                                             <version>3.3</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- GeoTools -->
                                         <dependency>
                                             <groupId>com.googlecode.efficient-java-matrix-library</groupId>
                                             <artifactId>core-osgi</artifactId>
                                             <version>0.26</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>net.sf.geographiclib</groupId>
                                             <artifactId>GeographicLib-Java-osgi</artifactId>
                                             <version>1.44</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.geotools</groupId>
                                             <artifactId>gt-opengis-osgi</artifactId>
                                             <version>16.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.geotools</groupId>
                                             <artifactId>gt-osgi</artifactId>
                                             <version>16.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.hsqldb</groupId>
                                             <artifactId>hsqldb-osgi</artifactId>
                                             <version>2.3.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>jgridshift</groupId>
                                             <artifactId>jgridshift-osgi</artifactId>
                                             <version>1.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>javax.measure</groupId>
                                             <artifactId>jsr-275-osgi</artifactId>
                                             <version>1.0-beta-2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>commons-pool</groupId>
                                             <artifactId>commons-pool</artifactId>
                                             <version>1.5.4</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Apache service mix. -->
                                         <dependency>
                                             <groupId>org.apache.servicemix.bundles</groupId>
                                             <artifactId>org.apache.servicemix.bundles.libthrift</artifactId>
                                             <version>0.9.2_1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.servicemix.bundles</groupId>
                                             <artifactId>org.apache.servicemix.bundles.spatial4j</artifactId>
                                             <version>0.4.1_1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/external</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Core libraries -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-component-v1</artifactId>
-                                            <version>0.0.0</version>
+                                            <artifactId>dataunit-core</artifactId>
+                                            <version>${lp.version}</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>api-component-v1-impl</artifactId>
-                                            <version>0.0.0</version>
+                                            <artifactId>rdf-utils-rdf4j</artifactId>
+                                            <version>${lp.version}</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
+                                        <!-- RDF -->
                                         <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>dataunit-sesame</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>dataunit-sesame-impl</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>dataunit-system</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>dataunit-system-impl</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                            <groupId>org.eclipse.rdf4j</groupId>
+                                            <artifactId>rdf4j-runtime-osgi</artifactId>
+                                            <version>${rdf4j.version}</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Core components. -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-httpGetFile</artifactId>
+                                            <artifactId>e-textHolder</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-httpGetFile/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-httpGetFiles</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-httpGetFiles/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-pipelineInput</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-pipelineInput/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-voidDataset</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-voidDataset/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-sparqlEndpoint</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpoint/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-sparqlEndpointChunked</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointChunked/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-sparqlEndpointSelect</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointSelect/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-sparqlEndpointSelectScrollableCursor</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointSelectScrollableCursor/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-sparqlEndpointConstructScrollableCursor</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-sparqlEndpointConstructScrollableCursor/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>q-sparqlAsk</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/q-sparqlAsk/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>t-filesFilter</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-filesFilter/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>l-filesToLocal</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/l-filesToLocal/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>l-filesToScp</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/l-filesToScp/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>l-graphStoreProtocol</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/l-graphStoreProtocol/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>l-sparqlEndpoint</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/l-sparqlEndpoint/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>l-sparqlEndpointChunked</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/l-sparqlEndpointChunked/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-datasetMetadata</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-datasetMetadata/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-dcatAp11Dataset</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-dcatAp11Dataset/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>l-dcatAp11ToCkan</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/l-dcatAp11ToCkan/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-distributionMetadata</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-distributionMetadata/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-dcatAp11Distribution</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-dcatAp11Distribution/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-filesFromLocal</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-filesFromLocal/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-ftpFiles</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-ftpFiles/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-textHolder/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdf</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-filesToRdf/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-filesToRdf/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-httpGetFile</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-httpGetFile/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-httpGetFiles</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-httpGetFiles/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-pipelineInput</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-pipelineInput/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-voidDataset</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-voidDataset/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpoint</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-sparqlEndpoint/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-sparqlEndpointChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointSelect</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-sparqlEndpointSelect/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointSelectScrollableCursor</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-sparqlEndpointSelectScrollableCursor/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointConstructScrollableCursor</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-sparqlEndpointConstructScrollableCursor/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>q-sparqlAsk</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/q-sparqlAsk/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-filesFilter</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-filesFilter/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-filesToLocal</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-filesToLocal/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-filesToScp</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-filesToScp/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-graphStoreProtocol</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-graphStoreProtocol/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-sparqlEndpoint</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-sparqlEndpoint/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-sparqlEndpointChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-sparqlEndpointChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-datasetMetadata</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-datasetMetadata/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-dcatAp11Dataset</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-dcatAp11Dataset/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-dcatAp11ToCkan</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-dcatAp11ToCkan/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-distributionMetadata</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-distributionMetadata/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-dcatAp11Distribution</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-dcatAp11Distribution/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-filesFromLocal</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-filesFromLocal/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-ftpFiles</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-ftpFiles/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-ftpFiles</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-ftpFiles/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdfChunked</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-filesToRdfChunked/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-filesToRdfChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToRdfGraph</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-filesToRdfGraph/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-filesToRdfGraph/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-graphMerger</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-graphMerger/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-graphMerger/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-mustache</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-mustache/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-mustache/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-packZip</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-packZip/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-packZip/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-rdfToFile</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-rdfToFile/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-rdfToFile/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-rdfToFileChunked</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-rdfToFileChunked/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-rdfToFileChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesToStatements</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-filesToStatements/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-filesToStatements/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlConstruct</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-sparqlConstruct/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlConstruct/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlConstructChunked</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-sparqlConstructChunked/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlConstructChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlLinkerChunked</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-sparqlLinkerChunked/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlLinkerChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlSelect</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-sparqlSelect/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlSelect/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlSelectMulti</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-sparqlSelectMulti/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlSelectMulti/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlUpdate</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-sparqlUpdate/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlUpdate/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlUpdateChunked</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-sparqlUpdateChunked/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlUpdateChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-tabular</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-tabular/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-tabular/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-tabularChunked</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-tabularChunked/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-tabularChunked/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-tabularUv</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-tabularUv/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-tabularUv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-templatedXlsToCsv</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-templatedXlsToCsv/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-textHolder</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/e-textHolder/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-templatedXlsToCsv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-dcatApToCkan</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/l-dcatApToCkan/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-dcatApToCkan/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-lodCloud</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-lodCloud/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-excelToCsv</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-excelToCsv/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-excelToCsv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-chunkedToGraph</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-chunkedToGraph/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-chunkedToGraph/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-chunkedToTurtle</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-chunkedToTurtle/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-chunkedToTurtle/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-streamCompression</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-streamCompression/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-streamCompression/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-fileHasher</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-fileHasher/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-fileHasher/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesBase64Decode</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-filesBase64Decode/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-filesBase64Decode/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-filesRenamer</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-filesRenamer/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-filesRenamer/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-unpack</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-unpack/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-unpack/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-unpackZip</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-unpackZip/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-unpackZip/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-xslt</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-xslt/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-xslt/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>x-virtuoso</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/x-virtuoso/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/x-virtuoso/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>x-virtuosoExtractor</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/x-virtuosoExtractor/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/x-virtuosoExtractor/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-singleGraphUnion</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-singleGraphUnion/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-singleGraphUnion/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-valueParser</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-valueParser/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-valueParser/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>x-deleteDirectory</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/x-deleteDirectory/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/x-deleteDirectory/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-htmlCssUv</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-htmlCssUv/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-htmlCssUv/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-modifyDate</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-modifyDate/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-modifyDate/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-geoTools</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-geoTools/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-geoTools/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-jsonToJsonLd</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-jsonToJsonLd/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-jsonLdFormat</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-jsonLdFormat/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-bingTranslator</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/t-bingTranslator/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-bingTranslator/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointList</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-sparqlEndpointList/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>e-sparqlEndpointChunkedList</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/e-sparqlEndpointChunkedList/</outputDirectory>
                                         </dependency>
                                     </artifactItems>
                                 </configuration>

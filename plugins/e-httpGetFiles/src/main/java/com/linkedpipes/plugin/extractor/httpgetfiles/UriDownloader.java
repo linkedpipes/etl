@@ -1,20 +1,18 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,6 +43,9 @@ class UriDownloader {
 
         private final ConcurrentLinkedQueue<FileToDownload> workQueue;
 
+        private final Map<String, String> contextMap =
+                MDC.getCopyOfContextMap();
+
         private final AtomicInteger counter;
 
         public Worker(
@@ -56,9 +57,11 @@ class UriDownloader {
 
         @Override
         public Object call() throws Exception {
+            MDC.setContextMap(contextMap);
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
-                LOG.info("Downloading {}/{} : {}",
+                final Date downloadStarted = new Date();
+                LOG.debug("Downloading {}/{} : {}",
                         counter.incrementAndGet(), total, work.source);
                 // Check failure of other threads.
                 if (!configuration.isSkipOnError() &&
@@ -91,10 +94,15 @@ class UriDownloader {
                 try (InputStream inputStream = connection.getInputStream()) {
                     FileUtils.copyInputStreamToFile(inputStream, work.target);
                 } catch (IOException ex) {
-                    LOG.error("Can't download file: {}", ex);
+                    LOG.error("Can't download file: {}", work.target, ex);
                     exceptions.add(ex);
                     continue;
                 } finally {
+                    final Date downloadEnded = new Date();
+                    long downloadTime = downloadEnded.getTime() -
+                            downloadStarted.getTime();
+                    LOG.debug("Downloading of: {} takes: {} ms",
+                            work.source, downloadTime);
                     progressReport.entryProcessed();
                     connection.disconnect();
                 }
@@ -206,27 +214,27 @@ class UriDownloader {
 
     /**
      * Log details about the connection.
-     * 
+     *
      * @param connection
      */
     private static void logDetails(HttpURLConnection connection) {
         final InputStream errStream = connection.getErrorStream();
         if (errStream != null) {
             try {
-                LOG.info("Error stream: {}",
+                LOG.debug("Error stream: {}",
                         IOUtils.toString(errStream, "UTF-8"));
             } catch (Throwable ex) {
                 // Ignore.
             }
         }
         try {
-            LOG.info(" response code: {}", connection.getResponseCode());
+            LOG.debug(" response code: {}", connection.getResponseCode());
         } catch (IOException ex) {
             LOG.warn("Can't read status code.");
         }
         for (String header : connection.getHeaderFields().keySet()) {
             for (String value : connection.getHeaderFields().get(header)) {
-                LOG.info(" header: {} : {}", header, value);
+                LOG.debug(" header: {} : {}", header, value);
             }
         }
     }

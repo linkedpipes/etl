@@ -1,9 +1,15 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,20 +19,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.poi.ss.usermodel.DateUtil;
 
-/**
- *
- */
 class Parser {
 
     private static final Logger LOG = LoggerFactory.getLogger(Parser.class);
@@ -52,7 +45,7 @@ class Parser {
                 if (configuration.getSheetFilter() != null
                         && !configuration.getSheetFilter().isEmpty()
                         && !sheet.getSheetName().matches(
-                                configuration.getSheetFilter())) {
+                        configuration.getSheetFilter())) {
                     // Skip the sheet as it does not match non empty
                     // sheet filter.
                     continue;
@@ -69,7 +62,7 @@ class Parser {
                     replace(ExcelToCsvConfiguration.SHEET_HOLDER,
                             sheet.getSheetName());
             final File outputFile
-                    = outputFiles.createFile(outputFileName).toFile();
+                    = outputFiles.createFile(outputFileName);
             LOG.info("Parsing sheet: '{}' number of rows: {} into file: {}",
                     sheet.getSheetName(), sheet.getLastRowNum(), outputFile);
             try (PrintStream outputStream = new PrintStream(
@@ -88,7 +81,8 @@ class Parser {
         if (configuration.getRowsEnd() == -1) {
             rowEnd = sheet.getLastRowNum();
         } else {
-            rowEnd = Math.min(configuration.getRowsEnd(), sheet.getLastRowNum());
+            rowEnd =
+                    Math.min(configuration.getRowsEnd(), sheet.getLastRowNum());
         }
         // Read virtual columns;
         final List<String> virtualColumns = new ArrayList<>(
@@ -191,7 +185,6 @@ class Parser {
     }
 
     /**
-     *
      * @param sheet
      * @param virtualColumn
      * @return String value of cell determined by {@link ExcelToCsvConfiguration.VirtualColumn}.
@@ -207,10 +200,8 @@ class Parser {
     }
 
     /**
-     *
      * @param cell
      * @return String value of given cell, empty string if cell is null.
-     * @throws IllegalArgumentException
      */
     private String getCellValue(Cell cell) throws IllegalArgumentException {
         if (cell == null) {
@@ -230,7 +221,8 @@ class Parser {
                 throw new IllegalArgumentException("Wrong cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " + Integer.toString(cell.getColumnIndex()));
+                        + " column: " +
+                        Integer.toString(cell.getColumnIndex()));
             case Cell.CELL_TYPE_NUMERIC:
                 if (configuration.isNumericParse()) {
                     // DataFormatter.formatCellValue use custom date format.
@@ -258,7 +250,8 @@ class Parser {
                 throw new IllegalArgumentException("Unknown cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " + Integer.toString(cell.getColumnIndex()));
+                        + " column: " +
+                        Integer.toString(cell.getColumnIndex()));
         }
     }
 

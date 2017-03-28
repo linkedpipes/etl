@@ -1,0 +1,15 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.threads.hide">
+        <label>Number of threads to use</label>
+        <input ng-model="dialog.threads.value"
+               ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
+               type="number" min="1">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.timeLimit.hide">
+        <label>Query time limit in seconds (-1 for infinite)</label>
+        <input ng-model="dialog.timeLimit.value"
+               ng-disabled="dialog.timeLimit.disabled || dialog.timeLimit.inherit"
+               type="number" min="1">
+    </md-input-container>
+</div>

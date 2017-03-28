@@ -1,12 +1,13 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
-import org.openrdf.model.Statement;
-import org.openrdf.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class UnpackerFacade {
 
     @Autowired
     private TemplateFacade templates;
+
+    @Autowired
+    private Configuration configuration;
 
     public Collection<Statement> unpack(Collection<Statement> pipelineRdf,
             Collection<Statement> configurationRdf) throws BaseException {
@@ -44,7 +48,7 @@ public class UnpackerFacade {
         }
         // Unpack.
         return Unpacker.update(pipelineRdf, templates,
-                pipelineIri, options);
+                pipelineIri, options, configuration);
     }
 
     public Collection<Statement> unpack(Pipeline pipeline,
@@ -54,7 +58,7 @@ public class UnpackerFacade {
         PojoLoader.loadOfType(configurationRdf, UnpackOptions.TYPE, options);
         // Unpack.
         return Unpacker.update(pipelines.getPipelineRdf(pipeline), templates,
-                pipeline.getIri(), options);
+                pipeline.getIri(), options, configuration);
     }
 
 }

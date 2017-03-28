@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGeneratorReplace;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfig;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParserCsvConfig;
@@ -13,11 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#Configuration")
+@RdfToPojo.Type(iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#Configuration")
 public class TabularConfig_V2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(TabularConfig_V2.class);
@@ -38,13 +34,13 @@ public class TabularConfig_V2 {
         Auto
     }
 
-    @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#AdvancedMapping")
+    @RdfToPojo.Type( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#AdvancedMapping")
     public static class AdvanceMapping {
 
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#uri")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#uri")
         private String uri = "";
 
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#template")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#template")
         private String template = "";
 
         public AdvanceMapping() {
@@ -73,38 +69,38 @@ public class TabularConfig_V2 {
 
     }
 
-    @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#ColumnInfo")
+    @RdfToPojo.Type( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#ColumnInfo")
     public static class ColumnInfo_V1 {
 
         /**
          * Column name.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#name")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#name")
         private String name = null;
 
         /**
          * Used column URI.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#uri")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#uri")
         private String URI = null;
 
         /**
          * Final column type.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#type")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#type")
         private ColumnType type = ColumnType.Auto;
 
         /**
          * If true then we use information from DBF to determine data type.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#typeFromDbf")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#typeFromDbf")
         private Boolean useTypeFromDfb = null;
 
         /**
          * If {@link #type} is {@link ColumnType#String} then this value is used to
          * specify language.
          */
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#lang")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#lang")
         private String language = null;
 
         public ColumnInfo_V1() {
@@ -161,16 +157,16 @@ public class TabularConfig_V2 {
 
     }
 
-    @RdfToPojo.Type(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#NamedCell")
+    @RdfToPojo.Type( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#NamedCell")
     public static class NamedCell_V1 {
 
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#name")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#name")
         private String name = "A0";
 
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowNumber")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#rowNumber")
         private Integer rowNumber = 0;
 
-        @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#columnNumber")
+        @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#columnNumber")
         private Integer columnNumber = 0;
 
         public NamedCell_V1() {
@@ -206,19 +202,19 @@ public class TabularConfig_V2 {
      * Name of column that will be used as a key. If null then first column
      * is used. Can also contains template for constriction of primary subject.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#keyColumn")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#keyColumn")
     private String keyColumn = null;
 
     /**
      * Base URI that is used to prefix generated URIs.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#baseUri")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#baseUri")
     private String baseURI = "http://localhost";
 
     /**
      * Column mapping simple.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#column")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#column")
     private List<ColumnInfo_V1> columnsInfo = new LinkedList<>();
 
     /**
@@ -229,111 +225,111 @@ public class TabularConfig_V2 {
      * this functionality is secured by
      * {@link ValueGeneratorReplace#compile}
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedMapping")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedMapping")
     private List<AdvanceMapping> columnsInfoAdv = new LinkedList<>();
 
     /**
      * Named cells for XLS.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#namedCell")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#namedCell")
     private List<NamedCell_V1> namedCells = new LinkedList<>();
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#quote")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#quote")
     private String quoteChar = "\"";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#delimeter")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#delimeter")
     private String delimiterChar = ",";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#linesToIgnore")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#linesToIgnore")
     private Integer linesToIgnore = 0;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#encoding")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#encoding")
     private String encoding = "UTF-8";
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsLimit")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsLimit")
     private Integer rowsLimit = null;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#tableType")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#tableType")
     private ParserType tableType = ParserType.CSV;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#hasHeader")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#hasHeader")
     private boolean hasHeader = false;
 
     /**
      * If false only columns from {@link #columnsInfo} are used.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#generateNew")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#generateNew")
     private boolean generateNew = false;
 
     /**
      * If false then for blank cells the {@link TabularOntology#BLANK_CELL}
      * is inserted.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreBlankCell")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreBlankCell")
     private boolean ignoreBlankCells = false;
 
     /**
      * If true then {@link #keyColumn} is interpreted as advanced = template.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedKey")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#advancedKey")
     private boolean advancedKeyColumn = false;
 
     /**
      * If null no class is set.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowClass")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#rowClass")
     private String rowClass = null;
 
     /**
      * Older version of rowClass.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsClass")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#rowsClass")
     private String rowsClass = null;
 
     /**
      * Sheet name.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#sheetName")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#sheetName")
     private String xlsSheetName = null;
 
     /**
      * If checked same row counter is used for all files. Used only for xsls.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#staticRowCounter")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#staticRowCounter")
     private boolean staticRowCounter = false;
 
     /**
      * If true then triple with row number is generated for each line.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#rowTriple")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#rowTriple")
     private boolean generateRowTriple = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#tableSubject")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#tableSubject")
     private boolean useTableSubject = false;
 
     /**
      * If checked then type auto is always set to string.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#autoAsString")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#autoAsString")
     private boolean autoAsStrings = false;
 
     /**
      * If true then 'a' predicate with class is generated for table and
      * row entity.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#tableClass")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#tableClass")
     private boolean generateTableClass = false;
 
     /**
      * Generate RDF.LABEL for columns from colum name.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#generateLabels")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#generateLabels")
     private boolean generateLabels = false;
 
     /**
      * If set then trailing null values in header are ignored.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#stripHeader")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#stripHeader")
     private boolean stripHeader = false;
 
     /**
@@ -342,16 +338,16 @@ public class TabularConfig_V2 {
      * WARNING: This field is in fact used not only for DBF,
      * but in global scope.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#trimString")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#trimString")
     private boolean dbfTrimString = false;
 
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#xlsAdvancedParser")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#xlsAdvancedParser")
     private boolean xlsAdvancedDoubleParser = false;
 
     /**
      * If true only info log instead of error in case of missing named column.
      */
-    @RdfToPojo.Property(uri = "http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreMissingColumn")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreMissingColumn")
     private boolean ignoreMissingColumn = false;
 
     public TabularConfig_V2() {

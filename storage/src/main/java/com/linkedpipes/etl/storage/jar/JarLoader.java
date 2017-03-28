@@ -1,12 +1,12 @@
 package com.linkedpipes.etl.storage.jar;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.StatementCollector;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.StatementCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ final class JarLoader {
                 return loadFromDefinition(jarFile, jar, entry);
             }
         }
-        // No definition has been found.
+        LOG.warn("No jar-definition found in file: {}", jarFile);
         return null;
     }
 

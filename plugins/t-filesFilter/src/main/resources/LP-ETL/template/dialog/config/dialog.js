@@ -2,13 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" : "http://plugins.linkedpipes.com/ontology/t-filesFilter#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesFilter#",
         "$type": "Configuration",
-        "fileNamePattern" : {
-            "$type" : "str",
-            "$property" : "fileNamePattern",
-            "$control": "fileNamePatternControl",
-            "$label" : "File name filter pattern"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
+        "fileNamePattern": {
+            "$type": "str",
+            "$label": "File name filter pattern"
         }
     };
 

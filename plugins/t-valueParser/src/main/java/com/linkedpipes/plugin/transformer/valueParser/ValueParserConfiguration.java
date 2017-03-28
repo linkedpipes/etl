@@ -1,33 +1,33 @@
 package com.linkedpipes.plugin.transformer.valueParser;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = ValueParserVocabulary.CONFIG)
+@RdfToPojo.Type(iri = ValueParserVocabulary.CONFIG)
 public class ValueParserConfiguration {
 
     /**
      * Map the group in the regular expression to output target.
      */
-    @RdfToPojo.Type(uri = ValueParserVocabulary.BINDING)
+    @RdfToPojo.Type(iri = ValueParserVocabulary.BINDING)
     public static class OutputBinding {
 
         /**
          * Name of the group.
          */
-        @RdfToPojo.Property(uri = ValueParserVocabulary.HAS_GROUP)
+        @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_GROUP)
         private String group;
 
         /**
          * Output target.
          */
-        @RdfToPojo.Property(uri = ValueParserVocabulary.HAS_TARGET)
+        @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_TARGET)
         private String target;
+
+        @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_TYPE)
+        private String type;
 
         public OutputBinding() {
         }
@@ -47,30 +47,38 @@ public class ValueParserConfiguration {
         public void setTarget(String target) {
             this.target = target;
         }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
     }
 
     /**
      * Predicate to load value from.
      */
-    @RdfToPojo.Property(uri = ValueParserVocabulary.HAS_SOURCE)
+    @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_SOURCE)
     private String source;
 
     /**
      * Regular expression used to parse value.
      */
-    @RdfToPojo.Property(uri = ValueParserVocabulary.HAS_REGEXP)
+    @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_REGEXP)
     private String regexp;
 
     /**
-     * If true language tags are transfered.
+     * If true language tags are transferred.
      */
-    @RdfToPojo.Property(uri = ValueParserVocabulary.HAS_METADATA)
+    @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_METADATA)
     private boolean keepMetadata = false;
 
     /**
      * Regular expression to RDF bindings.
      */
-    @RdfToPojo.Property(uri = ValueParserVocabulary.HAS_BINDING)
+    @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_BINDING)
     private List<OutputBinding> bindings = new ArrayList<>(2);
 
     public ValueParserConfiguration() {

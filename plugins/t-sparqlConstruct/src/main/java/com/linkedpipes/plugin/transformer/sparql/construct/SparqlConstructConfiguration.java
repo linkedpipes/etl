@@ -1,15 +1,11 @@
 package com.linkedpipes.plugin.transformer.sparql.construct;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-/**
- *
- * @author Škoda Petr
- */
-@RdfToPojo.Type(uri = SparqlConstructVocabulary.CONFIG)
+@RdfToPojo.Type(iri = SparqlConstructVocabulary.CONFIG)
 public class SparqlConstructConfiguration {
 
-    @RdfToPojo.Property(uri = SparqlConstructVocabulary.HAS_QUERY)
+    @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_QUERY)
     private String query = "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
     public SparqlConstructConfiguration() {

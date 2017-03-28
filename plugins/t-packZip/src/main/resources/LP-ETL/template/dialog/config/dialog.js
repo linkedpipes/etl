@@ -2,16 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-packZip#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-packZip#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "fileName" : {
-            "$type" : "str",
-            "$label" : "Output file name"
+        "fileName": {
+            "$type": "str",
+            "$label": "Output file name"
         }
     };
 

@@ -1,0 +1,18 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/threads> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/timeLimit> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/threads>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#threadsControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/timeLimit>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#timeLimit> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#timeLimitControl> .
+

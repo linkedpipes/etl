@@ -1,25 +1,19 @@
 package com.linkedpipes.plugin.transformer.tabularuv.column;
 
 import com.linkedpipes.plugin.transformer.tabularuv.Utils;
+import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
-
-/**
- *
- * @author Škoda Petr
- */
 public abstract class ValueGeneratorReplace implements ValueGenerator {
 
     private interface Token {
 
-        public abstract String process(List<Object> row);
+        String process(List<Object> row);
 
     }
 
@@ -107,7 +101,6 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
     private final List<Token> tokens = new LinkedList<>();
 
     /**
-     *
      * @param uri
      * @param template Replace template without type, language or \\ < > chars
      */
@@ -230,7 +223,6 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
      * @param uri
      * @param template
      * @return
-     * @throws ParseFailed
      */
     public static ValueGeneratorReplace create(IRI uri, String template)
             throws ParseFailed {

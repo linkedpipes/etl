@@ -1,34 +1,34 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.WritableFilesDataUnit;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
+import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
 import java.util.Optional;
 
-/**
- *
- * @author Škoda Petr
- */
-public final class RdfToFile implements Component.Sequential {
+public final class RdfToFile implements Component, SequentialExecution {
 
     private static final String FILE_ENCODE = "UTF-8";
 
-    @Component.InputPort(id = "InputRdf")
+    @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
-    @Component.OutputPort(id = "OutputFile")
+    @Component.OutputPort(iri = "OutputFile")
     public WritableFilesDataUnit outputFiles;
 
     @Component.Configuration
@@ -40,35 +40,72 @@ public final class RdfToFile implements Component.Sequential {
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
+    private RDFFormat outputFormat;
+
+    private File outputFile;
+
     @Override
     public void execute() throws LpException {
+        prepareOutputFormat();
+        prepareOutputFile();
+        inputRdf.execute((connection) -> {
+            export(connection);
+        });
+    }
+
+    private void prepareOutputFormat() throws LpException {
         Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
                 configuration.getFileType());
         if (!rdfFormat.isPresent()) {
             throw exceptionFactory.failure("Invalid output file type: {}",
                     configuration.getFileName());
         }
-        final File outputFile = outputFiles.createFile(
-                configuration.getFileName()).toFile();
-        inputRdf.execute((connection) -> {
-            try (FileOutputStream outStream = new FileOutputStream(outputFile);
-                    OutputStreamWriter outWriter = new OutputStreamWriter(
-                            outStream, Charset.forName(FILE_ENCODE))) {
-                // Based on data type utilize graph (context) renamer on not.
-                RDFWriter writer = Rio.createWriter(rdfFormat.get(), outWriter);
-                if (rdfFormat.get().supportsContexts()) {
-                    writer = new RdfWriterContextRenamer(writer,
-                            connection.getValueFactory().createIRI(
-                                    configuration.getGraphUri()));
-                }
-                writer = new RdfWriterContext(writer, progressReport);
-                progressReport.start((int) connection.size(inputRdf.getGraph()));
-                connection.export(writer, inputRdf.getGraph());
-                progressReport.done();
-            } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't write data.", ex);
-            }
-        });
+        outputFormat = rdfFormat.get();
+    }
+
+    private void prepareOutputFile() throws LpException {
+        outputFile = outputFiles.createFile(configuration.getFileName());
+    }
+
+    private void export(RepositoryConnection connection) throws LpException {
+        reportStart(connection);
+        try (FileOutputStream outStream = new FileOutputStream(outputFile);
+             OutputStreamWriter outWriter = new OutputStreamWriter(
+                     outStream, Charset.forName(FILE_ENCODE))) {
+            RDFWriter writer = createWriter(outWriter);
+            connection.export(writer, inputRdf.getReadGraph());
+        } catch (IOException ex) {
+            throw exceptionFactory.failure("Can't write data.", ex);
+        }
+        reportEnd();
+    }
+
+    private RDFWriter createWriter(OutputStreamWriter streamWriter) {
+        RDFWriter writer = Rio.createWriter(outputFormat, streamWriter);
+
+        if (outputFormat.supportsContexts()) {
+            writer = new ChangeContext(writer, getOutputGraph());
+        }
+
+        writer = new PerStatementProgressReport(writer, progressReport);
+
+        return writer;
+    }
+
+    private void reportStart(RepositoryConnection connection) {
+        progressReport.start((int) connection.size(inputRdf.getReadGraph()));
+    }
+
+    private void reportEnd() {
+        progressReport.done();
+    }
+
+    private IRI getOutputGraph() {
+        if (configuration.getGraphUri() == null) {
+            return null;
+        }
+        return SimpleValueFactory.getInstance().createIRI(
+                configuration.getGraphUri());
     }
 
 }

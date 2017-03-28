@@ -1,9 +1,12 @@
 package com.linkedpipes.etl.executor.web.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.PipelineExecutor;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
@@ -16,7 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 @RestController
-@RequestMapping(value = "/executions")
+@RequestMapping(value = "/v1/executions")
 class ExecutionServlet {
 
     /**
@@ -36,8 +39,6 @@ class ExecutionServlet {
 
     }
 
-    ;
-
     @Autowired
     private ModuleFacade modules;
 
@@ -51,7 +52,7 @@ class ExecutionServlet {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void accept(@RequestBody AcceptRequest task,
+    public void execute(@RequestBody AcceptRequest task,
             HttpServletResponse response) {
         if (execute(new File(task.directory), task.iri)) {
             response.setStatus(HttpServletResponse.SC_CREATED);
@@ -61,15 +62,44 @@ class ExecutionServlet {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/cancel", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void cancel() {
+        final PipelineExecutor executorSnp = executor;
+        synchronized (lock) {
+            if (executorSnp == null) {
+                return;
+            }
+            executorSnp.cancelExecution();
+        }
+    }
+
+    @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
     public void status(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
-        if (executor == null) {
+            HttpServletResponse response)
+            throws IOException, ExecutorException {
+        final PipelineExecutor executorSnp = executor;
+        if (executorSnp == null) {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
             final RDFFormat format = Rio.getParserFormatForMIMEType(
                     request.getHeader("Accept")).orElse(RDFFormat.JSONLD);
-            writeStatus(response.getOutputStream(), format);
+            writeStatus(response.getOutputStream(), format, executorSnp);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/overview", method = RequestMethod.GET)
+    public void statusOverview(HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ExecutorException {
+        final PipelineExecutor executorSnp = executor;
+        if (executorSnp == null) {
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else {
+            // TODO Check for format
+            writeStatusOverview(response.getOutputStream(), executorSnp);
         }
     }
 
@@ -86,11 +116,10 @@ class ExecutionServlet {
                 // Already executing.
                 return false;
             }
-            final PipelineExecutor newExecutor
-                    = new PipelineExecutor(executionDirectory, modules, iri);
+            final PipelineExecutor newExecutor = new PipelineExecutor(
+                    executionDirectory, iri, modules);
             executor = newExecutor;
             taskExecutor.execute(() -> {
-                executor.initialize();
                 executor.execute();
                 // Detach execution object once execution is finished.
                 executor = null;
@@ -105,11 +134,23 @@ class ExecutionServlet {
      * @param stream
      * @param format
      */
-    public void writeStatus(OutputStream stream, RDFFormat format) {
-        final PipelineExecutor executorSnapshot = executor;
-        if (executorSnapshot != null) {
-            executorSnapshot.writeStatus(stream, format);
+    private static void writeStatus(OutputStream stream, RDFFormat format,
+            PipelineExecutor executor) throws ExecutorException {
+        if (executor.getExecution() == null) {
+            return;
         }
+        executor.getExecution().writeV1Execution(stream, format);
+    }
+
+    private static void writeStatusOverview(OutputStream stream,
+            PipelineExecutor executor) throws IOException {
+        if (executor.getExecution() == null) {
+            return;
+        }
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectNode jsonRoot = executor.getExecution()
+                .getExecutionOverviewModel().toJsonLd(objectMapper);
+        objectMapper.writeValue(stream, jsonRoot);
     }
 
 }

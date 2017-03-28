@@ -1,27 +1,24 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.dataunit.sesame.api.rdf.WritableSingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit.Entry;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-/**
- *
- */
-public class Tabular implements Component.Sequential {
+public class Tabular implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tabular.class);
 
-    @Component.InputPort(id = "InputFiles")
+    @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFilesDataUnit;
 
-    @Component.OutputPort(id = "OutputRdf")
+    @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdfDataUnit;
 
     @Component.Configuration
@@ -39,7 +36,7 @@ public class Tabular implements Component.Sequential {
                 exceptionFactory);
         // TODO We could use some table group URI from user?
         mapper.initialize(null);
-        for (Entry entry : inputFilesDataUnit) {
+        for (FilesDataUnit.Entry entry : inputFilesDataUnit) {
             LOG.info("Processing file: {}", entry.toFile());
             output.onFileStart();
             final String table;

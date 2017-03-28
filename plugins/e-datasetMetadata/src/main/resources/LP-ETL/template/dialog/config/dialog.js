@@ -23,79 +23,80 @@ define([], function () {
     const DESC = {
         "$namespace": "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#",
         "$type": "Configuration",
-        "$control" : {
-            "$predicate": "auto"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
         "datasetURI": {
             "$type": "str",
-            "$label" : "Dataset IRI"
+            "$label": "Dataset IRI"
         },
         "language_orig": {
             "$type": "str",
-            "$label" : "Original language tag"
+            "$label": "Original language tag"
         },
         "title_cs": {
             "$type": "str",
-            "$label" : "Dataset title original language"
+            "$label": "Dataset title original language"
         },
         "title_en": {
             "$type": "str",
-            "$label" : "Dataset title in English"
+            "$label": "Dataset title in English"
         },
         "desc_cs": {
             "$type": "str",
-            "$label" : "Description in original language"
+            "$label": "Description in original language"
         },
         "desc_en": {
             "$type": "str",
-            "$label" : "Description in English"
+            "$label": "Description in English"
         },
         "authors": {
             "$array": true,
             "$type": "str",
-            "$onLoad" : listToString,
-            "$onSave" : stringToList,
-            "$label" : "Authors IRIs"
+            "$onLoad": listToString,
+            "$onSave": stringToList,
+            "$label": "Authors IRIs"
         },
         "publisherURI": {
             "$type": "str",
-            "$label" : "Publisher IRI"
+            "$label": "Publisher IRI"
         },
         "publisherName": {
             "$type": "str",
-            "$label" : "Publisher name"
+            "$label": "Publisher name"
         },
         "license": {
             "$type": "str",
-            "$label" : "Licenses IRIs"
+            "$label": "Licenses IRIs"
         },
         "sources": {
             "$array": true,
             "$type": "str",
-            "$onLoad" : listToString,
-            "$onSave" : stringToList,
-            "$label" : "Sources IRIs"
+            "$onLoad": listToString,
+            "$onSave": stringToList,
+            "$label": "Sources IRIs"
         },
         "languages": {
             "$array": true,
             "$type": "str",
-            "$onLoad" : listToString,
-            "$onSave" : stringToList,
-            "$label" : "Languages IRIs"
+            "$onLoad": listToString,
+            "$onSave": stringToList,
+            "$label": "Languages IRIs"
         },
         "keywords_orig": {
             "$array": true,
             "$type": "str",
-            "$onLoad" : listToString,
-            "$onSave" : stringToList,
-            "$label" : "Keywords in original language"
+            "$onLoad": listToString,
+            "$onSave": stringToList,
+            "$label": "Keywords in original language"
         },
         "keywords_en": {
             "$array": true,
             "$type": "str",
-            "$onLoad" : listToString,
-            "$onSave" : stringToList,
-            "$label" : "Keywords in English"
+            "$onLoad": listToString,
+            "$onSave": stringToList,
+            "$label": "Keywords in English"
         },
         "themes": {
             "$array": true,
@@ -106,59 +107,59 @@ define([], function () {
         },
         "contactPoint": {
             "$type": "str",
-            "$label" : "Contact point name"
+            "$label": "Contact point name"
         },
         "contactPointName": {
             "$type": "str",
-            "$label" : "Contact point name"
+            "$label": "Contact point name"
         },
         "periodicity": {
             "$type": "str",
-            "$label" : "Periodicity"
+            "$label": "Periodicity"
         },
         "useNow": {
             "$type": "bool",
-            "$label" : "Modified is Now"
+            "$label": "Modified is Now"
         },
         "useNowTemporalEnd": {
             "$type": "bool",
-            "$label" : "End is Now"
+            "$label": "End is Now"
         },
         "useTemporal": {
             "$type": "bool",
-            "$label" : "Use temporal coverage"
+            "$label": "Use temporal coverage"
         },
         "modified": {
             "$type": "date",
-            "$label" : "Modified is Now"
+            "$label": "Modified is Now"
         },
         "issued": {
             "$type": "date",
-            "$label" : "Issued"
+            "$label": "Issued"
         },
         "identifier": {
             "$type": "str",
-            "$label" : "Identifier"
+            "$label": "Identifier"
         },
         "landingPage": {
             "$type": "str",
-            "$label" : "Landing page URL"
+            "$label": "Landing page URL"
         },
         "temporalEnd": {
             "$type": "date",
-            "$label" : "Temporal end"
+            "$label": "Temporal end"
         },
         "temporalStart": {
             "$type": "date",
-            "$label" : "Temporal start"
+            "$label": "Temporal start"
         },
         "spatial": {
             "$type": "str",
-            "$label" : "Spatial coverage IRI"
+            "$label": "Spatial coverage IRI"
         },
         "schema": {
             "$type": "str",
-            "$label" : "Human readable documentation URL"
+            "$label": "Human readable documentation URL"
         }
     };
 

@@ -1,10 +1,11 @@
 package com.linkedpipes.plugin.loader.local;
 
-import com.linkedpipes.etl.component.api.Component;
-import com.linkedpipes.etl.component.api.service.ExceptionFactory;
-import com.linkedpipes.etl.component.api.service.ProgressReport;
-import com.linkedpipes.etl.dataunit.system.api.files.FilesDataUnit;
-import com.linkedpipes.etl.executor.api.v1.exception.LpException;
+import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,15 +14,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-/**
- *
- */
-public final class LoaderLocal implements Component.Sequential {
+public final class LoaderLocal implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(LoaderLocal.class);
 
-    @Component.InputPort(id = "FilesInput")
+    @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit input;
 
     @Component.Configuration

@@ -2,16 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "mimeType" : {
-            "$type" : "str",
-            "$label" : "Format",
+        "mimeType": {
+            "$type": "str",
+            "$label": "Format",
             "$onLoad": (value) => {
                 if (value === "") {
                     return "null";
@@ -27,13 +26,13 @@ define([], function () {
                 }
             }
         },
-        "softFail" : {
-            "$type" : "bool",
-            "$label" : "Skip file on failure"
+        "softFail": {
+            "$type": "bool",
+            "$label": "Skip file on failure"
         },
-        "commitSize" : {
-            "$type" : "int",
-            "$label" : "Commit size"
+        "commitSize": {
+            "$type": "int",
+            "$label": "Commit size"
         }
     };
 

@@ -2,26 +2,23 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/t-modifyDate#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-modifyDate#",
         "$type": "Configuration",
-        "input" : {
-            "$type" : "iri",
-            "$property" : "input",
-            "$control": "inputControl",
-            "$label" : "Input predicate"
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
         },
-        "shiftBy" : {
-            "$type" : "int",
-            "$property" : "shiftBy",
-            "$control": "shiftByControl",
-            "$label" : "Shift date by"
+        "input": {
+            "$type": "iri",
+            "$label": "Input predicate"
         },
-        "output" : {
-            "$type" : "iri",
-            "$property" : "output",
-            "$control": "outputControl",
-            "$label" : "Output predicate"
+        "shiftBy": {
+            "$type": "int",
+            "$label": "Shift date by"
+        },
+        "output": {
+            "$type": "iri",
+            "$label": "Output predicate"
         }
     };
 

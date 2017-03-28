@@ -2,52 +2,47 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace" :
-            "http://plugins.linkedpipes.com/ontology/x-virtuoso#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/x-virtuoso#",
         "$type": "Configuration",
-        "$options" : {
+        "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "uri" : {
-            "$type" : "str",
-            "$label" : "Virtuoso JDBC connection string"
+        "uri": {
+            "$type": "str",
+            "$label": "Virtuoso JDBC connection string"
         },
-        "fileName" : {
-            "$type" : "str",
-            "$label" : "Filename to load"
+        "fileName": {
+            "$type": "str",
+            "$label": "Filename to load"
         },
-        "graph" : {
-            "$type" : "iri",
-            "$label" : "Target graph IRI"
+        "graph": {
+            "$type": "iri",
+            "$label": "Target graph IRI"
         },
-        "directory" : {
-            "$type" : "str",
-            "$label" : "Remote directory with source files"
+        "directory": {
+            "$type": "str",
+            "$label": "Remote directory with source files"
         },
-        "clearGraph" : {
-            "$type" : "bool",
-            "$label" : "Clear target graph"
+        "clearGraph": {
+            "$type": "bool",
+            "$label": "Clear target graph"
         },
-        "clearLoadList" : {
-            "$type" : "bool",
-            "$label" : "Clear Virtuoso load list"
+        "username": {
+            "$type": "str",
+            "$label": "Virtuoso user name"
         },
-        "username" : {
-            "$type" : "str",
-            "$label" : "Virtuoso user name"
+        "password": {
+            "$type": "str",
+            "$label": "Virtuoso password"
         },
-        "password" : {
-            "$type" : "str",
-            "$label" : "Virtuoso password"
+        "updateInterval": {
+            "$type": "int",
+            "$label": "Status update interval"
         },
-        "updateInterval" : {
-            "$type" : "int",
-            "$label" : "Status update interval"
-        },
-        "loaderCount" : {
-            "$type" : "int",
-            "$label" : "Number of loaders to use"
+        "loaderCount": {
+            "$type": "int",
+            "$label": "Number of loaders to use"
         }
     };
 

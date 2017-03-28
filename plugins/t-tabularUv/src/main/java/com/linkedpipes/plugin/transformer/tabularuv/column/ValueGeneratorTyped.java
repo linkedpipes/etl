@@ -1,18 +1,13 @@
 package com.linkedpipes.plugin.transformer.tabularuv.column;
 
+import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+
 import java.util.List;
 import java.util.Map;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-
-import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
-
-/**
- *
- * @author Škoda Petr
- */
 public class ValueGeneratorTyped extends ValueGeneratorReplace {
 
     private final String typeStr;

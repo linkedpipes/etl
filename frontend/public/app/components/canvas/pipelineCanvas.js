@@ -90,7 +90,8 @@ define([
                     };
                     attrs[portSelector] = {
                         'ref': '.body',
-                        'ref-y': (index + 0.5) * (1 / total)
+                        'ref-y': (index + 0.5) * (1 / total),
+                        'fill': port['color']
                     };
                     if (selector === '.outPorts') {
                         attrs[portSelector]['ref-dx'] = 0;
@@ -140,11 +141,24 @@ define([
         // Use labels only if there is more than one data unit.
         if (template['inputs'] !== undefined) {
             template['inputs'].forEach(function (port) {
+                var color;
+                var useLabel;
+                if (port.isRuntimeConfiguration) {
+                    color = '#FFAAFF';
+                    useLabel = template.isDisplayLabels.runtimeConfiguration;
+                } else if (port.isTaskList) {
+                    color = '#CCCCFF';
+                    useLabel = template.isDisplayLabels.taskList;
+                } else {
+                    color = '#CCFFCC';
+                    useLabel = template.isDisplayLabels.dataInput;
+                }
                 portsData[port['binding']] = {
                     'binding': port['binding'],
                     'label': port['label'],
                     'dataType': port['content'],
-                    'useLabel': template['inputs'].length > 1
+                    'useLabel': useLabel,
+                    'color': color
                 };
                 inPorts.push(port['binding']);
             });
@@ -213,7 +227,6 @@ define([
             'portsData': ports['data'],
             'attrs': {
                 '.inPorts circle': {
-                    'fill': '#CCFFCC',
                     'magnet': 'passive',
                     'type': 'input'},
                 '.outPorts circle': {

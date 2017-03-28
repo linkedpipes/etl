@@ -1,8 +1,5 @@
 package com.linkedpipes.plugin.quality.sparql.ask;
 
-/**
- *
- */
 final class SparqlAskVocabulary {
 
     private static final String PREFIX

@@ -46,11 +46,6 @@
                ng-hide="dialog.clearGraph.hide">
         Clear target graph before loading
     </md-switch>
-    <md-switch ng-model="dialog.clearLoadList.value"
-               ng-disabled="dialog.clearLoadList.disabled || dialog.clearLoadList.inherit"
-               ng-hide="dialog.clearLoadList.hide">
-        Clear Virtuoso load list
-    </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.loaderCount.hide">
         <label>Number of loaders to use</label>
         <input ng-model="dialog.loaderCount.value"

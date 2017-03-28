@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#threads": "1",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#threadsControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#timeLimit": "-1",
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#timeLimitControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

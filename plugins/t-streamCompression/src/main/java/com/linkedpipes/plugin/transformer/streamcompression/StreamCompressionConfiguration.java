@@ -1,11 +1,11 @@
 package com.linkedpipes.plugin.transformer.streamcompression;
 
-import com.linkedpipes.etl.component.api.service.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-@RdfToPojo.Type(uri = StreamCompressionVocabulary.CONFIG_CLASS)
+@RdfToPojo.Type(iri = StreamCompressionVocabulary.CONFIG_CLASS)
 public class StreamCompressionConfiguration {
 
-    @RdfToPojo.Property(uri = StreamCompressionVocabulary.HAS_FORMAT)
+    @RdfToPojo.Property(iri = StreamCompressionVocabulary.HAS_FORMAT)
     private String format;
 
     public StreamCompressionConfiguration() {

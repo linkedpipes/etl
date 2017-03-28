@@ -3,21 +3,27 @@
 <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/1.0.0/configuration/desc/query>  ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/1.0.0/configuration/desc/fileName> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/1.0.0/configuration/desc/endpoint> .
+    config:member <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/query>  ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/fileName> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/endpoint> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/defaultGraph> .
 
-<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/1.0.0/configuration/desc/query>
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#query> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#queryControl> .
 
-<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/1.0.0/configuration/desc/fileName>
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/fileName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileName> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileNameControl> .
 
-<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/1.0.0/configuration/desc/endpoint>
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpoint> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpointControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/defaultGraph>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#defaultGraph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#defaultGraphControl> .

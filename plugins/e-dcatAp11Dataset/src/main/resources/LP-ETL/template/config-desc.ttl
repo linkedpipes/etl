@@ -1,5 +1,5 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
-@prefix dm: <http://linkedpipes.com/resources/components/e-dcatAp11Dataset/0.0.0/configuration/desc> .
+@prefix dm: <http://etl.linkedpipes.com/resource/components/e-dcatAp11Dataset/> .
 
 <http://linkedpipes.com/resources/components/e-dcatAp11Dataset/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
@@ -43,7 +43,8 @@
       dm:dimensionIRIs ,
       dm:numSeries ,
       dm:qualityAnnotationIRIs ,
-      dm:unitOfMeasurementIRIs .
+      dm:unitOfMeasurementIRIs ,
+      dm:spatialIRIs.
 
 dm:datasetIRI
     a config:ConfigurationMember ;
@@ -244,3 +245,8 @@ dm:unitOfMeasurementIRIs
     a config:ConfigurationMember ;
     config:property dm:unitOfMeasurementIRIs ;
     config:control dm:unitOfMeasurementIRIsControl .
+
+dm:spatialIRIs
+    a config:ConfigurationMember ;
+    config:property dm:spatialIRIs ;
+    config:control dm:spatialIRIsControl .
