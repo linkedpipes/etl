@@ -165,26 +165,37 @@ public class Execution implements ExecutionObserver {
 
     @Override
     public void onCantPreparePipeline(LpException exception) {
+        LOG.error("Can't prepare pipeline.", exception);
         executionModelV1.onExecutionFailed();
         statusMonitor.onCantPreparePipeline();
     }
 
     @Override
     public void onObserverBeginFailed(LpException exception) {
+        LOG.error("Observer notification failed.", exception);
         executionModelV1.onExecutionFailed();
         statusMonitor.onObserverBeginFailed();
     }
 
     @Override
     public void onDataUnitsLoadingFailed(LpException exception) {
+        LOG.error("Can't load dataunits.", exception);
         executionModelV1.onExecutionFailed();
         statusMonitor.onDataUnitsLoadingFailed();
     }
 
     @Override
     public void onComponentsLoadingFailed(LpException exception) {
+        LOG.error("Can't load components.", exception);
         executionModelV1.onExecutionFailed();
         statusMonitor.onComponentsLoadingFailed();
+    }
+
+    @Override
+    public void onExecutionFailedOnThrowable(Throwable exception) {
+        LOG.error("Throwable exception caught.", exception);
+        executionModelV1.onExecutionFailed();
+        statusMonitor.onExecutionFailedOnThrowable();
     }
 
     @Override
@@ -204,6 +215,7 @@ public class Execution implements ExecutionObserver {
 
     @Override
     public void onObserverEndFailed(LpException exception) {
+        LOG.error("Observer notification failed.", exception);
         executionModelV1.onExecutionFailed();
         statusMonitor.onObserverEndFailed();
     }

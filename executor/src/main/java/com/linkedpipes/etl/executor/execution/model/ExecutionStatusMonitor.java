@@ -50,6 +50,10 @@ public class ExecutionStatusMonitor {
         failed = true;
     }
 
+    public void onExecutionFailedOnThrowable() {
+        failed = true;
+    }
+
     public void onExecutionEnd() {
         if (failed) {
             status = ExecutionStatus.FAILED;
