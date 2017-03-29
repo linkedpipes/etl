@@ -82,7 +82,7 @@ public class PipelineExecutor {
                 execution.onComponentsExecutionModelEnd();
             }
         } catch (Throwable t) {
-            LOG.error("Uncaught exception!", t);
+            execution.onExecutionFailedOnThrowable(t);
         } finally {
             try {
                 terminate();

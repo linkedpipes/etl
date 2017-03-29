@@ -55,6 +55,8 @@ public interface ExecutionObserver {
 
     void onComponentsLoadingFailed(LpException exception);
 
+    void onExecutionFailedOnThrowable(Throwable exception);
+
     /**
      * Called at the end of the ExecutionModel, no mather the execution outcome.
      */
