@@ -79,6 +79,7 @@
         <module>t-jsonLdFormat</module>
         <module>e-sparqlEndpointList</module>
         <module>e-sparqlEndpointChunkedList</module>
+        <module>t-sparqlConstructToFileList</module>
     </modules>
 
 </project>
