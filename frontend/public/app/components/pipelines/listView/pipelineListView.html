@@ -22,6 +22,13 @@
                 </md-chips>
             </div>
             <md-list ng-show="repository.loaded">
+                <div ng-hide="repository.data.length" layout="row"
+                     layout-align="center center" flex>
+                    <div style="padding-top: 5em">
+                        Why don't you <a href="javascript:void(0)" ng-click=onCreate()>create</a> or
+                        <a href="javascript:void(0)" ng-click="onUpload()">import</a> one?
+                    </div>
+                </div>
                 <md-list-item ng-repeat="item in repository.data" ng-click="onPipeline(item)" class="md-1-line" ng-show="item.show">
                     <div class="md-primary">
                         <!--<md-checkbox ng-model="message.selected"></md-checkbox>-->
