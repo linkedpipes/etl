@@ -17,7 +17,7 @@ public final class SparqlConstructToFileListVocabulary {
 
     public static final String TASK_QUERY = PREFIX + "TaskQuery";
 
-    public static final String HAS_GRAPH_IRI = PREFIX + "graph";
+    public static final String HAS_GRAPH_IRI = PREFIX + "outputGraph";
 
     public static final String HAS_QUERY = PREFIX + "query";
 
