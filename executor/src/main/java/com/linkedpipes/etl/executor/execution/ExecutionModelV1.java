@@ -261,7 +261,7 @@ class ExecutionModelV1 {
             }
             statements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
-                    vf.createLiteral(dataUnit.getRelativeDataPath()),
+                    vf.createLiteral(dataUnit.getRelativeSaveDataPath()),
                     executionIri));
             if (!dataUnit.getPort().isSaveDebugData()) {
                 continue;
@@ -307,7 +307,7 @@ class ExecutionModelV1 {
             final IRI dataUnitIri = vf.createIRI(dataUnit.getDataUnitIri());
             pipelineStatements.add(vf.createStatement(dataUnitIri, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/dataPath"),
-                    vf.createLiteral(dataUnit.getRelativeDataPath()),
+                    vf.createLiteral(dataUnit.getRelativeSaveDataPath()),
                     executionIri));
             if (!dataUnit.getPort().isSaveDebugData()) {
                 continue;
