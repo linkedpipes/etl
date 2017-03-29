@@ -80,6 +80,7 @@
         <module>e-sparqlEndpointList</module>
         <module>e-sparqlEndpointChunkedList</module>
         <module>t-sparqlConstructToFileList</module>
+        <module>c-files</module>
     </modules>
 
 </project>
