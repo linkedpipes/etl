@@ -61,13 +61,13 @@ class UriDownloader {
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
                 final Date downloadStarted = new Date();
-                LOG.debug("Downloading {}/{} : {}",
-                        counter.incrementAndGet(), total, work.source);
                 // Check failure of other threads.
                 if (!configuration.isSkipOnError() &&
                         !exceptions.isEmpty()) {
                     return null;
                 }
+                LOG.debug("Downloading {}/{} : {}",
+                        counter.incrementAndGet(), total, work.source);
                 // Create connection.
                 final HttpURLConnection connection;
                 try {
@@ -85,8 +85,10 @@ class UriDownloader {
                         connection.getResponseCode() > 299) {
                     final Exception ex = new Exception(
                             "Invalid response code: " +
-                                    connection.getResponseCode());
-                    LOG.error("Can't download file: {}", ex);
+                                    connection.getResponseCode() +
+                                    " message: " +
+                                    connection.getResponseMessage());
+                    LOG.error("Can't download file: {}", work.source, ex);
                     exceptions.add(ex);
                     continue;
                 }
