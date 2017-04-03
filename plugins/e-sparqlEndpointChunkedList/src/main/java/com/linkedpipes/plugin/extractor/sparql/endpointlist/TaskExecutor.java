@@ -157,7 +157,7 @@ class TaskExecutor implements Runnable {
             try (GraphQueryResult result = preparedQuery.evaluate()) {
                 return collectResults(result);
             } catch (RuntimeException ex) {
-                LOG.error("Can't execute query: {}", task.getQuery());
+                LOG.error("Can't execute query: {}", query);
                 throw ex;
             }
         }
