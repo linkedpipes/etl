@@ -68,6 +68,7 @@
         <module>x-virtuosoExtractor</module>
         <module>t-valueParser</module>
         <module>x-deleteDirectory</module>
+        <module>x-graphStorePurger</module>
         <module>t-htmlCssUv</module>
         <module>t-modifyDate</module>
         <module>t-geoTools</module>
