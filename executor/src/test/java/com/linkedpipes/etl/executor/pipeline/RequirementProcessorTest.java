@@ -3,10 +3,10 @@ package com.linkedpipes.etl.executor.pipeline;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,9 +18,9 @@ public class RequirementProcessorTest {
 
     @Test
     public void workingAndInputDirectory() throws Exception {
-        final RdfSource source = Rdf4jSource.createInMemory();
-        final RdfBuilder builder = new RdfBuilder(
-                source.getTripleWriter("http://graph"));
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
+        final RdfBuilder builder = RdfBuilder.create(
+                source, "http://graph");
         final ResourceManager manager = Mockito.mock(ResourceManager.class);
         final File workingFile = File.createTempFile("lp-test", "");
         final File inputFile = File.createTempFile("lp-test", "");
@@ -49,7 +49,7 @@ public class RequirementProcessorTest {
                         " }}", "v");
         Assert.assertEquals(inputFile, new File(URI.create(input)));
         //
-        source.shutdown();
+        source.close();
     }
 
 }

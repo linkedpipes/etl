@@ -2,7 +2,8 @@ package com.linkedpipes.etl.test.suite;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 
 import java.util.LinkedList;
@@ -11,9 +12,9 @@ import java.util.List;
 /**
  * Represent a description of a configuration object.
  */
-class ConfigurationDescription implements RdfLoader.Loadable<String> {
+class ConfigurationDescription implements Loadable {
 
-    public static class Member implements RdfLoader.Loadable<String> {
+    public static class Member implements Loadable {
 
         private final List<String> types = new LinkedList<>();
 
@@ -30,28 +31,28 @@ class ConfigurationDescription implements RdfLoader.Loadable<String> {
         }
 
         @Override
-        public RdfLoader.Loadable load(String predicate, String object)
+        public Loadable load(String predicate, RdfValue object)
                 throws RdfUtilsException {
             switch (predicate) {
                 case RDF.TYPE:
-                    types.add(object);
+                    types.add(object.asString());
                     break;
                 case LP_OBJECTS.HAS_PROPERTY:
                     if (property != null) {
                         throw new RuntimeException("Multiple <" +
                                 LP_OBJECTS.HAS_PROPERTY + "> values detected!");
                     }
-                    property = object;
+                    property = object.asString();
                     break;
                 case LP_OBJECTS.HAS_CONTROL:
                     if (control != null) {
                         throw new RuntimeException("Multiple <" +
                                 LP_OBJECTS.HAS_CONTROL + "> values detected!");
                     }
-                    control = object;
+                    control = object.asString();
                     break;
                 case LP_OBJECTS.IS_COMPLEX:
-                    if ("true".equalsIgnoreCase(object)) {
+                    if ("true".equalsIgnoreCase(object.asString())) {
                         complex = true;
                     }
                     break;
@@ -99,21 +100,21 @@ class ConfigurationDescription implements RdfLoader.Loadable<String> {
     }
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
+    public Loadable load(String predicate, RdfValue object)
             throws RdfUtilsException {
         switch (predicate) {
             case RDF.TYPE:
-                types.add(object);
+                types.add(object.asString());
                 break;
             case LP_OBJECTS.HAS_DESCRIBE:
                 if (referencedType != null) {
                     throw new RuntimeException("Multiple <" +
                             LP_OBJECTS.HAS_DESCRIBE + "> values detected!");
                 }
-                referencedType = object;
+                referencedType = object.asString();
                 break;
             case LP_OBJECTS.HAS_MEMBER:
-                final Member newMember = new Member(object);
+                final Member newMember = new Member(object.asString());
                 members.add(newMember);
                 return newMember;
         }

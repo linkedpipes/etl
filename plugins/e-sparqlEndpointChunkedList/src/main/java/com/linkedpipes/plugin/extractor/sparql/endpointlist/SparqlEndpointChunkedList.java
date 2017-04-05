@@ -69,14 +69,10 @@ public final class SparqlEndpointChunkedList implements Component,
         initializeInputFileMap();
         initializeExecutor();
         initializeConsumers();
-        try {
-            progressReport.start(taskLoader.getTasks().size());
-            executeTasks();
-            awaitExecutorShutdown();
-            progressReport.done();
-        } finally {
-            closeTaskLoader();
-        }
+        progressReport.start(taskLoader.getTasks().size());
+        executeTasks();
+        awaitExecutorShutdown();
+        progressReport.done();
     }
 
     private void initializeTaskLoader() throws LpException {
@@ -164,12 +160,6 @@ public final class SparqlEndpointChunkedList implements Component,
             } catch (InterruptedException ex) {
                 // Do nothing here.
             }
-        }
-    }
-
-    private void closeTaskLoader() {
-        if (taskLoader != null) {
-            taskLoader.close();
         }
     }
 

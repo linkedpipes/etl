@@ -10,7 +10,7 @@ import java.util.List;
  * The control should be loaded before use (by the factory method)
  * and thus should have prior knowledge which field should be loaded.
  */
-public interface EntityControl {
+public interface MergeControl {
 
     /**
      * Load entities into the control.
@@ -32,6 +32,6 @@ public interface EntityControl {
      * @param property
      * @return Decision what to do with the property.
      */
-    EntityMergeType onProperty(String property) throws RdfUtilsException;
+    MergeType onProperty(String property) throws RdfUtilsException;
 
 }

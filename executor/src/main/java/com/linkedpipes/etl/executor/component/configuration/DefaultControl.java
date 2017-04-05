@@ -1,12 +1,12 @@
 package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.EntityControl;
-import com.linkedpipes.etl.rdf.utils.entity.EntityMergeType;
 import com.linkedpipes.etl.rdf.utils.entity.EntityReference;
+import com.linkedpipes.etl.rdf.utils.entity.MergeControl;
+import com.linkedpipes.etl.rdf.utils.entity.MergeType;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * Control loading of RDF data into entities.
  */
-class DefaultControl implements EntityControl {
+class DefaultControl implements MergeControl {
 
     /**
      * Represent a control of given property.
@@ -47,7 +47,7 @@ class DefaultControl implements EntityControl {
      * For pair definitionGraph-resource store list of properties and their
      * merge type.
      */
-    private final Map<String, Map<String, EntityMergeType>>
+    private final Map<String, Map<String, MergeType>>
             control = new HashMap<>();
 
     /**
@@ -129,9 +129,9 @@ class DefaultControl implements EntityControl {
             for (EntityReference ref : references) {
                 final String key = ref.getGraph() + "-" + ref.getResource();
                 if (loadFrom.contains(counter)) {
-                    control.get(key).put(predicate, EntityMergeType.LOAD);
+                    control.get(key).put(predicate, MergeType.LOAD);
                 } else {
-                    control.get(key).put(predicate, EntityMergeType.SKIP);
+                    control.get(key).put(predicate, MergeType.SKIP);
                 }
                 ++counter;
             }
@@ -149,14 +149,14 @@ class DefaultControl implements EntityControl {
     }
 
     @Override
-    public EntityMergeType onProperty(String property)
+    public MergeType onProperty(String property)
             throws RdfUtilsException {
         if (ALWAYS_LOAD_PROPERTIES.contains(property)) {
-            return EntityMergeType.LOAD;
+            return MergeType.LOAD;
         }
-        final EntityMergeType type = control.get(currentKey).get(property);
+        final MergeType type = control.get(currentKey).get(property);
         if (type == null) {
-            return EntityMergeType.SKIP;
+            return MergeType.SKIP;
         } else {
             return type;
         }
@@ -218,7 +218,7 @@ class DefaultControl implements EntityControl {
         for (EntityReference ref : references) {
             final String key = ref.getGraph() + "-" + ref.getResource();
             for (String predicate : complexPredicates) {
-                control.get(key).put(predicate, EntityMergeType.MERGE);
+                control.get(key).put(predicate, MergeType.MERGE);
             }
         }
     }

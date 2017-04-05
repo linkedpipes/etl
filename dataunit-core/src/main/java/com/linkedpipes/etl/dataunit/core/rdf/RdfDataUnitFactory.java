@@ -5,10 +5,9 @@ import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -47,8 +46,7 @@ public class RdfDataUnitFactory
         // Load configuration.
         final Configuration configuration = new Configuration(dataUnit, graph);
         try {
-            RdfUtils.load(definition, configuration, dataUnit, graph,
-                    String.class);
+            RdfUtils.load(definition, dataUnit, graph, configuration);
             configuration.loadSources(definition);
         } catch (RdfUtilsException ex) {
             throw new LpException("Can't load configuration for {} in {}",
@@ -94,7 +92,7 @@ public class RdfDataUnitFactory
             final String resource = RdfUtils.sparqlSelectSingle(definition,
                     getConfigurationQuery(pipeline, graph), "r");
             final FactoryConfiguration config = new FactoryConfiguration();
-            RdfLoader.load(definition, config, resource, graph, String.class);
+            RdfUtils.load(definition, resource, graph, config);
             // Save at the end.
             this.configuration = config;
         } catch (RdfUtilsException ex) {

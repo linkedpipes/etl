@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
+import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.Date;
@@ -65,7 +66,7 @@ public class DcatAp11DatasetConfig {
         this.unitOfMeasurementIRIs = unitOfMeasurementIRIs;
     }
 
-    public static class LocalizedString extends RdfToPojo.LangString {
+    public static class LocalizedString extends LanguageString {
 
         public LocalizedString() {
         }

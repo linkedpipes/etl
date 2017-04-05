@@ -1,132 +1,161 @@
 package com.linkedpipes.etl.rdf.utils;
 
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Descriptor;
+import com.linkedpipes.etl.rdf.utils.pojo.DescriptorFactory;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
+import com.linkedpipes.etl.rdf.utils.pojo.RdfToPojoLoader;
+import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RdfUtils {
 
     private RdfUtils() {
+
     }
 
-    /**
-     * @param source
-     * @param object Object to load.
-     * @param resource Resource of openEntity to load.
-     * @param graph
-     * @param clazz
-     * @param <ValueType>
-     */
-    public static <ValueType> void load(RdfSource source,
-            RdfLoader.Loadable<ValueType> object, String resource, String graph,
-            Class<ValueType> clazz) throws RdfUtilsException {
-        RdfLoader.load(source, object, resource, graph, clazz);
+    public static void load(RdfSource source, String resource, String graph,
+            Loadable loadable) throws RdfUtilsException {
+        RdfToPojoLoader.loadResource(source, resource, graph, loadable);
     }
 
-    public static <ValueType> List<ValueType> loadTypedByReflection(
-            RdfSource source, String graph,
-            Class<ValueType> resultType,
-            RdfLoader.DescriptorFactory descriptorFactory)
-            throws RdfUtilsException {
-        final RdfLoader.Descriptor descriptor =
-                descriptorFactory.create(resultType);
-        final String query = "SELECT ?s WHERE { GRAPH <" + graph + "> { " +
-                "?s a <" + descriptor.getType() + "> } }";
-        final List<ValueType> results = new LinkedList<>();
-        for (Map<String, String> queryResult : sparqlSelect(source, query)) {
-            ValueType object;
-            try {
-                object = resultType.newInstance();
-            } catch (IllegalAccessException | InstantiationException ex) {
-                throw new RdfUtilsException("Can't create result object", ex);
-            }
-            RdfLoader.loadByReflection(source, descriptorFactory, object,
-                    queryResult.get("s"), graph);
-            results.add(object);
+    public static void loadByType(RdfSource source, String graph,
+            Loadable loadable, String type) throws RdfUtilsException {
+        String resource = getResourceOfType(source, graph, type);
+        load(source, resource, graph, loadable);
+    }
+
+    private static String getResourceOfType(RdfSource source,
+            String graph, String type) throws RdfUtilsException {
+        List<String> resources = getResourcesOfType(source, graph, type);
+        if (resources.size() != 1) {
+            throw new RdfUtilsException(
+                    "Invalid number of resources ({}) of type: {}",
+                    resources.size(), type);
+        } else {
+            return resources.get(0);
         }
-        return results;
     }
 
-    /**
-     * @param source
-     * @param object
-     * @param graph
-     * @param descriptorFactory
-     */
-    public static void loadTypedByReflection(RdfSource source, Object object,
-            String graph, RdfLoader.DescriptorFactory descriptorFactory)
+    private static List<String> getResourcesOfType(RdfSource source,
+            String graph, String type) throws RdfUtilsException {
+        if (source instanceof RdfSource.SparqlQueryable) {
+            return getResourcesOfTypeByQuery(source, graph, type);
+        } else {
+            return getResourcesOfTypeByIteration(source, graph, type);
+        }
+    }
+
+    private static List<String> getResourcesOfTypeByIteration(RdfSource source,
+            String graph, String type) throws RdfUtilsException {
+        List<String> resources = new ArrayList<>();
+        source.triples(graph, triple -> {
+            if (triple.getPredicate().equals(RDF.TYPE) &&
+                    triple.getObject().isIri() &&
+                    triple.getObject().asString().equals(type)) {
+                resources.add(triple.getSubject());
+            }
+        });
+        return resources;
+    }
+
+    private static List<String> getResourcesOfTypeByQuery(
+            RdfSource source, String graph, String type)
             throws RdfUtilsException {
-        final RdfLoader.Descriptor descriptor =
-                descriptorFactory.create(object.getClass());
-        final String query = "SELECT ?s WHERE { GRAPH <" + graph + "> { " +
-                "?s a <" + descriptor.getType() + "> } }";
-        final String resource = sparqlSelectSingle(source, query, "s");
-        RdfLoader.loadByReflection(source, descriptorFactory, object,
-                resource, graph);
+        String queryAsString = "SELECT ?s WHERE { GRAPH <" + graph +
+                "> { ?s a <" + type + "> } } ";
+        List<String> resources = new ArrayList<>();
+        for (Map<String, String> binding
+                : sparqlSelect(source, queryAsString)) {
+            resources.add(binding.get("s"));
+        }
+        return resources;
     }
 
-    public static void loadByReflection(RdfSource source, Object object,
-            String resource, String graph,
-            RdfLoader.DescriptorFactory descriptorFactory)
+    public static void load(RdfSource source, String resource, String graph,
+            Object object, DescriptorFactory descriptorFactory)
             throws RdfUtilsException {
-        final RdfLoader.Descriptor descriptor =
-                descriptorFactory.create(object.getClass());
-        RdfLoader.loadByReflection(source, descriptorFactory, object,
-                resource, graph);
+        RdfToPojoLoader.loadResourceByReflection(source, resource, graph,
+                object, descriptorFactory);
     }
 
-    /**
-     * Execute given query and return the result. If the number of results
-     * is not one, then throws an exception.
-     *
-     * @param source
-     * @param queryAsString
-     * @return
-     */
+    public static void loadByType(RdfSource source, String graph,
+            String type, Object object, DescriptorFactory descriptorFactory)
+            throws RdfUtilsException {
+        String resource = getResourceOfType(source, graph, type);
+        load(source, resource, graph, object, descriptorFactory);
+    }
+
+    public static void loadByType(RdfSource source, String graph,
+            Object object, DescriptorFactory descriptorFactory)
+            throws RdfUtilsException {
+        Descriptor descriptor = descriptorFactory.create(object.getClass());
+        if (descriptor == null) {
+            throw new RdfUtilsException("Can't get descriptor.");
+        }
+        String type = descriptor.getObjectType();
+        String resource = getResourceOfType(source, graph, type);
+        load(source, resource, graph, object, descriptorFactory);
+    }
+
+    public static <Type> List<Type> loadList(RdfSource source, String graph,
+            DescriptorFactory descriptorFactory,
+            Class<Type> outputType) throws RdfUtilsException {
+        String type = descriptorFactory.create(
+                outputType.getClass()).getObjectType();
+        List<String> resources = getResourcesOfType(source, graph, type);
+        List<Type> output = new LinkedList<Type>();
+        for (String resource : resources) {
+            Type newEntity = createInstance(outputType);
+            load(source, resource, graph, newEntity, descriptorFactory);
+            output.add(newEntity);
+        }
+        return output;
+    }
+
+    private static <Type> Type createInstance(Class<Type> type)
+            throws RdfUtilsException {
+        try {
+            return type.newInstance();
+        } catch (IllegalAccessException | InstantiationException ex) {
+            throw new RdfUtilsException("Can't create instance");
+        }
+    }
+
     public static String sparqlSelectSingle(RdfSource source,
-            String queryAsString, String binding) throws RdfUtilsException {
-        final List<Map<String, String>> result =
-                source.sparqlSelect(queryAsString, String.class);
+            String queryAsString, String outputBinding)
+            throws RdfUtilsException {
+        List<Map<String, String>> result = sparqlSelect(source, queryAsString);
         if (result.size() != 1) {
             throw new RdfUtilsException(
                     "Invalid number of results: {} (1 expected) for:\n{}",
                     result.size(), queryAsString);
+        } else {
+            return result.get(0).get(outputBinding);
         }
-        return result.get(0).get(binding);
     }
 
-    public static List<Map<String, String>> sparqlSelect(RdfSource source,
-            String queryAsString) throws RdfUtilsException {
-        return source.sparqlSelect(queryAsString, String.class);
-    }
-
-    /**
-     * Recursively copy entity from source to target.
-     *
-     * @param iri
-     * @param sourceGraph
-     * @param source
-     * @param writer Caller is responsible for transaction handling.
-     * @param type
-     * @param <ValueType>
-     */
-    public static <ValueType> void copyEntityRecursive(String iri,
-            String sourceGraph, RdfSource<ValueType> source,
-            RdfSource.TypedTripleWriter<ValueType> writer,
-            Class<ValueType> type)
+    public static List<Map<String, String>> sparqlSelect(
+            RdfSource source, String queryAsString)
             throws RdfUtilsException {
-        final RdfSource.ValueInfo<ValueType> info = source.getValueInfo();
-        final RdfSource.ValueToString<ValueType> convert =
-                source.toStringConverter(type);
-        source.triples(iri, sourceGraph, type, (s, p, o) -> {
-            writer.add(s, p, o);
-            if (info.isIri(o)) {
-                copyEntityRecursive(convert.asString(o),
-                        sourceGraph, source, writer, type);
+        RdfSource.SparqlQueryable queryable = source.asQueryable();
+        if (queryable == null) {
+            throw new RdfUtilsException("Source does not support SPARQL.");
+        }
+        List<Map<String, String>> output = new LinkedList<>();
+        for (Map<String, RdfValue> binding
+                : queryable.sparqlSelect(queryAsString)) {
+            Map<String, String> outputEntry = new HashMap<>();
+            for (Map.Entry<String, RdfValue> entry
+                    : binding.entrySet()) {
+                outputEntry.put(entry.getKey(), entry.getValue().asString());
             }
-        });
+            output.add(outputEntry);
+        }
+        return output;
     }
+
 
 }

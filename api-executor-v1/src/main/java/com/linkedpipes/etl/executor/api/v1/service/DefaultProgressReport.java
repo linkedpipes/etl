@@ -4,7 +4,8 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.event.AbstractEvent;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EVENTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
 import java.util.Collection;
@@ -40,7 +41,7 @@ class DefaultProgressReport implements ProgressReport {
         }
 
         @Override
-        public void write(RdfSource.TripleWriter writer) {
+        public void write(TripleWriter writer) throws RdfUtilsException {
             super.write(writer);
             writer.typed(iri, LP_EVENTS.HAS_TOTAL,
                     Long.toString(total), XSD.LONG);

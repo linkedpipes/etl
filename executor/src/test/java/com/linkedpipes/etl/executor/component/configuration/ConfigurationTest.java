@@ -5,8 +5,12 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
-import com.linkedpipes.etl.rdf.utils.*;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.RdfBuilder;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.junit.Assert;
@@ -23,28 +27,27 @@ public class ConfigurationTest {
     /**
      * Test object used to load all properties.
      */
-    private static class TestObject implements RdfLoader.Loadable<String> {
+    private static class TestObject implements Loadable {
 
         private Map<String, List<String>> values = new HashMap();
 
         @Override
-        public RdfLoader.Loadable load(String predicate, String object)
+        public Loadable load(String predicate, RdfValue object)
                 throws RdfUtilsException {
             if (!values.containsKey(predicate)) {
                 values.put(predicate, new ArrayList<>());
             }
-            values.get(predicate).add(object);
+            values.get(predicate).add(object.asString());
             return null;
         }
     }
 
-    private static class ReferenceTestObject
-            implements RdfLoader.Loadable<String> {
+    private static class ReferenceTestObject implements Loadable {
 
         private TestObject reference;
 
         @Override
-        public RdfLoader.Loadable load(String predicate, String object)
+        public Loadable load(String predicate, RdfValue object)
                 throws RdfUtilsException {
             if (predicate.equals("http://value/reference")) {
                 reference = new TestObject();
@@ -56,10 +59,10 @@ public class ConfigurationTest {
 
     @Test
     public void mergeThreeConfigurations() throws Exception {
-        final RdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
         // Pipeline
-        final RdfBuilder ppl = new RdfBuilder(
-                source.getTripleWriter("http://pipeline"));
+        final RdfBuilder ppl = RdfBuilder.create(
+                source, "http://pipeline");
         ppl.entity("http://ppl")
                 .iri(RDF.TYPE, LP_PIPELINE.PIPELINE)
                 .entity(LP_PIPELINE.HAS_COMPONENT, "http://cmp")
@@ -100,8 +103,8 @@ public class ConfigurationTest {
                 .close();
         ppl.commit();
 
-        final RdfBuilder c_1 = new RdfBuilder(
-                source.getTripleWriter("http://config/1"));
+        final RdfBuilder c_1 = RdfBuilder.create(
+                source, "http://config/1");
         c_1.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/type")
                 .string("http://value/1", "1_1")
@@ -113,8 +116,8 @@ public class ConfigurationTest {
                 .string("http://value/4", "1_4")
                 .string("http://control/4", LP_OBJECTS.NONE);
         c_1.commit();
-        final RdfBuilder c_2 = new RdfBuilder(
-                source.getTripleWriter("http://config/2"));
+        final RdfBuilder c_2 = RdfBuilder.create(
+                source, "http://config/2");
         c_2.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/type")
                 .string("http://value/1", "2_1")
@@ -127,8 +130,8 @@ public class ConfigurationTest {
                 .string("http://value/4", "2_4")
                 .string("http://control/4", LP_OBJECTS.INHERIT_AND_FORCE);
         c_2.commit();
-        final RdfBuilder c_3 = new RdfBuilder(
-                source.getTripleWriter("http://config/3"));
+        final RdfBuilder c_3 = RdfBuilder.create(
+                source, "http://config/3");
         c_3.entity("http://resource/3")
                 .iri(RDF.TYPE, "http://config/type")
                 .string("http://value/1", "3_1")
@@ -143,24 +146,23 @@ public class ConfigurationTest {
         //
         final PipelineModel model = new PipelineModel(
                 "http://ppl", "http://pipeline");
-        RdfUtils.load(source, model, "http://ppl", "http://pipeline",
-                String.class);
+        RdfUtils.load(source, "http://ppl", "http://pipeline", model);
         //
         final Pipeline pipeline = Mockito.mock(Pipeline.class);
         Mockito.when(pipeline.getModel()).thenReturn(model);
         Mockito.when(pipeline.getSource()).thenReturn(source);
         Mockito.when(pipeline.getPipelineGraph()).thenReturn("http://pipeline");
-        final RdfSource target = Rdf4jSource.createInMemory();
+        final ClosableRdfSource target = Rdf4jSource.createInMemory();
         // Merge configurations.
         final Configuration factory = new Configuration();
         factory.prepareConfiguration("http://cmp/config/resource",
                 model.getComponent("http://cmp"), null, null,
-                target.getTypedTripleWriter("http://cmp/config/final"),
+                target.getTripleWriter("http://cmp/config/final"),
                 pipeline);
         // Load all to the test object.
         final TestObject testObject = new TestObject();
-        RdfUtils.load(target, testObject, "http://cmp/config/resource",
-                "http://cmp/config/final", String.class);
+        RdfUtils.load(target, "http://cmp/config/resource",
+                "http://cmp/config/final", testObject);
         // Check values.
         Assert.assertEquals("1_1",
                 testObject.values.get("http://value/1").get(0));
@@ -174,16 +176,16 @@ public class ConfigurationTest {
         Assert.assertEquals("1_4",
                 testObject.values.get("http://value/4").get(0));
         //
-        source.shutdown();
-        target.shutdown();
+        source.close();
+        target.close();
     }
 
     @Test
     public void copyOneOfTwoReferencedObject() throws Exception {
-        final RdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
         // Pipeline
-        final RdfBuilder ppl = new RdfBuilder(
-                source.getTripleWriter("http://pipeline"));
+        final RdfBuilder ppl = RdfBuilder.create(
+                source, "http://pipeline");
         ppl.entity("http://ppl")
                 .iri(RDF.TYPE, LP_PIPELINE.PIPELINE)
                 .entity(LP_PIPELINE.HAS_COMPONENT, "http://cmp")
@@ -226,8 +228,8 @@ public class ConfigurationTest {
                 .close();
         ppl.commit();
         //
-        final RdfBuilder c_1 = new RdfBuilder(
-                source.getTripleWriter("http://config/1"));
+        final RdfBuilder c_1 = RdfBuilder.create(
+                source, "http://config/1");
         c_1.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/typeReference")
                 .iri("http://control/reference", LP_OBJECTS.NONE)
@@ -240,8 +242,8 @@ public class ConfigurationTest {
                 .string("http://value/3", "1_3")
                 .string("http://control/3", LP_OBJECTS.NONE);
         c_1.commit();
-        final RdfBuilder c_2 = new RdfBuilder(
-                source.getTripleWriter("http://config/2"));
+        final RdfBuilder c_2 = RdfBuilder.create(
+                source, "http://config/2");
         c_2.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/typeReference")
                 .iri("http://control/reference", LP_OBJECTS.INHERIT)
@@ -258,24 +260,23 @@ public class ConfigurationTest {
         //
         final PipelineModel model = new PipelineModel(
                 "http://ppl", "http://pipeline");
-        RdfUtils.load(source, model, "http://ppl", "http://pipeline",
-                String.class);
+        RdfUtils.load(source, "http://ppl", "http://pipeline", model);
         //
         final Pipeline pipeline = Mockito.mock(Pipeline.class);
         Mockito.when(pipeline.getModel()).thenReturn(model);
         Mockito.when(pipeline.getSource()).thenReturn(source);
         Mockito.when(pipeline.getPipelineGraph()).thenReturn("http://pipeline");
-        final RdfSource target = Rdf4jSource.createInMemory();
+        final ClosableRdfSource target = Rdf4jSource.createInMemory();
         // Merge configurations.
         final Configuration factory = new Configuration();
         factory.prepareConfiguration("http://cmp/config/resource",
                 model.getComponent("http://cmp"), null, null,
-                target.getTypedTripleWriter("http://cmp/config/final"),
+                target.getTripleWriter("http://cmp/config/final"),
                 pipeline);
         // Load all to the test object.
         final ReferenceTestObject testObject = new ReferenceTestObject();
-        RdfUtils.load(target, testObject, "http://cmp/config/resource",
-                "http://cmp/config/final", String.class);
+        RdfUtils.load(target, "http://cmp/config/resource",
+                "http://cmp/config/final", testObject);
         // Check values.
         Assert.assertNotNull(testObject.reference);
         Assert.assertEquals("1_1",
@@ -286,16 +287,16 @@ public class ConfigurationTest {
                 testObject.reference.values.get("http://value/3").get(0));
 
         //
-        source.shutdown();
-        target.shutdown();
+        source.close();
+        target.close();
     }
 
     @Test
     public void mergeTwoReferencedObject() throws Exception {
-        final RdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
         // Pipeline
-        final RdfBuilder ppl = new RdfBuilder(
-                source.getTripleWriter("http://pipeline"));
+        final RdfBuilder ppl = RdfBuilder.create(
+                source, "http://pipeline");
         ppl.entity("http://ppl")
                 .iri(RDF.TYPE, LP_PIPELINE.PIPELINE)
                 .entity(LP_PIPELINE.HAS_COMPONENT, "http://cmp")
@@ -338,8 +339,8 @@ public class ConfigurationTest {
                 .close();
         ppl.commit();
         //
-        final RdfBuilder c_1 = new RdfBuilder(
-                source.getTripleWriter("http://config/1"));
+        final RdfBuilder c_1 = RdfBuilder.create(
+                source, "http://config/1");
         c_1.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/typeReference")
                 .entity("http://value/reference", "http://resource/ref")
@@ -351,8 +352,8 @@ public class ConfigurationTest {
                 .string("http://value/3", "1_3")
                 .string("http://control/3", LP_OBJECTS.FORCE);
         c_1.commit();
-        final RdfBuilder c_2 = new RdfBuilder(
-                source.getTripleWriter("http://config/2"));
+        final RdfBuilder c_2 = RdfBuilder.create(
+                source, "http://config/2");
         c_2.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/typeReference")
                 .entity("http://value/reference", "http://resource/ref")
@@ -367,24 +368,23 @@ public class ConfigurationTest {
         //
         final PipelineModel model = new PipelineModel(
                 "http://ppl", "http://pipeline");
-        RdfUtils.load(source, model, "http://ppl", "http://pipeline",
-                String.class);
+        RdfUtils.load(source,  "http://ppl", "http://pipeline", model);
         //
         final Pipeline pipeline = Mockito.mock(Pipeline.class);
         Mockito.when(pipeline.getModel()).thenReturn(model);
         Mockito.when(pipeline.getSource()).thenReturn(source);
         Mockito.when(pipeline.getPipelineGraph()).thenReturn("http://pipeline");
-        final RdfSource target = Rdf4jSource.createInMemory();
+        final ClosableRdfSource target = Rdf4jSource.createInMemory();
         // Merge configurations.
         final Configuration factory = new Configuration();
         factory.prepareConfiguration("http://cmp/config/resource",
                 model.getComponent("http://cmp"), null, null,
-                target.getTypedTripleWriter("http://cmp/config/final"),
+                target.getTripleWriter("http://cmp/config/final"),
                 pipeline);
         // Load all to the test object.
         final ReferenceTestObject testObject = new ReferenceTestObject();
-        RdfUtils.load(target, testObject, "http://cmp/config/resource",
-                "http://cmp/config/final", String.class);
+        RdfUtils.load(target, "http://cmp/config/resource",
+                "http://cmp/config/final", testObject);
         // Check values.
         Assert.assertNotNull(testObject.reference);
         Assert.assertEquals("1_1",
@@ -394,17 +394,17 @@ public class ConfigurationTest {
         Assert.assertEquals("1_3",
                 testObject.reference.values.get("http://value/3").get(0));
         //
-        source.shutdown();
-        target.shutdown();
+        source.close();
+        target.close();
     }
 
     @Test
     public void mergeTwoWithRuntimeConfigurations() throws Exception {
-        final RdfSource source = Rdf4jSource.createInMemory();
-        final RdfSource runtime = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource runtime = Rdf4jSource.createInMemory();
         // Pipeline
-        final RdfBuilder ppl = new RdfBuilder(
-                source.getTripleWriter("http://pipeline"));
+        final RdfBuilder ppl = RdfBuilder.create(
+                source, "http://pipeline");
         ppl.entity("http://ppl")
                 .iri(RDF.TYPE, LP_PIPELINE.PIPELINE)
                 .entity(LP_PIPELINE.HAS_COMPONENT, "http://cmp")
@@ -441,8 +441,8 @@ public class ConfigurationTest {
                 .close();
         ppl.commit();
 
-        final RdfBuilder c_1 = new RdfBuilder(
-                source.getTripleWriter("http://config/1"));
+        final RdfBuilder c_1 = RdfBuilder.create(
+                source, "http://config/1");
         c_1.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/type")
                 .string("http://value/1", "1_1")
@@ -454,8 +454,8 @@ public class ConfigurationTest {
                 .string("http://value/4", "1_4")
                 .string("http://control/4", LP_OBJECTS.NONE);
         c_1.commit();
-        final RdfBuilder c_2 = new RdfBuilder(
-                source.getTripleWriter("http://config/2"));
+        final RdfBuilder c_2 = RdfBuilder.create(
+                source, "http://config/2");
         c_2.entity("http://resource")
                 .iri(RDF.TYPE, "http://config/type")
                 .string("http://value/1", "2_1")
@@ -468,8 +468,8 @@ public class ConfigurationTest {
                 .string("http://value/4", "2_4")
                 .string("http://control/4", LP_OBJECTS.INHERIT_AND_FORCE);
         c_2.commit();
-        final RdfBuilder c_3 = new RdfBuilder(
-                runtime.getTripleWriter("http://config/3"));
+        final RdfBuilder c_3 = RdfBuilder.create(
+                runtime, "http://config/3");
         c_3.entity("http://resource/3")
                 .iri(RDF.TYPE, "http://config/type")
                 .string("http://value/1", "3_1")
@@ -484,25 +484,24 @@ public class ConfigurationTest {
         //
         final PipelineModel model = new PipelineModel(
                 "http://ppl", "http://pipeline");
-        RdfUtils.load(source, model, "http://ppl", "http://pipeline",
-                String.class);
+        RdfUtils.load(source, "http://ppl", "http://pipeline", model);
         //
         final Pipeline pipeline = Mockito.mock(Pipeline.class);
         Mockito.when(pipeline.getModel()).thenReturn(model);
         Mockito.when(pipeline.getSource()).thenReturn(source);
         Mockito.when(pipeline.getPipelineGraph()).thenReturn("http://pipeline");
-        final RdfSource target = Rdf4jSource.createInMemory();
+        final ClosableRdfSource target = Rdf4jSource.createInMemory();
         // Merge configurations.
         final Configuration factory = new Configuration();
         factory.prepareConfiguration("http://cmp/config/resource",
                 model.getComponent("http://cmp"),
                 runtime, "http://config/3",
-                target.getTypedTripleWriter("http://cmp/config/final"),
+                target.getTripleWriter("http://cmp/config/final"),
                 pipeline);
         // Load all to the test object.
         final TestObject testObject = new TestObject();
-        RdfUtils.load(target, testObject, "http://cmp/config/resource",
-                "http://cmp/config/final", String.class);
+        RdfUtils.load(target, "http://cmp/config/resource",
+                "http://cmp/config/final", testObject);
         // Check values.
         Assert.assertEquals("1_1",
                 testObject.values.get("http://value/1").get(0));
@@ -516,9 +515,9 @@ public class ConfigurationTest {
         Assert.assertEquals("1_4",
                 testObject.values.get("http://value/4").get(0));
         //
-        source.shutdown();
-        runtime.shutdown();
-        target.shutdown();
+        source.close();
+        runtime.close();
+        target.close();
     }
 
 }

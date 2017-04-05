@@ -3,7 +3,8 @@ package com.linkedpipes.etl.executor.pipeline.model;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Represent a DataUnit (port).
  */
-public class Port implements RdfLoader.Loadable<String> {
+public class Port implements Loadable {
 
     private final String iri;
 
@@ -52,20 +53,20 @@ public class Port implements RdfLoader.Loadable<String> {
     }
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
+    public Loadable load(String predicate, RdfValue object)
             throws RdfUtilsException {
         switch (predicate) {
             case RDF.TYPE:
-                types.add(object);
+                types.add(object.asString());
                 return null;
             case LP_PIPELINE.HAS_BINDING:
-                binding = object;
+                binding = object.asString();
                 return null;
             case LP_EXEC.HAS_SOURCE:
                 dataSource = new DataSource();
                 return dataSource;
             case LP_EXEC.HAS_SAVE_DEBUG_DATA:
-                saveDebugData = object.toLowerCase().equals("true");
+                saveDebugData = object.asBoolean();
                 return null;
             default:
                 return null;

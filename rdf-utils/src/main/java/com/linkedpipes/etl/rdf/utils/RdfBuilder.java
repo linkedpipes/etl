@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.rdf.utils;
 
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
 /**
@@ -20,54 +22,59 @@ public class RdfBuilder {
             this.resource = resource;
         }
 
-        public EntityBuilder entity(String predicate, String resource) {
+        public EntityBuilder entity(String predicate, String resource)
+                throws RdfUtilsException {
             writer.iri(this.resource, predicate, resource);
             return new EntityBuilder(this, resource);
         }
 
-        public EntityBuilder iri(String predicate, String value) {
+        public EntityBuilder iri(String predicate, String value)
+                throws RdfUtilsException {
             writer.iri(resource, predicate, value);
             return this;
         }
 
-        public EntityBuilder string(String predicate, String value) {
+        public EntityBuilder string(String predicate, String value)
+                throws RdfUtilsException {
             writer.string(resource, predicate, value, null);
             return this;
         }
 
         public EntityBuilder string(String predicate, String value,
-                String language) {
+                String language) throws RdfUtilsException {
             writer.string(resource, predicate, value, language);
             return this;
         }
 
-        public EntityBuilder integer(String predicate, int value) {
-            writer.typed(resource, predicate, Integer.toString(value),
-                    XSD.INTEGER);
+        public EntityBuilder integer(String predicate, int value)
+                throws RdfUtilsException {
+            writer.typed(resource, predicate,
+                    Integer.toString(value), XSD.INTEGER);
             return this;
         }
 
-        public EntityBuilder bool(String predicate, boolean value) {
-            writer.typed(resource, predicate, Boolean.toString(value),
-                    XSD.BOOLEAN);
+        public EntityBuilder bool(String predicate, boolean value)
+                throws RdfUtilsException {
+            writer.typed(resource, predicate,
+                    Boolean.toString(value), XSD.BOOLEAN);
             return this;
         }
 
+        public EntityBuilder typed(String predicate, String value, String type)
+                throws RdfUtilsException {
+            writer.typed(resource, predicate, value, type);
+            return this;
+        }
 
-        /**
-         * Close currently open openEntity.
-         *
-         * @return
-         */
         public EntityBuilder close() {
             return parent;
         }
 
     }
 
-    private final RdfSource.TripleWriter writer;
+    private final TripleWriter writer;
 
-    public RdfBuilder(RdfSource.TripleWriter writer) {
+    private RdfBuilder(TripleWriter writer) {
         this.writer = writer;
     }
 
@@ -76,26 +83,15 @@ public class RdfBuilder {
     }
 
     /**
-     * Close the writer, must be called at the end of {@link RdfBuilder}
-     * usage.
+     * Add triples into the source.
      */
     public void commit() throws RdfUtilsException {
-        writer.submit();
+        writer.flush();
     }
 
-    /**
-     * Create a model that writes data to given {@link RdfSource}.
-     *
-     * @param source
-     * @return
-     */
     public static RdfBuilder create(RdfSource source, String graph)
             throws RdfUtilsException {
-        final RdfSource.TripleWriter writer = source.getTripleWriter(graph);
-        if (writer == null) {
-            throw new RdfUtilsException(
-                    "Source does not provide TripleWriter interface.");
-        }
+        TripleWriter writer = source.getTripleWriter(graph);
         return new RdfBuilder(writer);
     }
 

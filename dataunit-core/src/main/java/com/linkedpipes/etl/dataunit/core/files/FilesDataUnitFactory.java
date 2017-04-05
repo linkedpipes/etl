@@ -4,9 +4,9 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.File;
@@ -21,8 +21,7 @@ public class FilesDataUnitFactory implements DataUnitFactory {
         // Load configuration.
         final Configuration configuration = new Configuration(dataUnit, graph);
         try {
-            RdfUtils.load(definition, configuration, dataUnit, graph,
-                    String.class);
+            RdfUtils.load(definition, dataUnit, graph, configuration);
             configuration.loadSources(definition);
         } catch (RdfUtilsException ex) {
             throw new LpException("Can't load configuration for {} in {}",

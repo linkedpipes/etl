@@ -1,11 +1,11 @@
 package com.linkedpipes.etl.executor.component.configuration;
 
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.EntityControl;
-import com.linkedpipes.etl.rdf.utils.entity.EntityControlFactory;
+import com.linkedpipes.etl.rdf.utils.entity.MergeControl;
+import com.linkedpipes.etl.rdf.utils.entity.MergeControlFactory;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
-class DefaultControlFactory implements EntityControlFactory {
+class DefaultControlFactory implements MergeControlFactory {
 
     /**
      * Source with definitions.
@@ -27,7 +27,7 @@ class DefaultControlFactory implements EntityControlFactory {
     }
 
     @Override
-    public EntityControl create(String type) throws RdfUtilsException {
+    public MergeControl create(String type) throws RdfUtilsException {
         final DefaultControl control = new DefaultControl();
         control.loadDefinition(definitionSource, definitionGraph, type);
         return control;
