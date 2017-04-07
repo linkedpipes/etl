@@ -1,41 +1,59 @@
-<md-dialog aria-label="Pipeline label"  ng-cloak flex="50">
+<md-dialog aria-label="Pipeline label" ng-cloak flex="50">
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h4>Pipeline detail</h4>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="onCancel()">
-                    <md-icon md-svg-src="close" aria-label="Close dialog"></md-icon>
+                    <md-icon md-svg-src="close"
+                             aria-label="Close dialog"></md-icon>
                 </md-button>
             </div>
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <div layout="column">
-                    <md-input-container class="md-block" flex>
-                        <label>URL</label>
-                        <input ng-model="detail.uri" ng-readonly='true'>
-                    </md-input-container>
-                    <md-input-container class="md-block" flex>
-                        <label>Label</label>
-                        <input ng-model="detail.label" md-autofocus>
-                    </md-input-container>
-                    <md-chips ng-model="detail.tags"
-                              placeholder="Enter a tag"
-                              md-require-match="False"
-                              secondary-placeholder="+Tag">
-                        <md-autocomplete
-                                md-search-text="tags.searchText"
-                                md-items="item in tags.querySearch(tags.searchText)"
-                                placeholder="Search for a tags.">
-                            <span md-highlight-text="tags.searchText">{{item}}</span>
-                        </md-autocomplete>
-                        <md-chip-template>{{$chip}}</md-chip-template>
-                        <md-chip-template>
-                            <strong>{{$chip}}</strong>
-                        </md-chip-template>
-                    </md-chips>
-                </div>
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="General">
+                        <div layout="column">
+                            <md-input-container class="md-block" flex>
+                                <label>URL</label>
+                                <input ng-model="detail.uri" ng-readonly='true'>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Label</label>
+                                <input ng-model="detail.label" md-autofocus>
+                            </md-input-container>
+                            <md-chips ng-model="detail.tags"
+                                      placeholder="Enter a tag"
+                                      md-require-match="False"
+                                      secondary-placeholder="+Tag">
+                                <md-autocomplete
+                                        md-search-text="tags.searchText"
+                                        md-items="item in tags.querySearch(tags.searchText)"
+                                        placeholder="Search for a tags.">
+                                    <span md-highlight-text="tags.searchText">{{item}}</span>
+                                </md-autocomplete>
+                                <md-chip-template>{{$chip}}</md-chip-template>
+                                <md-chip-template>
+                                    <strong>{{$chip}}</strong>
+                                </md-chip-template>
+                            </md-chips>
+                        </div>
+                    </md-tab>
+                    <md-tab label="Execution profile">
+                        <md-input-container  class="md-block" flex>
+                            <label>RDF repository mode</label>
+                            <md-select ng-model="profile.rdfRepositoryType">
+                                <md-option value="http://linkedpipes.com/ontology/repository/SingleRepository">
+                                    Single repository
+                                </md-option>
+                                <md-option value="http://linkedpipes.com/ontology/repository/PerInputRepository">
+                                    Repository per input
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </md-tab>
+                </md-tabs>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
