@@ -18,6 +18,28 @@ public final class LP_PIPELINE {
 
     public static final String JAS_TEMPLATE = PREFIX + "JarTemplate";
 
+    public static final String HAS_PROFILE = PREFIX + "profile";
+
+    /**
+     * Pipeline has execution profile.
+     */
+    public static final String PROFILE = PREFIX + "ExecutionProfile";
+
+    public static final String HAS_RDF_REPOSITORY_POLICY = PREFIX +
+            "rdfRepositoryPolicy";
+
+    /**
+     * Use single RDF repository per execution.
+     */
+    public static final String SINGLE_REPOSITORY = PREFIX  +
+            "repository/SingleRepository";
+
+    /**
+     * Use RDF repository per input.
+     */
+    public static final String PER_INPUT_REPOSITORY = PREFIX  +
+            "repository/PerInputRepository";
+
     /**
      * TODO Update to ../dataUnit/files/DirectoryMirror
      */
