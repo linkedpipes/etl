@@ -6,16 +6,14 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.query.Dataset;
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 public final class SparqlConstruct implements Component, SequentialExecution {
-
-    private static final Logger LOG
-            = LoggerFactory.getLogger(SparqlConstruct.class);
 
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
@@ -35,42 +33,46 @@ public final class SparqlConstruct implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
+        checkConfiguration();
+        executeQueryAndStoreResults();
+    }
+
+    private void checkConfiguration() throws LpException {
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    SparqlConstructVocabulary.HAS_QUERY);
+            throw exceptionFactory.failure("Missing query.");
         }
-        // We always perform inserts.
-        final String query = updateQuery(configuration.getQuery());
-        LOG.debug("Query: {}", query);
-        LOG.debug("{} -> {}", inputRdf.getReadGraph(), outputRdf.getWriteGraph());
-        // Execute query - TODO We should check that they share
-        // the same repository!
+    }
+
+    private void executeQueryAndStoreResults() throws LpException {
         try {
             inputRdf.execute((connection) -> {
-                final Update update = connection.prepareUpdate(
-                        QueryLanguage.SPARQL, query);
-                final SimpleDataset dataset = new SimpleDataset();
-                dataset.addDefaultGraph(inputRdf.getReadGraph());
-                dataset.setDefaultInsertGraph(outputRdf.getWriteGraph());
-                update.setDataset(dataset);
-                update.execute();
+                GraphQueryResult result = executeQuery(connection);
+                addResultToOutput(result);
             });
         } catch (Throwable t) {
             throw exceptionFactory.failure("Can't execute given query.", t);
         }
     }
 
-    /**
-     * Rewrite given SPARQL construct to SPARQL insert.
-     *
-     * @param query
-     * @return
-     */
-    static String updateQuery(String query) {
-        return query.replaceFirst("(?i)CONSTRUCT\\s*\\{", "INSERT \\{");
+    private GraphQueryResult executeQuery(RepositoryConnection connection) {
+        final String queryAsString = configuration.getQuery();
+        GraphQuery query = connection.prepareGraphQuery(
+                QueryLanguage.SPARQL, queryAsString);
+        query.setDataset(createDataset());
+        return query.evaluate();
     }
 
-    ;
+    private Dataset createDataset() {
+        SimpleDataset dataset = new SimpleDataset();
+        dataset.addDefaultGraph(inputRdf.getReadGraph());
+        return dataset;
+    }
+
+    private void addResultToOutput(GraphQueryResult result) throws LpException {
+        outputRdf.execute((connection) -> {
+            connection.add(result, outputRdf.getWriteGraph());
+        });
+    }
 
 }
