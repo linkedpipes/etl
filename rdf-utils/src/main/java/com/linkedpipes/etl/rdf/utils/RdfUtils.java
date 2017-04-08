@@ -28,10 +28,11 @@ public class RdfUtils {
     }
 
     private static String getResourceOfType(RdfSource source,
-            String graph, String type) throws RdfUtilsException {
+            String graph, String type)
+            throws RdfUtilsException {
         List<String> resources = getResourcesOfType(source, graph, type);
         if (resources.size() != 1) {
-            throw new RdfUtilsException(
+            throw new InvalidNumberOfResults(
                     "Invalid number of resources ({}) of type: {}",
                     resources.size(), type);
         } else {
@@ -129,7 +130,7 @@ public class RdfUtils {
             throws RdfUtilsException {
         List<Map<String, String>> result = sparqlSelect(source, queryAsString);
         if (result.size() != 1) {
-            throw new RdfUtilsException(
+            throw new InvalidNumberOfResults(
                     "Invalid number of results: {} (1 expected) for:\n{}",
                     result.size(), queryAsString);
         } else {
