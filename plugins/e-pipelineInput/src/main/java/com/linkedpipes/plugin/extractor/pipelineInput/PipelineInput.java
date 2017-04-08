@@ -15,9 +15,8 @@ import java.util.Collection;
 
 public class PipelineInput implements Component, SequentialExecution {
 
-    private static final String HAS_INPUT_DIRECTORY
-            = "http://linkedpipes.com/resources/components/e-pipelineInput/"
-            + "inputDirectory";
+    private static final String HAS_INPUT_DIRECTORY =
+            "http://linkedpipes.com/ontology/inputDirectory";
 
     @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
