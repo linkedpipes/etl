@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.rdf.utils;
 
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jTestUtils;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 import org.eclipse.rdf4j.model.Statement;
@@ -34,7 +34,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createIRI(SKOS.PREF_LABEL),
                 valueFactory.createLiteral("Resource 02")
         ));
-        Assert.assertTrue(Rdf4jTestUtils.rdfEqual(
+        Assert.assertTrue(Rdf4jUtils.rdfEqual(
                 "rdf4jtestutilstest/triple.ttl", actual));
     }
 
@@ -51,7 +51,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createIRI(SKOS.PREF_LABEL),
                 valueFactory.createLiteral("Resource 01")
         ));
-        Assert.assertTrue(Rdf4jTestUtils.rdfContains(
+        Assert.assertTrue(Rdf4jUtils.rdfContains(
                 "rdf4jtestutilstest/triple.ttl", actual));
     }
 
@@ -68,7 +68,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createIRI(SKOS.PREF_LABEL),
                 valueFactory.createLiteral("Resource 02")
         ));
-        Assert.assertFalse(Rdf4jTestUtils.rdfEqual(
+        Assert.assertFalse(Rdf4jUtils.rdfEqual(
                 "rdf4jtestutilstest/triple.ttl", actual));
     }
 
@@ -87,7 +87,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createLiteral("Resource 01"),
                 valueFactory.createIRI("http://localhost/graph/01")
         ));
-        Assert.assertTrue(Rdf4jTestUtils.rdfEqual(
+        Assert.assertTrue(Rdf4jUtils.rdfEqual(
                 "rdf4jtestutilstest/quad.trig", actual));
     }
 
@@ -100,7 +100,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createIRI("http://localhost/ontolog/Type"),
                 valueFactory.createIRI("http://localhost/graph/01")
         ));
-        Assert.assertTrue(Rdf4jTestUtils.rdfContains(
+        Assert.assertTrue(Rdf4jUtils.rdfContains(
                 "rdf4jtestutilstest/quad.trig", actual));
     }
 
@@ -113,7 +113,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createIRI("http://localhost/ontolog/Type"),
                 valueFactory.createIRI("http://localhost/graph/01")
         ));
-        Assert.assertFalse(Rdf4jTestUtils.rdfEqual(
+        Assert.assertFalse(Rdf4jUtils.rdfEqual(
                 "rdf4jtestutilstest/quad.trig", actual));
     }
 
@@ -132,7 +132,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createLiteral("Resource 01"),
                 valueFactory.createIRI("http://localhost/graph/02")
         ));
-        Assert.assertFalse(Rdf4jTestUtils.rdfEqual(
+        Assert.assertFalse(Rdf4jUtils.rdfEqual(
                 "rdf4jtestutilstest/quad.trig", actual));
     }
 
@@ -150,7 +150,7 @@ public class Rdf4jTestUtilsTest {
                 valueFactory.createIRI(SKOS.PREF_LABEL),
                 valueFactory.createLiteral("Resource 01")
         ));
-        Assert.assertFalse(Rdf4jTestUtils.rdfEqual(
+        Assert.assertFalse(Rdf4jUtils.rdfEqual(
                 "rdf4jtestutilstest/quad.trig", actual));
     }
 

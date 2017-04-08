@@ -1,7 +1,10 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.Rio;
@@ -16,16 +19,31 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
-/**
- * Use only for testing.
- */
-public class Rdf4jTestUtils {
+public class Rdf4jUtils {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(Rdf4jTestUtils.class);
+            LoggerFactory.getLogger(Rdf4jUtils.class);
 
-    private Rdf4jTestUtils() {
+    private Rdf4jUtils() {
 
+    }
+
+    public static ClosableRdfSource loadAsSource(String resourceName)
+            throws IOException {
+        File file = resourceToFile(resourceName);
+        RDFFormat format = Rio.getParserFormatForFileName(resourceName).get();
+        if (format == null) {
+            throw new IOException("Can't determine file format.");
+        }
+        ClosableRdf4jSource source = Rdf4jSource.createInMemory();
+        Repository rdfRepository = source.getRepository();
+        try (RepositoryConnection connection = rdfRepository.getConnection()) {
+            connection.add(file, "http://localhost/default", format);
+        } catch (RuntimeException | IOException ex) {
+            source.close();
+            throw ex;
+        }
+        return source;
     }
 
     public static boolean rdfEqual(String expectedResourceFile,
