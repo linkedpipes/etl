@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Rdf4jTestUtilsTest {
+public class Rdf4jUtilsTest {
 
     private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
