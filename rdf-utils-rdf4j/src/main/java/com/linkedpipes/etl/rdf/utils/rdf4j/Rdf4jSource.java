@@ -69,7 +69,7 @@ public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
     @Override
     public void triples(String resource, String graph, TripleHandler handler)
             throws RdfUtilsException {
-        Resource resourceFilter = createResourceOrNull(resource);
+        Resource resourceFilter = iriOrNull(resource);
         try (RepositoryConnection connection = repository.getConnection()) {
             RepositoryResult<Statement> result = connection.getStatements(
                     resourceFilter, null, null, valueFactory.createIRI(graph));
@@ -83,7 +83,7 @@ public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
         }
     }
 
-    private Resource createResourceOrNull(String resource) {
+    private Resource iriOrNull(String resource) {
         if (resource == null) {
             return null;
         }

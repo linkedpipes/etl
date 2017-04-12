@@ -18,7 +18,8 @@ public class RdfUtils {
 
     public static void load(RdfSource source, String resource, String graph,
             Loadable loadable) throws RdfUtilsException {
-        RdfToPojoLoader.loadResource(source, resource, graph, loadable);
+        RdfToPojoLoader loader = new RdfToPojoLoader(source);
+        loader.loadResource(resource, graph, loadable);
     }
 
     public static void loadByType(RdfSource source, String graph,
@@ -27,9 +28,8 @@ public class RdfUtils {
         load(source, resource, graph, loadable);
     }
 
-    private static String getResourceOfType(RdfSource source,
-            String graph, String type)
-            throws RdfUtilsException {
+    private static String getResourceOfType(RdfSource source, String graph,
+            String type) throws RdfUtilsException {
         List<String> resources = getResourcesOfType(source, graph, type);
         if (resources.size() != 1) {
             throw new InvalidNumberOfResults(
@@ -62,9 +62,8 @@ public class RdfUtils {
         return resources;
     }
 
-    private static List<String> getResourcesOfTypeByQuery(
-            RdfSource source, String graph, String type)
-            throws RdfUtilsException {
+    private static List<String> getResourcesOfTypeByQuery(RdfSource source,
+            String graph, String type) throws RdfUtilsException {
         String queryAsString = "SELECT ?s WHERE { GRAPH <" + graph +
                 "> { ?s a <" + type + "> } } ";
         List<String> resources = new ArrayList<>();
@@ -78,8 +77,9 @@ public class RdfUtils {
     public static void load(RdfSource source, String resource, String graph,
             Object object, DescriptorFactory descriptorFactory)
             throws RdfUtilsException {
-        RdfToPojoLoader.loadResourceByReflection(source, resource, graph,
-                object, descriptorFactory);
+        RdfToPojoLoader loader = new RdfToPojoLoader(source);
+        loader.loadResourceByReflection(resource, graph, object,
+                descriptorFactory);
     }
 
     public static void loadByType(RdfSource source, String graph,
@@ -137,9 +137,8 @@ public class RdfUtils {
         }
     }
 
-    public static List<Map<String, String>> sparqlSelect(
-            RdfSource source, String queryAsString)
-            throws RdfUtilsException {
+    public static List<Map<String, String>> sparqlSelect(RdfSource source,
+            String queryAsString) throws RdfUtilsException {
         RdfSource.SparqlQueryable queryable = source.asQueryable();
         if (queryable == null) {
             throw new RdfUtilsException("Source does not support SPARQL.");
@@ -156,6 +155,5 @@ public class RdfUtils {
         }
         return output;
     }
-
 
 }
