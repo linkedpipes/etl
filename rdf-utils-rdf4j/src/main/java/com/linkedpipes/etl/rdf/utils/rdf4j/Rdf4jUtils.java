@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.eclipse.rdf4j.rio.helpers.ContextStatementCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +32,7 @@ public class Rdf4jUtils {
     public static ClosableRdfSource loadAsSource(String resourceName)
             throws IOException {
         File file = resourceToFile(resourceName);
-        RDFFormat format = Rio.getParserFormatForFileName(resourceName).get();
-        if (format == null) {
-            throw new IOException("Can't determine file format.");
-        }
+        RDFFormat format = getFormat(resourceName);
         ClosableRdf4jSource source = Rdf4jSource.createInMemory();
         Repository rdfRepository = source.getRepository();
         try (RepositoryConnection connection = rdfRepository.getConnection()) {
@@ -44,6 +42,34 @@ public class Rdf4jUtils {
             throw ex;
         }
         return source;
+    }
+
+    public static Collection<Statement> loadAsStatements(String resourceName)
+            throws IOException {
+        File file = resourceToFile(resourceName);
+        RDFFormat format = getFormat(resourceName);
+        List<Statement> statements = new LinkedList<>();
+        try (InputStream stream = new FileInputStream(file)) {
+            RDFParser parser = Rio.createParser(format);
+            parser.setRDFHandler(new AbstractRDFHandler() {
+
+                @Override
+                public void handleStatement(Statement st) {
+                    statements.add(st);
+                }
+
+            });
+            parser.parse(stream, "http://localhost/default");
+        }
+        return statements;
+    }
+
+    private static RDFFormat getFormat(String fileName) throws IOException {
+        RDFFormat format = Rio.getParserFormatForFileName(fileName).get();
+        if (format == null) {
+            throw new IOException("Can't determine file format.");
+        }
+        return format;
     }
 
     public static boolean rdfEqual(String expectedResourceFile,
