@@ -104,8 +104,7 @@ public class RdfUtils {
     public static <Type> List<Type> loadList(RdfSource source, String graph,
             DescriptorFactory descriptorFactory,
             Class<Type> outputType) throws RdfUtilsException {
-        String type = descriptorFactory.create(
-                outputType.getClass()).getObjectType();
+        String type = descriptorFactory.create(outputType).getObjectType();
         List<String> resources = getResourcesOfType(source, graph, type);
         List<Type> output = new LinkedList<Type>();
         for (String resource : resources) {
