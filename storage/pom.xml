@@ -24,6 +24,18 @@
             <version>${lp.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>rdf-utils</artifactId>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>rdf-utils-rdf4j</artifactId>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- Spring. -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -138,6 +150,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
