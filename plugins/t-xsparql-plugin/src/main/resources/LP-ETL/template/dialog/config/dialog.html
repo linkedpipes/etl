@@ -1,0 +1,31 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.extension.hide" flex>
+        <label>Transformed file extension</label>
+        <input ng-model="dialog.extension.value"
+               ng-disabled="dialog.extension.disabled || dialog.extension.inherit"
+               placeholder="ttl">
+    </md-input-container>
+    <div ng-hide="dialog.reference.disabled || dialog.reference.inherit || dialog.reference.hide">
+        Bind external variables<br/>
+        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.reference.value">
+            <md-input-container class="md-block" flex>
+                <label>Variable</label>
+                <input ng-model="item.key.value">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>Value</label>
+                <input ng-model="item.val.value">
+            </md-input-container>
+            <button ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+        </section>
+        <button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+    </div>
+    <md-input-container class="md-block" ng-hide="dialog.xsparql.hide" flex>
+        <label>XSPARQL Template</label>
+        <textarea id="template" ng-model="dialog.template.value"
+                  ng-disabled="dialog.template.disabled || dialog.template.inherit"
+                  placeholder="XSPAQRL query"
+                  md-select-on-focus/>
+    </md-input-container>
+</div>
