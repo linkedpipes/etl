@@ -102,7 +102,11 @@ class Parser {
         final int columnCount;
         final int columnStart = configuration.getColumnsStart();
         if (configuration.getColumnsEnd() == -1) {
-            final Row row = sheet.getRow(configuration.getRowsStart());
+            // In some cases the first row may not start with the index 0 but 1.
+            int startRowIndex =  configuration.getRowsStart();
+            // So we use getFirstRowNum to shift the index.
+            startRowIndex += sheet.getFirstRowNum();
+            final Row row = sheet.getRow(startRowIndex);
             columnCount = row.getLastCellNum() - columnStart;
         } else {
             columnCount = configuration.getColumnsEnd() - columnStart + 1;
