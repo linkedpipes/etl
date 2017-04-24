@@ -206,7 +206,7 @@
      * @param value
      */
     const setValues = function (resource, predicate, value) {
-        if (value === undefined) {
+        if (value === undefined || value === null) {
             delete resource[predicate];
             return;
         }
