@@ -12,8 +12,9 @@
         <http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/header> ,
         <http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/numericParse> ,
         <http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/skipEmptyRows> ,
-        <http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/includeSheetName> .
-        
+        <http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/includeSheetName> ,
+        <http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/evalFormula> .
+
 <http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/fileName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-excelToCsv#fileName> ;
@@ -63,3 +64,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-excelToCsv#includeSheetName> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-excelToCsv#includeSheetNameControl> .
+
+<http://linkedpipes.com/resources/components/t-excelToCsv/0.0.0/configuration/desc/evalFormula>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-excelToCsv#evalFormula> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-excelToCsv#evalFormulaControl> .

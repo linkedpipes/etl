@@ -72,4 +72,9 @@
                ng-hide="dialog.includeSheetName.hide">
         Add sheet name as a column
     </md-switch>
+    <md-switch ng-model="dialog.evalFormula.value"
+               ng-disabled="dialog.evalFormula.disabled || dialog.evalFormula.inherit"
+               ng-hide="dialog.evalFormula.hide">
+        Evaluate formulas (experimental functionality)
+    </md-switch>
 </div>

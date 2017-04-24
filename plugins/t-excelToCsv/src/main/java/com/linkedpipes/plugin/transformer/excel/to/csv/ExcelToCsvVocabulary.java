@@ -40,6 +40,8 @@ final class ExcelToCsvVocabulary {
 
     public static final String HAS_NAME = PREFIX + "name";
 
+    public static final String HAS_EVAL_FORMULA = PREFIX + "evalFormula";
+
     private ExcelToCsvVocabulary() {
     }
 

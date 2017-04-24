@@ -47,6 +47,10 @@ define([], function () {
         "includeSheetName": {
             "$type": "bool",
             "$label": "Add sheet name as a column"
+        },
+        "evalFormula": {
+            "$type": "bool",
+            "$label": "Evaluate formulas"
         }
     };
 

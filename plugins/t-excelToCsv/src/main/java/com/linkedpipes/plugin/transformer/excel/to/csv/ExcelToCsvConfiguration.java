@@ -129,6 +129,9 @@ public class ExcelToCsvConfiguration {
     @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_INCLUDE_SHEET_NAME)
     private boolean includeSheetName = false;
 
+    @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_EVAL_FORMULA)
+    private boolean evaluateFormulas = false;
+
     public ExcelToCsvConfiguration() {
     }
 
@@ -220,4 +223,11 @@ public class ExcelToCsvConfiguration {
         this.includeSheetName = includeSheetName;
     }
 
+    public boolean isEvaluateFormulas() {
+        return evaluateFormulas;
+    }
+
+    public void setEvaluateFormulas(boolean evaluateFormulas) {
+        this.evaluateFormulas = evaluateFormulas;
+    }
 }
