@@ -25,7 +25,7 @@
             <label>Row start</label>
             <input type="number" ng-model="dialog.rowStart.value"
                    ng-disabled="dialog.rowStart.disabled || dialog.rowStart.inherit"
-                   placeholder="1" min="1">
+                   placeholder="1" min="0">
         </md-input-container>
         <md-input-container class="md-block"
                             ng-hide="dialog.rowEnd.hide"
@@ -41,7 +41,7 @@
             <label>Column start</label>
             <input type="number" ng-model="dialog.columnStart.value"
                    ng-disabled="dialog.columnStart.disabled || dialog.columnStart.inherit"
-                   placeholder="1" min="1">
+                   placeholder="1" min="0">
         </md-input-container>
         <md-input-container class="md-block"
                             ng-hide="dialog.columnEnd.hide"
