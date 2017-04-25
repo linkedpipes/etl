@@ -1,17 +1,29 @@
 ## About
 [XSPARQL](https://github.com/semantalytics/xsparql) is a language combining xQuery and SPARQL. 
 It could be used instead of XSLT for transformation of XML files. 
-[xsparql-language-specification](https://www.w3.org/Submission/xsparql-language-specification/)
 
-In the [wiki](https://github.com/semantalytics/xsparql/wiki) you can find useful information on how to use.
+Useful link:
+* [xsparql-language-specification](https://www.w3.org/Submission/xsparql-language-specification/)
+* [github wiki](https://github.com/semantalytics/xsparql/wiki) 
 
-Please note that the plugin doesn't currently support the db connections.
+## Plugin specifics
+* Please note that the plugin doesn't currently support the db connections.
+* All files added to the input of the component can be accessed within the script by the variable $input.
+```
+declare namespace foaf = "http://xmlns.com/foaf/0.1/";
 
-All files added to the input of the component can be accessed within the script by the variable $input.
+declare option saxon:output "method=text";
+declare variable $input as xs:string external;
+
+let $check := xs:gYearMonth("2016-12")
+let $en := "en"
+for $x in doc($input)/LOUFile/ContentDate
+construct {foaf:dfd foaf:fdsf {$x}.}
+```
 
 ## Prerequisites
 * [XSPARQL](https://github.com/semantalytics/xsparql) 
 
 ## Installation
-You need the xsparql-cli-jar-with-dependencies.jar
-The you need change the system-path in the pom file for the jar.
+- You need to download/package the xsparql-cli-jar-with-dependencies.jar
+- Then you need change the system-path in the pom file for the jar.
