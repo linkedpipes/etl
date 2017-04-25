@@ -704,7 +704,8 @@ define([
                 // Check for loader type.
                 const templateIri = comFacade.getTemplateIri(component);
                 const template = templateService.getJarTemplate(templateIri);
-                if (template.type.indexOf("http://etl.linkedpipes.com/ontology/component/type/Loader") === -1) {
+                if (template.type.indexOf("http://etl.linkedpipes.com/ontology/component/type/Loader") === -1 &&
+                    template.type.indexOf("http://etl.linkedpipes.com/ontology/component/type/Executor") === -1) {
                     continue
                 }
                 // Check state.
