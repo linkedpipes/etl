@@ -15,6 +15,10 @@ public final class MustacheVocabulary {
 
     public static final String HAS_FILE_NAME = PREFIX + "fileName";
 
+    public static final String HAS_ADD_FIRST_FLAG = PREFIX + "addFirstFlag";
+
+    public static final String HAS_IS_FIRST = PREFIX + "first";
+
     private MustacheVocabulary() {
     }
 

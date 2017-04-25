@@ -17,7 +17,7 @@ public class UpdateQueryTest {
         final String expected = "\n\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, UpdateQuery.expandPrefixes(input));
+        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class UpdateQueryTest {
         final String expected = "\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, UpdateQuery.expandPrefixes(input));
+        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class UpdateQueryTest {
         final String expected = "\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, UpdateQuery.expandPrefixes(input));
+        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class UpdateQueryTest {
         final String expected = "\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, UpdateQuery.expandPrefixes(input));
+        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class UpdateQueryTest {
         final String expected = "  \n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}{{noPrefix}}";
-        Assert.assertEquals(expected, UpdateQuery.expandPrefixes(input));
+        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
 }

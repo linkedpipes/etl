@@ -11,6 +11,9 @@ public class MustacheConfiguration {
     @RdfToPojo.Property(iri = MustacheVocabulary.HAS_TEMPLATE)
     private String template;
 
+    @RdfToPojo.Property(iri = MustacheVocabulary.HAS_ADD_FIRST_FLAG)
+    private boolean addFirstToCollection = false;
+
     public MustacheConfiguration() {
     }
 
@@ -28,6 +31,14 @@ public class MustacheConfiguration {
 
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    public boolean isAddFirstToCollection() {
+        return addFirstToCollection;
+    }
+
+    public void setAddFirstToCollection(boolean addFirstToCollection) {
+        this.addFirstToCollection = addFirstToCollection;
     }
 
 }
