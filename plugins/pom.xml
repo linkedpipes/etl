@@ -79,6 +79,8 @@
         <module>t-jsonLdFormat</module>
         <module>e-sparqlEndpointList</module>
         <module>e-sparqlEndpointChunkedList</module>
+        <module>t-xsparql-plugin</module>
+        <module>t-XMLtoChunks</module>
     </modules>
 
 </project>

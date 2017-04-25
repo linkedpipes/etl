@@ -1,0 +1,26 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-xsparql/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-xsparql#Configuration>  ;
+    config:member <http://linkedpipes.com/resources/components/t-xsparql/0.0.0/configuration/desc/template> ,
+        <http://linkedpipes.com/resources/components/t-xsparql/0.0.0/configuration/desc/extension> ,
+        <http://linkedpipes.com/resources/components/t-xsparql/0.0.0/configuration/desc/reference> .
+
+
+<http://linkedpipes.com/resources/components/t-xsparql/0.0.0/configuration/desc/template>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xsparql#template> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xsparql#templateControl> .
+
+<http://linkedpipes.com/resources/components/t-xsparql/0.0.0/configuration/desc/extension>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xsparql#extension> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xsparql#extensionControl> .
+
+<http://linkedpipes.com/resources/components/t-xsparql/0.0.0/configuration/desc/reference>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xsparql#reference> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xsparql#referenceControl> .
+
+
