@@ -63,8 +63,6 @@ public class XsparqlPlugin implements Component, SequentialExecution  {
             try (PrintStream outputStream = new PrintStream(
                     new FileOutputStream(outputFile), false, "UTF-8")) {
 
-                StringWriter writer = new StringWriter();
-
                 Reader is = null;
                 try {
                     // Set the external variables for Saxon
@@ -123,8 +121,8 @@ public class XsparqlPlugin implements Component, SequentialExecution  {
 
         String result;
         xe.setDBconnection(proc.getDBconnection());
-        result = xe.evaluateRewrittenQuery(xquery);
-        outputStream.print(result);
+        xe.evaluateRewrittenQuery(new StringReader(xquery), new PrintWriter(outputStream));
+        //outputStream.print(result);
 
     }
 
