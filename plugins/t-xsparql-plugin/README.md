@@ -20,6 +20,8 @@ let $en := "en"
 for $x in doc($input)/LOUFile/ContentDate
 construct {foaf:dfd foaf:fdsf {$x}.}
 ```
+* Currently if a file doesn't provide an output exception will be thrown
+* All XSPARQL debug info can be found in the pipeline log
 
 ## Prerequisites
 * [XSPARQL](https://github.com/semantalytics/xsparql) 
