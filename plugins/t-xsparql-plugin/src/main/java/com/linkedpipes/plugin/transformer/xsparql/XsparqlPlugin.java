@@ -53,6 +53,9 @@ public class XsparqlPlugin implements Component, SequentialExecution  {
         String[] args = new String[3];
         progressReport.start(inputFiles.size());
         LOG.debug(args.toString());
+
+        tieSystemOutAndErrToLog();
+
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Processing file: " + entry.getFileName());
             LOG.debug("Output write dir: " + outputFiles.getWriteDirectory().toString());
@@ -63,14 +66,11 @@ public class XsparqlPlugin implements Component, SequentialExecution  {
             try (PrintStream outputStream = new PrintStream(
                     new FileOutputStream(outputFile), false, "UTF-8")) {
 
-                Reader is = null;
                 try {
                     // Set the external variables for Saxon
                     xe.setXqueryExternalVars(getExternalVariables(entry));
 
                     // Rewrite and process query
-                    is = new FileReader(entry.toFile());
-                    //
                     String xquery = rewriteQuery(new StringReader(configuration.getXsparqlQuery())
                             , entry.getFileName());
                     postProcessing(xquery, outputStream);
@@ -136,5 +136,19 @@ public class XsparqlPlugin implements Component, SequentialExecution  {
             externalVariables.put(var.getKey(), var.getVal());
         }
         return externalVariables;
+    }
+
+    public static void tieSystemOutAndErrToLog() {
+        System.setOut(createLoggingProxy(System.out));
+        System.setErr(createLoggingProxy(System.err));
+    }
+
+    public static PrintStream createLoggingProxy(final PrintStream realPrintStream) {
+        return new PrintStream(realPrintStream) {
+            public void print(final String string) {
+                realPrintStream.print(string);
+                LOG.info(string);
+            }
+        };
     }
 }
