@@ -28,6 +28,7 @@ public class XsparqlPlugin implements Component, SequentialExecution  {
     private final XSPARQLEvaluator xe = new XSPARQLEvaluator();
     private boolean parseErrors = false;
     private int numOfSyntaxErrors;
+    private boolean errors = false;
 
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit inputFiles;
