@@ -7,7 +7,7 @@ description: Parses HTML pages using CSS like selectors.
 ---
 
 <p class="flow-text">
-Transformer, enables users to parse a HTML page using <a href="https://jsoup.org/" title="jsoup">jsoup</a> CSS like selectors.
+Transformer, enables users to parse a HTML pages using <a href="https://jsoup.org/" title="jsoup">jsoup</a> CSS like selectors.
 </p>
 <dl class="flow-text">
     <dt>Class of root subject</dt>
@@ -34,4 +34,46 @@ Transformer, enables users to parse a HTML page using <a href="https://jsoup.org
             <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
         </dl>
     </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The main parsing configuration happens in the Actions list.
+        The actions are performed on top of each input HTML document sequentially, starting with the action named <code>webPage</code>, producing tree-like RDF data connected using the <code>Default has predicate</code> and starting in an entity of type <code>Class of root subject</code>, representing the processed web page.
+        The inputs and outputs are named groups of either HTML elements, lists of HTML elements or texts.
+        Note that there is a difference between a list of HTML elements as a single object, and a list of objects, which are HTML elements. 
+        To pass from the first one to the second, one needs to use the <code>Unlist</code> action.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <h3 class="orange-text center">Actions</h3>
+    <p class="flow-text">Each action has the following attributes:</p>
+    <dl class="flow-text">
+        <dt>Name</dt>
+        <dd>Name of the input for the action. The first action needs to have the name <code>webPage</code></dd>
+        <dt>Type</dt>
+        <dd>Type of the action to be performed. The list of possible action types is below</dd>
+        <dt>Data</dt>
+        <dd>Configuration parameter, depends on the selected action type</dd>
+        <dt>Output</dt>
+        <dd>Name of the output from the current action. Is to be used as input name for other actions</dd>
+    </dl>
+    <p class="flow-text">Action types</p>
+    <dl class="flow-text">
+        <dt>Query</dt>
+        <dd>Applies the CSS selector specified in <code>Data</code> on the input specified by <code>Name</code>. Result can be either a single HTML element, or a list of HTML elements.</dd>
+        <dt>Unlist</dt>
+        <dd>Creates a list of individual HTML elements from a list of HTML elements as a single object</dd>
+        <dt>Text</dt>
+        <dd>Accesses the text content of HTML elements, produces Text output</dd>
+        <dt>HTML</dt>
+        <dd>Accesses the HTML element and outputs it as Text</dd>
+        <dt>Attribute</dt>
+        <dd>Accesses the attribute of the input HTML element(s) and outputs it as Text(s)</dd>
+        <dt>Subject</dt>
+        <dd>For each item on the input creates an RDF resource and connects it to the current parent RDF resource</dd>
+        <dt>Class</dt>
+        <dd>Generates a type triple for the current RDF resource, with the IRI in <code>Data</code> as the object</dd>
+        <dt>Output</dt>
+        <dd>Outputs the input texts as literals connected to the current RDF resource using the predicate IRI specified in <code>Data</code></dd>
+    </dl>
 </div>
