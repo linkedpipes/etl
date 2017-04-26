@@ -4,7 +4,7 @@
         <md-input-container class="md-block"
                             ng-hide="dialog.fileName.hide"
                             flex-gt-sm>
-            <label>Output file name</label>
+            <label>Output file template</label>
             <input ng-model="dialog.fileName.value"
                    ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
                    placeholder="my.csv">
@@ -75,6 +75,6 @@
     <md-switch ng-model="dialog.evalFormula.value"
                ng-disabled="dialog.evalFormula.disabled || dialog.evalFormula.inherit"
                ng-hide="dialog.evalFormula.hide">
-        Evaluate formulas (experimental functionality)
+        Evaluate formulas (use with caution)
     </md-switch>
 </div>

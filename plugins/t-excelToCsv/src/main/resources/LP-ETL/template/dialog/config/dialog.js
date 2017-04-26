@@ -10,7 +10,7 @@ define([], function () {
         },
         "fileName": {
             "$type": "str",
-            "$label": "Output file name<"
+            "$label": "Output file template"
         },
         "sheetFilter": {
             "$type": "str",
