@@ -21,10 +21,10 @@
     <md-switch ng-model="dialog.generateNullHeaderNames">Generate names for null header cells</md-switch>
     <md-switch ng-model="dialog.trim">{{dialog.trim ? "Trim whitespaces from cells" : "Keeping whitespaces"}}</md-switch>
     <md-input-container class="md-block" ng-hide="control.mimeType.forced" flex>
-        <label>Encode type</label>
+        <label>Table IRI prefix:</label>
         <md-select ng-model="dialog.encodeType">
-            <md-option value="default">Default</md-option>
-            <md-option value="emptyHost">With empty host</md-option>
+            <md-option value="default">file://</md-option>
+            <md-option value="emptyHost">file:///</md-option>
         </md-select>
     </md-input-container>
     <md-input-container class="md-block" flex-gt-sm>
