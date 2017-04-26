@@ -10,8 +10,8 @@ description: Transforms Excel files to CSV files.
 Transformer, allows the user to transform <a href="https://products.office.com/excel" title="Microsoft Excel">Microsoft Excel</a> files to <a href="https://tools.ietf.org/html/rfc4180" title="Comma Separated Values">CSV</a> files.
 </p>
 <dl class="flow-text">
-    <dt>Output file name</dt>
-    <dd>File name under which the output CSV file will be visible in the pipeline, including extension</dd>
+    <dt>Output file name template</dt>
+    <dd>File name template under which the output CSV file will be visible in the pipeline, including extension. You can use {% raw %}<code>{FILE}</code> and <code>{SHEET}</code>{% endraw %} placeholders to generate multiple CSV files from one input file</dd>
     <dt>Sheet filter</dt>
     <dd>Excel sheet name to process. If empty, all sheets are processed</dd>
     <dt>Row start</dt>
