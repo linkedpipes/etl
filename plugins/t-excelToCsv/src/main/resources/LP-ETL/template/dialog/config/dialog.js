@@ -10,7 +10,7 @@ define([], function () {
         },
         "fileName": {
             "$type": "str",
-            "$label": "Output file name<"
+            "$label": "Output file template"
         },
         "sheetFilter": {
             "$type": "str",
@@ -47,6 +47,10 @@ define([], function () {
         "includeSheetName": {
             "$type": "bool",
             "$label": "Add sheet name as a column"
+        },
+        "evalFormula": {
+            "$type": "bool",
+            "$label": "Evaluate formulas"
         }
     };
 

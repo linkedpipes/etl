@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -200,7 +201,9 @@ class Mapper {
             consumer.submit(R, RDF.TYPE, CSVW.ROW);
             // 4.6.4
             consumer.submit(R, CSVW.HAS_ROWNUM,
-                    VALUE_FACOTORY.createLiteral(rowNumber));
+                    VALUE_FACOTORY.createLiteral(
+                            Integer.toString(rowNumber),
+                            VALUE_FACOTORY.createIRI(XSD.INTEGER)));
             // 4.6.5
             //if (configuration.rows.size() > rowNumber) {
             //    final TabularDataModel.Rows rows
