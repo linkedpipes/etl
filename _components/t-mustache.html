@@ -209,3 +209,19 @@ IRI: {{on:iri}}
         <p class="flow-text">In order to declare namespace prefixes, you can start your Mustache template with a comment (i.e. {% raw %}{{! comment }}{% endraw %}) that contains namespace declarations in the <a href="https://www.w3.org/TR/sparql11-query/#rPrefixDecl">SPARQL syntax</a>.</p>
     </div>
 </div>
+<div class="row">
+    <h4 class="orange-text center">Generating lists</h4>
+    <div class="col s12">
+    <p class="flow-text">
+        When you are generating lists, for example in JSON, you may want to use the &quot;Add the <code>mustache:first</code> predicate to first items of input lists&quot; option, which adds the <code>http://plugins.linkedpipes.com/ontology/t-mustache#first</code> predicate to the first item of each input list.
+        You can then skip adding the list separator for that item like so:
+       {% raw %}
+<pre>
+{{^http://plugins.linkedpipes.com/ontology/t-mustache#first}}
+,
+{{/http://plugins.linkedpipes.com/ontology/t-mustache#first}}
+</pre>
+       {% endraw %}
+    </p>
+    </div>
+</div>
