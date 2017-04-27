@@ -160,7 +160,9 @@ class UriDownloader {
             }
         }
         //
-        progressReport.done();
+        if (exceptions.isEmpty()) {
+            progressReport.done();
+        }
     }
 
     public Collection<Exception> getExceptions() {
