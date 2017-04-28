@@ -16,21 +16,24 @@
                         <span>{{::label}}</span>
                     </p>
                     <p>Status:
-                        <span>{{::status}}</span>
+                        <span>{{status}}</span>
                     </p>
                     <p>Start:
-                        <span>{{::start| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                        <span>{{start| date:'yyyy-MM-dd HH:mm:ss'}}</span>
                     </p>
                     <p>End:
-                        <span>{{::end| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                        <span>{{end| date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                    </p>
+                    <p>Duration:
+                        <span>{{duration| date: 'HH:mm:ss' : 'UTC'}}</span>
                     </p>
                 </span>
-                <span ng-show="{{::failed}}">
+                <span ng-show="{{failed}}">
                     <p>Cause: <br/>
-                        <span>{{::cause}}</span>
+                        <span>{{cause}}</span>
                     </p>
                     <p>Root cause: <br/>
-                        <span>{{::rootCause}}</span>
+                        <span>{{rootCause}}</span>
                     </p>
                 </span>
                 <span>

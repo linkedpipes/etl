@@ -1,0 +1,26 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/l-solr#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/server> ,
+        <http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/core> ,
+        <http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/replace> .
+
+<http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/server>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-solr#server> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-solr#serverControl> .
+
+<http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/core>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-solr#core> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-solr#coreControl> .
+
+<http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/replace>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-solr#replace> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-solr#replaceControl> .
+
+
+

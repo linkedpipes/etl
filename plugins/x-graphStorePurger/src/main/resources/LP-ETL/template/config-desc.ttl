@@ -1,0 +1,31 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#Configuration> ;
+    config:member
+        <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/endpoint> ,
+        <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/username> ,
+        <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/password> ,
+        <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/useAuthentication> .
+
+<http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/endpoint>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpointControl> .
+
+<http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/username>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#username> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#usernameControl> .
+
+<http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#passwordControl> .
+
+<http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/useAuthentication>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthentication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthenticationControl> .
+

@@ -4,7 +4,7 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-tabularUv#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/baseUri> ,
-        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/columns> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/column> ,
         <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/advancedMapping> ,
         <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/namedCell> ,
         <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/quote> ,
@@ -37,10 +37,10 @@
     config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#baseUri> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#baseUriControl> .
 
-<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/columns>
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/column>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#columns> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#columnsControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#column> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#columnControl> .
 
 <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/advancedMapping>
     a config:ConfigurationMember ;

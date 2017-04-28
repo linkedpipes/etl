@@ -6,12 +6,12 @@ import java.util.Map;
 /**
  * Unpack PREFIXES in Mustache template.
  */
-class UpdateQuery {
+class MustacheTemplatePrefixExpander {
 
-    private UpdateQuery() {
+    private MustacheTemplatePrefixExpander() {
     }
 
-    private static enum StatusComment {
+    private enum StatusComment {
         NONE,
         OPEN,
         OPEN_OPEN,
@@ -19,7 +19,7 @@ class UpdateQuery {
         COMMENT_CLOSE
     }
 
-    private static enum StatusPrefix {
+    private enum StatusPrefix {
         NONE,
         P,
         PR,
@@ -32,7 +32,7 @@ class UpdateQuery {
         LINK_READ
     }
 
-    private static enum StatusReplace {
+    private enum StatusReplace {
         NONE,
         OPEN,
         OPEN_OPEN,
@@ -268,7 +268,7 @@ class UpdateQuery {
         return resultBuffer.toString();
     }
 
-    public static String expandPrefixes(String queryString) {
+    public static String expand(String queryString) {
         // Parse query.
         final StringBuffer commentBuffer = new StringBuffer(64);
         final StringBuffer queryBuffer = new StringBuffer(queryString.length());

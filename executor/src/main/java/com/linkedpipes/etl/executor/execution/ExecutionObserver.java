@@ -31,8 +31,10 @@ public interface ExecutionObserver {
      * is still called.
      *
      * @param component
+     * @param throwable
      */
-    void onComponentUserCodeFailed(ExecutionModel.Component component);
+    void onComponentUserCodeFailed(ExecutionModel.Component component,
+            Throwable throwable);
 
     void onComponentUserCodeSuccessful(ExecutionModel.Component component);
 

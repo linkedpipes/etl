@@ -1,0 +1,6 @@
+@prefix th: <http://plugins.linkedpipes.com/ontology/c-files#> .
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/c-files/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/c-files#Configuration> .

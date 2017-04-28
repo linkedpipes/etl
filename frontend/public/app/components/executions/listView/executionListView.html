@@ -8,12 +8,6 @@
                      style="padding-top: 5em"/>
             </div>
             <div ng-show="repository.loaded">
-                <div ng-hide="repository.data.length" layout="row"
-                     layout-align="center center" flex>
-                    <div style="padding-top: 5em">
-                        No executions found.
-                    </div>
-                </div>
                 <md-list>
                     <md-list-item
                             ng-repeat="item in repository.data| orderBy:'-start'"
@@ -161,6 +155,12 @@
                         </md-menu>
                         <md-divider></md-divider>
                 </md-list>
+                <div ng-hide="repository.data.length" layout="row"
+                     layout-align="center center" flex>
+                    <div style="padding-top: 5em">
+                        Why don't you <a href="#/pipelines">run a pipeline</a>?
+                    </div>
+                </div>
             </div>
         </md-content>
     </div>

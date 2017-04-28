@@ -27,7 +27,7 @@ public class ExecutionModel {
 
         private final File loadDirectory;
 
-        private final String relativeDataPath;
+        private final String relativeSaveDataPath;
 
         public DataUnit(
                 Port dataUnit,
@@ -39,7 +39,7 @@ public class ExecutionModel {
             this.debugVirtualPathSuffix = debugVirtualPathSuffix;
             this.saveDirectory = saveDirectory;
             this.loadDirectory = loadDirectory;
-            this.relativeDataPath = relativeDataPath;
+            this.relativeSaveDataPath = relativeDataPath;
         }
 
         public DataUnit(
@@ -49,7 +49,7 @@ public class ExecutionModel {
             this.debugVirtualPathSuffix = null;
             this.saveDirectory = null;
             this.loadDirectory = loadDirectory;
-            this.relativeDataPath = null;
+            this.relativeSaveDataPath = null;
         }
 
         public String getDataUnitIri() {
@@ -68,8 +68,8 @@ public class ExecutionModel {
             return saveDirectory;
         }
 
-        public String getRelativeDataPath() {
-            return relativeDataPath;
+        public String getRelativeSaveDataPath() {
+            return relativeSaveDataPath;
         }
 
         public Port getPort() {
@@ -191,8 +191,6 @@ public class ExecutionModel {
         } else {
             return new DataUnit(pplPort, loadPath);
         }
-
-
     }
 
 }

@@ -15,6 +15,10 @@ define([], function () {
         "template": {
             "$type": "str",
             "$label": "Mustache template"
+        },
+        "addFirstFlag" : {
+            "$type" : "bool",
+            "$label" : "Add predicate for first items"
         }
     };
 

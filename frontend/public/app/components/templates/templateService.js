@@ -368,6 +368,24 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         };
 
         /**
+         *
+         * @param iri
+         * @returns Core template.
+         */
+        service.getJarTemplate = (iri) => {
+            var template = data.jarTemplate[iri];
+            if (template !== undefined) {
+                return template;
+            }
+            template = data.refTemplate[iri];
+            if (template === undefined) {
+                console.warn("Missing template for: ", iri);
+                return undefined;
+            }
+            return service.getJarTemplate(template["template"]);
+        };
+
+        /**
          * Try to map given template IRI to the stored templates.
          * Is used for pipeline import
          *

@@ -1,0 +1,17 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.server.hide">
+        <label>URL of Solr instance</label>
+        <input ng-model="dialog.server.value"
+               ng-disabled="dialog.server.disabled || dialog.server.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.core.hide">
+        <label>Name of Solr Core</label>
+        <input ng-model="dialog.core.value"
+               ng-disabled="dialog.core.disabled || dialog.core.inherit">
+    </md-input-container>
+    <md-switch ng-hide="dialog.replace.hide"
+               ng-disabled="dialog.replace.disabled || dialog.replace.inherit"
+               ng-model="dialog.replace.value">Clear target core
+    </md-switch>    
+</div>

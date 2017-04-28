@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/x-graphStorePurger#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpoint": "",
+        "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#username": "",
+        "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#password": "",
+        "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthentication": false
+    }
+]

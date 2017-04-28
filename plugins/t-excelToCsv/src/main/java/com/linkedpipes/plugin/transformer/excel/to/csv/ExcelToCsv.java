@@ -6,12 +6,8 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ExcelToCsv implements Component, SequentialExecution {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ExcelToCsv.class);
 
     @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
@@ -27,16 +23,23 @@ public class ExcelToCsv implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
+        checkConfiguration();
+        parseFiles();
+    }
+
+    private void checkConfiguration() throws LpException {
         if (configuration.getFileNamePattern() == null
                 || configuration.getFileNamePattern().isEmpty()) {
             throw exceptionFactory.failure(
                     ExcelToCsvVocabulary.HAS_FILE_NAME);
         }
-        //
-        final Parser parser = new Parser(configuration);
+    }
+
+    private void parseFiles() throws LpException {
+        WorkbookConverter parser = new WorkbookConverter(
+                configuration, exceptionFactory, outputFiles);
         for (FilesDataUnit.Entry entry : inputFiles) {
-            LOG.debug("Processing file:", entry.getFileName());
-            parser.processEntry(entry, outputFiles, exceptionFactory);
+            parser.processEntry(entry);
         }
     }
 

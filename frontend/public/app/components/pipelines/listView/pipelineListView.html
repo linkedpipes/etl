@@ -115,6 +115,13 @@
                     </md-menu>
                     <md-divider></md-divider>
                 </md-list-item>
+                <div ng-hide="repository.data.length" layout="row"
+                     layout-align="center center" flex>
+                    <div style="padding-top: 5em">
+                        Why don't you <a href="javascript:void(0)" ng-click=onCreate()>create</a> or
+                        <a href="javascript:void(0)" ng-click="onUpload()">import</a> one?
+                    </div>
+                </div>
             </md-list>
         </md-content>
         <div style="height: 5em;"></div>

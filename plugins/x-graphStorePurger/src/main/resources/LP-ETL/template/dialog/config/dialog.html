@@ -1,0 +1,28 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.endpoint.hide" flex>
+        <label>Graph store protocol endpoint</label>
+        <input type="url" ng-model="dialog.endpoint.value"
+               ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
+               placeholder="http://localhost:8890/sparql-graph-crud">
+    </md-input-container>
+    <md-switch ng-model="dialog.useAuthentication.value"
+               ng-disabled="dialog.useAuthentication.disabled || dialog.useAuthentication.inherit"
+               ng-hide="dialog.useAuthentication.hide">Use authentication
+    </md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.useAuthentication.value">
+        <md-input-container class="md-block"
+                            ng-hide="dialog.username.hide"
+                            flex>
+            <label>User name</label>
+            <input ng-model="dialog.username.value"
+                   ng-disabled="dialog.username.disabled || dialog.username.inherit">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.password.hide" flex>
+            <label>Password</label>
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit">
+        </md-input-container>
+    </div>
+</div>

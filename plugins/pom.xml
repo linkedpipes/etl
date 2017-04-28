@@ -68,6 +68,7 @@
         <module>x-virtuosoExtractor</module>
         <module>t-valueParser</module>
         <module>x-deleteDirectory</module>
+        <module>x-graphStorePurger</module>
         <module>t-htmlCssUv</module>
         <module>t-modifyDate</module>
         <module>t-geoTools</module>
@@ -79,6 +80,10 @@
         <module>t-jsonLdFormat</module>
         <module>e-sparqlEndpointList</module>
         <module>e-sparqlEndpointChunkedList</module>
+        <module>t-sparqlConstructToFileList</module>
+        <module>c-files</module>
+        <module>l-solr</module>
+        <module>t-chunkedToFiles</module>
     </modules>
 
 </project>

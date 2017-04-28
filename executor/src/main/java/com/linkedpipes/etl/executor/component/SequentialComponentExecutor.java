@@ -34,7 +34,7 @@ class SequentialComponentExecutor implements Runnable {
             executable.execute();
             execution.onComponentUserCodeSuccessful(component);
         } catch (Throwable ex) {
-            execution.onComponentUserCodeFailed(component);
+            execution.onComponentUserCodeFailed(component, ex);
             exception = new ExecutorException(
                     "Component execution failed.", ex);
         }
