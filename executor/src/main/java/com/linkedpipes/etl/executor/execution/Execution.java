@@ -61,18 +61,21 @@ public class Execution implements ExecutionObserver {
 
     @Override
     public void onExecutionBegin() {
+        LOG.info("Pipeline execution begin.");
         executionOverviewModel.onExecutionBegin(new Date());
     }
 
     @Override
     public void onMapComponentBegin(ExecutionModel.Component component) {
+        LOG.info("Component mapping begin : {}", component.getComponentIri());
         executionModelV1.onComponentBegin(component);
     }
 
     @Override
     public void onMapComponentFailed(ExecutionModel.Component component,
             LpException exception) {
-        LOG.error("Component mapping failed.", exception);
+        LOG.error("Component mapping failed : {}", component.getComponentIri(),
+                exception);
         executionModelV1.onComponentFailed(component, exception);
         statusMonitor.onMapComponentFailed();
         writeToDisk();
@@ -80,6 +83,7 @@ public class Execution implements ExecutionObserver {
 
     @Override
     public void onMapComponentSuccessful(ExecutionModel.Component component) {
+        LOG.info("Component mapping end : {}", component.getComponentIri());
         executionModelV1.onComponentMapped(component);
         executionOverviewModel.onComponentExecutionEnd();
         writeToDisk();
@@ -88,13 +92,15 @@ public class Execution implements ExecutionObserver {
     @Override
     public void onExecuteComponentInitializing(
             ExecutionModel.Component component) {
+        LOG.info("Component initializing : {}", component.getComponentIri());
         executionModelV1.onComponentBegin(component);
     }
 
     @Override
     public void onExecuteComponentFailed(ExecutionModel.Component component,
             LpException exception) {
-        LOG.error("Component execution failed.", exception);
+        LOG.error("Component execution failed : {}",
+                component.getComponentIri(), exception);
         executionModelV1.onComponentFailed(component, exception);
         statusMonitor.onExecuteComponentFailed();
         writeToDisk();
@@ -103,6 +109,7 @@ public class Execution implements ExecutionObserver {
     @Override
     public void onExecuteComponentSuccessful(
             ExecutionModel.Component component) {
+        LOG.info("Component execution end : {}", component.getComponentIri());
         executionModelV1.onComponentEnd(component);
         executionOverviewModel.onComponentExecutionEnd();
         writeToDisk();
@@ -117,18 +124,20 @@ public class Execution implements ExecutionObserver {
 
     @Override
     public void onComponentUserCodeBegin(ExecutionModel.Component component) {
-        // No operation here.
+        LOG.info("Component code start : {}", component.getComponentIri());
     }
 
     @Override
-    public void onComponentUserCodeFailed(ExecutionModel.Component component) {
-        // No operation here.
+    public void onComponentUserCodeFailed(ExecutionModel.Component component,
+            Throwable throwable) {
+        LOG.info("Component code failed : {}", component.getComponentIri(),
+                throwable);
     }
 
     @Override
     public void onComponentUserCodeSuccessful(
             ExecutionModel.Component component) {
-        // No operation here.
+        LOG.info("Component code end : {}", component.getComponentIri());
     }
 
     @Override
@@ -200,6 +209,7 @@ public class Execution implements ExecutionObserver {
 
     @Override
     public void onExecutionEnd() {
+        LOG.info("Pipeline execution begin.");
         executionModelV1.onExecutionEnd();
         statusMonitor.onExecutionEnd();
         executionOverviewModel.onExecutionEnd(new Date());

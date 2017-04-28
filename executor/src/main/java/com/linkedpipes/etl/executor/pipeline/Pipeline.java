@@ -144,8 +144,6 @@ public class Pipeline {
     public RdfSource.TypedTripleWriter setConfiguration(
             Component component, String graph)
             throws ExecutorException {
-        LOG.info("setConfiguration {} {}", component.getIri(), graph);
-        // TODO Save reference to the entity.
         return source.getTypedTripleWriter(graph);
     }
 
