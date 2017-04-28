@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/fileType> ,
+        <http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/graphUri> .
+
+<http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/fileType>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#fileType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#fileTypeControl> .
+
+<http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/graphUri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#graphUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#graphUriControl> .

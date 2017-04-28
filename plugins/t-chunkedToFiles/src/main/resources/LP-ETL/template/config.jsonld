@@ -1,0 +1,7 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#fileType" : "application/ld+json"
+    }
+]

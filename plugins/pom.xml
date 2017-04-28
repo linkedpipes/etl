@@ -83,6 +83,7 @@
         <module>t-sparqlConstructToFileList</module>
         <module>c-files</module>
         <module>l-solr</module>
+        <module>t-chunkedToFiles</module>
     </modules>
 
 </project>
