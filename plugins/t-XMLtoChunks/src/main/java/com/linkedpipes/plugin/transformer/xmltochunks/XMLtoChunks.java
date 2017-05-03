@@ -187,7 +187,8 @@ public class XMLtoChunks implements Component, SequentialExecution {
 
     private boolean isWithinNode(Node current, String parentNamespaceURI, String parentLocal){
         while(current.getParentNode() != doc){
-            if (current.getNamespaceURI().equals(parentNamespaceURI) &&
+            if ((parentNamespaceURI != null ||
+                    current.getNamespaceURI().equals(parentNamespaceURI)) &&
                     current.getLocalName().equals(parentLocal))
                 return true;
             current = current.getParentNode();
