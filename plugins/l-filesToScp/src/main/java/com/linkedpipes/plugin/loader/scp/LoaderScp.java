@@ -139,7 +139,7 @@ public final class LoaderScp implements Component, SequentialExecution {
         LOG.info("deleteDirectory ...");
         final Channel channel = session.openChannel("exec");
         // We just execute given command.
-        ((ChannelExec) channel).setCommand("rm -r " + targetPath + "/*");
+        ((ChannelExec) channel).setCommand("rm -rf " + targetPath + "/*");
         final InputStream remoteIn = channel.getExtInputStream();
         channel.connect();
         LOG.info("\tWaiting for response!");
