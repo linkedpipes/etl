@@ -133,7 +133,7 @@ public final class LoaderScp implements Component, SequentialExecution {
         }
     }
 
-    private static void deleteDirectory(Session session,
+    private void deleteDirectory(Session session,
             String targetPath) throws JSchException, IOException,
             SftpException, LpException {
         LOG.info("deleteDirectory ...");
@@ -147,7 +147,9 @@ public final class LoaderScp implements Component, SequentialExecution {
         LOG.info("\tResponse status: {} message: {}",
                 channel.getExitStatus(), responseLine);
         channel.disconnect();
-        checkMakeDirResponse(responseLine, channel.getExitStatus());
+        if (channel.getExitStatus() != 0) {
+            throw exceptionFactory.failure("Can't clear directory");
+        }
         LOG.info("deleteDirectory ... done");
     }
 
@@ -157,7 +159,7 @@ public final class LoaderScp implements Component, SequentialExecution {
      * @param session
      * @param targetPath
      */
-    private static void secureCreateDirectory(Session session,
+    private void secureCreateDirectory(Session session,
             String targetPath) throws JSchException, IOException,
             SftpException, LpException {
         LOG.info("secureCreateDirectory ...");
@@ -175,15 +177,15 @@ public final class LoaderScp implements Component, SequentialExecution {
         LOG.info("secureCreateDirectory ... done");
     }
 
-    private static void checkMakeDirResponse(String responseLine, int status)
-            throws LpException {
+    private void checkMakeDirResponse(String responseLine,
+            int status) throws LpException {
         if (status == 0) {
             return;
         }
         if (responseLine.contains("File exists")) {
             return;
         }
-        throw new LpException("Can't create directory.");
+        throw exceptionFactory.failure("Can't create directory");
     }
 
     /**
