@@ -124,12 +124,14 @@ class SheetConverter {
         for (int rowIndex = configuration.getRowsStart(); rowIndex <= rowsEnd;
                 ++rowIndex) {
             Row row = sheet.getRow(rowIndex);
-            if (row == null) {
-                if (configuration.isSkipEmptyRows()) {
-                    continue;
-                }
+            if (row == null && configuration.isSkipEmptyRows()) {
+                continue;
             }
             List<String> values = rowToValues(row, columnsStart, columnsCount);
+            if (containsEmptyValues(values)) {
+                continue;
+            }
+
             if (firstRow && configuration.isHeaderPresented()) {
                 firstRow = false;
                 addVirtualHeader(values);
@@ -138,6 +140,15 @@ class SheetConverter {
             }
             writeRow(values);
         }
+    }
+
+    private boolean containsEmptyValues(List<String> values) {
+        for (String value : values) {
+            if (value != null && !value.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private List<String> rowToValues(Row row, int start, int count) {
