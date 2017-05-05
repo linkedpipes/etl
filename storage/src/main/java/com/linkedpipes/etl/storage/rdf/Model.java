@@ -68,6 +68,9 @@ public class Model {
          */
         public void replace(IRI property, Entity entity, boolean recursive) {
             set(property, entity.resource);
+            if (entity == null) {
+                return;
+            }
             if (!recursive) {
                 return;
             }
@@ -120,11 +123,13 @@ public class Model {
          * values are deleted.
          *
          * @param property
-         * @param value
+         * @param value Can be null, in that case value is ignored.
          */
         public void set(IRI property, Value value) {
-            final List<Value> values = new LinkedList<>();
-            values.add(value);
+            List<Value> values = new LinkedList<>();
+            if (value != null) {
+                values.add(value);
+            }
             properties.put(property, values);
         }
 

@@ -209,12 +209,7 @@ public class ConfigurationFacade {
         if (childrenControl == null) {
             childrenControl = NONE;
         }
-        final Value childrenValue =
-                children.getProperty(member.getProperty());
-        if (childrenValue == null) {
-            // In case of missing value ignore.
-            return;
-        }
+        Value childrenValue = children.getProperty(member.getProperty());
         switch (childrenControl) {
             case INHERIT:
                 // Preserve value from parent.
