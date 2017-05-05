@@ -63,7 +63,7 @@ define([], function () {
     };
 
     function increase(value) {
-        if (value === undefined) {
+        if (value === undefined || value === null) {
             return undefined;
         } else {
             return value + 1;
@@ -71,7 +71,7 @@ define([], function () {
     }
 
     function decrease(value) {
-        if (value === undefined) {
+        if (value === undefined || value === null) {
             return undefined;
         } else {
             return value - 1;
