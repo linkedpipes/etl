@@ -55,7 +55,17 @@ define([], function () {
          * @param id ID used to create an URI.
          */
         service.component.setIriFromId = function (model, component, id) {
-            component['@id'] = model.definition.iri + '/components/' + id;
+            var componentIri = model.definition.iri + '/components/' + id
+            if (service.getResource(model, componentIri) === undefined) {
+                component['@id'] = componentIri;
+                return;
+            }
+            console.log("iri collision ", componentIri);
+            componentIri += "-a";
+            while (service.getResource(model, componentIri) !== undefined) {
+                componentIri += Math.ceil(Math.random() * 100);
+            }
+            component['@id'] = componentIri;
         };
 
         /**
@@ -153,7 +163,17 @@ define([], function () {
          * @param id ID used to create an URI.
          */
         service.connection.setIriFromId = function (model, component, id) {
-            component['@id'] = model.definition.iri + '/connection/' + id;
+            var componentIri = model.definition.iri + '/connection/' + id
+            if (service.getResource(model, componentIri) === undefined) {
+                component['@id'] = componentIri;
+                return;
+            }
+            console.log("iri collision ", componentIri);
+            componentIri += "-a";
+            while (service.getResource(model, componentIri) !== undefined) {
+                componentIri += Math.ceil(Math.random() * 100);
+            }
+            component['@id'] = componentIri;
         };
 
         service.connection.setSource = function (connection, component, binding) {
