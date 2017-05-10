@@ -267,8 +267,13 @@ define([
         }.bind(this));
     };
 
-    service.onChangeComponent = function (iri) {
+    service.onChangeComponent = function (iri, visited=[]) {
         console.log('onChangeComponent' , iri);
+        if (visited.indexOf(iri) !== -1) {
+            // Breaking cycle detected.
+            return;
+        }
+        visited.push(iri);
         var component = this.execution.getComponents()[iri];
         if (component === undefined) {
             // This may happen if a component that was not executed,
@@ -301,7 +306,7 @@ define([
         var conService = this.pipelineModel.connection;
         connections.forEach(function (connection) {
             if (conService.getSource(connection) === iri) {
-                this.onChangeComponent(conService.getTarget(connection));
+                this.onChangeComponent(conService.getTarget(connection), visited);
             }
         }.bind(this));
     };
