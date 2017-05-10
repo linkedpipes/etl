@@ -270,7 +270,7 @@ define([
     service.onChangeComponent = function (iri, visited=[]) {
         console.log('onChangeComponent' , iri);
         if (visited.indexOf(iri) !== -1) {
-            // Breaking cycle detected.
+            // Cycle detected.
             return;
         }
         visited.push(iri);
