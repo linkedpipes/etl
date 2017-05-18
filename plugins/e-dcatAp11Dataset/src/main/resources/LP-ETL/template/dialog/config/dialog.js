@@ -13,12 +13,12 @@ define([], function () {
             "$label": "Dataset IRI"
         },
         "titles" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Title"
         },
         "descriptions" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Description"
         },
@@ -35,7 +35,7 @@ define([], function () {
             "$label": "Contact point email"
         },
         "keywords" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Keywords"
         },
@@ -53,7 +53,7 @@ define([], function () {
             "$label": "Publisher"
         },
         "publisherNames" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Publisher names"
         },
@@ -115,7 +115,7 @@ define([], function () {
             "$label": "Dataset type"
         },
         "provenances" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Provenance statement"
         },
@@ -163,7 +163,7 @@ define([], function () {
             "$label": "Version number"
         },
         "versionNotes" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Version notes"
         },

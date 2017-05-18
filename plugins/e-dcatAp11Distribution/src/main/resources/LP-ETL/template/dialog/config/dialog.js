@@ -42,7 +42,7 @@ define([], function () {
             "$label": "License type"
         },
         "descriptions": {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Descriptions"
         },
@@ -56,7 +56,7 @@ define([], function () {
             "$label": "Media type"
         },
         "titles": {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Distribution title"
         },
