@@ -132,6 +132,8 @@ define(["jsonld"], function (jsonld) {
                 return jsonld.r.getDates(resource, desc.$property);
             case "str":
                 return i18.str(jsonld.r.getStrings(resource, desc.$property));
+            case "str-lang":
+                return jsonld.r.getStrings(resource, desc.$property);
             case "int":
                 return jsonld.r.getIntegers(resource, desc.$property);
             case "bool":
@@ -154,6 +156,7 @@ define(["jsonld"], function (jsonld) {
                 jsonld.r.setDates(resource, desc.$property, value);
                 break;
             case "str":
+            case "str-lang":
                 jsonld.r.setStrings(resource, desc.$property, value);
                 break;
             case "int":
