@@ -35,10 +35,13 @@ define(["jquery"], function (jQuery) {
                  * Propagate changed from outside.
                  */
                 ngModel.$render = function () {
-                    if (jQuery.isArray(ngModel.$modelValue)) {
-                        $scope.data = ngModel.$modelValue;
+                    const modelValue = ngModel.$modelValue;
+                    if (modelValue === undefined || modelValue === null) {
+                        $scope.data = [];
+                    } else if (Array.isArray(modelValue)) {
+                        $scope.data = modelValue;
                     } else {
-                        $scope.data = [{"@id": ngModel.$modelValue}];
+                        $scope.data = [{"@id": modelValue}];
                     }
                 };
 
