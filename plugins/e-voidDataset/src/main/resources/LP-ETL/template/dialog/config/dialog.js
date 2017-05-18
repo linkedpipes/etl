@@ -37,6 +37,8 @@ define([], function () {
             $scope.dialog = {};
         }
 
+        DESC.exampleResourceIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+
         const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {

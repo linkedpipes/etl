@@ -1643,6 +1643,12 @@ define([], function () {
             $scope.dialog = {};
         }
 
+        DESC.accessURLs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.downloadURLs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.documentationIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.conformsToIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.spatialIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+
         const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {

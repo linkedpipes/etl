@@ -1755,6 +1755,21 @@ define([], function () {
             $scope.dialog = {};
         }
 
+        DESC.otherThemeIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.spatialIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.documentationIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.sampleIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.landingPageIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.relatedIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.conformsToIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.sourceIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.hasVersionIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.isVersionOfIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.attributeIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.dimensionIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.qualityAnnotationIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.unitOfMeasurementIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+
         const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {

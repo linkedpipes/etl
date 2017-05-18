@@ -45,6 +45,8 @@ define([], function () {
             $scope.dialog = {};
         }
 
+        DESC.defaultGraph["$onSave"] = $service.v1.fnc.removeEmptyIri;
+
         const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {
