@@ -226,6 +226,12 @@ public class ComponentServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
+        // Set headers.
+        if (filePath.toLowerCase().endsWith(".js")) {
+            response.setHeader("Content-Type", "application/javascript");
+        } else if (filePath.toLowerCase().endsWith(".html")) {
+            response.setHeader("Content-Type", "text/html; charset=UTF-8");
+        }
         try (OutputStream stream = response.getOutputStream()) {
             FileUtils.copyFile(file, stream);
         }
