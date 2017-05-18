@@ -64,8 +64,10 @@ public final class MustacheComponent implements Component, SequentialExecution {
     private void outputData(Mustache mustache, List<ObjectDataHolder> data)
             throws LpException {
         progressReport.start(data.size());
-
         for (ObjectDataHolder object : data) {
+            if (object.data == null) {
+                continue;
+            }
             String fileName = getFileName(object);
             File outputFile = output.createFile(fileName);
             try (OutputStreamWriter outputStream = new OutputStreamWriter(
