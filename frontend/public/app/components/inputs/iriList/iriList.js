@@ -27,8 +27,7 @@ define(["jquery"], function (jQuery) {
                 /**
                  * Update on change of value in the primary field.
                  */
-                $scope.onChange = function () 
-                {                    
+                $scope.onChange = function () {
                     ngModel.$setViewValue($scope.data);
                 };
 
