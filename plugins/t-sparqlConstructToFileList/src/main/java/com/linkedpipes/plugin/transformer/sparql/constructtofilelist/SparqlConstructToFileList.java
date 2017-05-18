@@ -82,7 +82,7 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
             executeTasks(outputFile, format, group.getTasks());
             progressReport.entryProcessed();
         }
-        progressReport.entryProcessed();
+        progressReport.done();
     }
 
     private RDFFormat getRdfFormat(TaskGroup group) throws LpException {
