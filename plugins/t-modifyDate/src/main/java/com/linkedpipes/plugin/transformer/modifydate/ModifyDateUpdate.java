@@ -71,6 +71,9 @@ public final class ModifyDateUpdate implements Component, SequentialExecution {
                         outputRdf.getWriteGraph()));
             }
         });
+        outputRdf.execute((connection) -> {
+           connection.add(result);
+        });
     }
 
     /**
