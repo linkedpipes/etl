@@ -29,6 +29,15 @@ We recommend using [Cygwin] and proceeding as with Linux.
 
 ### Configuration
 Now edit the configuration file, mainly adding paths to working, storage, log and library directories. Especially:
+* ```executor.execution.working_directory```
+* ```executor.log.directory```
+* ```executor.osgi.lib.directory```
+* ```executor-monitor.log.directory```
+* ```storage.jars.directory```
+* ```storage.directory```
+* ```storage.log.directory```
+
+For an example see the configuration.properties.example file.
 
 ## Running LinkedPipes ETL
 To run LP-ETL, you need to run the three components it consists of. For debugging purposes, it is useful to store the console logs.
