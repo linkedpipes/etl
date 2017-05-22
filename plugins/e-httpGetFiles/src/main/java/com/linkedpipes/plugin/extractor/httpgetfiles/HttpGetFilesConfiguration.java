@@ -37,49 +37,6 @@ public class HttpGetFilesConfiguration {
         }
     }
 
-    @RdfToPojo.Type(iri = HttpGetFilesVocabulary.REFERENCE)
-    public static class Reference {
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_URI)
-        private String uri;
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_NAME)
-        private String fileName;
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
-        private List<Header> headers = new LinkedList<>();
-
-        public Reference() {
-        }
-
-        public String getUri() {
-            return uri;
-        }
-
-        public void setUri(String uri) {
-            this.uri = uri;
-        }
-
-        public String getFileName() {
-            return fileName;
-        }
-
-        public void setFileName(String fileName) {
-            this.fileName = fileName;
-        }
-
-        public List<Header> getHeaders() {
-            return headers;
-        }
-
-        public void setHeaders(List<Header> headers) {
-            this.headers = headers;
-        }
-    }
-
-    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_REFERENCE)
-    private List<Reference> references = new LinkedList<>();
-
     /**
      * Force custom redirect. The Java follow only redirect in scope of
      * a protocol. So specially it does not allow redirect from http
@@ -107,14 +64,6 @@ public class HttpGetFilesConfiguration {
     private boolean detailLogging = false;
 
     public HttpGetFilesConfiguration() {
-    }
-
-    public List<Reference> getReferences() {
-        return references;
-    }
-
-    public void setReferences(List<Reference> references) {
-        this.references = references;
     }
 
     public boolean isForceFollowRedirect() {

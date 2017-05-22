@@ -10,8 +10,6 @@ public final class HttpGetFilesVocabulary {
 
     public static final String CONFIG = PREFIX + "Configuration";
 
-    public static final String HAS_REFERENCE = PREFIX + "reference";
-
     public static final String REFERENCE = PREFIX + "Reference";
 
     public static final String HAS_URI = PREFIX + "fileUri";

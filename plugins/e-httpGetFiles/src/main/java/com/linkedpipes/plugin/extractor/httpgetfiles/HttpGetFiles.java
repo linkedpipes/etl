@@ -5,8 +5,14 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class HttpGetFiles implements Component, SequentialExecution {
@@ -50,10 +57,10 @@ public final class HttpGetFiles implements Component, SequentialExecution {
                     "Can't set trust all certificates.", ex);
         }
         // Prepare work.
+        List<HttpGetFilesTask> tasks = loadTasks();
         final ConcurrentLinkedQueue<UriDownloader.FileToDownload> workQueue =
                 new ConcurrentLinkedQueue<>();
-        for (HttpGetFilesConfiguration.Reference reference
-                : configuration.getReferences()) {
+        for (HttpGetFilesTask reference : tasks) {
             if (reference.getUri() == null
                     || reference.getUri().isEmpty()) {
                 if (configuration.isSkipOnError()) {
@@ -103,16 +110,30 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         // Execute.
         final UriDownloader downloader =
                 new UriDownloader(progressReport, configuration);
-        downloader.download(workQueue, configuration.getReferences().size());
+        downloader.download(workQueue, tasks.size());
         if (!downloader.getExceptions().isEmpty()) {
             LOG.info("Downloaded {}/{}", downloader.getExceptions().size(),
-                    configuration.getReferences().size());
+                    tasks.size());
             if (!configuration.isSkipOnError()) {
                 throw exceptionFactory.failure("Can't download all entities.");
             }
         } else {
-            LOG.info("Downloaded {}/{}", configuration.getReferences().size(),
-                    configuration.getReferences().size());
+            LOG.info("Downloaded {}/{}", tasks.size(), tasks.size());
+        }
+    }
+
+    private List<HttpGetFilesTask> loadTasks() throws LpException {
+        RdfSource source = Rdf4jSource.createWrap(
+                configurationRdf.getRepository());
+        RdfLoader.DescriptorFactory descriptorFactory =
+                new AnnotationDescriptionFactory();
+        try {
+            return RdfUtils.loadTypedByReflection(source,
+                    configurationRdf.getReadGraph().stringValue(),
+                    HttpGetFilesTask.class,
+                    descriptorFactory);
+        } catch (RdfUtilsException ex) {
+            throw exceptionFactory.failure("Can't load tasks.", ex);
         }
     }
 
