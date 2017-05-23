@@ -29,11 +29,11 @@ The first set of parameters is there simply do deal with CSV files not compliant
     <dd>Switches between <code>file://</code> and <code>file:///</code> prefix for output table IRI</dd>
     <dt>Default resource IRI template</dt>
     <dd>An <a href="https://tools.ietf.org/html/rfc6570#section-2">RFC 6570</a> IRI template. E.g., <code>http://ex.org/{COLUMN_WITH_ID}</code>. <code>{$ROW_NUMBER$}</code> can be used here for row number.</dd>
-    <dt>Rows skipped</dt>
+    <dt>Rows skipped (after header)</dt>
     <dd>Number of rows to be skipped during transformation</dd>
     <dt>Rows limit</dt>
     <dd>Number of rows to be processed during transformation</dd>
-    <dt>Skip lines</dt>
+    <dt>Rows skipped (before header)</dt>
     <dd>Number of lines to be skipped in the file before starting the transformation. Useful for blank, formatted or merged lines added typically for printing purposes in Excel files</dd>
     <dt>Table and row entities</dt>
     <dd>When checked, entities for rows and the table are generated. Otherwise, only raw row data is generated</dd>
