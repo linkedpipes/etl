@@ -132,13 +132,16 @@ define([
                 "jsonld": jsonld,
                 "fnc": {
                     "removeEmptyIri" : function(values) {
+                        if (values === undefined) {
+                            return [];
+                        }
                         const output = [];
                         values.forEach((item) => {
                             const iri = item["@id"];
                             if (iri === undefined || iri === "") {
                                 return;
                             }
-                            output.append({"@id" : iri});
+                            output.push({"@id" : iri});
                         });
                         return output;
                     }
