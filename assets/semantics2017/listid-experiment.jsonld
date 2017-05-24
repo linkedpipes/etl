@@ -1,253 +1,424 @@
-[ {
-  "@graph" : [ {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467",
-    "@type" : [ "http://linkedpipes.com/ontology/Pipeline" ],
-    "http://etl.linkedpipes.com/ontology/tag" : [ {
-      "@value" : "ESWC"
-    } ],
-    "http://etl.linkedpipes.com/ontology/version" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#int",
-      "@value" : "1"
-    } ],
-    "http://www.w3.org/2004/02/skos/core#prefLabel" : [ {
-      "@value" : "LISTID"
-    } ]
-  }, {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef",
-    "@type" : [ "http://linkedpipes.com/ontology/Component" ],
-    "http://linkedpipes.com/ontology/configurationGraph" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef/configuration"
-    } ],
-    "http://linkedpipes.com/ontology/template" : [ {
-      "@id" : "http://etl.linkedpipes.com/resources/components/t-rdfToFileChunked/0.0.0"
-    } ],
-    "http://linkedpipes.com/ontology/x" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "1480"
-    } ],
-    "http://linkedpipes.com/ontology/y" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "60"
-    } ],
-    "http://www.w3.org/2004/02/skos/core#prefLabel" : [ {
-      "@value" : "Chunked RDF to file"
-    } ]
-  }, {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6",
-    "@type" : [ "http://linkedpipes.com/ontology/Component" ],
-    "http://linkedpipes.com/ontology/configurationGraph" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6/configuration"
-    } ],
-    "http://linkedpipes.com/ontology/template" : [ {
-      "@id" : "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0"
-    } ],
-    "http://linkedpipes.com/ontology/x" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "980"
-    } ],
-    "http://linkedpipes.com/ontology/y" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "60"
-    } ],
-    "http://www.w3.org/2004/02/skos/core#prefLabel" : [ {
-      "@value" : "Tabular chunked"
-    } ]
-  }, {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b",
-    "@type" : [ "http://linkedpipes.com/ontology/Component" ],
-    "http://linkedpipes.com/ontology/configurationGraph" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b/configuration"
-    } ],
-    "http://linkedpipes.com/ontology/template" : [ {
-      "@id" : "http://etl.linkedpipes.com/resources/components/e-filesFromLocal/0.0.0"
-    } ],
-    "http://linkedpipes.com/ontology/x" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "780"
-    } ],
-    "http://linkedpipes.com/ontology/y" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "60"
-    } ],
-    "http://www.w3.org/2004/02/skos/core#prefLabel" : [ {
-      "@value" : "Files from local"
-    } ]
-  }, {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9",
-    "@type" : [ "http://linkedpipes.com/ontology/Component" ],
-    "http://linkedpipes.com/ontology/configurationGraph" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9/configuration"
-    } ],
-    "http://linkedpipes.com/ontology/template" : [ {
-      "@id" : "http://etl.linkedpipes.com/resources/components/t-sparqlConstructChunked/0.0.0"
-    } ],
-    "http://linkedpipes.com/ontology/x" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "1180"
-    } ],
-    "http://linkedpipes.com/ontology/y" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "60"
-    } ],
-    "http://www.w3.org/2004/02/skos/core#prefLabel" : [ {
-      "@value" : "SPARQL construct chunked"
-    } ]
-  }, {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/connection/228009c2-0cd1-4763-91a6-8dae34ab1113",
-    "@type" : [ "http://linkedpipes.com/ontology/Connection" ],
-    "http://linkedpipes.com/ontology/sourceBinding" : [ {
-      "@value" : "OutputRdf"
-    } ],
-    "http://linkedpipes.com/ontology/sourceComponent" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6"
-    } ],
-    "http://linkedpipes.com/ontology/targetBinding" : [ {
-      "@value" : "InputRdf"
-    } ],
-    "http://linkedpipes.com/ontology/targetComponent" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9"
-    } ]
-  }, {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/connection/3d5e7077-0b1b-43e6-92f3-0e53bf4ef4a0",
-    "@type" : [ "http://linkedpipes.com/ontology/Connection" ],
-    "http://linkedpipes.com/ontology/sourceBinding" : [ {
-      "@value" : "FilesOutput"
-    } ],
-    "http://linkedpipes.com/ontology/sourceComponent" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b"
-    } ],
-    "http://linkedpipes.com/ontology/targetBinding" : [ {
-      "@value" : "InputFiles"
-    } ],
-    "http://linkedpipes.com/ontology/targetComponent" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6"
-    } ]
-  }, {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/connection/659f9149-f83e-4f44-a8e1-cdf1c2d147de",
-    "@type" : [ "http://linkedpipes.com/ontology/Connection" ],
-    "http://linkedpipes.com/ontology/sourceBinding" : [ {
-      "@value" : "OutputRdf"
-    } ],
-    "http://linkedpipes.com/ontology/sourceComponent" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9"
-    } ],
-    "http://linkedpipes.com/ontology/targetBinding" : [ {
-      "@value" : "InputRdf"
-    } ],
-    "http://linkedpipes.com/ontology/targetComponent" : [ {
-      "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef"
-    } ]
-  } ],
-  "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467"
-}, {
-  "@graph" : [ {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef/configuration",
-    "@type" : [ "http://plugins.linkedpipes.com/ontology/t-rdfToFile#Configuration" ],
-    "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileName" : [ {
-      "@value" : "ic.trig"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileNameControl" : [ {
-      "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileType" : [ {
-      "@value" : "application/trig"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileTypeControl" : [ {
-      "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri" : [ {
-      "@id" : "http://linked.opendata.cz/resource/dataset/ic"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl" : [ {
-      "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-rdfToFile#prefixTurtleControl" : [ {
-      "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-    } ]
-  } ],
-  "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef/configuration"
-}, {
-  "@graph" : [ {
-    "@id" : "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/1",
-    "@type" : [ "http://www.w3.org/ns/csvw#Schema" ],
-    "http://www.w3.org/ns/csvw#aboutUrl" : [ {
-      "@value" : ""
-    } ]
-  }, {
-    "@id" : "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/2",
-    "@type" : [ "http://www.w3.org/ns/csvw#Table" ],
-    "http://plugins.linkedpipes.com/ontology/t-tabular#baseUri" : [ {
-      "@value" : "http://localhost/temp/"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-tabular#chunkSize" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#integer",
-      "@value" : "1000"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-tabular#encodeType" : [ {
-      "@value" : "default"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-tabular#fullMapping" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
-      "@value" : "true"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-tabular#normalOutput" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
-      "@value" : "false"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUri" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
-      "@value" : "true"
-    } ],
-    "http://www.w3.org/ns/csvw#dialect" : [ {
-      "@id" : "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/3"
-    } ],
-    "http://www.w3.org/ns/csvw#tableSchema" : [ {
-      "@id" : "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/1"
-    } ]
-  }, {
-    "@id" : "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/3",
-    "@type" : [ "http://www.w3.org/ns/csvw#Dialect" ],
-    "http://www.w3.org/ns/csvw#delimeter" : [ {
-      "@value" : "|"
-    } ],
-    "http://www.w3.org/ns/csvw#encoding" : [ {
-      "@value" : "ISO-8859-2"
-    } ],
-    "http://www.w3.org/ns/csvw#header" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
-      "@value" : "false"
-    } ],
-    "http://www.w3.org/ns/csvw#quoteChar" : [ {
-      "@value" : ""
-    } ],
-    "http://www.w3.org/ns/csvw#trim" : [ {
-      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
-      "@value" : "false"
-    } ]
-  } ],
-  "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6/configuration"
-}, {
-  "@graph" : [ {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b/configuration",
-    "@type" : [ "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#Configuration" ],
-    "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#path" : [ {
-      "@value" : "/data/experiments/seznamic"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#pathControl" : [ {
-      "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-    } ]
-  } ],
-  "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b/configuration"
-}, {
-  "@graph" : [ {
-    "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9/configuration",
-    "@type" : [ "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration" ],
-    "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query" : [ {
-      "@value" : "prefix adms:    <http://www.w3.org/ns/adms#>\nprefix skos:    <http://www.w3.org/2004/02/skos/core#>\nprefix s:       <http://schema.org/>\nprefix temp:   <http://localhost/temp/>\nprefix tabular: <http://linked.opendata.cz/ontology/odcs/tabular/>\nprefix gr:      <http://purl.org/goodrelations/v1#>\nprefix govcz: <http://linked.opendata.cz/ontology/business-entity/>\n\nCONSTRUCT {\n?be a gr:BusinessEntity, s:Organization ;\n\tadms:identifier ?id ;\n        gr:legalName ?podnikatel ;\n\t.\n    \n?id a adms:Identifier;\n\tskos:notation ?ico ;\n\tskos:prefLabel ?ico ;\n\tskos:inScheme <http://linked.opendata.cz/resource/concept-scheme/CZ-ICO> ;\n        govcz:validFrom ?validFrom ;\n        govcz:validTo ?validTo \n\t.\n}\nWHERE {\n?row temp:column_1 ?IC ;\n     temp:column_2 ?podnikatel ;\n     temp:column_3 ?validFrom .\nOPTIONAL { ?row temp:column_4 ?validTo . }\n\nBIND (\"http://linked.opendata.cz/resource/\" as ?beBaseUri)\n\nBIND (\n  CONCAT(\n\tIF(STRLEN(?IC)=7, \"0\",\"\"),\n\tIF(STRLEN(?IC)=6, \"00\",\"\"),\n\tIF(STRLEN(?IC)=5, \"000\",\"\"),\n\tIF(STRLEN(?IC)=4, \"0000\",\"\"),\n\tIF(STRLEN(?IC)=3, \"00000\",\"\"),\n\tIF(STRLEN(?IC)=2, \"000000\",\"\"),\n\t?IC\n\t) as ?ico)\n\nBIND (IRI(concat(?beBaseUri,\"business-entity/CZ\", ?ico)) as ?be)\nBIND (IRI(concat(?beBaseUri,\"business-entity/CZ\", ?ico, \"/identifier/gov.cz\")) as ?id)\n\n}"
-    } ],
-    "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl" : [ {
-      "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-    } ]
-  } ],
-  "@id" : "http://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9/configuration"
-} ]
+{
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467",
+          "@type": [
+            "http://linkedpipes.com/ontology/Pipeline"
+          ],
+          "http://etl.linkedpipes.com/ontology/tag": [
+            {
+              "@value": "SEMANTICS2017"
+            }
+          ],
+          "http://etl.linkedpipes.com/ontology/version": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#int",
+              "@value": "1"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": "LISTID"
+        },
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-rdfToFileChunked/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "1480"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "60"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "Chunked RDF to file"
+            }
+          ]
+        },
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "980"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "60"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "Tabular chunked"
+            }
+          ]
+        },
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/e-filesFromLocal/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "780"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "60"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "Files from local"
+            }
+          ]
+        },
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstructChunked/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "1180"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "60"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "SPARQL construct chunked"
+            }
+          ]
+        },
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/connection/228009c2-0cd1-4763-91a6-8dae34ab1113",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "OutputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9"
+            }
+          ]
+        },
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/connection/3d5e7077-0b1b-43e6-92f3-0e53bf4ef4a0",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "FilesOutput"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputFiles"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6"
+            }
+          ]
+        },
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/connection/659f9149-f83e-4f44-a8e1-cdf1c2d147de",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "OutputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef"
+            }
+          ]
+        }
+      ],
+      "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-rdfToFile#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileName": [
+            {
+              "@value": "ic.trig"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileNameControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileType": [
+            {
+              "@value": "application/trig"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileTypeControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri": [
+            {
+              "@id": "http://linked.opendata.cz/resource/dataset/ic"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-rdfToFile#prefixTurtleControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/018b5aff-7e18-4a27-a076-89f7053c8eef/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/1",
+          "@type": [
+            "http://www.w3.org/ns/csvw#Schema"
+          ],
+          "http://www.w3.org/ns/csvw#aboutUrl": [
+            {
+              "@value": ""
+            }
+          ]
+        },
+        {
+          "@id": "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/2",
+          "@type": [
+            "http://www.w3.org/ns/csvw#Table"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#baseUri": [
+            {
+              "@value": "http://localhost/temp/"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#chunkSize": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "1000"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#encodeType": [
+            {
+              "@value": "default"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#fullMapping": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#normalOutput": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "false"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUri": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#dialect": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/3"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#tableSchema": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/1"
+            }
+          ]
+        },
+        {
+          "@id": "http://etl.linkedpipes.com/resources/components/t-tabularChunked/0.0.0/new/3",
+          "@type": [
+            "http://www.w3.org/ns/csvw#Dialect"
+          ],
+          "http://www.w3.org/ns/csvw#delimeter": [
+            {
+              "@value": "|"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#encoding": [
+            {
+              "@value": "ISO-8859-2"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#header": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "false"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#quoteChar": [
+            {
+              "@value": ""
+            }
+          ],
+          "http://www.w3.org/ns/csvw#trim": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "false"
+            }
+          ]
+        }
+      ],
+      "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/24a92976-2194-41b6-8e1f-61310af92af6/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#path": [
+            {
+              "@value": "/data/experiments/seznamic"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#pathControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/8f6310f7-c3ea-4ea3-8dbd-26445c946a1b/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+            {
+              "@value": "prefix adms:    <http://www.w3.org/ns/adms#>\nprefix skos:    <http://www.w3.org/2004/02/skos/core#>\nprefix s:       <http://schema.org/>\nprefix temp:   <http://localhost/temp/>\nprefix tabular: <http://linked.opendata.cz/ontology/odcs/tabular/>\nprefix gr:      <http://purl.org/goodrelations/v1#>\nprefix govcz: <http://linked.opendata.cz/ontology/business-entity/>\n\nCONSTRUCT {\n?be a gr:BusinessEntity, s:Organization ;\n\tadms:identifier ?id ;\n        gr:legalName ?podnikatel ;\n\t.\n    \n?id a adms:Identifier;\n\tskos:notation ?ico ;\n\tskos:prefLabel ?ico ;\n\tskos:inScheme <http://linked.opendata.cz/resource/concept-scheme/CZ-ICO> ;\n        govcz:validFrom ?validFrom ;\n        govcz:validTo ?validTo \n\t.\n}\nWHERE {\n?row temp:column_1 ?IC ;\n     temp:column_2 ?podnikatel ;\n     temp:column_3 ?validFrom .\nOPTIONAL { ?row temp:column_4 ?validTo . }\n\nBIND (\"http://linked.opendata.cz/resource/\" as ?beBaseUri)\n\nBIND (\n  CONCAT(\n\tIF(STRLEN(?IC)=7, \"0\",\"\"),\n\tIF(STRLEN(?IC)=6, \"00\",\"\"),\n\tIF(STRLEN(?IC)=5, \"000\",\"\"),\n\tIF(STRLEN(?IC)=4, \"0000\",\"\"),\n\tIF(STRLEN(?IC)=3, \"00000\",\"\"),\n\tIF(STRLEN(?IC)=2, \"000000\",\"\"),\n\t?IC\n\t) as ?ico)\n\nBIND (IRI(concat(?beBaseUri,\"business-entity/CZ\", ?ico)) as ?be)\nBIND (IRI(concat(?beBaseUri,\"business-entity/CZ\", ?ico, \"/identifier/gov.cz\")) as ?id)\n\n}"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "https://etl.opendata.cz/resources/pipelines/created-1479487990467/components/b168a5e1-31ea-4a52-923c-08e0e4c294a9/configuration"
+    }
+  ]
+}
