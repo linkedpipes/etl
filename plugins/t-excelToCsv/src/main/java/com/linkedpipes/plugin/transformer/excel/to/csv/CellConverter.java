@@ -65,7 +65,7 @@ class CellConverter {
     private String convertFormulaCell(Cell cell) {
         if (!configuration.isEvaluateFormulas()) {
             throw new IllegalArgumentException(
-                    "Cells with formulas are not supported, "
+                    "Evaluation of cells with formulas are not enabled, "
                             + "  row: " + Integer.toString(cell.getRowIndex())
                             + " column: " +
                             Integer.toString(cell.getColumnIndex()));
