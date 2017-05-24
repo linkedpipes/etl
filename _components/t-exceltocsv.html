@@ -22,14 +22,16 @@ Transformer, allows the user to transform <a href="https://products.office.com/e
     <dd>Number of the first column to be transformed</dd>
     <dt>Column end</dt>
     <dd>Number of the last column to be transformed</dd>
-    <dt>Virtual columns have header</dt>
+    <dt>Virtual columns with header</dt>
     <dd>Adds <code>sheet_name</code> column header as this is currently the only supported virtual column</dd>
-    <dt>Try to determine cell type (date, integer)</dt>
+    <dt>Determine type (date) for numeric cells</dt>
     <dd>Excel stores dates and integers as double values. When checked, the transformer tries to parse these as dates and integers</dd>
     <dt>Skip empty rows</dt>
     <dd>When checked, empty rows are not included in the output CSV. Otherwise, they are full of NULL values</dd>
-    <dt>Include sheet name as additional column</dt>
+    <dt>Add sheet name as column</dt>
     <dd>When checked, a <code>sheet_name</code> column is added, with source Excel sheet name as a value</dd>
+    <dt>Evaluate formulas</dt>
+    <dd>When checked, formulas in Excel are evaluated</dd>
 </dl>
 <!--more-->
 <div class="row" id="characteristics">
