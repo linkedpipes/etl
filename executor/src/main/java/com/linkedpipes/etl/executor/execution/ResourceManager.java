@@ -27,7 +27,7 @@ public class ResourceManager {
      * @return Pipeline as given for execution.
      */
     public File getDefinitionFile() {
-        final File directory = new File(executionRoot, "definition");
+        final File directory = (new File(executionRoot, "definition")).getAbsoluteFile();
         for (File file : directory.listFiles()) {
             final String fileName = file.getName();
             // @TODO Rename to pipeline
