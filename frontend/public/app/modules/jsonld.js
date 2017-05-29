@@ -147,7 +147,7 @@
      * @param lang Optional.
      */
     const setStrings = function (resource, predicate, value) {
-        if (value === undefined) {
+        if (value === undefined || value === null) {
             delete resource[predicate];
             return;
         }
