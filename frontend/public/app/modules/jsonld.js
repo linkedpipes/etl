@@ -217,9 +217,7 @@
             delete resource[predicate];
             return;
         }
-        if (!Array.isArray(value)) {
-            value = [value];
-        }
+        value = asArray(value);
         const resourceValue = [];
         value.forEach((item) => {
             if (item["@value"] === undefined) {
@@ -232,6 +230,17 @@
         });
         resource[predicate] = resourceValue;
     };
+
+    const asArray = function (value) {
+        if (value === undefined || value === null) {
+            return [];
+        }
+        if (!Array.isArray(value)) {
+            return [value];
+        } else {
+            return value;
+        }
+    }
 
     /**
      * Return an array of IRI values for given predicate.
@@ -312,6 +321,7 @@
     };
 
     const setIntegers = function (resource, predicate, value) {
+        value = asArray(value).filter((x)=>Number.isInteger(x));
         setValues(resource, predicate, value);
     };
 

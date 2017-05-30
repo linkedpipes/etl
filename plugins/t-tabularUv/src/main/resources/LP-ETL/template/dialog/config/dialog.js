@@ -84,7 +84,7 @@ define(["jsonld"], function (jsonld) {
             "$label": "Encoding"
         },
         "rowsLimit": {
-            "$type": "str",
+            "$type": "int",
             "$label": "Rows limit"
         },
         "tableType": {
