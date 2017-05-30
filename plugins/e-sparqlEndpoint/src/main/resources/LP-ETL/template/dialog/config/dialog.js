@@ -31,6 +31,30 @@ define([], function () {
         }
     };
 
+    const MIME_TYPES = [
+        "application/rdf+xml",
+        "application/xml",
+        "application/n-triples",
+        "application/x-turtle",
+        "application/trix",
+        "application/trig",
+        "application/x-trig",
+        "application/x-binary-rdf",
+        "application/n-quads",
+        "application/ld+json",
+        "application/rdf+json",
+        "application/xhtml+xml",
+        "application/html",
+        "text/xml",
+        "text/n3",
+        "text/plain",
+        "text/turtle",
+        "text/rdf+n3",
+        "text/x-nquads",
+        "text/nquads",
+        "text/html"
+    ];
+
     function controller($scope, $service) {
 
         if ($scope.dialog === undefined) {
@@ -44,6 +68,15 @@ define([], function () {
         $service.onStore = function () {
             dialogManager.save();
         };
+
+        $scope.getMimeTypes = function (query) {
+            return query ? MIME_TYPES.filter(createFilter(query)) : MIME_TYPES;
+        };
+
+        function createFilter(query) {
+            query = angular.lowercase(query);
+            return (item) => (item.indexOf(query) !== -1);
+        }
 
         dialogManager.load();
 

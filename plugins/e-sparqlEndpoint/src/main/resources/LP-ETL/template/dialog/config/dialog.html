@@ -7,11 +7,19 @@
                ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
                required>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.headerAccept.hide">
-        <label>MimeType</label>
-        <input type="text" ng-model="dialog.headerAccept.value"
-               ng-disabled="dialog.headerAccept.disabled || dialog.headerAccept.inherit">
-    </md-input-container>
+    <md-autocomplete
+            ng-hide="dialog.headerAccept.hide"
+            ng-disabled="dialog.headerAccept.disabled || dialog.headerAccept.inherit"
+            md-no-cache="true"
+            md-min-length="0"
+            md-clear-button="false"
+            md-selected-item="dialog.headerAccept.value"
+            md-search-text="mimeTypeSearchText"
+            md-items="item in getMimeTypes(mimeTypeSearchText)"
+            md-item-text="item"
+            md-floating-label="MimeType">
+        <span>{{item}}</span>
+    </md-autocomplete>    
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
                  lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"
