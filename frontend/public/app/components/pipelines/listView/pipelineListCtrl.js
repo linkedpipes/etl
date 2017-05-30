@@ -54,6 +54,9 @@ define([], function () {
                 }
             },
             'decorator': function (item) {
+                item['onClickUrl'] = "#/pipelines/edit/canvas?pipeline=" +
+                    encodeURIComponent(item.iri);
+
                 if (item['label'] === undefined) {
                     item['label'] = item['iri'];
                 }
@@ -83,12 +86,6 @@ define([], function () {
             },
             'url': '/resources/pipelines'
         });
-
-        $scope.onPipeline = function (pipeline) {
-            $location.path('/pipelines/edit/canvas').search({
-                'pipeline': pipeline.iri
-            });
-        };
 
         $scope.onExecute = function (pipeline) {
             var configuration = {

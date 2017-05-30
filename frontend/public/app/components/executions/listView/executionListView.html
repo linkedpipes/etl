@@ -11,7 +11,7 @@
                 <md-list>
                     <md-list-item
                             ng-repeat="item in repository.data| orderBy:'-start'"
-                            ng-click="onPipeline(item)" class="md-2-line"
+                            ng-href="{{item.onClickUrl}}" class="md-2-line"
                             aria-label="Show detail">
                         <div class="md-primary">
                             <md-icon md-svg-icon="{{item.icon.name}}"
