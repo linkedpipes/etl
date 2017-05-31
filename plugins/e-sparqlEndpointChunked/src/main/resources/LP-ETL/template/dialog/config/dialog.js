@@ -35,11 +35,8 @@ define([], function () {
         "application/rdf+xml",
         "application/xml",
         "application/n-triples",
-        "application/x-turtle",
         "application/trix",
         "application/trig",
-        "application/x-trig",
-        "application/x-binary-rdf",
         "application/n-quads",
         "application/ld+json",
         "application/rdf+json",
@@ -50,7 +47,6 @@ define([], function () {
         "text/plain",
         "text/turtle",
         "text/rdf+n3",
-        "text/x-nquads",
         "text/nquads",
         "text/html"
     ];
