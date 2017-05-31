@@ -40,6 +40,10 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(DcatAp11ToCkan.class);
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "Metadata")
     public SingleGraphDataUnit metadata;
 

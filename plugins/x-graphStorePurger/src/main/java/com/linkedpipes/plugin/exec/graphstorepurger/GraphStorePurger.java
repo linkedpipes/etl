@@ -37,6 +37,10 @@ public class GraphStorePurger implements Component, SequentialExecution {
     private static final Logger LOG =
             LoggerFactory.getLogger(GraphStorePurger.class);
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "Tasks")
     public SingleGraphDataUnit taskRdf;
 

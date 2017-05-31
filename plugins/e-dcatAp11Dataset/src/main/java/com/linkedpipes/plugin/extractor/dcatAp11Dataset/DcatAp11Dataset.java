@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -20,6 +21,10 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class DcatAp11Dataset implements Component, SequentialExecution {
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.OutputPort(iri = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;

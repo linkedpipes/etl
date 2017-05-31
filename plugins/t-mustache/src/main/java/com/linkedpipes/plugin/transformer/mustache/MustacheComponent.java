@@ -16,6 +16,10 @@ import java.util.List;
 
 public final class MustacheComponent implements Component, SequentialExecution {
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit input;
 

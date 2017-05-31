@@ -20,6 +20,10 @@ public final class SparqlEndpointList
     private static final Logger LOG =
             LoggerFactory.getLogger(SparqlEndpointList.class);
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 

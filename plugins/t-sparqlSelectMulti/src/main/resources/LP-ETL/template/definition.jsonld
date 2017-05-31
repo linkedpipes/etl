@@ -46,8 +46,7 @@
         "http://www.w3.org/2004/02/skos/core#prefLabel": "Output",
         "@type": [
             "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
-            "http://linkedpipes.com/ontology/Port",
-            "http://linkedpipes.com/ontology/Output"
+            "http://linkedpipes.com/ontology/RuntimeConfiguration"
         ],
         "http://linkedpipes.com/ontology/binding": "OutputFiles",
         "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]

@@ -45,6 +45,10 @@ public final class LodCloud implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(LodCloud.class);
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "Metadata")
     public SingleGraphDataUnit metadata;
 

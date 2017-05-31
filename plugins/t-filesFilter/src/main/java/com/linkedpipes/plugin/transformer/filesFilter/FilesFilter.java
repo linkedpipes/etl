@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.transformer.filesFilter;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -17,6 +18,10 @@ public class FilesFilter implements Component, SequentialExecution {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(FilesFilter.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;

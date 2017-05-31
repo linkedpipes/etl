@@ -24,6 +24,10 @@ public final class ModifyDateUpdate implements Component, SequentialExecution {
 
     private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 

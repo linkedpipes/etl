@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.htmlcssuv;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -31,6 +32,10 @@ public class HtmlCssUv implements Component, SequentialExecution {
             = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
     private static final Logger LOG = LoggerFactory.getLogger(HtmlCssUv.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inFilesHtml;

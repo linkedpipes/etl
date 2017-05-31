@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.extractor.httpget;
 
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -23,6 +24,10 @@ import java.security.NoSuchAlgorithmException;
 public final class HttpGet implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpGet.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;

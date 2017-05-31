@@ -25,6 +25,10 @@ public final class RdfToFile implements Component, SequentialExecution {
 
     private static final String FILE_ENCODE = "UTF-8";
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 

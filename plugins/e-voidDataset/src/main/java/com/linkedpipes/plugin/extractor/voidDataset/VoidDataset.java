@@ -25,6 +25,10 @@ import java.util.*;
 
 public class VoidDataset implements Component, SequentialExecution {
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "Distribution")
     public SingleGraphDataUnit inputDistribution;
 

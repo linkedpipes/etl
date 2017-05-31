@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.bingtranslator;
 
 import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -61,6 +62,10 @@ public final class BingTranslator implements Component, SequentialExecution {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(BingTranslator.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "FilesInput")
     public ChunkedTriples input;

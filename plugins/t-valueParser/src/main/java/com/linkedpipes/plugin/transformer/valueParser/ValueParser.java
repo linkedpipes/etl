@@ -23,6 +23,10 @@ public final class ValueParser implements Component, SequentialExecution {
 
     public static final String LIST_WITH_INDEX = "ListWithIndexes";
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 

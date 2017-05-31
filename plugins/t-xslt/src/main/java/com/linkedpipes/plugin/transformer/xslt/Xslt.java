@@ -30,6 +30,10 @@ public final class Xslt implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Xslt.class);
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit inputFiles;
 

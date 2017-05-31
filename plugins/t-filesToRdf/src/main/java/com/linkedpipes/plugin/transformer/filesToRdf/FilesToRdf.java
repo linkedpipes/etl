@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -15,6 +16,10 @@ import java.io.InputStream;
 import java.util.Optional;
 
 public final class FilesToRdf implements Component, SequentialExecution {
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;

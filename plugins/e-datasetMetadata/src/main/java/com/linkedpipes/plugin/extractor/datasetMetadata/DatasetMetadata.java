@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.datasetMetadata;
 
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -20,6 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 public class DatasetMetadata implements Component, SequentialExecution {
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.OutputPort(iri = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;

@@ -32,6 +32,10 @@ public final class SparqlEndpointChunkedList implements Component,
     private static final Logger LOG
             = LoggerFactory.getLogger(SparqlEndpointChunkedList.class);
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit inputFiles;
 
