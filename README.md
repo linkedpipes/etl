@@ -64,6 +64,7 @@ There are components in the ```jars``` directory. Detailed description of how to
 
 ## Known issues
  * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
+ * If you are using Oracle Java 8, accessing HTTPS based URLs and getting ```SSL handshake error``` when the same URL works from, e.g. Chrome, try installing the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
  
 ## Update notes
 > Update note 3: When upgrading from develop prior to 2017-02-14, you need to delete ```{deploy}/jars``` and ```{deploy}/osgi```. 
