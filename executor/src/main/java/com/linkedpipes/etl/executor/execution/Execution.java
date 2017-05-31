@@ -164,6 +164,7 @@ public class Execution implements ExecutionObserver {
     @Override
     public void onInvalidPipeline(PipelineModel pipeline,
             LpException exception) {
+        LOG.error("Can't invalid pipeline.", exception);
         if (pipeline != null) {
             executionModelV1.bindToPipeline(pipeline);
         }
