@@ -30,6 +30,7 @@
         <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/trimString> ,
         <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/xlsAdvancedParser> ,
         <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/ignoreMissingColumn> ,
+        <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/keyColumn> ,
         <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateRowTriple> .
 
 <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/baseUri>
@@ -166,6 +167,11 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreMissingColumn> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreMissingColumnControl> .
+
+<http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/keyColumn>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularUv#keyColumn> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularUv#keyColumnControl> .
 
 <http://linkedpipes.com/resources/components/t-tabularUv/0.0.0/configuration/desc/generateRowTriple>
     a config:ConfigurationMember ;

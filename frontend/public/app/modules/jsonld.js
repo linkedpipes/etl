@@ -321,8 +321,8 @@
     };
 
     const setIntegers = function (resource, predicate, value) {
-        value = asArray(value).filter((x)=>Number.isInteger(x));
-        setValues(resource, predicate, value);
+        let filteredValues = asArray(value).filter((x)=> x !== "");
+        setValues(resource, predicate, filteredValues);
     };
 
     const getBooleans = function (resource, predicate) {
