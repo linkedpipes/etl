@@ -27,4 +27,9 @@
             </md-option>
         </md-select>
     </md-input-container>
+    <md-switch ng-model="dialog.skipOnError.value"
+               ng-hide="dialog.skipOnError.hide"
+               ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit">
+        Skip file on error
+    </md-switch>
 </div>
