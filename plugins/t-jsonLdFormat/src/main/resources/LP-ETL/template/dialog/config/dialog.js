@@ -10,7 +10,7 @@ define([], function () {
         },
         "format": {
             "$type": "iri",
-            "$label": "Format type"
+            "$label": "Operation"
         },
         "context": {
             "$type": "str",
