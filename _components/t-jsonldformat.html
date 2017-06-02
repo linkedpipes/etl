@@ -2,18 +2,18 @@
 short: t-jsonldformat
 type: transformer
 color: indigo
-title: Format JSON-LD
-description: Transforms JSON-LD files among various JSON-LD formats.
+title: JSON-LD operations
+description: Performs JSON-LD operations on JSON-LD files.
 ---
 
 <p class="flow-text">
-Transformer, changes JSON-LD formats using a <a href="http://json-ld.org/" title="JSON-LD processor">JSON-LD processor</a>.
+Transformer, performs JSON-LD operations on files formats using a <a href="http://json-ld.org/" title="JSON-LD processor">JSON-LD processor</a>.
 </p>
 <dl class="flow-text">
-    <dt>Format</dt>
-    <dd>Target format of the output JSON-LD file</dd>
+    <dt>Operation</dt>
+    <dd>Operation to be performed on input JSON-LD files</dd>
     <dt>JSON-LD context (where applicable)</dt>
-    <dd>For <code>Flattened</code> and <code>Compacted</code> output formats, a new <a href="https://www.w3.org/TR/json-ld/#the-context" title="JSON-LD context">JSON-LD context</a> can be specified</dd>
+    <dd>For <code>Flatten</code> and <code>Compact</code> operations, a new <a href="https://www.w3.org/TR/json-ld/#the-context" title="JSON-LD context">JSON-LD context</a> can be specified</dd>
 </dl>
 <!--more-->
 <div class="row" id="characteristics">
@@ -34,7 +34,7 @@ Transformer, changes JSON-LD formats using a <a href="http://json-ld.org/" title
     </div>
     <div class="col s12 l6">
         <p class="flow-text">
-        The {{page.title}} component takes the input JSON-LD files and reformats them to another JSON-LD format, such as <code>Flattened</code>, <code>Expanded</code> or <code>Compacted</code>.
+        The {{page.title}} component takes the input JSON-LD files and reformats them to another JSON-LD format, such as <code>Flatten</code>, <code>Expand</code> or <code>Compact</code>.
         </p>
     </div>
 </div>
