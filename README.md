@@ -25,7 +25,8 @@ $ cp configuration.properties.sample deploy/configuration.properties
 $ vi deploy/configuration.properties
 ```
 ### Windows
-We recommend using [Cygwin] and proceeding as with Linux.
+We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux.
+Nevertheless, it is possible to build and use LP-ETL with pure Windows-based versions of tools.
 
 ### Configuration
 Now edit the configuration file, mainly adding paths to working, storage, log and library directories. Especially:
@@ -108,3 +109,4 @@ disown
 [Maven]: <https://maven.apache.org/>
 [Node.js]: <https://nodejs.org>
 [Cygwin]: <https://www.cygwin.com/>
+[Bash on Ubuntu on Windows]: <https://msdn.microsoft.com/en-us/commandline/wsl/about>
