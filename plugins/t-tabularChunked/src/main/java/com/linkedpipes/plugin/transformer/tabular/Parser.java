@@ -74,7 +74,12 @@ class Parser {
             List<String> header;
             List<String> row;
             if (dialect.isHeader()) {
-                header = Arrays.asList(csvListReader.getHeader(false));
+                String[] headerArray = csvListReader.getHeader(false);
+                if (headerArray == null) {
+                    LOG.info("Ignoring file with no header");
+                    return;
+                }
+                header = Arrays.asList(headerArray);
                 row = csvListReader.read();
                 // TODO Should we really trim header?
                 if (dialect.isTrim()) {
@@ -82,6 +87,10 @@ class Parser {
                 }
             } else {
                 row = csvListReader.read();
+                if (row == null) {
+                    LOG.info("Ignoring file with no content.");
+                    return;
+                }
                 // We use row size to create artificial header.
                 // This is not according to specification
                 // where they always have header.
