@@ -7,7 +7,8 @@
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/endpoint> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/defaultGraph> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/headerAccept> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/chunkSize> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/chunkSize> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/skipOnError> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
@@ -33,3 +34,9 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSize> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSizeControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/skipOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#skipOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#skipOnErrorControl> .
+

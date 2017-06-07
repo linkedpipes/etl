@@ -26,6 +26,14 @@
                lp-disabled="dialog.chunkSize.disabled || dialog.chunkSize.inherit"
                min="1">
     </md-input-container>
+    <md-switch ng-model="dialog.skipOnError.value"
+               ng-hide="dialog.skipOnError.hide"
+               ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit">
+        Skip on error
+        <md-tooltip>If set and query failed, the query is skipped. If
+            not set and query failed the component fail.
+        </md-tooltip>
+    </md-switch>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
                  lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"

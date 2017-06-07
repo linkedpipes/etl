@@ -12,6 +12,10 @@ define([], function () {
             "$type" : "str",
             "$label" : "Endpoint URL"
         },
+        "skipOnError" : {
+            "$type" : "bool",
+            "$label" : "Skip on error"
+        },
         "endpoint" : {
             "$type" : "str",
             "$label" : "SPARQL CONSTRUCT query"

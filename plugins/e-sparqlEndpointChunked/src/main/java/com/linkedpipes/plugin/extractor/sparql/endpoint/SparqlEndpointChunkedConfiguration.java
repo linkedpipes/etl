@@ -32,6 +32,9 @@ public class SparqlEndpointChunkedConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_CHUNK_SIZE)
     private Integer chunkSize;
 
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_SKIP_ON_ERROR)
+    private boolean skipOnError = false;
+
     public SparqlEndpointChunkedConfiguration() {
     }
 
@@ -73,5 +76,13 @@ public class SparqlEndpointChunkedConfiguration {
 
     public void setChunkSize(Integer chunkSize) {
         this.chunkSize = chunkSize;
+    }
+
+    public boolean isSkipOnError() {
+        return skipOnError;
+    }
+
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
     }
 }

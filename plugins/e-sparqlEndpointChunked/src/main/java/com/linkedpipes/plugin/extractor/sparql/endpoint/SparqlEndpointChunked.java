@@ -114,6 +114,21 @@ public final class SparqlEndpointChunked implements Component,
         final String query = configuration.getQuery().replace("${VALUES}",
                 valueClause);
         LOG.debug("query:\n{}", query);
+        try {
+            tryToExecuteQuery(repository, query, buffer);
+        } catch (LpException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            if (configuration.isSkipOnError()) {
+                 LOG.error("Failed to execute query.", ex);
+            } else {
+                throw exceptionFactory.failure("Failed to execute query.", ex);
+            }
+        }
+    }
+
+    protected void tryToExecuteQuery(Repository repository, String query,
+            List<Statement> buffer) throws LpException {
         try (final RepositoryConnection connection =
                      repository.getConnection()) {
             final GraphQuery preparedQuery = connection.prepareGraphQuery(
@@ -128,6 +143,5 @@ public final class SparqlEndpointChunked implements Component,
             });
         }
     }
-
 
 }

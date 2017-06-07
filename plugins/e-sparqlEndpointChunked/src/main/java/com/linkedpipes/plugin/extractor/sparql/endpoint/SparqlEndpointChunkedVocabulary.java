@@ -17,6 +17,8 @@ final class SparqlEndpointChunkedVocabulary {
 
     public static final String HAS_CHUNK_SIZE = PREFIX + "chunkSize";
 
+    public static final String HAS_SKIP_ON_ERROR = PREFIX + "skipOnError";
+
     private SparqlEndpointChunkedVocabulary() {
     }
 
