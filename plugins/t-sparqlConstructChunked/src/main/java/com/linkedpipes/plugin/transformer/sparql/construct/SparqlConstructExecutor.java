@@ -71,7 +71,7 @@ class SparqlConstructExecutor implements Runnable {
         });
         manager.submitResult(outputBuffer);
         repository.shutDown();
-        LOG.info("Executing task ... done");
+        LOG.info("Executing task (size: {}) ... done", outputBuffer.size());
         return true;
     }
 
