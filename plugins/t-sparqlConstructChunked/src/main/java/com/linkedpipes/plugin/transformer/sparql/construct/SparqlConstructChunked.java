@@ -8,6 +8,8 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +25,9 @@ import java.util.concurrent.TimeUnit;
  */
 public final class SparqlConstructChunked implements Component,
         SequentialExecution {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SparqlConstructChunked.class);
 
     @Component.InputPort(iri = "InputRdf")
     public ChunkedTriples inputRdf;
@@ -51,31 +56,16 @@ public final class SparqlConstructChunked implements Component,
     public void execute() throws LpException {
         checkConfiguration();
         createExecutors();
-        progressReport.start(inputRdf.size());
 
         ExecutorService executor = Executors.newFixedThreadPool(
                 configuration.getNumberOfThreads());
-        for (SparqlConstructExecutor constructExecutor : executors) {
-            executor.submit(constructExecutor);
-        }
+
+        progressReport.start(inputRdf.size());
+        startThreads(executor);
         executor.shutdown();
-
-        while (true) {
-            try {
-                if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                    break;
-                }
-            } catch (InterruptedException ex) {
-                // Ignore.
-            }
-        }
-
-        for (SparqlConstructExecutor constructExecutor : executors) {
-            if (constructExecutor.isFailed()) {
-                throw exceptionFactory.failure("One construct failed.");
-            }
-        }
+        awaitTermination(executor);
         progressReport.done();
+        checkExecutorsStatus();
     }
 
     private void createExecutors() {
@@ -94,6 +84,36 @@ public final class SparqlConstructChunked implements Component,
         if (query == null || query.isEmpty()) {
             throw exceptionFactory.failure("Missing property: {}",
                     SparqlConstructVocabulary.HAS_QUERY);
+        }
+    }
+
+    private void startThreads(ExecutorService executor) {
+        LOG.info("Number of threads:", configuration.getNumberOfThreads());
+        for (SparqlConstructExecutor constructExecutor : executors) {
+            executor.submit(constructExecutor);
+        }
+    }
+
+    private void awaitTermination(ExecutorService executor) {
+        LOG.info("Waiting for executors ...");
+        while (true) {
+            try {
+                if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    break;
+                }
+            } catch (InterruptedException ex) {
+                // Ignore.
+            }
+        }
+        LOG.info("Waiting for executors ... done");
+    }
+
+    private void checkExecutorsStatus() throws LpException {
+        for (SparqlConstructExecutor constructExecutor : executors) {
+            if (constructExecutor.isFailed()) {
+                throw exceptionFactory.failure(
+                        "At least construct failed. See logs for more info.");
+            }
         }
     }
 

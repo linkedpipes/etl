@@ -36,6 +36,7 @@ class SparqlConstructExecutor implements Runnable {
 
     @Override
     public void run() {
+        LOG.info("Executor is running ...");
         while (true) {
             try {
                 if (!executeTask()) {
@@ -47,6 +48,7 @@ class SparqlConstructExecutor implements Runnable {
                 manager.terminate();
             }
         }
+        LOG.info("Executor is running ... done");
     }
 
     private boolean executeTask() throws LpException {
@@ -54,6 +56,7 @@ class SparqlConstructExecutor implements Runnable {
         if (statements == null) {
             return false;
         }
+        LOG.info("Executing task ... size: {}", statements.size());
         Repository repository = createRepository();
         Repositories.consume(repository, (connection) -> {
             connection.add(statements);
@@ -63,6 +66,7 @@ class SparqlConstructExecutor implements Runnable {
         });
         manager.submitResult(outputBuffer);
         repository.shutDown();
+        LOG.info("Executing task ... done");
         return true;
     }
 
