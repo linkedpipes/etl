@@ -11,6 +11,10 @@ define([], function () {
         "query": {
             "$type": "str",
             "$label": "SPARQL CONSTRUCT query"
+        },
+        "threads" : {
+            "$type": "int",
+            "$label": "Number of threads to use"
         }
     };
 

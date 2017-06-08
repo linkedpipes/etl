@@ -9,6 +9,8 @@ final class SparqlConstructVocabulary {
 
     public static final String HAS_QUERY = PREFIX + "query";
 
+    public static final String HAS_NUMBER_OF_THREADS = PREFIX + "threads";
+
     private SparqlConstructVocabulary() {
     }
 

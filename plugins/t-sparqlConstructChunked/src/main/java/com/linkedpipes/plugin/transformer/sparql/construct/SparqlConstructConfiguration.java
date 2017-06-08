@@ -8,6 +8,9 @@ public class SparqlConstructConfiguration {
     @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_QUERY)
     private String query = "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
+    @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_NUMBER_OF_THREADS)
+    private int numberOfThreads = 1;
+
     public SparqlConstructConfiguration() {
     }
 
@@ -17,6 +20,14 @@ public class SparqlConstructConfiguration {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public int getNumberOfThreads() {
+        return numberOfThreads;
+    }
+
+    public void setNumberOfThreads(int numberOfThreads) {
+        this.numberOfThreads = numberOfThreads;
     }
 
 }

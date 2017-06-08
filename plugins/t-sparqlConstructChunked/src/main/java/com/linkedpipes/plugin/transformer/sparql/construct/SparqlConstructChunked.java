@@ -8,22 +8,18 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.query.GraphQueryResult;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.repository.util.Repositories;
-import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Chunked version of SPARQL construct. Perform the construct operation
  * on chunks of RDF data.
  *
- * Use the same vocabulary as SPARQL construct.
+ * TODO: Use the same vocabulary as SPARQL construct.
  */
 public final class SparqlConstructChunked implements Component,
         SequentialExecution {
@@ -47,39 +43,58 @@ public final class SparqlConstructChunked implements Component,
     @Component.Inject
     public ProgressReport progressReport;
 
+    private ExecutorManager executorManager;
+
+    private List<SparqlConstructExecutor> executors = new LinkedList<>();
+
     @Override
     public void execute() throws LpException {
-        if (configuration.getQuery() == null
-                || configuration.getQuery().isEmpty()) {
+        checkConfiguration();
+        createExecutors();
+        progressReport.start(inputRdf.size());
+
+        ExecutorService executor = Executors.newFixedThreadPool(
+                configuration.getNumberOfThreads());
+        for (SparqlConstructExecutor constructExecutor : executors) {
+            executor.submit(constructExecutor);
+        }
+        executor.shutdown();
+
+        while (true) {
+            try {
+                if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    break;
+                }
+            } catch (InterruptedException ex) {
+                // Ignore.
+            }
+        }
+
+        for (SparqlConstructExecutor constructExecutor : executors) {
+            if (constructExecutor.isFailed()) {
+                throw exceptionFactory.failure("One construct failed.");
+            }
+        }
+        progressReport.done();
+    }
+
+    private void createExecutors() {
+        executorManager = new ExecutorManager(
+                inputRdf, outputRdf, progressReport);
+        for (int i = 0; i < configuration.getNumberOfThreads(); ++i) {
+            SparqlConstructExecutor constructExecutor =
+                    new SparqlConstructExecutor(
+                            executorManager, configuration.getQuery());
+            executors.add(constructExecutor);
+        }
+    }
+
+    private void checkConfiguration() throws LpException {
+        String query = configuration.getQuery();
+        if (query == null || query.isEmpty()) {
             throw exceptionFactory.failure("Missing property: {}",
                     SparqlConstructVocabulary.HAS_QUERY);
         }
-        // We always perform inserts.
-        progressReport.start(inputRdf.size());
-        List<Statement> outputBuffer = new ArrayList<>(10000);
-        for (ChunkedTriples.Chunk chunk: inputRdf) {
-            // Prepare repository and load data.
-            final Repository repository = new SailRepository(new MemoryStore());
-            repository.initialize();
-            final Collection<Statement> statements = chunk.toCollection();
-            Repositories.consume(repository, (connection) -> {
-                connection.add(statements);
-            });
-            // Execute query and store result.
-            Repositories.consume(repository, (connection) -> {
-                final GraphQueryResult result = connection.prepareGraphQuery(
-                        configuration.getQuery()).evaluate();
-                while (result.hasNext()) {
-                    outputBuffer.add(result.next());
-                }
-            });
-            outputRdf.submit(outputBuffer);
-            // Cleanup.
-            outputBuffer.clear();
-            repository.shutDown();
-            progressReport.entryProcessed();
-        }
-        progressReport.done();
     }
 
 }
