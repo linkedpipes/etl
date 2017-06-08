@@ -6,6 +6,8 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EVENTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
@@ -13,6 +15,9 @@ import java.util.Collection;
  * Default implementation of progress report.
  */
 class DefaultProgressReport implements ProgressReport {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(DefaultProgressReport.class);
 
     /**
      * Specific implementation or event to report component progress.
@@ -74,6 +79,7 @@ class DefaultProgressReport implements ProgressReport {
 
     @Override
     public void start(long entriesToProcess) {
+        LOG.info("Progress report ({}) ... ", entriesToProcess);
         current = 0;
         total = entriesToProcess;
         reportStep = (long) (total * 0.1f);
@@ -97,6 +103,7 @@ class DefaultProgressReport implements ProgressReport {
 
     @Override
     public void done() {
+        LOG.info("Progress report ... done");
         context.sendMessage(new ReportProgress(total, total, component));
     }
 
