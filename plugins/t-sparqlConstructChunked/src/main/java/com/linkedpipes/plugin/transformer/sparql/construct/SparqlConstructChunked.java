@@ -56,7 +56,6 @@ public final class SparqlConstructChunked implements Component,
     public void execute() throws LpException {
         checkConfiguration();
         createExecutors();
-
         ExecutorService executor = Executors.newFixedThreadPool(
                 configuration.getNumberOfThreads());
 
@@ -88,7 +87,7 @@ public final class SparqlConstructChunked implements Component,
     }
 
     private void startThreads(ExecutorService executor) {
-        LOG.info("Number of threads:", configuration.getNumberOfThreads());
+        LOG.info("Number of threads: {}", configuration.getNumberOfThreads());
         for (SparqlConstructExecutor constructExecutor : executors) {
             executor.submit(constructExecutor);
         }

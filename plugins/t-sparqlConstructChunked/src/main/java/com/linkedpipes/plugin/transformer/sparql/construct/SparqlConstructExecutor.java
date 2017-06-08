@@ -11,15 +11,19 @@ import org.eclipse.rdf4j.repository.util.Repositories;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 class SparqlConstructExecutor implements Runnable {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SparqlConstructExecutor.class);
+
+    private final Map<String,String> contextMap = MDC.getCopyOfContextMap();
 
     private final ExecutorManager manager;
 
@@ -36,6 +40,7 @@ class SparqlConstructExecutor implements Runnable {
 
     @Override
     public void run() {
+        MDC.setContextMap(contextMap);
         LOG.info("Executor is running ...");
         while (true) {
             try {
@@ -56,7 +61,7 @@ class SparqlConstructExecutor implements Runnable {
         if (statements == null) {
             return false;
         }
-        LOG.info("Executing task ... size: {}", statements.size());
+        LOG.info("Executing task (size: {}) ...", statements.size());
         Repository repository = createRepository();
         Repositories.consume(repository, (connection) -> {
             connection.add(statements);
