@@ -56,7 +56,7 @@ class UriDownloader {
         }
 
         @Override
-        public Object call() throws Exception {
+        public Object call() {
             MDC.setContextMap(contextMap);
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
@@ -81,14 +81,20 @@ class UriDownloader {
                 if (configuration.isDetailLogging()) {
                     logDetails(connection);
                 }
-                if (connection.getResponseCode() < 200 ||
-                        connection.getResponseCode() > 299) {
-                    final Exception ex = new Exception(
-                            "Invalid response code: " +
-                                    connection.getResponseCode() +
-                                    " message: " +
-                                    connection.getResponseMessage());
-                    LOG.error("Can't download file: {}", work.source, ex);
+                try {
+                    int responseCode = connection.getResponseCode();
+                    if (responseCode < 200 || responseCode > 299) {
+                        final Exception ex = new Exception(
+                                "Invalid response code: " + responseCode +
+                                        " message: " +
+                                        connection.getResponseMessage());
+                        LOG.error("Can't download file: {}", work.source, ex);
+                        exceptions.add(ex);
+                        continue;
+                    }
+                } catch (IOException ex) {
+                    LOG.error("Can't read response code for file: {}",
+                            work.target, ex);
                     exceptions.add(ex);
                     continue;
                 }
