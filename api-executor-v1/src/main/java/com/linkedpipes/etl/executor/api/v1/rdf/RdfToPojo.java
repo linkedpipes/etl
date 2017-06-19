@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.rdf;
 
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.pojo.DescriptorFactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,17 +10,16 @@ import java.lang.annotation.Target;
 /**
  * Annotation that describe process of loading an RDF into the Java POJO
  * object.
- *
- * Implementation specifications:
- * <ul>
- * <li>For the {@link java.util.Date} the GMT time zone is used.</li>
- * </ul>
  */
-public interface RdfToPojo {
+public class RdfToPojo {
+
+    private RdfToPojo() {
+
+    }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
-    @interface Type {
+    public @interface Type {
 
         String iri();
 
@@ -28,7 +27,13 @@ public interface RdfToPojo {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Property {
+    public @interface Resource {
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface Property {
 
         String iri();
 
@@ -39,37 +44,8 @@ public interface RdfToPojo {
 
     }
 
-    /**
-     * Can be used to load language string with a language tag.
-     */
-    class LangString implements RdfLoader.LangString {
-
-        private String value;
-
-        private String language;
-
-        public LangString() {
-        }
-
-        public LangString(String value, String language) {
-            this.value = value;
-            this.language = language;
-        }
-
-        @Override
-        public void setValue(String value, String language) {
-            this.value = value;
-            this.language = language;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public String getLanguage() {
-            return language;
-        }
-
+    public static DescriptorFactory descriptorFactory() {
+        return new AnnotationDescriptionFactory();
     }
 
 }

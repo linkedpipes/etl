@@ -1,14 +1,13 @@
 package com.linkedpipes.etl.executor.pipeline.model;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
 /**
  * Represent a configuration description.
  */
-public class ConfigurationDescription
-        implements RdfLoader.Loadable<String> {
+public class ConfigurationDescription implements Loadable {
 
     private final String iri;
 
@@ -19,11 +18,10 @@ public class ConfigurationDescription
     }
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, RdfValue object) {
         switch (predicate) {
             case LP_OBJECTS.HAS_DESCRIBE:
-                describedType = object;
+                describedType = object.asString();
                 return null;
             default:
                 return null;

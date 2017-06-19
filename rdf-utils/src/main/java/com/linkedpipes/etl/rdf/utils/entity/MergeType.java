@@ -1,6 +1,9 @@
 package com.linkedpipes.etl.rdf.utils.entity;
 
-public enum EntityMergeType {
+/**
+ * Define merge operation.
+ */
+public enum MergeType {
     /**
      * Value is added to current value list.
      */

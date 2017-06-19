@@ -5,12 +5,11 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -60,17 +59,13 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
 
     private void loadTasksGroups() throws LpException {
         Rdf4jSource source = Rdf4jSource.createWrap(tasksRdf.getRepository());
-        RdfLoader.DescriptorFactory descriptorFactory =
-                new AnnotationDescriptionFactory();
         try {
-            taskGroups = RdfUtils.loadTypedByReflection(source,
+            taskGroups = RdfUtils.loadList(source,
                     tasksRdf.getReadGraph().stringValue(),
-                    TaskGroup.class,
-                    descriptorFactory);
+                    RdfToPojo.descriptorFactory(),
+                    TaskGroup.class);
         } catch (RdfUtilsException ex) {
             throw exceptionFactory.failure("Can't load task list.", ex);
-        } finally {
-            source.shutdown();
         }
     }
 

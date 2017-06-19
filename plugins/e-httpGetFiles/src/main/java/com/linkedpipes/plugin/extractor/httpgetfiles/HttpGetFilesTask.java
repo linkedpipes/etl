@@ -15,7 +15,7 @@ public class HttpGetFilesTask {
     private String fileName;
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
-    private List<HttpGetFilesConfiguration.Header> headers = new LinkedList<>();
+    private List<RequestHeader> headers = new LinkedList<>();
 
     public HttpGetFilesTask() {
     }
@@ -36,11 +36,11 @@ public class HttpGetFilesTask {
         this.fileName = fileName;
     }
 
-    public List<HttpGetFilesConfiguration.Header> getHeaders() {
+    public List<RequestHeader> getHeaders() {
         return headers;
     }
 
-    public void setHeaders(List<HttpGetFilesConfiguration.Header> headers) {
+    public void setHeaders(List<RequestHeader> headers) {
         this.headers = headers;
     }
 

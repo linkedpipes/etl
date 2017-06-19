@@ -1,19 +1,16 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
+import com.linkedpipes.etl.dataunit.core.pipeline.PipelineModel;
+import com.linkedpipes.etl.dataunit.core.pipeline.PipelineModelFactory;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
-import org.apache.commons.io.FileUtils;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +33,7 @@ public class RdfDataUnitFactory
 
     private FactoryConfiguration configuration;
 
-    private Repository repository;
+    private RepositoryManager repositoryManager;
 
     @Override
     public ManageableDataUnit create(String dataUnit, String graph,
@@ -47,8 +44,7 @@ public class RdfDataUnitFactory
         // Load configuration.
         final Configuration configuration = new Configuration(dataUnit, graph);
         try {
-            RdfUtils.load(definition, configuration, dataUnit, graph,
-                    String.class);
+            RdfUtils.load(definition, dataUnit, graph, configuration);
             configuration.loadSources(definition);
         } catch (RdfUtilsException ex) {
             throw new LpException("Can't load configuration for {} in {}",
@@ -61,7 +57,7 @@ public class RdfDataUnitFactory
                     return new DefaultSingleGraphDataUnit(
                             configuration.getBinding(),
                             dataUnit,
-                            repository,
+                            getRepository(dataUnit),
                             configuration.getSources(),
                             dataUnit
                     );
@@ -69,7 +65,7 @@ public class RdfDataUnitFactory
                     return new DefaultGraphListDataUnit(
                             configuration.getBinding(),
                             dataUnit,
-                            repository,
+                            getRepository(dataUnit),
                             configuration.getSources(),
                             dataUnit
                     );
@@ -87,14 +83,19 @@ public class RdfDataUnitFactory
         return null;
     }
 
+    private Repository getRepository(String dataUnitIri) throws LpException {
+        return repositoryManager.getRepository(dataUnitIri);
+    }
+
     @Override
     public void onPipelineBegin(String pipeline, String graph,
             RdfSource definition) throws LpException {
+        repositoryManager = null;
         try {
             final String resource = RdfUtils.sparqlSelectSingle(definition,
                     getConfigurationQuery(pipeline, graph), "r");
             final FactoryConfiguration config = new FactoryConfiguration();
-            RdfLoader.load(definition, config, resource, graph, String.class);
+            RdfUtils.load(definition, resource, graph, config);
             // Save at the end.
             this.configuration = config;
         } catch (RdfUtilsException ex) {
@@ -102,43 +103,28 @@ public class RdfDataUnitFactory
             return;
         }
         //
-        repository = new SailRepository(
-                new NativeStore(configuration.getDirectory()));
+        initializeRepositoryManager(definition, pipeline, graph);
+    }
+
+    private void initializeRepositoryManager(RdfSource source, String pipeline,
+            String graph) throws LpException {
+        PipelineModelFactory factory = new PipelineModelFactory();
+        PipelineModel pipelineModel;
         try {
-            repository.initialize();
-        } catch (RepositoryException ex) {
-            repository = null;
-            throw new LpException("Can't create RDF repository.", ex);
+            pipelineModel = factory.createModel(source, pipeline, graph);
+        } catch (RdfUtilsException ex) {
+            throw new LpException("Can't load pipeline model.", ex);
         }
+        repositoryManager = new RepositoryManager(pipelineModel,
+                configuration.getDirectory());
     }
 
     @Override
     public void onPipelineEnd() {
-        if (repository == null) {
+        if (repositoryManager == null) {
             return;
         }
-        try {
-            LOG.info("Closing repository ... ");
-            repository.shutDown();
-            repository = null;
-            LOG.info("Closing repository ... done");
-        } catch (RepositoryException ex) {
-            LOG.error("Can't close repository.", ex);
-            return;
-        }
-        // Delete the directory.
-        LOG.info("Deleting content ...");
-        final File workingDirectory = configuration.getDirectory();
-        FileUtils.deleteQuietly(workingDirectory);
-        // It may take some time before the file is released.
-        while (workingDirectory.exists()) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-            }
-            FileUtils.deleteQuietly(workingDirectory);
-        }
-        LOG.info("Deleting content ... done");
+        repositoryManager.close();
     }
 
     private String getConfigurationQuery(String pipeline, String graph) {

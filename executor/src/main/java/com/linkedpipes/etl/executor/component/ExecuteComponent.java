@@ -12,8 +12,9 @@ import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.model.Component;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,7 +156,7 @@ class ExecuteComponent implements ComponentExecutor {
 
         final String configGraph =
                 pplComponent.getIri() + "/configuration/effective";
-        final RdfSource.TypedTripleWriter writer = pipeline.setConfiguration(
+        final TripleWriter writer = pipeline.setConfiguration(
                 pplComponent, configGraph);
 
         if (runtimeConfig == null) {
@@ -166,7 +167,6 @@ class ExecuteComponent implements ComponentExecutor {
             Configuration.prepareConfiguration(configGraph, pplComponent,
                     runtimeSource, RUNTIME_CONFIGURATION_GRAPH,
                     writer, pipeline);
-            runtimeSource.shutdown();
         }
 
         try {
@@ -181,11 +181,11 @@ class ExecuteComponent implements ComponentExecutor {
             RuntimeConfiguration runtimeConfiguration)
             throws ExecutorException {
         final RdfSource source = Rdf4jSource.createInMemory();
-        final RdfSource.TripleWriter writer =
+        final TripleWriter writer =
                 source.getTripleWriter(RUNTIME_CONFIGURATION_GRAPH);
         try {
             runtimeConfiguration.write(writer);
-            writer.submit();
+            writer.flush();
         } catch (LpException | RdfUtilsException ex) {
             throw new ExecutorException(
                     "Can't copy runtime configuration.", ex);

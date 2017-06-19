@@ -50,25 +50,15 @@ public final class SparqlEndpointList
     public void execute() throws LpException {
         initializeTaskLoader();
         initializeExecutor();
-        try {
-            progressReport.start(taskLoader.getTasks().size());
-            executeTasks();
-            awaitExecutorShutdown();
-            progressReport.done();
-        } finally {
-            closeTaskLoader();
-        }
+        progressReport.start(taskLoader.getTasks().size());
+        executeTasks();
+        awaitExecutorShutdown();
+        progressReport.done();
     }
 
     private void initializeTaskLoader() throws LpException {
         taskLoader = new TaskLoader(tasksRdf, exceptionFactory);
         taskLoader.initialize();
-    }
-
-    private void closeTaskLoader() {
-        if (taskLoader != null) {
-            taskLoader.close();
-        }
     }
 
     private void executeTasks() {

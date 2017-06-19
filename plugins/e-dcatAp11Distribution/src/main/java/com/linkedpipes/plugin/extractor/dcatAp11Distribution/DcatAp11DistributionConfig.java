@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Distribution;
 
+import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.Date;
@@ -241,7 +242,7 @@ public class DcatAp11DistributionConfig {
         this.distributionTypeIRI = distributionTypeIRI;
     }
 
-    public static class LocalizedString extends RdfToPojo.LangString {
+    public static class LocalizedString extends LanguageString {
         public LocalizedString() {
         }
 

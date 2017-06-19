@@ -680,7 +680,8 @@ define([
                 'locals': {
                     // TODO Update dialog and argumetn passing.
                     'data': {
-                        'definition': data.pipeline.resource
+                        'definition': data.pipeline.resource,
+                        'profile': pipelineService.getOrCreateExecutionProfile(data.pipeline.model)
                     }
                 }
             }).then(function () {

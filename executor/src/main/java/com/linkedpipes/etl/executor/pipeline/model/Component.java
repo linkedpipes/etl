@@ -3,7 +3,8 @@ package com.linkedpipes.etl.executor.pipeline.model;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Component in a pipeline.
  */
-public class Component implements RdfLoader.Loadable<String> {
+public class Component implements Loadable {
 
     private final String iri;
 
@@ -92,26 +93,21 @@ public class Component implements RdfLoader.Loadable<String> {
     }
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
+    public Loadable load(String predicate, RdfValue object)
             throws RdfUtilsException {
         switch (predicate) {
             case SKOS.PREF_LABEL:
-                label = object;
+                label = object.asString();
                 return null;
             case LP_EXEC.HAS_ORDER_EXEC:
-                try {
-                    executionOrder = Integer.parseInt(object);
-                } catch (NumberFormatException ex) {
-                    throw new RdfUtilsException(
-                            "Value is not an integer: {}", object);
-                }
+                executionOrder = (int)object.asLong();
                 return null;
             case LP_PIPELINE.HAS_DATA_UNIT:
-                final Port newDataUnit = new Port(object, this);
+                final Port newDataUnit = new Port(object.asString(), this);
                 ports.add(newDataUnit);
                 return newDataUnit;
             case LP_EXEC.HAS_EXECUTION_TYPE:
-                switch (object) {
+                switch (object.asString()) {
                     case LP_EXEC.TYPE_EXECUTE:
                         executionType = ExecutionType.EXECUTE;
                         break;
@@ -128,15 +124,15 @@ public class Component implements RdfLoader.Loadable<String> {
                 return null;
             case LP_EXEC.HAS_CONFIGURATION:
                 final Configuration configuration =
-                        new Configuration(object);
+                        new Configuration(object.asString());
                 configurations.add(configuration);
                 return configuration;
             case LP_PIPELINE.HAS_JAR_URL:
-                jarPath = object;
+                jarPath = object.asString();
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
                 configurationDescription =
-                        new ConfigurationDescription(object);
+                        new ConfigurationDescription(object.asString());
                 return configurationDescription;
             default:
                 return null;

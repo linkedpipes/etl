@@ -1,6 +1,10 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -11,7 +15,11 @@ import org.eclipse.rdf4j.repository.util.Repositories;
 import java.util.ArrayList;
 import java.util.List;
 
-class BufferedTripleWriter implements RdfSource.TypedTripleWriter<Value> {
+/**
+ * TODO Add support for RdfValue implemented by Rdf4j
+ * TODO Add support for RdfTriple implemented by Rdf4j
+ */
+class BufferedTripleWriter implements TripleWriter {
 
     private static final ValueFactory VF = SimpleValueFactory.getInstance();
 
@@ -21,44 +29,89 @@ class BufferedTripleWriter implements RdfSource.TypedTripleWriter<Value> {
 
     private final Repository repository;
 
+    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
     public BufferedTripleWriter(String graph, Repository repository) {
         this.graph = graph;
         this.repository = repository;
     }
 
     @Override
-    public void iri(String s, String p, String o) {
-        buffer.add(VF.createStatement(VF.createIRI(s), VF.createIRI(p),
-                VF.createIRI(o)));
+    public void iri(String subject, String predicate, String object) {
+        buffer.add(valueFactory.createStatement(
+                valueFactory.createIRI(subject),
+                valueFactory.createIRI(predicate),
+                valueFactory.createIRI(object)
+        ));
     }
 
     @Override
-    public void typed(String s, String p, String o, String type) {
-        buffer.add(VF.createStatement(VF.createIRI(s), VF.createIRI(p),
-                VF.createLiteral(o, VF.createIRI(type))));
-    }
-
-    @Override
-    public void string(String s, String p, String o, String language) {
+    public void string(String subject, String predicate, String object,
+            String language) {
+        Value value;
         if (language == null) {
-            buffer.add(VF.createStatement(VF.createIRI(s), VF.createIRI(p),
-                    VF.createLiteral(o)));
+            value = valueFactory.createLiteral(object);
         } else {
-            buffer.add(VF.createStatement(VF.createIRI(s), VF.createIRI(p),
-                    VF.createLiteral(o, language)));
+            value = valueFactory.createLiteral(object, language);
         }
+        buffer.add(valueFactory.createStatement(
+                valueFactory.createIRI(subject),
+                valueFactory.createIRI(predicate),
+                value
+        ));
     }
 
     @Override
-    public void add(String s, String p, Value o) {
-        buffer.add(VF.createStatement(VF.createIRI(s), VF.createIRI(p), o));
+    public void typed(String subject, String predicate, String object,
+            String type) {
+        buffer.add(valueFactory.createStatement(
+                valueFactory.createIRI(subject),
+                valueFactory.createIRI(predicate),
+                valueFactory.createLiteral(object,
+                        valueFactory.createIRI(type))
+        ));
     }
 
     @Override
-    public void submit() {
-        Repositories.consume(repository, (connection) -> {
-            connection.add(buffer, VF.createIRI(graph));
-        });
+    public void add(String subject, String predicate, RdfValue value) {
+        Value rdf4jValue = asRdf4jValue(value);
+        buffer.add(valueFactory.createStatement(
+                valueFactory.createIRI(subject),
+                valueFactory.createIRI(predicate),
+                rdf4jValue
+        ));
+    }
+
+    private Value asRdf4jValue(RdfValue value) {
+        if (value.isIri()) {
+            return valueFactory.createIRI(value.asString());
+        }
+        String type = value.getType();
+        if (type.equals(XSD.STRING)) {
+            return valueFactory.createLiteral(value.asString());
+        }
+        if (type.equals(XSD.LANG_STRING)) {
+            return valueFactory.createLiteral(value.asString(),
+                    value.getLanguage());
+        }
+        return valueFactory.createLiteral(value.asString(),
+                valueFactory.createIRI(type));
+    }
+
+    @Override
+    public void add(RdfTriple triple) {
+        add(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    }
+
+    @Override
+    public void flush() throws RdfUtilsException {
+        try {
+            Repositories.consume(repository, (connection) -> {
+                connection.add(buffer, VF.createIRI(graph));
+            });
+        } catch (RuntimeException ex) {
+            throw new RdfUtilsException("Can't add triples to repository.");
+        }
     }
 
 }

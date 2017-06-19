@@ -3,7 +3,7 @@ package com.linkedpipes.etl.dataunit.core.rdf;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
@@ -74,7 +74,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
     }
 
     @Override
-    public void write(RdfSource.TripleWriter writer) throws LpException {
+    public void write(TripleWriter writer) throws LpException {
         execute((connection) -> {
             final RepositoryResult<Statement> statements =
                     connection.getStatements(null, null, null, graph);
@@ -115,7 +115,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
     }
 
     private void writeStatement(Statement statement,
-            RdfSource.TripleWriter writer) throws LpException {
+            TripleWriter writer) throws LpException {
         final String subject = statement.getSubject().stringValue();
         final String predicate = statement.getPredicate().stringValue();
         final Value object = statement.getObject();

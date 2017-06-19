@@ -1,0 +1,54 @@
+@prefix local: <http://localhost/> .
+@prefix lp: <http://linkedpipes.com/ontology/> .
+
+local:graph {
+
+    local:pipeline a lp:Pipeline ;
+        lp:connection local:connection_1, local:connection_2 ;
+        lp:component local:source_cmp_1, local:target_cmp_1,
+            local:source_cmp_2, local:target_cmp_2 ;
+        lp:profile local:profile .
+
+    local:connection_1 a lp:Connection ;
+        lp:sourceBinding "source" ;
+        lp:sourceComponent local:source_cmp_1 ;
+        lp:targetBinding "target" ;
+        lp:targetComponent local:target_cmp_1 .
+
+    local:source_cmp_1 a lp:Component ;
+        lp:port local:output_port_1 .
+
+    local:output_port_1 a lp:Output ,
+        <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> ;
+        lp:binding "source" .
+
+    local:target_cmp_1 a lp:Component ;
+        lp:port local:input_port_1 .
+
+    local:input_port_1 a lp:Input ,
+        <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> ;
+        lp:binding "target" .
+
+    local:connection_2 a lp:Connection ;
+        lp:sourceBinding "source" ;
+        lp:sourceComponent local:source_cmp_2 ;
+        lp:targetBinding "target" ;
+        lp:targetComponent local:target_cmp_2 .
+
+    local:source_cmp_2 a lp:Component ;
+        lp:port local:output_port_2 .
+
+    local:output_port_2 a lp:Output ,
+        <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> ;
+        lp:binding "source" .
+
+    local:target_cmp_2 a lp:Component ;
+        lp:port local:input_port_2 .
+
+    local:input_port_2 a lp:Input ,
+        <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> ;
+        lp:binding "target" .
+
+    local:profile a lp:ExecutionProfile ;
+        lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
+}

@@ -1,10 +1,11 @@
 package com.linkedpipes.etl.dataunit.core;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 
 import java.util.Collections;
@@ -15,7 +16,7 @@ import java.util.Map;
 /**
  * Base configuration entity for core DataUnit instance.
  */
-public class BaseConfiguration implements RdfLoader.Loadable<String> {
+public class BaseConfiguration implements Loadable {
 
     private final String iri;
 
@@ -33,14 +34,13 @@ public class BaseConfiguration implements RdfLoader.Loadable<String> {
     }
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, RdfValue object) {
         switch (predicate) {
             case RDF.TYPE:
-                types.add(object);
+                types.add(object.asString());
                 break;
             case LP_PIPELINE.HAS_BINDING:
-                binding = object;
+                binding = object.asString();
                 break;
         }
         return null;

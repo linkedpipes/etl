@@ -3,11 +3,11 @@ package com.linkedpipes.etl.executor.api.v1.component;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
-import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.service.ServiceFactory;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -98,8 +98,8 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
         }
         //
         try {
-            RdfUtils.loadTypedByReflection(definition, instance,
-                    graph, new AnnotationDescriptionFactory());
+            RdfUtils.loadByType(definition, graph,
+                    instance, RdfToPojo.descriptorFactory());
         } catch (RdfUtilsException ex) {
             throw new LpException("Can't load for field: {}",
                     field.getName(), ex);

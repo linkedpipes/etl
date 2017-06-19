@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.rdf.utils.entity;
 
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
 /**
- * Describe reference to the RDF entity.
+ * Object used to reference RDF entity.
  */
 public class EntityReference {
 

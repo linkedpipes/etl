@@ -4,10 +4,10 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class DefaultServiceFactoryTest {
         // temp directory.
         final File path = Files.createTempDirectory("lp-test-").toFile();
         //
-        final RdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
         final RdfBuilder builder = RdfBuilder.create(source, "http://graph");
         builder.entity("http://component")
                 .iri(RDF.TYPE, LP_PIPELINE.COMPONENT)
@@ -68,7 +68,7 @@ public class DefaultServiceFactoryTest {
         Assert.assertEquals(path.getAbsolutePath(), result.getAbsolutePath());
         //
         path.delete();
-        source.shutdown();
+        source.close();
     }
 
 }

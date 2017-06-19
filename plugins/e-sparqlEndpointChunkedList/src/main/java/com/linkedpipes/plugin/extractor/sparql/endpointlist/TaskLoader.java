@@ -2,12 +2,11 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 
@@ -22,9 +21,6 @@ class TaskLoader {
     private final SingleGraphDataUnit dataUnit;
 
     private final RdfSource source;
-
-    private final RdfLoader.DescriptorFactory descriptorFactory =
-            new AnnotationDescriptionFactory();
 
     private final ExceptionFactory exceptionFactory;
 
@@ -65,9 +61,9 @@ class TaskLoader {
 
     private void loadTask(Task task) throws LpException {
         try {
-            RdfUtils.loadByReflection(source, task, task.getIri(),
-                    dataUnit.getReadGraph().stringValue(),
-                    descriptorFactory);
+            RdfUtils.load(source, task.getIri(),
+                    dataUnit.getReadGraph().stringValue(), task,
+                    RdfToPojo.descriptorFactory());
         } catch (RdfUtilsException ex) {
             throw exceptionFactory.failure("Can't load task.", ex);
         }
@@ -75,10 +71,6 @@ class TaskLoader {
 
     public List<Task> getTasks() {
         return Collections.unmodifiableList(tasks);
-    }
-
-    public void close() {
-        source.shutdown();
     }
 
 }

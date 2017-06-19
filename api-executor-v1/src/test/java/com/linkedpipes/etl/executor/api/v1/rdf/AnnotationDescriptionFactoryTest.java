@@ -1,6 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.rdf;
 
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.pojo.Descriptor;
+import com.linkedpipes.etl.rdf.utils.pojo.DescriptorFactory;
+import com.linkedpipes.etl.rdf.utils.pojo.LoaderException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,29 +22,31 @@ public class AnnotationDescriptionFactoryTest {
         @RdfToPojo.Property(iri = "http://name")
         private String name;
 
+        @RdfToPojo.Resource
+        private String iri;
+
+
     }
 
     @Test
-    public void simpleScan() {
-        final RdfLoader.DescriptorFactory factory =
-                new AnnotationDescriptionFactory();
-        final RdfLoader.Descriptor desc =
-                factory.create(TestObject.class);
-        //
-        Assert.assertEquals("http://type", desc.getType());
-        Assert.assertNotNull(desc.getField("http://label"));
+    public void simpleScan() throws LoaderException {
+        DescriptorFactory factory = new AnnotationDescriptionFactory();
+        Descriptor desc = factory.create(TestObject.class);
+
+        Assert.assertEquals("http://type", desc.getObjectType());
+        Assert.assertNotNull(desc.getFieldForPredicate("http://label"));
+        Assert.assertNull(desc.getFieldForResource());
     }
 
     @Test
-    public void inheritanceScan() {
-        final RdfLoader.DescriptorFactory factory =
-                new AnnotationDescriptionFactory();
-        final RdfLoader.Descriptor desc =
-                factory.create(TestInheritance.class);
-        //
-        Assert.assertEquals("http://inheritance", desc.getType());
-        Assert.assertNotNull(desc.getField("http://name"));
-        Assert.assertNotNull(desc.getField("http://label"));
+    public void inheritanceScan() throws LoaderException {
+        DescriptorFactory factory = new AnnotationDescriptionFactory();
+        Descriptor desc = factory.create(TestInheritance.class);
+
+        Assert.assertEquals("http://inheritance", desc.getObjectType());
+        Assert.assertNotNull(desc.getFieldForPredicate("http://name"));
+        Assert.assertNotNull(desc.getFieldForPredicate("http://label"));
+        Assert.assertNotNull(desc.getFieldForResource());
     }
 
 }

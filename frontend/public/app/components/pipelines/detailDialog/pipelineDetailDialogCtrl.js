@@ -1,8 +1,6 @@
 define([], function () {
     function controler($scope, $mdDialog, data, jsonldService, pipelineDesign) {
-
         var jsonld = jsonldService.jsonld();
-
         $scope.tags = {
             'searchText' : '',
             'all' : [],
@@ -21,6 +19,10 @@ define([], function () {
             'tags' : jsonld.getValues(data.definition, 'http://etl.linkedpipes.com/ontology/tag')
         };
 
+        $scope.profile = {
+            "rdfRepositoryType" : jsonld.getReference(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryPolicy'),
+        }
+
         $scope.onCancel = function () {
             $mdDialog.cancel();
         };
@@ -28,7 +30,8 @@ define([], function () {
         $scope.onSave = function () {
             // Save changes.
             data.definition['http://www.w3.org/2004/02/skos/core#prefLabel'] = $scope.detail.label;
-            jsonld.setValues(data.definition, 'http://etl.linkedpipes.com/ontology/tag', undefined, $scope.detail.tags)
+            jsonld.setValues(data.definition, 'http://etl.linkedpipes.com/ontology/tag', undefined, $scope.detail.tags);
+            data.profile['http://linkedpipes.com/ontology/rdfRepositoryPolicy'] = {"@id": $scope.profile.rdfRepositoryType}
             // Close the dialog.
             $mdDialog.hide();
         };

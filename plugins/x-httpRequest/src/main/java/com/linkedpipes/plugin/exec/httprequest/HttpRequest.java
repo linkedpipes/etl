@@ -6,13 +6,12 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 
 import java.io.File;
@@ -55,12 +54,10 @@ public final class HttpRequest implements Component, SequentialExecution {
 
     private List<HttpRequestTask> loadTasks() throws LpException {
         RdfSource source = Rdf4jSource.createWrap(taskRdf.getRepository());
-        RdfLoader.DescriptorFactory descriptorFactory =
-                new AnnotationDescriptionFactory();
         try {
-            return RdfUtils.loadTypedByReflection(source,
+            return RdfUtils.loadList(source,
                     taskRdf.getReadGraph().stringValue(),
-                    HttpRequestTask.class, descriptorFactory);
+                    RdfToPojo.descriptorFactory(), HttpRequestTask.class);
         } catch (RdfUtilsException ex) {
             throw exceptionFactory.failure("Can't load tasks.", ex);
         }

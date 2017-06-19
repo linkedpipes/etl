@@ -5,13 +5,12 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,11 +55,11 @@ public final class HttpGetFiles implements Component, SequentialExecution {
             throw exceptionFactory.failure(
                     "Can't set trust all certificates.", ex);
         }
+        List<FileToDownload> filesToDownload = getFilesToDownload();
         // Prepare work.
-        List<HttpGetFilesTask> tasks = loadTasks();
         final ConcurrentLinkedQueue<UriDownloader.FileToDownload> workQueue =
                 new ConcurrentLinkedQueue<>();
-        for (HttpGetFilesTask reference : tasks) {
+        for (FileToDownload reference : filesToDownload) {
             if (reference.getUri() == null
                     || reference.getUri().isEmpty()) {
                 if (configuration.isSkipOnError()) {
@@ -97,12 +96,10 @@ public final class HttpGetFiles implements Component, SequentialExecution {
             // Prepare and and job.
             final UriDownloader.FileToDownload job =
                     new UriDownloader.FileToDownload(source, target);
-            for (HttpGetFilesConfiguration.Header header
-                    : configuration.getHeaders()) {
+            for (RequestHeader header : configuration.getHeaders()) {
                 job.setHeader(header.getKey(), header.getValue());
             }
-            for (HttpGetFilesConfiguration.Header header
-                    : reference.getHeaders()) {
+            for (RequestHeader header : reference.getHeaders()) {
                 job.setHeader(header.getKey(), header.getValue());
             }
             workQueue.add(job);
@@ -110,28 +107,27 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         // Execute.
         final UriDownloader downloader =
                 new UriDownloader(progressReport, configuration);
-        downloader.download(workQueue, tasks.size());
+        downloader.download(workQueue, filesToDownload.size());
         if (!downloader.getExceptions().isEmpty()) {
             LOG.info("Downloaded {}/{}", downloader.getExceptions().size(),
-                    tasks.size());
+                    filesToDownload.size());
             if (!configuration.isSkipOnError()) {
                 throw exceptionFactory.failure("Can't download all entities.");
             }
         } else {
-            LOG.info("Downloaded {}/{}", tasks.size(), tasks.size());
+            LOG.info("Downloaded {}/{}", filesToDownload.size(),
+                    filesToDownload.size());
         }
     }
 
-    private List<HttpGetFilesTask> loadTasks() throws LpException {
+    private List<FileToDownload> getFilesToDownload() throws LpException {
         RdfSource source = Rdf4jSource.createWrap(
                 configurationRdf.getRepository());
-        RdfLoader.DescriptorFactory descriptorFactory =
-                new AnnotationDescriptionFactory();
         try {
-            return RdfUtils.loadTypedByReflection(source,
+            return RdfUtils.loadList(source,
                     configurationRdf.getReadGraph().stringValue(),
-                    HttpGetFilesTask.class,
-                    descriptorFactory);
+                    RdfToPojo.descriptorFactory(),
+                    FileToDownload.class);
         } catch (RdfUtilsException ex) {
             throw exceptionFactory.failure("Can't load tasks.", ex);
         }

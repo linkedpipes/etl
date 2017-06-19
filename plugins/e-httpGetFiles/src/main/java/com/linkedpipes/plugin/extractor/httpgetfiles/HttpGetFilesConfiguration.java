@@ -8,35 +8,6 @@ import java.util.List;
 @RdfToPojo.Type(iri = HttpGetFilesVocabulary.CONFIG)
 public class HttpGetFilesConfiguration {
 
-    @RdfToPojo.Type(iri = HttpGetFilesVocabulary.HEADER)
-    public static class Header {
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_KEY)
-        private String key;
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_VALUE)
-        private String value;
-
-        public Header() {
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public void setKey(String key) {
-            this.key = key;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
     /**
      * Force custom redirect. The Java follow only redirect in scope of
      * a protocol. So specially it does not allow redirect from http
@@ -55,7 +26,7 @@ public class HttpGetFilesConfiguration {
     private boolean skipOnError = false;
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
-    private List<Header> headers = new LinkedList<>();
+    private List<RequestHeader> headers = new LinkedList<>();
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_THREADS)
     private int threads = 1;
@@ -82,11 +53,11 @@ public class HttpGetFilesConfiguration {
         this.skipOnError = skipOnError;
     }
 
-    public List<Header> getHeaders() {
+    public List<RequestHeader> getHeaders() {
         return headers;
     }
 
-    public void setHeaders(List<Header> headers) {
+    public void setHeaders(List<RequestHeader> headers) {
         this.headers = headers;
     }
 

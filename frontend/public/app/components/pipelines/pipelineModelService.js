@@ -8,6 +8,7 @@ define([], function () {
         };
 
         var jsonld = jsonldService.jsonld();
+        console.log(jsonld);
 
         service.component.getIri = function (component) {
             return component['@id'];
@@ -594,6 +595,29 @@ define([], function () {
         service.deleteGraph = function (model, iri) {
             delete model['graphs'][iri];
             console.log('deleteGraph', iri, model);
+        };
+
+        service.getOrCreateExecutionProfile = function (model) {
+            var pipeline = service.getPipeline(model);
+            var profileIri = jsonld.getReference(pipeline,
+                "http://linkedpipes.com/ontology/profile");
+            console.log("PIPELINE", pipeline);
+            console.log("PROFILE", profileIri);
+            if (profileIri === undefined) {
+                var profileIri = pipeline["@id"] + "/profile/default";
+                pipeline["http://linkedpipes.com/ontology/profile"] = {"@id" :profileIri};
+                var profile = {
+                    "@id": profileIri,
+                    "@type": ["http://linkedpipes.com/ontology/ExecutionProfile"],
+                    "http://linkedpipes.com/ontology/rdfRepositoryPolicy" : {
+                        "@id": "http://linkedpipes.com/ontology/repository/SingleRepository"
+                    }
+                };
+                service.getDefinitionGraph(model).push(profile);
+                return profile;
+            } else {
+                return service.getResource(model, profileIri);
+            }
         };
 
         return service;

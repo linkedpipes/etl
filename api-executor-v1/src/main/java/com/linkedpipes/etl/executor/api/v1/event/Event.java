@@ -1,12 +1,9 @@
 package com.linkedpipes.etl.executor.api.v1.event;
 
-import com.linkedpipes.etl.rdf.utils.pojo.RdfWriter;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 
-/**
- * Used to communicate additional state of the execution as well as user
- * information to the application.
- */
-public interface Event extends RdfWriter.Writable {
+public interface Event {
 
     /**
      * Set iri for this message.
@@ -14,5 +11,7 @@ public interface Event extends RdfWriter.Writable {
      * @param iri
      */
     void setIri(String iri);
+
+    void write(TripleWriter builder) throws RdfUtilsException;
 
 }

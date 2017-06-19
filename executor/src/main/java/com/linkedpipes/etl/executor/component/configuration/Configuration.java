@@ -4,11 +4,12 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.entity.EntityMerger;
 import com.linkedpipes.etl.rdf.utils.entity.EntityReference;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Configuration {
      */
     public static void prepareConfiguration(String iri,
             Component component, RdfSource runtimeSource,
-            String runtimeGraph, RdfSource.TypedTripleWriter writer,
+            String runtimeGraph, TripleWriter writer,
             Pipeline pipeline)
             throws ExecutorException {
         final List<EntityReference> references = new ArrayList<>(3);
@@ -65,7 +66,6 @@ public class Configuration {
                 resource = RdfUtils.sparqlSelectSingle(pplSource,
                         query, "resource");
             } catch (RdfUtilsException ex) {
-                pplSource.shutdown();
                 throw new ExecutorException(
                         "Can't get configuration object of type {} in {}",
                         configurationType, graph, ex);
@@ -92,15 +92,12 @@ public class Configuration {
         final DefaultControlFactory controlFactory =
                 new DefaultControlFactory(pplSource,
                         pipeline.getPipelineGraph());
+        final EntityMerger merger = new EntityMerger(controlFactory);
         try {
-            EntityMerger.merge(references, controlFactory, iri, writer,
-                    pplSource.getDefaultType());
+            merger.merge(references, iri, writer);
         } catch (RdfUtilsException ex) {
-            pplSource.shutdown();
             throw new ExecutorException("Can't merge data.", ex);
         }
-        // Close opened sources.
-        pplSource.shutdown();
     }
 
     private static String getQueryForConfiguration(String type, String graph) {

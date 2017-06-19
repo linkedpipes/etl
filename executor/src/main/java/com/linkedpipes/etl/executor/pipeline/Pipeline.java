@@ -4,10 +4,11 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
@@ -84,7 +85,7 @@ public class Pipeline {
         // Parse data.
         model = new PipelineModel(iri, graph);
         try {
-            RdfUtils.load(source, model, iri, graph, String.class);
+            RdfUtils.load(source, iri, graph, model);
         } catch (RdfUtilsException ex) {
             throw new ExecutorException("Can't load pipeline model.", ex);
         }
@@ -141,10 +142,12 @@ public class Pipeline {
      * @param graph
      * @return Writer for given configuration.
      */
-    public RdfSource.TypedTripleWriter setConfiguration(
+    public TripleWriter setConfiguration(
             Component component, String graph)
             throws ExecutorException {
-        return source.getTypedTripleWriter(graph);
+        LOG.info("setConfiguration {} {}", component.getIri(), graph);
+        // TODO Save reference to the entity.
+        return source.getTripleWriter(graph);
     }
 
     private static String getPipelineQuery() {
