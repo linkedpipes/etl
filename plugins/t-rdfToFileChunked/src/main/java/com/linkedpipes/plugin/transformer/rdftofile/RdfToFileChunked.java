@@ -119,6 +119,9 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
 
     private void writePrefixes(RDFWriter writer)
             throws LpException {
+        if (configuration.getPrefixes() == null) {
+            return;
+        }
         final RDFParser parser = Rio.createParser(RDFFormat.TURTLE);
         final InputStream stream;
         try {
@@ -143,5 +146,6 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
         }
 
     }
+
 
 }
