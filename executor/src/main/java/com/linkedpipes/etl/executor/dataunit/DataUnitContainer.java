@@ -154,8 +154,8 @@ class DataUnitContainer {
             return;
         }
         try {
-            LOG.debug("map by reference: {} ({})",
-                    metadata.getDataUnitIri(), saveDirectory);
+            LOG.debug("map by reference: {} from {}",
+                    metadata.getDataUnitIri(), source);
             instance.referenceContent(source, saveDirectory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't reference content.", ex);
