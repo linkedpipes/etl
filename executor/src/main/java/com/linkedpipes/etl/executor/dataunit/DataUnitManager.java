@@ -127,10 +127,12 @@ public class DataUnitManager {
             }
             final File sourceFile = dataUnit.getLoadDirectory();
             if (sourceFile == null) {
-                // This can happen if we added new port and then use debug form.
+                // This can happen if we added new port and then use debug form,
+                // so we create and save new empty data unit.
                 LOG.warn("Initializing new port ({}) with empty data. ",
                         dataUnit.getDataUnitIri());
                 container.initialize(Collections.EMPTY_MAP);
+                container.save();
             } else if (isDataUnitUsed(component, dataUnit)) {
                 container.initialize(sourceFile);
                 container.save();
