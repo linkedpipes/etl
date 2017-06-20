@@ -137,7 +137,8 @@ public abstract class BaseDataUnit implements ManageableDataUnit {
             return mapper.readValue(file,
                     typeFactory.constructCollectionType(List.class, type));
         } catch (IOException ex) {
-            throw new LpException("Can't load directory list.", ex);
+            throw new LpException("Can't load directory list from file: {}",
+                    file, ex);
         }
     }
 
