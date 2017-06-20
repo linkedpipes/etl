@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class is responsible for handling dataunit management.
@@ -129,7 +126,12 @@ public class DataUnitManager {
                         dataUnit.getDataUnitIri(), component.getComponentIri());
             }
             final File sourceFile = dataUnit.getLoadDirectory();
-            if (isDataUnitUsed(component, dataUnit)) {
+            if (sourceFile == null) {
+                // This can happen if we added new port and then use debug form.
+                LOG.warn("Initializing new port ({}) with empty data. ",
+                        dataUnit.getDataUnitIri());
+                container.initialize(Collections.EMPTY_MAP);
+            } else if (isDataUnitUsed(component, dataUnit)) {
                 container.initialize(sourceFile);
                 container.save();
             } else {
