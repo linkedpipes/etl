@@ -85,6 +85,7 @@
         <module>l-solr</module>
         <module>t-chunkedToFiles</module>
         <module>x-httpRequest</module>
+        <module>l-coachDb</module>
     </modules>
 
 </project>

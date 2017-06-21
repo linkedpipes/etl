@@ -1,0 +1,23 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.url.hide" flex>
+        <label>Server URL</label>
+        <input ng-model="dialog.url.value"
+               ng-disabled="dialog.url.disabled || dialog.url.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.database.hide" flex>
+        <label>Database name</label>
+        <input ng-model="dialog.database.value"
+               ng-disabled="dialog.database.disabled || dialog.database.inherit">
+    </md-input-container>
+    <md-switch ng-hide="dialog.clearBeforeLoading.hide"
+               ng-disabled="dialog.clearBeforeLoading.disabled || dialog.clearBeforeLoading.inherit"
+               ng-model="dialog.clearBeforeLoading.value">Clear database (delete and create)
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.batchSize.hide" flex>
+        <label>Number of documents to load in single batch</label>
+        <input ng-model="dialog.batchSize.value"
+               ng-disabled="dialog.batchSize.disabled || dialog.batchSize.inherit"
+               type="number">
+    </md-input-container>
+</div>
