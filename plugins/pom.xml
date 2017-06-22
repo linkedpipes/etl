@@ -86,6 +86,7 @@
         <module>t-chunkedToFiles</module>
         <module>x-httpRequest</module>
         <module>l-coachDb</module>
+        <module>t-mustacheChunked</module>
     </modules>
 
 </project>
