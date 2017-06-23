@@ -1,7 +1,10 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.*;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.TripleHandler;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -13,12 +16,10 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.repository.util.Repositories;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
 
@@ -69,10 +70,17 @@ public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
     @Override
     public void triples(String resource, String graph, TripleHandler handler)
             throws RdfUtilsException {
-        Resource resourceFilter = iriOrNull(resource);
+        Resource resourceFilter = resourceOrNull(resource);
         try (RepositoryConnection connection = repository.getConnection()) {
-            RepositoryResult<Statement> result = connection.getStatements(
-                    resourceFilter, null, null, valueFactory.createIRI(graph));
+            RepositoryResult<Statement> result;
+            if (graph == null) {
+                result = connection.getStatements(
+                        resourceFilter, null, null);
+            } else {
+                result = connection.getStatements(
+                        resourceFilter, null, null,
+                        valueFactory.createIRI(graph));
+            }
             while (result.hasNext()) {
                 try {
                     handler.handle(new Rdf4jTriple(result.next()));
@@ -83,11 +91,44 @@ public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
         }
     }
 
-    private Resource iriOrNull(String resource) {
+    public void statements(String graph, StatementHandler handler)
+            throws RdfUtilsException {
+        statements(null, graph, handler);
+    }
+
+    public void statements(String resource, String graph,
+            StatementHandler handler) throws RdfUtilsException {
+        Resource resourceFilter = resourceOrNull(resource);
+        try (RepositoryConnection connection = repository.getConnection()) {
+            RepositoryResult<Statement> result;
+            if (graph == null) {
+                result = connection.getStatements(
+                        resourceFilter, null, null);
+            } else {
+                result = connection.getStatements(
+                        resourceFilter, null, null,
+                        valueFactory.createIRI(graph));
+            }
+            while (result.hasNext()) {
+                try {
+                    handler.handle(result.next());
+                } catch (Exception ex) {
+                    throw new RdfUtilsException("Handler failed.", ex);
+                }
+            }
+        }
+    }
+
+    private Resource resourceOrNull(String resource) {
         if (resource == null) {
             return null;
         }
-        return valueFactory.createIRI(resource);
+        try {
+            return valueFactory.createIRI(resource);
+        } catch (IllegalArgumentException ex) {
+            // Implement this in better way.
+            return valueFactory.createBNode(resource);
+        }
     }
 
     @Override
@@ -105,7 +146,16 @@ public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
         return new ClosableRdf4jSource(repository);
     }
 
-    public static Rdf4jSource createWrap(Repository repository) {
+    public static ClosableRdf4jSource wrapInMemory(
+            Collection<Statement> statements) {
+        final Repository repository = new SailRepository(new MemoryStore());
+        repository.initialize();
+        Repositories.consume(repository,
+                connection -> connection.add(statements));
+        return new ClosableRdf4jSource(repository);
+    }
+
+    public static Rdf4jSource wrapRepository(Repository repository) {
         return new Rdf4jSource(repository);
     }
 

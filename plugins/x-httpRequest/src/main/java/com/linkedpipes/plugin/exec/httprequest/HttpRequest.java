@@ -53,7 +53,7 @@ public final class HttpRequest implements Component, SequentialExecution {
     }
 
     private List<HttpRequestTask> loadTasks() throws LpException {
-        RdfSource source = Rdf4jSource.createWrap(taskRdf.getRepository());
+        RdfSource source = Rdf4jSource.wrapRepository(taskRdf.getRepository());
         try {
             return RdfUtils.loadList(source,
                     taskRdf.getReadGraph().stringValue(),

@@ -121,7 +121,7 @@ public final class HttpGetFiles implements Component, SequentialExecution {
     }
 
     private List<FileToDownload> getFilesToDownload() throws LpException {
-        RdfSource source = Rdf4jSource.createWrap(
+        RdfSource source = Rdf4jSource.wrapRepository(
                 configurationRdf.getRepository());
         try {
             return RdfUtils.loadList(source,
