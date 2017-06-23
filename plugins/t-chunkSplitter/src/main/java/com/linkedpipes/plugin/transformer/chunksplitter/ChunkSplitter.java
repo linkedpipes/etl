@@ -98,20 +98,18 @@ public final class ChunkSplitter implements Component, SequentialExecution {
         Stack<Resource> resourcesToAdd = new Stack();
         Set<Resource> alreadyAdded = new HashSet<>();
         resourcesToAdd.push(resource);
-        LOG.info("Creating chunk ({}) ...", resource);
         while (!resourcesToAdd.isEmpty()) {
             Resource resourceToAdd = resourcesToAdd.pop();
             alreadyAdded.add(resourceToAdd);
             List<Statement> statements = statementsForResource(resourceToAdd);
             output.addAll(statements);
             // Add new referenced resources.
-//            statements.stream()
-//                    .map(s -> s.getObject())
-//                    .filter(r -> r instanceof Resource)
-//                    .filter(r -> !alreadyAdded.contains(r))
-//                    .forEach(r -> resourcesToAdd.push((Resource) r));
+            statements.stream()
+                    .map(s -> s.getObject())
+                    .filter(r -> r instanceof Resource)
+                    .filter(r -> !alreadyAdded.contains(r))
+                    .forEach(r -> resourcesToAdd.push((Resource) r));
         }
-        LOG.info("Creating chunk ({}) ... done", resource);
         outputRdf.submit(output);
     }
 
