@@ -44,10 +44,12 @@ public final class MustacheChunkedComponent
     @Override
     public void execute() throws LpException {
         dataObjectLoader = new DataObjectLoader(configuration);
+        progressReport.start(input.size());
         for (ChunkedTriples.Chunk chunk : input) {
             processChunk(chunk);
+            progressReport.entryProcessed();
         }
-
+        progressReport.done();
     }
 
     private void processChunk(ChunkedTriples.Chunk chunk) throws LpException {
@@ -74,7 +76,6 @@ public final class MustacheChunkedComponent
 
     private void outputData(Mustache mustache, List<ObjectDataHolder> data)
             throws LpException {
-        progressReport.start(data.size());
         for (ObjectDataHolder object : data) {
             if (object.data == null) {
                 continue;
@@ -87,9 +88,7 @@ public final class MustacheChunkedComponent
             } catch (IOException ex) {
                 throw exceptionFactory.failure("Can't write output file.", ex);
             }
-            progressReport.entryProcessed();
         }
-        progressReport.done();
     }
 
     private String getFileName(ObjectDataHolder object) {
