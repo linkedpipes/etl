@@ -18,7 +18,19 @@ public final class LP_PIPELINE {
 
     public static final String JAS_TEMPLATE = PREFIX + "JarTemplate";
 
+    public static final String REFERENCE_TEMPLATE = PREFIX + "Template";
+
     public static final String HAS_PROFILE = PREFIX + "profile";
+
+    public static final String HAS_VERSION = PREFIX + "version";
+
+    public static final String EXECUTION_METADATA =
+            PREFIX + "ExecutionMetadata";
+
+    public static final String HAS_SAVE_DEBUG_DATA = PREFIX + "saveDebugData";
+
+    public static final String HAS_DELETE_WORKING =
+            PREFIX + "deleteWorkingData";
 
     /**
      * Pipeline has execution profile.
@@ -31,13 +43,13 @@ public final class LP_PIPELINE {
     /**
      * Use single RDF repository per execution.
      */
-    public static final String SINGLE_REPOSITORY = PREFIX  +
+    public static final String SINGLE_REPOSITORY = PREFIX +
             "repository/SingleRepository";
 
     /**
      * Use RDF repository per input.
      */
-    public static final String PER_INPUT_REPOSITORY = PREFIX  +
+    public static final String PER_INPUT_REPOSITORY = PREFIX +
             "repository/PerInputRepository";
 
     /**
@@ -146,13 +158,17 @@ public final class LP_PIPELINE {
             "http://linkedpipes.com/ontology/jar";
 
     /**
+     * If true component support configuration control/inheritance.
+     */
+    public static final String HAS_SUPPORT_CONTROLS =
+            PREFIX + "supportControl";
+
+    /**
      * Reference to a graph with a configuration, used to reference
      * configuration by frontend.
-     *
-     * TODO: Change to lp:configurationGraph
      */
     public static final String HAS_CONFIGURATION_GRAPH =
-            "http://linkedpipes.com/ontology/configuration/graph";
+            "http://linkedpipes.com/ontology/configurationGraph";
 
     /**
      * Component has a template.
@@ -164,5 +180,7 @@ public final class LP_PIPELINE {
      */
     public static final String HAS_CONFIGURATION_ENTITY_DESCRIPTION =
             PREFIX + "configurationDescription";
+
+    public static final String HAS_DISABLED = PREFIX + "disabled";
 
 }

@@ -1,0 +1,11 @@
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix etl: <http://etl.linkedpipes.com/ontology/> .
+
+<http://options> {
+
+    <http://localhost/base> a etl:ExecutionOptions ;
+        lp:deleteWorkingData true ;
+        lp:saveDebugData false ;
+        lp:execution <http://localhost/execution> .
+
+}

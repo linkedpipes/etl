@@ -1,0 +1,13 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://localhost/pipeline> {
+
+	<http://localhost/pipeline> a lp:Pipeline ;
+		lp:version "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		lp:profile <http://localhost/pipeline/profile/default> ;
+		skos:prefLabel "Empty pipeline" ;
+		dcterms:description "Empty pipeline." .
+
+}

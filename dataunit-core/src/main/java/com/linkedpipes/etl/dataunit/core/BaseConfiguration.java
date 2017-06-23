@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
@@ -28,6 +29,8 @@ public class BaseConfiguration implements Loadable {
 
     private final List<String> types = new LinkedList<>();
 
+    private String group;
+
     protected BaseConfiguration(String iri, String graph) {
         this.iri = iri;
         this.graph = graph;
@@ -41,6 +44,9 @@ public class BaseConfiguration implements Loadable {
                 break;
             case LP_PIPELINE.HAS_BINDING:
                 binding = object.asString();
+                break;
+            case LP_EXEC.HAS_DATA_UNIT_GROUP:
+                group = object.asString();
                 break;
         }
         return null;
@@ -100,6 +106,10 @@ public class BaseConfiguration implements Loadable {
 
     public List<String> getTypes() {
         return Collections.unmodifiableList(types);
+    }
+
+    public String getGroup() {
+        return group;
     }
 
 }

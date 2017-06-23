@@ -1,0 +1,63 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix textHolder: <http://plugins.linkedpipes.com/ontology/e-textHolder#> .
+@prefix filesToRdf: <http://plugins.linkedpipes.com/ontology/t-filesToRdf#> .
+
+<http://localhost/pipeline> {
+
+	<http://localhost/pipeline> a lp:Pipeline ;
+		lp:version "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		lp:profile <http://localhost/pipeline/profile/default> ;
+		skos:prefLabel "TextHolder and FilesToRdf" ;
+		dcterms:description "Pipeline with two connected components." .
+
+	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
+		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
+
+    <http://localhost/pipeline/9d21ebd5>
+        a lp:Component ;
+        lp:configurationGraph <http://localhost/pipeline/9d21ebd5/configuration> ;
+        lp:template <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> ;
+        lp:x "380"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        lp:y "140"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        skos:prefLabel "Text holder" .
+
+    <http://localhost/pipeline/b67542e2>
+        a lp:Component ;
+        lp:configurationGraph <http://localhost/pipeline/b67542e2/configuration> ;
+        lp:template <http://etl.linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0> ;
+        lp:x "580"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        lp:y "140"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        skos:prefLabel "Files to RDF" .
+
+    <http://localhost/pipeline/connection/dff7b779>
+        a lp:Connection ;
+        lp:sourceBinding "FilesOutput" ;
+        lp:sourceComponent <http://localhost/pipeline/9d21ebd5> ;
+        lp:targetBinding "InputFiles" ;
+        lp:targetComponent <http://localhost/pipeline/b67542e2> .
+
+}
+
+<http://localhost/pipeline/9d21ebd5/configuration> {
+
+    <http://localhost/pipeline/9d21ebd5/configuration>
+        a textHolder:Configuration ;
+        textHolder:content "<http://localhost/value> a  <http://localhost/Object> ."  ;
+        textHolder:contentControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+        textHolder:fileName "file.ttl" ;
+        textHolder:fileNameControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+
+}
+
+<http://localhost/pipeline/b67542e2/configuration> {
+
+    <http://localhost/pipeline/b67542e2/configuration>
+        a filesToRdf:Configuration ;
+        filesToRdf:commitSize "50000"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        filesToRdf:commitSizeControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+        filesToRdf:mimeType "" ;
+        filesToRdf:mimeTypeControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+
+}

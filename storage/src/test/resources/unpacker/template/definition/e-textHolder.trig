@@ -1,0 +1,35 @@
+<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> {
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> a <http://linkedpipes.com/ontology/JarTemplate> ;
+		<http://linkedpipes.com/ontology/color> "#F6D8CE" ;
+		<http://linkedpipes.com/ontology/componentType> <http://etl.linkedpipes.com/ontology/component/type/Extractor> ;
+		<http://linkedpipes.com/ontology/configurationDescription> <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc> ;
+		<http://linkedpipes.com/ontology/infoLink> <http://etl.linkedpipes.com/components/e-textholder> ;
+		<http://linkedpipes.com/ontology/jar> <http://etl.linkedpipes.com/resources/jars/e-textHolder/0.0.0> ;
+		<http://linkedpipes.com/ontology/keyword> "text" , "file" ;
+		<http://linkedpipes.com/ontology/port> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dataUnit/output> ;
+		<http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+		<http://linkedpipes.com/ontology/supportControl> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Text holder" .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dataUnit/output> a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror> , <http://linkedpipes.com/ontology/Output> ;
+		<http://linkedpipes.com/ontology/binding> "FilesOutput" ;
+		<http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Output" .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> <http://linkedpipes.com/ontology/dialog> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/config> .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/config> a <http://linkedpipes.com/ontology/Dialog> ;
+		<http://linkedpipes.com/ontology/name> "config" .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> <http://linkedpipes.com/ontology/dialog> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/instance> .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/instance> a <http://linkedpipes.com/ontology/Dialog> ;
+		<http://linkedpipes.com/ontology/name> "instance" .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> <http://linkedpipes.com/ontology/dialog> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/template> .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/template> a <http://linkedpipes.com/ontology/Dialog> ;
+		<http://linkedpipes.com/ontology/name> "template" .
+	
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> <http://linkedpipes.com/ontology/configurationGraph> <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configurationGraph> .
+}

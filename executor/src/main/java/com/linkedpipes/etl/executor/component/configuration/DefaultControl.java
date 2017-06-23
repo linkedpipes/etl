@@ -62,13 +62,14 @@ class DefaultControl implements MergeControl {
      * Load definition of entity of given type.
      *
      * @param source
-     * @param graph
      * @param type
      */
-    public void loadDefinition(RdfSource source, String graph, String type)
+    public void loadDefinition(RdfSource source, String type)
             throws RdfUtilsException {
-        loadControlledProperties(source, graph, type);
-        loadComplexProperties(source, graph, type);
+        // TODO Do not search for all graphs, ie. use definition from
+        // given component.
+        loadControlledProperties(source, type);
+        loadComplexProperties(source, type);
     }
 
     @Override
@@ -162,10 +163,10 @@ class DefaultControl implements MergeControl {
         }
     }
 
-    private void loadControlledProperties(RdfSource source, String graph,
+    private void loadControlledProperties(RdfSource source,
             String type) throws RdfUtilsException {
         final String query = "SELECT ?property ?control WHERE { \n" +
-                " GRAPH <" + graph + "> {" +
+                " GRAPH ?g {" +
                 "  ?entity a <" + LP_OBJECTS.DESCRIPTION + "> ;\n" +
                 "   <" + LP_OBJECTS.HAS_DESCRIBE + "> <" + type + "> ;\n" +
                 "   <" + LP_OBJECTS.HAS_MEMBER + "> ?member .\n" +
@@ -181,10 +182,10 @@ class DefaultControl implements MergeControl {
         }
     }
 
-    private void loadComplexProperties(RdfSource source, String graph,
+    private void loadComplexProperties(RdfSource source,
             String type) throws RdfUtilsException {
         final String query = "SELECT ?property ?control WHERE { \n" +
-                " GRAPH <" + graph + "> {" +
+                " GRAPH ?g {" +
                 "  ?entity a <" + LP_OBJECTS.DESCRIPTION + "> ;\n" +
                 "   <" + LP_OBJECTS.HAS_DESCRIBE + "> <" + type + "> ;\n" +
                 "   <" + LP_OBJECTS.HAS_MEMBER + "> ?member .\n" +

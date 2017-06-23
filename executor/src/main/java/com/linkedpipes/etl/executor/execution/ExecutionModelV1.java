@@ -208,6 +208,12 @@ class ExecutionModelV1 {
             }
 
             @Override
+            public void bool(String s, String p, boolean o) {
+                eventStatements.add(vf.createStatement(vf.createIRI(s),
+                        vf.createIRI(p), vf.createLiteral(o), executionIri));
+            }
+
+            @Override
             public void typed(String s, String p, String o, String type) {
                 eventStatements.add(vf.createStatement(vf.createIRI(s),
                         vf.createIRI(p),

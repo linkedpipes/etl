@@ -1,0 +1,9 @@
+@prefix textHolder: <http://plugins.linkedpipes.com/ontology/e-textHolder#> .
+
+<http://localhost:8080/resources/components/1476115743178/configuration> {
+	<http://localhost:8080/resources/components/1476115743178/configuration> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
+		textHolder:content "Second level template content." ;
+		textHolder:contentControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+		textHolder:fileName "second-level.dat" ;
+		textHolder:fileNameControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+}

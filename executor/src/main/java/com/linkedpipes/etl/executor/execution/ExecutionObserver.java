@@ -29,9 +29,6 @@ public interface ExecutionObserver {
     /**
      * Called if the user code failed. The onExecuteComponentFailed
      * is still called.
-     *
-     * @param component
-     * @param throwable
      */
     void onComponentUserCodeFailed(ExecutionModel.Component component,
             Throwable throwable);

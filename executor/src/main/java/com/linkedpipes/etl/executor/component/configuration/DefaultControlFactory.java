@@ -29,7 +29,7 @@ class DefaultControlFactory implements MergeControlFactory {
     @Override
     public MergeControl create(String type) throws RdfUtilsException {
         final DefaultControl control = new DefaultControl();
-        control.loadDefinition(definitionSource, definitionGraph, type);
+        control.loadDefinition(definitionSource, type);
         return control;
     }
 

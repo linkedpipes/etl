@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
-import com.linkedpipes.etl.dataunit.core.pipeline.PipelineModel;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -19,23 +19,27 @@ class RepositoryManager {
     private static final Logger LOG =
             LoggerFactory.getLogger(RepositoryManager.class);
 
-    private final PipelineModel pipelineModel;
+    private final String repositoryPolicy;
 
     private final File workingDirectory;
 
-    private final Map<Integer, Repository> groupsRepository = new HashMap<>();
+    private final Map<String, Repository> groupsRepository = new HashMap<>();
 
-    public RepositoryManager(PipelineModel pipelineModel, File directory) {
-        this.pipelineModel = pipelineModel;
+    public RepositoryManager(String repositoryPolicy, File directory) {
+        this.repositoryPolicy = repositoryPolicy;
         this.workingDirectory = directory;
     }
 
-    public Repository getRepository(String dataUnitIri) throws LpException {
-        Integer group = pipelineModel.getPortGroup(dataUnitIri);
+    public Repository getRepository(Configuration configuration)
+            throws LpException {
+        String group = configuration.getGroup();
+        if (repositoryPolicy.equals(LP_PIPELINE.SINGLE_REPOSITORY)) {
+            group = "single";
+        }
         return getOrCreateRepository(group);
     }
 
-    private Repository getOrCreateRepository(Integer group) throws LpException {
+    private Repository getOrCreateRepository(String group) throws LpException {
         if (groupsRepository.containsKey(group)) {
             return groupsRepository.get(group);
         } else {
@@ -45,8 +49,9 @@ class RepositoryManager {
         }
     }
 
-    private Repository createRepository(Integer group) throws LpException {
-        File repositoryDirectory = new File(workingDirectory, "repo-" + group);
+    private Repository createRepository(String group) throws LpException {
+        File repositoryDirectory = new File(workingDirectory,
+                "dataunit-sesame-" + group);
         Repository repository =
                 new SailRepository(new NativeStore(repositoryDirectory));
         try {

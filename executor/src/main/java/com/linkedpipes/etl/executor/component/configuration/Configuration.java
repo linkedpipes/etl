@@ -56,9 +56,8 @@ public class Configuration {
         final RdfSource pplSource = pipeline.getSource();
         final String configurationType = description.getDescribedType();
         // Get definitionGraph and resource for each configuration.
-        for (com.linkedpipes.etl.executor.pipeline.model.Configuration configuration
-                : component.getConfigurations()) {
-            final String graph = configuration.getGraph();
+        {
+            final String graph = component.getConfigurationGraph();
             final String query = getQueryForConfiguration(
                     configurationType, graph);
             final String resource;
