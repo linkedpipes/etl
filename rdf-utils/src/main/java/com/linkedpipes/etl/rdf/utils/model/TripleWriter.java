@@ -6,6 +6,8 @@ public interface TripleWriter {
 
     void iri(String subject, String predicate, String object);
 
+    void bool(String subject, String predicate, boolean object);
+
     void string(String subject, String predicate, String object,
             String language);
 

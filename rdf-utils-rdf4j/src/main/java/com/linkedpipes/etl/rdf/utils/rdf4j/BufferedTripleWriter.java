@@ -46,6 +46,15 @@ class BufferedTripleWriter implements TripleWriter {
     }
 
     @Override
+    public void bool(String subject, String predicate, boolean object) {
+        buffer.add(valueFactory.createStatement(
+                valueFactory.createIRI(subject),
+                valueFactory.createIRI(predicate),
+                valueFactory.createLiteral(object)
+        ));
+    }
+
+    @Override
     public void string(String subject, String predicate, String object,
             String language) {
         Value value;
@@ -109,6 +118,7 @@ class BufferedTripleWriter implements TripleWriter {
             Repositories.consume(repository, (connection) -> {
                 connection.add(buffer, VF.createIRI(graph));
             });
+            buffer.clear();
         } catch (RuntimeException ex) {
             throw new RdfUtilsException("Can't add triples to repository.");
         }
