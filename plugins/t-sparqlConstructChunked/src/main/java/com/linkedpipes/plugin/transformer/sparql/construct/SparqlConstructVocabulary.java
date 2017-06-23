@@ -11,6 +11,8 @@ final class SparqlConstructVocabulary {
 
     public static final String HAS_NUMBER_OF_THREADS = PREFIX + "threads";
 
+    public static final String HAS_DEDUPLICATION = PREFIX + "deduplication";
+
     private SparqlConstructVocabulary() {
     }
 

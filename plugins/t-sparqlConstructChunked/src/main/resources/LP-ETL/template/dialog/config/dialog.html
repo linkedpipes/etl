@@ -6,6 +6,10 @@
                ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
                type="number" placeholder="1" min="1">
     </md-input-container>
+    <md-switch ng-hide="dialog.deduplication.hide"
+               ng-disabled="dialog.deduplication.disabled || dialog.deduplication.inherit"
+               ng-model="dialog.deduplication.value">Use deduplication (cause performance penalty, use only to fix duplicity in results).
+    </md-switch>    
     <md-input-container class="md-block" ng-hide="dialog.query.hide">
         <label>SPARQL CONSTRUCT query</label>
         <textarea id="query" ng-model="dialog.query.value"

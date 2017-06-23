@@ -15,6 +15,10 @@ define([], function () {
         "threads" : {
             "$type": "int",
             "$label": "Number of threads to use"
+        },
+        "deduplication": {
+            "$type": "bool",
+            "$label": "Deduplication"
         }
     };
 

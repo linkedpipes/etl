@@ -72,8 +72,9 @@ public final class SparqlConstructChunked implements Component,
                 inputRdf, outputRdf, progressReport);
         for (int i = 0; i < configuration.getNumberOfThreads(); ++i) {
             SparqlConstructExecutor constructExecutor =
-                    new SparqlConstructExecutor(
-                            executorManager, configuration.getQuery());
+                    new SparqlConstructExecutor(executorManager,
+                            configuration.getQuery(),
+                            configuration.isUseDeduplication());
             executors.add(constructExecutor);
         }
     }
