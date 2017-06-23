@@ -87,6 +87,7 @@
         <module>x-httpRequest</module>
         <module>l-coachDb</module>
         <module>t-mustacheChunked</module>
+        <module>t-chunkSplitter</module>
     </modules>
 
 </project>
