@@ -6,8 +6,8 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.Statement;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 class ExecutorManager {
 
@@ -45,7 +45,7 @@ class ExecutorManager {
         }
     }
 
-    public synchronized void submitResult(List<Statement> statements)
+    public synchronized void submitResult(Collection<Statement> statements)
             throws LpException {
         outputRdf.submit(statements);
         progressReport.entryProcessed();

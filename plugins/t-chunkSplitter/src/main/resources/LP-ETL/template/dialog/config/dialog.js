@@ -2,23 +2,15 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace": "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-chunkSplitter#",
         "$type": "Configuration",
         "$options": {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "query": {
+        "type": {
             "$type": "str",
-            "$label": "SPARQL CONSTRUCT query"
-        },
-        "threads" : {
-            "$type": "int",
-            "$label": "Number of threads to use"
-        },
-        "deduplication": {
-            "$type": "bool",
-            "$label": "Deduplication"
+            "$label": "Root entity type"
         }
     };
 

@@ -13,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class SparqlConstructExecutor implements Runnable {
 
@@ -33,9 +30,13 @@ class SparqlConstructExecutor implements Runnable {
 
     private List<Statement> outputBuffer = new ArrayList<>(128);
 
-    public SparqlConstructExecutor(ExecutorManager manager, String query) {
+    private final boolean deduplicateResults;
+
+    public SparqlConstructExecutor(ExecutorManager manager, String query,
+            boolean deduplicateResults) {
         this.manager = manager;
         this.query = query;
+        this.deduplicateResults = deduplicateResults;
     }
 
     @Override
@@ -69,7 +70,12 @@ class SparqlConstructExecutor implements Runnable {
         Repositories.consume(repository, (connection) -> {
             executeQuery(connection);
         });
-        manager.submitResult(outputBuffer);
+        if (deduplicateResults) {
+            // Workaround for https://github.com/eclipse/rdf4j/issues/857
+            manager.submitResult(deduplicate(outputBuffer));
+        } else {
+            manager.submitResult(outputBuffer);
+        }
         repository.shutDown();
         LOG.info("Executing task (size: {}) ... done", outputBuffer.size());
         return true;
@@ -97,6 +103,10 @@ class SparqlConstructExecutor implements Runnable {
         while (result.hasNext()) {
             outputBuffer.add(result.next());
         }
+    }
+
+    private Set<Statement> deduplicate(Collection<Statement> statements) {
+        return new HashSet<>(statements);
     }
 
     public boolean isFailed() {

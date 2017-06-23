@@ -11,6 +11,9 @@ public class SparqlConstructConfiguration {
     @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_NUMBER_OF_THREADS)
     private int numberOfThreads = 1;
 
+    @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_DEDUPLICATION)
+    private boolean useDeduplication = false;
+
     public SparqlConstructConfiguration() {
     }
 
@@ -28,6 +31,14 @@ public class SparqlConstructConfiguration {
 
     public void setNumberOfThreads(int numberOfThreads) {
         this.numberOfThreads = numberOfThreads;
+    }
+
+    public boolean isUseDeduplication() {
+        return useDeduplication;
+    }
+
+    public void setUseDeduplication(boolean useDeduplication) {
+        this.useDeduplication = useDeduplication;
     }
 
 }
