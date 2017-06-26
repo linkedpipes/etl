@@ -6,7 +6,7 @@
         "http://plugins.linkedpipes.com/ontology/l-coachDb#clearBeforeLoadingControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
-        "http://plugins.linkedpipes.com/ontology/l-coachDb#batchSize": "10000",
+        "http://plugins.linkedpipes.com/ontology/l-coachDb#batchSize": "8",
         "http://plugins.linkedpipes.com/ontology/l-coachDb#batchSizeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }        

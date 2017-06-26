@@ -4,8 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,8 +12,6 @@ import java.net.URLConnection;
 import java.util.Collection;
 
 public class CouchDb {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CouchDb.class);
 
     private final String server;
 
@@ -139,13 +135,21 @@ public class CouchDb {
 
     private void checkStatus(HttpURLConnection connection)
             throws IOException, LpException {
-        int responseCode = connection.getResponseCode();
-        if (responseCode >= 200 && responseCode < 300) {
-            return;
+        int responseCode;
+        try {
+            responseCode = connection.getResponseCode();
+            if (responseCode >= 200 && responseCode < 300) {
+                return;
+            }
+        } catch (IOException ex) {
+            // This can happen if the query is too big, ie. we split the query.
+            throw exceptionFactory.failure("Can't get response code.", ex);
         }
         StringWriter error = new StringWriter();
         try (InputStream stream = connection.getErrorStream()) {
-            IOUtils.copy(stream, error, "UTF-8");
+            if (stream != null) {
+                IOUtils.copy(stream, error, "UTF-8");
+            }
         } catch (IOException ex) {
             // Ignore.
         }

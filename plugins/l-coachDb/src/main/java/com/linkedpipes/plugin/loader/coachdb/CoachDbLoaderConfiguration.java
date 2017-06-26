@@ -14,8 +14,11 @@ public class CoachDbLoaderConfiguration {
     @RdfToPojo.Property(iri = CoachDbLoaderVocabulary.HAS_RECREATE_DATABASE)
     private boolean recreateDatabase;
 
+    /**
+     * Batch size in MB.
+     */
     @RdfToPojo.Property(iri = CoachDbLoaderVocabulary.HAS_BATCH_SIZE)
-    private int batchSize = 1;
+    private int batchSize = 8;
 
     public String getUrl() {
         return url;

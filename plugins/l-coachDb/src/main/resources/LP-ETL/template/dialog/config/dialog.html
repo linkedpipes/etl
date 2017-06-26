@@ -15,7 +15,7 @@
                ng-model="dialog.clearBeforeLoading.value">Clear database (delete and create)
     </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.batchSize.hide" flex>
-        <label>Number of documents to load in single batch</label>
+        <label>Maximum batch size in MB</label>
         <input ng-model="dialog.batchSize.value"
                ng-disabled="dialog.batchSize.disabled || dialog.batchSize.inherit"
                type="number">

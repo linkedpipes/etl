@@ -33,9 +33,14 @@ public final class CoachDbLoader implements Component, SequentialExecution {
 
     private CouchDb couchDb;
 
+    private List<File> filesToUpload;
+
+    private long maxSizeInBytes;
+
     @Override
     public void execute() throws LpException {
         initializeCouchDb();
+        initializeComponent();
         if (configuration.isRecreateDatabase()) {
             recreateDatabase();
         }
@@ -46,31 +51,35 @@ public final class CoachDbLoader implements Component, SequentialExecution {
         couchDb = new CouchDb(configuration.getUrl(), exceptionFactory);
     }
 
+    private void initializeComponent() {
+        filesToUpload = new ArrayList<>();
+        maxSizeInBytes = configuration.getBatchSize() * (1024 * 1024);
+    }
+
     private void recreateDatabase() throws LpException {
         couchDb.deleteDatabase(configuration.getDatabase());
         couchDb.createDatabase(configuration.getDatabase());
     }
 
     private void uploadData() throws LpException {
-        int batchSize = configuration.getBatchSize();
-        int numberOfBatches = getNumberOfBatches();
-        progressReport.start(numberOfBatches);
-        List<File> filesToUpload = new ArrayList<>(batchSize);
+        long currentBathSize = 0;
+        progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
-            filesToUpload.add(entry.toFile());
-            if (filesToUpload.size() >= batchSize) {
-                uploadBatch(filesToUpload);
+            long entrySize = entry.toFile().length();
+            if (isChunkTooBig(currentBathSize, entrySize)) {
+                uploadFiles();
                 filesToUpload.clear();
-                progressReport.entryProcessed();
+                currentBathSize = 0;
             }
+            filesToUpload.add(entry.toFile());
+            currentBathSize += entrySize;
         }
         uploadBatch(filesToUpload);
         progressReport.done();
     }
 
-    private int getNumberOfBatches() {
-        int batchSize = configuration.getBatchSize();
-        return (int)Math.ceil((double)inputFiles.size() / batchSize);
+    private boolean isChunkTooBig(long currentBathSize, long entrySize) {
+        return (entrySize + currentBathSize) > maxSizeInBytes;
     }
 
     private void uploadBatch(Collection<File> files) throws LpException {
@@ -78,6 +87,17 @@ public final class CoachDbLoader implements Component, SequentialExecution {
             return;
         }
         couchDb.uploadDocuments(configuration.getDatabase(), files);
+    }
+
+    private void uploadFiles() throws LpException {
+        uploadBatch(filesToUpload);
+        reportProgress(filesToUpload.size());
+    }
+
+    private void reportProgress(int entries) {
+        for (int i = 0; i < entries; ++i) {
+            progressReport.entryProcessed();
+        }
     }
 
 }
