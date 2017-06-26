@@ -1,7 +1,7 @@
 <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
 <div>
     <md-input-container class="md-block" ng-hide="dialog.threads.hide">
-        <label>Number of threads used for download</label>
+        <label>Number of threads used</label>
         <input ng-model="dialog.threads.value"
                ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
                type="number" placeholder="1" min="1">
