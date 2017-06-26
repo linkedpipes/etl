@@ -14,9 +14,18 @@ define([], function () {
         },
         "outputMode": {
             "$type": "iri",
-            "$label": "Output mode"
+            "$label": "Output mode",
+            "$onLoad": defaultOutputMode
         }
     };
+
+    function defaultOutputMode(value) {
+        if (value === undefined) {
+           return DESC["$namespace"] + "createNewChunk";
+        } else {
+            return value;
+        }
+    }
 
     function controller($scope, $service) {
 
