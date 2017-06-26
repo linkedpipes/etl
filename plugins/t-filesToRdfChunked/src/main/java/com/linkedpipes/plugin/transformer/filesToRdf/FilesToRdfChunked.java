@@ -81,7 +81,7 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
             LOG.debug("Loading: {}", entry.getFileName());
             loadEntry(entry);
             ++filesCounter;
-            if (filesCounter > configuration.getFilesPerChunk()) {
+            if (filesCounter >= configuration.getFilesPerChunk()) {
                 flushBuffer();
                 filesCounter = 0;
             }
