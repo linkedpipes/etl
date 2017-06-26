@@ -76,20 +76,19 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
 
     private void loadFiles() throws LpException {
         progressReport.start(inputFiles.size());
+        int filesCounter = 0;
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Loading: {}", entry.getFileName());
             loadEntry(entry);
-            flushBufferIfBigEnough();
+            ++filesCounter;
+            if (filesCounter > configuration.getFilesPerChunk()) {
+                flushBuffer();
+                filesCounter = 0;
+            }
             progressReport.entryProcessed();
         }
         flushBuffer();
         progressReport.done();
-    }
-
-    private void flushBufferIfBigEnough() throws LpException {
-        if (buffer.size() > configuration.getFilesPerChunk()) {
-            flushBuffer();
-        }
     }
 
     private void flushBuffer() throws LpException {
@@ -133,11 +132,9 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
                 buffer.add(st);
             }
         };
-
         if (format == RDFFormat.JSONLD) {
             handler = new BlankNodePrefixUpdater(handler);
         }
-
         RDFParser parser = Rio.createParser(format);
         parser.setRDFHandler(handler);
         return parser;

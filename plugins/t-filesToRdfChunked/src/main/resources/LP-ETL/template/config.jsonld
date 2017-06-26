@@ -2,7 +2,7 @@
     {
         "@id": "http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration",
         "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration"],
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize" : 50000,
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize" : 1,
         "http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
