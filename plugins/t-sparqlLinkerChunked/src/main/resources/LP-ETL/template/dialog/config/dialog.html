@@ -1,5 +1,14 @@
 <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
 <div>
+    <md-input-container class="md-block" ng-hide="dialog.outputMode.hide">
+        <label>Output mode</label>
+        <md-select
+                ng-disabled="dialog.outputMode.disabled || dialog.outputMode.inherit"
+                ng-model="dialog.outputMode.value">
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#createNewChunk">Query results form output chunks</md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#addToChunk">Query results merged into input chunks</md-option>
+        </md-select>
+    </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.query.hide">
         <label>SPARQL CONSTRUCT query</label>
         <textarea id="query" ng-model="dialog.query.value"

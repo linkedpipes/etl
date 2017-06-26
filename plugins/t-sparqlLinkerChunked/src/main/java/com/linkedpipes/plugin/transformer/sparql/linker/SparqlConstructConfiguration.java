@@ -8,6 +8,9 @@ public class SparqlConstructConfiguration {
     @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_QUERY)
     private String query = "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
+    @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_OUTPUT_MODE)
+    private String outputMode;
+
     public SparqlConstructConfiguration() {
     }
 
@@ -17,6 +20,14 @@ public class SparqlConstructConfiguration {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public String getOutputMode() {
+        return outputMode;
+    }
+
+    public void setOutputMode(String outputMode) {
+        this.outputMode = outputMode;
     }
 
 }

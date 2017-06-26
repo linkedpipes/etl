@@ -9,6 +9,12 @@ final class SparqlConstructVocabulary {
 
     public static final String HAS_QUERY = PREFIX + "query";
 
+    public static final String HAS_OUTPUT_MODE = PREFIX + "outputMode";
+
+    public static final String CREATE_NEW_CHUNK = PREFIX + "createNewChunk";
+
+    public static final String ADD_TO_CHUNK = PREFIX + "addToChunk";
+
     private SparqlConstructVocabulary() {
     }
 
