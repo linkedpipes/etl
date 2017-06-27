@@ -9,7 +9,7 @@ title: Converting tabular data to RDF
 
 <p class="flow-text">Now we have a syntactically valid RDF data.
 However, it has some imperfections that we can remedy.
-To clean the data we pipe it into the <a href="http://etl.linkedpipes.com/components/t-sparqlupdate">SPARQL Update</a> component that allows us to run <a href="https://www.w3.org/TR/sparql11-update">SPARQL 1.1 Update</a> operations on the input RDF data.
+To clean the data we pipe it into the <a href="{% link _components/t-sparqlupdate.html %}">SPARQL Update</a> component that allows us to run <a href="https://www.w3.org/TR/sparql11-update">SPARQL 1.1 Update</a> operations on the input RDF data.
 A handy assistant in developing SPARQL Update operations is the <a href="http://sparql.org/update-validator.html">SPARQLer Update Validator</a> that you can use to check the syntax of your update operations before entering them into LP-ETL.
 Cleaning and mapping data usually takes multiple steps, embodied by multiple instances of the SPARQL Update component.
 It is therefore useful to add a description to each instance to be able to differentiate them quickly.

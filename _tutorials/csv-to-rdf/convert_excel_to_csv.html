@@ -8,11 +8,11 @@ title: Converting tabular data to RDF
 <p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/introduction.html %}" rel="prev">&larr; Back to the introduction</a></p>
 
 <p class="flow-text">The first step of the data transformation is converting the Excel spreadsheet into CSV.
-We start by downloading the spreadsheet using the <a href="http://etl.linkedpipes.com/components/e-httpgetfile">HTTP GET</a> component of LP-ETL.
+We start by downloading the spreadsheet using the <a href="{% link _components/e-httpgetfile.html %}">HTTP GET</a> component of LP-ETL.
 To add a component to the pipeline's canvas, right-click the canvas and select the option to insert a component.
 A menu appears that lists the available components.
 You can quickly filter the components by typing a few characters of their names.
-We pipe the downloaded file into the <a href="http://etl.linkedpipes.com/components/t-exceltocsv">Excel to CSV</a> component.
+We pipe the downloaded file into the <a href="{% link _components/t-exceltocsv %}">Excel to CSV</a> component.
 You can pipe a component's output by dragging an edge from the component's output port to the target component's input port.
 Port are displayed as circles on the sides of the components.
 By convention, the ports on the left are inputs and the ports on the right are outputs.

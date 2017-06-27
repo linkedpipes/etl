@@ -10,18 +10,18 @@ title: Converting tabular data to RDF
 </p>
 
 <p class="flow-text">LP-ETL allows you to store your data in many ways, so that others may reap the results of your work.
-You can store files locally using the <a href="http://etl.linkedpipes.com/components/l-filestolocal">Files to local</a> component or you can push them to a remote server via the <a href="https://en.wikipedia.org/wiki/Secure_copy">Secure Copy Protocol</a> with the <a href="http://etl.linkedpipes.com/components/l-filestoscp">Files to SCP</a> component.
-You can load data to RDF stores, either using the <a href="https://www.w3.org/TR/sparql11-http-rdf-update">SPARQL 1.1 Graph Store HTTP Protocol</a> via the <a href="http://etl.linkedpipes.com/components/l-graphstoreprotocol">Graph Store Protocol</a> component, using <a href="https://www.w3.org/TR/sparql11-update">SPARQL 1.1 Update</a> via the <a href="http://etl.linkedpipes.com/components/l-sparqlendpoint">SPARQL endpoint</a> component, or via the proprietary <a href="http://etl.linkedpipes.com/components/x-virtuoso">bulk loader for Virtuoso</a>.</p>
+You can store files locally using the <a href="{% link _components/l-filestolocal.html %}">Files to local</a> component or you can push them to a remote server via the <a href="https://en.wikipedia.org/wiki/Secure_copy">Secure Copy Protocol</a> with the <a href="{% link _components/l-filestoscp.html %}">Files to SCP</a> component.
+You can load data to RDF stores, either using the <a href="https://www.w3.org/TR/sparql11-http-rdf-update">SPARQL 1.1 Graph Store HTTP Protocol</a> via the <a href="{% link _components/l-graphstoreprotocol.html %}">Graph Store Protocol</a> component, using <a href="https://www.w3.org/TR/sparql11-update">SPARQL 1.1 Update</a> via the <a href="{% link _components/l-sparqlendpoint.html %}">SPARQL endpoint</a> component, or via the proprietary <a href="{% link _components/x-virtuoso.html %}">bulk loader for Virtuoso</a>.</p>
 
 <p class="flow-text">In our example pipeline we export the data to files and to a Virtuoso RDF store.
-RDF can be written to files using the <a href="http://etl.linkedpipes.com/components/t-rdftofile">RDF to file</a> component.
+RDF can be written to files using the <a href="{% link _components/t-rdftofile.html %}">RDF to file</a> component.
 It can write RDF in many serializations, including formats for triples, such as <a href="https://www.w3.org/TR/turtle">Turtle</a>, or formats for quads, such as <a href="https://www.w3.org/TR/trig">TriG</a>.
 Quad-based formats allow you to specify a named graph into which the triples of your data will be wrapped.
 Our pipeline produces RDF dumps in the TriG format, which offers a compact and readable way to represent RDF quads.
 For each dump we specify a named graph IRI.
 By convention, we use the IRI of the <code>skos:ConceptScheme</code> instance for the LAU code list (i.e. <code class="breakurl">https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016</code>), and the IRI of the <code>qb:DataSet</code> instance (i.e., <code class="breakurl">https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics</code>) for the associated statistical data cube.</p>
 
-<p class="flow-text">In order to save space we compress the RDF dumps via the <a href="http://etl.linkedpipes.com/components/t-streamcompression">Stream compression</a> component.
+<p class="flow-text">In order to save space we compress the RDF dumps via the <a href="{% link _components/t-streamcompression.html %}">Stream compression</a> component.
 Text-based RDF serializations contain redundant substrings, such as namespaces shared between absolute IRIs, so that compression can significantly decrease the size of RDF dumps.
 The effect of compression is particularly apparent in line-based formats, such as <a href="https://www.w3.org/TR/n-triples">N-Triples</a> or <a href="https://www.w3.org/TR/n-quads">N-Quads</a>, which lack shorthand notations for RDF, such as namespaced compact IRIs.
 Nevertheless, space savings can be achieved also in compact RDF formats.

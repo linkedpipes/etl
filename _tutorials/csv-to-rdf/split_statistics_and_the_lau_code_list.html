@@ -56,7 +56,7 @@ dbo:area sdmx-attribute:unitMeasure unit:SquareMeter .
 {% endhighlight %}
 
 <p class="flow-text">We map the data to QB by a SPARQL CONSTRUCT query.
-LP-ETL offers the <a href="http://etl.linkedpipes.com/components/t-sparqlconstruct">SPARQL CONSTRUCT</a> component to run such queries.
+LP-ETL offers the <a href="{% link _components/t-sparqlconstruct.html %}">SPARQL CONSTRUCT</a> component to run such queries.
 Similarly to SPARQL Update operations, you can validate SPARQL queries in the <a href="http://sparql.org/query-validator.html">SPARQLer Query Validator</a> before you enter them to LP-ETL.
 This is the query that maps the data to its DSD:</p>
 
@@ -154,7 +154,7 @@ INSERT DATA {
     qb:structure :dsd .
 }</code></pre>
 
-<p class="flow-text">The DSD can be alternatively provided in an RDF serialization to the <a href="http://etl.linkedpipes.com/components/e-textholder">Text holder</a> component, then parsed as RDF via <a href="http://etl.linkedpipes.com/components/t-filestordf">Files to RDF</a>, merged via <a href="http://etl.linkedpipes.com/components/t-graphmerger">Graph merger</a>, and combined with the QB data via <a href="http://etl.linkedpipes.com/components/t-singlegraphunion">Union</a>.</p>
+<p class="flow-text">The DSD can be alternatively provided in an RDF serialization to the <a href="{% link _components/e-textholder.html %}">Text holder</a> component, then parsed as RDF via <a href="{% link _components/t-filestordf.html %}">Files to RDF</a>, merged via <a href="{% link _components/t-graphmerger.html %}">Graph merger</a>, and combined with the QB data via <a href="{% link _components/t-singlegraphunion.html %}">Union</a>.</p>
 
 <p class="flow-text">The sheet for Irish LAU also features the column <code>DEGURBA</code> that lists the <a href="http://ec.europa.eu/eurostat/statistics-explained/index.php/Glossary:Degree_of_urbanisation">degrees of urbanisation</a> of the administrative units.
 The numeric codes denoting the degrees can be converted to links to the <a href="http://eurostat.linked-statistics.org/dic/deg_urb.rdf">code list of degrees of urbanisation</a> (in RDF/XML), which is available as part of the <a href="http://eurostat.linked-statistics.org">data from Eurostat converted to linked data</a>.

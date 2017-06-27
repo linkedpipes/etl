@@ -12,7 +12,7 @@ title: Converting tabular data to RDF
 <p class="flow-text">In our final step, we annotate the produced data with metadata.
 LP-ETL supports describing the processed datasets using metadata expressed using the standard <a href="https://www.w3.org/TR/vocab-dcat">Data Catalog Vocabulary</a> (DCAT).
 In particular, it uses the <a href="https://joinup.ec.europa.eu/asset/dcat_application_profile/description">DCAT application profile for data portals in Europe</a> (DCAT-AP).
-Datasets can be described by the <a href="http://etl.linkedpipes.com/components/e-dcatap11dataset">DCAT-AP Dataset</a> component and their distributions can be covered by the <a href="http://etl.linkedpipes.com/components/e-dcatap11distribution">DCAT-AP Distribution</a> component.
+Datasets can be described by the <a href="{% link _components/e-dcatap11dataset.html %}">DCAT-AP Dataset</a> component and their distributions can be covered by the <a href="{% link _components/e-dcatap11distribution.html %}">DCAT-AP Distribution</a> component.
 In this context, distributions correspond to specific forms of a given dataset, such as downloadable files or APIs.</p>
 
 <p class="flow-text">Both components provide expressive means to characterize datasets using descriptive, structural, and administrative metadata in RDF.
@@ -23,7 +23,7 @@ For the data described by QB, the StatDCAT-AP metadata overlaps with the dataset
 The metadata produced by the DCAT-AP Dataset component can be fed into the DCAT-AP Distribution component instead of filling in the links between a distribution and its dataset manually.
 If you loaded a data dump to a directory exposed via an HTTP server, as suggested previously, you can fill in the server's host name with the path to the dump as the download URL of the distribution.</p>
 
-<p class="flow-text">Apart from DCAT-AP, LP-ETL supports the <a href="https://www.w3.org/TR/void">Vocabulary of Interlinked Datasets</a> (VoID) via the <a href="http://etl.linkedpipes.com/components/e-voiddataset">VoID Dataset</a> component.
+<p class="flow-text">Apart from DCAT-AP, LP-ETL supports the <a href="https://www.w3.org/TR/void">Vocabulary of Interlinked Datasets</a> (VoID) via the <a href="{% link _components/e-voiddataset.html %}">VoID Dataset</a> component.
 In terms of VoID the <code>void:Dataset</code> matches the <code>dcat:Distribution</code>.
 You can thus feed the output of the DCAT-AP Distribution component to VoID Dataset that uses it to produce metadata in VoID.
 In this component you can also specify the IRI of an example resource and the URL of the SPARQL endpoint exposing the dataset.</p>
@@ -66,7 +66,7 @@ WHERE  {
 
 <p class="flow-text">To enable verification of integrity of the downloaded data distributions, you can provide a hash of the distribution files as part of their metadata.
 When a file is downloaded, its integrity can be verified by computing its hash and comparing it with the hash in the metadata.
-The <a href="http://etl.linkedpipes.com/components/t-filehasher">File hasher</a> component computes an SHA-1 hash of its input.
+The <a href="{% link _components/t-filehasher.html %}">File hasher</a> component computes an SHA-1 hash of its input.
 To include its output in the metadata we combine it with the distribution metadata by using the following CONSTRUCT query:</p>
 
 <pre><code>PREFIX dcat: &lt;http://www.w3.org/ns/dcat#&gt;
@@ -89,7 +89,7 @@ WHERE {
   BIND (iri(concat(str(?distribution), "/checksum")) AS ?checksumIRI)
 }</code></pre>
 
-<p class="flow-text">To merge multiple metadata outputs you can use the <a href="http://etl.linkedpipes.com/components/t-singlegraphunion">Union</a> component, which combines several RDF inputs into a single output.
+<p class="flow-text">To merge multiple metadata outputs you can use the <a href="{% link _components/t-singlegraphunion.html %}">Union</a> component, which combines several RDF inputs into a single output.
 We persist the merged metadata using the above-described loaders, producing both a file dump and loading the data to an RDF store.</p>
 
 <p class="flow-text">To make the data easier to discover and present in search engines we can generate <a href="https://schema.org">Schema.org</a> dataset metadata.
@@ -170,7 +170,7 @@ WHERE {
 
 <p class="flow-text">We serialize the generated RDF into <a href="https://www.w3.org/TR/json-ld">JSON-LD</a> via the RDF to file component.
 JSON-LD is one of the formats for Schema.org metadata supported by search engines.
-To make the resulting JSON-LD terser, we can use the <a href="http://etl.linkedpipes.com/components/t-jsonldformat">JSON-LD operations</a> component that performs the operations defined in the <a href="https://www.w3.org/TR/json-ld-api">JSON-LD API</a> on its input.
+To make the resulting JSON-LD terser, we can use the <a href="{% link _components/t-jsonldformat.html %}">JSON-LD operations</a> component that performs the operations defined in the <a href="https://www.w3.org/TR/json-ld-api">JSON-LD API</a> on its input.
 We simply invoke the <a href="https://www.w3.org/TR/json-ld-api/#compaction">compact</a> operation on the input using the Schema.org context:</p>
 
 {% highlight json %}
@@ -185,7 +185,7 @@ The obtained context guides the structure and abbreviations of the JSON-LD data 
 The resulting compact JSON-LD can be published on the Web, so that search engines can crawl it and incorporate its metadata in their indices.</p>
 
 <p class="flow-text">An alternative path for making the data easy to discover is to publish its metadata in a data catalogue.
-LP-ETL supports loading metadata to data catalogues based on <a href="https://ckan.org">CKAN</a>, into which you can deliver your metadata via the <a href="http://etl.linkedpipes.com/components/l-dcatap11tockan">DCAT-AP to CKAN</a> component.
+LP-ETL supports loading metadata to data catalogues based on <a href="https://ckan.org">CKAN</a>, into which you can deliver your metadata via the <a href="{% link _components/l-dcatap11tockan.html %}">DCAT-AP to CKAN</a> component.
 The component expects its input to be described using the DCAT-AP vocabulary, so that you can pipe in it the output of the DCAT-AP components.
 The input data is combined with the component's configuration and transformed to JSON that conforms with the <a href="http://docs.ckan.org/en/ckan-1.7.4/domain-model.html">CKAN data model</a>.
 The component requires you to specify the API endpoint's URL of the CKAN instance to which you load metadata, such as <code>http://ckan.net/api/3</code>.
@@ -195,9 +195,9 @@ To identify the loaded dataset in the data catalogue you must to give it a uniqu
 While DCAT-AP allows you to express multilingual metadata, CKAN's data model is monolingual, so you need to select one of the languages in DCAT-AP metadata to use in the metadata for CKAN.
 If you provide the component with VoID metadata as well, as is the case in our example pipeline, the component can generate CKAN resources from it.
 The component requires one more input; and that is the <a href="http://publications.europa.eu/mdr/resource/authority/file-type/html/filetypes-eng.html">code list of file types</a>.
-You can download its <a href="http://publications.europa.eu/mdr/resource/authority/file-type/skos/filetypes-skos.rdf">RDF dump</a> via the HTTP GET component, convert it to RDF via the <a href="http://etl.linkedpipes.com/components/t-filestordfsinglegraph">Files to RDF single graph</a> and feed it into the DCAT-AP to CKAN component by connecting to its dedicated port.</p>
+You can download its <a href="http://publications.europa.eu/mdr/resource/authority/file-type/skos/filetypes-skos.rdf">RDF dump</a> via the HTTP GET component, convert it to RDF via the <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> and feed it into the DCAT-AP to CKAN component by connecting to its dedicated port.</p>
 
-<p class="flow-text">LP-ETL also offers the <a href="http://etl.linkedpipes.com/components/l-lodcloud">DCAT-AP to datahub.io</a> component that is tied to the CKAN instance at <a href="https://datahub.io">datahub.io</a>.
+<p class="flow-text">LP-ETL also offers the <a href="{% link _components/l-lodcloud.html %}">DCAT-AP to datahub.io</a> component that is tied to the CKAN instance at <a href="https://datahub.io">datahub.io</a>.
 This data catalogue provides source data for the <a href="http://lod-cloud.net">Linking Open Data cloud diagram</a> (LOD cloud), so that you can use the component to publish data to become a part of this renowned diagram.
 The component mostly mirrors the DCAT-AP to CKAN component.
 In addition to the configuration we described for its parent component, you need to provide it with the ID of a CKAN organization that will own the uploaded dataset.
@@ -215,4 +215,4 @@ You learnt about the steps involved in producing linked data in RDF out of tabul
 LP-ETL provides an extensive toolbox of components that can automate these steps.
 We illustrated the use of LP-ETL components on an example dataset of Local Administrative Units.
 The example allowed us to showcase how to deal with Excel spreadsheets with multiple sheets, convert CSV to RDF, implement data cleaning rules, express data using RDF vocabularies, link data, optimize the performance of the transformation pipeline, store the output data, and finally describe it with metadata.
-If you want delve into more depth on LP-ETL, you may go through its <a href="http://etl.linkedpipes.com/documentation">documentation</a> or the <a href="http://etl.linkedpipes.com/components">documentation of its individual components</a>.</p>
+If you want delve into more depth on LP-ETL, you may go through its <a href="{% link documentation/index.html %}">documentation</a> or the <a href="{% link components/index.html %}">documentation of its individual components</a>.</p>

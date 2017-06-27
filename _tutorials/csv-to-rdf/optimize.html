@@ -30,12 +30,12 @@ Doing so can speed up the pipeline approximately to half of its original runtime
 <p class="flow-text">We can also improve the pipeline's runtime by letting it operate on smaller chunks of RDF.
 LP-ETL loads RDF into an in-memory store and larger data in bulk can take longer to process than the same data split into smaller parts.
 In order to leverage this optimization, LP-ETL provides special versions of many of its components that can operate on collections of chunks of RDF data.
-To split data into chunks, which are then processed separately, we can use <a href="http://etl.linkedpipes.com/components/t-tabularchunked">Tabular chunked</a> and then transform it via <a href="http://etl.linkedpipes.com/components/t-sparqlupdatechunked">SPARQL Update chunked</a> or <a href="http://etl.linkedpipes.com/components/t-sparqlconstructchunked">SPARQL CONSTRUCT chunked</a>.
+To split data into chunks, which are then processed separately, we can use <a href="{% link _components/t-tabularchunked.html %}">Tabular chunked</a> and then transform it via <a href="{% link _components/t-sparqlupdatechunked.html %}">SPARQL Update chunked</a> or <a href="{% link _components/t-sparqlconstructchunked.html %}">SPARQL CONSTRUCT chunked</a>.
 Tabular chunked allows to specify the size of the individual chunks in terms of the number of rows of its input CSV.
 Note that the chunked execution may be applied only to transformations that make do with the data present in one chunk.
 Transformations that require data outside of each chunk, such as the whole dataset, cannot be executed on chunks.
 For example, this mode of execution cannot be applied to deduplication that requires joins across the whole dataset.
-Also note that chunking carries an overhead of needing to merge the chunked data via the <a href="http://etl.linkedpipes.com/components/t-chunkedtograph">Chunked merger</a> component at the end.
+Also note that chunking carries an overhead of needing to merge the chunked data via the <a href="{% link _components/t-chunkedtograph.html %}">Chunked merger</a> component at the end.
 It should be therefore employed only for demanding transformations, in which the time savings gained from chunked execution trump the overhead with merging data.</p>
 
 <p class="flow-text">You can see how this optimization changes the runtime of the individual transformations.
