@@ -1,0 +1,257 @@
+---
+file: split_statistics_and_the_lau_code_list.html
+short: "CSV to RDF: split statistics and the LAU code list"
+subtitle: Split statistics and the LAU code list
+title: Converting tabular data to RDF
+---
+
+<p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/generate_iris.html %}" rel="prev">&larr; Previous step</a></p>
+
+<p class="flow-text">At this stage we split the data into the two parts mentioned above.
+We fork the data processing pipeline into two branches.
+One branch creates the statistical part of the dataset and the other branch creates the LAU code list.
+We start with the statistical part, which forms a three-dimensional data cube.
+The dimensions of our data cube consist of LAU2 and year, plus the <a href="https://www.w3.org/TR/vocab-data-cube/#dfn-measure-dimension">measure dimension</a> that distinguishes between the two measures in the data: area and population.
+Measure dimension is one of the ways in which QB can handle <a href="https://www.w3.org/TR/vocab-data-cube/#dsd-mm">multi-measure data cubes</a>.
+Additionally, we add an optional property indicating the degree of urbanisation and an attribute that marks the missing observations in the data cube.
+This is the <a href="https://www.w3.org/TR/vocab-data-cube/#dsd-dsd">data structure definition</a> (DSD) of the data cube:</p>
+
+{% highlight turtle %}
+@prefix :               <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/> .
+@prefix dbo:            <http://dbpedia.org/ontology/> .
+@prefix dimension:      <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/> .
+@prefix geo:            <http://ec.europa.eu/eurostat/ramon/ontologies/geographic.rdf#> .
+@prefix obeu:           <http://data.openbudgets.eu/ontology/> .
+@prefix property:       <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/property/> .
+@prefix qb:             <http://purl.org/linked-data/cube#> .
+@prefix rdf:            <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:           <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix unit:           <http://qudt.org/vocab/unit#> .
+
+:dsd a qb:DataStructureDefinition ;
+  rdfs:label "Data structure definition of the LAU statistics."@en ;
+  qb:component [ qb:dimension dimension:refArea ],
+               [ qb:dimension sdmx-dimension:refPeriod ],
+               [ qb:dimension qb:measureType ],
+               [ qb:componentProperty property:degreeOfUrbanisation ;
+                 qb:componentRequired false ],
+               [ qb:attribute sdmx-attribute:obsStatus ;
+                 qb:componentRequired false ],
+               [ qb:measure dbo:area ],
+               [ qb:measure dbo:populationTotal ] .
+
+dimension:refArea a rdf:Property, qb:CodedProperty, qb:DimensionProperty ;
+  rdfs:label "Reference area"@en ;
+  rdfs:subPropertyOf sdmx-dimension:refArea ;
+  rdfs:range geo:LAURegion ;
+  qb:codeList <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> .
+
+property:degreeOfUrbanisation a rdf:Property, qb:CodedProperty, obeu:OptionalProperty ;
+  rdfs:label "Degree of urbanisation"@en ;
+  qb:codeList <http://eurostat.linked-statistics.org/dic/deg_urb> .
+
+dbo:area sdmx-attribute:unitMeasure unit:SquareMeter .
+{% endhighlight %}
+
+<p class="flow-text">We map the data to QB by a SPARQL CONSTRUCT query.
+LP-ETL offers the <a href="http://etl.linkedpipes.com/components/t-sparqlconstruct">SPARQL CONSTRUCT</a> component to run such queries.
+Similarly to SPARQL Update operations, you can validate SPARQL queries in the <a href="http://sparql.org/query-validator.html">SPARQLer Query Validator</a> before you enter them to LP-ETL.
+This is the query that maps the data to its DSD:</p>
+
+<pre><code>PREFIX :               &lt;http://example.com/&gt;
+PREFIX dbo:            &lt;http://dbpedia.org/ontology/&gt;
+PREFIX dimension:      &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/&gt;
+PREFIX property:       &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/property/&gt;
+PREFIX qb:             &lt;http://purl.org/linked-data/cube#&gt;
+PREFIX sdmx-code:      &lt;http://purl.org/linked-data/sdmx/2009/code#&gt;
+PREFIX sdmx-dimension: &lt;http://purl.org/linked-data/sdmx/2009/dimension#&gt;
+PREFIX skos:           &lt;http://www.w3.org/2004/02/skos/core#&gt;
+PREFIX year:           &lt;http://reference.data.gov.uk/id/gregorian-year/&gt;
+
+CONSTRUCT {
+  ?observation a qb:Observation ;
+    ?target ?measure ;
+    qb:measureType ?target ;
+    sdmx-dimension:refPeriod ?year ;
+    dimension:refArea ?lau2 ;
+    property:degreeOfUrbanisation ?degreeOfUrbanisation ;
+    qb:dataSet &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics&gt; .
+}
+WHERE {
+  VALUES (?source                       ?target             ?year) {
+         (:AREA                         dbo:area            year:2016)
+         (:POP                          dbo:populationTotal year:2016)
+         # Due to the plus sign in the IRI we cannot use a compact IRI.
+         (&lt;http://example.com/POP+2015&gt; dbo:populationTotal year:2015)
+  }
+
+  ?lau2 ?source ?measure ;
+    skos:notation ?lau2Notation ;
+    :sheet_name ?country .
+
+  BIND ("https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/" AS ?ns)
+  BIND (substr(str(?year), strlen(str(year:)) + 1) AS ?yearNotation)
+  BIND (substr(str(?target), strlen(str(dbo:)) + 1) AS ?measurePropertyNotation)
+  BIND (iri(concat(?ns,
+                   lcase(?country),
+                   "/",
+                   encode_for_uri(lcase(?lau2Notation)),
+                   "/",
+                   ?yearNotation,
+                   "/",
+                   ?measurePropertyNotation)) AS ?observation)
+
+  OPTIONAL {
+    ?lau2 :DEGURBA ?degreeOfUrbanisation .
+  }
+}</code></pre>
+
+<p class="flow-text">We update the output of this query to add the above-mentioned data structure definition and the description of the QB dataset.</p>
+
+<pre><code>PREFIX :               &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/&gt;
+PREFIX dbo:            &lt;http://dbpedia.org/ontology/&gt;
+PREFIX dimension:      &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/&gt;
+PREFIX geo:            &lt;http://ec.europa.eu/eurostat/ramon/ontologies/geographic.rdf#&gt;
+PREFIX obeu:           &lt;http://data.openbudgets.eu/ontology/&gt;
+PREFIX property:       &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/property/&gt;
+PREFIX qb:             &lt;http://purl.org/linked-data/cube#&gt;
+PREFIX rdf:            &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs:           &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX sdmx-attribute: &lt;http://purl.org/linked-data/sdmx/2009/attribute#&gt;
+PREFIX sdmx-dimension: &lt;http://purl.org/linked-data/sdmx/2009/dimension#&gt;
+PREFIX skos:           &lt;http://www.w3.org/2004/02/skos/core#&gt;
+PREFIX unit:           &lt;http://qudt.org/vocab/unit#&gt;
+
+INSERT DATA {
+  :dsd a qb:DataStructureDefinition ;
+    rdfs:label "Data structure definition of the LAU statistics."@en ;
+    qb:component [ qb:dimension dimension:refArea ],
+                 [ qb:dimension sdmx-dimension:refPeriod ],
+                 [ qb:dimension qb:measureType ],
+                 [ qb:componentProperty property:degreeOfUrbanisation ;
+                   qb:componentRequired false ],
+                 [ qb:attribute sdmx-attribute:obsStatus ;
+                   qb:componentRequired false ],
+                 [ qb:measure dbo:area ],
+                 [ qb:measure dbo:populationTotal ] .
+
+  dimension:refArea a rdf:Property, qb:CodedProperty, qb:DimensionProperty ;
+    rdfs:label "Reference area"@en ;
+    rdfs:subPropertyOf sdmx-dimension:refArea ;
+    rdfs:range geo:LAURegion ;
+    qb:codeList &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016&gt; .
+
+  property:degreeOfUrbanisation a rdf:Property, qb:CodedProperty, obeu:OptionalProperty ;
+    rdfs:label "Degree of urbanisation"@en ;
+    qb:codeList &lt;http://eurostat.linked-statistics.org/dic/deg_urb&gt; .
+
+  dbo:area sdmx-attribute:unitMeasure unit:SquareMeter .
+
+  &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics&gt; a qb:DataSet ;
+    rdfs:label "LAU2 statistics"@en ;
+    qb:structure :dsd .
+}</code></pre>
+
+<p class="flow-text">The DSD can be alternatively provided in an RDF serialization to the <a href="http://etl.linkedpipes.com/components/e-textholder">Text holder</a> component, then parsed as RDF via <a href="http://etl.linkedpipes.com/components/t-filestordf">Files to RDF</a>, merged via <a href="http://etl.linkedpipes.com/components/t-graphmerger">Graph merger</a>, and combined with the QB data via <a href="http://etl.linkedpipes.com/components/t-singlegraphunion">Union</a>.</p>
+
+<p class="flow-text">The sheet for Irish LAU also features the column <code>DEGURBA</code> that lists the <a href="http://ec.europa.eu/eurostat/statistics-explained/index.php/Glossary:Degree_of_urbanisation">degrees of urbanisation</a> of the administrative units.
+The numeric codes denoting the degrees can be converted to links to the <a href="http://eurostat.linked-statistics.org/dic/deg_urb.rdf">code list of degrees of urbanisation</a> (in RDF/XML), which is available as part of the <a href="http://eurostat.linked-statistics.org">data from Eurostat converted to linked data</a>.
+We link the coded values of degree of urbanisation to the values from this code list.</p>
+
+<pre><code>PREFIX deg-urb:  &lt;http://eurostat.linked-statistics.org/dic/deg_urb#&gt;
+PREFIX property: &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/property/&gt;
+
+DELETE {
+  ?lau2 property:degreeOfUrbanisation ?code .
+}
+INSERT {
+  ?lau2 property:degreeOfUrbanisation ?degUrb .
+}
+WHERE {
+  VALUES (?code ?degUrb) {
+         ("1"   deg-urb:DEG1)
+         ("2"   deg-urb:DEG2)
+         ("3"   deg-urb:DEG3)
+  }
+  ?lau2 property:degreeOfUrbanisation ?code .
+}</code></pre>
+
+<p class="flow-text">Finally, we add placeholders for the missing measures in the dataset.
+QB requires <a href="https://www.w3.org/TR/vocab-data-cube/#ic-17">all measures to be present</a>, however, our dataset lacks some measures. 
+In order to comply with the requirements on well-formed data cubes, we generate zero placeholders for the absent measures, for which we mark their observation status (<code>sdmx-attribute:obsStatus</code>) as missing (<code>sdmx-code:obsStatus-M</code>).</p>
+
+<pre><code>PREFIX dbo:            &lt;http://dbpedia.org/ontology/&gt;
+PREFIX dimension:      &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/&gt;
+PREFIX qb:             &lt;http://purl.org/linked-data/cube#&gt;
+PREFIX sdmx-attribute: &lt;http://purl.org/linked-data/sdmx/2009/attribute#&gt;
+PREFIX sdmx-code:      &lt;http://purl.org/linked-data/sdmx/2009/code#&gt;
+PREFIX sdmx-dimension: &lt;http://purl.org/linked-data/sdmx/2009/dimension#&gt;
+PREFIX year:           &lt;http://reference.data.gov.uk/id/gregorian-year/&gt;
+
+INSERT {
+  ?observation a qb:Observation ;
+    dimension:refArea ?area ;
+    sdmx-dimension:refPeriod ?year ;
+    qb:measureType ?otherMeasureProperty ;
+    ?otherMeasureProperty 0 ;
+    sdmx-attribute:obsStatus sdmx-code:obsStatus-M ;
+    qb:dataSet &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics&gt; .
+}
+WHERE {
+  VALUES (?measureProperty    ?otherMeasureProperty) {
+         (dbo:area            dbo:populationTotal)
+         (dbo:populationTotal dbo:area)
+  }
+  [] dimension:refArea ?area ;
+    sdmx-dimension:refPeriod ?year ;
+    qb:measureType ?measureProperty ;
+    ?measureProperty [] .
+  FILTER NOT EXISTS {
+    [] dimension:refArea ?area ;
+      sdmx-dimension:refPeriod ?year ;
+      qb:measureType ?otherMeasureProperty ;
+      ?otherMeasureProperty [] .
+  }
+  
+  BIND ("https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/" AS ?ns)
+  BIND (replace(str(?area), "^.+/([^/]+)$", "$1") AS ?areaNotation)
+  BIND (substr(str(?year), strlen(str(year:)) + 1) AS ?yearNotation)
+  BIND (substr(str(?otherMeasureProperty), strlen(str(dbo:)) + 1) AS ?measurePropertyNotation)
+  BIND (iri(concat(?ns, ?areaNotation, "/", ?yearNotation, "/", ?measurePropertyNotation)) AS ?observation)
+}</code></pre>
+
+<p class="flow-text">At the point where we fork our pipeline with the SPARQL CONSTRUCT query producing the statistical part of the dataset, we continue with processing of the LAU code list.
+First, we remove the original data that was already mapped.
+This update operation also deletes the source data that we turned into the statistical part.</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE {
+  ?s ?p ?o .
+}
+WHERE {
+  VALUES ?p {
+    :AREA
+    :CHANGE
+    :POP
+    :sheet_name
+    &lt;http://example.com/POP+2015&gt;
+  }
+  ?s ?p ?o .
+}</code></pre>
+
+<p class="flow-text">Next, we insert the concept scheme of the LAU code list.</p>
+
+<pre><code>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+INSERT DATA {
+  &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016&gt; a skos:ConceptScheme ;
+    rdfs:label "Local administrative units 2016"@en .
+}</code></pre>
+
+<p class="flow-text">
+  <a href="{% link _tutorials/csv-to-rdf/link_data.html %}" rel="next">&rarr; Next step</a>
+</p>

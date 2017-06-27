@@ -1,0 +1,61 @@
+---
+file: introduction.html
+short: "CSV to RDF"
+title: Converting tabular data to RDF
+---
+
+<p class="flow-text">In this tutorial, we will walk through the common steps for converting tabular data, such as CSV files or Excel spreadsheets, to RDF using LinkedPipes ETL (LP-ETL).
+These steps automate the typical tasks you may encounter in transformations of tabular data to RDF.
+Each step and the corresponding part of the tutorial is focused on performing a single task, so that there is a clear separation of concerns in the pipeline.
+We show these steps on the transformation of an example dataset.
+We provide you with the LP-ETL pipeline for this transformation, so that you can follow along and see the transformation in action.
+Each LP-ETL component we use to achieve our goal is linked to its documentation, which you may consult for more details about the component's configuration.</p>
+
+<p class="flow-text">The example dataset we use are the <a href="http://ec.europa.eu/eurostat/web/nuts/local-administrative-units">Local Administrative Units</a> (LAU), a code list of administrative divisions of the EU member states.
+LAU correspond to lower-level administrative units subdividing regions of the member states into counties, districts or municipalities.
+The dataset is available in Excel spreadsheets published by <a href="http://ec.europa.eu/eurostat">Eurostat</a>, the statistical agency of the European Union.
+Since the definition of local administrative units may change over time, these spreadsheets are updated each year.
+In this tutorial, we use the snapshot for the year 2016.
+This spreadsheet contains LAU for the 28 EU member states, each on a separate sheet.</p>
+
+<p class="flow-text">The tutorial covers the following steps of converting tabular data to linked data:</p>
+
+<ol class="flow-text">
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/convert_excel_to_csv.html %}">Convert Excel spreadsheet to CSV</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/convert_csv_to_rdf.html %}">Convert CSV to RDF</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/clean_data.html %}">Clean data</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/make_versions_explicit.html %}">Make versions explicit</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/describe_semantics.html %}">Describe semantics</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/generate_iris.html %}">Generate IRIs</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/link_data.html %}">Link data</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/optimize.html %}">Optimize</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/load_data.html %}">Load data</a>
+  </li>
+  <li>
+    <a href="{% link _tutorials/csv-to-rdf/add_metadata.html %}">Add metadata</a>
+  </li>
+</ol>
+
+<p class="flow-text">It is a tutorial intended for readers who are reasonably well versed in semantic web technologies.
+However, no prior knowledge of LP-ETL is required to be able to follow this tutorial.</p>
+
+<p class="flow-text">
+  <a href="{% link _tutorials/csv-to-rdf/convert_excel_to_csv.html %}" rel="next">&rarr; First step</a>
+</p>

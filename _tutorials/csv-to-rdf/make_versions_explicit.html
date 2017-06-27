@@ -1,0 +1,57 @@
+---
+file: make_versions_explicit.html
+short: "CSV to RDF: make versions explicit"
+subtitle: Make versions explicit
+title: Converting tabular data to RDF
+---
+
+<p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/clean_data.html %}" rel="prev">&larr; Previous step</a></p>
+
+<p class="flow-text">Our dataset contains rudimentary data on versioning.
+Previous codes are provided for several administrative areas.
+These codes are made obsolete by the current codes, but they are useful to have for mapping older data that refers to them.
+We replace the old codes with the new ones and mark them as replaced via the <a href="http://dublincore.org/documents/dcmi-terms/#terms-replaces"><code>dcterms:replaces</code></a> property.</p>
+
+<pre><code>PREFIX :        &lt;http://example.com/&gt;
+PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+
+DELETE {
+  ?lau :LAU2_NAT_CODE ?lau2old ;
+    :LAU1_NAT_CODE ?lau1old .
+}
+INSERT {
+  ?lau :LAU2_NAT_CODE ?lau2new ;
+    :LAU1_NAT_CODE ?lau1new ;
+    dcterms:replaces [
+      :LAU2_NAT_CODE ?lau2old ;
+      :LAU1_NAT_CODE ?lau1old
+    ] .
+}
+WHERE {
+  ?lau :LAU2_NAT_CODE_NEW ?lau2new ;
+    :LAU1_NAT_CODE_NEW ?lau1new ;
+    :LAU2_NAT_CODE ?lau2old ;
+    :LAU1_NAT_CODE ?lau1old .
+}</code></pre>
+
+<p class="flow-text">The dataset also describes whether the definitions of administrative areas changed since the previous year's version of the code list.
+This is indicated by the <code>:CHANGE</code> boolean property.
+In order to make the semantics of this property more explicit, we indicate the change via a date of modification.</p>
+
+<pre><code>PREFIX :        &lt;http://example.com/&gt;
+PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX xsd:     &lt;http://www.w3.org/2001/XMLSchema#&gt;</p>
+
+DELETE {
+  ?lau2 :CHANGE true .
+}
+INSERT {
+  ?lau2 dcterms:modified "2016-01-01"^^xsd:date .
+}
+WHERE {
+  ?lau2 :CHANGE true .
+}</code></pre>
+
+<p class="flow-text">The pipeline that includes the step of cleaning data is available <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_excel_to_clean_rdf.jsonld %}">here</a>.</p>
+
+<p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/describe_semantics.html %}" rel="next">&rarr; Next step</a></p>

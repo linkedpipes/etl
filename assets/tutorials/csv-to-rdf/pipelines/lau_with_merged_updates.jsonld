@@ -1,0 +1,812 @@
+{
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584",
+          "@type": [
+            "http://linkedpipes.com/ontology/Pipeline"
+          ],
+          "http://etl.linkedpipes.com/ontology/version": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#int",
+              "@value": "1"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "LAU with merged updates"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/2",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "OutputFiles"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/3"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputFiles"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/4"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/3",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/65"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-excelToCsv/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "180"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "20"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "Excel to CSV"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/30",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/83"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": 20,
+          "http://linkedpipes.com/ontology/y": 120,
+          "http://purl.org/dc/terms/description": [
+            {
+              "@value": "Map QB"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "SPARQL construct"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/4",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/graph/86"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-tabular/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "380"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "20"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "Tabular"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/5",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "FilesOutput"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/6"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputFiles"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/3"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/6",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/67"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/e-httpGetFile/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "20"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "20"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "HTTP get"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/1777428d-c47e-4449-841c-25b5c51b6b90",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/1777428d-c47e-4449-841c-25b5c51b6b90/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": 600,
+          "http://linkedpipes.com/ontology/y": 120,
+          "http://purl.org/dc/terms/description": [
+            {
+              "@value": "Merged SKOS updates"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "SPARQL update"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/50667ed1-0bf7-4148-9c49-a716b4764a8b",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/50667ed1-0bf7-4148-9c49-a716b4764a8b/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": 20,
+          "http://linkedpipes.com/ontology/y": 200,
+          "http://purl.org/dc/terms/description": [
+            {
+              "@value": "Merged QB updates"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "SPARQL update"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/8f258ae1-39df-448d-96bf-b7a9a05d89aa",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/8f258ae1-39df-448d-96bf-b7a9a05d89aa/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "600"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "0"
+            }
+          ],
+          "http://purl.org/dc/terms/description": [
+            {
+              "@value": "Merged updates"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "SPARQL update"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/07eaae26-58f3-4f34-b92f-fb23afda76ef",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "OutputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/8f258ae1-39df-448d-96bf-b7a9a05d89aa"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/1777428d-c47e-4449-841c-25b5c51b6b90"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/53608586-ef6c-431c-9d81-de055f9d3f38",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "OutputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/4"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/8f258ae1-39df-448d-96bf-b7a9a05d89aa"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/5689c1f6-f926-4286-bba1-d1a22fc53c35",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "OutputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/30"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/50667ed1-0bf7-4148-9c49-a716b4764a8b"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/93e54d9d-9098-4547-af14-06e96e3c031d",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "OutputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/8f258ae1-39df-448d-96bf-b7a9a05d89aa"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "InputRdf"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/30"
+            }
+          ],
+          "http://linkedpipes.com/ontology/vertex": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/93e54d9d-9098-4547-af14-06e96e3c031d/vertex/1"
+            },
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/93e54d9d-9098-4547-af14-06e96e3c031d/vertex/2"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/93e54d9d-9098-4547-af14-06e96e3c031d/vertex/1",
+          "@type": "http://linkedpipes.com/ontology/Vertex",
+          "http://linkedpipes.com/ontology/x": 760,
+          "http://linkedpipes.com/ontology/y": 80,
+          "http://linkedpipes.com/ontology/order": 1
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/connection/93e54d9d-9098-4547-af14-06e96e3c031d/vertex/2",
+          "@type": "http://linkedpipes.com/ontology/Vertex",
+          "http://linkedpipes.com/ontology/x": 20,
+          "http://linkedpipes.com/ontology/y": 100,
+          "http://linkedpipes.com/ontology/order": 2
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/65",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-excelToCsv#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#columnEndControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#columnStartControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#evalFormula": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#evalFormulaControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#fileName": [
+            {
+              "@value": "lau_{SHEET}.csv"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#fileNameControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#header": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#headerControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#includeSheetName": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#includeSheetNameControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#numericParse": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#numericParseControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#rowEndControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#rowStartControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#sheetFilter": [
+            {
+              "@value": "[A-Z]{2}"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#sheetFilterControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#skipEmptyRows": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-excelToCsv#skipEmptyRowsControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/65"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/67",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/e-httpGetFile#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileName": [
+            {
+              "@value": "lau.xlsx"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileNameControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileUri": [
+            {
+              "@value": "http://ec.europa.eu/eurostat/documents/345175/501971/EU-28_LAU_2016/9fa4f51f-6b97-4d80-b1a1-2a4cd3f7a0d1"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileUriControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirect": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "false"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirectControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/67"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/83",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+            {
+              "@value": "PREFIX :               <http://example.com/>\nPREFIX dbo:            <http://dbpedia.org/ontology/>\nPREFIX dimension:      <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/>\nPREFIX property:       <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/property/>\nPREFIX qb:             <http://purl.org/linked-data/cube#>\nPREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>\nPREFIX sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#>\nPREFIX skos:           <http://www.w3.org/2004/02/skos/core#>\nPREFIX year:           <http://reference.data.gov.uk/id/gregorian-year/>\n\nCONSTRUCT {\n  ?observation a qb:Observation ;\n    ?target ?measure ;\n    qb:measureType ?target ;\n    sdmx-dimension:refPeriod ?year ;\n    dimension:refArea ?lau2 ;\n    property:degreeOfUrbanisation ?degreeOfUrbanisation ;\n    qb:dataSet <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics> .\n}\nWHERE {\n  VALUES (?source                       ?target             ?year) {\n         (:AREA                         dbo:area            year:2016)\n         (:POP                          dbo:populationTotal year:2016)\n         # Due to the plus sign in the IRI we cannot use a compact IRI.\n         (<http://example.com/POP+2015> dbo:populationTotal year:2015)\n  }\n\n  ?lau2 ?source ?measure ;\n    skos:notation ?lau2Notation ;\n    :sheet_name ?country .\n\n  BIND (\"https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/\" AS ?ns)\n  BIND (substr(str(?year), strlen(str(year:)) + 1) AS ?yearNotation)\n  BIND (substr(str(?target), strlen(str(dbo:)) + 1) AS ?measurePropertyNotation)\n  BIND (iri(concat(?ns,\n                   lcase(?country),\n                   \"/\",\n                   encode_for_uri(lcase(?lau2Notation)),\n                   \"/\",\n                   ?yearNotation,\n                   \"/\",\n                   ?measurePropertyNotation)) AS ?observation)\n\n  OPTIONAL {\n    ?lau2 :DEGURBA ?degreeOfUrbanisation .\n  }\n}"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/83"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/1777428d-c47e-4449-841c-25b5c51b6b90/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+            {
+              "@value": "PREFIX :        <http://example.com/>\nPREFIX dcterms: <http://purl.org/dc/terms/>\nPREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX skos:    <http://www.w3.org/2004/02/skos/core#>\n\n#################################\n### Delete source for QB data ###\n#################################\n\nDELETE {\n  ?s ?p ?o .\n}\nWHERE {\n  VALUES ?p {\n    :AREA\n    :CHANGE\n    :POP\n    :sheet_name\n    <http://example.com/POP+2015>\n  }\n  ?s ?p ?o .\n}\n;\n\n##########################\n### Add concept scheme ###\n##########################\n\nINSERT DATA {\n  <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> a skos:ConceptScheme ;\n    rdfs:label \"Local administrative units 2016\"@en .\n}\n;\n\n#######################\n### Link NUTS3 2010 ###\n#######################\n\nDELETE {\n  ?lau2 :NUTS3_10 ?nuts3Notation .\n}\nINSERT {\n  ?nuts3 dcterms:replaces ?oldNuts3 .\n}\nWHERE {\n  ?lau2 :NUTS3_10 ?nuts3Notation ;\n    skos:broaderTransitive+ ?nuts3 .\n  ?nuts3 skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013> .\n  BIND (iri(concat(\"http://nuts.geovocab.org/id/\", ?nuts3Notation)) AS ?oldNuts3)\n}\n;\n\n##########################\n### Link Czech regions ###\n##########################\n\nINSERT {\n  ?lau2 skos:exactMatch ?region .\n}\nWHERE {\n  ?lau2 skos:broaderTransitive/skos:broaderTransitive/skos:notation ?nuts ;\n  FILTER strstarts(?nuts, \"CZ\")\n\n  ?lau2 skos:notation ?notation .\n  BIND (iri(concat(\"http://linked.opendata.cz/resource/region/\", ?notation)) AS ?region)\n}"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/1777428d-c47e-4449-841c-25b5c51b6b90/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/50667ed1-0bf7-4148-9c49-a716b4764a8b/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+            {
+              "@value": "PREFIX :               <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/>\nPREFIX dbo:            <http://dbpedia.org/ontology/>\nPREFIX deg-urb:        <http://eurostat.linked-statistics.org/dic/deg_urb#>\nPREFIX dimension:      <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/>\nPREFIX geo:            <http://ec.europa.eu/eurostat/ramon/ontologies/geographic.rdf#>\nPREFIX obeu:           <http://data.openbudgets.eu/ontology/>\nPREFIX property:       <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/property/>\nPREFIX qb:             <http://purl.org/linked-data/cube#>\nPREFIX rdf:            <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs:           <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#>\nPREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>\nPREFIX sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#>\nPREFIX skos:           <http://www.w3.org/2004/02/skos/core#>\nPREFIX unit:           <http://qudt.org/vocab/unit#>\nPREFIX year:           <http://reference.data.gov.uk/id/gregorian-year/>\n\n###############\n### Add DSD ###\n###############\n\nINSERT DATA {\n  :dsd a qb:DataStructureDefinition ;\n    rdfs:label \"Data structure definition of the LAU statistics.\"@en ;\n    qb:component [ qb:dimension dimension:refArea ],\n                 [ qb:dimension sdmx-dimension:refPeriod ],\n                 [ qb:dimension qb:measureType ],\n                 [ qb:componentProperty property:degreeOfUrbanisation ;\n                   qb:componentRequired false ],\n                 [ qb:attribute sdmx-attribute:obsStatus ;\n                   qb:componentRequired false ],\n                 [ qb:measure dbo:area ],\n                 [ qb:measure dbo:populationTotal ] .\n\n  dimension:refArea a rdf:Property, qb:CodedProperty, qb:DimensionProperty ;\n    rdfs:label \"Reference area\"@en ;\n    rdfs:subPropertyOf sdmx-dimension:refArea ;\n    rdfs:range geo:LAURegion ;\n    qb:codeList <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> .\n\n  property:degreeOfUrbanisation a rdf:Property, qb:CodedProperty, obeu:OptionalProperty ;\n    rdfs:label \"Degree of urbanisation\"@en ;\n    qb:codeList <http://eurostat.linked-statistics.org/dic/deg_urb> .\n\n  dbo:area sdmx-attribute:unitMeasure unit:SquareMeter .\n\n  <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics> a qb:DataSet ;\n    rdfs:label \"LAU2 statistics\"@en ;\n    qb:structure :dsd .\n}\n;\n\n###################################\n### Link degree of urbanisation ###\n###################################\n\nDELETE {\n  ?lau2 property:degreeOfUrbanisation ?code .\n}\nINSERT {\n  ?lau2 property:degreeOfUrbanisation ?degUrb .\n}\nWHERE {\n  VALUES (?code ?degUrb) {\n         (\"1\"   deg-urb:DEG1)\n         (\"2\"   deg-urb:DEG2)\n         (\"3\"   deg-urb:DEG3)\n  }\n  ?lau2 property:degreeOfUrbanisation ?code .\n}\n;\n\n#############################################\n### Add placeholders for missing measures ###\n#############################################\n\nINSERT {\n  ?observation a qb:Observation ;\n    dimension:refArea ?area ;\n    sdmx-dimension:refPeriod ?year ;\n    qb:measureType ?otherMeasureProperty ;\n    ?otherMeasureProperty 0 ;\n    sdmx-attribute:obsStatus sdmx-code:obsStatus-M ;\n    qb:dataSet <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics> .\n}\nWHERE {\n  VALUES (?measureProperty    ?otherMeasureProperty) {\n         (dbo:area            dbo:populationTotal)\n         (dbo:populationTotal dbo:area)\n  }\n  [] dimension:refArea ?area ;\n    sdmx-dimension:refPeriod ?year ;\n    qb:measureType ?measureProperty ;\n    ?measureProperty [] .\n  FILTER NOT EXISTS {\n    [] dimension:refArea ?area ;\n      sdmx-dimension:refPeriod ?year ;\n      qb:measureType ?otherMeasureProperty ;\n      ?otherMeasureProperty [] .\n  }\n  \n  BIND (\"https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/\" AS ?ns)\n  BIND (replace(str(?area), \"^.+/([^/]+)$\", \"$1\") AS ?areaNotation)\n  BIND (substr(str(?year), strlen(str(year:)) + 1) AS ?yearNotation)\n  BIND (substr(str(?otherMeasureProperty), strlen(str(dbo:)) + 1) AS ?measurePropertyNotation)\n  BIND (iri(concat(?ns, ?areaNotation, \"/\", ?yearNotation, \"/\", ?measurePropertyNotation)) AS ?observation)\n}"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/50667ed1-0bf7-4148-9c49-a716b4764a8b/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/8f258ae1-39df-448d-96bf-b7a9a05d89aa/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+            {
+              "@value": "PREFIX :        <http://example.com/>\nPREFIX dcterms: <http://purl.org/dc/terms/>\nPREFIX skos:    <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>\n\n###########################\n### Remove empty values ###\n###########################\n\nDELETE {\n  ?s ?p ?o .\n}\nWHERE {\n  VALUES ?o {\n    \"n.a\"\n    \"n.a.\"\n  }\n  ?s ?p ?o .\n}\n;\n\n#########################################\n### Remove redundant transliterations ###\n#########################################\n\nDELETE {\n  ?lau :NAME_2_LAT ?name .\n}\nWHERE {\n  ?lau :NAME_1 ?name ;\n    :NAME_2_LAT ?name .\n}\n;\n\n#####################################\n### Delete placeholder LAU2 codes ###\n#####################################\n\nDELETE WHERE {\n  ?lau2 :LAU2_NAT_CODE \"9999\" .\n}\n;\n\n#################################\n### Remove empty computed row ###\n#################################\n\nDELETE {\n  ?row ?p ?o .\n}\nWHERE {\n  # Remove the empty row with computed zero area.\n  ?row :sheet_name [] .\n  # The row does not have any other property besides :sheet_name and :AREA.\n  FILTER NOT EXISTS {\n    ?row !(:sheet_name|:AREA) [] .\n  }\n  ?row ?p ?o .\n}\n;\n\n###############################\n### Cast strings to numbers ###\n###############################\n\nDELETE {\n  ?s ?p ?string .\n}\nINSERT {\n  ?s ?p ?number .\n}\nWHERE {\n  VALUES (?p ?datatype) {\n         (:AREA xsd:decimal)\n         (:POP xsd:integer)\n  }\n  ?s ?p ?string .\n  BIND (strdt(?string, ?datatype) AS ?number)\n}\n;\n\n################################\n### Cast strings to booleans ###\n################################\n\nDELETE {\n  ?s :CHANGE ?string .\n}\nINSERT {\n  ?s :CHANGE ?boolean .\n}\nWHERE {\n  VALUES (?string ?boolean) {\n         (\"yes\"   true)\n         (\"no\"    false)\n  }\n  ?s :CHANGE ?string .\n}\n;\n\n#########################\n### Add language tags ###\n#########################\n\nDELETE {\n  ?lau ?nameProperty ?_name .\n}\nINSERT {\n  ?lau ?nameProperty ?name .\n}\nWHERE {\n  VALUES ?nameProperty {\n    :NAME_1\n    :LAU1_NAME\n  }\n  VALUES (?country ?language) {\n         (\"AT\"     \"de\")\n         (\"BE\"     \"be\")\n         (\"BG\"     \"bg\")\n         (\"CY\"     \"el\")\n         (\"CZ\"     \"cs\")\n         (\"DE\"     \"de\")\n         (\"DK\"     \"da\")\n         (\"EE\"     \"et\")\n         (\"EL\"     \"el\")\n         (\"ES\"     \"es\")\n         (\"FI\"     \"fi\")\n         (\"FR\"     \"fr\")\n         (\"HR\"     \"hr\")\n         (\"IE\"     \"en\")\n         (\"IT\"     \"it\")\n         (\"LT\"     \"lt\")\n         (\"LU\"     \"lb\")\n         (\"LV\"     \"lv\")\n         (\"MT\"     \"mt\")\n         (\"NL\"     \"nl\")\n         (\"PL\"     \"pl\")\n         (\"PT\"     \"pt\")\n         (\"RO\"     \"ro\")\n         (\"SE\"     \"sv\")\n         (\"SI\"     \"sl\")\n         (\"SK\"     \"sk\")\n         (\"UK\"     \"en\")\n  }\n  ?lau ?nameProperty ?_name ;\n    :sheet_name ?country .\n  BIND (strlang(?_name, ?language) AS ?name)\n}\n;\n\n########################\n### Resolve new data ###\n########################\n\nDELETE {\n  ?lau :LAU2_NAT_CODE_NEW ?lau2new ;\n    :LAU1_NAT_CODE_NEW ?lau1new ;\n    :LAU2_NAT_CODE ?lau2old ;\n    :LAU1_NAT_CODE ?lau1old .\n}\nINSERT {\n  ?lau :LAU2_NAT_CODE ?lau2new ;\n    :LAU1_NAT_CODE ?lau1new ;\n    dcterms:replaces [\n      :LAU2_NAT_CODE ?lau2old ;\n      :LAU1_NAT_CODE ?lau1old\n    ] .\n}\nWHERE {\n  ?lau :LAU2_NAT_CODE_NEW ?lau2new ;\n    :LAU1_NAT_CODE_NEW ?lau1new ;\n    :LAU2_NAT_CODE ?lau2old ;\n    :LAU1_NAT_CODE ?lau1old .\n}\n;\n\n################\n### Map SKOS ###\n################\n\nDELETE {\n  ?lau2 ?source ?o .\n}\nINSERT {\n  ?lau2 a skos:Concept ;\n    skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;\n    ?target ?o .\n}\nWHERE {\n  VALUES (?source        ?target) {\n         (:NAME_1        skos:prefLabel)\n         (:NAME_2_LAT    skos:altLabel)\n         (:LAU2_NAT_CODE skos:notation)\n  }\n  ?lau2 ?source ?o .\n}\n;\n\n####################################\n### Change flag to modified date ###\n####################################\n\nDELETE {\n  ?lau2 :CHANGE true .\n}\nINSERT {\n  ?lau2 dcterms:modified \"2016-01-01\"^^xsd:date .\n}\nWHERE {\n  ?lau2 :CHANGE true .\n}\n;\n\n##########################\n### Generate LAU1 IRIs ###\n##########################\n\nDELETE {\n  ?lau2 :LAU1_NAT_CODE ?lau1Notation ;\n    :LAU1_NAME ?lau1PrefLabel .\n}\nINSERT {\n  ?lau2 skos:broaderTransitive ?lau1 .\n  ?lau1 a skos:Concept ;\n    skos:prefLabel ?lau1PrefLabel ;\n    skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> .\n}\nWHERE {\n  ?lau2 :LAU1_NAT_CODE ?lau1Notation ;\n    :sheet_name ?country .\n  BIND (iri(concat(\"https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/\",\n                   lcase(?country),\n                   \"/\",\n                   ?lau1Notation)) AS ?lau1)\n  OPTIONAL {\n    ?lau2 :LAU1_NAME ?lau1PrefLabel .\n  }\n}\n;\n\n##########################\n### Generate LAU2 IRIs ###\n##########################\n\nDELETE {\n  ?_lau2 ?p ?o .\n}\nINSERT {\n  ?lau2 ?p ?o .\n}\nWHERE {\n  {\n    SELECT ?_lau2 ?lau2\n    WHERE {\n      ?_lau2 :sheet_name ?country .\n      OPTIONAL {\n        # There are some LAU2 without a code.\n        ?_lau2 skos:notation ?code .\n      }\n\t\t\tOPTIONAL {\n\t\t\t\t?_lau2 skos:broaderTransitive/skos:notation ?lau1 .\n\t\t\t}\n      BIND (if(bound(?code),\n               concat(lcase(?country),\n                      \"/\",\n                      if(bound(?lau1), concat(encode_for_uri(lcase(?lau1)), \"/\"), \"\"),\n                      encode_for_uri(lcase(?code))),\n               struuid()) AS ?key)\n      BIND (iri(concat(\"https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/\", ?key))\n            AS ?lau2)\n    }\n  }\n  ?_lau2 ?p ?o .\n}\n;\n\n###########################\n### Generate NUTS3 IRIs ###\n###########################\n\nDELETE {\n  ?lau2 ?nutsProperty ?notation .\n}\nINSERT {\n  ?narrower skos:broaderTransitive ?nuts3 .\n  ?nuts3 a skos:Concept ;\n    skos:notation ?notation ;\n    skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013> .\n}\nWHERE {\n  VALUES ?nutsProperty {\n    :NUTS_3\n    :NUTS3_13\n  }\n  ?lau2 ?nutsProperty ?notation ;\n    :sheet_name ?country .\n  BIND (if(strstarts(?notation, ucase(?country)), ?notation, concat(ucase(?country), ?notation))\n        AS ?key)\n  BIND (iri(concat(\"https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013/\", ?key))\n        AS ?nuts3)\n  OPTIONAL {\n    ?lau2 skos:broaderTransitive ?lau1 .\n  }\n  BIND (coalesce(?lau1, ?lau2) AS ?narrower)\n}\n;\n\n##############################\n### Generate old LAU2 IRIs ###\n##############################\n\nDELETE {\n  ?newLau2 dcterms:replaces ?_oldLau2 .\n  ?_oldLau2 ?p ?o .\n}\nINSERT {\n  ?newLau2 dcterms:replaces ?oldLau2 .\n  ?oldLau2 a skos:Concept ;\n    skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2015> ;\n    skos:notation ?oldLau2Notation ;\n    skos:broaderTransitive ?oldLau1 .\n  ?oldLau1 a skos:Concept ;\n    skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2015> ;\n    skos:notation ?oldLau1Notation .\n}\nWHERE {\n  ?newLau2 dcterms:replaces ?_oldLau2 ;\n    :sheet_name ?country .\n  OPTIONAL {\n    ?_oldLau2 skos:notation ?oldLau2Notation .\n  }\n  BIND (\"https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2015/\" AS ?ns)\n  OPTIONAL {\n    ?_oldLau2 skos:broaderTransitive/skos:notation ?oldLau1Notation .\n    BIND (iri(concat(?ns,\n                     lcase(?country),\n                     \"/\",\n                     ?oldLau1Notation)) AS ?oldLau1)\n  }\n  BIND (if(bound(?oldLau2Notation),\n           concat(lcase(?country),\n                  \"/\",\n                  if(bound(?oldLau1Notation), concat(encode_for_uri(lcase(?oldLau1Notation)), \"/\"), \"\"),\n                  encode_for_uri(lcase(?oldLau2Notation))),\n           struuid()) AS ?key)\n  BIND (iri(concat(?ns, ?key)) AS ?oldLau2)\n  ?_oldLau2 ?p ?o .\n}"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/components/8f258ae1-39df-448d-96bf-b7a9a05d89aa/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/85",
+          "@type": [
+            "http://www.w3.org/ns/csvw#Schema"
+          ],
+          "http://www.w3.org/ns/csvw#aboutUrl": [
+            {
+              "@value": ""
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/87",
+          "@type": [
+            "http://www.w3.org/ns/csvw#Table"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#baseUri": [
+            {
+              "@value": "http://example.com/"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#baseUriControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#dialectControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#encodeType": [
+            {
+              "@value": "default"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#encodeTypeControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#fullMapping": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#fullMappingControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#generateNullHeaderNames": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#generateNullHeaderNamesControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#normalOutput": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "false"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#normalOutputControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#rowLimitControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#skipLines": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "0"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#skipLinesControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#tableSchemaControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUri": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUriControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#dialect": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/88"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#tableSchema": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/85"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/88",
+          "@type": [
+            "http://www.w3.org/ns/csvw#Dialect"
+          ],
+          "http://www.w3.org/ns/csvw#delimeter": [
+            {
+              "@value": ","
+            }
+          ],
+          "http://www.w3.org/ns/csvw#encoding": [
+            {
+              "@value": "UTF-8"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#header": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ],
+          "http://www.w3.org/ns/csvw#quoteChar": [
+            {
+              "@value": "\""
+            }
+          ],
+          "http://www.w3.org/ns/csvw#trim": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "true"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1494914992584/graph/86"
+    }
+  ]
+}

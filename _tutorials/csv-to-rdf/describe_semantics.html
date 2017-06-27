@@ -1,0 +1,51 @@
+---
+file: describe_semantics.html
+short: "CSV to RDF: describe semantics"
+subtitle: Describe semantics
+title: Converting tabular data to RDF
+---
+
+<p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/make_versions_explicit.html %}" rel="prev">&larr; Previous step</a></p>
+
+<p class="flow-text">At this point we have reasonably clean RDF data.
+However, the data is described in terms of custom properties, such as <code>:POP</code> or <code>:NUTS3_10</code>.
+These properties do not give away much of their meaning, making it difficult to comprehend the data.
+In order to improve the usability of the data, we therefore map these custom properties to terms from standard RDF vocabularies.</p>
+
+<p class="flow-text">The dataset is actually made up of two parts.
+The first part is a code list of the local administrative units.
+Code lists, as well as other controlled vocabularies, can be described using the terms of the <a href="https://www.w3.org/TR/skos-reference">Simple Knowledge Organization System</a> (SKOS).
+The second part consists of statistical measures about the administrative units.
+Specifically, there are population counts and areas in square meters.
+Statistical data of this kind can be described by the <a href="https://www.w3.org/TR/vocab-data-cube">Data Cube Vocabulary</a> (QB).
+Both SKOS and QB are widely used standards by the <a href="https://www.w3.org">World Wide Web Consortium</a> (W3C).
+In the following, we will refer to the terms of these standards via compact IRIs that use short prefixes in place of namespace IRIs.
+You can look up the namespace IRIs of common prefixes, such as <code>skos:</code> and <code>qb:</code>, by using <a href="http://prefix.cc">Prefix.cc</a>.</p>
+
+<p class="flow-text">We cast the local administrative units as instances of <code>skos:Concept</code> belonging to the LAU concept scheme.
+Using an inline table via the <code>VALUES</code> clause we map the source properties to the target properties from SKOS.
+<code>:NAME_1</code> is mapped to <code>skos:prefLabel</code>, <code>:LAU2_NAT_CODE</code> to <code>skos:notation</code>, and the transliterated names are treated as values of <code>skos:altLabel</code>.</p>
+
+<pre><code>PREFIX :     &lt;http://example.com/&gt;
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+DELETE {
+  ?lau2 ?source ?o .
+}
+INSERT {
+  ?lau2 a skos:Concept ;
+    skos:inScheme &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016&gt; ;
+    ?target ?o .
+}
+WHERE {
+  VALUES (?source        ?target) {
+         (:NAME_1        skos:prefLabel)
+         (:NAME_2_LAT    skos:altLabel)
+         (:LAU2_NAT_CODE skos:notation)
+  }
+  ?lau2 ?source ?o .
+}</code></pre>
+
+<p class="flow-text">We will get back to mapping the statistical part once we generate IRIs of the RDF resources in our data in the next step.</p>
+
+<p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/generate_iris.html %}" rel="next">&rarr; Next step</a></p>

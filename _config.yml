@@ -15,6 +15,9 @@ excerpt_separator: <!--more-->
 collections:
   components:
     output: true
+  tutorials:
+    output: true
+    permalink: /:collection/:path
   
 defaults:
   - scope:
@@ -22,8 +25,41 @@ defaults:
       type: components
     values:
       layout: component
+  - scope:
+      path: ""
+      type: tutorials
+    values:
+      layout: tutorial
 
 gems:
   - jekyll-mentions
   - jekyll-feed
   - jekyll-sitemap
+
+exclude:
+  - api-commons
+  - api-component-v1
+  - api-component-v1-impl
+  - api-dpu-v1
+  - api-dpu-v1-impl
+  - api-executor-v1
+  - build-checkstyle
+  - commons-code
+  - commons-entities
+  - dataunit-core
+  - dataunit-sesame
+  - dataunit-sesame-impl
+  - dataunit-system
+  - dataunit-system-impl
+  - deploy
+  - deploy-dependencies
+  - executor
+  - executor-monitor
+  - frontend
+  - plugins
+  - rdf-utils
+  - rdf-utils-rdf4j
+  - storage
+  - test-environment
+  - utils-core
+  - vocabulary
