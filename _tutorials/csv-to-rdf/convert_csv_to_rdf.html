@@ -15,6 +15,15 @@ We separate further post-processing of the data into the subsequent steps.</p>
 Tabular implements the standard mapping specified in the W3C Recommendation <a href="https://www.w3.org/TR/csv2rdf">Generating RDF from Tabular Data on the Web</a>.
 There are several options that allow us to customize the output of this component.</p>
 
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <img alt="Pipeline with Tabular"
+         class="responsive-img"
+         data-caption="Pipeline with Tabular"
+         src="{% link /assets/tutorials/csv-to-rdf/img/pipeline_with_tabular.png %}"/>
+  </div>
+</div>
+
 <p class="flow-text">The option <em>Table has header row</em> is on by default and we leave it as such, since our CSV inputs contain headers with column names.
 However, some of the sheets converted to CSV contain empty columns and, consequently, their headers are empty too.
 Tabular would raise an error when provided with an empty header, since it needs a column name to generate an IRI for the RDF property the column values are mapped to.
