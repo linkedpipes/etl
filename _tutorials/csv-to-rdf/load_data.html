@@ -41,12 +41,30 @@ For example, you can use this feature to delete obsolete dumps from prior execut
 If you want to publish the data, it is a good idea to push it to a directory that is exposed via an HTTP server.
 That way, the data will be automatically made available for download from the server.</p>
 
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Files to SCP configuration"
+         class="responsive-img"
+         data-caption="Files to SCP configuration"
+         src="{% link /assets/tutorials/csv-to-rdf/img/files_to_scp.png %}"/>
+  </div>
+</div>
+
 <p class="flow-text">To load the data into an RDF store we use the Virtuoso component.
 This is a peculiar component, since it accepts its input indirectly.
 Instead of providing it with data via an input edge, it loads the data from a specified directory on the server where the Virtuoso RDF store runs.
 Since the component depends on RDF dumps being loaded by Files to SCP, it is connected to it via the <em>Run before</em> edge.
 To create this edge, click on the Files to SCP component that must complete before the Virtuoso component can load the data, select the <em>Run before</em> button, and drag it to the Virtuoso component.
 Note that the directory from which Virtuoso loads data must be present in the <code>DirsAllowed</code> section of the <a href="http://docs.openlinksw.com/virtuoso/dbadm">virtuoso.ini</a> file.</p>
+
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <img alt="Run before edge"
+         class="responsive-img"
+         data-caption="Run before edge"
+         src="{% link /assets/tutorials/csv-to-rdf/img/run_before.png %}"/>
+  </div>
+</div>
 
 <p class="flow-text">The component connects to Virtuoso via <a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity">JDBC</a>, so you need to provide it with the JDBC connection string, which typically has the format of <code>jdbc:virtuoso://{host name}:1111/charset=UTF-8/</code>.
 In order to authorize LP-ETL to push data to Virtuoso, you must give it the Virtuoso user name and password.
@@ -62,6 +80,15 @@ It will, however, be used to clear previous data present in the named graph.</p>
 To get the best performance, the number of loaders should correspond to the number of CPU cores available on the server running the Virtuoso.
 The use of the Virtuoso loader is recommended for larger datasets that contain millions of RDF triples, since the other methods for loading data to RDF stores are better suited for smaller datasets.</p>
 
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Virtuoso configuration"
+         class="responsive-img"
+         data-caption="Virtuoso configuration"
+         src="{% link /assets/tutorials/csv-to-rdf/img/virtuoso.png %}"/>
+  </div>
+</div>
+
 <p class="flow-text"><a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_loaders.jsonld %}">Here</a> you can find the example pipeline with the loaders included.
 The pipeline is exported without the credentials required by loaders.
 You can share a pipeline with no private configuration by using the option to download it without credentials.
@@ -71,6 +98,15 @@ You can toggle components between the disabled and the enabled state via their b
 Moreover, there is a special mass command that disables or enables all loaders in a pipeline.
 You can find it by clicking the cogwheel icon in the top right corner of the pipeline view.
 When components are disabled, their execution is skipped and any following components receive empty input.</p>
+
+<div class="row">
+  <div class="col s12 m4 offset-m4">
+    <img alt="Disable loaders"
+         class="responsive-img"
+         data-caption="Disable loaders"
+         src="{% link /assets/tutorials/csv-to-rdf/img/disable_loaders.png %}"/>
+  </div>
+</div>
 
 <p class="flow-text">
   <a href="{% link _tutorials/csv-to-rdf/add_metadata.html %}" rel="next">&rarr; Next step</a>

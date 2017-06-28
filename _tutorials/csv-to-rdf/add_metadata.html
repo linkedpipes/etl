@@ -15,6 +15,13 @@ In particular, it uses the <a href="https://joinup.ec.europa.eu/asset/dcat_appli
 Datasets can be described by the <a href="{% link _components/e-dcatap11dataset.html %}">DCAT-AP Dataset</a> component and their distributions can be covered by the <a href="{% link _components/e-dcatap11distribution.html %}">DCAT-AP Distribution</a> component.
 In this context, distributions correspond to specific forms of a given dataset, such as downloadable files or APIs.</p>
 
+<p>
+  <img alt="Data Catalog Vocabulary"
+       class="materialboxed responsive-img"
+       data-caption="Data Catalog Vocabulary"
+       src="{% link /assets/tutorials/csv-to-rdf/img/dcat-model.jpg %}"/>
+</p>
+
 <p class="flow-text">Both components provide expressive means to characterize datasets using descriptive, structural, and administrative metadata in RDF.
 The mandatory metadata required for a DCAT-AP dataset are grouped in the initial section of the component.
 The remaining sections enable you to fill in other recommended or optional metadata.
@@ -91,6 +98,13 @@ WHERE {
 
 <p class="flow-text">To merge multiple metadata outputs you can use the <a href="{% link _components/t-singlegraphunion.html %}">Union</a> component, which combines several RDF inputs into a single output.
 We persist the merged metadata using the above-described loaders, producing both a file dump and loading the data to an RDF store.</p>
+
+<p>
+  <img alt="Union of metadata"
+       class="materialboxed responsive-img"
+       data-caption="Union of metadata"
+       src="{% link /assets/tutorials/csv-to-rdf/img/metadata_fragment.png %}"/>
+</p>
 
 <p class="flow-text">To make the data easier to discover and present in search engines we can generate <a href="https://schema.org">Schema.org</a> dataset metadata.
 A dataset can be described as an instance of <a href="http://schema.org/Dataset"><code>schema:Dataset</code></a> using the properties declared by the Schema.org vocabulary. 
@@ -204,6 +218,13 @@ In addition to the configuration we described for its parent component, you need
 Since CKAN uses specific IDs for dataset licences different from those in DCAT-AP, you should select the appropriate licence in the component's configuration.
 Moreover, you can provide metadata designated for the LOD cloud diagram, such as the dataset's topic or its links to other datasets already included in the LOD cloud.
 For example, we can describe that our dataset features 173 links to <a href="https://datahub.io/dataset/nuts-geovocab">NUTS 2010 in RDF</a>.</p>
+
+<p>
+  <img alt="Load metadata"
+       class="materialboxed responsive-img"
+       data-caption="Load metadata"
+       src="{% link /assets/tutorials/csv-to-rdf/img/load_metadata.png %}"/>
+</p>
 
 <p class="flow-text">The final version of our example pipeline that includes the metadata is available <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_metadata.jsonld %}">here</a>.
 The interdependencies between the metadata components make the pipeline impossible to layout without edge crossings, but you can achieve a reasonably clear layout as we tried in the example pipeline.</p>

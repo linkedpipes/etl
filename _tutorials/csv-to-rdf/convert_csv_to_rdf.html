@@ -26,6 +26,15 @@ We can handle the empty columns by switching on the <em>Generate names for null 
 It instructs Tabular to generate synthetic names for empty headers.
 Since the values in the empty columns are missing, switching this option on effectively ignores these columns.</p>
 
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Tabular configuration, part 1"
+         class="responsive-img"
+         data-caption="Tabular configuration, part 1"
+         src="{% link /assets/tutorials/csv-to-rdf/img/tabular_initial_config.png %}"/>
+  </div>
+</div>
+
 <p class="flow-text">We also turn on the option <em>Trim whitespace from cells</em> to get rid of insignificant whitespace.
 Instead of the <em>Default row and property IRIs</em> we specify a fixed property IRI base.
 We choose <code>http://example.com/</code> as a placeholder namespace to use for the IRIs of properties.
@@ -41,6 +50,15 @@ We do not need to skip any rows, but the <em>Rows skipped</em> options can be em
 We use the default option <em>Data only</em> since we do not need to generate structural metadata about the input CSV files.
 Finally, we keep the switch <em>Using CSV on the Web mapping</em> on.
 Instead of providing a custom mapping directly in Tabular, we map the data in follow-up data processing.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Tabular configuration, part 2"
+         class="responsive-img"
+         data-caption="Tabular configuration, part 2"
+         src="{% link /assets/tutorials/csv-to-rdf/img/tabular_end_config.png %}"/>
+  </div>
+</div>
 
 <p class="flow-text">The pipeline that includes the steps described so far in the tutorial can be downloaded <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_excel_to_rdf.jsonld %}">here</a>.</p>
 

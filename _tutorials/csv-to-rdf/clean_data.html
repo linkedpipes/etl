@@ -15,6 +15,15 @@ Cleaning and mapping data usually takes multiple steps, embodied by multiple ins
 It is therefore useful to add a description to each instance to be able to differentiate them quickly.
 You can add a description to any component by going to its <em>General</em> tab and filling in the <em>Description</em> field.</p>
 
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Component description"
+         class="responsive-img"
+         data-caption="Component description"
+         src="{% link /assets/tutorials/csv-to-rdf/img/component_description.png %}"/>
+  </div>
+</div>
+
 {% comment %}
 Remove data
 {% endcomment %}
@@ -177,5 +186,12 @@ WHERE {
 
 <p class="flow-text">Note that the mapping between countries and languages is a simplification, because there are EU member countries that have multiple official languages, such as Ireland where both Irish and English are spoken.
 Consequently, there is a chance that this mapping assigns the names of local administrative units with incorrect language tags.</p>
+
+<p>
+  <img alt="Clean data pipeline"
+       class="materialboxed responsive-img"
+       data-caption="Clean data pipeline"
+       src="{% link /assets/tutorials/csv-to-rdf/img/clean_data_pipeline.png %}"/>
+</p>
 
 <p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/make_versions_explicit.html %}" rel="next">&rarr; Next step</a></p>

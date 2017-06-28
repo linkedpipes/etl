@@ -12,11 +12,20 @@ We start by downloading the spreadsheet using the <a href="{% link _components/e
 To add a component to the pipeline's canvas, right-click the canvas and select the option to insert a component.
 A menu appears that lists the available components.
 You can quickly filter the components by typing a few characters of their names.
-We pipe the downloaded file into the <a href="{% link _components/t-exceltocsv %}">Excel to CSV</a> component.
+We pipe the downloaded file into the <a href="{% link _components/t-exceltocsv.html %}">Excel to CSV</a> component.
 You can pipe a component's output by dragging an edge from the component's output port to the target component's input port.
 Port are displayed as circles on the sides of the components.
 By convention, the ports on the left are inputs and the ports on the right are outputs.
 You can also drop the dragged edge onto an empty canvas, in which case LP-ETL suggests the components that have an input compatible with the edge.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Select component"
+         class="responsive-img"
+         data-caption="Select component"
+         src="{% link /assets/tutorials/csv-to-rdf/img/select_component.png %}"/>
+  </div>
+</div>
 
 <p class="flow-text">There are several options that we can configure in the Excel to CSV component.
 In this case, we convert the Excel spreadsheet into multiple CSV files; one for each sheet.
@@ -26,6 +35,15 @@ This allows us to select the sheets of interest by using the regular expression 
 We can also use the sheet names to distinguish the names of the produced CSV files.
 We can refer to the sheet name via the <code>{SHEET}</code> variable in the <em>Output file template</em> option.
 We enter <code>lau_{SHEET}.csv</code> as the value of this option, so that files like <code>lau_DE.csv</code> or <code>lau_CZ.csv</code> are produced.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Excel to CSV configuration"
+         class="responsive-img"
+         data-caption="Excel to CSV configuration"
+         src="{% link /assets/tutorials/csv-to-rdf/img/excel_to_csv_config.png %}"/>
+  </div>
+</div>
 
 <p class="flow-text">In order to be able to differentiate the countries in the later steps of the transformation, we switch on the <em>Virtual columns have header</em> and the <em>Include sheet name as additional column</em> options, which append the sheet names as an additional <code>sheet_name</code> column in the produced CSV files.
 Similarly, we turn on the <em>Skip empty rows</em> option, since the spreadsheet contains unnecessary empty rows.
@@ -37,19 +55,21 @@ When the pipeline execution completes, you can click through to its execution vi
 
 <p>
   <img alt="List of executions"
-       class="materialboxed responsive-img"
+       class="responsive-img"
        data-caption="List of executions"
        src="{% link /assets/tutorials/csv-to-rdf/img/list_of_executions.png %}"/>
 </p>
 
 <p class="flow-text">When you click the output port of the Excel to CSV component a listing of the CSV files produced by the component is shown.</p>
 
-<p>
-  <img alt="CSV files"
-       class="materialboxed responsive-img"
-       data-caption="CSV files"
-       src="{% link /assets/tutorials/csv-to-rdf/img/csv_files.png %}"/>
-</p>
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="CSV files"
+         class="responsive-img"
+         data-caption="CSV files"
+         src="{% link /assets/tutorials/csv-to-rdf/img/csv_files.png %}"/>
+  </div>
+</div>
 
 <p class="flow-text">The pipeline to replicate this transformation step can be found <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_excel_to_csv.jsonld %}">here</a>.</p>
 
