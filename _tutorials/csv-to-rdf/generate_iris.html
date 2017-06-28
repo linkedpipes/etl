@@ -66,8 +66,56 @@ WHERE {
 }</code></pre>
 
 <p class="flow-text">Next, we generate IRIs for local administrative units on the level 2.
-This step is more convoluted because not all LAU2 have codes and when their codes are available they may not be unique per country.
-In order to address these limitations, we generate UUID-based IRIs for LAU2 without codes and include LAU1 codes in LAU2 IRIs to disambiguate the administrative units within countries.
+This step is more convoluted because not all LAU2 have codes and when their codes are available they may not be unique per country. For example, the LAU2 code <code>32010</code> in the column <code>LAU2_NAT_CODE</code> is shared among several countries, such as Belgium, Bulgaria, and Ireland:</p>
+
+<table class="responsive-table">
+  <thead>
+    <tr>
+      <th>NUTS_3</th>
+      <th>LAU1_NAT_CODE</th>
+      <th>LAU2_NAT_CODE</th>
+      <th>CHANGE</th>
+      <th>NAME_1</th>
+      <th>NAME_2_LAT</th>
+      <th>POP</th>
+      <th>AREA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>BE252</td>
+      <td>n.a.</td>
+      <td>32010</td>
+      <td>no</td>
+      <td>Koekelare</td>
+      <td>Koekelare</td>
+      <td>8761</td>
+      <td>39185258</td>
+    </tr>
+    <tr>
+      <td>BG423</td>
+      <td>PAZ19</td>
+      <td>32010</td>
+      <td>no</td>
+      <td>Ивайло</td>
+      <td>Ivaylo</td>
+      <td>2750</td>
+      <td>14078000</td>
+    </tr>
+    <tr>
+      <td>IE011</td>
+      <td>01</td>
+      <td>32010</td>
+      <td>no</td>
+      <td>Mullagh</td>
+      <td>Mullagh</td>
+      <td>n.a</td>
+      <td>2440000</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="flow-text">In order to address these limitations, we generate UUID-based IRIs for LAU2 without codes and include LAU1 codes in LAU2 IRIs to disambiguate the administrative units within countries.
 However, not all LAU2 codes link a LAU1 code, so its inclusion is optional.</p>
 
 <pre><code>PREFIX :     &lt;http://example.com/&gt;
