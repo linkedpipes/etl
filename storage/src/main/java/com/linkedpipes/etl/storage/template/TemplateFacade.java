@@ -3,6 +3,7 @@ package com.linkedpipes.etl.storage.template;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.mapping.MappingFacade;
+import com.linkedpipes.etl.storage.unpacker.TemplateSource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,11 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.*;
 
+/**
+ * TODO Extract implementation of TemplateSource to external class?
+ */
 @Service
-public class TemplateFacade {
+public class TemplateFacade implements TemplateSource {
 
     @Autowired
     private TemplateManager manager;
@@ -218,6 +222,24 @@ public class TemplateFacade {
     public void remove(Template template) throws BaseException {
         manager.remove(template);
         mappingFacade.remove(template);
+    }
+
+    @Override
+    public Collection<Statement> getDefinition(String iri)
+            throws BaseException {
+        return getDefinition(getTemplate(iri));
+    }
+
+    @Override
+    public Collection<Statement> getConfiguration(String iri)
+            throws BaseException {
+        return getConfigurationInstance(getTemplate(iri));
+    }
+
+    @Override
+    public Collection<Statement> getConfigurationDescription(String iri)
+            throws BaseException {
+        return getConfigurationDescription(getTemplate(iri));
     }
 
 }

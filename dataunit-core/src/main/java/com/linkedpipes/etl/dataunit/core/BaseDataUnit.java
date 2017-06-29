@@ -105,7 +105,6 @@ public abstract class BaseDataUnit implements ManageableDataUnit {
 
     private List<String> relativeAsString(
             Collection<File> paths, File root) {
-        root = root.getAbsoluteFile();
         final Path rootPath = root.toPath();
         return paths.stream().map(
                 (file) -> rootPath.relativize(file.toPath()).toString()
@@ -137,8 +136,7 @@ public abstract class BaseDataUnit implements ManageableDataUnit {
             return mapper.readValue(file,
                     typeFactory.constructCollectionType(List.class, type));
         } catch (IOException ex) {
-            throw new LpException("Can't load directory list from file: {}",
-                    file, ex);
+            throw new LpException("Can't load directory list.", ex);
         }
     }
 

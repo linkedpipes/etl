@@ -1,0 +1,9 @@
+@prefix textHolder: <http://plugins.linkedpipes.com/ontology/e-textHolder#> .
+
+<http://localhost:8080/resources/components/1476168977169/configuration> {
+	<http://localhost:8080/resources/components/1476168977169/configuration> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
+		textHolder:content "First level value." ;
+		textHolder:contentControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+		textHolder:fileName "template-file-name.dat" ;
+		textHolder:fileNameControl <http://plugins.linkedpipes.com/resource/configuration/Force> .
+}

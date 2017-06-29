@@ -9,7 +9,6 @@ import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class Component implements Loadable {
 
     private final List<Port> ports = new ArrayList<>(2);
 
-    private final List<Configuration> configurations = new ArrayList<>(3);
+    private String configurationGraph;
 
     private Integer executionOrder;
 
@@ -85,11 +84,8 @@ public class Component implements Loadable {
         return configurationDescription;
     }
 
-    /**
-     * @return Ordered configuration entities for this component.
-     */
-    public List<Configuration> getConfigurations() {
-        return configurations;
+    public String getConfigurationGraph() {
+        return configurationGraph;
     }
 
     @Override
@@ -122,11 +118,9 @@ public class Component implements Loadable {
                                 "Invalid exec. type : {} {}", iri, object);
                 }
                 return null;
-            case LP_EXEC.HAS_CONFIGURATION:
-                final Configuration configuration =
-                        new Configuration(object.asString());
-                configurations.add(configuration);
-                return configuration;
+            case LP_PIPELINE.HAS_CONFIGURATION_GRAPH:
+                configurationGraph = object.asString();
+                return null;
             case LP_PIPELINE.HAS_JAR_URL:
                 jarPath = object.asString();
                 return null;
@@ -141,7 +135,6 @@ public class Component implements Loadable {
 
     public void afterLoad() throws InvalidPipelineException {
         check();
-        sortConfigurations();
     }
 
     private void check() throws InvalidPipelineException {
@@ -158,20 +151,19 @@ public class Component implements Loadable {
             throw new InvalidPipelineException(
                     "Missing execution executionOrder: {}", iri);
         }
+        if (executionType == ExecutionType.MAP) {
+            return;
+        }
         if (configurationDescription == null) {
             throw new InvalidPipelineException(
-                    "Missing configuration description: {} jar: {}",
+                    "Missing configurationGraph description: {} jar: {}",
                     iri, jarPath);
         }
-        configurationDescription.check();
-        for (Configuration configuration : configurations) {
-            configuration.check();
+        if (configurationGraph == null) {
+            throw new InvalidPipelineException(
+                    "Missing configurationGraph for: {}", iri);
         }
-    }
-
-    private void sortConfigurations() {
-        Collections.sort(configurations,
-                Comparator.comparingInt(x -> -x.getOrder()));
+        configurationDescription.check();
     }
 
 }

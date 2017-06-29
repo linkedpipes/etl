@@ -58,7 +58,7 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
     }
 
     private void loadTasksGroups() throws LpException {
-        Rdf4jSource source = Rdf4jSource.createWrap(tasksRdf.getRepository());
+        Rdf4jSource source = Rdf4jSource.wrapRepository(tasksRdf.getRepository());
         try {
             taskGroups = RdfUtils.loadList(source,
                     tasksRdf.getReadGraph().stringValue(),

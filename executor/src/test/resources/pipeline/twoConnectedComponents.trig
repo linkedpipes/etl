@@ -1,7 +1,7 @@
 @prefix lp : <http://linkedpipes.com/ontology/> .
 @prefix skos : <http://www.w3.org/2004/02/skos/core#> .
-@prefix lpCnf : <http://plugins.linkedpipes.com/ontology/configuration/> .
-@prefix lpCnfRes : <http://plugins.linkedpipes.com/resource/configuration/> .
+@prefix lpCnf : <http://plugins.linkedpipes.com/ontology/configurationGraph/> .
+@prefix lpCnfRes : <http://plugins.linkedpipes.com/resource/configurationGraph/> .
 
 <http://pipeline/graph> {
 
@@ -21,8 +21,7 @@
         lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
         <http://linkedpipes.com/ontology/executionOrder>1 ;
         lp:configurationDescription <http://pipeline/component/1/desc> ;
-        lp:configuration <http://pipeline/component/1/config/1> ,
-            <http://pipeline/component/1/config/2>
+        lp:configurationGraph  <http://pipeline/configurationGraph/1/2>
         .
 
     <http://pipeline/component/2> a lp:Component ;
@@ -33,7 +32,7 @@
         lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
         <http://linkedpipes.com/ontology/executionOrder> 2 ;
         lp:configurationDescription <http://pipeline/component/2/desc> ;
-        lp:configuration <http://pipeline/component/2/config/1>
+        lp:configurationGraph <http://pipeline/configurationGraph/2/1>
         .
 
     <http://pipeline/connection/1> a lp:Connection ;
@@ -58,18 +57,6 @@
             <http://linkedpipes.com/ontology/dataUnit/files/DirectoryMirror> ;
         lp:binding <http://linkedpipes.com/ontology/components/2/dataunit/1> ;
         .
-
-    <http://pipeline/component/1/config/2> a lp:Configuration ;
-        <http://linkedpipes.com/ontology/configuration/order> 1 ;
-        <http://linkedpipes.com/ontology/configuration/graph> <http://pipeline/configuration/1/2> .
-
-    <http://pipeline/component/1/config/1> a lp:Configuration ;
-        <http://linkedpipes.com/ontology/configuration/order> 2 ;
-        <http://linkedpipes.com/ontology/configuration/graph> <http://pipeline/configuration/1/1> .
-
-    <http://pipeline/component/2/config/1> a lp:Configuration ;
-        <http://linkedpipes.com/ontology/configuration/order> 1 ;
-        <http://linkedpipes.com/ontology/configuration/graph> <http://pipeline/configuration/2/1> .
 
     <http://pipeline/component/1/desc>
         a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
@@ -96,7 +83,7 @@
 
 }
 
-<http://pipeline/configuration/1/1> {
+<http://pipeline/configurationGraph/1/1> {
     <http://pipeline/resource> a <http://descriptionr/c/1> ;
         <http://value/1> "1-1" ;
         <http://control/1> lpCnfRes:None ;
@@ -104,7 +91,7 @@
         <http://control/2> lpCnfRes:Force .
 }
 
-<http://pipeline/configuration/1/2> {
+<http://pipeline/configurationGraph/1/2> {
     <http://pipeline/resource> a <http://descriptionr/c/1> ;
         <http://value/1> "2-1" ;
         <http://control/1> lpCnfRes:None ;
@@ -112,7 +99,7 @@
         <http://control/2> lpCnfRes:Forced .
 }
 
-<http://pipeline/configuration/2/1> {
+<http://pipeline/configurationGraph/2/1> {
     <http://pipeline/resource> a <http://descriptionr/c/2> ;
         <http://value/1> "a" ;
         <http://control/1> lpCnfRes:None ;

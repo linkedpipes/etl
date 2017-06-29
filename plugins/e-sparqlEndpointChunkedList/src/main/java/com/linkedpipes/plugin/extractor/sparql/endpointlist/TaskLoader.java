@@ -27,7 +27,7 @@ class TaskLoader {
     public TaskLoader(SingleGraphDataUnit dataUnit,
             ExceptionFactory exceptionFactory) {
         this.dataUnit = dataUnit;
-        this.source = Rdf4jSource.createWrap(dataUnit.getRepository());
+        this.source = Rdf4jSource.wrapRepository(dataUnit.getRepository());
         this.exceptionFactory = exceptionFactory;
     }
 

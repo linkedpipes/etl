@@ -68,9 +68,6 @@ public class Model {
          */
         public void replace(IRI property, Entity entity, boolean recursive) {
             set(property, entity.resource);
-            if (entity == null) {
-                return;
-            }
             if (!recursive) {
                 return;
             }
@@ -123,13 +120,11 @@ public class Model {
          * values are deleted.
          *
          * @param property
-         * @param value Can be null, in that case value is ignored.
+         * @param value
          */
         public void set(IRI property, Value value) {
-            List<Value> values = new LinkedList<>();
-            if (value != null) {
-                values.add(value);
-            }
+            final List<Value> values = new LinkedList<>();
+            values.add(value);
             properties.put(property, values);
         }
 
@@ -354,6 +349,9 @@ public class Model {
         toOutput.forEach((entity) -> {
             entity.properties.entrySet().forEach((entry) -> {
                 entry.getValue().forEach((value) -> {
+                    if (value == null) {
+                        return;
+                    }
                     statements.add(vf.createStatement(entity.resource,
                             entry.getKey(), value, graph
                     ));

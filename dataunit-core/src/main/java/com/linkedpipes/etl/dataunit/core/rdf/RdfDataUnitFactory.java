@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
-import com.linkedpipes.etl.dataunit.core.pipeline.PipelineModel;
-import com.linkedpipes.etl.dataunit.core.pipeline.PipelineModelFactory;
+import com.linkedpipes.etl.dataunit.core.pipeline.PipelineInfo;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
@@ -57,7 +56,7 @@ public class RdfDataUnitFactory
                     return new DefaultSingleGraphDataUnit(
                             configuration.getBinding(),
                             dataUnit,
-                            getRepository(dataUnit),
+                            getRepository(configuration),
                             configuration.getSources(),
                             dataUnit
                     );
@@ -65,7 +64,7 @@ public class RdfDataUnitFactory
                     return new DefaultGraphListDataUnit(
                             configuration.getBinding(),
                             dataUnit,
-                            getRepository(dataUnit),
+                            getRepository(configuration),
                             configuration.getSources(),
                             dataUnit
                     );
@@ -83,8 +82,9 @@ public class RdfDataUnitFactory
         return null;
     }
 
-    private Repository getRepository(String dataUnitIri) throws LpException {
-        return repositoryManager.getRepository(dataUnitIri);
+    private Repository getRepository(Configuration configuration)
+            throws LpException {
+        return repositoryManager.getRepository(configuration);
     }
 
     @Override
@@ -108,15 +108,15 @@ public class RdfDataUnitFactory
 
     private void initializeRepositoryManager(RdfSource source, String pipeline,
             String graph) throws LpException {
-        PipelineModelFactory factory = new PipelineModelFactory();
-        PipelineModel pipelineModel;
+        PipelineInfo pipelineInfo = new PipelineInfo(pipeline, graph, source);
+        String rdfRepositoryPolicy;
         try {
-            pipelineModel = factory.createModel(source, pipeline, graph);
+            rdfRepositoryPolicy = pipelineInfo.getRdfRepositoryPolicy();
         } catch (RdfUtilsException ex) {
-            throw new LpException("Can't load pipeline model.", ex);
+            throw new LpException("Can't query pipeline model.", ex);
         }
-        repositoryManager = new RepositoryManager(pipelineModel,
-                configuration.getDirectory());
+        repositoryManager = new RepositoryManager(
+                rdfRepositoryPolicy, configuration.getDirectory());
     }
 
     @Override

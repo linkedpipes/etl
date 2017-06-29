@@ -5,7 +5,7 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
-class ExecutionProfile implements Loadable {
+public class ExecutionProfile implements Loadable {
 
     private String rdfRepositoryPolicy;
 

@@ -1,0 +1,6 @@
+
+<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration> {
+	<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration> a <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query> "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
+		<http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}

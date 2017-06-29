@@ -1,0 +1,14 @@
+
+<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc> {
+	<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/type> <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/member> <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName> , <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content> .
+	
+	<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> .
+	
+	<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/e-textHolder#content> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> .
+}

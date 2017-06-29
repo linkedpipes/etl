@@ -66,7 +66,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
     }
 
     private void loadTasks() throws LpException {
-        RdfSource source = Rdf4jSource.createWrap(taskRdf.getRepository());
+        RdfSource source = Rdf4jSource.wrapRepository(taskRdf.getRepository());
         try {
             graphsToPurge = RdfUtils.loadList(source,
                     taskRdf.getReadGraph().stringValue(),

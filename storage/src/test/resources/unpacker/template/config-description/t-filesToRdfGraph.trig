@@ -1,0 +1,18 @@
+
+<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc> {
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/type> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/member> <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize> , <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> , <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> .
+	
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl> .
+	
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl> .
+	
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFailControl> .
+}

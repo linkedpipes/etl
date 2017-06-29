@@ -49,7 +49,7 @@ public class DefaultControlTest {
                 .string("http://control/2", LP_OBJECTS.FORCE);
         cnf2.commit();
         final DefaultControl control = new DefaultControl();
-        control.loadDefinition(source, "http://graph", "http://type");
+        control.loadDefinition(source, "http://type");
 
         final List<EntityReference> refs = new LinkedList<>();
         refs.add(new EntityReference("http://config",

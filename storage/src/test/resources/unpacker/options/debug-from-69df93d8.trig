@@ -1,0 +1,24 @@
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix etl: <http://etl.linkedpipes.com/ontology/> .
+
+<http://options> {
+
+    <http://localhost/base> a etl:ExecutionOptions ;
+        lp:deleteWorkingData false ;
+        lp:saveDebugData true ;
+        lp:execution <http://localhost/execution-debug> ;
+        etl:executionMapping <http://localhost/base/0> .
+
+    <http://localhost/base/0>
+        etl:execution <http://localhost:8080/resources/executions/69df93d8> ;
+        etl:mapping <http://localhost/base/1>, <http://localhost/base/2>  .
+
+    <http://localhost/base/1>
+        etl:mappingSource <http://localhost/pipeline/9d21ebd5/exec> ;
+        etl:mappingTarget <http://localhost/pipeline/9d21ebd5> .
+
+    <http://localhost/base/2>
+        etl:mappingSource <http://localhost/pipeline/a67542e2/exec> ;
+        etl:mappingTarget <http://localhost/pipeline/a67542e2> .
+
+}

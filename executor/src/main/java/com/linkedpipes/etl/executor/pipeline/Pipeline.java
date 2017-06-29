@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.pipeline;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
@@ -66,7 +67,7 @@ public class Pipeline {
         } catch (Exception ex) {
             throw new ExecutorException("Can't load definition.", ex);
         }
-        source = Rdf4jSource.createWrap(repository);
+        source = Rdf4jSource.wrapRepository(repository);
         // Search for a pipeline.
         final String iri;
         final String graph;
@@ -88,6 +89,26 @@ public class Pipeline {
             RdfUtils.load(source, iri, graph, model);
         } catch (RdfUtilsException ex) {
             throw new ExecutorException("Can't load pipeline model.", ex);
+        }
+        // Load descriptions.
+        for (Component component : model.getComponents()) {
+            ConfigurationDescription description =
+                    component.getConfigurationDescription();
+            if (description == null) {
+                continue;
+            }
+            try {
+                // TODO Implement more efficient approach
+                String descriptionGraph = RdfUtils.sparqlSelectSingle(source,
+                        "SELECT ?graph WHERE { GRAPH ?graph {" +
+                                "<" + description.getIri() + "> ?p ?o " +
+                                "} } LIMIT 1", "graph");
+
+                RdfUtils.load(source, description.getIri(),
+                        descriptionGraph, description);
+            } catch (RdfUtilsException ex) {
+                throw new ExecutorException("Can't load pipeline model.", ex);
+            }
         }
         model.afterLoad();
     }

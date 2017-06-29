@@ -25,6 +25,9 @@ public class RdfUtils {
     public static void loadByType(RdfSource source, String graph,
             Loadable loadable, String type) throws RdfUtilsException {
         String resource = getResourceOfType(source, graph, type);
+        if (resource == null) {
+            throw new RdfUtilsException("Missing resource of given type.");
+        }
         load(source, resource, graph, loadable);
     }
 
@@ -40,7 +43,7 @@ public class RdfUtils {
         }
     }
 
-    private static List<String> getResourcesOfType(RdfSource source,
+    public static List<String> getResourcesOfType(RdfSource source,
             String graph, String type) throws RdfUtilsException {
         if (source instanceof RdfSource.SparqlQueryable) {
             return getResourcesOfTypeByQuery(source, graph, type);
@@ -64,8 +67,11 @@ public class RdfUtils {
 
     private static List<String> getResourcesOfTypeByQuery(RdfSource source,
             String graph, String type) throws RdfUtilsException {
-        String queryAsString = "SELECT ?s WHERE { GRAPH <" + graph +
-                "> { ?s a <" + type + "> } } ";
+        String queryAsString = "SELECT ?s ";
+        if (graph != null) {
+            queryAsString += " FROM <" + graph + "> ";
+        }
+        queryAsString += " WHERE { ?s a <" + type + "> } ";
         List<String> resources = new ArrayList<>();
         for (Map<String, String> binding
                 : sparqlSelect(source, queryAsString)) {
@@ -106,7 +112,7 @@ public class RdfUtils {
             Class<Type> outputType) throws RdfUtilsException {
         String type = descriptorFactory.create(outputType).getObjectType();
         List<String> resources = getResourcesOfType(source, graph, type);
-        List<Type> output = new LinkedList<Type>();
+        List<Type> output = new LinkedList<>();
         for (String resource : resources) {
             Type newEntity = createInstance(outputType);
             load(source, resource, graph, newEntity, descriptorFactory);
@@ -122,6 +128,20 @@ public class RdfUtils {
         } catch (IllegalAccessException | InstantiationException ex) {
             throw new RdfUtilsException("Can't create instance");
         }
+    }
+
+    public static <Type extends Loadable> List<Type> loadList(RdfSource source,
+            String graph, Class<Type> outputType, String type)
+            throws RdfUtilsException {
+        List<String> resources = getResourcesOfType(source, graph, type);
+        List<Type> output = new LinkedList<>();
+        for (String resource : resources) {
+            Type newEntity = createInstance(outputType);
+            load(source, resource, graph, newEntity);
+            output.add(newEntity);
+        }
+        return output;
+
     }
 
     public static String sparqlSelectSingle(RdfSource source,

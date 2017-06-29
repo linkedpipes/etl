@@ -57,10 +57,16 @@ public class RdfObjects {
          */
         public Entity getReference(IRI property) {
             final List<Entity> objects = references.get(property);
-            if (objects != null && objects.size() == 1) {
+            if (objects == null) {
+                throw new RuntimeException("No references returned " +
+                        "for property: " + property.stringValue());
+            }
+            if (objects.size() == 1) {
                 return objects.get(0);
             } else {
-                throw new RuntimeException("Invalid number of references.");
+                throw new RuntimeException("Invalid number of references: " +
+                        objects.size() + " property: " +
+                        property.stringValue());
             }
         }
 
@@ -258,6 +264,12 @@ public class RdfObjects {
             this.valueFactory = graph.valueFactory;
         }
 
+        public Builder(RdfObjects graph, String resource) {
+            this.object = new Entity(graph.valueFactory.createIRI(resource),
+                    graph);
+            this.valueFactory = graph.valueFactory;
+        }
+
         public Builder add(String property, Value value) {
             return add(valueFactory.createIRI(property), value);
         }
@@ -346,7 +358,7 @@ public class RdfObjects {
      * @return Never null.
      */
     public Collection<Entity> getTyped(Resource... types) {
-        final Collection<Entity> result = new HashSet<>();
+        final Collection<Entity> result = new LinkedList<>();
         for (Entity object : resources.values()) {
             // TODO Use for loop and break.
             object.getReferences(RDF.TYPE).forEach((type) -> {
@@ -417,12 +429,24 @@ public class RdfObjects {
     }
 
     /**
-     * Generate a new resource for givne object.
+     * TODO Remove, do not use blacnk noders.
      *
      * @param object
      */
     public void changeResource(Entity object) {
         final Resource newResource = valueFactory.createBNode();
+        resources.remove(object.getResource());
+        resources.put(newResource, object);
+        object.resource = newResource;
+    }
+
+    /**
+     * Generate a new resource for givne object.
+     *
+     * @param object
+     */
+    public void changeResource(Entity object, String newValue) {
+        final Resource newResource = valueFactory.createIRI(newValue);
         resources.remove(object.getResource());
         resources.put(newResource, object);
         // TODO Replace with setter!
