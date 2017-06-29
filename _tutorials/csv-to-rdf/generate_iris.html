@@ -7,7 +7,7 @@ title: Converting tabular data to RDF
 
 <p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/describe_semantics.html %}" rel="prev">&larr; Previous step</a></p>
 
-<p class="flow-text">Tabular outputs <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes">blank nodes</a> by default. 
+<p class="flow-text">Tabular outputs <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes">blank nodes</a> by default.
 Blank nodes are not stable identifiers, so they do not persist across queries or updates, which makes them difficult to manipulate in data transformations.
 Since blank nodes are usually <em>“a convenience for the content provider and a burden on the content consumer”</em> (<a href="https://lists.w3.org/Archives/Public/semantic-web/2011Mar/0068.html">source</a>), we convert them to IRIs to make it easier to consume the data.
 We mint IRIs within a domain under our control; in this case <a href="https://linked.opendata.cz">https://linked.opendata.cz</a>.
@@ -153,7 +153,7 @@ WHERE {
 }</code></pre>
 
 <p class="flow-text">Some local administrative units refer to codes of their parent NUTS regions via the <code>:NUTS_3</code> or <code>:NUTS3_13</code> properties.
-<a href="http://ec.europa.eu/eurostat/web/nuts/overview">NUTS</a> (Nomenclature of territorial units for statistics) divides the EU into hierarchically organized regions that serve the purpose of aggregating statistics. 
+<a href="http://ec.europa.eu/eurostat/web/nuts/overview">NUTS</a> (Nomenclature of territorial units for statistics) divides the EU into hierarchically organized regions that serve the purpose of aggregating statistics.
 There are unofficial versions of NUTS in RDF that correspond to older versions of NUTS.
 However, our dataset links the current version of NUTS from 2013.
 Hence, we cannot reuse the existing RDF versions.
@@ -234,6 +234,49 @@ WHERE {
   BIND (iri(concat(?ns, ?key)) AS ?oldLau2)
   ?_oldLau2 ?p ?o .
 }</code></pre>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :     <http://example.com/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/005> a skos:Concept ;
+  skos:prefLabel "Alajärvi"@fi ;
+  skos:notation "005" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/146> ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "1056740000"^^xsd:decimal ;
+  :CHANGE false ;
+  :POP 10006 ;
+  :sheet_name "FI" .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/050> a skos:Concept ;
+  skos:prefLabel "Eura"@fi ;
+  skos:notation "050" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/041> ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "630200000"^^xsd:decimal ;
+  :CHANGE false ;
+  :POP 12128 ;
+  :sheet_name "FI" .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/592> a skos:Concept ;
+  skos:prefLabel "Petäjävesi"@fi ;
+  skos:notation "592" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/131> ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "495420000"^^xsd:decimal ;
+  :CHANGE false ;
+  :POP 4008 ;
+  :sheet_name "FI" .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
 
 <p class="flow-text">
   <a href="{% link _tutorials/csv-to-rdf/split_statistics_and_the_lau_code_list.html %}"

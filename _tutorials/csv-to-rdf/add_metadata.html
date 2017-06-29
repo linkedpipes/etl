@@ -226,6 +226,72 @@ For example, we can describe that our dataset features 173 links to <a href="htt
        src="{% link /assets/tutorials/csv-to-rdf/img/load_metadata.png %}"/>
 </p>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample metadata in RDF</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix adms:           <http://www.w3.org/ns/adms#> .
+@prefix dcat:           <http://www.w3.org/ns/dcat#> .
+@prefix dcterms:        <http://purl.org/dc/terms/> .
+@prefix dimension:      <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/> .
+@prefix owl:            <http://www.w3.org/2002/07/owl#> .
+@prefix qb:             <http://purl.org/linked-data/cube#> .
+@prefix qudt:           <http://qudt.org/vocab/unit#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix spdx:           <http://spdx.org/rdf/terms#> .
+@prefix statdcat:       <http://data.europa.eu/(xyz)/statdcat-ap/> .
+@prefix void:           <http://rdfs.org/ns/void#> .
+@prefix xsd:            <http://www.w3.org/2001/XMLSchema#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics> a dcat:Dataset ;
+  dcterms:accessRights <http://publications.europa.eu/resource/authority/access-rights/PUBLIC> ;
+  dcterms:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/ANNUAL> ;
+  dcterms:issued "2016-01-01"^^xsd:date ;
+  dcterms:modified "2017-06-29"^^xsd:date ;
+  dcterms:publisher <http://opendata.cz> ;
+  dcterms:title "LAU 2016 statistics"@en ;
+  dcterms:type <http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL> ;
+  owl:versionInfo "2016" ;
+  adms:versionNotes "Version for the year 2016"@en ;
+  dcat:contactPoint <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/contactPoint> ;
+  dcat:distribution <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution> ;
+  dcat:keyword "European Union"@en, "geography"@en, "statistics"@en, "demography"@en ;
+  dcat:theme <http://publications.europa.eu/resource/authority/data-theme/SOCI> ;
+  statdcat:attribute sdmx-attribute:obsStatus ;
+  statdcat:dimension qb:measureType , sdmx-dimension:refPeriod , dimension:refArea ;
+  statdcat:statMeasure qudt:SquareMeter .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution> a dcat:Distribution, void:Dataset ;
+  dcterms:format <http://publications.europa.eu/resource/authority/file-type/RDF_TRIG> ;
+  dcterms:issued "2016-01-01"^^xsd:date ;
+  dcterms:modified "2017-06-29"^^xsd:date ;
+  dcterms:title "Gzipovaný dump v RDF TriG"@cs , "Gzipped RDF TriG Dump"@en ;
+  dcterms:type <http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE> ;
+  adms:status <http://purl.org/adms/status/Completed> ;
+  dcat:accessURL <https://linked.opendata.cz/dataset/lau-2016-statistics> ;
+  dcat:downloadURL <https://obeu.vse.cz/dump/lau_2016_statistics.trig.gz> ;
+  dcat:mediaType <http://www.iana.org/assignments/media-types/application/trig> ;
+  spdx:checksum <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution/checksum> ;
+  void:classes 7 ;
+  void:dataDump <https://obeu.vse.cz/dump/lau_2016_statistics.trig.gz> ;
+  void:distinctObjects 166440 ;
+  void:distinctSubjects 176940 ;
+  void:entities 175924 ;
+  void:exampleResource <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/cz/554782/2016/populationTotal> ;
+  void:properties 21 ;
+  void:sparqlEndpoint <http://obeu.vse.cz:8890/sparql> ;
+  void:triples 1090105 .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution/checksum> a spdx:Checksum ;
+  spdx:algorithm spdx:checksumAlgorithm_sha1 ;
+  spdx:checksumValue "1d89b35e6e1f1a08b93a02c6c954e3e4ad97e125"^^xsd:hexBinary .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">The final version of our example pipeline that includes the metadata is available <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_metadata.jsonld %}">here</a>.
 The interdependencies between the metadata components make the pipeline impossible to layout without edge crossings, but you can achieve a reasonably clear layout as we tried in the example pipeline.</p>
 

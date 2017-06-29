@@ -71,6 +71,59 @@ When the pipeline execution completes, you can click through to its execution vi
   </div>
 </div>
 
+<p class="flow-text">Viewing one of the files reveals the table structure. For example, in the `lau_FI.csv` file for Finnish LAU, you can find the following rows:</p>
+
+<table class="responsive-table">
+  <thead>
+    <tr>
+      <th>NUTS_3</th>
+      <th>LAU1_NAT_CODE</th>
+      <th>LAU2_NAT_CODE</th>
+      <th>CHANGE</th>
+      <th>NAME_1</th>
+      <th>NAME_2_LAT</th>
+      <th>POP</th>
+      <th>AREA</th>
+      <th>sheet_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FI194</td>
+      <td>146</td>
+      <td>005</td>
+      <td>no</td>
+      <td>Alajärvi</td>
+      <td>Alajärvi</td>
+      <td>10006</td>
+      <td>1056740000</td>
+      <td>FI</td>
+    </tr>
+    <tr>
+      <td>FI196</td>
+      <td>041</td>
+      <td>050</td>
+      <td>no</td>
+      <td>Eura</td>
+      <td>Eura</td>
+      <td>12128</td>
+      <td>630200000</td>
+      <td>FI</td>
+    </tr>
+    <tr>
+      <td>FI193</td>
+      <td>131</td>
+      <td>592</td>
+      <td>no</td>
+      <td>Petäjävesi</td>
+      <td>Petäjävesi</td>
+      <td>4008</td>
+      <td>495420000</td>
+      <td>FI</td>
+    </tr>
+  </tbody>
+</table>
+
 <p class="flow-text">The pipeline to replicate this transformation step can be found <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_excel_to_csv.jsonld %}">here</a>.</p>
 
 <p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/convert_csv_to_rdf.html %}" rel="next">&rarr; Next step</a></p>

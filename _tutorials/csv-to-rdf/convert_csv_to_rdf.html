@@ -69,6 +69,47 @@ Instead of providing a custom mapping directly in Tabular, we map the data in fo
   </div>
 </div>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix : <http://example.com/> .
+
+[ :AREA "1056740000" ;
+  :CHANGE "no" ;
+  :LAU1_NAT_CODE "146" ;
+  :LAU2_NAT_CODE "005" ;
+  :NAME_1 "Alajärvi" ;
+  :NAME_2_LAT "Alajärvi" ;
+  :NUTS_3 "FI194" ;
+  :POP "10006" ;
+  :sheet_name "FI" ] .
+
+[ :AREA "630200000" ;
+  :CHANGE "no" ;
+  :LAU1_NAT_CODE "041" ;
+  :LAU2_NAT_CODE "050" ;
+  :NAME_1 "Eura" ;
+  :NAME_2_LAT "Eura" ;
+  :NUTS_3 "FI196" ;
+  :POP "12128" ;
+  :sheet_name "FI" ] .
+
+[ :AREA "495420000" ;
+  :CHANGE "no" ;
+  :LAU1_NAT_CODE "131" ;
+  :LAU2_NAT_CODE "592" ;
+  :NAME_1 "Petäjävesi" ;
+  :NAME_2_LAT "Petäjävesi" ;
+  :NUTS_3 "FI193" ;
+  :POP "4008" ;
+  :sheet_name "FI" ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">The pipeline that includes the steps described so far in the tutorial can be downloaded <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_excel_to_rdf.jsonld %}">here</a>.</p>
 
 <p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/clean_data.html %}" rel="next">&rarr; Next step</a></p>

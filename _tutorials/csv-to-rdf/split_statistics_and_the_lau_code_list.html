@@ -222,6 +222,36 @@ WHERE {
   BIND (iri(concat(?ns, ?areaNotation, "/", ?yearNotation, "/", ?measurePropertyNotation)) AS ?observation)
 }</code></pre>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix dbo:            <http://dbpedia.org/ontology/> .
+@prefix dimension:      <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/> .
+@prefix qb:             <http://purl.org/linked-data/cube#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix year:           <http://reference.data.gov.uk/id/gregorian-year/> .
+@prefix xsd:            <http://www.w3.org/2001/XMLSchema#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/fi/005/2016/populationTotal> a qb:Observation ;
+  qb:measureType dbo:populationTotal ;
+  sdmx-dimension:refPeriod year:2016 ;
+  dimension:refArea <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/005> ;
+  dbo:populationTotal 10006 ;
+  qb:dataSet <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/fi/005/2016/area> a qb:Observation ;
+  qb:measureType dbo:area ;
+  sdmx-dimension:refPeriod year:2016 ;
+  dimension:refArea <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/005> ;
+  dbo:area "1056740000"^^xsd:decimal ;
+  qb:dataSet <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau2/statistics> .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">At the point where we fork our pipeline with the SPARQL CONSTRUCT query producing the statistical part of the dataset, we continue with processing of the LAU code list.
 First, we remove the original data that was already mapped.
 This update operation also deletes the source data that we turned into the statistical part.</p>
@@ -251,6 +281,39 @@ INSERT DATA {
   &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016&gt; a skos:ConceptScheme ;
     rdfs:label "Local administrative units 2016"@en .
 }</code></pre>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> a skos:ConceptScheme ;
+  rdfs:label "Local administrative units 2016"@en .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/005> a skos:Concept ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  skos:prefLabel "Alajärvi"@fi ;
+  skos:notation "005" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/146> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/050> a skos:Concept ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  skos:prefLabel "Eura"@fi ;
+  skos:notation "050" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/041> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/592> a skos:Concept ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  skos:prefLabel "Petäjävesi"@fi ;
+  skos:notation "592" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/131> .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
 
 <p class="flow-text">
   <a href="{% link _tutorials/csv-to-rdf/link_data.html %}" rel="next">&rarr; Next step</a>

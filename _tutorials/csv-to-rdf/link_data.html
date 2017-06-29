@@ -56,6 +56,30 @@ WHERE {
   BIND (iri(concat("http://linked.opendata.cz/resource/region/", ?notation)) AS ?region)
 }</code></pre>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/500011> a skos:Concept ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  skos:prefLabel "Želechovice nad Dřevnicí"@cs ;
+  skos:notation "500011" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/CZ0724> ;
+  skos:exactMatch <http://linked.opendata.cz/resource/region/500011> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013/UKI42> a skos:Concept ;
+  skos:notation "UKI42" ;
+  dcterms:replaces <http://nuts.geovocab.org/id/UKI12> ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013> .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">The export of the pipeline up to this point is available <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_updates.jsonld %}">here</a>.</p>
 
 <p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/optimize.html %}" rel="next">&rarr; Next step</a></p>

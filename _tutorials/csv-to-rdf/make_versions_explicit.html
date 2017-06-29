@@ -52,6 +52,33 @@ WHERE {
   ?lau2 :CHANGE true .
 }</code></pre>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :        <http://example.com/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+[ :AREA "1467502"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "E06000001" ;
+  :LAU2_NAT_CODE "E05008942" ;
+  :NAME_1 "Burn Valley"@en ;
+  :POP 8774 ;
+  :sheet_name "UK" ;
+  :NUTS3_10 "UKC11" ;
+  :NUTS3_13 "UKC11" ;
+  dcterms:replaces [
+    :LAU1_NAT_CODE "00EB" ;
+    :LAU2_NAT_CODE "00EBNM"
+  ] ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">The pipeline that includes the step of cleaning data is available <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_excel_to_clean_rdf.jsonld %}">here</a>.</p>
 
 <p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/describe_semantics.html %}" rel="next">&rarr; Next step</a></p>
