@@ -157,6 +157,13 @@ public class DesignerToExecutorTest {
                 "unpacker/executor/05-run.trig");
     }
 
+    @Test
+    public void runComponentAndTemplateWithoutConfiguration() throws Exception {
+        testUnpacking("unpacker/designer/06.trig",
+                "unpacker/options/run.trig",
+                "unpacker/executor/06-run.trig");
+    }
+
     private void testUnpacking(String pipelineResource, String optionResource,
             String unpackedResource) throws Exception {
 
