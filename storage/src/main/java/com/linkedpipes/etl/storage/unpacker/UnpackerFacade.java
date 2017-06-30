@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.unpacker;
 
+import com.linkedpipes.etl.rdf.utils.InvalidNumberOfResults;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
@@ -49,6 +50,8 @@ public class UnpackerFacade {
         try {
             RdfUtils.loadByType(optionsSource, null, options,
                     UnpackOptions.TYPE);
+        } catch (InvalidNumberOfResults ex) {
+            // Ignore as the option is optional.
         } catch (RdfUtilsException ex) {
             throw new BaseException("Can't read execution options.", ex);
         } finally {
