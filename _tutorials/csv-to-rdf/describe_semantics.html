@@ -1,0 +1,159 @@
+---
+file: describe_semantics.html
+short: "CSV to RDF: describe semantics"
+subtitle: Describe semantics
+title: Converting tabular data to RDF
+---
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/make_versions_explicit.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/generate_iris.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF input</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :    <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[ :AREA "1056740000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "146" ;
+  :LAU2_NAT_CODE "005" ;
+  :NAME_1 "Alajärvi"@fi ;
+  :NUTS_3 "FI194" ;
+  :POP 10006 ;
+  :sheet_name "FI" ] .
+
+[ :AREA "630200000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "041" ;
+  :LAU2_NAT_CODE "050" ;
+  :NAME_1 "Eura"@fi ;
+  :NUTS_3 "FI196" ;
+  :POP 12128 ;
+  :sheet_name "FI" ] .
+
+[ :AREA "495420000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "131" ;
+  :LAU2_NAT_CODE "592" ;
+  :NAME_1 "Petäjävesi"@fi ;
+  :NUTS_3 "FI193" ;
+  :POP 4008 ;
+  :sheet_name "FI" ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
+<p class="flow-text">At this point we have reasonably clean RDF data.
+However, the data is described in terms of custom properties, such as <code>:POP</code> or <code>:NUTS3_10</code>.
+These properties do not give away much of their meaning, making it difficult to comprehend the data.
+In order to improve the usability of the data, we therefore map these custom properties to terms from standard RDF vocabularies.</p>
+
+<p class="flow-text">The dataset is actually made up of two parts.
+The first part is a code list of the local administrative units.
+Code lists, as well as other controlled vocabularies, can be described using the terms of the <a href="https://www.w3.org/TR/skos-reference">Simple Knowledge Organization System</a> (SKOS).
+The second part consists of statistical measures about the administrative units.
+Specifically, there are population counts and areas in square meters.
+Statistical data of this kind can be described by the <a href="https://www.w3.org/TR/vocab-data-cube">Data Cube Vocabulary</a> (QB).
+Both SKOS and QB are widely used standards by the <a href="https://www.w3.org">World Wide Web Consortium</a> (W3C).
+In the following, we will refer to the terms of these standards via compact IRIs that use short prefixes in place of namespace IRIs.
+You can look up the namespace IRIs of common prefixes, such as <code>skos:</code> and <code>qb:</code>, by using <a href="http://prefix.cc">Prefix.cc</a>.</p>
+
+<div class="row">
+  <div class="col s12 m10 offset-m1">
+    <img alt="Schema of SKOS"
+         class="materialboxed responsive-img"
+         data-caption="Schema of SKOS"
+         src="{% link /assets/tutorials/csv-to-rdf/img/skos.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">We cast the local administrative units as instances of <code>skos:Concept</code> belonging to the LAU concept scheme.
+Using an inline table via the <code>VALUES</code> clause we map the source properties to the target properties from SKOS.
+<code>:NAME_1</code> is mapped to <code>skos:prefLabel</code>, <code>:LAU2_NAT_CODE</code> to <code>skos:notation</code>, and the transliterated names are treated as values of <code>skos:altLabel</code>.</p>
+
+<pre><code>PREFIX :     &lt;http://example.com/&gt;
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+DELETE {
+  ?lau2 ?source ?o .
+}
+INSERT {
+  ?lau2 a skos:Concept ;
+    skos:inScheme &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016&gt; ;
+    ?target ?o .
+}
+WHERE {
+  VALUES (?source        ?target) {
+         (:NAME_1        skos:prefLabel)
+         (:NAME_2_LAT    skos:altLabel)
+         (:LAU2_NAT_CODE skos:notation)
+  }
+  ?lau2 ?source ?o .
+}</code></pre>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :     <http://example.com/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+[ a skos:Concept ;
+  skos:prefLabel "Alajärvi"@fi ;
+  skos:notation "005" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "1056740000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "146" ;
+  :NUTS_3 "FI194" ;
+  :POP 10006 ;
+  :sheet_name "FI" ] .
+
+[ a skos:Concept ;
+  skos:prefLabel "Eura"@fi ;
+  skos:notation "050" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "630200000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "041" ;
+  :NUTS_3 "FI196" ;
+  :POP 12128 ;
+  :sheet_name "FI" ] .
+
+[ a skos:Concept ;
+  skos:prefLabel "Petäjävesi"@fi ;
+  skos:notation "592" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "495420000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "131" ;
+  :NUTS_3 "FI193" ;
+  :POP 4008 ;
+  :sheet_name "FI" ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
+<p class="flow-text">We will get back to mapping the statistical part once we generate IRIs of the RDF resources in our data in the next step.</p>
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/make_versions_explicit.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/generate_iris.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>

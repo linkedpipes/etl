@@ -1,0 +1,120 @@
+---
+file: link_data.html
+short: "CSV to RDF: link data"
+subtitle: Link data
+title: Converting tabular data to RDF
+---
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/split_statistics_and_the_lau_code_list.html %}"
+       rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/optimize.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF input</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/500011> a skos:Concept ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  skos:prefLabel "Želechovice nad Dřevnicí"@cs ;
+  skos:notation "500011" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/CZ0724> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013/UKI42> a skos:Concept ;
+  skos:notation "UKI42" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013> .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
+<p class="flow-text">We can enrich the LAU code list with links to related external data.
+Doing so enables combining the code list with relevant data, such as additional statistics, to perform more sophisticated queries and analyses.
+In this tutorial, we show linking of two third-party datasets.
+The first is an unofficial <a href="http://nuts.geovocab.org">version of NUTS 2010 in RDF</a>, the second are the Czech regions in RDF maintained by the <a href="http://opendata.cz/en">Czech linked open data initiative</a>.</p>
+
+<p class="flow-text">The first dataset is from 2011 and mirrors the 2010 version of NUTS.
+In addition to the NUTS code list it provides simplified polygons of the geographic geometries of the NUTS regions and contains links to other datasets, such as the <a href="https://www.eionet.europa.eu">European Environment Information and Observation Network</a>, which can be followed to retrieve more data.
+Our data links the 2013 version of NUTS, which we can connect with the NUTS regions in this external dataset as their previous versions.
+To do so, we link the older version from the newer one via the <code>dcterms:replaces</code> property, a pattern we already used previously to capture versioning.
+We can link the dataset simply by appending NUTS codes to the dataset's namespace IRI:</p>
+
+<pre><code>PREFIX :        &lt;http://example.com/&gt;
+PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX skos:    &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+DELETE {
+  ?lau2 :NUTS3_10 ?nuts3Notation .
+}
+INSERT {
+  ?nuts3 dcterms:replaces ?oldNuts3 .
+}
+WHERE {
+  ?lau2 :NUTS3_10 ?nuts3Notation ;
+    skos:broaderTransitive+ ?nuts3 .
+  ?nuts3 skos:inScheme &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013&gt; .
+  BIND (iri(concat("http://nuts.geovocab.org/id/", ?nuts3Notation)) AS ?oldNuts3)
+}</code></pre>
+
+<p class="flow-text">The second dataset contains local aliases for the Czech LAU regions.
+It provides mostly the same data that the LAU code list has, but it is linked from several Czech demographic datasets, such as statistics on births or immigration.
+As such, it is an example of a dataset that, from our perspective, does not directly bring new data, but its value lies in being linked from other datasets. 
+Once again, we can link the dataset by simply appending the Czech LAU codes to a namespace IRI:</p>
+
+<pre><code>PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+INSERT {
+  ?lau2 skos:exactMatch ?region .
+}
+WHERE {
+  ?lau2 skos:broaderTransitive/skos:broaderTransitive/skos:notation ?nuts ;
+  FILTER strstarts(?nuts, "CZ")
+
+  ?lau2 skos:notation ?notation .
+  BIND (iri(concat("http://linked.opendata.cz/resource/region/", ?notation)) AS ?region)
+}</code></pre>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/500011> a skos:Concept ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  skos:prefLabel "Želechovice nad Dřevnicí"@cs ;
+  skos:notation "500011" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/CZ0724> ;
+  skos:exactMatch <http://linked.opendata.cz/resource/region/500011> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013/UKI42> a skos:Concept ;
+  skos:notation "UKI42" ;
+  dcterms:replaces <http://nuts.geovocab.org/id/UKI12> ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013> .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
+<p class="flow-text">The export of the pipeline up to this point is available <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_updates.jsonld %}">here</a>.</p>
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/split_statistics_and_the_lau_code_list.html %}"
+       rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/optimize.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>

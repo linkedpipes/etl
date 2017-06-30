@@ -1,0 +1,123 @@
+---
+file: load_data.html
+short: "CSV to RDF: load data"
+subtitle: Load data
+title: Converting tabular data to RDF
+---
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/optimize.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/add_metadata.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
+
+<p class="flow-text">LP-ETL allows you to store your data in many ways, so that others may reap the results of your work.
+You can store files locally using the <a href="{% link _components/l-filestolocal.html %}">Files to local</a> component or you can push them to a remote server via the <a href="https://en.wikipedia.org/wiki/Secure_copy">Secure Copy Protocol</a> with the <a href="{% link _components/l-filestoscp.html %}">Files to SCP</a> component.
+You can load data to RDF stores, either using the <a href="https://www.w3.org/TR/sparql11-http-rdf-update">SPARQL 1.1 Graph Store HTTP Protocol</a> via the <a href="{% link _components/l-graphstoreprotocol.html %}">Graph Store Protocol</a> component, using <a href="https://www.w3.org/TR/sparql11-update">SPARQL 1.1 Update</a> via the <a href="{% link _components/l-sparqlendpoint.html %}">SPARQL endpoint</a> component, or via the proprietary <a href="{% link _components/x-virtuoso.html %}">bulk loader for Virtuoso</a>.</p>
+
+<p class="flow-text">In our example pipeline we export the data to files and to a Virtuoso RDF store.
+RDF can be written to files using the <a href="{% link _components/t-rdftofile.html %}">RDF to file</a> component.
+It can write RDF in many serializations, including formats for triples, such as <a href="https://www.w3.org/TR/turtle">Turtle</a>, or formats for quads, such as <a href="https://www.w3.org/TR/trig">TriG</a>.
+Quad-based formats allow you to specify a named graph into which the triples of your data will be wrapped.
+Our pipeline produces RDF dumps in the TriG format, which offers a compact and readable way to represent RDF quads.
+For each dump we specify a named graph IRI.
+By convention, we use the IRI of the <code>skos:ConceptScheme</code> instance for the LAU code list (i.e. <code class="breakurl">https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016</code>), and the IRI of the <code>qb:DataSet</code> instance (i.e., <code class="breakurl">https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics</code>) for the associated statistical data cube.</p>
+
+<p class="flow-text">In order to save space we compress the RDF dumps via the <a href="{% link _components/t-streamcompression.html %}">Stream compression</a> component.
+Text-based RDF serializations contain redundant substrings, such as namespaces shared between absolute IRIs, so that compression can significantly decrease the size of RDF dumps.
+The effect of compression is particularly apparent in line-based formats, such as <a href="https://www.w3.org/TR/n-triples">N-Triples</a> or <a href="https://www.w3.org/TR/n-quads">N-Quads</a>, which lack shorthand notations for RDF, such as namespaced compact IRIs.
+Nevertheless, space savings can be achieved also in compact RDF formats.
+For example, our statistical data cube in TriG has 131 MB uncompressed.
+Compressed via <a href="https://en.wikipedia.org/wiki/Gzip">gzip</a> it shrinks to 2.3 MB.
+Compression by <a href="https://en.wikipedia.org/wiki/Bzip2">bzip2</a> decreases the size even further, to 1.3 MB, although this method of compression takes longer as it is more computationally demanding.
+As you can see, we can achieve a two orders of magnitude decrease in file size when using compression.</p>
+
+<p class="flow-text">We save the compressed files to a remote server using the Files to SCP component.
+This component asks you to provide the host address of your server, access credentials, and the target directory.
+If your server accepts SCP connections on a different port than the default 22, you must fill the port number into the component.
+The supplied access credentials consist of a user name and a password of a user that is authorized to write files into the target directory.
+On your server, you can create a dedicated user with permissions restricted to a part of the file system that stores the uploaded data dumps.
+Files to SCP also allows you to configure that the target directory should be created unless it already exists.
+Moreover, you can have the component clear the target directory before loading your files.
+For example, you can use this feature to delete obsolete dumps from prior executions of the pipeline. 
+If you want to publish the data, it is a good idea to push it to a directory that is exposed via an HTTP server.
+That way, the data will be automatically made available for download from the server.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Files to SCP configuration"
+         class="responsive-img"
+         data-caption="Files to SCP configuration"
+         src="{% link /assets/tutorials/csv-to-rdf/img/files_to_scp.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">To load the data into an RDF store we use the Virtuoso component.
+This is a peculiar component, since it accepts its input indirectly.
+Instead of providing it with data via an input edge, it loads the data from a specified directory on the server where the Virtuoso RDF store runs.
+Since the component depends on RDF dumps being loaded by Files to SCP, it is connected to it via the <em>Run before</em> edge.
+To create this edge, click on the Files to SCP component that must complete before the Virtuoso component can load the data, select the <em>Run before</em> button, and drag it to the Virtuoso component.
+Note that the directory from which Virtuoso loads data must be present in the <code>DirsAllowed</code> section of the <a href="http://docs.openlinksw.com/virtuoso/dbadm">virtuoso.ini</a> file.</p>
+
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <img alt="Run before edge"
+         class="responsive-img"
+         data-caption="Run before edge"
+         src="{% link /assets/tutorials/csv-to-rdf/img/run_before.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">The component connects to Virtuoso via <a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity">JDBC</a>, so you need to provide it with the JDBC connection string, which typically has the format of <code>jdbc:virtuoso://{host name}:1111/charset=UTF-8/</code>.
+In order to authorize LP-ETL to push data to Virtuoso, you must give it the Virtuoso user name and password.
+To locate the RDF dump to import to Virtuoso, you enter its directory and file name to the component's configuration.
+The component can load multiple files that match a given file mask, such as <code>*.ttl</code> to load all Turtle files in the directory with the <code>.ttl</code> suffix.</p>
+
+<p class="flow-text">To load RDF triples into a particular named graph, specify it by using the <em>Target graph IRI</em>.
+If you are updating an existing dataset, you can switch on the option to clear the target graph before loading, so that the existing old data is removed.
+When you load data in a quad-based format, such as TriG, it explicitly specifies its named graph, so that the <em>Target graph IRI</em> will not be used for the loaded data.
+It will, however, be used to clear previous data present in the named graph.</p>
+
+<p class="flow-text">To speed up loading large datasets, you can increase the number of loaders to use, so that multiple loaders can run in parallel.
+To get the best performance, the number of loaders should correspond to the number of CPU cores available on the server running the Virtuoso.
+The use of the Virtuoso loader is recommended for larger datasets that contain millions of RDF triples, since the other methods for loading data to RDF stores are better suited for smaller datasets.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Virtuoso configuration"
+         class="responsive-img"
+         data-caption="Virtuoso configuration"
+         src="{% link /assets/tutorials/csv-to-rdf/img/virtuoso.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text"><a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_loaders.jsonld %}">Here</a> you can find the example pipeline with the loaders included.
+The pipeline is exported without the credentials required by loaders.
+You can share a pipeline with no private configuration by using the option to download it without credentials.
+This is useful when you want to share a pipeline publicly.
+Since loaders without the credentials do not work, they are disabled in the example pipeline.
+You can toggle components between the disabled and the enabled state via their button with the power symbol.
+Moreover, there is a special mass command that disables or enables all loaders in a pipeline.
+You can find it by clicking the cogwheel icon in the top right corner of the pipeline view.
+When components are disabled, their execution is skipped and any following components receive empty input.</p>
+
+<div class="row">
+  <div class="col s12 m4 offset-m4">
+    <img alt="Disable loaders"
+         class="responsive-img"
+         data-caption="Disable loaders"
+         src="{% link /assets/tutorials/csv-to-rdf/img/disable_loaders.png %}"/>
+  </div>
+</div>
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/optimize.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/add_metadata.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>

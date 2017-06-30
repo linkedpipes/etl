@@ -1,0 +1,313 @@
+---
+file: add_metadata.html
+short: "CSV to RDF: add metadata"
+subtitle: Add metadata
+title: Converting tabular data to RDF
+---
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/load_data.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+</div>
+
+<p class="flow-text">In our final step, we annotate the produced data with metadata.
+LP-ETL supports describing the processed datasets using metadata expressed using the standard <a href="https://www.w3.org/TR/vocab-dcat">Data Catalog Vocabulary</a> (DCAT).
+In particular, it uses the <a href="https://joinup.ec.europa.eu/asset/dcat_application_profile/description">DCAT application profile for data portals in Europe</a> (DCAT-AP).
+Datasets can be described by the <a href="{% link _components/e-dcatap11dataset.html %}">DCAT-AP Dataset</a> component and their distributions can be covered by the <a href="{% link _components/e-dcatap11distribution.html %}">DCAT-AP Distribution</a> component.
+In this context, distributions correspond to specific forms of a given dataset, such as downloadable files or APIs.</p>
+
+<p>
+  <img alt="Data Catalog Vocabulary"
+       class="materialboxed responsive-img"
+       data-caption="Data Catalog Vocabulary"
+       src="{% link /assets/tutorials/csv-to-rdf/img/dcat-model.jpg %}"/>
+</p>
+
+<p class="flow-text">Both components provide expressive means to characterize datasets using descriptive, structural, and administrative metadata in RDF.
+The mandatory metadata required for a DCAT-AP dataset are grouped in the initial section of the component.
+The remaining sections enable you to fill in other recommended or optional metadata.
+In case of the statistical data cube, you can also provide metadata using the <a href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4">StatDCAT-AP</a> extension of DCAT-AP.
+For the data described by QB, the StatDCAT-AP metadata overlaps with the dataset's DSD, since it too lists the attributes and dimensions used in the dataset.
+The metadata produced by the DCAT-AP Dataset component can be fed into the DCAT-AP Distribution component instead of filling in the links between a distribution and its dataset manually.
+If you loaded a data dump to a directory exposed via an HTTP server, as suggested previously, you can fill in the server's host name with the path to the dump as the download URL of the distribution.</p>
+
+<p class="flow-text">Apart from DCAT-AP, LP-ETL supports the <a href="https://www.w3.org/TR/void">Vocabulary of Interlinked Datasets</a> (VoID) via the <a href="{% link _components/e-voiddataset.html %}">VoID Dataset</a> component.
+In terms of VoID the <code>void:Dataset</code> matches the <code>dcat:Distribution</code>.
+You can thus feed the output of the DCAT-AP Distribution component to VoID Dataset that uses it to produce metadata in VoID.
+In this component you can also specify the IRI of an example resource and the URL of the SPARQL endpoint exposing the dataset.</p>
+
+<p class="flow-text">Since metadata is just RDF, many other LP-ETL components can be employed to generate it.
+Besides DCAT-AP, you can provide static metadata described by any other vocabulary via the Text holder component.
+Should you need to generate dynamic metadata derived from your data, you can pipe the data into a SPARQL CONSTRUCT component with a query that computes the metadata.
+In the example pipeline, we use this approach to create metadata described in VoID.
+By using a CONSTRUCT query we compute statistics about the processed data, such as the count of triples or the number of distinct instantiated classes:</p>
+
+<pre><code>PREFIX void: &lt;http://rdfs.org/ns/void#&gt;
+
+CONSTRUCT {
+  &lt;https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/distribution&gt; a void:Dataset;
+    void:triples ?triples ;
+    void:entities ?entities ;
+    void:classes ?classes ;
+    void:properties ?properties ;
+    void:distinctSubjects ?subjects ;
+    void:distinctObjects ?objects .
+}
+WHERE  {
+  {
+    SELECT (COUNT(*) AS ?triples)
+           (COUNT(DISTINCT ?p) AS ?properties)
+           (COUNT(DISTINCT ?s) AS ?subjects)
+           (COUNT(DISTINCT ?o) AS ?objects)
+    WHERE {
+      ?s ?p ?o .
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?s) AS ?entities)
+           (COUNT(DISTINCT ?class) AS ?classes)
+    WHERE {
+      ?s a ?class .
+    }
+  }
+}</code></pre>
+
+<p class="flow-text">To enable verification of integrity of the downloaded data distributions, you can provide a hash of the distribution files as part of their metadata.
+When a file is downloaded, its integrity can be verified by computing its hash and comparing it with the hash in the metadata.
+The <a href="{% link _components/t-filehasher.html %}">File hasher</a> component computes an SHA-1 hash of its input.
+To include its output in the metadata we combine it with the distribution metadata by using the following CONSTRUCT query:</p>
+
+<pre><code>PREFIX dcat: &lt;http://www.w3.org/ns/dcat#&gt;
+PREFIX fh:   &lt;http://plugins.linkedpipes.com/ontology/t-filehash#&gt;
+PREFIX spdx: &lt;http://spdx.org/rdf/terms#&gt;
+
+CONSTRUCT {
+  ?distribution spdx:checksum ?checksumIRI .
+  ?checksumIRI a spdx:Checksum ;
+      spdx:algorithm ?algorithm ;
+      spdx:checksumValue ?value.
+}
+WHERE {
+  ?distribution a dcat:Distribution .
+  [] spdx:checksum ?checksum .
+  ?checksum a spdx:Checksum ;
+      spdx:algorithm ?algorithm ;
+      spdx:checksumValue ?value .
+
+  BIND (iri(concat(str(?distribution), "/checksum")) AS ?checksumIRI)
+}</code></pre>
+
+<p class="flow-text">To merge multiple metadata outputs you can use the <a href="{% link _components/t-singlegraphunion.html %}">Union</a> component, which combines several RDF inputs into a single output.
+We persist the merged metadata using the above-described loaders, producing both a file dump and loading the data to an RDF store.</p>
+
+<p>
+  <img alt="Union of metadata"
+       class="materialboxed responsive-img"
+       data-caption="Union of metadata"
+       src="{% link /assets/tutorials/csv-to-rdf/img/metadata_fragment.png %}"/>
+</p>
+
+<p class="flow-text">To make the data easier to discover and present in search engines we can generate <a href="https://schema.org">Schema.org</a> dataset metadata.
+A dataset can be described as an instance of <a href="http://schema.org/Dataset"><code>schema:Dataset</code></a> using the properties declared by the Schema.org vocabulary. 
+The data model for dataset metadata already matches well with DCAT, but there is also a <a href="https://www.w3.org/community/schemaorg4datasets">Schema.org for datasets community group</a> that works towards even better alignment and extension of Schema.org for datasets.
+We generate the Schema.org metadata by transforming the DCAT-AP metadata via a CONSTRUCT query:</p>
+
+<pre><code>PREFIX dcat:    &lt;http://www.w3.org/ns/dcat#&gt;
+PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX foaf:    &lt;http://xmlns.com/foaf/0.1/&gt;
+PREFIX schema:  &lt;http://schema.org/&gt;
+
+CONSTRUCT {
+  ?dataset a schema:Dataset;
+    schema:distribution ?distribution ;
+    schema:name ?title ;
+    schema:keywords ?keyword ;
+    schema:url ?lp ;
+    schema:description ?description ;
+    schema:creator ?publisher ;
+    schema:includedInDataCatalog ?catalog .
+
+  ?distribution a schema:DataDownload ;
+    schema:contentUrl ?download ;
+    schema:fileFormat ?mediatype .
+
+  ?publisher a schema:Organization;
+    schema:name ?pname .
+
+  ?catalog a schema:DataCatalog;
+    schema:dataset ?dataset .
+}
+WHERE {
+  ?dataset a dcat:Dataset;
+    dcterms:title ?title ;
+    dcat:distribution ?distribution .
+
+  OPTIONAL {
+    ?dataset dcat:keyword ?keyword .
+  }
+  OPTIONAL {
+    ?dataset dcterms:description ?description .
+  }
+  OPTIONAL {
+    ?dataset dcat:landingPage ?landingPage .
+    BIND (str(?landingPage) AS ?lp)
+  }
+
+  ?distribution a dcat:Distribution .
+  OPTIONAL {
+    ?distribution dcat:downloadURL ?download .
+  }
+  OPTIONAL {
+    ?distribution dcat:mediaType ?mediatype .
+  }
+  OPTIONAL {
+    ?dataset dcterms:publisher ?publisher .
+    ?publisher foaf:name ?pname .
+  }
+  OPTIONAL {
+    ?catalog dcat:dataset ?dataset .
+  }
+}</code></pre>
+
+<p class="flow-text">Since the <a href="https://search.google.com/structured-data/testing-tool">Google Structured Data Testing Tool</a> currently does not support language tags, we remove them from the Schema.org metadata via a SPARQL Update operation:</p>
+
+<pre><code>DELETE {
+  ?s ?p ?_literal .
+} 
+INSERT {
+  ?s ?p ?literal .
+} 
+WHERE {
+  ?s ?p ?_literal .
+  FILTER (isLiteral(?_literal) &amp;&amp; lang(?_literal) != "")
+  BIND (str(?_literal) AS ?literal)
+}</code></pre>
+
+<p class="flow-text">We serialize the generated RDF into <a href="https://www.w3.org/TR/json-ld">JSON-LD</a> via the RDF to file component.
+JSON-LD is one of the formats for Schema.org metadata supported by search engines.
+To make the resulting JSON-LD terser, we can use the <a href="{% link _components/t-jsonldformat.html %}">JSON-LD operations</a> component that performs the operations defined in the <a href="https://www.w3.org/TR/json-ld-api">JSON-LD API</a> on its input.
+We simply invoke the <a href="https://www.w3.org/TR/json-ld-api/#compaction">compact</a> operation on the input using the Schema.org context:</p>
+
+{% highlight json %}
+{
+  "@context": "http://schema.org/"
+}
+{% endhighlight %}
+
+<p class="flow-text">The component then dereferences the context, asking for its representation in JSON-LD.
+You can examine it yourself, for example by requesting it via the command-line tool <code>curl</code> with the <code>Accept</code> header indicating the JSON-LD MIME type (i.e. <code>curl -LH "Accept:application/ld+json" http://schema.org</code>).
+The obtained context guides the structure and abbreviations of the JSON-LD data that is subject to compaction.
+The resulting compact JSON-LD can be published on the Web, so that search engines can crawl it and incorporate its metadata in their indices.</p>
+
+<p class="flow-text">An alternative path for making the data easy to discover is to publish its metadata in a data catalogue.
+LP-ETL supports loading metadata to data catalogues based on <a href="https://ckan.org">CKAN</a>, into which you can deliver your metadata via the <a href="{% link _components/l-dcatap11tockan.html %}">DCAT-AP to CKAN</a> component.
+The component expects its input to be described using the DCAT-AP vocabulary, so that you can pipe in it the output of the DCAT-AP components.
+The input data is combined with the component's configuration and transformed to JSON that conforms with the <a href="http://docs.ckan.org/en/ckan-1.7.4/domain-model.html">CKAN data model</a>.
+The component requires you to specify the API endpoint's URL of the CKAN instance to which you load metadata, such as <code>http://ckan.net/api/3</code>.
+In order to authorize the component to store metadata in the given CKAN instance, you need to provide it with a CKAN API key.
+You can find your API key when you log into the CKAN instance and navigate to your profile page.
+To identify the loaded dataset in the data catalogue you must to give it a unique dataset ID.
+While DCAT-AP allows you to express multilingual metadata, CKAN's data model is monolingual, so you need to select one of the languages in DCAT-AP metadata to use in the metadata for CKAN.
+If you provide the component with VoID metadata as well, as is the case in our example pipeline, the component can generate CKAN resources from it.
+The component requires one more input; and that is the <a href="http://publications.europa.eu/mdr/resource/authority/file-type/html/filetypes-eng.html">code list of file types</a>.
+You can download its <a href="http://publications.europa.eu/mdr/resource/authority/file-type/skos/filetypes-skos.rdf">RDF dump</a> via the HTTP GET component, convert it to RDF via the <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> and feed it into the DCAT-AP to CKAN component by connecting to its dedicated port.</p>
+
+<p class="flow-text">LP-ETL also offers the <a href="{% link _components/l-lodcloud.html %}">DCAT-AP to datahub.io</a> component that is tied to the CKAN instance at <a href="https://datahub.io">datahub.io</a>.
+This data catalogue provides source data for the <a href="http://lod-cloud.net">Linking Open Data cloud diagram</a> (LOD cloud), so that you can use the component to publish data to become a part of this renowned diagram.
+The component mostly mirrors the DCAT-AP to CKAN component.
+In addition to the configuration we described for its parent component, you need to provide it with the ID of a CKAN organization that will own the uploaded dataset.
+Since CKAN uses specific IDs for dataset licences different from those in DCAT-AP, you should select the appropriate licence in the component's configuration.
+Moreover, you can provide metadata designated for the LOD cloud diagram, such as the dataset's topic or its links to other datasets already included in the LOD cloud.
+For example, we can describe that our dataset features 173 links to <a href="https://datahub.io/dataset/nuts-geovocab">NUTS 2010 in RDF</a>.</p>
+
+<p>
+  <img alt="Load metadata"
+       class="materialboxed responsive-img"
+       data-caption="Load metadata"
+       src="{% link /assets/tutorials/csv-to-rdf/img/load_metadata.png %}"/>
+</p>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample metadata in RDF</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix adms:           <http://www.w3.org/ns/adms#> .
+@prefix dcat:           <http://www.w3.org/ns/dcat#> .
+@prefix dcterms:        <http://purl.org/dc/terms/> .
+@prefix dimension:      <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/statistics/dimension/> .
+@prefix owl:            <http://www.w3.org/2002/07/owl#> .
+@prefix qb:             <http://purl.org/linked-data/cube#> .
+@prefix qudt:           <http://qudt.org/vocab/unit#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix spdx:           <http://spdx.org/rdf/terms#> .
+@prefix statdcat:       <http://data.europa.eu/(xyz)/statdcat-ap/> .
+@prefix void:           <http://rdfs.org/ns/void#> .
+@prefix xsd:            <http://www.w3.org/2001/XMLSchema#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics> a dcat:Dataset ;
+  dcterms:accessRights <http://publications.europa.eu/resource/authority/access-rights/PUBLIC> ;
+  dcterms:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/ANNUAL> ;
+  dcterms:issued "2016-01-01"^^xsd:date ;
+  dcterms:modified "2017-06-29"^^xsd:date ;
+  dcterms:publisher <http://opendata.cz> ;
+  dcterms:title "LAU 2016 statistics"@en ;
+  dcterms:type <http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL> ;
+  owl:versionInfo "2016" ;
+  adms:versionNotes "Version for the year 2016"@en ;
+  dcat:contactPoint <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/contactPoint> ;
+  dcat:distribution <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution> ;
+  dcat:keyword "European Union"@en, "geography"@en, "statistics"@en, "demography"@en ;
+  dcat:theme <http://publications.europa.eu/resource/authority/data-theme/SOCI> ;
+  statdcat:attribute sdmx-attribute:obsStatus ;
+  statdcat:dimension qb:measureType , sdmx-dimension:refPeriod , dimension:refArea ;
+  statdcat:statMeasure qudt:SquareMeter .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution> a dcat:Distribution, void:Dataset ;
+  dcterms:format <http://publications.europa.eu/resource/authority/file-type/RDF_TRIG> ;
+  dcterms:issued "2016-01-01"^^xsd:date ;
+  dcterms:modified "2017-06-29"^^xsd:date ;
+  dcterms:title "Gzipovaný dump v RDF TriG"@cs , "Gzipped RDF TriG Dump"@en ;
+  dcterms:type <http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE> ;
+  adms:status <http://purl.org/adms/status/Completed> ;
+  dcat:accessURL <https://linked.opendata.cz/dataset/lau-2016-statistics> ;
+  dcat:downloadURL <https://obeu.vse.cz/dump/lau_2016_statistics.trig.gz> ;
+  dcat:mediaType <http://www.iana.org/assignments/media-types/application/trig> ;
+  spdx:checksum <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution/checksum> ;
+  void:classes 7 ;
+  void:dataDump <https://obeu.vse.cz/dump/lau_2016_statistics.trig.gz> ;
+  void:distinctObjects 166440 ;
+  void:distinctSubjects 176940 ;
+  void:entities 175924 ;
+  void:exampleResource <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/observation/cz/554782/2016/populationTotal> ;
+  void:properties 21 ;
+  void:sparqlEndpoint <http://obeu.vse.cz:8890/sparql> ;
+  void:triples 1090105 .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/statistics/distribution/checksum> a spdx:Checksum ;
+  spdx:algorithm spdx:checksumAlgorithm_sha1 ;
+  spdx:checksumValue "1d89b35e6e1f1a08b93a02c6c954e3e4ad97e125"^^xsd:hexBinary .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
+<p class="flow-text">The final version of our example pipeline that includes the metadata is available <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_metadata.jsonld %}">here</a>.
+The interdependencies between the metadata components make the pipeline impossible to layout without edge crossings, but you can achieve a reasonably clear layout as we tried in the example pipeline.</p>
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/load_data.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+</div>
+
+<h2 class="header center orange-text">Summary</h2>
+
+<p class="flow-text">We covered a lot of ground in this tutorial.
+You learnt about the steps involved in producing linked data in RDF out of tabular data.
+LP-ETL provides an extensive toolbox of components that can automate these steps.
+We illustrated the use of LP-ETL components on an example dataset of Local Administrative Units.
+The example allowed us to showcase how to deal with Excel spreadsheets with multiple sheets, convert CSV to RDF, implement data cleaning rules, express data using RDF vocabularies, link data, optimize the performance of the transformation pipeline, store the output data, and finally describe it with metadata.
+If you want delve into more depth on LP-ETL, you may go through its <a href="{% link documentation/index.html %}">documentation</a> or the <a href="{% link components/index.html %}">documentation of its individual components</a>.</p>

@@ -1,0 +1,143 @@
+---
+file: convert_excel_to_csv.html
+short: "CSV to RDF: convert Excel to CSV"
+subtitle: Convert Excel to CSV
+title: Converting tabular data to RDF
+---
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/introduction.html %}" rel="prev">&larr; Back to the introduction</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/convert_csv_to_rdf.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
+
+<p class="flow-text">The first step of the data transformation is converting the Excel spreadsheet into CSV.
+We start by downloading the spreadsheet using the <a href="{% link _components/e-httpgetfile.html %}">HTTP GET</a> component of LP-ETL.
+To add a component to the pipeline's canvas, right-click the canvas and select the option to insert a component.
+A menu appears that lists the available components.
+You can quickly filter the components by typing a few characters of their names.
+We pipe the downloaded file into the <a href="{% link _components/t-exceltocsv.html %}">Excel to CSV</a> component.
+You can pipe a component's output by dragging an edge from the component's output port to the target component's input port.
+Port are displayed as circles on the sides of the components.
+By convention, the ports on the left are inputs and the ports on the right are outputs.
+You can also drop the dragged edge onto an empty canvas, in which case LP-ETL suggests the components that have an input compatible with the edge.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Select component"
+         class="responsive-img"
+         data-caption="Select component"
+         src="{% link /assets/tutorials/csv-to-rdf/img/select_component.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">There are several options that we can configure in the Excel to CSV component.
+In this case, we convert the Excel spreadsheet into multiple CSV files; one for each sheet.
+However, the spreadsheet contains not only sheets with LAU codes, but also sheets with explanatory notes.
+Fortunately, each sheet with LAU codes is named with a two-letter country code.
+This allows us to select the sheets of interest by using the regular expression <code>[A-Z]{2}</code> in the <em>Sheet filter</em> option.
+We can also use the sheet names to distinguish the names of the produced CSV files.
+We can refer to the sheet name via the <code>{SHEET}</code> variable in the <em>Output file template</em> option.
+We enter <code>lau_{SHEET}.csv</code> as the value of this option, so that files like <code>lau_DE.csv</code> or <code>lau_CZ.csv</code> are produced.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Excel to CSV configuration"
+         class="responsive-img"
+         data-caption="Excel to CSV configuration"
+         src="{% link /assets/tutorials/csv-to-rdf/img/excel_to_csv_config.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">In order to be able to differentiate the countries in the later steps of the transformation, we switch on the <em>Virtual columns have header</em> and the <em>Include sheet name as additional column</em> options, which append the sheet names as an additional <code>sheet_name</code> column in the produced CSV files.
+Similarly, we turn on the <em>Skip empty rows</em> option, since the spreadsheet contains unnecessary empty rows.
+The spreadsheet also features formulas left in by omission, so we enable the <em>Evaluate formulas</em> option to turn them into data.
+Without having this option switched on, the component would raise an error alerting us about formulas present in the spreadsheet, which is likely the way you would find about them during the iterative pipeline development.</p>
+
+<p class="flow-text">If you change an option and do not want to re-run the whole pipeline, you can re-run a transformation step by clicking the <em>Debug to this component</em> button on the reconfigured component.
+When the pipeline execution completes, you can click through to its execution view and click the output of the Excel to CSV component to view the generated CSV files.</p>
+
+<p>
+  <img alt="List of executions"
+       class="responsive-img"
+       data-caption="List of executions"
+       src="{% link /assets/tutorials/csv-to-rdf/img/list_of_executions.png %}"/>
+</p>
+
+<p class="flow-text">When you click the output port of the Excel to CSV component a listing of the CSV files produced by the component is shown.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="CSV files"
+         class="responsive-img"
+         data-caption="CSV files"
+         src="{% link /assets/tutorials/csv-to-rdf/img/csv_files.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">Viewing one of the files reveals the table structure. For example, in the `lau_FI.csv` file for Finnish LAU, you can find the following rows:</p>
+
+<table class="responsive-table">
+  <thead>
+    <tr>
+      <th>NUTS_3</th>
+      <th>LAU1_NAT_CODE</th>
+      <th>LAU2_NAT_CODE</th>
+      <th>CHANGE</th>
+      <th>NAME_1</th>
+      <th>NAME_2_LAT</th>
+      <th>POP</th>
+      <th>AREA</th>
+      <th>sheet_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FI194</td>
+      <td>146</td>
+      <td>005</td>
+      <td>no</td>
+      <td>Alajärvi</td>
+      <td>Alajärvi</td>
+      <td>10006</td>
+      <td>1056740000</td>
+      <td>FI</td>
+    </tr>
+    <tr>
+      <td>FI196</td>
+      <td>041</td>
+      <td>050</td>
+      <td>no</td>
+      <td>Eura</td>
+      <td>Eura</td>
+      <td>12128</td>
+      <td>630200000</td>
+      <td>FI</td>
+    </tr>
+    <tr>
+      <td>FI193</td>
+      <td>131</td>
+      <td>592</td>
+      <td>no</td>
+      <td>Petäjävesi</td>
+      <td>Petäjävesi</td>
+      <td>4008</td>
+      <td>495420000</td>
+      <td>FI</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="flow-text">The pipeline to replicate this transformation step can be found <a href="{% link /assets/tutorials/csv-to-rdf/pipelines/lau_with_excel_to_csv.jsonld %}">here</a>.</p>
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/introduction.html %}" rel="prev">&larr; Back to the introduction</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/convert_csv_to_rdf.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>

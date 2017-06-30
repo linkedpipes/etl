@@ -1,11 +1,14 @@
 <header class="site-header" >
     <nav class="blue" role="navigation">
-        {% if page.layout == 'component' %}
-            {% include compnav.html %}
-        {% elsif page.layout == 'post' %}
-            {% include postnav.html %}
-        {% else %}
-            {% include nav.html %}
-        {% endif %}
+      {% case page.layout %}
+      {% when 'component' %}
+        {% include compnav.html %}
+      {% when 'post' %}
+        {% include postnav.html %}
+      {% when 'tutorial' %}
+        {% include tutnav.html %}
+      {% else %}
+        {% include nav.html %}
+      {% endcase %}
     </nav>
 </header>

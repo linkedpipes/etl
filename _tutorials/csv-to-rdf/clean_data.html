@@ -1,0 +1,291 @@
+---
+file: clean_data.html
+short: "CSV to RDF: clean data"
+subtitle: Clean data
+title: Converting tabular data to RDF
+---
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/convert_csv_to_rdf.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/make_versions_explicit.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF input</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix : <http://example.com/> .
+
+[ :AREA "1056740000" ;
+  :CHANGE "no" ;
+  :LAU1_NAT_CODE "146" ;
+  :LAU2_NAT_CODE "005" ;
+  :NAME_1 "Alajärvi" ;
+  :NAME_2_LAT "Alajärvi" ;
+  :NUTS_3 "FI194" ;
+  :POP "10006" ;
+  :sheet_name "FI" ] .
+
+[ :AREA "630200000" ;
+  :CHANGE "no" ;
+  :LAU1_NAT_CODE "041" ;
+  :LAU2_NAT_CODE "050" ;
+  :NAME_1 "Eura" ;
+  :NAME_2_LAT "Eura" ;
+  :NUTS_3 "FI196" ;
+  :POP "12128" ;
+  :sheet_name "FI" ] .
+
+[ :AREA "495420000" ;
+  :CHANGE "no" ;
+  :LAU1_NAT_CODE "131" ;
+  :LAU2_NAT_CODE "592" ;
+  :NAME_1 "Petäjävesi" ;
+  :NAME_2_LAT "Petäjävesi" ;
+  :NUTS_3 "FI193" ;
+  :POP "4008" ;
+  :sheet_name "FI" ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
+<p class="flow-text">Now we have a syntactically valid RDF data.
+However, it has some imperfections that we can remedy.
+To clean the data we pipe it into the <a href="{% link _components/t-sparqlupdate.html %}">SPARQL Update</a> component that allows us to run <a href="https://www.w3.org/TR/sparql11-update">SPARQL 1.1 Update</a> operations on the input RDF data.
+A handy assistant in developing SPARQL Update operations is the <a href="http://sparql.org/update-validator.html">SPARQLer Update Validator</a> that you can use to check the syntax of your update operations before entering them into LP-ETL.
+Cleaning and mapping data usually takes multiple steps, embodied by multiple instances of the SPARQL Update component.
+It is therefore useful to add a description to each instance to be able to differentiate them quickly.
+You can add a description to any component by going to its <em>General</em> tab and filling in the <em>Description</em> field.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Component description"
+         class="responsive-img"
+         data-caption="Component description"
+         src="{% link /assets/tutorials/csv-to-rdf/img/component_description.png %}"/>
+  </div>
+</div>
+
+{% comment %}
+Remove data
+{% endcomment %}
+
+<p class="flow-text">We start with updates that delete data.
+Doing so speeds up subsequent transformations since they can operate on smaller data.
+First, we remove the empty values that are indicated with the placeholder "n.a.", or "n.a" alternatively:</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE {
+  ?s ?p ?o .
+}
+WHERE {
+  VALUES ?o {
+    "n.a"
+    "n.a."
+  }
+  ?s ?p ?o .
+}</code></pre>
+
+<p class="flow-text">We also remove the redundant transliterations of the names of local administrative units.
+The <code>:NAME_2_LAT</code> property provides Latin transliterations of the names.
+Transliterations are useful for non-Latin names, such as in Cyrillic.
+However, they provide no additional value if they are the same as the original names.</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE {
+  ?lau :NAME_2_LAT ?name .
+}
+WHERE {
+  ?lau :NAME_1 ?name ;
+    :NAME_2_LAT ?name .
+}</code></pre>
+
+<p class="flow-text">Some local administrative units on the level 2 lack codes.
+Instead, they are given a placeholder code <code>9999</code>. 
+We delete these placeholder codes using the <a href="https://www.w3.org/TR/sparql11-update/#deleteWhere"><code>DELETE WHERE</code></a> shorthand.</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE WHERE {
+  ?lau2 :LAU2_NAT_CODE "9999" .
+}</code></pre>
+
+<p class="flow-text">This SPARQL Update operation is equivalent to this longer form:</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE {
+  ?lau2 :LAU2_NAT_CODE "9999" .
+}
+WHERE {
+  ?lau2 :LAU2_NAT_CODE "9999" .
+}</code></pre>
+
+<p class="flow-text">Due to a superfluous formula in the source spreadsheet, the generated RDF contains a corresponding empty row for which the formula computes its area to be zero.
+In order to remove this row, we match the rows that have only the properties <code>:sheet_name</code> and <code>:AREA</code> and delete them.</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE {
+  ?row ?p ?o .
+}
+WHERE {
+  ?row :sheet_name [] .
+  # The row does not have any other property besides :sheet_name and :AREA.
+  FILTER NOT EXISTS {
+    ?row !(:sheet_name|:AREA) [] .
+  }
+  ?row ?p ?o .
+}</code></pre>
+
+<p class="flow-text">By default, Tabular outputs all literals as strings.
+Besides strings, our dataset contains numbers and boolean values, so we cast these values to their suitable data types.
+We cast the values of the properties <code>:AREA</code> and <code>:POP</code> to integers:</p>
+
+<pre><code>PREFIX :    &lt;http://example.com/&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+DELETE {
+  ?s ?p ?string .
+}
+INSERT {
+  ?s ?p ?number .
+}
+WHERE {
+  VALUES ?p {
+    :AREA
+    :POP
+  }
+  ?s ?p ?string .
+  BIND (strdt(?string, xsd:integer) AS ?number)
+}</code></pre>
+
+<p class="flow-text">Yes/no values are mapped to boolean true/false:</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE {
+  ?s :CHANGE ?string .
+}
+INSERT {
+  ?s :CHANGE ?boolean .
+}
+WHERE {
+  VALUES (?string ?boolean) {
+         ("yes"   true)
+         ("no"    false)
+  }
+  ?s :CHANGE ?string .
+}</code></pre>
+
+<p class="flow-text">Finally, we infer language tags of the names based on countries where the local administrative units are located.
+We use a manually created lookup table to map country codes to <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 language codes</a>.</p>
+
+<pre><code>PREFIX : &lt;http://example.com/&gt;
+
+DELETE {
+  ?lau :NAME_1 ?_name .
+}
+INSERT {
+  ?lau :NAME_1 ?name .
+}
+WHERE {
+  VALUES (?country ?language) {
+         ("AT"     "de")
+         ("BE"     "be")
+         ("BG"     "bg")
+         ("CY"     "el")
+         ("CZ"     "cs")
+         ("DE"     "de")
+         ("DK"     "da")
+         ("EE"     "et")
+         ("EL"     "el")
+         ("ES"     "es")
+         ("FI"     "fi")
+         ("FR"     "fr")
+         ("HR"     "hr")
+         ("IE"     "en")
+         ("IT"     "it")
+         ("LT"     "lt")
+         ("LU"     "lb")
+         ("LV"     "lv")
+         ("MT"     "mt")
+         ("NL"     "nl")
+         ("PL"     "pl")
+         ("PT"     "pt")
+         ("RO"     "ro")
+         ("SE"     "sv")
+         ("SI"     "sl")
+         ("SK"     "sk")
+         ("UK"     "en")
+  }
+  ?lau :NAME_1 ?_name ;
+    :sheet_name ?country .
+  BIND (strlang(?_name, ?language) AS ?name)
+}</code></pre>
+
+<p class="flow-text">Note that the mapping between countries and languages is a simplification, because there are EU member countries that have multiple official languages, such as Ireland where both Irish and English are spoken.
+Consequently, there is a chance that this mapping assigns the names of local administrative units with incorrect language tags.</p>
+
+<p>
+  <img alt="Clean data pipeline"
+       class="materialboxed responsive-img"
+       data-caption="Clean data pipeline"
+       src="{% link /assets/tutorials/csv-to-rdf/img/clean_data_pipeline.png %}"/>
+</p>
+
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF output</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :    <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[ :AREA "1056740000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "146" ;
+  :LAU2_NAT_CODE "005" ;
+  :NAME_1 "Alajärvi"@fi ;
+  :NUTS_3 "FI194" ;
+  :POP 10006 ;
+  :sheet_name "FI" ] .
+
+[ :AREA "630200000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "041" ;
+  :LAU2_NAT_CODE "050" ;
+  :NAME_1 "Eura"@fi ;
+  :NUTS_3 "FI196" ;
+  :POP 12128 ;
+  :sheet_name "FI" ] .
+
+[ :AREA "495420000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "131" ;
+  :LAU2_NAT_CODE "592" ;
+  :NAME_1 "Petäjävesi"@fi ;
+  :NUTS_3 "FI193" ;
+  :POP 4008 ;
+  :sheet_name "FI" ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/convert_csv_to_rdf.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/make_versions_explicit.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
