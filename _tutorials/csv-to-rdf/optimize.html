@@ -5,9 +5,14 @@ subtitle: Optimize
 title: Converting tabular data to RDF
 ---
 
-<p class="flow-text">
-  <a href="{% link _tutorials/csv-to-rdf/link_data.html %}" rel="prev">&larr; Previous step</a>
-</p>
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/link_data.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/load_data.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
 
 <p class="flow-text">If we run our pipeline, we can notice that its full execution may take around 100 minutes to complete.
 The runtime can vary significantly based on network latency or the specification of the computer that you run the pipeline on.
@@ -71,4 +76,11 @@ During pipeline development, you probably want to execute pipelines in the stand
 
 <p class="flow-text">You can find the optimized version of the example pipeline <a href="pipelines/lau_with_chunked_merged_updates.jsonld">here</a>.</p>
 
-<p class="flow-text"><a href="{% link _tutorials/csv-to-rdf/load_data.html %}" rel="next">&rarr; Next step</a></p>
+<div class="row">
+  <p class="col s4 flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/link_data.html %}" rel="prev">&larr; Previous step</a>
+  </p>
+  <p class="col s4 offset-s4 right-align flow-text">
+    <a href="{% link _tutorials/csv-to-rdf/load_data.html %}" rel="next">&rarr; Next step</a>
+  </p>
+</div>
