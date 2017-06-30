@@ -21,7 +21,7 @@
 		skos:prefLabel "Text holder template" .
 
 	<http://localhost/pipeline/9405c1ee> a lp:Component ;
-		lp:template <http://etl.linkedpipes.com/resources/components/e-TextHolder/0.0.0> ;
+		lp:template <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> ;
 		lp:x "100"^^<http://www.w3.org/2001/XMLSchema#integer> ;
 		lp:y "120"^^<http://www.w3.org/2001/XMLSchema#integer> ;
 		skos:prefLabel "Text holder component" .
