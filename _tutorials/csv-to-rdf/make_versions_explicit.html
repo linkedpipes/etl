@@ -14,6 +14,30 @@ title: Converting tabular data to RDF
   </p>
 </div>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF input</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :        <http://example.com/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+[ :AREA "1467502"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "00EB" ;
+  :LAU1_NAT_CODE_NEW "E06000001" ;
+  :LAU2_NAT_CODE "00EBNM"
+  :LAU2_NAT_CODE_NEW "E05008942" ;
+  :NAME_1 "Burn Valley"@en ;
+  :NUTS3_10 "UKC11" ;
+  :NUTS3_13 "UKC11" ;
+  :POP 8774 ;
+  :sheet_name "UK" ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">Our dataset contains rudimentary data on versioning.
 Previous codes are provided for several administrative areas.
 These codes are made obsolete by the current codes, but they are useful to have for mapping older data that refers to them.
@@ -73,10 +97,10 @@ WHERE {
   :LAU1_NAT_CODE "E06000001" ;
   :LAU2_NAT_CODE "E05008942" ;
   :NAME_1 "Burn Valley"@en ;
-  :POP 8774 ;
-  :sheet_name "UK" ;
   :NUTS3_10 "UKC11" ;
   :NUTS3_13 "UKC11" ;
+  :POP 8774 ;
+  :sheet_name "UK" ;
   dcterms:replaces [
     :LAU1_NAT_CODE "00EB" ;
     :LAU2_NAT_CODE "00EBNM"

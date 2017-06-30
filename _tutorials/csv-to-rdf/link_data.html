@@ -15,6 +15,28 @@ title: Converting tabular data to RDF
   </p>
 </div>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF input</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/500011> a skos:Concept ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  skos:prefLabel "Želechovice nad Dřevnicí"@cs ;
+  skos:notation "500011" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/cz/CZ0724> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013/UKI42> a skos:Concept ;
+  skos:notation "UKI42" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/nuts/2013> .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">We can enrich the LAU code list with links to related external data.
 Doing so enables combining the code list with relevant data, such as additional statistics, to perform more sophisticated queries and analyses.
 In this tutorial, we show linking of two third-party datasets.

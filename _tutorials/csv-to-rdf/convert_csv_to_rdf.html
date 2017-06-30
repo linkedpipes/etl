@@ -18,6 +18,64 @@ title: Converting tabular data to RDF
 To narrow down the concerns considered in this step we perform only syntactical conversion to the RDF data model.
 We separate further post-processing of the data into the subsequent steps.</p>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample CSV input</div>
+    <div class="collapsible-body">
+      <table class="responsive-table">
+        <thead>
+          <tr>
+            <th>NUTS_3</th>
+            <th>LAU1_NAT_CODE</th>
+            <th>LAU2_NAT_CODE</th>
+            <th>CHANGE</th>
+            <th>NAME_1</th>
+            <th>NAME_2_LAT</th>
+            <th>POP</th>
+            <th>AREA</th>
+            <th>sheet_name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FI194</td>
+            <td>146</td>
+            <td>005</td>
+            <td>no</td>
+            <td>Alajärvi</td>
+            <td>Alajärvi</td>
+            <td>10006</td>
+            <td>1056740000</td>
+            <td>FI</td>
+          </tr>
+          <tr>
+            <td>FI196</td>
+            <td>041</td>
+            <td>050</td>
+            <td>no</td>
+            <td>Eura</td>
+            <td>Eura</td>
+            <td>12128</td>
+            <td>630200000</td>
+            <td>FI</td>
+          </tr>
+          <tr>
+            <td>FI193</td>
+            <td>131</td>
+            <td>592</td>
+            <td>no</td>
+            <td>Petäjävesi</td>
+            <td>Petäjävesi</td>
+            <td>4008</td>
+            <td>495420000</td>
+            <td>FI</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">LP-ETL provides the <a href="{% link _components/t-tabular.html %}">Tabular</a> component for turning CSV into RDF.
 Tabular implements the standard mapping specified in the W3C Recommendation <a href="https://www.w3.org/TR/csv2rdf">Generating RDF from Tabular Data on the Web</a>.
 There are several options that allow us to customize the output of this component.</p>

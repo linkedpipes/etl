@@ -14,6 +14,29 @@ title: Converting tabular data to RDF
   </p>
 </div>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF input</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :     <http://example.com/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/005> a skos:Concept ;
+  skos:prefLabel "Alajärvi"@fi ;
+  skos:notation "005" ;
+  skos:broaderTransitive <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016/fi/146> ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "1056740000"^^xsd:decimal ;
+  :CHANGE false ;
+  :POP 10006 ;
+  :sheet_name "FI" .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">At this stage we split the data into the two parts mentioned above.
 We fork the data processing pipeline into two branches.
 One branch creates the statistical part of the dataset and the other branch creates the LAU code list.

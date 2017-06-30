@@ -15,6 +15,52 @@ title: Converting tabular data to RDF
   </p>
 </div>
 
+<ul class="collapsible popout" data-collapsible="accordion">
+  <li>
+    <div class="collapsible-header"><i class="material-icons">open_with</i>Sample RDF input</div>
+    <div class="collapsible-body">
+{% highlight turtle %}
+@prefix :     <http://example.com/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+[ a skos:Concept ;
+  skos:prefLabel "Alajärvi"@fi ;
+  skos:notation "005" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "1056740000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "146" ;
+  :NUTS_3 "FI194" ;
+  :POP 10006 ;
+  :sheet_name "FI" ] .
+
+[ a skos:Concept ;
+  skos:prefLabel "Eura"@fi ;
+  skos:notation "050" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "630200000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "041" ;
+  :NUTS_3 "FI196" ;
+  :POP 12128 ;
+  :sheet_name "FI" ] .
+
+[ a skos:Concept ;
+  skos:prefLabel "Petäjävesi"@fi ;
+  skos:notation "592" ;
+  skos:inScheme <https://linked.opendata.cz/resource/ec.europa.eu/eurostat/lau/2016> ;
+  :AREA "495420000"^^xsd:decimal ;
+  :CHANGE false ;
+  :LAU1_NAT_CODE "131" ;
+  :NUTS_3 "FI193" ;
+  :POP 4008 ;
+  :sheet_name "FI" ] .
+{% endhighlight %}
+    </div>
+  </li>
+</ul>
+
 <p class="flow-text">Tabular outputs <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes">blank nodes</a> by default.
 Blank nodes are not stable identifiers, so they do not persist across queries or updates, which makes them difficult to manipulate in data transformations.
 Since blank nodes are usually <em>“a convenience for the content provider and a burden on the content consumer”</em> (<a href="https://lists.w3.org/Archives/Public/semantic-web/2011Mar/0068.html">source</a>), we convert them to IRIs to make it easier to consume the data.
