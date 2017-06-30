@@ -4,6 +4,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.query.GraphQueryResult;
+import org.eclipse.rdf4j.query.QueryResults;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
@@ -70,12 +71,6 @@ class SparqlConstructExecutor implements Runnable {
         Repositories.consume(repository, (connection) -> {
             executeQuery(connection);
         });
-        if (deduplicateResults) {
-            // Workaround for https://github.com/eclipse/rdf4j/issues/857
-            manager.submitResult(deduplicate(outputBuffer));
-        } else {
-            manager.submitResult(outputBuffer);
-        }
         repository.shutDown();
         LOG.info("Executing task (size: {}) ... done", outputBuffer.size());
         return true;
@@ -100,13 +95,14 @@ class SparqlConstructExecutor implements Runnable {
         outputBuffer.clear();
         GraphQueryResult result =
                 connection.prepareGraphQuery(query).evaluate();
+        if (deduplicateResults) {
+            // Sparql construct does not return distinct results by default:
+            // https://github.com/eclipse/rdf4j/issues/857
+            result = QueryResults.distinctResults(result);
+        }
         while (result.hasNext()) {
             outputBuffer.add(result.next());
         }
-    }
-
-    private Set<Statement> deduplicate(Collection<Statement> statements) {
-        return new HashSet<>(statements);
     }
 
     public boolean isFailed() {
