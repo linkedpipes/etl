@@ -37,6 +37,10 @@ public abstract class Template implements Loadable {
         return configDescriptionGraph;
     }
 
+    public void setConfigDescriptionGraph(String configDescriptionGraph) {
+        this.configDescriptionGraph = configDescriptionGraph;
+    }
+
     public abstract String getConfigGraph();
 
 }
