@@ -88,6 +88,7 @@
         <module>l-coachDb</module>
         <module>t-mustacheChunked</module>
         <module>t-chunkSplitter</module>
+        <module>t-rdfToWrappedJsonLdChunked</module>
     </modules>
 
 </project>
