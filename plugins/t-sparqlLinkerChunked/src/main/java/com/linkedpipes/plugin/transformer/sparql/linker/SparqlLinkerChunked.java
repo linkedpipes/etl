@@ -84,6 +84,10 @@ public final class SparqlLinkerChunked implements Component,
         //
         boolean isAddToChunk = SparqlConstructVocabulary.ADD_TO_CHUNK.equals(
                 configuration.getOutputMode());
+
+        LOG.info("Output mode (add to chunk: {}) : {}", isAddToChunk,
+                configuration.getOutputMode());
+
         for (ChunkedTriples.Chunk data : dataRdf) {
             LOG.info("processing ..");
             // Prepare repository and load data.
