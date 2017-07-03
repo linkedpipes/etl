@@ -14,6 +14,8 @@ public final class LP_PIPELINE {
 
     public static final String CONNECTION = PREFIX + "Connection";
 
+    public static final String RUN_AFTER = PREFIX + "RunAfter";
+
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
     public static final String JAS_TEMPLATE = PREFIX + "JarTemplate";

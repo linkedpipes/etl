@@ -7,6 +7,7 @@ import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerConnection;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
+import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerRunAfter;
 import com.linkedpipes.etl.storage.unpacker.model.execution.Execution;
 import com.linkedpipes.etl.storage.unpacker.model.template.JarTemplate;
 import com.linkedpipes.etl.storage.unpacker.model.template.ReferenceTemplate;
@@ -30,6 +31,9 @@ public class ModelLoader {
 
         pipelineModel.getConnections().addAll((RdfUtils.loadList(source, null,
                 DesignerConnection.class, DesignerConnection.TYPE)));
+
+        pipelineModel.getRunAfter().addAll((RdfUtils.loadList(source, null,
+                DesignerRunAfter.class, DesignerRunAfter.TYPE)));
 
         pipelineModel.getComponents().addAll((RdfUtils.loadList(source, null,
                 DesignerComponent.class, DesignerComponent.TYPE)));

@@ -10,6 +10,7 @@ import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerConnection;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
+import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerRunAfter;
 import com.linkedpipes.etl.storage.unpacker.model.execution.Execution;
 import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionComponent;
 import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionPort;
@@ -28,6 +29,8 @@ public class DesignerToExecutor {
 
     private ExecutorPipeline target;
 
+    private List<DesignerRunAfter> runAfter;
+
     private final TemplateExpander jarTemplateExpander;
 
     private final ExecutionSource executionSource;
@@ -43,6 +46,7 @@ public class DesignerToExecutor {
         this.source = pipeline;
         this.graphs = graphs;
         this.target = new ExecutorPipeline(getExecutionIri(options));
+        this.runAfter = new ArrayList<>(pipeline.getRunAfter());
         //
         initializePipeline();
         convertConnections();
@@ -89,6 +93,7 @@ public class DesignerToExecutor {
     private void convertAndExpandComponents() throws BaseException {
         jarTemplateExpander.setGraphs(graphs);
         for (DesignerComponent component : source.getComponents()) {
+            // TODO Also pass connections and runAfter for possible modification
             target.addComponent(jarTemplateExpander.expand(component));
         }
     }
@@ -119,7 +124,8 @@ public class DesignerToExecutor {
 
     private void computeExecutionFlow(UnpackOptions options)
             throws BaseException {
-        ExecutionFlow flowComputer = new ExecutionFlow(source, target, options);
+        ExecutionFlow flowComputer = new ExecutionFlow(
+                source, target, runAfter, options);
         flowComputer.computeExecutionTypeAndOrder();
     }
 

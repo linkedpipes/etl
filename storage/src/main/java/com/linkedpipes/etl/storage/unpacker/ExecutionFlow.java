@@ -3,6 +3,7 @@ package com.linkedpipes.etl.storage.unpacker;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
+import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerRunAfter;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorComponent;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorConnection;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPipeline;
@@ -20,11 +21,14 @@ class ExecutionFlow {
 
     private final UnpackOptions options;
 
+    private final List<DesignerRunAfter> runAfter;
+
     public ExecutionFlow(DesignerPipeline source, ExecutorPipeline target,
-            UnpackOptions options) {
+            List<DesignerRunAfter> runAfter, UnpackOptions options) {
         this.source = source;
         this.target = target;
         this.options = options;
+        this.runAfter = runAfter;
     }
 
     public void computeExecutionTypeAndOrder() throws BaseException {
@@ -71,6 +75,11 @@ class ExecutionFlow {
             dependencies.put(component.getIri(), new HashSet<>());
         }
         for (ExecutorConnection connection : target.getConnections()) {
+            String targetComponent = connection.getTargetComponent();
+            Set<String> ancestors = dependencies.get(targetComponent);
+            ancestors.add(connection.getSourceComponent());
+        }
+        for (DesignerRunAfter connection : runAfter) {
             String targetComponent = connection.getTargetComponent();
             Set<String> ancestors = dependencies.get(targetComponent);
             ancestors.add(connection.getSourceComponent());

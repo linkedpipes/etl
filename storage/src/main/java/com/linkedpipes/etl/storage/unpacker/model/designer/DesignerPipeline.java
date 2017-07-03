@@ -26,6 +26,8 @@ public class DesignerPipeline implements Loadable {
 
     private final List<DesignerComponent> components = new LinkedList<>();
 
+    private final List<DesignerRunAfter> runAfter = new LinkedList<>();
+
     public DesignerPipeline() {
     }
 
@@ -65,6 +67,10 @@ public class DesignerPipeline implements Loadable {
 
     public List<DesignerConnection> getConnections() {
         return connections;
+    }
+
+    public List<DesignerRunAfter> getRunAfter() {
+        return runAfter;
     }
 
     public List<DesignerComponent> getComponents() {
