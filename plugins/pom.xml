@@ -89,6 +89,7 @@
         <module>t-mustacheChunked</module>
         <module>t-chunkSplitter</module>
         <module>t-rdfToWrappedJsonLdChunked</module>
+        <module>t-rdfDifference</module>
     </modules>
 
 </project>
