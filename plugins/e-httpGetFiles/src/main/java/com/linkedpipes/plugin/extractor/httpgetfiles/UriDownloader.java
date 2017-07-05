@@ -130,12 +130,11 @@ class UriDownloader {
                 exceptions.add(ex);
                 return;
             } finally {
-                final Date downloadEnded = new Date();
+                Date downloadEnded = new Date();
                 long downloadTime = downloadEnded.getTime() -
                         downloadStarted.getTime();
                 LOG.debug("Downloading of: {} takes: {} ms",
                         fileToDownload.source, downloadTime);
-                progressReport.entryProcessed();
                 connection.disconnect();
             }
         }
