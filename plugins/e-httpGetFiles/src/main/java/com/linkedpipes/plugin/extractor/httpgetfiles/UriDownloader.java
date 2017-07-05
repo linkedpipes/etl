@@ -98,11 +98,13 @@ class UriDownloader {
             Integer timeOut = fileToDownload.getTimeOut();
             if (timeOut != null) {
                 connection.setConnectTimeout(timeOut);
+                connection.setReadTimeout(timeOut);
             }
 
             if (configuration.isDetailLogging()) {
                 logDetails(connection);
             }
+
             try {
                 int responseCode = connection.getResponseCode();
                 if (responseCode < 200 || responseCode > 299) {
