@@ -27,7 +27,9 @@ class UriDownloader {
 
         private final File target;
 
-        private Map<String, String> headers = new HashMap<>();
+        private final Map<String, String> headers = new HashMap<>();
+
+        private Integer timeOut = null;
 
         public FileToDownload(URL source, File target) {
             this.source = source;
@@ -37,6 +39,15 @@ class UriDownloader {
         public void setHeader(String key, String value) {
             headers.put(key, value);
         }
+
+        public Integer getTimeOut() {
+            return timeOut;
+        }
+
+        public void setTimeOut(Integer timeOut) {
+            this.timeOut = timeOut;
+        }
+
     }
 
     private class Worker implements Callable<Object> {
@@ -48,8 +59,7 @@ class UriDownloader {
 
         private final AtomicInteger counter;
 
-        public Worker(
-                ConcurrentLinkedQueue<FileToDownload> workQueue,
+        public Worker(ConcurrentLinkedQueue<FileToDownload> workQueue,
                 AtomicInteger counter) {
             this.workQueue = workQueue;
             this.counter = counter;
@@ -60,64 +70,76 @@ class UriDownloader {
             MDC.setContextMap(contextMap);
             FileToDownload work;
             while ((work = workQueue.poll()) != null) {
-                final Date downloadStarted = new Date();
-                // Check failure of other threads.
-                if (!configuration.isSkipOnError() &&
-                        !exceptions.isEmpty()) {
+                if (!configuration.isSkipOnError() && !exceptions.isEmpty()) {
                     return null;
                 }
-                LOG.debug("Downloading {}/{} : {}",
-                        counter.incrementAndGet(), total, work.source);
-                // Create connection.
-                final HttpURLConnection connection;
-                try {
-                    connection = createConnection(work.source, work.headers);
-                } catch (IOException ex) {
-                    LOG.error("Can't create connection to: {}", ex);
-                    exceptions.add(ex);
-                    progressReport.entryProcessed();
-                    continue;
-                }
-                if (configuration.isDetailLogging()) {
-                    logDetails(connection);
-                }
-                try {
-                    int responseCode = connection.getResponseCode();
-                    if (responseCode < 200 || responseCode > 299) {
-                        final Exception ex = new Exception(
-                                "Invalid response code: " + responseCode +
-                                        " message: " +
-                                        connection.getResponseMessage());
-                        LOG.error("Can't download file: {}", work.source, ex);
-                        exceptions.add(ex);
-                        continue;
-                    }
-                } catch (IOException ex) {
-                    LOG.error("Can't read response code for file: {}",
-                            work.target, ex);
-                    exceptions.add(ex);
-                    continue;
-                }
-                // Copy content.
-                try (InputStream inputStream = connection.getInputStream()) {
-                    FileUtils.copyInputStreamToFile(inputStream, work.target);
-                } catch (IOException ex) {
-                    LOG.error("Can't download file: {}", work.target, ex);
-                    exceptions.add(ex);
-                    continue;
-                } finally {
-                    final Date downloadEnded = new Date();
-                    long downloadTime = downloadEnded.getTime() -
-                            downloadStarted.getTime();
-                    LOG.debug("Downloading of: {} takes: {} ms",
-                            work.source, downloadTime);
-                    progressReport.entryProcessed();
-                    connection.disconnect();
-                }
+                downloadFile(work);
+                progressReport.entryProcessed();
             }
             return null;
         }
 
+        private void downloadFile(FileToDownload fileToDownload) {
+            final Date downloadStarted = new Date();
+            // Check failure of other threads.
+            LOG.debug("Downloading {}/{} : {}",
+                    counter.incrementAndGet(), total, fileToDownload.source);
+            // Create connection.
+            final HttpURLConnection connection;
+            try {
+                connection = createConnection(fileToDownload.source,
+                        fileToDownload.headers);
+            } catch (IOException ex) {
+                LOG.error("Can't create connection to: {}", ex);
+                exceptions.add(ex);
+                return;
+            }
+
+            Integer timeOut = fileToDownload.getTimeOut();
+            if (timeOut != null) {
+                connection.setConnectTimeout(timeOut);
+                connection.setReadTimeout(timeOut);
+            }
+
+            if (configuration.isDetailLogging()) {
+                logDetails(connection);
+            }
+            try {
+                int responseCode = connection.getResponseCode();
+                if (responseCode < 200 || responseCode > 299) {
+                    final Exception ex = new Exception(
+                            "Invalid response code: " + responseCode +
+                                    " message: " +
+                                    connection.getResponseMessage());
+                    LOG.error("Can't download file: {}", fileToDownload.source,
+                            ex);
+                    exceptions.add(ex);
+                    return;
+                }
+            } catch (IOException ex) {
+                LOG.error("Can't read response code for file: {}",
+                        fileToDownload.target, ex);
+                exceptions.add(ex);
+                return;
+            }
+            // Copy content.
+            try (InputStream inputStream = connection.getInputStream()) {
+                FileUtils.copyInputStreamToFile(inputStream,
+                        fileToDownload.target);
+            } catch (IOException ex) {
+                LOG.error("Can't download file: {}", fileToDownload.target, ex);
+                exceptions.add(ex);
+                return;
+            } finally {
+                final Date downloadEnded = new Date();
+                long downloadTime = downloadEnded.getTime() -
+                        downloadStarted.getTime();
+                LOG.debug("Downloading of: {} takes: {} ms",
+                        fileToDownload.source, downloadTime);
+                progressReport.entryProcessed();
+                connection.disconnect();
+            }
+        }
     }
 
     private static final Logger LOG =
@@ -166,9 +188,7 @@ class UriDownloader {
             }
         }
         //
-        if (exceptions.isEmpty()) {
-            progressReport.done();
-        }
+        progressReport.done();
     }
 
     public Collection<Exception> getExceptions() {

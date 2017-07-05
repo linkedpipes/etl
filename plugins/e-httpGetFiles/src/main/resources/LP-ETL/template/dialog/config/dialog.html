@@ -32,4 +32,9 @@
         <md-tooltip>If set aditional information are logged for every download.
         </md-tooltip>
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.timeout.hide">
+        <label>Timeout</label>
+        <input type="number" ng-model="dialog.timeout.value"
+               ng-disabled="dialog.timeout.disabled || dialog.timeout.inherit">
+    </md-input-container>
 </div>

@@ -23,6 +23,10 @@ define([], function () {
         "detailLog" : {
             "$type" : "bool",
             "$label" : "Detail log"
+        },
+        "timeout" : {
+            "$type" : "int",
+            "$label" : "Timeout"
         }
     };
 

@@ -34,6 +34,9 @@ public class HttpGetFilesConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_DETAIL_LOG)
     private boolean detailLogging = false;
 
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TMEOUT)
+    private Integer timeout;
+
     public HttpGetFilesConfiguration() {
     }
 
@@ -76,4 +79,13 @@ public class HttpGetFilesConfiguration {
     public void setDetailLogging(boolean detailLogging) {
         this.detailLogging = detailLogging;
     }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
+    }
+
 }

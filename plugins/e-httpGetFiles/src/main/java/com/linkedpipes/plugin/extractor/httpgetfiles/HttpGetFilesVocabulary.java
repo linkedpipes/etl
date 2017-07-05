@@ -33,4 +33,6 @@ public final class HttpGetFilesVocabulary {
 
     public static final String HAS_DETAIL_LOG = PREFIX + "detailLog";
 
+    public static final String HAS_TMEOUT = PREFIX + "timeout";
+
 }

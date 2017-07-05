@@ -17,6 +17,9 @@ public class FileToDownload {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
     private List<RequestHeader> headers = new LinkedList<>();
 
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TMEOUT)
+    private Integer timeOut = null;
+
     public FileToDownload() {
     }
 
@@ -42,6 +45,14 @@ public class FileToDownload {
 
     public void setHeaders(List<RequestHeader> headers) {
         this.headers = headers;
+    }
+
+    public Integer getTimeOut() {
+        return timeOut;
+    }
+
+    public void setTimeOut(Integer timeOut) {
+        this.timeOut = timeOut;
     }
 
 }

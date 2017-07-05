@@ -49,7 +49,6 @@ public final class HttpGetFiles implements Component, SequentialExecution {
     public void execute() throws LpException {
         // TODO Do not use this, but be selective about certs we trust.
         try {
-            LOG.warn("'Trust all certs' policy used -> security risk!");
             setTrustAllCerts();
         } catch (Exception ex) {
             throw exceptionFactory.failure(
@@ -57,56 +56,17 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         }
         List<FileToDownload> filesToDownload = getFilesToDownload();
         // Prepare work.
-        final ConcurrentLinkedQueue<UriDownloader.FileToDownload> workQueue =
+        ConcurrentLinkedQueue<UriDownloader.FileToDownload> workQueue =
                 new ConcurrentLinkedQueue<>();
         for (FileToDownload reference : filesToDownload) {
-            if (reference.getUri() == null
-                    || reference.getUri().isEmpty()) {
-                if (configuration.isSkipOnError()) {
-                    continue;
-                } else {
-                    throw exceptionFactory.failure("Missing property: {}",
-                            HttpGetFilesVocabulary.HAS_URI);
-                }
-            }
-            if (reference.getFileName() == null
-                    || reference.getFileName().isEmpty()) {
-                if (configuration.isSkipOnError()) {
-                    continue;
-                } else {
-                    throw exceptionFactory.failure("Missing property: {}",
-                            HttpGetFilesVocabulary.HAS_NAME);
-                }
-            }
-            final File target = output.createFile(
-                    reference.getFileName());
-            final URL source;
-            try {
-                source = new URL(reference.getUri());
-            } catch (MalformedURLException ex) {
-                if (configuration.isSkipOnError()) {
-                    LOG.warn("Invalid property: {} on {}");
-                    continue;
-                } else {
-                    throw exceptionFactory.failure("Invalid property: {} on {}",
-                            HttpGetFilesVocabulary.HAS_URI,
-                            reference.getUri(), ex);
-                }
-            }
-            // Prepare and and job.
-            final UriDownloader.FileToDownload job =
-                    new UriDownloader.FileToDownload(source, target);
-            for (RequestHeader header : configuration.getHeaders()) {
-                job.setHeader(header.getKey(), header.getValue());
-            }
-            for (RequestHeader header : reference.getHeaders()) {
-                job.setHeader(header.getKey(), header.getValue());
+            UriDownloader.FileToDownload job = createDownloadJob(reference);
+            if (job == null) {
+                continue;
             }
             workQueue.add(job);
         }
         // Execute.
-        final UriDownloader downloader =
-                new UriDownloader(progressReport, configuration);
+        UriDownloader downloader = new UriDownloader(progressReport, configuration);
         downloader.download(workQueue, filesToDownload.size());
         if (!downloader.getExceptions().isEmpty()) {
             LOG.info("Downloaded {}/{}", downloader.getExceptions().size(),
@@ -133,10 +93,8 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         }
     }
 
-    /**
-     * Add trust to all certificates.
-     */
-    private static void setTrustAllCerts() throws Exception {
+    private void setTrustAllCerts() throws Exception {
+        LOG.warn("'Trust all certs' policy used -> security risk!");
         final TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
@@ -168,6 +126,82 @@ public final class HttpGetFiles implements Component, SequentialExecution {
                     (String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
             throw ex;
+        }
+    }
+
+    private UriDownloader.FileToDownload createDownloadJob(
+            FileToDownload reference) throws LpException {
+        String uri = getUri(reference);
+        String fileName = getFileName(reference);
+        if (uri == null || fileName == null) {
+            if (configuration.isSkipOnError()) {
+                return null;
+            } else {
+                throw exceptionFactory.failure("Invalid reference: {}",
+                        reference.getUri());
+            }
+        }
+        URL source = createUrl(uri);
+        if (source == null) {
+            return null;
+        }
+        File target = output.createFile(reference.getFileName());
+        UriDownloader.FileToDownload job = new UriDownloader.FileToDownload(
+                source, target);
+        job.setTimeOut(getTimeOut(reference));
+        setHeaders(job, reference);
+        return job;
+
+    }
+
+    private String getUri(FileToDownload reference) throws LpException {
+        String uri = reference.getUri();
+        if (uri == null || uri.isEmpty()) {
+            return null;
+        }
+        return uri;
+    }
+
+    private String getFileName(FileToDownload reference)
+            throws LpException {
+        String fileName = reference.getFileName();
+        if (fileName == null || fileName.isEmpty()) {
+            return null;
+        }
+        return fileName;
+    }
+
+    private URL createUrl(String urlAsString) throws LpException {
+        try {
+            return new URL(urlAsString);
+        } catch (MalformedURLException ex) {
+            if (configuration.isSkipOnError()) {
+                LOG.warn("Invalid property: {} on {}");
+                return null;
+            } else {
+                throw exceptionFactory.failure("Invalid property: {} on {}",
+                        HttpGetFilesVocabulary.HAS_URI,
+                        urlAsString, ex);
+            }
+        }
+    }
+
+    private Integer getTimeOut(FileToDownload reference) {
+        Integer timeOut = reference.getTimeOut();
+        if (timeOut == null) {
+            return configuration.getTimeout();
+        } else {
+            return timeOut;
+        }
+    }
+
+    private void setHeaders(UriDownloader.FileToDownload job,
+            FileToDownload reference) {
+        for (RequestHeader header : configuration.getHeaders()) {
+            job.setHeader(header.getKey(), header.getValue());
+        }
+        for (RequestHeader header : reference.getHeaders()) {
+            job.setHeader(header.getKey(), header.getValue());
         }
     }
 
