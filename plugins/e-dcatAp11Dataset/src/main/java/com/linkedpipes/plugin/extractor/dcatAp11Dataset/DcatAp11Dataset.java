@@ -181,7 +181,8 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
 
     private void addLocalizedString(IRI subject, IRI predicate, List<LocalizedString> strings) {
         for (LocalizedString s : strings) {
-        	statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(s.getValue(), s.getLanguage())));
+        	statements.add(valueFactory.createStatement(subject, predicate,
+                    createString(s.getValue(), s.getLanguage())));
         }
     }
 
@@ -214,6 +215,14 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
 
     private static boolean isBlank(String string) {
         return string == null || string.isEmpty();
+    }
+
+    private Value createString(String value, String language) {
+        if (language == null || language.isEmpty()) {
+            return valueFactory.createLiteral(value);
+        } else {
+            return valueFactory.createLiteral(value, language);
+        }
     }
 
 }
