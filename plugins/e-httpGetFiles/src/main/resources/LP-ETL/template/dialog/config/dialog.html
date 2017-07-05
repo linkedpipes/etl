@@ -29,11 +29,11 @@
                ng-hide="dialog.detailLog.hide"
                ng-disabled="dialog.detailLog.disabled || dialog.detailLog.inherit">
         Detail log
-        <md-tooltip>If set aditional information are logged for every download.
+        <md-tooltip>If set additional information are logged for every download.
         </md-tooltip>
     </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.timeout.hide">
-        <label>Timeout</label>
+        <label>Timeout (in milliseconds)</label>
         <input type="number" ng-model="dialog.timeout.value"
                ng-disabled="dialog.timeout.disabled || dialog.timeout.inherit">
     </md-input-container>
