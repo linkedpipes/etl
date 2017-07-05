@@ -179,26 +179,6 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
 
     }
 
-    /**
-     * Add string value with given language tag if the given string is not empty.
-     *
-     * @param predicate
-     * @param value
-     * @param language Is not used if null.
-     */
-    private void addStringIfNotBlank(IRI subject, IRI predicate, String value, String language) {
-        if (isBlank(value)) {
-            return;
-        }
-        final Value object;
-        if (language == null)  {
-            object = valueFactory.createLiteral(value);
-        } else {
-            object = valueFactory.createLiteral(value, language);
-        }
-        statements.add(valueFactory.createStatement(subject, predicate, object));
-    }
-
     private void addLocalizedString(IRI subject, IRI predicate, List<LocalizedString> strings) {
         for (LocalizedString s : strings) {
         	statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(s.getValue(), s.getLanguage())));
