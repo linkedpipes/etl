@@ -1,6 +1,6 @@
 <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="Mandatory">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-subheader class="md-primary">IRI</md-subheader>
         <md-input-container class="md-block"
                             ng-hide="dialog.datasetIRI.hide"
@@ -30,7 +30,7 @@
         </div>
     </md-tab>
     <md-tab label="Recommended">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-subheader class="md-primary">Contact point</md-subheader>
         <md-input-container class="md-block"
                             ng-hide="dialog.contactPointTypeIRI.hide"
@@ -115,7 +115,7 @@
         </md-input-container>
     </md-tab>
     <md-tab label="Optional">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-chips ng-model="dialog.languages.value"
                   ng-disabled="dialog.languages.disabled || dialog.languages.inherit"
                   md-transform-chip="transformChip($chip)"
@@ -226,7 +226,7 @@
         </div>
     </md-tab>
     <md-tab label="Relations">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-input-container class="md-block" ng-hide="dialog.catalogIRI.hide"
                             flex-gt-sm>
             <label>Catalog IRI</label>
@@ -271,7 +271,7 @@
                      ng-hide="dialog.isVersionOfIRIs.hide"></lp-iri-list>
     </md-tab>
     <md-tab label="Versions">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-input-container class="md-block" ng-hide="dialog.version.hide"
                             flex-gt-sm>
             <label>Version number</label>
@@ -289,7 +289,7 @@
         </div>
     </md-tab>
     <md-tab label="StatDCAT-AP">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-input-container class="md-block" flex-gt-sm>
             See <a
                 href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4"
