@@ -24,6 +24,9 @@ define([
 
             // Scope used by the dialog.
             $scope.dialogScope = $rootScope.$new(true);
+            $scope.dialogScope.application = {
+                "changeToHierarchyTab" : changeToHierarchyTab
+            };
 
             // Services to bind to the dialog.
             $scope.dialogLocals = {
@@ -92,6 +95,10 @@ define([
             };
 
             $scope.api.load = load;
+
+            function changeToHierarchyTab() {
+                $scope.activeTab = 1;
+            }
 
             // The data might be already ready, as we do not know
             // if the parent or we get to run first.
