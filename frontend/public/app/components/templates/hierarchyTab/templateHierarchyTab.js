@@ -7,7 +7,9 @@ define([], function () {
         return {
             "restrict": "E",
             "scope": {
-                "ngModel": "="
+                "ngModel": "=",
+                "showChildren": "=",
+                "enableTemplateLink": "="
             },
             "templateUrl": PARENT_PATH + "templateHierarchyTab.html",
             "link": (scope) => {

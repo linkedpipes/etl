@@ -4,11 +4,11 @@
             <lp-template-general-tab ng-model="templateToEdit">
             </lp-template-general-tab>
         </md-tab>
-        <md-tab label="Hierarchy" ng-if="showHierarchy">
-            <lp-template-hierarchy-tab ng-model="template">
+        <md-tab label="Hierarchy">
+            <lp-template-hierarchy-tab ng-model="template" show-children="showTemplateManagement" enable-template-link="enableTemplateLink">
             </lp-template-hierarchy-tab>
         </md-tab>
-        <md-tab label="Usage" ng-if="showHierarchy">
+        <md-tab label="Usage" ng-if="showTemplateManagement">
             <lp-template-usage-tab ng-model="usage">
             </lp-template-usage-tab>
         </md-tab>
@@ -18,7 +18,7 @@
                  scope="dialogScope" locals="dialogLocals"
                  lp-embed></div>
         </md-tab>
-        <md-tab label="Delete" ng-if="showHierarchy">
+        <md-tab label="Delete" ng-if="showTemplateManagement">
             <div class="layout-padding">
                 <p>
                     WARNING:

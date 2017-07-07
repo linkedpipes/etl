@@ -114,7 +114,8 @@ define([
                 // Shared API object.
                 // Use store property to transfer data.
                 "api": "=",
-                "showHierarchy": "="
+                "showTemplateManagement": "=",
+                "enableTemplateLink": "="
             },
             "controller": controller
         };
