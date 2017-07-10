@@ -62,6 +62,17 @@ title: How to map RDF properties using SPARQL Update
   :NAME_2_LAT "Ribino" ] .
 {% endhighlight %}
 
+<p class="flow-text">The initial mapping to RDF can be done via <a href="{% link /assets/tutorials/how-to/pipelines/how_to_map_rdf_properties_source.jsonld %}">this pipeline</a>:</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Source pipeline"
+         class="responsive-img"
+         data-caption="Source pipeline"
+         src="{% link /assets/tutorials/how-to/img/map_rdf_properties_source_pipeline.png %}"/>
+  </div>
+</div>
+
 <p class="flow-text">Consequently, you want to map the generated properties to properties from RDF vocabularies.</p>
 
 <h3 class="header center orange-text">Solution</h3>
@@ -111,6 +122,17 @@ WHERE {
   skos:notation     "00062" ;
   skos:prefLabel    "Аврамово" ] .
 {% endhighlight %}
+
+<p class="flow-text">This mapping to properties can be executed via <a href="{% link /assets/tutorials/how-to/pipelines/how_to_map_rdf_properties_target.jsonld %}">this pipeline</a>:</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Target pipeline"
+         class="responsive-img"
+         data-caption="Target pipeline"
+         src="{% link /assets/tutorials/how-to/img/map_rdf_properties_target_pipeline.png %}"/>
+  </div>
+</div>
 
 <h3 class="header center orange-text">Discussion</h3>
 
@@ -166,6 +188,8 @@ WHERE {
   skos:notation     "00062" ;
   skos:prefLabel    "Аврамово"@bg ] .
 {% endhighlight %}
+
+<p class="flow-text">You may also use the <a href="{% link _components/t-sparqlconstruct.html %}">SPARQL CONSTRUCT component</a> to map RDF properties. The <code>CONSTRUCT</code> query form is handy when you want to ignore the data unaffected by the mapping, since <code>CONSTRUCT</code> queries return only the data that is explicitly created via the <code>CONSTRUCT</code> clause. In such case, you would remove the <code>DELETE</code> clause and change the <code>INSERT</code> to <code>CONSTRUCT</code> in the update operation above to obtain a mapping <code>CONSTRUCT</code> query.</p>
 
 <h3 class="header center orange-text">See also</h3>
 
