@@ -11,6 +11,7 @@ import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -107,10 +108,17 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
 
     private void executeTask(QueryTask task, RDFWriter writer)
             throws LpException {
-        writer = new ChangeContext(writer,
-                valueFactory.createIRI(task.getGraph()));
+        writer = new ChangeContext(writer, createIriOrNull(task.getGraph()));
         for (Statement statement : executeQuery(task.getQuery())) {
             writer.handleStatement(statement);
+        }
+    }
+
+    private IRI createIriOrNull(String iriAsString) {
+        if (iriAsString == null) {
+            return null;
+        } else {
+            return valueFactory.createIRI(iriAsString);
         }
     }
 
