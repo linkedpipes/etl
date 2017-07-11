@@ -2,10 +2,10 @@
     {
         "@id": "http://etl.linkedpipes.com/resources/components/c-files/0.0.0",
         "@type": "http://linkedpipes.com/ontology/JarTemplate",
-        "http://www.w3.org/2004/02/skos/core#prefLabel": "Check files",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Check files equivalence",
         "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/c-files/0.0.0"},
         "http://linkedpipes.com/ontology/color": "#42EBF4",
-        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Transformer"},
+        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Quality"},
         "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
         "http://linkedpipes.com/ontology/supportControl" : true,
         "http://linkedpipes.com/ontology/port": [
