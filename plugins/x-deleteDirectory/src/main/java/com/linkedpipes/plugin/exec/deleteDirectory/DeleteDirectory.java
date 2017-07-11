@@ -12,6 +12,10 @@ import java.io.IOException;
 
 public final class DeleteDirectory implements Component, SequentialExecution {
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.Configuration
     public DeleteDirectoryConfiguration configuration;
 
