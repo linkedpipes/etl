@@ -21,6 +21,8 @@ public final class SparqlConstructToFileListVocabulary {
 
     public static final String HAS_QUERY = PREFIX + "query";
 
+    public static final String HAS_DEDUPLICATION = PREFIX + "deduplication";
+
     private SparqlConstructToFileListVocabulary() {
 
     }

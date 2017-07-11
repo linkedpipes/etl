@@ -2,4 +2,10 @@
 
 <http://linkedpipes.com/resources/components/t-sparqlConstructToFileList/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-sparqlConstructToFileList/1.0.0/configuration/desc/deduplication> .
+
+<http://linkedpipes.com/resources/components/t-sparqlConstructToFileList/1.0.0/configuration/desc/deduplication>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#deduplication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#deduplicationControl> .

@@ -18,6 +18,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.QueryResults;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
@@ -42,11 +43,18 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
     @Component.InputPort(iri = "Tasks")
     public SingleGraphDataUnit tasksRdf;
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.Inject
     public ProgressReport progressReport;
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
+
+    @Configuration
+    public SparqlConstructToFileListConfiguration configuration;
 
     private List<TaskGroup> taskGroups;
 
@@ -132,6 +140,11 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
             dataset.addDefaultGraph(inputRdf.getReadGraph());
             query.setDataset(dataset);
             GraphQueryResult queryResult = query.evaluate();
+            if (configuration.isUseDeduplication()) {
+                // Sparql construct does not return distinct results by default:
+                // https://github.com/eclipse/rdf4j/issues/857
+                queryResult = QueryResults.distinctResults(queryResult);
+            }
             while (queryResult.hasNext()) {
                 statements.add(queryResult.next());
             }
