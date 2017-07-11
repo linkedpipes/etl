@@ -22,6 +22,10 @@ public final class FilesToStatements implements Component, SequentialExecution {
 
     private static final int BUFFER_SIZE = 64;
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.OutputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
 
