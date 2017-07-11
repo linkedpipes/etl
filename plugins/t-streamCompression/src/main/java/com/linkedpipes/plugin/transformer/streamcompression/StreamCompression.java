@@ -25,6 +25,10 @@ public final class StreamCompression implements Component, SequentialExecution {
     @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.Inject
     public ProgressReport progressReport;
 
