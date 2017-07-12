@@ -9,4 +9,7 @@ final class ChunkSplitterVocabulary {
 
     public static final String HAS_TYPE = PREFIX + "type";
 
+    public static final String HAS_INCOMING_LEVEL_DEPTH =
+            PREFIX + "incomingLevelDepth";
+
 }

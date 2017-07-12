@@ -5,4 +5,10 @@
         <input type="url" ng-model="dialog.type.value"
                ng-disabled="dialog.type.disabled || dialog.type.inherit">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.incomingLevelDepth.hide">
+        <label>Reverse resource depth</label>
+        <input ng-model="dialog.incomingLevelDepth.value"
+               ng-disabled="dialog.incomingLevelDepth.disabled || dialog.incomingLevelDepth.inherit"
+               type="number" min="0">
+    </md-input-container>    
 </div>

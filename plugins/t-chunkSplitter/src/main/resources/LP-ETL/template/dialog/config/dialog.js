@@ -11,6 +11,10 @@ define([], function () {
         "type": {
             "$type": "str",
             "$label": "Root entity type"
+        },
+        "incomingLevelDepth": {
+            "$type": "int",
+            "$label": "Reverse resource depth"
         }
     };
 
