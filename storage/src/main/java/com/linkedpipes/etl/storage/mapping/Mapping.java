@@ -9,12 +9,12 @@ public interface Mapping {
 
     /**
      * Given the component IRI return IRI of corresponding template
-     * on local instance. Can be used to map remote template to local.
+     * on local instance. Can be used to remoteToLocal remote template to local.
      *
      * @param iri
      * @return Given IRI if there is no mapping.
      */
-    public String map(String iri);
+    public String remoteToLocal(String iri);
 
     /**
      * For given component return its original IRI. Can be used to set
@@ -23,6 +23,6 @@ public interface Mapping {
      * @param iri
      * @return Given IRI if there is no record for given IRI.
      */
-    public String original(String iri);
+    public String toOriginal(String iri);
 
 }

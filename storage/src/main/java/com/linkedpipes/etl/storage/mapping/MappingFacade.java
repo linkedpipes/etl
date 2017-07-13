@@ -125,8 +125,10 @@ public class MappingFacade {
      * @return Object representing the given mapping.
      */
     public Mapping read(Collection<Statement> statements) {
-        final Map<String, String> readMapping = new HashMap<>();
-        final Map<String, String> readOriginal = new HashMap<>();
+        // Mapping from remote to localhost based on the "original" iri.
+        final Map<String, String> remoteToLocal = new HashMap<>();
+        // For remote component store it's original.
+        final Map<String, String> remoteToOriginal = new HashMap<>();
         for (Statement statement : statements) {
             if (!statement.getContext().equals(GRAPH)) {
                 continue;
@@ -137,11 +139,11 @@ public class MappingFacade {
             // Prepare and store mapping from the template to original.
             final String original = statement.getSubject().stringValue();
             final String remote = statement.getObject().stringValue();
-            readOriginal.put(remote, original);
+            remoteToOriginal.put(remote, original);
             // Now we use our mapping to get mapping to local components.
             final String local = mappings.get(original);
             if (local != null) {
-                readMapping.put(remote, local);
+                remoteToLocal.put(remote, local);
             }
         }
         // Create and return Mapping object. It use the
@@ -149,14 +151,25 @@ public class MappingFacade {
         return new Mapping() {
 
             @Override
-            public String map(String iri) {
-                return readMapping.getOrDefault(iri,
-                        mappings.getOrDefault(iri, iri));
+            public String remoteToLocal(String iri) {
+                // Check known mappings.
+                String localMapping = mappings.get(iri);
+                if (localMapping != null) {
+                    return localMapping;
+                }
+                // Check mappings from the pipeline.
+                localMapping = remoteToLocal.get(iri);
+                if (localMapping != null) {
+                    return localMapping;
+                }
+                // The mapping could be newly added during pipeline import
+                // we need to check for original.
+                String original = remoteToOriginal.getOrDefault(iri, iri);
+                return mappings.getOrDefault(original, original);
             }
 
-            @Override
-            public String original(String iri) {
-                return readOriginal.getOrDefault(iri, iri);
+            public String toOriginal(String iri) {
+                return remoteToOriginal.getOrDefault(iri, iri);
             }
         };
     }
