@@ -233,7 +233,7 @@ public class TemplateFacade implements TemplateSource {
     @Override
     public Collection<Statement> getConfiguration(String iri)
             throws BaseException {
-        return getConfigurationInstance(getTemplate(iri));
+        return getConfigurationTemplate(getTemplate(iri));
     }
 
     @Override

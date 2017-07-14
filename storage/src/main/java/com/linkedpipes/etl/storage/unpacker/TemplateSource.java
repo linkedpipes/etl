@@ -9,6 +9,9 @@ public interface TemplateSource {
 
     Collection<Statement> getDefinition(String iri) throws BaseException;
 
+    /**
+     * Get template configuration.
+     */
     Collection<Statement> getConfiguration(String iri) throws BaseException;
 
     Collection<Statement> getConfigurationDescription(String iri)
