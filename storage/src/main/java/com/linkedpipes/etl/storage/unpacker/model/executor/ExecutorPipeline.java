@@ -20,9 +20,12 @@ public class ExecutorPipeline {
 
     private ExecutorMetadata executorMetadata = null;
 
+    private ExecutorProfile executorProfile = null;
+
     public ExecutorPipeline(String iri) {
         this.iri = iri;
         this.executorMetadata = new ExecutorMetadata(iri + "/metadata");
+        this.executorProfile = new ExecutorProfile(iri + "/profile");
     }
 
     public void write(TripleWriter writer) {
@@ -30,6 +33,8 @@ public class ExecutorPipeline {
         writer.string(iri, SKOS.PREF_LABEL, label, null);
         writer.iri(iri, LP_EXEC.HAS_METADATA, executorMetadata.getIri());
         executorMetadata.write(writer);
+        writer.iri(iri, LP_EXEC.HAS_EXECUTION_PROFILE, executorProfile.getIri());
+        executorProfile.write(writer);
         for (ExecutorComponent component : components) {
             writer.iri(iri, LP_PIPELINE.HAS_COMPONENT, component.getIri());
             component.write(writer);
@@ -98,6 +103,10 @@ public class ExecutorPipeline {
 
     public ExecutorMetadata getExecutorMetadata() {
         return executorMetadata;
+    }
+
+    public ExecutorProfile getExecutorProfile() {
+        return executorProfile;
     }
 
     public String getIri() {

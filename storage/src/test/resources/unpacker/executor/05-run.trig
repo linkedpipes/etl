@@ -20,7 +20,10 @@
             <http://localhost/pipeline/connection/c4> ,
             <http://localhost/pipeline/connection/c5> ;
 		skos:prefLabel "Test focused on lp:dataUnitGroup" ;
+		lp:profile <http://localhost/execution/profile> ;
         lp:repository <http://localhost/repository/sesame> .
+
+    <http://localhost/execution/profile> lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> .
 
     <http://localhost/execution/metadata> a lp:ExecutionMetadata ;
         lp:deleteWorkingData true ;

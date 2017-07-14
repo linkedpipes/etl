@@ -7,10 +7,7 @@ import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
-import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
-import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerConnection;
-import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
-import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerRunAfter;
+import com.linkedpipes.etl.storage.unpacker.model.designer.*;
 import com.linkedpipes.etl.storage.unpacker.model.execution.Execution;
 import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionComponent;
 import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionPort;
@@ -49,6 +46,7 @@ public class DesignerToExecutor {
         this.runAfter = new ArrayList<>(pipeline.getRunAfter());
         //
         initializePipeline();
+        initializePipelineProfile();
         convertConnections();
         convertAndExpandComponents();
         createExecutionMetadata(options);
@@ -69,6 +67,13 @@ public class DesignerToExecutor {
 
     private void initializePipeline() {
         target.setLabel(source.getLabel());
+    }
+
+    private void initializePipelineProfile() {
+        ExecutionProfile sourceProfile = source.getExecutionProfile();
+        ExecutorProfile targetProfile = target.getExecutorProfile();
+        //
+        targetProfile.setRepositoryType(sourceProfile.getRdfRepositoryPolicy());
     }
 
     private void convertConnections() {

@@ -15,7 +15,10 @@
             <http://localhost/pipeline/c67542e2> ;
         lp:connection <http://localhost/pipeline/connection/aff7b779> ;
         skos:prefLabel "TextHolder and FilesToRdf, FilesToRdf, SparqlConstruct" ;
+        lp:profile <http://localhost/execution-debug/profile> ;
         lp:repository <http://localhost/repository/sesame> .
+
+    <http://localhost/execution-debug/profile> lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
 
     <http://localhost/execution-debug/metadata> a lp:ExecutionMetadata ;
         lp:deleteWorkingData false ;

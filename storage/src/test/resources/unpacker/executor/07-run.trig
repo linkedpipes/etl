@@ -11,8 +11,10 @@
         lp:component <http://localhost/pipeline/9d21ebd5> ,
             <http://localhost/pipeline/b67542e2> ;
 		skos:prefLabel "TextHolder and FilesToRdf" ;
+        lp:profile <http://localhost/execution/profile> ;
         lp:repository <http://localhost/repository/sesame> .
 
+    <http://localhost/execution/profile> lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
 
     <http://localhost/execution/metadata> a lp:ExecutionMetadata ;
         lp:deleteWorkingData true ;

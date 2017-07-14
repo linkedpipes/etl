@@ -11,10 +11,10 @@
 		lp:version "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
 		lp:profile <http://localhost/pipeline/profile/default> ;
 		skos:prefLabel "Test focused on lp:dataUnitGroup" ;
-		dcterms:description "Use two groups of connections that should create two groups." .
+		dcterms:description "Use two groups of connections that should create two groups with per input." .
 
 	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
-		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
+		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> .
 
     <http://localhost/pipeline/lt> a lp:Component ;
         lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;

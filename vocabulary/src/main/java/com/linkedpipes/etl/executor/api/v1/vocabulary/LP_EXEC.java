@@ -46,6 +46,8 @@ public final class LP_EXEC {
 
     public static final String HAS_METADATA = PREFIX + "executionMetadata";
 
+    public static final String HAS_EXECUTION_PROFILE = PREFIX + "profile";
+
     /**
      * Input directory.
      */

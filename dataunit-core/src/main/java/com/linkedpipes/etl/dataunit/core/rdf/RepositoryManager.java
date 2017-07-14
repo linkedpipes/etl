@@ -27,6 +27,7 @@ class RepositoryManager {
 
     public RepositoryManager(String repositoryPolicy, File directory) {
         this.repositoryPolicy = repositoryPolicy;
+        LOG.info("Repository policy: {}", repositoryPolicy);
         this.workingDirectory = directory;
     }
 
