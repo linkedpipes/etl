@@ -15,6 +15,8 @@ import java.util.*;
 
 /**
  * Control loading of RDF data into entities.
+ *
+ * TODO Update to work with only two levels (pipeline, runtime) of configuration.
  */
 class DefaultControl implements MergeControl {
 
@@ -106,7 +108,8 @@ class DefaultControl implements MergeControl {
                 } else if (status == Configuration.Status.INHERIT_AND_FORCE) {
                     forceFrom = i - 1;
                     break;
-                } else if (status == Configuration.Status.NONE) {
+                } else if (status == Configuration.Status.NONE ||
+                        status == Configuration.Status.FORCED) {
                     lastLoad = i;
                 }
             }
