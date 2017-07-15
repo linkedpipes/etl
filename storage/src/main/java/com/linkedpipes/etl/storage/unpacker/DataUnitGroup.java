@@ -56,14 +56,31 @@ class DataUnitGroup {
                     portsByComponentAndBinding.get(getSourceKey(connection));
             ExecutorPort target =
                     portsByComponentAndBinding.get(getTargetKey(connection));
-            if (connectionGroups.containsKey(source)) {
+            if (hasGroupSet(source)) {
+                if (hasGroupSet(target)) {
+                    renamePortGroup(target, connectionGroups.get(source));
+                }
                 connectionGroups.put(target, connectionGroups.get(source));
-            } else if (connectionGroups.containsKey(target)) {
+            } else if (hasGroupSet(target)) {
                 connectionGroups.put(source, connectionGroups.get(target));
             } else {
                 int newGroup = ++counter;
                 connectionGroups.put(source, newGroup);
                 connectionGroups.put(target, newGroup);
+            }
+        }
+    }
+
+    private boolean hasGroupSet(ExecutorPort port) {
+        return connectionGroups.containsKey(port);
+    }
+
+    private void renamePortGroup(ExecutorPort port, int target) {
+        int source = connectionGroups.get(port);
+        for (Map.Entry<ExecutorPort, Integer> entry
+                : connectionGroups.entrySet()) {
+            if (entry.getValue() == source) {
+                entry.setValue(target);
             }
         }
     }

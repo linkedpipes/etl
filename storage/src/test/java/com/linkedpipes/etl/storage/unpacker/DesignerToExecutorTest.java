@@ -171,6 +171,13 @@ public class DesignerToExecutorTest {
                 "unpacker/executor/07-run.trig");
     }
 
+    @Test
+    public void runPortGroups() throws Exception {
+        testUnpacking("unpacker/designer/08.trig",
+                "unpacker/options/run.trig",
+                "unpacker/executor/08-run.trig");
+    }
+
     private void testUnpacking(String pipelineResource, String optionResource,
             String unpackedResource) throws Exception {
 
