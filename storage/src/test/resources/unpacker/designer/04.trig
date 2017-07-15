@@ -11,7 +11,7 @@
 		lp:version "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
 		lp:profile <http://localhost/pipeline/profile/default> ;
 		skos:prefLabel "Disabled TextHolder and FilesToRdf" ;
-		dcterms:description "Pipeline three connected components, the second is disabled." .
+		dcterms:description "Pipeline three connected components in line, the second is disabled." .
 
 	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
 		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
