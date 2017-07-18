@@ -20,7 +20,8 @@
 		lp:profile <http://localhost/execution/profile> ;
         lp:repository <http://localhost/repository/sesame> .
 
-    <http://localhost/execution/profile> lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> .
+    <http://localhost/execution/profile> lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> ;
+        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/InMemoryStore> .
 
     <http://localhost/execution/metadata> a lp:ExecutionMetadata ;
         lp:deleteWorkingData true ;

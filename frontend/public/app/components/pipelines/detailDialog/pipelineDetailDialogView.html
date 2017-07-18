@@ -43,12 +43,23 @@
                     <md-tab label="Execution profile">
                         <md-input-container  class="md-block" flex>
                             <label>RDF repository mode</label>
-                            <md-select ng-model="profile.rdfRepositoryType">
+                            <md-select ng-model="profile.rdfRepositoryPolicy">
                                 <md-option value="http://linkedpipes.com/ontology/repository/SingleRepository">
                                     Single repository
                                 </md-option>
                                 <md-option value="http://linkedpipes.com/ontology/repository/PerInputRepository">
                                     Repository per input
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        <md-input-container  class="md-block" flex>
+                            <label>RDF repository type</label>
+                            <md-select ng-model="profile.rdfRepositoryType">
+                                <md-option value="http://linkedpipes.com/ontology/repository/NativeStore">
+                                    Native repository
+                                </md-option>
+                                <md-option value="http://linkedpipes.com/ontology/repository/MemoryStore">
+                                    InMemory repository
                                 </md-option>
                             </md-select>
                         </md-input-container>

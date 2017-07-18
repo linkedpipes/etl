@@ -29,11 +29,30 @@ public class PipelineInfo {
         }
     }
 
+    public String getRdfRepositoryType() throws RdfUtilsException {
+        try {
+            return RdfUtils.sparqlSelectSingle(source,
+                    getRdfRepositoryTypeQuery(), "rdfPolicy");
+        } catch (InvalidNumberOfResults ex) {
+            return LP_PIPELINE.SINGLE_REPOSITORY;
+        }
+    }
+
     private String getRdfRepositoryPolicyQuery() {
         return "SELECT ?rdfPolicy FROM <" + graph + "> WHERE {" +
                 " <" + pipeline + "> <" + LP_PIPELINE.HAS_PROFILE + "> " +
                 "?profile . " +
                 " ?profile <" + LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY + "> " +
+                "?rdfPolicy ." +
+                "}";
+    }
+
+
+    private String getRdfRepositoryTypeQuery() {
+        return "SELECT ?rdfPolicy FROM <" + graph + "> WHERE {" +
+                " <" + pipeline + "> <" + LP_PIPELINE.HAS_PROFILE + "> " +
+                "?profile . " +
+                " ?profile <" + LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE + "> " +
                 "?rdfPolicy ." +
                 "}";
     }

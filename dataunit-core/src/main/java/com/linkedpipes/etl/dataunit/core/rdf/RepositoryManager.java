@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +20,21 @@ class RepositoryManager {
     private static final Logger LOG =
             LoggerFactory.getLogger(RepositoryManager.class);
 
+    // TODO Replace with a single configuration object.
     private final String repositoryPolicy;
+
+    private final String repositoryType;
 
     private final File workingDirectory;
 
     private final Map<String, Repository> groupsRepository = new HashMap<>();
 
-    public RepositoryManager(String repositoryPolicy, File directory) {
+    public RepositoryManager(String repositoryPolicy, String repositoryType,
+            File directory) {
         this.repositoryPolicy = repositoryPolicy;
+        this.repositoryType = repositoryType;
         LOG.info("Repository policy: {}", repositoryPolicy);
+        LOG.info("Repository type: {}", repositoryType);
         this.workingDirectory = directory;
     }
 
@@ -51,16 +58,30 @@ class RepositoryManager {
     }
 
     private Repository createRepository(String group) throws LpException {
-        File repositoryDirectory = new File(workingDirectory,
-                "dataunit-sesame-" + group);
-        Repository repository =
-                new SailRepository(new NativeStore(repositoryDirectory));
+        Repository repository;
+        if (LP_PIPELINE.MEMORY_STORE.equals(repositoryType)) {
+            repository = createInMemory();
+        } else {
+            repository = createNativeRepository(group);
+        }
         try {
             repository.initialize();
         } catch (RepositoryException ex) {
             throw new LpException("Can't create RDF repository.", ex);
         }
         return repository;
+    }
+
+    private Repository createNativeRepository(String group) {
+        File repositoryDirectory = new File(workingDirectory,
+                "dataunit-sesame-" + group);
+        return new SailRepository(new NativeStore(repositoryDirectory));
+    }
+
+    private Repository createInMemory() {
+        // TODO Use dataFile ?
+        return new SailRepository(new MemoryStore());
+
     }
 
     public void close() {

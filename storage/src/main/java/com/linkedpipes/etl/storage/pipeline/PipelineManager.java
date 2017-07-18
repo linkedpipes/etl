@@ -226,7 +226,10 @@ class PipelineManager {
                         vf.createIRI(LP_PIPELINE.PROFILE), iri),
                 vf.createStatement(profileIri,
                         vf.createIRI(LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY),
-                        vf.createIRI(LP_PIPELINE.SINGLE_REPOSITORY), iri)
+                        vf.createIRI(LP_PIPELINE.SINGLE_REPOSITORY), iri),
+                vf.createStatement(profileIri,
+                        vf.createIRI(LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE),
+                        vf.createIRI(LP_PIPELINE.NATIVE_STORE), iri)
         );
     }
 

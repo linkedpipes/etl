@@ -70,10 +70,11 @@ public class DesignerToExecutor {
     }
 
     private void initializePipelineProfile() {
-        ExecutionProfile sourceProfile = source.getExecutionProfile();
-        ExecutorProfile targetProfile = target.getExecutorProfile();
+        ExecutionProfile source = this.source.getExecutionProfile();
+        ExecutorProfile target = this.target.getExecutorProfile();
         //
-        targetProfile.setRepositoryType(sourceProfile.getRdfRepositoryPolicy());
+        target.setRepositoryPolicy(source.getRdfRepositoryPolicy());
+        target.setRepositoryType(source.getRdfRepositoryType());
     }
 
     private void convertConnections() {

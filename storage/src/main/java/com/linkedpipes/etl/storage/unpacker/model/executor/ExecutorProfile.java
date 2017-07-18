@@ -7,7 +7,9 @@ public class ExecutorProfile {
 
     private final String iri;
 
-    private String repositoryType = LP_PIPELINE.SINGLE_REPOSITORY;
+    private String repositoryPolicy = LP_PIPELINE.SINGLE_REPOSITORY;
+
+    private String repositoryType = LP_PIPELINE.NATIVE_STORE;
 
     public ExecutorProfile(String iri) {
         this.iri = iri;
@@ -15,15 +17,16 @@ public class ExecutorProfile {
 
     public void write(TripleWriter writer) {
         // TODO Add class for ExecutionProfile
-        writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryType);
+        writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryPolicy);
+        writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE, repositoryType);
     }
 
     public String getIri() {
         return iri;
     }
 
-    public String getRepositoryType() {
-        return repositoryType;
+    public void setRepositoryPolicy(String repositoryPolicy) {
+        this.repositoryPolicy = repositoryPolicy;
     }
 
     public void setRepositoryType(String repositoryType) {

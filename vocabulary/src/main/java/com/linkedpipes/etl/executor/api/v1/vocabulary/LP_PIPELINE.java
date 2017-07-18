@@ -42,6 +42,9 @@ public final class LP_PIPELINE {
     public static final String HAS_RDF_REPOSITORY_POLICY = PREFIX +
             "rdfRepositoryPolicy";
 
+    public static final String HAS_RDF_REPOSITORY_TYPE = PREFIX +
+            "rdfRepositoryType";
+
     /**
      * Use single RDF repository per execution.
      */
@@ -53,6 +56,12 @@ public final class LP_PIPELINE {
      */
     public static final String PER_INPUT_REPOSITORY = PREFIX +
             "repository/PerInputRepository";
+
+    public static final String NATIVE_STORE = PREFIX +
+            "repository/NativeStore";
+
+    public static final String MEMORY_STORE = PREFIX +
+            "repository/MemoryStore";
 
     /**
      * TODO Update to ../dataUnit/files/DirectoryMirror

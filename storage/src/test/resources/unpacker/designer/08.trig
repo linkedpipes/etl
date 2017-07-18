@@ -14,7 +14,8 @@
 		dcterms:description "Test port group (4 components), use specific order of connections to test group merging." .
 
 	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
-		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> .
+		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> ;
+		lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/InMemoryStore> .
 
     <http://localhost/pipeline/lt> a lp:Component ;
         lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;

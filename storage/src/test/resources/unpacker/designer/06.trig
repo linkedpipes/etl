@@ -12,7 +12,8 @@
         dcterms:description "Pipeline with two components and no configuration." .
 	
 	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
-		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
+		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+		lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/NativeStore> .
 	
 	<http://localhost/pipeline/3405c1ee> a lp:Component ;
 		lp:template <http://etl.linkedpipes.com/resources/components/1476115743178/0.0.0> ;

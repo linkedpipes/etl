@@ -13,7 +13,8 @@
 		dcterms:description "Test RunAfter connection." .
 
 	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
-		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> .
+		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+		lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/NativeStore> .
 
     <http://localhost/pipeline/9d21ebd5>
         a lp:Component ;

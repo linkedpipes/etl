@@ -110,13 +110,16 @@ public class RdfDataUnitFactory
             String graph) throws LpException {
         PipelineInfo pipelineInfo = new PipelineInfo(pipeline, graph, source);
         String rdfRepositoryPolicy;
+        String rdfRepositoryType;
         try {
             rdfRepositoryPolicy = pipelineInfo.getRdfRepositoryPolicy();
+            rdfRepositoryType = pipelineInfo.getRdfRepositoryType();
         } catch (RdfUtilsException ex) {
             throw new LpException("Can't query pipeline model.", ex);
         }
         repositoryManager = new RepositoryManager(
-                rdfRepositoryPolicy, configuration.getDirectory());
+                rdfRepositoryPolicy, rdfRepositoryType,
+                configuration.getDirectory());
     }
 
     @Override
