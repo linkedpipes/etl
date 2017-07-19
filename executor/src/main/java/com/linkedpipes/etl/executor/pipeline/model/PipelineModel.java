@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.pipeline.model;
 
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfValue;
@@ -24,7 +23,7 @@ public class PipelineModel implements Loadable {
 
     private final List<Connection> connections = new LinkedList<>();
 
-    private boolean deleteWorkingData = false;
+    private final ExecutionMetadata executionMetadata = new ExecutionMetadata();
 
     public PipelineModel(String iri, String graph) {
         this.iri = iri;
@@ -68,9 +67,8 @@ public class PipelineModel implements Loadable {
                 final Connection connection = new Connection();
                 connections.add(connection);
                 return connection;
-            case LP_EXEC.HAS_DELETE_WORKING_DATA:
-                deleteWorkingData = object.asBoolean();
-                return null;
+            case LP_PIPELINE.HAS_EXECUTION_METADATA:
+                return executionMetadata;
             default:
                 return null;
         }
@@ -93,6 +91,6 @@ public class PipelineModel implements Loadable {
     }
 
     public boolean isDeleteWorkingData() {
-        return deleteWorkingData;
+        return executionMetadata.isDeleteWorkingData();
     }
 }

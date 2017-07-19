@@ -29,6 +29,10 @@ public final class LP_PIPELINE {
     public static final String EXECUTION_METADATA =
             PREFIX + "ExecutionMetadata";
 
+    // TODO Move to execution ?
+    public static final String HAS_EXECUTION_METADATA =
+            PREFIX + "executionMetadata";
+
     public static final String HAS_SAVE_DEBUG_DATA = PREFIX + "saveDebugData";
 
     public static final String HAS_DELETE_WORKING =
