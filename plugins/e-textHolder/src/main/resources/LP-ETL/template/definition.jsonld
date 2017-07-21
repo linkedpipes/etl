@@ -16,7 +16,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "text", "file"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-textholder"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/e-textholder"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
             "@id": "http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc"
         }

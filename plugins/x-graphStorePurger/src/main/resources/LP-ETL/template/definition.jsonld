@@ -15,7 +15,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "graph", "clear", "delete", "virtuoso", "purge"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/x-graphstorepurger"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/x-graphstorepurger"},
         "http://linkedpipes.com/ontology/configurationDescription": [
              {"@id": "http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc"}
         ]

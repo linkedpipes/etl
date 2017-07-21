@@ -16,7 +16,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "jsonld", "flatten", "compact", "expand", "operation"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-jsonldformat"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/t-jsonldformat"},
         "http://linkedpipes.com/ontology/configurationDescription": [
             {"@id": "http://linkedpipes.com/resources/components/t-jsonLdFormat/0.0.0/configuration/desc"}
         ]

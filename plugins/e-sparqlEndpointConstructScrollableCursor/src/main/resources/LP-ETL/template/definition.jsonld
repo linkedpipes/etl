@@ -15,7 +15,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "SPARQL", "query", "endpoint", "construct"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-sparqlendpointconstructscrollablecursor"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/e-sparqlendpointconstructscrollablecursor"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
            "@id": "http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc"
         }

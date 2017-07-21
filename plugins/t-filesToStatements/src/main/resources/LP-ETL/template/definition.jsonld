@@ -17,7 +17,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "rdf", "wrap", "escape", "statement"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-filestostatements"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/t-filestostatements"},
         "http://linkedpipes.com/ontology/configurationDescription": [
             {"@id": "http://linkedpipes.com/resources/components/t-filesToStatements/0.0.0/configuration/desc"}
         ]

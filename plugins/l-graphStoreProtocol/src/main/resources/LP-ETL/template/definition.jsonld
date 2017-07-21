@@ -15,7 +15,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "graph", "store"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/l-graphstoreprotocol"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/l-graphstoreprotocol"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
            "@id": "http://linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0/configuration/desc"
         }

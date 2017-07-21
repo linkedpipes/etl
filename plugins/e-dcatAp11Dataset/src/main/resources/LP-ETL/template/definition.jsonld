@@ -15,7 +15,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "metadata", "dataset", "DCAT-AP"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-dcatap11dataset"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/e-dcatap11dataset"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
            "@id": "http://linkedpipes.com/resources/components/e-dcatAp11Dataset/0.0.0/configuration/desc"
         }

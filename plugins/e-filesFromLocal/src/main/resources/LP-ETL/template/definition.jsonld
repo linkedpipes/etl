@@ -15,7 +15,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "local", ""
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/e-filesfromlocal"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/e-filesfromlocal"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
            "@id": "http://linkedpipes.com/resources/components/e-filesFromLocal/0.0.0/configuration/desc"
         }
