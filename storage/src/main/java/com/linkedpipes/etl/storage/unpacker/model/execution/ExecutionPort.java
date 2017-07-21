@@ -19,6 +19,8 @@ public class ExecutionPort implements Loadable {
 
     private String dataPath;
 
+    private String loadPath;
+
     @Override
     public void resource(String resource) throws LoaderException {
         iri = resource;
@@ -38,6 +40,9 @@ public class ExecutionPort implements Loadable {
             case LP_EXEC.HAS_DATA_PATH:
                 dataPath = value.asString();
                 return null;
+            case LP_EXEC.HAS_LOAD_PATH:
+                loadPath = value.asString();
+                return null;
             default:
                 return null;
         }
@@ -53,6 +58,10 @@ public class ExecutionPort implements Loadable {
 
     public String getDataPath() {
         return dataPath;
+    }
+
+    public String getLoadPath() {
+        return loadPath;
     }
 
 }

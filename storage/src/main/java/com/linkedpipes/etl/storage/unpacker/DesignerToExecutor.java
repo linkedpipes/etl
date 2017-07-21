@@ -180,16 +180,23 @@ public class DesignerToExecutor {
             for (ExecutorPort targetPort : targetComponent.getPorts()) {
                 ExecutionPort sourcePort = sourceComponent.getPortByBinding(
                         targetPort.getBinding());
-                String sourceExecution;
-                if (sourcePort.getExecution() == null) {
-                    sourceExecution = executionMapping.getExecution();
-                } else {
-                    sourceExecution = sourcePort.getExecution();
-                }
-                targetPort.setDataSource(new ExecutorDataSource(
-                        sourcePort.getDataPath(), sourceExecution));
+                targetPort.setDataSource(createDataSource(
+                        sourcePort, executionMapping));
             }
         }
+    }
+
+    private ExecutorDataSource createDataSource(ExecutionPort sourcePort,
+            UnpackOptions.ExecutionMapping executionMapping) {
+        if (sourcePort.getExecution() == null) {
+            return new ExecutorDataSource(sourcePort.getDataPath(),
+                    executionMapping.getExecution());
+        } else {
+            // We load data from another execution.
+            return new ExecutorDataSource(sourcePort.getLoadPath(),
+                    sourcePort.getExecution());
+        }
+
     }
 
     /**
