@@ -756,9 +756,9 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>l-coachDb</artifactId>
+                                            <artifactId>l-couchDb</artifactId>
                                             <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/core/l-coachDb/</outputDirectory>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-couchDb/</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>

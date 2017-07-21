@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/l-couchDb/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/l-couchDb#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/l-couchDb#clearBeforeLoading": true,
+        "http://plugins.linkedpipes.com/ontology/l-couchDb#clearBeforeLoadingControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/l-couchDb#batchSize": "8",
+        "http://plugins.linkedpipes.com/ontology/l-couchDb#batchSizeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }        
+    }
+]
