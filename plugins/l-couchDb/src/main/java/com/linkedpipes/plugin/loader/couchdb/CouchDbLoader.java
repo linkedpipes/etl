@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public final class CouchDbDbLoader implements Component, SequentialExecution {
+public final class CouchDbLoader implements Component, SequentialExecution {
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
