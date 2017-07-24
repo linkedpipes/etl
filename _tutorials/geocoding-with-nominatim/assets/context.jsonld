@@ -1,0 +1,14 @@
+{
+  "@vocab": "http://localhost/",
+  "hydra": "http://www.w3.org/ns/hydra/core#",
+  "schema": "http://schema.org/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "lat": {
+    "@id": "schema:latitude",
+    "@type": "xsd:decimal"
+  },
+  "lon": {
+    "@id": "schema:longitude",
+    "@type": "xsd:decimal"
+  }
+}

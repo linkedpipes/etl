@@ -1,0 +1,20 @@
+@prefix :        <http://schema.org/> .
+@prefix address: <http://example.com/resource/postal-address/> .
+
+address:1 a :PostalAddress ;
+  :streetAddress "Malostranské nám. 2/25" ;
+  :addressLocality "Praha 1" ;
+  :postalCode "11800" ;
+  :addressCountry "CZ" .
+
+address:2 a :PostalAddress ;
+  :streetAddress "nám. W. Churchilla 1938/4" ;
+  :addressLocality "Praha 3 - Žižkov" ;
+  :postalCode "13000" ;
+  :addressCountry "CZ" .
+
+address:3 a :PostalAddress ;
+  :streetAddress "Thákurova 9" ;
+  :addressLocality "Prague 6" ;
+  :postalCode "16000" ;
+  :addressCountry "CZ" .
