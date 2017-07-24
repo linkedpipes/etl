@@ -1,0 +1,23 @@
+PREFIX :      <http://schema.org/>
+PREFIX dbo:   <http://dbpedia.org/ontology/>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+
+CONSTRUCT {
+  ?place :address ?postalAddress ;
+    :geo ?geoCoordinates .
+  ?geoCoordinates a :GeoCoordinates ;
+    :latitude ?latitude ;
+    :longitude ?longitude .
+}
+WHERE {
+  [] dbo:filename ?fileName ;
+    hydra:member [ 
+      :latitude ?latitude ;
+      :longitude ?longitude
+    ] .
+
+  BIND ("http://example.com/resource/" AS ?ns)
+  BIND (iri(concat(?ns, "place/", ?fileName)) AS ?place)
+  BIND (iri(concat(?ns, "geo-coordinates/", ?fileName)) AS ?geoCoordinates)
+  BIND (iri(concat(?ns, "postal-address/", ?fileName)) AS ?postalAddress)
+}
