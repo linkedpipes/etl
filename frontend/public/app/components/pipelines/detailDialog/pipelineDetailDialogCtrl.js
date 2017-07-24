@@ -32,11 +32,20 @@ define([], function () {
             // Save changes.
             data.definition['http://www.w3.org/2004/02/skos/core#prefLabel'] = $scope.detail.label;
             jsonld.setValues(data.definition, 'http://etl.linkedpipes.com/ontology/tag', undefined, $scope.detail.tags);
-            data.profile['http://linkedpipes.com/ontology/rdfRepositoryPolicy'] = {"@id": $scope.profile.rdfRepositoryPolicy}
-            data.profile['http://linkedpipes.com/ontology/rdfRepositoryType'] = {"@id": $scope.profile.rdfRepositoryType}
+            setResource(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryPolicy', $scope.profile.rdfRepositoryPolicy);
+            setResource(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryType', $scope.profile.rdfRepositoryType);
             // Close the dialog.
             $mdDialog.hide();
         };
+
+        // TODO Use json-ld service.
+        function setResource(object, property, value) {
+            if (value === undefined || value === "") {
+                delete object[property];
+            } else {
+                object[property] = {"@id" : value}
+            }
+        }
 
         pipelineDesign.initialize(() => {
             $scope.tags.all = pipelineDesign.getTags();
