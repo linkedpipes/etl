@@ -778,6 +778,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-rdfDifference/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-xmlToChunks</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-xmlToChunks/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>

@@ -90,6 +90,7 @@
         <module>t-chunkSplitter</module>
         <module>t-rdfToWrappedJsonLdChunked</module>
         <module>t-rdfDifference</module>
+        <module>t-xmlToChunks</module>
     </modules>
 
 </project>
