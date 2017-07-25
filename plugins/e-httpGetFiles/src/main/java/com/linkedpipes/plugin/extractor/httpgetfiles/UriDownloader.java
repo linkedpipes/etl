@@ -85,10 +85,10 @@ class UriDownloader {
             LOG.debug("Downloading {}/{} : {}",
                     counter.incrementAndGet(), total, fileToDownload.source);
             // Create connection.
-            final HttpURLConnection connection;
+            HttpURLConnection connection;
             try {
-                connection = createConnection(fileToDownload.source,
-                        fileToDownload.headers);
+                connection = createConnectionFollowRedirect(
+                        fileToDownload.source, fileToDownload.headers);
             } catch (RuntimeException | IOException ex) {
                 LOG.error("Can't create connection to: {}",
                         fileToDownload.source, ex);
@@ -141,6 +141,69 @@ class UriDownloader {
                 connection.disconnect();
             }
         }
+
+        private HttpURLConnection createConnectionFollowRedirect(URL target,
+                Map<String, String> headers) throws IOException {
+            HttpURLConnection connection = createConnection(target, headers);
+            if (configuration.isForceFollowRedirect()) {
+                return updateConnectionIfRedirected(connection, headers);
+            } else {
+                return connection;
+            }
+        }
+
+        private HttpURLConnection createConnection(URL target,
+                Map<String, String> headers) throws IOException {
+            HttpURLConnection connection =
+                    (HttpURLConnection) target.openConnection();
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                connection.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+            return connection;
+        }
+
+        private HttpURLConnection updateConnectionIfRedirected(
+                HttpURLConnection connection,
+                Map<String, String> headers) throws IOException {
+            int responseCode = connection.getResponseCode();
+            if (isResponseRedirect(responseCode)) {
+                connection.disconnect();
+                String location = connection.getHeaderField("Location");
+                LOG.debug("Resolved redirect to: {}", location);
+                return createConnection(new URL(location), headers);
+            } else {
+                return connection;
+            }
+        }
+
+        private boolean isResponseRedirect(int responseCode) {
+            return responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                    responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+                    responseCode == HttpURLConnection.HTTP_SEE_OTHER;
+        }
+
+        private void logDetails(HttpURLConnection connection) {
+            final InputStream errStream = connection.getErrorStream();
+            if (errStream != null) {
+                try {
+                    LOG.debug("Error stream: {}",
+                            IOUtils.toString(errStream, "UTF-8"));
+                } catch (Throwable ex) {
+                    // Ignore.
+                }
+            }
+            try {
+                LOG.debug(" response code: {}", connection.getResponseCode());
+            } catch (IOException ex) {
+                LOG.warn("Can't read status code.");
+            }
+            for (String header : connection.getHeaderFields().keySet()) {
+                for (String value : connection.getHeaderFields().get(header)) {
+                    LOG.debug(" header: {} : {}", header, value);
+                }
+            }
+        }
+
     }
 
     private static final Logger LOG =
@@ -159,6 +222,12 @@ class UriDownloader {
             HttpGetFilesConfiguration configuration) {
         this.progressReport = progressReport;
         this.configuration = configuration;
+    }
+
+    public Worker createWorker(
+            ConcurrentLinkedQueue<FileToDownload> toDownload) {
+        AtomicInteger counter = new AtomicInteger();
+        return new Worker(toDownload, counter);
     }
 
     /**
@@ -195,80 +264,5 @@ class UriDownloader {
     public Collection<Exception> getExceptions() {
         return Collections.unmodifiableCollection(exceptions);
     }
-
-    /**
-     * Create connection for given reference.
-     *
-     * @param target
-     * @return
-     */
-    private HttpURLConnection createConnection(URL target,
-            Map<String, String> headers) throws IOException {
-        // Create connection.
-        final HttpURLConnection connection =
-                (HttpURLConnection) target.openConnection();
-        // Set headers.
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            connection.setRequestProperty(entry.getKey(), entry.getValue());
-        }
-        if (configuration.isForceFollowRedirect()) {
-            // Open connection and check for reconnect.
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
-                    responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-                    responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
-                final String location = connection.getHeaderField("Location");
-                if (location == null) {
-                    throw new IOException("Invalid redirect from :"
-                            + target.toString());
-                } else {
-                    // Create new based on the redirect.
-                    connection.disconnect();
-                    final HttpURLConnection newConnection =
-                            (HttpURLConnection) target.openConnection();
-                    connection.getRequestProperties().entrySet()
-                            .forEach((entry) -> {
-                                entry.getValue().forEach((value) -> {
-                                    newConnection.addRequestProperty(
-                                            entry.getKey(), value);
-                                });
-                            });
-                    return newConnection;
-                }
-            } else {
-                return connection;
-            }
-        }
-        return connection;
-    }
-
-    /**
-     * Log details about the connection.
-     *
-     * @param connection
-     */
-    private static void logDetails(HttpURLConnection connection) {
-        final InputStream errStream = connection.getErrorStream();
-        if (errStream != null) {
-            try {
-                LOG.debug("Error stream: {}",
-                        IOUtils.toString(errStream, "UTF-8"));
-            } catch (Throwable ex) {
-                // Ignore.
-            }
-        }
-        try {
-            LOG.debug(" response code: {}", connection.getResponseCode());
-        } catch (IOException ex) {
-            LOG.warn("Can't read status code.");
-        }
-        for (String header : connection.getHeaderFields().keySet()) {
-            for (String value : connection.getHeaderFields().get(header)) {
-                LOG.debug(" header: {} : {}", header, value);
-            }
-        }
-    }
-
 
 }
