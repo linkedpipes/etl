@@ -89,8 +89,9 @@ class UriDownloader {
             try {
                 connection = createConnection(fileToDownload.source,
                         fileToDownload.headers);
-            } catch (IOException ex) {
-                LOG.error("Can't create connection to: {}", ex);
+            } catch (RuntimeException | IOException ex) {
+                LOG.error("Can't create connection to: {}",
+                        fileToDownload.source, ex);
                 exceptions.add(ex);
                 return;
             }
@@ -117,7 +118,7 @@ class UriDownloader {
                     exceptions.add(ex);
                     return;
                 }
-            } catch (IOException ex) {
+            } catch (RuntimeException | IOException ex) {
                 LOG.error("Can't read response code for file: {}",
                         fileToDownload.target, ex);
                 exceptions.add(ex);
@@ -127,7 +128,7 @@ class UriDownloader {
             try (InputStream inputStream = connection.getInputStream()) {
                 FileUtils.copyInputStreamToFile(inputStream,
                         fileToDownload.target);
-            } catch (IOException ex) {
+            } catch (RuntimeException | IOException ex) {
                 LOG.error("Can't download file: {}", fileToDownload.target, ex);
                 exceptions.add(ex);
                 return;
