@@ -17,7 +17,7 @@
         <label>Page size</label>
         <input type="number" ng-model="dialog.pageSize.value"
                ng-disabled="dialog.pageSize.disabled || dialog.pageSize.inherit"
-               min="1000" step="100">
+               min="1" step="1">
     </md-input-container>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
