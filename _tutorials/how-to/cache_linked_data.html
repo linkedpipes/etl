@@ -1,0 +1,86 @@
+---
+file: how_to_cache_linked_data.html
+short: "How to: Cache linked data"
+title: How to cache linked data
+---
+
+<p class="flow-text">Your data references linked data resources. You want to cache their data locally.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">Linked data is a publication model for data distributed on the Web. If you look at the famous <a href="http://lod-cloud.net">Linking Open Data cloud diagram</a>, you can see hundreds of linked datasets distributed on many servers. While there are tasks that can be solved by traversing the distributed linked data, other tasks call for collecting the required data locally. For example, storing linked data in a local cache is expedient if the data is accessed frequently and must be available quickly.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">According to the best practice embodied by the <a href="https://www.w3.org/DesignIssues/LinkedData.html">linked data principles</a>, IRIs of linked data resources can be dereferenced to obtain their descriptions. Servers exposing linked data may offer several representations of a given resource. Client and server can then agree on the preferred representation via <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">content negotiation</a>, in which the client specifies its preference by using the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept">Accept header</a> in its HTTP request and the server responds in a way that matches the preference the best. Applications can use this practice to request machine-readable representations in RDF, while browsers may ask for human-readable HTML.</p>
+
+<p class="flow-text">Crawling data describing linked data resources is usually done by dedicated tools, such as <a href="https://github.com/ldspider/ldspider">LDSpider</a>. However, if you manage to simplify the crawling task, LinkedPipes ETL (LP-ETL) can execute it via the <a href="{% link _components/e-httpgetfiles.html %}">HTTP GET list</a> component. This component accepts configuration in RDF that lists the URLs to download.</p>
+
+<p class="flow-text">We demonstrate the use of the HTTP GET list component on harvesting code lists linked from a data structure definition (DSD) described by the <a href="https://www.w3.org/TR/vocab-data-cube">Data Cube Vocabulary</a> (DCV). In DSDs, code list of a property enumerates the concepts that are valid objects of the property. Properties link their code lists by the <code>qb:codeList</code> property. Data describing code lists has many uses. For example, you may fetch code lists for validation of the <a href="https://www.w3.org/TR/vocab-data-cube/#ic-19">integrity constraint 19</a> from DCV, which tests whether all objects of a property are members of the code list defined by the property. Code lists can also provide labels that user interfaces for DCV datasets can display instead of the IRIs of code list concepts.</p>
+
+<p class="flow-text">We use the <a href="https://github.com/openbudgets/datasets/blob/master/greek-municipalities/municipality-of-athens/dsd/athens-be2015-dsd.ttl">DSD for expenditures in the 2015 budget of Athens, Greece</a> for our example. The DSD can be downloaded by the <a href="{% link _components/e-httpgetfile.html %}">HTTP GET</a> component and turned into RDF by the <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> component. Alternatively, you may want to get your source of links from a SPARQL endpoint, which you can query via the component unsurprisingly named <a href="{% link _components/e-sparql.html %}">SPARQL endpoint</a>.</p>
+
+<p class="flow-text">Configuration for the HTTP GET list component can be generated via a SPARQL CONSTRUCT query executed by the <a href="{% link _components/t-sparqlconstruct.html %}">SPARQL CONSTRUCT</a> component. The configuration is described by terms from the <code>http://plugins.linkedpipes.com/ontology/e-httpGetFiles#</code> namespace, thereafter abbreviated by the prefix <code>httpList</code>. The configuration instantiates <code>httpList:Configuration</code> and refers to one or more instances of <code>httpList:Reference</code> via the <code>httpList:reference</code> property. Each reference specifies its URL via the <code>httpList:fileUri</code> property and the name of the file to store the obtained response, declared by the <code>httpList:fileName</code> property. We generate file names as <a href="https://www.w3.org/TR/sparql11-query/#func-sha1">SHA1</a> hashes of the code lists' IRIs concatenated with the <code>.ttl</code> suffix. References can optionally link HTTP headers, instances of <code>httpList:Header</code>, via the <code>httpList:header</code> property. Each header is described as a combination of a key (<code>httpList:key</code>) and value (<code>httpList:value</code>). In our example, we use content negotiation and specify the Accept header to ask for RDF in the <a href="https://www.w3.org/TR/turtle">Turtle</a> or <a href="https://www.w3.org/TR/n-triples">N-Triples</a> syntaxes, followed by anything else. Any response will be attempted to be parsed as Turtle. Parsing N-Triples as Turtle works because N-Triples is a subset of Turtle. If responses that cannot be read as Turtle are downloaded, parsing them will fail and they will be ignored. Let's have a look at the SPARQL CONSTRUCT query that generates the configuration for HTTP GET list from a DSD:</p>
+
+<pre><code>PREFIX :         &lt;http://localhost/&gt;
+PREFIX httpList: &lt;http://plugins.linkedpipes.com/ontology/e-httpGetFiles#&gt;
+PREFIX qb:       &lt;http://purl.org/linked-data/cube#&gt;
+
+CONSTRUCT {
+  :config a httpList:Configuration ;
+    httpList:reference ?codeList .
+
+  ?codeList a httpList:Reference ;
+    httpList:fileUri ?url ;
+    httpList:fileName ?fileName ;
+    httpList:header :header .
+
+  :header a httpList:Header ;
+    httpList:key "Accept" ;
+    httpList:value "text/turtle,application/n-triples;q=0.9,*/*;q=0.8" .
+}
+WHERE {
+  {
+    SELECT DISTINCT ?codeList
+    WHERE {
+      [] qb:codeList ?codeList .
+    }
+  }
+  BIND (str(?codeList) AS ?url)
+  BIND (concat(sha1(str(?codeList)), ".ttl") AS ?fileName)
+}
+</pre></code>
+
+<p class="flow-text">We pipe the RDF generated by this query to HTTP GET list. We leave the <em>Number of threads used for download</em> parameter with the default value of 1. Increasing this parameter allows to download multiple URLs in parallel. However, since we do not want to overload servers with concurrent requests, we request the individual URLs serially. We switch the <em>Force to follow redirects</em> parameter to allow redirects from HTTP to HTTPS. We turn on the <em>Skip on error</em> parameter to make the pipeline more fault-resistant. If downloading a URL produces an error, the URL is simply skipped. To enable better debugging we also switch on the <em>Detailed log</em> option, which makes the component output richer logs that may explain why downloading some URLs fails. We set the <em>Timeout</em> parameter to 30 seconds to cut off long-running requests that may halt the pipeline execution. Overall, the configuration of the component looks like this:</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Configuration of HTTP GET list"
+         class="responsive-img"
+         data-caption="Configuration of HTTP GET list"
+         src="{% link /assets/tutorials/how-to/img/cache_linked_data_http_get_list.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">Running the pipeline downloads the code lists referenced from the given DSD. The code lists can be then turned into RDF via the <a href="{% link _components/t-filestordf.html %}">Files to RDF</a> or <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> components. By default, these components will attempt to parse their input as its file suffix implies. We generated file names with the <code>.ttl</code> suffix, so the files are parsed as Turtle. In these components we can switch the <em>Skip file on failure</em> parameter to ignore files that fail to be parsed as Turtle.</p>
+
+<p class="flow-text">Now that we have the data describing the linked code lists, there are several ways how to cache it locally. For instance, we can push it to an RDF store via the <a href="{% link _components/l-graphstoreprotocol.html %}">Graph store protocol</a> component. If you trust that the downloaded data will be valid RDF, you can skip the parsing and reserialization and pipe the output of the HTTP GET list component directly to the Graph store protocol component.</p>
+
+<p class="flow-text">The described pipeline is available <a href="{% link /assets/tutorials/how-to/pipelines/how_to_cache_linked_data.jsonld %}">here</a>. It has the following structure:</p>
+
+<div class="row">
+  <div class="col s12 m10 offset-m1">
+    <img alt="Pipeline for caching code lists"
+         class="responsive-img"
+         data-caption="Pipeline for caching code lists"
+         src="{% link /assets/tutorials/how-to/img/cache_linked_data_pipeline.png %}"/>
+  </div>
+</div>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">We can extend the number of hops that we crawl by piping the crawled data into another instance of the HTTP GET list component. For example, we can first extract a link to a dataset's DSD, download it, and then extract links to code lists from the DSD.</p>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">As mentioned in the solution, if you require a more fully-fledged tool for crawling linked data, you can use <a href="https://github.com/ldspider/ldspider">LDSpider</a>, for example.</p>
