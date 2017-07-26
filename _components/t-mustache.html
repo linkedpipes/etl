@@ -134,7 +134,7 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
     &lt;li&gt;&lt;strong&gt;{{http://localhost/ontology/name}}&lt;/strong&gt;&lt;/li&gt;
   {{/http://localhost/ontology/first}}
   {{#http://localhost/ontology/link}}
-    &lt;li&gt;&lt;a href=\"{{http://localhost/ontology/url}}\"&gt;{{http://localhost/ontology/name}}&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;{{http://localhost/ontology/url}}&quot;&gt;{{http://localhost/ontology/name}}&lt;/a&gt;&lt;/li&gt;
   {{/http://localhost/ontology/link}}
 {{/http://localhost/ontology/item}}
 
@@ -199,7 +199,7 @@ IRI: {{on:iri}}
     &lt;/li&gt;
   {{/on:first}}
   {{#on:link}}
-    &lt;li&gt;&lt;a href="{{on:url}}"&gt;{{on:name}}&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;{{on:url}}&quot;&gt;{{on:name}}&lt;/a&gt;&lt;/li&gt;
   {{/on:link}}
 {{/on:item}}
 {% endraw %}
