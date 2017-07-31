@@ -1,6 +1,6 @@
 ---
 layout: post
-icon: whatshot
+icon: school
 title: Tabular data to RDF tutorial available
 ---
 
