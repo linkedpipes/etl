@@ -1,0 +1,267 @@
+---
+file: index.html
+short: Geocoding with Nominatim
+title: Geocoding with Nominatim
+---
+
+<p class="flow-text">Data often refers to places in the real world. Geographic location provides an important context for many datasets, even when it is not referred explicitly. Locations are commonly described in terms of postal addresses. In order to compute with them or place them on a map, they have to be converted to geographic coordinates. Lookup of geographic coordinates for postal addresses is known as geocoding.</p>
+
+<p class="flow-text"><a href="http://www.openstreetmap.org">OpenStreetMap</a> is a premier source of open geographic data. For each location it provides both its address and its geographic coordinates. In order to convert between these two kinds of descriptions of locations it offers a geocoding web service <a href="http://wiki.openstreetmap.org/wiki/Nominatim">Nominatim</a>. In this tutorial, we show how LinkedPipes ETL (LP-ETL) can be used for geocoding with Nominatim. We cover how to generate queries for Nominatim and how to map their results in JSON to RDF.</p>
+
+<p class="flow-text">Geocoding starts with postal addresses. For example, let's have addresses of three universities in Prague, Czech Republic, described as instances of <code>PostalAddress</code> from <a href="https://schema.org">schema.org</a>:</p>
+
+{% highlight turtle %}
+@prefix :        <http://schema.org/> .
+@prefix address: <http://example.com/resource/postal-address/> .
+
+address:1 a :PostalAddress ;
+  :streetAddress "Malostranské nám. 2/25" ;
+  :addressLocality "Praha 1" ;
+  :postalCode "11800" ;
+  :addressCountry "CZ" .
+
+address:2 a :PostalAddress ;
+  :streetAddress "nám. W. Churchilla 1938/4" ;
+  :addressLocality "Praha 3 - Žižkov" ;
+  :postalCode "13000" ;
+  :addressCountry "CZ" .
+
+address:3 a :PostalAddress ;
+  :streetAddress "Thákurova 9" ;
+  :addressLocality "Prague 6" ;
+  :postalCode "16000" ;
+  :addressCountry "CZ" .
+{% endhighlight %}
+
+<p class="flow-text">Usually, much effort is spent cleaning the addresses before geocoding. Normalization of addresses, such as expansion of common abbreviations or trimming extraneous characters, has crucial impact on the quality of geocoding. However, in this tutorial we skip the cleaning of the addresses so that we can focus on geocoding. That is why the addresses in our simplified example are already well-structured.</p>
+
+<p class="flow-text">In real cases, you would typically retrieve the addresses to geocode via a SPARQL query or from a data dump. In order to be self-contained, our tutorial instead loads the addresses from the <a href="{% link _components/e-textholder.html %}">Text holder</a> component into which we paste the example data above. We convert it to RDF by using the <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> component, so that we can process it further.</p>
+
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <img alt="Text holder"
+         class="responsive-img"
+         data-caption="Text holder"
+         src="{% link /assets/tutorials/geocoding-with-nominatim/img/text_holder.png %}"/>
+  </div>
+</div>
+
+<h2 class="header center orange-text">Generate query</h2>
+
+<p class="flow-text">For each address we need to generate a query to Nominatim. The query is expressed via parameters sent to the Nominatim's endpoint URL <code>http://nominatim.openstreetmap.org/search</code>. The endpoint supports both unstructured and structured queries. Since our data is structured, we turn it into structured queries. Structured search maps elements of postal addresses to specific <a href="http://wiki.openstreetmap.org/wiki/Nominatim#Parameters">query parameters</a>. The parameters roughly correspond to the properties of Schema.org's <a href="https://schema.org/PostalAddress"><code>PostalAddress</code></a>, which simplifies generating the queries. The properties can be mapped in the following way:</p>
+
+<table class="responsive-table highlight">
+  <thead>
+    <tr>
+      <th>Schema.org property</th>
+      <th>Nominatim's parameter</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>schema:streetAddress</code></td>
+      <td><code>street</code></td>
+    </tr>
+    <tr>
+      <td><code>schema:addressLocality</code></td>
+      <td><code>city</code></td>
+    </tr>
+    <tr>
+      <td><code>schema:postalCode</code></td>
+      <td><code>postalcode</code></td>
+    </tr>
+    <tr>
+      <td><code>schema:addressCountry</code></td>
+      <td><code>countrycodes</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="flow-text">We use either city or postal code, since both usually identify the same level of postal addresses and are therefore to some degree exchangeable. Postal code is preferred as it is more standardized and exhibits less variety. We map country to <code>countrycodes</code> instead of <code>country</code> because the former allows you to specify a precise <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code, which is what we have in our sample addresses. We ask only for the best match via <code>limit=1</code>, since we do not have other ways to assess the matches. We request the response to be in JSON via <code>format=json</code>. URLs of queries to Nominatim can be generated as RDF configuration for the <a href="{% link _components/e-httpgetfiles.html %}">HTTP GET list</a> component via the <a href="{% link _components/t-sparqlconstruct.html %}">SPARQL CONSTRUCT</a> component:</p>
+
+<pre><code>PREFIX :         &lt;http://localhost/&gt;
+PREFIX httpList: &lt;http://plugins.linkedpipes.com/ontology/e-httpGetFiles#&gt;
+PREFIX schema:   &lt;http://schema.org/&gt;
+
+CONSTRUCT {
+  :config a httpList:Configuration ;
+    httpList:reference ?reference .
+
+  ?postalAddress a httpList:Reference ;
+    httpList:fileUri ?url ;
+    httpList:fileName ?fileName .
+}
+WHERE {
+  ?postalAddress a schema:PostalAddress ;
+    schema:streetAddress ?streetAddress ;
+    schema:addressCountry ?country .
+  
+  OPTIONAL {
+    ?postalAddress schema:postalCode ?postalCode .
+  }
+  OPTIONAL {
+    ?postalAddress schema:addressLocality ?city .
+  }
+  BIND (if(bound(?postalCode), concat("postalcode=", ?postalCode),
+        if(bound(?city), concat("city=", encode_for_uri(?city)), "")) AS ?cityParam)
+  BIND (concat("http://nominatim.openstreetmap.org/search?format=json&limit=1&street=",
+              encode_for_uri(?streetAddress),
+              "&", ?cityParam,
+              "&countrycodes=",
+              lcase(?country)
+              ) AS ?url)
+  BIND (replace(str(?postalAddress), "^.*(\\d+)$", "$1") AS ?fileName)
+}
+</code></pre>
+
+<p class="flow-text">Configuration for the HTTP GET list component is an instance of <code>httpList:Configuration</code> that refers to one or more instances of <code>httpList:Reference</code>, each of which is a resource retrievable from the URL given by the <code>httpList:fileUri</code> property. Moreover, in order to pair the obtained geo-coordinates with the geocoded postal addresses, we pass in the postal address identifier via the <code>httpList:fileName</code> property to serve as file name of the response produced by the HTTP GET list component.</p>
+
+<div class="row">
+  <div class="col s12 m12">
+    <img alt="Geocoding with Nominatim pipeline fragment"
+         class="responsive-img"
+         data-caption="Geocoding with Nominatim pipeline fragment"
+         src="{% link /assets/tutorials/geocoding-with-nominatim/img/http_get_files.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">Note that Nominatim has a limited <a href="https://operations.osmfoundation.org/policies/nominatim">usage policy</a>, so that you should use it only for geocoding few addresses. If you need to geocode many addresses in bulk, there are better solutions available. Hence, when querying Nominatim via the HTTP GET list component, it is advisable to use only a single thread, the default setting, to avoid overloading the service.</p>
+
+<h2 class="header center orange-text">Map JSON to RDF</h2>
+
+<p class="flow-text">Nominatim responds with JSON containing matches found for the generated queries. For instance, this is a response to one of our queries:</p>
+
+{% highlight json %}
+[
+  {
+    "importance": 0.511,
+    "type": "house",
+    "class": "place",
+    "place_id": "1086355",
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright",
+    "osm_type": "node",
+    "osm_id": "296701039",
+    "boundingbox": [
+      "50.088437",
+      "50.088537",
+      "14.4031363",
+      "14.4032363"
+    ],
+    "lat": "50.088487",
+    "lon": "14.4031863",
+    "display_name": "2/25, Malostranské náměstí, Malá Strana, Praha, okres Hlavní město Praha, Hlavní město Praha, Praha, 11800, Česko"
+  }
+]
+{% endhighlight %}
+
+<p class="flow-text">In order to map the JSON responses to RDF we can use <a href="https://www.w3.org/TR/json-ld">JSON-LD</a>, a JSON-based syntax for RDF. The <a href="{% link _components/t-jsontojsonld.html %}">JSON to JSON-LD</a> component allows us to interpret any JSON as RDF given a <a href="https://www.w3.org/TR/json-ld/#the-context">JSON-LD context</a>. A JSON-LD context maps attributes in JSON to RDF properties. Let's have a look at the context that we use in our example:</p>
+
+{% highlight json %}
+{
+  "@vocab": "http://localhost/",
+  "schema": "http://schema.org/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "lat": {
+    "@id": "schema:latitude",
+    "@type": "xsd:decimal"
+  },
+  "lon": {
+    "@id": "schema:longitude",
+    "@type": "xsd:decimal"
+  }
+}
+{% endhighlight %}
+
+<p class="flow-text">Nominatim's response contains a lot of data. However, we are interested only in few parts of the response, namely the latitude and longitude. Consequently, we map <code>lat</code> and <code>lon</code> attributes to properties from Schema.org, namely <code>schema:latitude</code> and <code>schema:longitude</code>. Since Nominatim outputs geo-coordinates as strings, we cast the values of these attributes to numbers by setting the <code>@type</code> of the RDF properties to <code>xsd:decimal</code>. JSON-LD context allows us to use compact IRIs like <code>xsd:decimal</code> if we declare their prefixes, so we define <code>xsd</code> as <code>http://www.w3.org/2001/XMLSchema#</code> and <code>schema</code> as <code>http://schema.org/</code>. In order to produce valid RDF, every JSON attribute is interpreted as a local name of a property in the namespace <code>http://localhost/</code> set via <code>@vocab</code>. The choice of namespace is insignificant in this case because we filter out this part of the data further on.</p>
+
+<p class="flow-text">We use the <a href="https://www.hydra-cg.com/spec/latest/core">Hydra Core Vocabulary</a> to wrap the Nominatim's response. Each returned match is treated as a <code>hydra:member</code> of a <a href="https://www.hydra-cg.com/spec/latest/core/#collections"><code>hydra:Collection</code></a>. We therefore configure the JSON to JSON-LD component to use <code>hydra:member</code> as the <em>data predicate</em> and <code>hydra:Collection</code> as the <em>root entity type</em>. Note that the component does not support compact IRIs, so we need to refer to the terms from the Hydra Core Vocabulary by using their absolute IRIs. Additionally, the JSON to JSON-LD component can include the file name of its input file in the JSON-LD it produces. We use the <code>dbo:filename</code> property from the DBpedia ontology to associate the Nominatim's response with the file name identifying the geocoded postal address. Let's see the configuration of the JSON to JSON-LD component:</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="JSON to JSON-LD"
+         class="responsive-img"
+         data-caption="JSON to JSON-LD"
+         src="{% link /assets/tutorials/geocoding-with-nominatim/img/json_to_json_ld.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">Since JSON-LD is an RDF serialization it can be read as RDF. We employ the <a href="{% link _components/t-filestordfchunked.html %}">Files to RDF chunked</a> component to convert each JSON-LD file to an RDF chunk. Chunks split RDF data into smaller parts, each of which can be handled separately for efficient processing. We transform each RDF chunk via a SPARQL CONSTRUCT query executed by the <a href="{% link _components/t-sparqlconstructchunked.html %}">SPARQL CONSTRUCT chunked</a> component. The query throws away all data besides the geo-coordinates, which it wraps as an instance of <a href="https://schema.org/GeoCoordinates"><code>schema:GeoCoordinates</code></a>. In line with Schema.org, geo-coordinates are linked to a <code>schema:Place</code> that also links the geocoded postal address. We use the following SPARQL CONSTRUCT query to extract the geo-coordinates:</p>
+
+<pre><code>PREFIX :      &lt;http://schema.org/&gt;
+PREFIX dbo:   &lt;http://dbpedia.org/ontology/&gt;
+PREFIX hydra: &lt;http://www.w3.org/ns/hydra/core#&gt;
+
+CONSTRUCT {
+  ?place :address ?postalAddress ;
+    :geo ?geoCoordinates .
+  ?geoCoordinates a :GeoCoordinates ;
+    :latitude ?latitude ;
+    :longitude ?longitude .
+}
+WHERE {
+  [] dbo:filename ?fileName ;
+    hydra:member [ 
+      :latitude ?latitude ;
+      :longitude ?longitude
+    ] .
+
+  BIND ("http://example.com/resource/" AS ?ns)
+  BIND (iri(concat(?ns, "place/", ?fileName)) AS ?place)
+  BIND (iri(concat(?ns, "geo-coordinates/", ?fileName)) AS ?geoCoordinates)
+  BIND (iri(concat(?ns, "postal-address/", ?fileName)) AS ?postalAddress)
+}
+</code></pre>
+
+<p class="flow-text">We reconstruct the IRIs of the geocoded postal addresses from the file names given to Nominatim's responses. <code>schema:GeoCoordinates</code> assumes that the coordinates follow the <a href="https://en.wikipedia.org/wiki/World_Geodetic_System">WGS 84</a> coordinate reference system, which matches the system used by Nominatim. If we obtained the geo-coordinates in a different coordinate reference system, we would be able to reproject them to a desired reference system by using the <a href="{% link _components/t-geotools.html %}">Geotools</a> component.</p>
+
+<p class="flow-text">Finally, we merge the RDF chunks via the <a href="{% link _components/t-chunkedtograph.html %}">Chunked merger</a> component. Subsequently, you can use the <a href="{% link _components/t-singlegraphunion.html %}">Union</a> component to combine the geo-coordinates with the source addresses or you can push them to an RDF store. If we merge the geo-coordinates with the input addresses, we get this data:</p>
+
+{% highlight turtle %}
+@prefix :        <http://schema.org/> .
+@prefix address: <http://example.com/resource/postal-address/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+address:1 a :PostalAddress ;
+  :streetAddress "Malostranské nám. 2/25" ;
+  :addressLocality "Praha 1" ;
+  :postalCode "11800" ;
+  :addressCountry "CZ" .
+
+address:2 a :PostalAddress ;
+  :streetAddress "nám. W. Churchilla 1938/4" ;
+  :addressLocality "Praha 3 - Žižkov" ;
+  :postalCode "13000" ;
+  :addressCountry "CZ" .
+
+address:3 a :PostalAddress ;
+  :streetAddress "Thákurova 9" ;
+  :addressLocality "Prague 6" ;
+  :postalCode "16000" ;
+  :addressCountry "CZ" .
+
+<http://example.com/resource/place/1>
+  :address address:1 ;
+  :geo <http://example.com/resource/geo-coordinates/1> .
+
+<http://example.com/resource/place/2>
+  :address address:2 ;
+  :geo <http://example.com/resource/geo-coordinates/2> .
+
+<http://example.com/resource/place/3>
+  :address address:3 ;
+  :geo <http://example.com/resource/geo-coordinates/3> .
+
+<http://example.com/resource/geo-coordinates/1> a :GeoCoordinates ;
+  :latitude 50.088487 ;
+  :longitude 14.4031863 .
+
+<http://example.com/resource/geo-coordinates/2> a :GeoCoordinates ;
+  :latitude 50.0847649 ;
+  :longitude 14.4419528 .
+
+<http://example.com/resource/geo-coordinates/3> a :GeoCoordinates ;
+  :latitude 50.1049507 ;
+  :longitude 14.3894689 .
+{% endhighlight %}
+
+<p class="flow-text">The example pipeline for geocoding with Nominatim can be found <a href="{% link /assets/tutorials/geocoding-with-nominatim/pipelines/pipeline.jsonld %}">here</a>.</p>
