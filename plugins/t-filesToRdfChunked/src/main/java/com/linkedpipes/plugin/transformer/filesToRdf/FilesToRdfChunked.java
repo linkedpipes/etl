@@ -79,7 +79,15 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
         int filesCounter = 0;
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Loading: {}", entry.getFileName());
-            loadEntry(entry);
+            try {
+                loadEntry(entry);
+            } catch (LpException ex) {
+                if (configuration.isSkipOnFailure()) {
+                    LOG.error("Can't load file: {}", entry.getFileName());
+                } else {
+                    throw  ex;
+                }
+            }
             ++filesCounter;
             if (filesCounter >= configuration.getFilesPerChunk()) {
                 flushBuffer();
@@ -120,8 +128,8 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
         try (InputStream stream = new FileInputStream(file)) {
             final RDFParser parser = createParser(format);
             parser.parse(stream, "http://localhost/base/");
-        } catch (IOException ex) {
-            exceptionFactory.failure("Can't load file: {}", file, ex);
+        } catch (RuntimeException | IOException ex) {
+            throw exceptionFactory.failure("Can't load file: {}", file, ex);
         }
     }
 

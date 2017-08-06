@@ -24,4 +24,9 @@
                min="1" step="1"
                ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit">
     </md-input-container>
+    <md-switch ng-model="dialog.softFail.value"
+               ng-disabled="dialog.softFail.disabled || dialog.softFail.inherit"
+               ng-hide="dialog.softFail.hide">
+        Skip file on failure
+    </md-switch>
 </div>
