@@ -11,6 +11,8 @@ public final class FilesToRdfVocabulary {
 
     public static final String HAS_MIME_TYPE = PREFIX + "mimeType";
 
+    public static final String HAS_SKIP_ON_FAILURE = PREFIX + "softFail";
+
     private FilesToRdfVocabulary() {
     }
 

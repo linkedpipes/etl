@@ -9,6 +9,7 @@
         "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType": "",
         "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        }        
+        },
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail" : false
     }
 ]

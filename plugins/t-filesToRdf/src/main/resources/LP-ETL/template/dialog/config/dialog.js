@@ -29,6 +29,10 @@ define([], function () {
                     return value;
                 }
             }
+        },
+        "softFail": {
+            "$type": "bool",
+            "$label": "Skip file on failure"
         }
     };
 
