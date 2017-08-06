@@ -339,35 +339,7 @@ public class ParserXls implements Parser {
                         + " column: " +
                         Integer.toString(cell.getColumnIndex()));
             case Cell.CELL_TYPE_NUMERIC:
-                if (config.advancedDoubleParser) {
-                    // Check for Date
-                    //  https://poi.apache.org/faq.html#faq-N1008D FAQ 8
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                        final Calendar cal = new GregorianCalendar();
-                        cal.setTime(HSSFDateUtil.getJavaDate(
-                                cell.getNumericCellValue()));
-                        final StringBuilder dateStr = new StringBuilder(10);
-                        dateStr.append(cal.get(Calendar.YEAR));
-                        dateStr.append("-");
-                        dateStr.append(String.format("%02d",
-                                cal.get(Calendar.MONTH) + 1));
-                        dateStr.append("-");
-                        dateStr.append(String.format("%02d",
-                                cal.get(Calendar.DAY_OF_MONTH)));
-                        return dateStr.toString();
-                    }
-                    // Can be double or long/integer.
-                    final double doubleValue = cell.getNumericCellValue();
-                    // Check if the value is decimal or not.
-                    if ((doubleValue % 1) == 0) {
-                        // It's integer or long.
-                        return Long.toString((long) doubleValue);
-                    } else {
-                        return Double.toString(doubleValue);
-                    }
-                } else {
-                    return Double.toString(cell.getNumericCellValue());
-                }
+                return parseNumericCell(cell);
             case Cell.CELL_TYPE_STRING:
                 return cell.getStringCellValue();
             default:
@@ -376,6 +348,47 @@ public class ParserXls implements Parser {
                         + " on row: " + Integer.toString(cell.getRowIndex())
                         + " column: " +
                         Integer.toString(cell.getColumnIndex()));
+        }
+    }
+
+    private String parseNumericCell(Cell cell) {
+        if (config.advancedDoubleParser) {
+            // Check for Date
+            //  https://poi.apache.org/faq.html#faq-N1008D FAQ 8
+            if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                final Calendar cal = new GregorianCalendar();
+                cal.setTime(HSSFDateUtil.getJavaDate(
+                        cell.getNumericCellValue()));
+                final StringBuilder dateStr = new StringBuilder(10);
+                dateStr.append(cal.get(Calendar.YEAR));
+                dateStr.append("-");
+                dateStr.append(String.format("%02d",
+                        cal.get(Calendar.MONTH) + 1));
+                dateStr.append("-");
+                dateStr.append(String.format("%02d",
+                        cal.get(Calendar.DAY_OF_MONTH)));
+                return dateStr.toString();
+            }
+            //
+            if (config.useDataFormatter) {
+                DataFormatter formatter = new DataFormatter();
+                return formatter.formatCellValue(cell);
+            }
+            // Can be double or long/integer.
+            final double doubleValue = cell.getNumericCellValue();
+            // Check if the value is decimal or not.
+            if ((doubleValue % 1) == 0) {
+                // It's integer or long.
+                return Long.toString((long) doubleValue);
+            } else {
+                return Double.toString(doubleValue);
+            }
+        } else {
+            if (config.useDataFormatter) {
+                DataFormatter formatter = new DataFormatter();
+                return formatter.formatCellValue(cell);
+            }
+            return Double.toString(cell.getNumericCellValue());
         }
     }
 

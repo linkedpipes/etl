@@ -350,6 +350,9 @@ public class TabularConfig_V2 {
     @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#ignoreMissingColumn")
     private boolean ignoreMissingColumn = false;
 
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#useDataFormatter")
+    private boolean useDataFormatter = false;
+
     public TabularConfig_V2() {
     }
 
@@ -577,6 +580,14 @@ public class TabularConfig_V2 {
         this.ignoreMissingColumn = ignoreMissingColumn;
     }
 
+    public boolean isUseDataFormatter() {
+        return useDataFormatter;
+    }
+
+    public void setUseDataFormatter(boolean useDataFormatter) {
+        this.useDataFormatter = useDataFormatter;
+    }
+
     public TableToRdfConfig getTableToRdfConfig() {
         String usedRowClass;
         if (rowsClass != null) {
@@ -620,7 +631,8 @@ public class TabularConfig_V2 {
         return new ParserXlsConfig(xlsSheetName, linesToIgnore, hasHeader,
                 namedCells,
                 rowsLimit == null || rowsLimit == -1 ? null : rowsLimit,
-                staticRowCounter, stripHeader, xlsAdvancedDoubleParser);
+                staticRowCounter, stripHeader, xlsAdvancedDoubleParser,
+                useDataFormatter);
     }
 
 }
