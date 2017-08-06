@@ -29,10 +29,13 @@ public class ParserXlsConfig {
 
     final boolean advancedDoubleParser;
 
+    final boolean useDataFormatter;
+
     public ParserXlsConfig(String sheetName, int numberOfStartLinesToIgnore,
             boolean hasHeader, List<NamedCell_V1> namedCells,
             Integer rowLimit, boolean checkStaticRowCounter,
-            boolean stripHeader, boolean advancedDoubleParser) {
+            boolean stripHeader, boolean advancedDoubleParser,
+            boolean useDataFormatter) {
         this.sheetName = sheetName;
         this.numberOfStartLinesToIgnore = numberOfStartLinesToIgnore;
         this.hasHeader = hasHeader;
@@ -45,6 +48,7 @@ public class ParserXlsConfig {
         this.checkStaticRowCounter = checkStaticRowCounter;
         this.stripHeader = stripHeader;
         this.advancedDoubleParser = advancedDoubleParser;
+        this.useDataFormatter = useDataFormatter;
     }
 
 }

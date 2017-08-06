@@ -158,6 +158,10 @@ define(["jsonld"], function (jsonld) {
         "generateRowTriple": {
             "$type": "bool",
             "$label": "Generate row column"
+        },
+        "useDataFormatter" : {
+            "$type": "bool",
+            "$label": "Format numbers with DateFormatter"
         }
     };
 
