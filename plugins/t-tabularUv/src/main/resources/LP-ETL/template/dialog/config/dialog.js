@@ -161,7 +161,7 @@ define(["jsonld"], function (jsonld) {
         },
         "useDataFormatter" : {
             "$type": "bool",
-            "$label": "Format numbers with DateFormatter"
+            "$label": "Format numbers with DataFormatter"
         }
     };
 
