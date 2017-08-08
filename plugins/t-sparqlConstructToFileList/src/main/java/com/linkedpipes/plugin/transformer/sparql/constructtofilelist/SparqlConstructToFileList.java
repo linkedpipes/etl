@@ -23,6 +23,8 @@ import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +35,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class SparqlConstructToFileList implements Component, SequentialExecution {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlConstructToFileList.class);
 
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
@@ -117,6 +121,7 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
     private void executeTask(QueryTask task, RDFWriter writer)
             throws LpException {
         writer = new ChangeContext(writer, createIriOrNull(task.getGraph()));
+        LOG.info("Executing query:\n{}", task.getQuery());
         for (Statement statement : executeQuery(task.getQuery())) {
             writer.handleStatement(statement);
         }
