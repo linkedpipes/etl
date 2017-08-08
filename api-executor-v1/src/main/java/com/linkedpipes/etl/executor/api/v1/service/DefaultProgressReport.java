@@ -80,7 +80,7 @@ class DefaultProgressReport implements ProgressReport {
 
     @Override
     public void start(long entriesToProcess) {
-        LOG.info("Progress report ({}) ... ", entriesToProcess);
+        LOG.info("Progress report 0/{}", entriesToProcess);
         current = 0;
         total = entriesToProcess;
         reportStep = (long) (total * 0.1f);
@@ -98,13 +98,14 @@ class DefaultProgressReport implements ProgressReport {
         ++current;
         if (current >= reportNext) {
             reportNext += reportStep;
+            LOG.info("Progress report {}/{}", current, total);
             context.sendMessage(new ReportProgress(current, total, component));
         }
     }
 
     @Override
     public void done() {
-        LOG.info("Progress report ... done");
+        LOG.info("Progress report {}/{} (actual: {})", total, total, current);
         context.sendMessage(new ReportProgress(total, total, component));
     }
 
