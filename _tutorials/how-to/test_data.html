@@ -1,0 +1,76 @@
+---
+file: test_data.html
+short: "How to: Test data"
+title: How to test data
+---
+
+<p class="flow-text">You want to test that data processed in a pipeline meets specific requirements.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">Many pipelines embody assumptions about the data they operate on. In order for such pipelines to execute successfully, the data they work with must fulfil the assumptions. Unfortunately, these assumptions are often not stated explicitly, so that the pipelines tend to fail unexpectedly when they encounter data that violates their assumptions. There are many cases in which this problem appears: when pipelines receive arbitrary input from their users, the data they work with changes in time, or when edits during a pipeline development cause unwanted side effects. Fortunately, the assumptions behind a pipeline can be made explicit and automatically testable.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">The <a href="{% link _components/q-sparqlask.html %}">SPARQL ask</a> component allows you to stop a pipeline's execution based on the result of a given SPARQL <a href="https://www.w3.org/TR/sparql11-query/#ask">ASK query</a>. Pipeline's assumptions can be formulated as ASK queries and tested automatically via the SPARQL ask component.</p>
+
+<p class="flow-text">The component falls into a special category of components that test data quality. Unlike extractors, transformers, and loaders, it takes input data and effects the execution of the pipeline that contains it. Such pipeline will either terminate or continue when the component is run. The component's option <em>Fail on ASK success</em> determines what effect the component's query result has. Execution of the component's pipeline is terminated either when its query returns the boolean value <code>true</code> and the mentioned option is switched on, or when the query results is <code>false</code> and the option is switched off. Otherwise, the pipeline execution continues. Being able to configure how is the query result interpreted allows you write simpler ASK queries. For instance, consider writing a query that tests if some data matches a specified graph pattern and an inverse query testing that no data matches a prohibited pattern. For example, to test if some data is not empty, you can use the this simple query:</p>
+
+<pre><code>ASK { [] ?p [] . }</code></pre>
+
+<p class="flow-text">When a pipeline execution fails, you can go to its debug view and see if it was terminated by the SPARQL ask component. In such case, the component will be outlined in red and its would display an error <em>Ask assertion failure</em> upon clicking on it.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Failed SPARQL ask component"
+         class="responsive-img"
+         data-caption="Failed SPARQL ask component"
+         src="{% link /assets/tutorials/how-to/img/test_data_failed_component.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">There are several typical scenarios in which this component is used. When you develop a pipeline fragment that requires its users to provide its input data, the component can test if the provided data meets the requirements of the fragment. For example, besides testing a non-empty input, a pipeline fragment may require its input to be described in terms of a specific RDF vocabulary. In such case, you can describe the required data shape by a graph pattern and let the SPARQL ask component check whether the input data matches the pattern.</p>
+
+<p class="flow-text">There are also cases in which a pipeline's non-RDF input may vary. For instance, a pipeline can be run periodically, while the data it processes changes over time. If you want to ensure that the assumptions about the input with which a pipeline operates are met, you can employ the SPARQL ask component to test the pipeline's intermediate data. Tests executed via this component can also serve as guard rails during pipeline development, helping to detect unwanted effects of changes in the pipeline.</p>
+
+<p class="flow-text"><a href="{% link assets/tutorials/how-to/pipelines/how_to_test_data.jsonld %}">Here</a> you can find a simple pipeline that tests if its input is not empty.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">In order to ensure that LP-ETL does not execute a component unless a condition tested by the SPARQL ask component is met, you can connect the SPARQL ask to the component via a <em>Run before</em> edge. This edge instructs LP-ETL to run the connected components only after the SPARQL ask component has run. In effect, either the tested condition is satisfied and the connected component is run or else the pipeline execution is terminated. For example, this approach is useful for preventing needless execution of components performing expensive or long-running operations.</p>
+
+<p class="flow-text">If you want to test more sophisticated requirements, then knowing when data fails to meet them is insufficient, because you need more information to diagnose the problem and solve it. In such case you can formulate a <a href="https://www.w3.org/TR/sparql11-query/#construct">SPARQL CONSTRUCT</a> query that tests the given requirement but also collects and outputs data describing the violations of the requirement. For example, if you require that birth dates of all people precede their death dates in your dataset, then you can express the requirement via the following query:</p>
+
+<pre><code>
+PREFIX dbo:  &lt;http://dbpedia.org/ontology/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX spin: &lt;http://spinrdf.org/spin#&gt;
+
+CONSTRUCT {
+  [] a spin:ConstrainViolation ;
+    rdfs:label "Person's birth date follows the death date"@en ;
+    spin:violationRoot ?person ;
+    spin:violationPath dbo:birthDate, dbo:deathDate ;
+    spin:violationValue ?birthDate, ?deathDate .
+}
+WHERE {
+  ?person a foaf:Person ;
+    dbo:birthDate ?birthDate ;
+    dbo:deathDate ?deathDate .
+  FILTER (?birthDate &gt; ?deathDate)
+}
+</code></pre>
+
+<p class="flow-text">
+Violations of the tested requirement are described with the terms of the <a href="http://spinrdf.org/spin.html">SPIN RDF</a> vocabulary. Their descriptions feature labels indicating the violated requirement, as well as links to resources involved in the violation, and values causing it. For example, if you run this query on <a href="http://dbpedia.org/sparql">DBpedia</a>, you will see that it currently fails this assumption.</p>
+
+<p class="flow-text">In LP-ETL, you can execute CONSTRUCT queries by the <a href="{% link _components/t-sparqlconstruct.html %}">SPARQL construct</a> component. You can pipe the results of this component into the SPARQL ask component and assert that they are empty by switching off the <em>Fail on ASK success</em> option and filling in the already mentioned query:</p>
+
+<pre><code>ASK { [] ?p [] . }</code></pre>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">While SPARQL offers expressive means to formulate a variety of requirements for data, there are tools directly made for the job of testing data. The standard way of testing whether data conforms to the assumed structure is the <a href="https://www.w3.org/TR/shacl">Shapes Constraint Language</a>, which provides greater capabilities for RDF data validation than vanilla SPARQL.</p>
+
+<p class="flow-text">If you are after conformance with RDF vocabularies describing the processed data, then you can try <a href="https://github.com/AKSW/RDFUnit">RDFUnit</a>, which allows to generate integrity constraints automatically from RDF vocabularies.</p>
