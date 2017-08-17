@@ -484,7 +484,7 @@ public class LodCloudConfiguration {
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VOCAB_TAG)
     private VocabTags vocabTag;
 
-    private final String apiUri = "https://datahub.io/api/3/action";
+    private final String apiUri = "https://old.datahub.io/api/3/action";
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VERSION)
     private String version ;
