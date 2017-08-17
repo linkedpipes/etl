@@ -5,7 +5,8 @@
     config:type <http://plugins.linkedpipes.com/ontology/e-httpGetFile#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileUri> ,
         <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileName> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/hardRedirect> .
+        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/hardRedirect> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/userAgent> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileUri>
     a config:ConfigurationMember ;
@@ -21,3 +22,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirect> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirectControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/userAgent>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#userAgent> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#userAgentControl> .

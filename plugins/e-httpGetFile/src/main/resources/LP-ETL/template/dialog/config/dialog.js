@@ -21,6 +21,12 @@ define([], function () {
             "$property" : "hardRedirect",
             "$control": "hardRedirectControl",
             "$label" : "Force to follow redirects"
+        },
+        "userAgent" : {
+            "$type" : "str",
+            "$property" : "userAgent",
+            "$control": "userAgentControl",
+            "$label" : "User agent"
         }
     };
 
