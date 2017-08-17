@@ -31,7 +31,7 @@ defaults:
     values:
       layout: tutorial
 
-plugins:
+gems:
   - jekyll-mentions
   - jekyll-feed
   - jekyll-sitemap
