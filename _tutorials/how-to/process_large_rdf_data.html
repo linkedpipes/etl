@@ -1,0 +1,56 @@
+---
+file: process_large_rdf_data.html
+short: "How to: Process large RDF data"
+title: How to process large RDF data
+---
+
+<p class="flow-text">You want to process large RDF data.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">When you transform large RDF data in LinkedPipes ETL (LP-ETL), your SPARQL queries and update operations can take long or get stuck, or you may run out of memory.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">LP-ETL allows you to divide and conquer large RDF data by splitting it into smaller chunks. Each chunk can be transformed separately, which requires less compute resources in total than processing the same RDF in bulk.</p>
+
+<p class="flow-text">Processing data in chunks implies that it need not be loaded into memory as a whole, thus reducing the memory footprint of their transformation. Moreover, a sequence of chunks can be processed in parallel, leveraging machines with multiple CPU cores that can work with several chunks at a time. By efficient utilization of compute resources the parallel processing can speed up a pipeline's execution.</p>
+
+<p class="flow-text">Chunking comes with a major caveat. It can be used only when the processed data can be partitioned into chunks such that each chunk contains all data required by the applied transformations. For example, joins across the complete dataset are unfeasible when the dataset is split into chunks. Consequently, chunking is suitable for data processing tasks that are <a href="https://en.wikipedia.org/wiki/Embarrassingly_parallel">embarrassingly parallel</a>. Fortunately, there are still many tasks in ETL of RDF data that fit this description.</p>
+
+<p class="flow-text">LP-ETL provides special versions of many of its components that produce or operate on chunked data. If you want to use chunking, you can substitute the components in your pipeline with their variants that support chunks. There are several components that output chunks:</p>
+
+<table class="responsive-table">
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Chunk size determined by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="{% link _components/t-filestordfchunked.html %}">Files to RDF chunked</a></td>
+      <td>number of files</td>
+    </tr>
+    <tr>
+      <td><a href="{% link _components/t-tabularchunked.html %}">Tabular chunked</a></td>
+      <td>number of rows from the input CSV</td>
+    </tr>
+    <tr>
+      <td><a href="{% link _components/e-sparqlendpointchunked.html %}">SPARQL Endpoint chunked</a></td>
+      <td>number of resources included in the component's query</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="flow-text">Moreover, chunks can be produced in any case you have collections of RDF files, such as those obtained from the <a href="{% link _components/t-xslt.html %}">XSLT transformer</a> or the <a href="{% link _components/e-httpgetfiles.html %}">HTTP get list</a> components. Once you have chunks, you can consume them with components that can transform the chunks, such as the <a href="{% link _components/t-sparqlconstructchunked.html %}">SPARQL construct chunked</a> or the <a href="{% link _components/t-sparqlupdatechunked.html %}">SPARQL update chunked</a> components. They operate the same as their non-chunked counterparts, except that the SPARQL query or update operation from their configuration is executed on each chunk individually.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">When you are done with transforming your chunks or you need to pass the data to a component without support for chunks, you can merge the chunks back to a single RDF database via the <a href="{% link _components/t-chunkedtograph.html %}">Chunked merger</a> component.</p>
+
+<p class="flow-text">Note that chunking RDF data and merging it back incurs an overhead. The decision to use chunking should therefore be informed by the trade off between the savings gained by chunked execution compared with the costs of the overhead. Simply put, you want to use chunking only if your data reaches a larger volume.</a>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">You can find more ways to optimize LP-ETL pipelines described in a <a href="{% link _tutorials/csv-to-rdf/optimize.html %}">part</a> of the tutorial on converting tabular data to RDF. In case the options that LP-ETL offers do not cut it for the volume of data you need to handle, you can look at other methods for distributed processing of large-scale RDF data, such as the <a href="https://jena.apache.org/documentation/hadoop">Apache Jena Elephas</a> library for working with RDF on a Hadoop back-end.</p>
