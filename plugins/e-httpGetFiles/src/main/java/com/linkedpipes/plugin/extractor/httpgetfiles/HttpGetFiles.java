@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class HttpGetFiles implements Component, SequentialExecution {
@@ -47,26 +47,21 @@ public final class HttpGetFiles implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        // TODO Do not use this, but be selective about certs we trust.
-        try {
-            setTrustAllCerts();
-        } catch (Exception ex) {
-            throw exceptionFactory.failure(
-                    "Can't set trust all certificates.", ex);
-        }
+        setTrustAllCerts();
         List<FileToDownload> filesToDownload = getFilesToDownload();
-        // Prepare work.
-        ConcurrentLinkedQueue<UriDownloader.FileToDownload> workQueue =
+        //
+        ConcurrentLinkedQueue<Downloader.Task> workQueue =
                 new ConcurrentLinkedQueue<>();
         for (FileToDownload reference : filesToDownload) {
-            UriDownloader.FileToDownload job = createDownloadJob(reference);
-            if (job == null) {
+            Downloader.Task task = createDownloadTask(reference);
+            if (task == null) {
                 continue;
             }
-            workQueue.add(job);
+            workQueue.add(task);
         }
         // Execute.
-        UriDownloader downloader = new UriDownloader(progressReport, configuration);
+        UriDownloader downloader =
+                new UriDownloader(progressReport, configuration);
         downloader.download(workQueue, filesToDownload.size());
         if (!downloader.getExceptions().isEmpty()) {
             LOG.info("Downloaded {}/{}", downloader.getExceptions().size(),
@@ -93,7 +88,7 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         }
     }
 
-    private void setTrustAllCerts() throws Exception {
+    private void setTrustAllCerts() throws LpException {
         LOG.warn("'Trust all certs' policy used -> security risk!");
         final TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -125,12 +120,13 @@ public final class HttpGetFiles implements Component, SequentialExecution {
             HttpsURLConnection.setDefaultHostnameVerifier(
                     (String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
-            throw ex;
+            throw exceptionFactory.failure(
+                    "Can't set trust all certificates.", ex);
         }
     }
 
-    private UriDownloader.FileToDownload createDownloadJob(
-            FileToDownload reference) throws LpException {
+    private Downloader.Task createDownloadTask(FileToDownload reference)
+            throws LpException {
         String uri = getUri(reference);
         String fileName = getFileName(reference);
         if (uri == null || fileName == null) {
@@ -141,15 +137,9 @@ public final class HttpGetFiles implements Component, SequentialExecution {
                         reference.getUri());
             }
         }
-        URL source = createUrl(uri);
-        if (source == null) {
-            return null;
-        }
-        File target = output.createFile(reference.getFileName());
-        UriDownloader.FileToDownload job = new UriDownloader.FileToDownload(
-                source, target);
-        job.setTimeOut(getTimeOut(reference));
-        setHeaders(job, reference);
+        File targetFile = output.createFile(reference.getFileName());
+        Downloader.Task job = new Downloader.Task(uri,
+                targetFile, getHeader(reference), getTimeOut(reference));
         return job;
 
     }
@@ -162,8 +152,7 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         return uri;
     }
 
-    private String getFileName(FileToDownload reference)
-            throws LpException {
+    private String getFileName(FileToDownload reference) throws LpException {
         String fileName = reference.getFileName();
         if (fileName == null || fileName.isEmpty()) {
             return null;
@@ -171,19 +160,15 @@ public final class HttpGetFiles implements Component, SequentialExecution {
         return fileName;
     }
 
-    private URL createUrl(String urlAsString) throws LpException {
-        try {
-            return new URL(urlAsString);
-        } catch (MalformedURLException ex) {
-            if (configuration.isSkipOnError()) {
-                LOG.warn("Invalid property: {} on {}");
-                return null;
-            } else {
-                throw exceptionFactory.failure("Invalid property: {} on {}",
-                        HttpGetFilesVocabulary.HAS_URI,
-                        urlAsString, ex);
-            }
+    private Map<String, String> getHeader(FileToDownload reference) {
+        Map<String, String> headers = new HashMap<>();
+        for (RequestHeader header : configuration.getHeaders()) {
+            headers.put(header.getKey(), header.getValue());
         }
+        for (RequestHeader header : reference.getHeaders()) {
+            headers.put(header.getKey(), header.getValue());
+        }
+        return headers;
     }
 
     private Integer getTimeOut(FileToDownload reference) {
@@ -192,16 +177,6 @@ public final class HttpGetFiles implements Component, SequentialExecution {
             return configuration.getTimeout();
         } else {
             return timeOut;
-        }
-    }
-
-    private void setHeaders(UriDownloader.FileToDownload job,
-            FileToDownload reference) {
-        for (RequestHeader header : configuration.getHeaders()) {
-            job.setHeader(header.getKey(), header.getValue());
-        }
-        for (RequestHeader header : reference.getHeaders()) {
-            job.setHeader(header.getKey(), header.getValue());
         }
     }
 
