@@ -19,6 +19,8 @@ final class SparqlEndpointChunkedVocabulary {
 
     public static final String HAS_SKIP_ON_ERROR = PREFIX + "skipOnError";
 
+    public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
+
     private SparqlEndpointChunkedVocabulary() {
     }
 

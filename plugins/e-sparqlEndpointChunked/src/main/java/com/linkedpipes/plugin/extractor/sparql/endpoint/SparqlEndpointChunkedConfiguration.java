@@ -35,6 +35,9 @@ public class SparqlEndpointChunkedConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_SKIP_ON_ERROR)
     private boolean skipOnError = false;
 
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_ENCODE_RDF)
+    private boolean fixIncomingRdf = false;
+
     public SparqlEndpointChunkedConfiguration() {
     }
 
@@ -85,4 +88,13 @@ public class SparqlEndpointChunkedConfiguration {
     public void setSkipOnError(boolean skipOnError) {
         this.skipOnError = skipOnError;
     }
+
+    public boolean isFixIncomingRdf() {
+        return fixIncomingRdf;
+    }
+
+    public void setFixIncomingRdf(boolean fixIncomingRdf) {
+        this.fixIncomingRdf = fixIncomingRdf;
+    }
+
 }

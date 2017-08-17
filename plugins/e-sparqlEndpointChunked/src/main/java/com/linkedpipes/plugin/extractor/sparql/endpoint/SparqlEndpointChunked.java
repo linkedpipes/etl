@@ -17,7 +17,7 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +120,7 @@ public final class SparqlEndpointChunked implements Component,
             throw ex;
         } catch (Exception ex) {
             if (configuration.isSkipOnError()) {
-                 LOG.error("Failed to execute query.", ex);
+                LOG.error("Failed to execute query.", ex);
             } else {
                 throw exceptionFactory.failure("Failed to execute query.", ex);
             }
@@ -134,13 +134,16 @@ public final class SparqlEndpointChunked implements Component,
             final GraphQuery preparedQuery = connection.prepareGraphQuery(
                     QueryLanguage.SPARQL, query);
             preparedQuery.setDataset(createDataset());
-            preparedQuery.evaluate(new AbstractRDFHandler() {
+            RDFHandler handler = new AbstractRDFHandler() {
                 @Override
-                public void handleStatement(Statement st)
-                        throws RDFHandlerException {
+                public void handleStatement(Statement st) {
                     buffer.add(st);
                 }
-            });
+            };
+            if (configuration.isFixIncomingRdf()) {
+                handler = new RdfEncodeHandler(handler);
+            }
+            preparedQuery.evaluate(handler);
         }
     }
 

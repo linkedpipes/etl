@@ -32,6 +32,10 @@ define([], function () {
         "chunkSize" : {
             "$type" : "int",
             "$label" : "Chunk size"
+        },
+        "encodeRdf": {
+            "$type": "bool",
+            "$label": "Encode RDF"
         }
     };
 
