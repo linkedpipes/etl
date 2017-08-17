@@ -10,7 +10,6 @@ materialicon: extension
   <p class="flow-text">Learning ETL for linked data can be a daunting task. This is why we have prepared tutorials that explain common practices in using LinkedPipes ETL.</p>
 
   <ul class="collection with-header">
-    <li class="collection-header"><h4>Tutorials</h4></li>
     <li class="collection-item">
       <a href="{% link _tutorials/csv-to-rdf/index.html %}">Converting tabular data to RDF</a>
     </li>
@@ -18,4 +17,65 @@ materialicon: extension
       <a href="{% link _tutorials/geocoding-with-nominatim/index.html %}">Geocoding with Nominatim</a>
     </li>
   </ul>
+
+  <h2 class="header center orange-text">How to guides</h2>
+
+  <p class="flow-text">Although every dataset is different, many ETL tasks are shared in processing these datasets. Here you can find a cookbook with recipes for some of the common tasks you may encounter when working with linked data. The recipes are grouped by the technologies they are based on.</p>
+
+  <p class="flow-text">Each recipe follows the same structure. It declares the problem it solves, presents a solution to the problem, discusses details and extensions of the solution, and includes links to relevant resources. This format is designed so that it can be quickly skimmed to find out the information relevant for you.</p>
+
+  <div class="row">
+    <div class="col s12 m6 l4">
+      <ul class="collection with-header">
+        <li class="collection-header">
+          <h4>Mustache</h4>
+        </li>
+        <li class="collection-item">
+          <a href="{% link _tutorials/how-to/generate_sparql_queries_via_mustache.html %}">How to generate SPARQL queries via Mustache</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col s12 m6 l4">
+      <ul class="collection with-header">
+        <li class="collection-header">
+          <h4>HTTP GET list</h4>
+        </li>
+        <li class="collection-item">
+          <a href="{% link _tutorials/how-to/cache_linked_data.html %}">How to cache linked data</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col s12 m6 l4">
+      <ul class="collection with-header">
+        <li class="collection-header">
+          <h4>SPARQL Update</h4>
+        </li>
+        <li class="collection-item">
+          <a href="{% link _tutorials/how-to/map_rdf_properties.html %}">How to map RDF properties using SPARQL Update</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 m6 l4">
+      <ul class="collection with-header">
+        <li class="collection-header">
+          <h4>SPARQL ask</h4>
+        </li>
+        <li class="collection-item">
+          <a href="{% link _tutorials/how-to/test_data.html %}">How to test data</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col s12 m6 l4">
+      <ul class="collection with-header">
+        <li class="collection-header">
+          <h4>Chunking</h4>
+        </li>
+        <li class="collection-item">
+          <a href="{% link _tutorials/how-to/process_large_rdf_data.html %}">How to process large RDF data</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,145 @@
+---
+file: generate_sparql_queries_via_mustache.html
+short: "How to: Generate SPARQL queries via Mustache"
+title: How to generate SPARQL queries via Mustache
+---
+
+<p class="flow-text">You want to generate a SPARQL query dynamically. You can render a Mustache template to SPARQL query and pass it as runtime configuration.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">Consider that you want to generate a SPARQL query based on input data. Configuration of LinkedPipes ETL (LP-ETL) pipelines usually contains static SPARQL queries, but they can be also generated dynamically and passed as runtime configuration. Doing so is useful when a part of a pipeline's configuration is unknown prior to the pipeline's execution. For example, SPARQL queries may need to adapt to the pipeline's input data.</p>
+
+<p class="flow-text">The solution to the problem of generating SPARQL queries can be demonstrated on the <a href="https://www.w3.org/TR/vocab-data-cube/#ic-12">integrity constraint 12</a> (IC-12) from the <a href="https://www.w3.org/TR/vocab-data-cube">Data Cube Vocabulary</a> (DCV). DCV is a vocabulary for describing multidimensional datasets composed of observations of statistical phenomena. IC-12 tests if there are no observations sharing the same values of dimensions. In other words, combinations of dimension values must be unique. The original implementation of this constraint present in the DCV specification is generic, albeit slow. Our goal here is to improve the speed of IC-12 by generating a dataset-specific SPARQL query that implements the integrity constraint.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">You can generate SPARQL queries from templates in the <a href="https://mustache.github.io">Mustache</a> syntax using the <a href="{% link _components/t-mustache.html %}">Mustache</a> component. Mustache is a widely known minimalistic templating language available in most programming languages. Given a template and data, it renders the template by filling it with the data.</p>
+
+<p class="flow-text">The data model of Mustache is on par with JSON. Since LP-ETL is based on RDF, its implementation of Mustache reads RDF as a JSON-like data structure. RDF referents, including IRIs and blank nodes, are treated as hash maps that contain key-value pairs comprising properties and objects from the triples where the referent is in the subject position. Objects can be either literal values or other referents. Since IRIs are treated as hash maps, if you want to output an IRI, you have to convert it to a literal first. You can do this when you generate the data via the <a href="https://www.w3.org/TR/sparql11-query/#func-str"><code>str()</code></a> function in SPARQL.</p>
+
+<p class="flow-text">Since RDF is structured as a graph while JSON forms a tree, you need to convert RDF into one or more trees for use with Mustache. You can do that by specifying the IRI of the root entity class in the component's configuration. The component will then treat any instance of the given class as a root of a tree. It will render its template for every such instance, which will be used as input data for rendering.</p>
+
+<p class="flow-text">The Mustache component recognizes several special properties from the <code>http://plugins.linkedpipes.com/ontology/t-mustache#</code> namespace, thereafter abbreviated as <code>mustache:</code>.
+The <code>mustache:fileName</code> property attached to root entities determines the name of the file in which the output rendered using the data of a given root entity is stored. Since RDF triples are unordered, in case you want objects of an RDF property to be sorted, you must explictly specify their order by numeric indices via the <code>mustache:order</code> property. If you want to distinguish the first object from the rest, you can configure the Mustache component to annotate it by the <code>mustache:first</code> property with the boolean <code>true</code> value. For example, this is useful when you generate lists of items split by a separator.</p>
+
+<p class="flow-text">We generate the input data for the Mustache component from the data structure definition (DSD) of the tested DCV dataset. Among other things, DSDs specify what dimensions are used in DCV datasets conforming to the DSDs. This is what we need to implement IC-12. Dimensions are defined by components of a DSD. The components are enumerated as objects of the <code>qb:component</code> property attached to a given instance of <code>qb:DataStructureDefinition</code>. Dimensions can be distinguished either by being referred via the <code>qb:dimension</code> property or, if referred by the generic <code>qb:componentProperty</code> property, by instantiating the <code>qb:DimensionProperty</code> class. Following this description, we can extract the dimensions from a DSD by using this SPARQL CONSTRUCT query:</p>
+
+<pre><code>PREFIX mustache: &lt;http://plugins.linkedpipes.com/ontology/t-mustache#&gt;
+PREFIX qb:       &lt;http://purl.org/linked-data/cube#&gt;
+PREFIX sp:       &lt;http://spinrdf.org/sp#&gt;
+
+CONSTRUCT {
+  ?dsd a qb:DataStructureDefinition ;
+     qb:component [
+      qb:componentProperty ?dimension ;
+      sp:varName ?varName
+    ] ;
+    mustache:fileName ?fileName .
+}
+WHERE {
+  ?dsd qb:component ?component .
+  {
+    ?component qb:dimension ?_dimension .
+  } UNION {
+    ?component qb:componentProperty ?_dimension .
+    ?_dimension a qb:DimensionProperty .
+  }
+  BIND (str(?_dimension) AS ?dimension)
+  BIND (md5(?dimension) AS ?varName)
+  BIND (concat("ic_12_", md5(str(?dsd)), ".rq") AS ?fileName)
+}
+</code></pre>
+
+<p class="flow-text">As you can see in the query, we use <code>qb:DataStructureDefinition</code> as the root entity class. For each dimension we generate a variable name linked via the <code>sp:varName</code> property. Variable names are derived by hashing the dimensions' IRIs by the <a href="https://www.w3.org/TR/sparql11-query/#func-md5">md5()</a> hash function because it gives us names conforming to the SPARQL syntax. We will need the variable names for dimensions in our template for IC-12. We pipe the output of this SPARQL query to the Mustache component.</p>
+
+<p class="flow-text">We provide the DSD to the SPARQL CONSTRUCT component by pasting it into the <a href="{% link _components/e-textholder.html %}">Text holder</a> component and converting it to RDF via the <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> component. This makes the start of our pipeline to look like that:</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Pipeline start"
+         class="responsive-img"
+         data-caption="Pipeline start"
+         src="{% link /assets/tutorials/how-to/img/generate_sparql_via_mustache_start.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">Now that we have data for the Mustache component, let's turn to its template. The template produces a SPARQL query that tests IC-12. While originally implemented as an ASK query, we reformulated the constraint as a CONSTRUCT query that produces descriptions of observations violating the constraint, instead of merely telling whether the constraint is satisfied or not, as would the ASK query do. The reported violations of IC-12 are described using the <a href="http://spinrdf.org">SPIN RDF</a> vocabulary. Let's have a look at the template:</p>
+
+{% raw %}
+<pre><code>{{!
+PREFIX qb:    &lt;http://purl.org/linked-data/cube#&gt;
+PREFIX sp:    &lt;http://spinrdf.org/sp#&gt;
+}}
+PREFIX qb:    &lt;http://purl.org/linked-data/cube#&gt;
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX spin:  &lt;http://spinrdf.org/spin#&gt;
+
+CONSTRUCT {
+  [] a spin:ConstraintViolation ;
+    spin:violationRoot ?obs ;
+    rdfs:label "IC-12" ;
+    rdfs:comment "No two qb:Observations in the same qb:DataSet may have the same value for all dimensions."@en .
+}
+WHERE {
+  {
+    SELECT {{#qb:component}}
+           ?{{sp:varName}}
+           {{/qb:component}}
+    WHERE {
+      {{#qb:component}}
+      ?obs &lt;{{{qb:componentProperty}}}&gt; ?{{sp:varName}} .
+      {{/qb:component}}
+    }
+    GROUP BY {{#qb:component}}
+             ?{{sp:varName}}
+             {{/qb:component}}
+    HAVING (COUNT(?obs) &gt; 1)
+  }
+  {{#qb:component}}
+  ?obs &lt;{{{qb:componentProperty}}}&gt; ?{{sp:varName}} .
+  {{/qb:component}}
+}
+</pre></code>
+{% endraw %}
+
+<p class="flow-text">The Mustache component recognizes an optional leading Mustache comment, delimited by <code>{% raw %}{{!{% endraw %}</code> and <code>{% raw %}}}{% endraw %}</code>, that defines namespace prefixes using the SPARQL syntax. The defined prefixes can be then used to shorten IRIs of properties referred in Mustache tags. Without prefixes, you would have to use absolute IRIs. In our template, the standard triple curly braces are used to avoid HTML-escaping of IRIs, such as converting <code>&amp;</code> separating query parameters to <code>&amp;amp;</code>. In the component's configuration, we set the <em>Entity class IRI</em> to be <code>qb:DataStructureDefinition</code> via its absolute IRI <code>http://purl.org/linked-data/cube#DataStructureDefinition</code>.</p>
+
+<p class="flow-text">The Mustache component renders files, but runtime configurations must be in RDF. You can use the <a href="{% link _components/t-filestostatements.html %}">Files to statements</a> component to convert files to literal objects of a given RDF predicate, in our case <code>http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query</code>. This component produces a named graph with a single RDF statement for each its input file. In order to work with its output as a single RDF graph, we use the <a href="{% link _components/t-graphmerger.html %}">Graph merger</a> component, which simply merges its input named graphs.</p>
+
+<p class="flow-text">You can transform the statements with the rendered queries to a runtime configuration by a SPARQL CONSTRUCT query executed by the <a href="{% link _components/t-sparqlconstruct.html %}">SPARQL CONSTRUCT</a> component. The transformation simply types the subject of the generated statement as an instance of the <code>:Configuration</code> class:</p>
+
+<pre><code>PREFIX :      &lt;http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#&gt;
+PREFIX local: &lt;http://localhost/ontology/&gt;
+
+CONSTRUCT { 
+  local:config a :Configuration ;
+    :query ?query .
+}
+WHERE {
+  [] local:query ?query . 
+}
+</code></pre>
+
+<p class="flow-text">Note that blank nodes are not allowed in component configuration. The generated RDF can be used as configuration for another SPARQL CONSTRUCT component. In our case, this component would execute the generated query on a DCV dataset conforming to the input DSD to verify that the dataset adheres to IC-12. Compared to the generic query for IC-12 from the DCV specification, you may see up to 100&times; speed-up for the generated dataset-specific query.</p>
+
+<p class="flow-text">The pipeline implementing the described process is available <a href="{% link /assets/tutorials/how-to/pipelines/how_to_generate_sparql_via_mustache.jsonld %}">here</a>. This is the pipeline's layout:</p>
+
+<div class="row">
+  <div class="col s12 m12">
+    <img alt="Pipeline implementing IC-12"
+         class="responsive-img"
+         data-caption="Pipeline implementing IC-12"
+         src="{% link /assets/tutorials/how-to/img/generate_sparql_via_mustache_pipeline.png %}"/>
+  </div>
+</div>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">Most components in LP-ETL accept runtime configuration in RDF. In this way, LP-ETL pipelines can adapt to the data they process. Dynamic RDF configuration adds an element of homoiconicity to LP-ETL pipelines that enables you to devise novel data processing workflows.</p>
+
+<p class="flow-text">The presented implementation of IC-12 demonstrates only one of this class of workflows. It also shows how two more specific SPARQL queries can be orders of magnitude faster than a single generic query. In cases such as this, a way to optimize a SPARQL query is to decompose it into several simpler and more specific queries.</p>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">Validation of DCV's integrity constraints was originally developed as an <a href="https://github.com/openbudgets/pipeline-fragments/tree/master/dcv/dcv-validation">LP-ETL pipeline fragment</a> for the <a href="http://openbudgets.eu">OpenBudgets.eu</a> project. The implementation of IC-12 showcased in this tutorial comes from this pipeline fragment.</p>
