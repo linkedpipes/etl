@@ -58,11 +58,11 @@ public final class HttpGet implements Component, SequentialExecution {
     }
 
     private void checkConfiguration() throws LpException {
-        if (!isNullOrEmpty(configuration.getUri())) {
+        if (isNullOrEmpty(configuration.getUri())) {
             throw exceptionFactory.failure("Missing property: {}",
                     HttpGetVocabulary.HAS_URI);
         }
-        if (!isNullOrEmpty(configuration.getFileName())) {
+        if (isNullOrEmpty(configuration.getFileName())) {
             throw exceptionFactory.failure("Missing property: {}",
                     HttpGetVocabulary.HAS_NAME);
         }
