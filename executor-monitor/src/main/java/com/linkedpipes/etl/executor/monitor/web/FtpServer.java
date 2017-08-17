@@ -46,7 +46,7 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
                 = new DataConnectionConfigurationFactory();
 
         dataFactory.setActiveEnabled(false);
-        dataFactory.setPassivePorts(configuration.getFtpDataPort());
+        dataFactory.setPassivePorts(getPassivePorts());
 
         final ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(configuration.getFtpCommandPort());
@@ -56,6 +56,11 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
         final ConnectionConfigFactory connectionConfigFactory
                 = new ConnectionConfigFactory();
         connectionConfigFactory.setAnonymousLoginEnabled(true);
+
+        int loginLimit = (configuration.getFtpDataPortsEnd() -
+                configuration.getFtpDataPortsStart());
+        connectionConfigFactory.setMaxLogins(loginLimit);
+        connectionConfigFactory.setMaxAnonymousLogins(loginLimit);
 
         final BaseUser anonymous = new BaseUser();
         anonymous.setName("anonymous");
@@ -90,6 +95,11 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
             LOG.error("Can't start FTP server.", ex);
             appContext.stop();
         }
+    }
+
+    protected String getPassivePorts() {
+        return configuration.getFtpDataPortsStart() + "-" +
+                (configuration.getFtpDataPortsEnd());
     }
 
     protected void stop() {
