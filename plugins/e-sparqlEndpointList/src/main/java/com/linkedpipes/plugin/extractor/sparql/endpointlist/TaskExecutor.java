@@ -6,12 +6,13 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -40,17 +41,21 @@ class TaskExecutor implements Runnable {
 
     private final int executionTimeLimit;
 
+    private final boolean fixIncomingRdf;
+
     public TaskExecutor(
             Task task,
             ErrorReportConsumer errorReportConsumer,
             TaskResultConsumer resultConsumer,
             ProgressReport progressReport,
-            int executionTimeLimit) {
+            int executionTimeLimit,
+            boolean fixIncomingRdf) {
         this.task = task;
         this.errorReportConsumer = errorReportConsumer;
         this.resultConsumer = resultConsumer;
         this.progressReport = progressReport;
         this.executionTimeLimit = executionTimeLimit;
+        this.fixIncomingRdf = fixIncomingRdf;
     }
 
     @Override
@@ -90,9 +95,19 @@ class TaskExecutor implements Runnable {
                     QueryLanguage.SPARQL, task.getQuery());
             setGraphsToQuery(preparedQuery);
             preparedQuery.setMaxExecutionTime(executionTimeLimit);
-            try (GraphQueryResult result = preparedQuery.evaluate()) {
-                return collectResults(result);
+
+            List<Statement> statements = new LinkedList<>();
+            RDFHandler handler = new AbstractRDFHandler() {
+                @Override
+                public void handleStatement(Statement st) {
+                    statements.add(st);
+                }
+            };
+            if (fixIncomingRdf) {
+                handler = new RdfEncodeHandler(handler);
             }
+            preparedQuery.evaluate(handler);
+            return statements;
         }
     }
 
@@ -102,14 +117,6 @@ class TaskExecutor implements Runnable {
             dataset.addDefaultGraph(valueFactory.createIRI(iri));
         }
         preparedQuery.setDataset(dataset);
-    }
-
-    private List<Statement> collectResults(GraphQueryResult result) {
-        List<Statement> statements = new LinkedList<>();
-        while (result.hasNext()) {
-            statements.add(result.next());
-        }
-        return statements;
     }
 
 }

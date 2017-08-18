@@ -35,6 +35,8 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_TIME_LIMIT = PREFIX + "timeLimit";
 
+    public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
+
     private SparqlEndpointListVocabulary() {
     }
 

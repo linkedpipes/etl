@@ -4,7 +4,8 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration/desc/threads> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration/desc/timeLimit> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration/desc/timeLimit> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration/desc/encodeRdf> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration/desc/threads>
     a config:ConfigurationMember ;
@@ -16,4 +17,7 @@
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#timeLimit> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#timeLimitControl> .
 
-
+<http://linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/configuration/desc/encodeRdf>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#encodeRdf> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#encodeRdfControl> .

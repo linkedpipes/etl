@@ -70,7 +70,8 @@ public final class SparqlEndpointList
         for (Task task : taskLoader.getTasks()) {
             executorService.submit(new TaskExecutor(
                     task, errorConsumer, resultConsumer, progressReport,
-                    configuration.getExecutionTimeLimit()));
+                    configuration.getExecutionTimeLimit(),
+                    configuration.isFixIncomingRdf()));
         }
         executorService.shutdown();
     }
