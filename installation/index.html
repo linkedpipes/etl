@@ -32,7 +32,7 @@ order: 4
           <div class="icon-block">
             <h2 class="center blue-text"><i class="material-icons">filter_2</i></h2>
             <h5 class="center">Build using Maven</h5>
-            <p class="flow-text">Once the project is cloned, build it using Maven's <code>mvn install</code> command.</p>
+            <p class="flow-text">Once the project is cloned, build it using Maven's <code>mvn install</code> command. You may consider skipping tests by using the <code>-DskipTests</code> parameter to speed things up.</p>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@ order: 4
         <div class="col s12 m6">
           <div class="icon-block">
             <h2 class="center blue-text"><i class="material-icons">filter_3</i></h2>
-            <h5 class="center">Configure using text editor</h5>
+            <h5 class="center">Configure using text editor (skip for <code>develop</code> branch)</h5>
 
             <p class="flow-text">Copy the <a href="https://github.com/linkedpipes/etl/blob/master/configuration.properties.sample"><code>configuration.properties.sample</code></a> file to <code>deploy/configuration.properties</code> and edit it in your favorite text editor, setting the paths to working directories, etc.</p>
           </div>
@@ -50,7 +50,7 @@ order: 4
             <h2 class="center blue-text"><i class="material-icons">filter_4</i></h2>
             <h5 class="center">Run our 4 components</h5>
 
-            <p class="flow-text">Once configured, you are ready to go. Currently, the ETL project consists of three components, which are ran individually from the deploy folder. Either run them in three separate console windows, or in shell or <a href="https://www.cygwin.com/">Cygwin</a> on the background, e.g. <code>./executor.sh &amp;</code>, <code>./storage.sh &amp;</code>, <code>./executor-monitor.sh &amp;</code> and <code>./frontend.sh &amp;</code>. The frontend should now run on <code>http://localhost:8080</code> or the port used in the configuration.</p>
+            <p class="flow-text">Once configured, you are ready to go. Currently, the ETL project consists of four components, which are ran individually from the deploy folder. Either run them in four separate console windows, or in shell or <a href="https://www.cygwin.com/">Cygwin</a> in the background, e.g. <code>./executor.sh &amp;</code>, <code>./storage.sh &amp;</code>, <code>./executor-monitor.sh &amp;</code> and <code>./frontend.sh &amp;</code>. The frontend should now run on <code>http://localhost:8080</code> or the port used in the configuration.</p>
           </div>
         </div>
       </div>
