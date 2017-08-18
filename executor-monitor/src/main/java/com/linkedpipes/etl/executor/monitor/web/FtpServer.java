@@ -58,7 +58,7 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
         connectionConfigFactory.setAnonymousLoginEnabled(true);
 
         int loginLimit = (configuration.getFtpDataPortsEnd() -
-                configuration.getFtpDataPortsStart());
+                configuration.getFtpDataPortsStart()) + 1;
         connectionConfigFactory.setMaxLogins(loginLimit);
         connectionConfigFactory.setMaxAnonymousLogins(loginLimit);
 
