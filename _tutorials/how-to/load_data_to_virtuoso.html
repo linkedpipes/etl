@@ -1,0 +1,71 @@
+---
+file: load_data_to_virtuoso.html
+short: "How to: load data to Virtuoso"
+title: How to load data to Virtuoso
+---
+
+<p class="flow-text">You want to load data to the <a href="https://virtuoso.openlinksw.com">Virtuoso RDF store</a>, particularly large data from multiple files that belongs into several named graphs.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">Virtuoso, especially its open-source version, is a commonly used RDF store. You can load data to Virtuoso by its <a href="http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoader">bulk loader</a>. This is a Virtuoso-specific solution. However, the standards-based <a href="https://www.w3.org/TR/sparql11-http-rdf-update">SPARQL 1.1 Graph Store HTTP Protocol</a> does not support loading data in quad-based RDF syntaxes that specify named graphs. Instead, named graph IRIs must be provided by a query parameter. If you want to load multiple files into multiple named graphs, the Virtuoso bulk loader can do it for you. Moreover, it can provide better performance than the Graph Store Protocol. Nevertheless, it is a Virtuoso-specific solution for loading data, so it requires a Virtuoso-specific LinkedPipes ETL (LP-ETL) component.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">Since Virtuoso is so widespread, LP-ETL offers a special component to load data into this RDF store, the <a href="{% link _components/x-virtuoso.html %}">Virtuoso loader</a>. It allows you to load data via the afore-mentioned <a href="http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoader">Virtuoso bulk loader</a>. The configuration of this component involves serveral parameters.</p>
+
+<p class="flow-text">In order to connect to a Virtuoso instance you must provide a <a href="http://docs.openlinksw.com/virtuoso/jdbcurl4mat/">JDBC connection string</a>, which is <code>jdbc:virtuoso://localhost:1111/charset=UTF-8/</code> for default Virtuoso installations. To authorize the connection, provide the access credentials of a Virtuoso user allowed to load data. By default, Virtuoso offers a user with the name <code>dba</code> and the password <code>dba</code>.</p>
+
+<p class="flow-text">Files are loaded from a configured directory. Their names must match a given mask. If you want to load one file, specify its name as the mask. Otherwise, if you want to load multiple files, you can match their names by using the asterisk wildcard. For instance, the mask <code>*.ttl</code> matches all files in the <a href="https://www.w3.org/TR/turtle">Turtle</a> syntax and the mask <code>*</code> matches any file in the directory.</p>
+
+<p class="flow-text">IRI of the named graph into which the data is loaded is determined via the <em>Target graph IRI</em> parameter. When no named graph is given, then the data is loaded into the unnamed default graph, unless the input data references named graphs. If the input is serialized in a quad-based format, such as <a href="https://www.w3.org/TR/n-quads">N-Quads</a> or <a href="https://www.w3.org/TR/trig">TriG</a>, then it is loaded into the named graphs that it specifies, overriding the named graph IRI from the component's configuration.</p>
+
+<p class="flow-text">The <em>Clear target graph before loading</em> option allows you to delete any data in the configured target graph prior to loading the given data. This comes in handy when you run a pipeline that contains a Virtuoso loader repeatedly, such as in during its development or when executed periodically to fetch updates in data. The component clears only the named graph given in the configuration. Named graphs specified in the input data are not cleared. As a result, using this option makes sense only when dealing with a single known named graph.</p>
+
+<p class="flow-text">You would typically switch the <em>Clear load list</em> option on, unless you want Virtuoso to keep an audit record of the loaded data in the <code>db.dba.load_list</code> table. You can use multiple CPU threads to load data in parallel by increasing the <em>Number of loaders to use</em>. Finally, the <em>Status update interval in seconds</em> specifies how often the component should poll Virtuoso about the status of the bulk load process. You can leave this option with its default value unless you want to monitor the load process closely.</p>
+
+<p class="flow-text">Virtuoso loader is a peculiar component, since it receives its input indirectly. Unlike other LP-ETL components that receive data via an input edge, it sources data directly from the file system of the server that runs the Virtuoso instance. Consequently, the data to load must be first serialized to RDF files and then copied to the server via the <a href="{% link _components/l-filestoscp.html %}">Files to SCP</a> component.
+In order to ensure that the Virtuoso loader is run only after the Files to SCP component has completed, drag a <em>Run before</em> edge from the Files to SCP to the Virtuoso loader.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Run before edge"
+         class="responsive-img"
+         data-caption="Run before edge"
+         src="{% link /assets/tutorials/how-to/img/run_before_edge.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">Note that the directory where the files to load are must be included in the values of the <code>DirsAllowed</code> parameter in the <a href="http://docs.openlinksw.com/virtuoso/dbadm/">virtuoso.ini</a> configuration file. The parameter must include either the directory or its parent directory to allow loading data from it. Remember to restart the Virtuoso instance (e.g., by running <code>service virtuoso-opensource restart</code>) to put the changes in the configuration into effect.</p>
+
+<p class="flow-text">An example pipeline for loading data into Virtuoso can be found <a href="{% link /assets/tutorials/how-to/pipelines/how_to_load_data_into_virtuoso.jsonld %}">here</a>.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">The <a href="http://vos.openlinksw.com/owiki/wiki/VOS/VirtBulkRDFLoader">Virtuoso bulk loader</a> recognizes several RDF syntaxes based on their file suffixes. Make sure you use the correct suffix so that the loader files can be parsed successfully. The files to load can be either uncompressed or compressed via GZip, as indicated by the additional <code>.gz</code> file name extension. Since RDF serializations tend to be verbose, you can save some time spent transferring the data if you compress it before.</p>
+
+<p class="flow-text">Since the components involved in loading data to Virtuoso require you to provide access credentials, pipelines containing them should be exported without the credentials if you want to share them publicly. Instead of removing the confidential information manually, LP-ETL offers an option to remove it automatically via the <em>Download without credentials</em> action.</p>
+
+<div class="row">
+  <div class="col s12 m4 offset-m4">
+    <img alt="Download without credentials"
+         class="responsive-img"
+         data-caption="Download without credentials"
+         src="{% link /assets/tutorials/how-to/img/download_without_credentials.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">If you remove credentials from components that require them, the components will not work unless the required credentials are provided again. Therefore, it is a good practice to disable these these components in the pipelines exported without credentials. You can either disable individual components or use the mass action <em>Disable loaders</em> to disable all loaders in a pipeline.</p>
+
+<div class="row">
+  <div class="col s12 m4 offset-m4">
+    <img alt="Disable loaders"
+         class="responsive-img"
+         data-caption="Disable loaders"
+         src="{% link /assets/tutorials/how-to/img/disable_loaders.png %}"/>
+  </div>
+</div>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">You can also load data into Virtuoso by using the <a href="{% link _components/l-graphstoreprotocol.html %}">Graph store protocol</a> component that operates via the standard <a href="https://www.w3.org/TR/sparql11-http-rdf-update">SPARQL 1.1 Graph Store HTTP Protocol</a>. You would use this component if you need to load data to RDF stores other than Virtuoso.</p> 
