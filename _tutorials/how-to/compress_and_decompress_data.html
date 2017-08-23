@@ -1,0 +1,113 @@
+---
+file: compress_and_decompress_data.html
+short: "How to: Compress and decompress data"
+title: How to compress and decompress data
+---
+
+<p class="flow-text">Your data takes too long to transfer or occupies too much disk space.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">RDF syntaxes, especially the line-oriented ones, such as <a href="https://www.w3.org/TR/n-triples">N-Triples</a> or <a href="https://www.w3.org/TR/n-quads">N-Quads</a>, tend to be verbose. Unless namespace prefixes are used diligently, namespace substrings are frequently repeated in IRIs. Redundancies may appear on structural level too. For example, size of data increases when it is denormalized. That is often the case of data in CSV. Consequently, transferring uncompressed data between servers can take long and the data files can occupy too much disk space.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">LinkedPipes ETL (LP-ETL) offers several ways to compress data. It supports <a href="https://en.wikipedia.org/wiki/Gzip">GZip</a>, <a href="http://www.bzip.org">BZip2</a>, <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">Zip</a>, and <a href="http://www.7-zip.org">7-zip</a>; albeit only reading is supported for 7-zip. There are LP-ETL components that provide compression and decompression via these methods.</p>
+
+<p class="flow-text">The <a href="{% link _components/t-streamcompression.html %}">Stream compression</a> component compresses to GZip or BZip2, with GZip being the default. Since these formats do not support creating archives containing multiple files, the component produces a single output file for each input file. You can switch the compression methods by the <em>Format</em> option. The component outputs a file named as the input file name with the suffix indicating the compression method appended, i.e. <code>.gz</code> or <code>.bz2</code>.</p>
+
+<p class="flow-text">The <a href="{% link _components/t-packzip.html %}">Create zip archive</a> component compresses its input files to a Zip archive. You can specify the output's name by the <em>Output zip file name</em> option. If you need to combine multiple files into a single archive file, use this component.</p>
+
+<p class="flow-text">Conversely, there is a component for decompression. The <a href="{% link _components/t-unpack.html %}">Decompress archive</a> can read the GZip, BZip2, Zip, and 7-zip formats. The input's format can be either detected automatically from its file extension or selected by the <em>Format</em> option. You can also opt in to <em>Unpack each file into separated directory</em> or switch the <em>Skip file on error</em> option on if your pipeline may encounter an invalid file. Besides this component there is also the <a href="{% link _components/t-unpackzip.html %}">Decompress zip archive</a> component, which supports only Zip archives. Since this format is also available in the Decompress archive component, the Zip-specific component exists mostly due to legacy reasons.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">We can illustrate the data compression ratios of the supported compression methods by using an example. The following table shows relative files sizes of a 653 MB file in the <a href="https://www.w3.org/TR/turtle">Turtle</a> syntax when compressed by the respective methods or reserialized to other RDF syntaxes.</p>
+
+<!--
+<table class="responsive-table">
+  <caption>File sizes of an example RDF file per syntax and compression</caption>
+  <thead>
+    <tr>
+      <th>RDF syntax</th>
+      <th>Uncompressed</th>
+      <th>GZip</th>
+      <th>BZip2</th>
+      <th>Zip</th>
+      <th>7-zip</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Turtle</td>
+      <td>653 MB</td>
+      <td>115 MB</td>
+      <td>85 MB</td>
+      <td>116 MB</td>
+      <td>73 MB</td>
+    </tr>
+    <tr>
+      <td>N-Triples</td>
+      <td>1.7 GB</td>
+      <td>150 MB</td>
+      <td>115 MB</td>
+      <td>151 MB</td>
+      <td>99 MB</td>
+    </tr>
+    <tr>
+      <td>RDF/XML</td>
+      <td>1023 MB</td>
+      <td>120 MB</td>
+      <td>87 MB</td>
+      <td>121 MB</td>
+      <td>77 MB</td>
+    </tr>
+  </tbody>
+</table>
+-->
+
+<table class="responsive-table">
+  <caption>Relative file sizes of an example RDF file per syntax and compression</caption>
+  <thead>
+    <tr>
+      <th>RDF syntax</th>
+      <th>Uncompressed</th>
+      <th>GZip</th>
+      <th>BZip2</th>
+      <th>Zip</th>
+      <th>7-zip</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Turtle</td>
+      <td>1</td>
+      <td>0.18</td>
+      <td>0.13</td>
+      <td>0.18</td>
+      <td>0.11</td>
+    </tr>
+    <tr>
+      <td>N-Triples</td>
+      <td>2.6</td>
+      <td>0.23</td>
+      <td>0.18</td>
+      <td>0.23</td>
+      <td>0.15</td>
+    </tr>
+    <tr>
+      <td>RDF/XML</td>
+      <td>1.57</td>
+      <td>0.18</td>
+      <td>0.13</td>
+      <td>0.19</td>
+      <td>0.12</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="flow-text">While the results may vary for different kinds of data, they suggest that Turtle and 7-zip offer the most compact compression. However, LP-ETL can only read 7-zip, not write it. The second best results are achieved with BZip2. Nevertheless, note that the more efficient compression methods take more time, so that there is a trade off to be made between the resulting file size and the time it takes to produce it. When deciding on a method of compression to use, consider how often it will be read. When data is transferred or read many times, use a more compact compression method. Otherwise, when data is read only once, use a faster compression method.</p>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">Benefits of compression can be also attained by using binary serialization formats. LP-ETL allows to export RDF to <a href="http://docs.rdf4j.org/rdf4j-binary">BinaryRDF</a>, a custom binary format for RDF supported by the <a href="http://rdf4j.org">RDF4J</a>. Serialization to this format is provided by the <a href="{% link _components/t-rdftofile.html %}">RDF to File</a> component. Outside of LP-ETL, <a href="http://www.rdfhdt.org">RDF HDT</a> is an established binary RDF format that also maintains limited capability to query the data. For illustration purposes, the compression ratio of RDF HDT for the example used above is 0.24, which makes it on par with the evaluted compression methods.</p>
