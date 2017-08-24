@@ -1,0 +1,29 @@
+---
+file: input_fixed_data.html
+short: "How to: Input fixed data"
+title: How to input fixed data
+---
+
+<p class="flow-text">You need to provide static data into a pipeline.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">Many data processing tasks call for static input. It can be used as configuration for LinkedPipes ETL (LP-ETL) components, describe manually created metadata or RDF vocabularies, or simply provide data for testing.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">You can provide fixed input to an LP-ETL pipeline via the <a href="{% link _components/e-textholder.html %}">Text holder</a> component, which converts the text from its configuration to a file that you can further manipulate in your pipeline. The component allows you to specify the <em>Output file name</em> and its <em>File content</em>.</p>
+
+<p class="flow-text">By using this component, you can make your pipelines self-contained. Instead of loading static input from a file system or requesting it from a remote server, the Text holder makes the input a part of the pipeline definition.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">The file content is output as is provided in the component's configuration. For example, its character encoding is kept unchanged. However, note that most RDF syntaxes require data to be provided in UTF-8. This is also true of the <a href="https://www.w3.org/TR/json-ld">JSON-LD</a> syntax, in which pipelines are stored. Therefore, you should only give UTF-8 input to the Text holder.</p>
+
+<p class="flow-text">You should keep the size of the data provided to the Text holder small. The maximum size allowed by LP-ETL is 1 MB. Since the input is stored as an RDF literal, the <a href="http://docs.rdf4j.org/javadoc/2.1/org/eclipse/rdf4j/rio/helpers/BasicParserSettings.html#LARGE_LITERALS_LIMIT">default maximum length of literals</a> applies.</p>
+
+<p class="flow-text">It is common to use the Text holder to provide input in RDF. To turn it to an RDF database, connect the Text holder's output to the <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> component. If you choose a file name extension that is recognized by subsequent components, such as <code>.ttl</code> for RDF <a href="https://www.w3.org/TR/turtle">Turtle</a>, you need not provide the file format explicitly to have it parsed correctly, since it is automatically inferred from the extension.</p>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">If you can afford to have your pipeline depend on external resources, you can load static input from a local file system by the <a href="{% link _components/e-filesfromlocal.html %}">Files from local</a> component, download it from an HTTP server by the <a href="{% link _components/e-httpgetfile.html %}">HTTP get</a> component, or get it via FTP by the <a href="{% link _components/e-ftpfiles.html %}">Extract from FTP</a> component.</p>
