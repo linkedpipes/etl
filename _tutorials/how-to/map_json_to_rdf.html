@@ -1,0 +1,75 @@
+---
+file: map_json_to_rdf.html
+short: "How to: Map JSON to RDF"
+title: How to map JSON to RDF
+---
+
+<p class="flow-text">You want to combine JSON with RDF data.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">Some datasets are available only in JSON. The data they provide may be useful to combine with your RDF data. Integrating the data allows you to query across multiple datasets. However, in order to do that you must first convert the JSON data to RDF.</p>
+
+<p class="flow-text">Moreover, while RDF allows you to merge any data, data integration is not only a matter of syntax alignment. For example, consider this simple JSON document:</p>
+
+{% highlight json %}
+{
+  "count": 52350
+}
+{% endhighlight %}
+
+<p class="flow-text">Without knowing its context it is impossible to tell what it is about. Mapping JSON to RDF thus also involves mapping data to RDF vocabularies that describe how to interpret the data.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">You can map JSON to RDF by converting it to <a href="https://www.w3.org/TR/json-ld">JSON-LD</a>, a standard JSON-based syntax for RDF. If you add a <a href="https://www.w3.org/TR/json-ld/#the-context">JSON-LD context</a> to the data you can reinterpret it as RDF. Simply put, the context maps JSON attributes to RDF properties.</p>
+
+<p class="flow-text">Have a look at the example JSON above. Without context the <code>count</code> attribute can mean anything. I can almost hear you say: <em>&ldquo;52 thousand of what?&rdquo;</em> It turns out that the count is the number of graves in <a href="https://en.wikipedia.org/wiki/Brno">Brno</a>, as available in JSON from the municipality's <a href="http://gis.brno.cz/arcgis/rest/services/PUBLIC/hrobova_mista/MapServer/1">GIS service</a>. You can see live results of this query to the service <a href="http://gis.brno.cz/arcgis/rest/services/PUBLIC/hrobova_mista/MapServer/1/query?where=1%3D1&returnCountOnly=true&f=geojson">here</a>. Now that we know how to interpret the JSON, we can describe it in a JSON-LD context:</p>
+
+{% highlight json %}
+{
+  "@vocab": "http://dbpedia.org/ontology/",
+  "count": "numberOfGraves"
+}
+{% endhighlight %}
+
+<p class="flow-text">The context defines <code>http://dbpedia.org/ontology/</code> (<a href="http://wiki.dbpedia.org/services-resources/ontology">DBpedia ontology</a>) as the default namespace via the special <code>@vocab</code> attribute. Unless specified otherwise, all attributes are interpreted as local names of properties in this namespace given by <code>@vocab</code>. The <code>count</code> is mapped to the <code>numberOfGraves</code> property from the default namespace.</p>
+
+<p class="flow-text">LinkedPipes ETL allows you to enrich JSON with a JSON-LD context via the <a href="{% link _components/t-jsontojsonld.html %}">JSON to JSON-LD</a> component. The component adds the value of the <em>Context object</em> option as the JSON-LD context of its output. The options <em>data predicate</em> and 
+<em>root entity type</em> are used to wrap the input JSON. The output JSON-LD is described as an instance of the <em>root entity type</em> that links the input JSON data via the <em>data predicate</em>. You can stick with the default values of these parameters unless you want to qualify the component's output. Moreover, you would typically post-process the generated JSON-LD via SPARQL, so that you can discard the wrapping data if not needed. You can also add a reference to the input's file name into the output data by turning on the <em>Add file reference</em> switch and filling in a property to store the file name. Note that since there is no support for namespaces, all terms in the component's configuration must be referenced by their absolute IRIs. Given the context above and the default configuration the component produces the following JSON-LD:</p>
+
+{% highlight json %}
+{
+  "@context": {
+    "@vocab": "http://dbpedia.org/ontology/",
+    "count": "numberOfGraves"
+  },
+  "@type" : "http://localhost/ontology/Data",
+  "http://localhost/ontology/data" : {
+    "count": 52350
+  }
+}
+{% endhighlight %}
+
+<p class="flow-text">Finally, you can turn the produced JSON-LD into an RDF database by passing it to the <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> component. At this point, you can work with data from the input JSON as RDF. This is how the example data looks in the <a href="https://www.w3.org/TR/turtle">Turtle</a> RDF syntax, prettified by syntax short-hands:</p>
+
+{% highlight turtle %}
+@prefix :    <http://localhost/ontology/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a :Data ;
+  :data [
+    dbo:numberOfGraves "52350"^^xsd:integer
+  ] .
+{% endhighlight %}
+
+<p class="flow-text">An example pipeline showing the described conversion is available <a href="{% link /assets/tutorials/how-to/pipelines/how_to_map_json_to_rdf.jsonld %}">here</a>.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">Consider that JSON-LD contexts can only express basic mapping that is mostly limited to properties and data types of literals. Should you need a more sophisticated mapping that changes the structure of the input data or reformats it, you can transform the output JSON-LD by using the full expressive power of SPARQL. You can see a simple example of mapping via SPARQL in <a href="{% link _tutorials/how-to/map_rdf_properties.html %}">this tutorial</a>.</p>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">An invaluable tool to help you when working with JSON-LD is the <a href="https://json-ld.org/playground">JSON-LD playground</a> where you can see what effect JSON-LD contexts have. If you want to learn about how JSON to RDF mapping can fit into a larger data processing pipeline, have a look at the more complex mapping that is described as part of the <a href="{% link _tutorials/geocoding-with-nominatim/index.html %}">tutorial on geocoding with Nominatim</a>.</p> 
