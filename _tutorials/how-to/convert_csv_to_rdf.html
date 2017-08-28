@@ -1,0 +1,114 @@
+---
+file: convert_csv_to_rdf.html
+short: "How to: Convert CSV to RDF"
+title: How to convert CSV to RDF
+---
+
+<p class="flow-text">You want to combine Comma-Separated Values (CSV) files with RDF data.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">There are many reasons for converting CSV to RDF, but the most common one likely is wanting to combine CSV data with other data. RDF offers a straightforward way to combine multiple datasets. RDF datasets can be merged automatically as set union of their triples or quads. You can also deepen the integration by using common RDF vocabularies to describe the combined datasets in a semantic fashion. Once merged, RDF allows you to run expressive queries over the combined data.</p>
+
+<p class="flow-text">Consider, for example the <a href="http://data.okfn.org/data/core/media-types">CSV version</a> of the list of <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">media types registered by IANA</a>. This dataset lends itself to a number of uses, such as inferring media type from the extensions of files linked from RDF data. This is how the data is structured:</p>
+
+<table class="responsive-table">
+  <thead>
+    <tr>
+      <th>Media Type</th>
+      <th>Type</th>
+      <th>Subtype</th>
+      <th>Template</th>
+      <th>Extensions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>text/css</td>
+      <td>text</td>
+      <td>css</td>
+      <td>http://www.iana.org/assignments/media-types/text/css</td>
+      <td>css</td>
+    </tr>
+    <tr>
+      <td>text/csv</td>
+      <td>text</td>
+      <td>csv</td>
+      <td>http://www.iana.org/assignments/media-types/text/csv</td>
+      <td>csv</td>
+    </tr> 
+    <tr>
+      <td>text/csv-schema</td>
+      <td>text</td>
+      <td>csv-schema</td>
+      <td>http://www.iana.org/assignments/media-types/text/csv-schema</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text">Converting CSV to RDF is a task so common that numerous solutions were devised to address it. LinkedPipes ETL (LP-ETL) offers the <a href="{% link _components/t-tabular.html %}">Tabular</a> component for this task. It performs a syntactic transformation of CSV to RDF that follows the W3C recommendation <a href="https://www.w3.org/TR/csv2rdf">Generating RDF from Tabular Data on the Web</a>. Simply put, it turns rows from a CSV file into RDF resources described by RDF properties derived from the file's column headers. Here is an example output of the Tabular component for the CSV fragment shown above, using a prettified <a href="https://www.w3.org/TR/turtle">Turtle</a> syntax for RDF:</p>
+
+{% highlight turtle %}
+@base <http://localhost/> .
+    
+[ <Media+Type> "text/css" ;
+  <Subtype> "css" ;
+  <Template> "http://www.iana.org/assignments/media-types/text/css" ;
+  <Type> "text" ;
+  <Extensions> "css" ] .
+
+[ <Media+Type> "text/csv" ;
+  <Subtype> "csv" ;
+  <Template> "http://www.iana.org/assignments/media-types/text/csv" ;
+  <Type> "text" ;
+  <Extensions> "csv" ] .
+
+[ <Media+Type> "text/csv-schema" ;
+  <Subtype> "csv-schema" ;
+  <Template> "http://www.iana.org/assignments/media-types/text/csv-schema" ;
+  <Type> "text" ] .
+{% endhighlight %}
+
+<p class="flow-text">Let's review the configuration options of this component. The component exposes quite a few options to customize how it handles its input as well as how its output should look like.</p>
+
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <img alt="Tabular's configuration"
+         class="responsive-img"
+         data-caption="Tabular's configuration"
+         src="{% link /assets/tutorials/how-to/img/tabular.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">The first section of the configuration enables to handle input data that does not conform to the <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a>, which specifies the default syntax of CSV files. As the name describes, data in CSV files is separated by commas. However, it is common to have data separated by other characters, such as <a href="https://en.wikipedia.org/wiki/Tab-separated_values">Tab-separated values</a>. Similarly, languages that use comma as decimal separator often employ semicolon to delimit data in CSV. You can configure any character to act as the separator via the <em>Delimiter</em> option. However, note that the tabulator for TSV must be escaped as <code>\t</code>. Besides the separator, you can also specify the quote character, which is <code>"</code> by default, and the input's character encoding, defaulting to UTF-8.</p>
+
+<p class="flow-text">The IRIs of RDF properties that the Tabular component produces are derived from the input's column headers. For instance, when the input has a column named <code>Type</code>, the component turns it into an IRI ending with <code>Type</code>. Characters from the column names that are not allowed in IRIs, such as whitespace, are replaced by safe characters. For example, spaces are substituted by plus signs. The initial part of the IRIs is determined by options we discuss further. Column names are used when the switch <em>Table has header row</em> is on. Otherwise, when there are no column names in the input, you can turn this option off. In such case, the generated RDF properties will end with <code>column_1</code>, <code>column_2</code>, and so on.</p>
+
+<p class="flow-text">When the <em>Table has header row</em> option is switched on and some columns are missing names, the Tabular component fails, since it cannot use an empty name for an IRI of an RDF property. To work around this, you need to turn on the option <em>Generate names for null header cells</em>. It makes LP-ETL generate synthetic names for the empty header cells, such as <code>generated_name_1</code>, <code>generated_name_2</code> etc.</p>
+
+<p class="flow-text">You can trim leading or trailing whitespace from the input data by switching on the option <em>Trim whitespace from cells</em>. The option is off by default, keeping the whitespace characters in the input.</p>
+
+<p class="flow-text">Namespaces of IRIs identifying the RDF properties generated by the component are determined by two options. By default, the IRIs start with the name of the input file using the <code>file://</code> protocol. For example, if the input file name is <code>data.csv</code>, the IRI for the column <code>Media type</code> will be <code>file:///data.csv#Media+type</code>. Originally, the component generated invalid IRIs missing the forward slash separating its hostname from its path, such as <code>file://data.csv#Media+type</code>. To preserve backwards compatibility the option <em>Table IRI prefix</em> was added, which defaults to the incorrect <code>file://</code> prefix and allows you to opt in for the correct <code>file:///</code> prefix.</p>
+
+<p class="flow-text">Alternatively, you can provide a fixed namespace for the generated IRIs to be used instead of the input file names. In order to do that, you need to switch the <em>Default row and property IRIs</em> option to <em>Specified row and property IRI base</em>, which in turn allows you to specify the <em>Row and property IRI base</em>. For example, we used the fixed namespace <code>http://localhost/</code> in our example above. Setting a static namespace is handy especially when you have multiple input files in which the same column names have the same interpretation, so that they are transformed to the same RDF properties instead of ones differing by file names.</p>
+
+<p class="flow-text">The output RDF resources corresponding to rows from the input CSV are identified by <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes">blank nodes</a> by default. Alternatively, the resources can be identified by IRIs generated from a template provided as <em>Default resource IRI template</em>. Syntax of the template is defined by <a href="https://tools.ietf.org/html/rfc6570#section-2">RFC 6570</a>. The templates allow you to refer to column values via column names. For instance, the template <code>http://example.com/{ID}</code> would put values of the <code>ID</code> column in place of the <code>{ID}</code> reference. Using IRI templates is convenient when your source data contains a unique key for each row. Otherwise, you may want to stick with blank nodes as identifiers and generate IRIs based on more complex rules expressed in SPARQL during post-processing of the Tabular's output.</p>
+
+<p class="flow-text">Since CSV files may wrap the actual data with irrelevant rows, such as with a preamble containing notes, the Tabular component enables you to specify rows to be ignored. You can have it skip the rows prior to the header via the <em>Rows skipped (before header)</em> option. Rows after the header can be skipped too, using the <em>Rows skipped (after header)</em> option. You can also discard the final rows by specifying the <em>Rows limit</em> option, which determines how many rows after the header are processed. By default, it has the value <code>-1</code> that indicates no limit. You may find setting a smaller number of rows useful during pipeline development. Working with a small data sample is fast and allows an easy visual inspection to verify that the pipeline does what it is expected to do.</p>
+
+<p class="flow-text">The Tabular component implements the W3C recommendation <a href="https://www.w3.org/TR/csv2rdf">Generating RDF from Tabular Data on the Web</a>. The option <em>Using CSV on the Web mapping</em>, turned on by default, instructs the component to follow this recommendation. The recommendation specifies how to map CSV to RDF. It defines two modes of conversion. The <a href="https://www.w3.org/TR/csv2rdf/#dfn-minimal-mode">minimal mode</a> includes only the data from the cells of the transformed CSV. The <a href="https://www.w3.org/TR/csv2rdf/#dfn-standard-mode">standard mode</a> also outputs RDF describing the structure of the transformed CSV, including details of rows, tables, and table groups. The minimal mode is the default mode in the Tabular component, as indicated by the switch <em>Data only</em>. Should you want the structure of the input CSV to be explicitly described in RDF, flip this switch to the state <em>Table and row entities</em>.</p>
+
+<p class="flow-text">You can provide a custom mapping from CSV to RDF if you switch the option <em>Using CSV on the Web mapping</em> off to <em>Using custom mapping</em>. Custom mapping is included mostly to maintain compatibility with the previous versions of the Tabular component. More often than not, you will map the Tabular's default output in the subsequent steps of your pipeline that allow you to formulate more expressive mappings, such as those <a href="{% link _tutorials/how-to/map_rdf_properties.html %}">using SPARQL Update</a>. However, there are cases in which the custom mapping is indispensable. When you transform large CSV data containing many irrelevant columns, they too are converted to RDF when using the standard mapping. On contrary, the custom mapping allows you to mark columns to be discarded, so that no RDF is created from them. Doing so reduces the use of compute resources that would be required for data subsequently discarded in a pipeline.</p>
+
+<p class="flow-text">An example pipeline for conversion of the IANA media types to RDF is <a href="{% link /assets/tutorials/how-to/pipelines/how_to_convert_csv_to_rdf.jsonld %}">here</a>. You can experiment with the settings of the Tabular component in this pipeline, run it, and examine its output.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">Large CSV files present an opportunity for parallelization, since their rows are typically independent, so that they can be processed separately. LP-ETL enables you to leverage this opportunity via the <a href="{% link _components/t-tabularchunked.html %}">Tabular chunked</a> component. It splits its input data into smaller chunks that are processed separately and in parallel. The size of each chunk is determined by the number of included rows via the <em>Rows per chunk</em> option. Apart from this option, the component's configuration is identical with that of the Tabular component. The component produces a sequence of RDF chunks that can be further processed by components that support chunked execution, as described in the <a href="{% link _tutorials/how-to/process_large_rdf_data.html %}">tutorial on handling large RDF data</a>.</p>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">Conversion of CSV to RDF is discussed in a larger context in the tutorial on <a href="{% link _tutorials/csv-to-rdf/convert_csv_to_rdf.html %}">converting tabular data to RDF</a>. There you can see how the Tabular component can fit into a more extensive pipeline.</p>
