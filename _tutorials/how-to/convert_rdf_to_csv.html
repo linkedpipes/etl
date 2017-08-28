@@ -8,20 +8,13 @@ title: How to convert RDF to CSV
 
 <h3 class="header center orange-text">Problem</h3>
 
-<p class="flow-text">Even though RDF was designed to be the lingua franca for exchanging data on the Web, this role belongs to CSV. While few tools support input in RDF, most every tool supports input in CSV. CSV is thus often the lowest common denominator when you need to exchange data between tools. For example, CSV can feed visualizations and its <a href="https://link.springer.com/referenceworkentry/10.1007%2F978-0-387-30164-8_680">propositional form</a> is typically appropriate for most data mining tools. In order to be able to leverage these tools you need to convert your RDF data into CSV.</p>
+<p class="flow-text">Even though RDF was designed to be the lingua franca for data on the Web, this role belongs to CSV. While few tools support input in RDF, most every tool supports input in CSV. CSV is thus often the common denominator when you need to exchange data between tools. For example, CSV can feed visualizations and its <a href="https://link.springer.com/referenceworkentry/10.1007%2F978-0-387-30164-8_680">propositional form</a> is typically appropriate for most data mining tools. In order to be able to leverage these tools you need to convert your RDF data into CSV.</p>
 
 <h3 class="header center orange-text">Solution</h3>
 
-<p class="flow-text">
+<p class="flow-text">RDF can be transformed to CSV via SPARQL <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT queries</a>. The SELECT query form produces tabular views of the queried RDF data. The SELECT query results can be serialized to CSV, as specified in the W3C recommendation on <a href="https://www.w3.org/TR/sparql11-results-csv-tsv">SPARQL 1.1 Query Results CSV and TSV Formats</a>.</p>
 
-the SPARQL <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT query form</a>
-
-LinkedPipes ETL (LP-ETL) 
-the <a href="{% link _components/t-sparqlselect.html %}">SPARQL select</a> component
-<a href="https://www.w3.org/TR/sparql11-results-csv-tsv">SPARQL 1.1 Query Results CSV and TSV Formats</a>
-They offer the lowest fidelity of the formats, since each value is serialized as string.   
-lossy encoding
-For example, empty string represents both an empty literal and unbound variables.
+<p class="flow-text">LinkedPipes ETL (LP-ETL) provides the <a href="{% link _components/t-sparqlselect.html %}">SPARQL select</a> component to extract tables out of RDF. The resulting tables are serialized as CSV files. Consider you want to reverse the transformation described in the <a href="{% link _tutorials/how-to/convert_csv_to_rdf.html %}">tutorial on converting CSV to RDF</a>. You would start with the result of the transformation to reverse:</p>
 
 {% highlight turtle %}
 @base <http://localhost/> .
@@ -93,6 +86,11 @@ ORDER BY ?mediaType
     </tr>
   </tbody>
 </table>
+
+They offer the lowest fidelity of the formats, since each value is serialized as string.   
+lowest common denominator
+lossy encoding
+For example, empty string represents both an empty literal and unbound variables.
 
 <a href="https://en.wikipedia.org/wiki/Cardinality_(data_modeling)">cardinality</a>
 
