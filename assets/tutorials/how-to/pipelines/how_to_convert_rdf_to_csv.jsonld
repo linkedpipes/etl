@@ -206,22 +206,22 @@
           "@type": [
             "http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"
           ],
-          "http://plugins.linkedpipes.com/ontology/e-textHolder#content": [
-            {
-              "@value": "@base <http://localhost/> .\n\n[ <Media+Type> \"text/css\" ;\n  <Subtype> \"css\" ;\n  <Template> \"http://www.iana.org/assignments/media-types/text/css\" ;\n  <Type> \"text\" ;\n  <Extensions> \"css\" ] .\n\n[ <Media+Type> \"text/csv\" ;\n  <Subtype> \"csv\" ;\n  <Template> \"http://www.iana.org/assignments/media-types/text/csv\" ;\n  <Type> \"text\" ;\n  <Extensions> \"csv\" ] .\n\n[ <Media+Type> \"text/csv-schema\" ;\n  <Subtype> \"csv-schema\" ;\n  <Template> \"http://www.iana.org/assignments/media-types/text/csv-schema\" ;\n  <Type> \"text\" ] ."
-            }
-          ],
-          "http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl": [
-            {
-              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
-            }
-          ],
           "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": [
             {
               "@value": "data.ttl"
             }
           ],
           "http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#content": [
+            {
+              "@value": "@base <file:///media-types.csv#> .\n\n[ <Media+Type> \"text/css\" ;\n  <Subtype> \"css\" ;\n  <Template> \"http://www.iana.org/assignments/media-types/text/css\" ;\n  <Type> \"text\" ;\n  <Extensions> \"css\" ] .\n\n[ <Media+Type> \"text/csv\" ;\n  <Subtype> \"csv\" ;\n  <Template> \"http://www.iana.org/assignments/media-types/text/csv\" ;\n  <Type> \"text\" ;\n  <Extensions> \"csv\" ] .\n\n[ <Media+Type> \"text/csv-schema\" ;\n  <Subtype> \"csv-schema\" ;\n  <Template> \"http://www.iana.org/assignments/media-types/text/csv-schema\" ;\n  <Type> \"text\" ] ."
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl": [
             {
               "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
             }
@@ -237,22 +237,22 @@
           "@type": [
             "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#Configuration"
           ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#query": [
+            {
+              "@value": "BASE <file:///media-types.csv#>\n\nSELECT ?MediaType ?Type ?Subtype ?Template ?Extensions\nWHERE {\n  ?s <Media+Type> ?MediaType ;\n    <Subtype> ?Subtype ;\n    <Template> ?Template ;\n    <Type> ?Type .\n  OPTIONAL {\n    ?s <Extensions> ?Extensions .\n  }\n}\nORDER BY ?MediaType"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#queryControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
           "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#fileName": [
             {
               "@value": "data.csv"
             }
           ],
           "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#fileNameControl": [
-            {
-              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
-            }
-          ],
-          "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#query": [
-            {
-              "@value": "BASE <http://localhost/>\n\nSELECT ?mediaType ?type ?subtype ?template ?extensions\nWHERE {\n  ?s <Media+Type> ?mediaType ;\n    <Subtype> ?subtype ;\n    <Template> ?template ;\n    <Type> ?type .\n  OPTIONAL {\n    ?s <Extensions> ?extensions .\n  }\n}\nORDER BY ?mediaType"
-            }
-          ],
-          "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#queryControl": [
             {
               "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
             }

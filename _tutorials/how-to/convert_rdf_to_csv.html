@@ -8,58 +8,62 @@ title: How to convert RDF to CSV
 
 <h3 class="header center orange-text">Problem</h3>
 
-<p class="flow-text">Even though RDF was designed to be the lingua franca for data on the Web, this role belongs to CSV. While few tools support input in RDF, most every tool supports input in CSV. CSV is thus often the common denominator when you need to exchange data between tools. For example, CSV can feed visualizations and its <a href="https://link.springer.com/referenceworkentry/10.1007%2F978-0-387-30164-8_680">propositional form</a> is typically appropriate for most data mining tools. In order to be able to leverage these tools you need to convert your RDF data into CSV.</p>
+<p class="flow-text">Even though RDF was designed to be the lingua franca for data on the Web, this role practically belongs to CSV. While few tools support input in RDF, most every tool supports input in CSV. CSV is thus often the common denominator when you need to exchange data between applications. For example, CSV can feed visualizations and its <a href="https://link.springer.com/referenceworkentry/10.1007%2F978-0-387-30164-8_680">propositional form</a> is suitable for most data mining software. In order to be able to leverage these tools you need to convert your RDF data into CSV.</p>
 
 <h3 class="header center orange-text">Solution</h3>
 
-<p class="flow-text">RDF can be transformed to CSV via SPARQL <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT queries</a>. The SELECT query form produces tabular views of the queried RDF data. The SELECT query results can be serialized to CSV, as specified in the W3C recommendation on <a href="https://www.w3.org/TR/sparql11-results-csv-tsv">SPARQL 1.1 Query Results CSV and TSV Formats</a>.</p>
+<p class="flow-text">RDF can be transformed to CSV via SPARQL <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT queries</a>. The SELECT query form produces a tabular view of the queried RDF data. Its results can be serialized to CSV, as specified in the W3C recommendation on <a href="https://www.w3.org/TR/sparql11-results-csv-tsv">SPARQL 1.1 Query Results CSV and TSV Formats</a>.</p>
 
-<p class="flow-text">LinkedPipes ETL (LP-ETL) provides the <a href="{% link _components/t-sparqlselect.html %}">SPARQL select</a> component to extract tables out of RDF. The resulting tables are serialized as CSV files. Consider you want to reverse the transformation described in the <a href="{% link _tutorials/how-to/convert_csv_to_rdf.html %}">tutorial on converting CSV to RDF</a>. You would start with the result of the transformation to reverse:</p>
+<p class="flow-text">LinkedPipes ETL (LP-ETL) provides the <a href="{% link _components/t-sparqlselect.html %}">SPARQL select</a> component to extract tabular data out of RDF. The resulting table is stored as a CSV file. For instance, consider you want to reverse the transformation described in the <a href="{% link _tutorials/how-to/convert_csv_to_rdf.html %}">tutorial on converting CSV to RDF</a>. You would start with the RDF result of that transformation (the <code>file://</code> protocol IRIs corrected):</p>
 
 {% highlight turtle %}
-@base <http://localhost/> .
-    
+@base <file:///media-types.csv#> .
+ 
 [ <Media+Type> "text/css" ;
   <Subtype> "css" ;
-  <Template> <http://www.iana.org/assignments/media-types/text/css> ;
+  <Template> "http://www.iana.org/assignments/media-types/text/css" ;
   <Type> "text" ;
   <Extensions> "css" ] .
 
 [ <Media+Type> "text/csv" ;
   <Subtype> "csv" ;
-  <Template> <http://www.iana.org/assignments/media-types/text/csv> ;
+  <Template> "http://www.iana.org/assignments/media-types/text/csv" ;
   <Type> "text" ;
   <Extensions> "csv" ] .
 
 [ <Media+Type> "text/csv-schema" ;
   <Subtype> "csv-schema" ;
-  <Template> <http://www.iana.org/assignments/media-types/text/csv-schema> ;
+  <Template> "http://www.iana.org/assignments/media-types/text/csv-schema" ;
   <Type> "text" ] .
 {% endhighlight %}
 
-<pre><code>BASE &lt;http://localhost/&gt;
+<p class="flow-text">The following SELECT query reverts the above RDF data back to its original CSV form:</p>
 
-SELECT ?mediaType ?type ?subtype ?template ?extensions
+<pre><code>BASE &lt;file:///media-types.csv#&gt;
+
+SELECT ?MediaType ?Type ?Subtype ?Template ?Extensions
 WHERE {
-  ?s &lt;Media+Type&gt; ?mediaType ;
-    &lt;Subtype&gt; ?subtype ;
-    &lt;Template&gt; ?template ;
-    &lt;Type&gt; ?type .
+  ?s &lt;Media+Type&gt; ?MediaType ;
+    &lt;Subtype&gt; ?Subtype ;
+    &lt;Template&gt; ?Template ;
+    &lt;Type&gt; ?Type .
   OPTIONAL {
-    ?s &lt;Extensions&gt; ?extensions .
+    ?s &lt;Extensions&gt; ?Extensions .
   }
 }
-ORDER BY ?mediaType
+ORDER BY ?MediaType
 </code></pre>
+
+<p class="flow-text">This query results in a table that, apart from a slight change in the header, matches the original CSV data. The columns have the names of the variables projected by the query without the leading <code>?</code> (or <code>$</code>).</p>
 
 <table class="responsive-table">
   <thead>
     <tr>
-      <th>mediaType</th>
-      <th>type</th>
-      <th>subtype</th>
-      <th>template</th>
-      <th>extensions</th>
+      <th>MediaType</th>
+      <th>Type</th>
+      <th>Subtype</th>
+      <th>Template</th>
+      <th>Extensions</th>
     </tr>
   </thead>
   <tbody>
@@ -87,37 +91,56 @@ ORDER BY ?mediaType
   </tbody>
 </table>
 
-They offer the lowest fidelity of the formats, since each value is serialized as string.   
-lowest common denominator
-lossy encoding
-For example, empty string represents both an empty literal and unbound variables.
-
-<a href="https://en.wikipedia.org/wiki/Cardinality_(data_modeling)">cardinality</a>
-
-<code>1..1</code>
-<code>0..1</code> with OPTIONAL
-<code>1..*</code> with <a href="https://www.w3.org/TR/sparql11-query/#aggregates">aggregates</a>
-
-transformation query is hand-written
-can be automated by detecting cardinality
-templated via the <a href="{% link _components/t-mustache.html %}">Mustache</a> component
-
-<p class="flow-text">You can find a pipeline that convert the example data from RDF to CSV <a href="{% link /assets/tutorials/how-to/pipelines/how_to_convert_rdf_to_csv.jsonld %}">here</a>.</p>
+<p class="flow-text">You can find the pipeline that converts the example data from RDF to CSV <a href="{% link /assets/tutorials/how-to/pipelines/how_to_convert_rdf_to_csv.jsonld %}">here</a>.</p>
 
 <h3 class="header center orange-text">Discussion</h3>
 
-the columns have the names of the projected variables without the leading <code>?</code> (or <code>$</code>)
-column names from local names of RDF properties
-local name is typically the part of IRI after the last forward slash or hash
-reverse of <a href="{% link _tutorials/how-to/convert_csv_to_rdf.html %}">converting RDF to CSV</a>
-unlike their IRIs, local names of RDF properties may be non-unique
-in that case, you can append an <a href="https://www.w3.org/TR/sparql11-query/#func-md5">md5()</a> hash of the IRI to the property's local name to make it unique
+<p class="flow-text">As mentioned, CSV is a common denominator supported by most tools. It is also perhaps the lowest common denominator, since it offers low data fidelity. Since each value is serialized to CSV as a string, distinctions between more specific data types, such as numbers or IRIs, are lost. For example, the SPARQL results format in CSV uses the empty string to represent both empty literals and unbound variables. Some distinctions can be recovered by matching strings to patterns of more specific data formats, such as HTTP URLs starting with <code>http://</code>. Nevertheless, CSV presents a lossy encoding.</p>
 
-serialization to CSV and TSV differs as described in the <a href="https://www.w3.org/TR/sparql11-results-csv-tsv">specification</a>
+<p class="flow-text">A key concept to understand when transforming RDF to CSV is <a href="https://en.wikipedia.org/wiki/Cardinality_(data_modeling)">cardinality</a>. In the context of RDF, cardinality is a feature of properties that describes the number of objects a property has for a single subject. We recognize four basic categories of cardinalities. For each category there is a way to handle it in SPARQL when converting RDF to a single table.</p>
+
+<table class="table-responsive">
+  <caption>Categories of cardinalities of RDF properties</caption>
+  <thead>
+    <tr>
+      <th>Cardinality</th>
+      <th>Notation</th>
+      <th>Number of objects per property and subject</th>
+      <th>Handling in SPARQL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>One-to-one</td>
+      <td><code>1..1</code></td>
+      <td>One</td>
+      <td>No special handling required.</td>
+    </tr>
+    <tr>
+      <td>Optional one-to-one</td>
+      <td><code>0..1</code></td>
+      <td>Zero or one</td>
+      <td><a href="https://www.w3.org/TR/sparql11-query/#optionals"><code>OPTIONAL</code></a></td>
+    </tr>
+    <tr>
+      <td>One-to-many</td>
+      <td><code>1..*</code></td>
+      <td>One or more</td>
+      <td><a href="https://www.w3.org/TR/sparql11-query/#aggregates">Aggregates</a></td>
+    </tr>
+    <tr>
+      <td>Optional one-to-many</td>
+      <td><code>0..*</code></td>
+      <td>Zero or more</td>
+      <td><a href="https://www.w3.org/TR/sparql11-query/#optionals"><code>OPTIONAL</code></a> with <a href="https://www.w3.org/TR/sparql11-query/#aggregates">aggregates</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="flow-text">As you can see in the SPARQL query above, all included properties are <code>1..1</code> properties, except the <code>&lt;Extensions&gt;</code> property that is a <code>0..1</code> property, which is therefore wrapped in an <code>OPTIONAL</code> clause. If there are multi-valued properties, you need to group the query results by the variables for the <code>1..1</code> and <code>0..1</code> properties and aggregate the multiple values into a single value, such as by selecting one randomly via <code>sample()</code>.</p>
+
+<p class="flow-text">Since cardinalities of RDF properties can be computed automatically, queries transforming RDF to CSV can be generated in an automated fashion as well. You may also generate the transformation query first and then fine-tune it manually. You can use the <a href="{% link _components/t-mustache.html %}">Mustache</a> component for this task, as described in the <a href="{% link _tutorials/how-to/generate_sparql_queries_via_mustache.html %}">tutorial on generating SPARQL queries from Mustache templates</a>. Column names can be created from local names of RDF properties. Local name is typically the part of an IRI following the last forward slash or hash. Note that, unlike IRIs, local names of RDF properties may be non-unique. In that case, you can append an <a href="https://www.w3.org/TR/sparql11-query/#func-md5">md5()</a> hash of the IRI to the property's local name to make it unique.</p>
 
 <h3 class="header center orange-text">See also</h3>
 
-Unlike most RDF data, data described by DCV exhibits a remarkably regular structure.
-DCV constrains the expressivity of RDF
-multi-valued properties are missing
-<a href="https://github.com/openbudgets/pipeline-fragments/tree/master/dcv/dcv-to-csv">DCV to CSV transformation</a>
+<p class="flow-text">Unlike most RDF data, data described by the <a href="https://www.w3.org/TR/vocab-data-cube">Data Cube Vocabulary</a> (DCV) exhibits a remarkably regular structure. DCV constrains the expressivity of RDF, such that multi-valued properties are missing. We leverage this regularity in the <a href="https://github.com/openbudgets/pipeline-fragments/tree/master/dcv/dcv-to-csv">DCV to CSV transformation</a> that is implemented as an LP-ETL pipeline fragment using the above-described principles. As such, it presents a practical use case for converting RDF to CSV.</p>
