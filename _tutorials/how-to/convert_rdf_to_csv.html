@@ -111,9 +111,7 @@ templated via the <a href="{% link _components/t-mustache.html %}">Mustache</a> 
 the columns have the names of the projected variables without the leading <code>?</code> (or <code>$</code>)
 column names from local names of RDF properties
 local name is typically the part of IRI after the last forward slash or hash
-{% comment %}
 reverse of <a href="{% link _tutorials/how-to/convert_csv_to_rdf.html %}">converting RDF to CSV</a>
-{% endcomment %}
 unlike their IRIs, local names of RDF properties may be non-unique
 in that case, you can append an <a href="https://www.w3.org/TR/sparql11-query/#func-md5">md5()</a> hash of the IRI to the property's local name to make it unique
 
