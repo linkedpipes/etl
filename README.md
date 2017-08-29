@@ -40,7 +40,7 @@ Now edit the configuration file, mainly adding paths to working, storage, log an
 For an example see the ```configuration.properties.example``` file.
 
 ## Running LinkedPipes ETL
-To run LP-ETL, you need to run the three components it consists of. For debugging purposes, it is useful to store the console logs.
+To run LP-ETL, you need to run the four components it consists of. For debugging purposes, it is useful to store the console logs.
 
 ### Linux
 ```sh
@@ -55,7 +55,7 @@ $ ./frontend.sh >> frontend.log &
 We recommend using [Cygwin] and proceeding as with Linux. Otherwise, in the ```deploy``` folder, run
  * ```executor.bat```
  * ```executor-monitor.bat```
- * ```sotrage.bat```
+ * ```storage.bat```
  * ```frontend.bat```
 
 Unless configured otherwise, LinkedPipes ETL should now run on ```http://localhost:8080```.
@@ -68,12 +68,12 @@ There are components in the ```jars``` directory. Detailed description of how to
 ## Update notes
 > Update note 3: When upgrading from develop prior to 2017-02-14, you need to delete ```{deploy}/jars``` and ```{deploy}/osgi```. 
 
-> Update note 2: When upgrading from master prior to 2016-11-04, you need to move your pipelines folder from e.g. ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
+> Update note 2: When upgrading from master prior to 2016-11-04, you need to move your pipelines folder from e.g., ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
 
-> Update note: When upgrading from master prior to 2016-04-07, you need to delete your old execution data (e.g. in /data/lp/etl/working/data)
+> Update note: When upgrading from master prior to 2016-04-07, you need to delete your old execution data (e.g., in /data/lp/etl/working/data)
  
 ## Update script
-Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse if you wish. The script sets path to Java 8, kills running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```
+Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse it if you wish. The script sets the path to Java 8, kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```
 ```sh
 #!/bin/bash
 echo Killing Executor
