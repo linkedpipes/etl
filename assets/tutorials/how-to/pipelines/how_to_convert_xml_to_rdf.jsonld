@@ -1,0 +1,228 @@
+{
+  "@graph": [
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1503934335700",
+          "@type": [
+            "http://linkedpipes.com/ontology/Pipeline"
+          ],
+          "http://etl.linkedpipes.com/ontology/tag": [
+            {
+              "@value": "tutorial"
+            }
+          ],
+          "http://etl.linkedpipes.com/ontology/version": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#int",
+              "@value": "1"
+            }
+          ],
+          "http://linkedpipes.com/ontology/profile": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/profile/default"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "How to: Convert XML to RDF"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/211db287-5a80-41e1-a75f-72326b07a2db",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/211db287-5a80-41e1-a75f-72326b07a2db/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/t-xslt/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "280"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "80"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "XSLT transformer"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/bea9f7f8-98f3-4031-99c8-6e6513a6d565",
+          "@type": [
+            "http://linkedpipes.com/ontology/Component"
+          ],
+          "http://linkedpipes.com/ontology/configurationGraph": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/bea9f7f8-98f3-4031-99c8-6e6513a6d565/configuration"
+            }
+          ],
+          "http://linkedpipes.com/ontology/template": [
+            {
+              "@id": "http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0"
+            }
+          ],
+          "http://linkedpipes.com/ontology/x": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "60"
+            }
+          ],
+          "http://linkedpipes.com/ontology/y": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "80"
+            }
+          ],
+          "http://www.w3.org/2004/02/skos/core#prefLabel": [
+            {
+              "@value": "Text holder"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/connection/1cda3ca3-2ece-4804-99bf-f7196dc66f53",
+          "@type": [
+            "http://linkedpipes.com/ontology/Connection"
+          ],
+          "http://linkedpipes.com/ontology/sourceBinding": [
+            {
+              "@value": "FilesOutput"
+            }
+          ],
+          "http://linkedpipes.com/ontology/sourceComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/bea9f7f8-98f3-4031-99c8-6e6513a6d565"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetBinding": [
+            {
+              "@value": "FilesInput"
+            }
+          ],
+          "http://linkedpipes.com/ontology/targetComponent": [
+            {
+              "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/211db287-5a80-41e1-a75f-72326b07a2db"
+            }
+          ]
+        },
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/profile/default",
+          "@type": [
+            "http://linkedpipes.com/ontology/ExecutionProfile"
+          ],
+          "http://linkedpipes.com/ontology/rdfRepositoryPolicy": [
+            {
+              "@id": "http://linkedpipes.com/ontology/repository/SingleRepository"
+            }
+          ],
+          "http://linkedpipes.com/ontology/rdfRepositoryType": [
+            {
+              "@id": "http://linkedpipes.com/ontology/repository/NativeStore"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1503934335700"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/211db287-5a80-41e1-a75f-72326b07a2db/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/t-xslt#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#extension": [
+            {
+              "@value": ".rdf"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#extensionControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#skipOnError": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+              "@value": "false"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#skipOnErrorControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#template": [
+            {
+              "@value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xsl:stylesheet version=\"2.0\"\n    xmlns:base=\"http://inspire.ec.europa.eu/schemas/base/3.3\"\n    xmlns:bu-base=\"http://inspire.ec.europa.eu/schemas/bu-base/4.0\"\n    xmlns:bu-core2d=\"http://inspire.ec.europa.eu/schemas/bu-core2d/4.0\"\n    xmlns:bu-ext2d=\"http://inspire.ec.europa.eu/schemas/bu-ext2d/4.0\"\n    xmlns:dbo=\"http://dbpedia.org/ontology/\"\n    xmlns:f=\"http://opendata.cz/xslt/functions#\"\n    xmlns:gml=\"http://www.opengis.net/gml/3.2\"\n    xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n    xmlns:schema=\"http://schema.org/\"\n    xmlns:wfs=\"http://www.opengis.net/wfs/2.0\"\n    xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"\n    exclude-result-prefixes=\"f\">\n    \n    <!-- Global parameters -->\n    \n    <xsl:param name=\"ns\">https://linked.opendata.cz/resource/</xsl:param>\n    \n    <!-- Functions -->\n    \n    <!-- Convert text into IRI-safe slug. -->\n    <xsl:function name=\"f:slugify\">\n        <xsl:param name=\"text\"/>\n        <xsl:value-of select=\"encode-for-uri(lower-case($text))\"/>   \n    </xsl:function>\n    \n    <!-- Output -->\n    \n    <xsl:output encoding=\"UTF-8\" indent=\"yes\" method=\"xml\" normalization-form=\"NFC\" />\n    <xsl:strip-space elements=\"*\"/>\n    \n    <!-- Templates -->\n    \n    <xsl:template match=\"/wfs:FeatureCollection\">\n        <rdf:RDF>\n            <xsl:apply-templates/>\n        </rdf:RDF>\n    </xsl:template>\n    \n    <xsl:template match=\"wfs:member/bu-ext2d:Building\">\n        <xsl:variable name=\"identifier\" select=\"bu-base:inspireId/base:Identifier\"/>\n        <xsl:variable name=\"id\" select=\"$identifier/base:localId\"/>\n        <xsl:variable name=\"iri-slug\" select=\"concat(f:slugify($identifier/base:namespace), '/', f:slugify($id))\"/>\n        <dbo:Building rdf:about=\"{concat($ns, 'building/', $iri-slug)}\">\n            <schema:identifier><xsl:value-of select=\"$id\"/></schema:identifier>\n            <xsl:apply-templates>\n                <xsl:with-param name=\"iri-slug\" select=\"$iri-slug\" tunnel=\"yes\"/>\n            </xsl:apply-templates>\n        </dbo:Building>\n    </xsl:template>\n    \n    <xsl:template match=\"bu-core2d:geometry2D/bu-base:BuildingGeometry2D/bu-base:geometry\">\n        <xsl:param name=\"iri-slug\" tunnel=\"yes\"/>\n        <schema:geo>\n            <schema:GeoShape rdf:about=\"{concat($ns, 'geo-shape/', $iri-slug)}\">\n                <schema:polygon><xsl:value-of select=\"gml:Polygon/gml:exterior/gml:LinearRing/gml:posList\"/></schema:polygon>\n            </schema:GeoShape>\n        </schema:geo>\n    </xsl:template>\n    \n    <!-- Catch-all empty template -->\n    <xsl:template match=\"text()|@*\" mode=\"#all\"/>\n</xsl:stylesheet>"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#templateControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#threads": [
+            {
+              "@type": "http://www.w3.org/2001/XMLSchema#integer",
+              "@value": "1"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/t-xslt#threadsControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/211db287-5a80-41e1-a75f-72326b07a2db/configuration"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/bea9f7f8-98f3-4031-99c8-6e6513a6d565/configuration",
+          "@type": [
+            "http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration"
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#content": [
+            {
+              "@value": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<FeatureCollection xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:bu-base=\"http://inspire.ec.europa.eu/schemas/bu-base/4.0\" xmlns:base=\"http://inspire.ec.europa.eu/schemas/base/3.3\" xmlns:gn=\"http://inspire.ec.europa.eu/schemas/gn/4.0\" xmlns:ad=\"http://inspire.ec.europa.eu/schemas/ad/4.0\" xmlns:bu-ext2d=\"http://inspire.ec.europa.eu/schemas/bu-ext2d/4.0\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns:bu-core2d=\"http://inspire.ec.europa.eu/schemas/bu-core2d/4.0\" xmlns:bu-ext=\"http://inspire.ec.europa.eu/schemas/bu-ext/4.0\" xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd  http://inspire.ec.europa.eu/schemas/bu-ext2d/4.0 http://services.cuzk.cz/xsd/inspire/bu-ext2d/4.0/BuildingsExtended2D.xsd\" timeStamp=\"2017-08-29T17:23:59\" numberMatched=\"1\" numberReturned=\"1\" xmlns=\"http://www.opengis.net/wfs/2.0\">\n  <boundedBy>\n    <gml:Envelope srsName=\"urn:ogc:def:crs:EPSG::4326\" srsDimension=\"2\">\n      <gml:lowerCorner>50.0809612870382 14.4510128907181</gml:lowerCorner>\n      <gml:upperCorner>50.0811231788008 14.4512509663105</gml:upperCorner>\n    </gml:Envelope>\n  </boundedBy>\n  <member>\n    <bu-ext2d:Building gml:id=\"BU.11138712\">\n      <bu-base:beginLifespanVersion>2016-09-27T13:27:27</bu-base:beginLifespanVersion>\n      <bu-base:conditionOfConstruction xlink:href=\"http://inspire.ec.europa.eu/codelist/ConditionOfConstructionValue/functional/functional.en.xml\" xlink:title=\"functional\" />\n      <bu-base:dateOfConstruction xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown\" />\n      <bu-base:elevation xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n      <bu-base:endLifespanVersion xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n      <bu-base:externalReference>\n        <bu-base:ExternalReference>\n          <bu-base:informationSystem>http://vdp.cuzk.cz/</bu-base:informationSystem>\n          <bu-base:informationSystemName>\n            <PT_FreeText xmlns=\"http://www.isotc211.org/2005/gmd\">\n              <textGroup>\n                <LocalisedCharacterString locale=\"cs\">ISÚI</LocalisedCharacterString>\n              </textGroup>\n            </PT_FreeText>\n          </bu-base:informationSystemName>\n          <bu-base:reference>42413419</bu-base:reference>\n        </bu-base:ExternalReference>\n      </bu-base:externalReference>\n      <bu-base:externalReference>\n        <bu-base:ExternalReference>\n          <bu-base:informationSystem>http://nahlizenidokn.cuzk.cz/</bu-base:informationSystem>\n          <bu-base:informationSystemName>\n            <PT_FreeText xmlns=\"http://www.isotc211.org/2005/gmd\">\n              <textGroup>\n                <LocalisedCharacterString locale=\"cs\">ISKN</LocalisedCharacterString>\n              </textGroup>\n            </PT_FreeText>\n          </bu-base:informationSystemName>\n          <bu-base:reference>883290101</bu-base:reference>\n        </bu-base:ExternalReference>\n      </bu-base:externalReference>\n      <bu-base:heightAboveGround xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n      <bu-base:inspireId>\n        <base:Identifier>\n          <base:localId>BU.11138712</base:localId>\n          <base:namespace>CZ-00025712-CUZK_BU</base:namespace>\n        </base:Identifier>\n      </bu-base:inspireId>\n      <bu-base:name>\n        <gn:GeographicalName>\n          <gn:language>ces</gn:language>\n          <gn:nativeness xlink:href=\"http://inspire.ec.europa.eu/codelist/NativenessValue/endonym\" xlink:title=\"endonym\" />\n          <gn:nameStatus xlink:href=\"http://inspire.ec.europa.eu/codelist/NativenessValue/official\" xlink:title=\"official\" />\n          <gn:sourceOfName>Český úřad zeměměřický a katastrální</gn:sourceOfName>\n          <gn:pronunciation xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n          <gn:spelling>\n            <gn:SpellingOfName>\n              <gn:text>bez čp/če</gn:text>\n              <gn:script>Latn</gn:script>\n            </gn:SpellingOfName>\n          </gn:spelling>\n        </gn:GeographicalName>\n      </bu-base:name>\n      <bu-base:buildingNature xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown\" />\n      <bu-base:currentUse>\n        <bu-base:CurrentUse>\n          <bu-base:currentUse xlink:href=\"http://inspire.ec.europa.eu/codelist/CurrentUseValue/industrial/industrial.en.xml\" xlink:title=\"Industrial\" />\n          <bu-base:percentage xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown\" />\n        </bu-base:CurrentUse>\n      </bu-base:currentUse>\n      <bu-base:numberOfBuildingUnits>1</bu-base:numberOfBuildingUnits>\n      <bu-base:numberOfFloorsAboveGround xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n      <bu-base:parts xlink:href=\"http://services.cuzk.cz/wfs/inspire-bu-wfs.asp?service=WFS&amp;VERSION=2.0.0&amp;request=GetFeature&amp;StoredQuery_id=urn:ogc:def:query:OGC-WFS::GetFeatureById&amp;Id=BP.11138712.825175\" />\n      <bu-core2d:geometry2D>\n        <bu-base:BuildingGeometry2D>\n          <bu-base:geometry>\n            <gml:Polygon gml:id=\"P.BU.11138712\" srsName=\"urn:ogc:def:crs:EPSG::4326\" srsDimension=\"2\">\n              <gml:exterior>\n                <gml:LinearRing>\n                  <gml:posList>50.080995 14.451077 50.080974 14.451186 50.080965 14.451198 50.080961 14.451215 50.080964 14.451232 50.080971 14.451246 50.080982 14.451251 50.080994 14.451247 50.081002 14.451234 50.081088 14.451203 50.081099 14.45121 50.081111 14.451207 50.08112 14.451194 50.081123 14.451176 50.08112 14.451158 50.081111 14.451145 50.0811 14.451141 50.081052 14.451058 50.081049 14.451039 50.081041 14.451022 50.081029 14.451013 50.081016 14.451013 50.081004 14.451021 50.080996 14.451037 50.080992 14.451057 50.080995 14.451077</gml:posList>\n                </gml:LinearRing>\n              </gml:exterior>\n            </gml:Polygon>\n          </bu-base:geometry>\n          <bu-base:referenceGeometry>true</bu-base:referenceGeometry>\n          <bu-base:horizontalGeometryReference xlink:href=\"http://inspire.ec.europa.eu/codelist/HorizontalGeometryReferenceValue/footPrint/footPrint.en.xml\" />\n          <bu-base:horizontalGeometryEstimatedAccuracy uom=\"m\">1.5</bu-base:horizontalGeometryEstimatedAccuracy>\n        </bu-base:BuildingGeometry2D>\n      </bu-core2d:geometry2D>\n      <bu-ext2d:buildingInfo>\n        <bu-ext:address>\n          <ad:AddressRepresentation>\n            <ad:adminUnit>\n              <gn:GeographicalName>\n                <gn:language>ces</gn:language>\n                <gn:nativeness xlink:href=\"http://inspire.ec.europa.eu/codelist/NativenessValue/endonym\" xlink:title=\"endonym\" />\n                <gn:nameStatus xlink:href=\"http://inspire.ec.europa.eu/codelist/NativenessValue/official\" xlink:title=\"official\" />\n                <gn:sourceOfName>Český úřad zeměměřický a katastrální</gn:sourceOfName>\n                <gn:pronunciation xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n                <gn:spelling>\n                  <gn:SpellingOfName>\n                    <gn:text>Praha</gn:text>\n                    <gn:script>Latn</gn:script>\n                  </gn:SpellingOfName>\n                </gn:spelling>\n              </gn:GeographicalName>\n            </ad:adminUnit>\n            <ad:addressArea xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown\" />\n          </ad:AddressRepresentation>\n        </bu-ext:address>\n        <bu-ext:officialArea xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown\" />\n        <bu-ext:officialValue xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n        <bu-ext:cadastralParcel xlink:href=\"http://services.cuzk.cz/wfs/inspire-cp-wfs.asp?service=WFS&amp;VERSION=2.0.0&amp;request=GetFeature&amp;StoredQuery_id=urn:ogc:def:query:OGC-WFS::GetFeatureById&amp;Id=CP.2075353101\" />\n        <bu-ext:floorDistribution xsi:nil=\"true\" nilReason=\"http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated\" />\n      </bu-ext2d:buildingInfo>\n    </bu-ext2d:Building>\n  </member>\n</FeatureCollection>"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#fileName": [
+            {
+              "@value": "zizkov_television_tower.xml"
+            }
+          ],
+          "http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl": [
+            {
+              "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+            }
+          ]
+        }
+      ],
+      "@id": "http://localhost:8080/resources/pipelines/created-1503934335700/components/bea9f7f8-98f3-4031-99c8-6e6513a6d565/configuration"
+    }
+  ]
+}

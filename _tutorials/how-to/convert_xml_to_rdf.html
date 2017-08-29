@@ -1,0 +1,169 @@
+---
+file: convert_xml_to_rdf.html
+short: "How to: Convert XML to RDF"
+title: How to convert XML to RDF
+---
+
+<p class="flow-text">You want to combine XML with RDF.</p>
+
+<h3 class="header center orange-text">Problem</h3>
+
+<p class="flow-text">Use of XML is widespread across many domains. For example, it is likely the dominant format of geographic data, as evidenced by standards of the <a href="http://www.opengeospatial.org">Open Geospatial Consortium</a> or the <a href="http://inspire.ec.europa.eu">INSPIRE specifications</a> for spatial data infrastructure in the EU. Since a lot of RDF data refers to places in the real world, combining it with geographic datasets often becomes useful. If that data is in XML, it must be turned into RDF first to be able to combine the data together.</p>
+
+<p class="flow-text">Assume you have geospatial XML data about the <a href="https://en.wikipedia.org/wiki/%C5%BDi%C5%BEkov_Television_Tower">Žižkov Television Tower</a>, allegedly the second ugliest building in the world. It is available as open data via the web services maintained by the Czech <a href="http://www.cuzk.cz/en">State Administration of Land Surveying and Cadastre</a>. You can get the <a href="http://services.cuzk.cz/wfs/inspire-bu-wfs.asp?service=WFS&version=2.0.0&request=GetFeature&typeNames=CZ-00025712-CUZK_BU:Building&featureID=BU.11138712&srsName=urn:ogc:def:crs:EPSG::4326">data live</a> via a web service. Since it is quite verbose, here is a subset of it:</p>
+
+{% highlight xml %}
+<?xml version="1.0" encoding="utf-8"?>
+<FeatureCollection
+  xmlns:base="http://inspire.ec.europa.eu/schemas/base/3.3"
+  xmlns:bu-base="http://inspire.ec.europa.eu/schemas/bu-base/4.0"
+  xmlns:bu-core2d="http://inspire.ec.europa.eu/schemas/bu-core2d/4.0"
+  xmlns:bu-ext2d="http://inspire.ec.europa.eu/schemas/bu-ext2d/4.0"
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.opengis.net/wfs/2.0"
+  xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd  http://inspire.ec.europa.eu/schemas/bu-ext2d/4.0 http://services.cuzk.cz/xsd/inspire/bu-ext2d/4.0/BuildingsExtended2D.xsd"
+  numberMatched="1"
+  numberReturned="1"
+  timeStamp="2017-08-29T17:23:59">
+  <member>
+    <bu-ext2d:Building gml:id="BU.11138712">
+      <bu-base:inspireId>
+        <base:Identifier>
+          <base:localId>BU.11138712</base:localId>
+          <base:namespace>CZ-00025712-CUZK_BU</base:namespace>
+        </base:Identifier>
+      </bu-base:inspireId>
+      <bu-core2d:geometry2D>
+        <bu-base:BuildingGeometry2D>
+          <bu-base:geometry>
+            <gml:Polygon gml:id="P.BU.11138712" srsName="urn:ogc:def:crs:EPSG::4326" srsDimension="2">
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:posList>50.080995 14.451077 50.080974 14.451186 50.080965 14.451198 50.080961 14.451215 50.080964 14.451232 50.080971 14.451246 50.080982 14.451251 50.080994 14.451247 50.081002 14.451234 50.081088 14.451203 50.081099 14.45121 50.081111 14.451207 50.08112 14.451194 50.081123 14.451176 50.08112 14.451158 50.081111 14.451145 50.0811 14.451141 50.081052 14.451058 50.081049 14.451039 50.081041 14.451022 50.081029 14.451013 50.081016 14.451013 50.081004 14.451021 50.080996 14.451037 50.080992 14.451057 50.080995 14.451077</gml:posList>
+                </gml:LinearRing>
+              </gml:exterior>
+            </gml:Polygon>
+          </bu-base:geometry>
+        </bu-base:BuildingGeometry2D>
+      </bu-core2d:geometry2D>
+    </bu-ext2d:Building>
+  </member>
+</FeatureCollection>
+{% endhighlight %}
+
+<p class="flow-text">It is described using the <a href="http://inspire.ec.europa.eu/Themes/126/2892">INSPIRE specification for data about buildings</a> and includes snippets in the <a href="https://en.wikipedia.org/wiki/Geography_Markup_Language">Geography Markup Language</a> (GML) defining geospatial geometries. In fact, the initial version of GML had a profile serializing data to RDF, and its object-property structure retained some likeness to RDF to this day. Constructing RDF out of the example data is thus relatively straightforward.</p>
+
+<h3 class="header center orange-text">Solution</h3>
+
+<p class="flow-text"><a href="https://www.w3.org/TR/xslt20">XSL Transformations</a> serve for transformations of XML data into other XML data. While this standard can produce any textual format, it was designed to create XML output in particular. You can leverage this support by producing <a href="https://www.w3.org/TR/rdf-syntax-grammar">RDF/XML</a>, an XML-based RDF syntax. Unfortunately, RDF/XML has perhaps done more bad than good to RDF. Superficial flaws of this syntax were mistaken to be fundamental flaws of RDF. Using this syntax as a bridge between XML and RDF is likely one of the few uses it has.</p>
+
+<p class="flow-text">LinkedPipes ETL (LP-ETL) provides the <a href="{% link _components/t-xslt.html %}">XSLT transformer</a> component to run XSL transformations. This component is based on the open-source version of the <a href="http://saxon.sourceforge.net">Saxon XSLT processor</a>.</p>
+
+<p class="flow-text">A few options are at your disposal to configure this component. The <em>Transformed file extension</em> will be appended to the input file name to form the output file name. If you produce RDF, use the extension <code>rdf</code> that indicates RDF/XML and allows the output to be subsequently parsed without needing to specify its format. The <em>Number of threads used for transformation</em> enables you to parallelize the transformations of multiple files. If processing many XML files, you would typically set this option to be equal to the number of CPU cores available on the machine running LP-ETL. The <em>Skip on error</em> switch instructs LP-ETL to skip files that cause errors during their transformation. In general, it is recommended to keep this switch turned off and handle the expected errors in the XSL stylesheet. Finally, the most important parameter of the component is the actual XSL stylesheet that defines the transformation. For instance, to transform the data about the Žižkov Television Tower we can use the following simplified stylesheet, which takes only few source elements into account:</p>
+
+{% highlight xml %}
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0"
+  xmlns:base="http://inspire.ec.europa.eu/schemas/base/3.3"
+  xmlns:bu-base="http://inspire.ec.europa.eu/schemas/bu-base/4.0"
+  xmlns:bu-core2d="http://inspire.ec.europa.eu/schemas/bu-core2d/4.0"
+  xmlns:bu-ext2d="http://inspire.ec.europa.eu/schemas/bu-ext2d/4.0"
+  xmlns:dbo="http://dbpedia.org/ontology/"
+  xmlns:f="http://opendata.cz/xslt/functions#"
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:schema="http://schema.org/"
+  xmlns:wfs="http://www.opengis.net/wfs/2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  exclude-result-prefixes="f">
+  
+  <!-- Global parameters -->
+  
+  <xsl:param name="ns">https://linked.opendata.cz/resource/</xsl:param>
+  
+  <!-- Functions -->
+  
+  <!-- Convert text into IRI-safe slug. -->
+  <xsl:function name="f:slugify">
+    <xsl:param name="text"/>
+    <xsl:value-of select="encode-for-uri(lower-case($text))"/>
+  </xsl:function>
+  
+  <!-- Output -->
+  
+  <xsl:output encoding="UTF-8" indent="yes" method="xml" normalization-form="NFC" />
+  <xsl:strip-space elements="*"/>
+  
+  <!-- Templates -->
+  
+  <xsl:template match="/wfs:FeatureCollection">
+    <rdf:RDF><xsl:apply-templates/></rdf:RDF>
+  </xsl:template>
+  
+  <xsl:template match="wfs:member/bu-ext2d:Building">
+    <xsl:variable name="identifier" select="bu-base:inspireId/base:Identifier"/>
+    <xsl:variable name="id" select="$identifier/base:localId"/>
+    <xsl:variable name="iri-slug"
+                  select="concat(f:slugify($identifier/base:namespace), '/', f:slugify($id))"/>
+    <dbo:Building rdf:about="{concat($ns, 'building/', $iri-slug)}">
+      <schema:identifier><xsl:value-of select="$id"/></schema:identifier>
+      <xsl:apply-templates>
+        <xsl:with-param name="iri-slug" select="$iri-slug" tunnel="yes"/>
+      </xsl:apply-templates>
+    </dbo:Building>
+  </xsl:template>
+  
+  <xsl:template match="bu-core2d:geometry2D/bu-base:BuildingGeometry2D/bu-base:geometry">
+    <xsl:param name="iri-slug" tunnel="yes"/>
+    <schema:geo>
+      <schema:GeoShape rdf:about="{concat($ns, 'geo-shape/', $iri-slug)}">
+        <schema:polygon>
+          <xsl:value-of select="gml:Polygon/gml:exterior/gml:LinearRing/gml:posList"/>
+        </schema:polygon>
+      </schema:GeoShape>
+    </schema:geo>
+  </xsl:template>
+  
+  <!-- Catch-all empty template -->
+  <xsl:template match="text()|@*" mode="#all"/>
+</xsl:stylesheet>
+{% endhighlight %}
+
+<p class="flow-text">Applying this stylesheet to the input data produces the following result; here shown reserialized in the more readable <a href="https://www.w3.org/TR/turtle">Turtle</a> RDF syntax:</p>
+
+{% highlight turtle %}
+@prefix dbo:    <http://dbpedia.org/ontology/> .
+@prefix schema: <http://schema.org/> .
+
+<https://linked.opendata.cz/resource/building/cz-00025712-cuzk_bu/bu.11138712> a dbo:Building ;
+  schema:identifier "BU.11138712" ;
+  schema:geo <https://linked.opendata.cz/resource/geo-shape/cz-00025712-cuzk_bu/bu.11138712> .
+
+<https://linked.opendata.cz/resource/geo-shape/cz-00025712-cuzk_bu/bu.11138712> a schema:GeoShape ;
+  schema:polygon "50.080995 14.451077 50.080974 14.451186 50.080965 14.451198 50.080961 14.451215 50.080964 14.451232 50.080971 14.451246 50.080982 14.451251 50.080994 14.451247 50.081002 14.451234 50.081088 14.451203 50.081099 14.45121 50.081111 14.451207 50.08112 14.451194 50.081123 14.451176 50.08112 14.451158 50.081111 14.451145 50.0811 14.451141 50.081052 14.451058 50.081049 14.451039 50.081041 14.451022 50.081029 14.451013 50.081016 14.451013 50.081004 14.451021 50.080996 14.451037 50.080992 14.451057 50.080995 14.451077" .
+{% endhighlight %}
+
+<p class="flow-text">The data in RDF describes the Žižkov Television Tower as an instance of <a href="http://dbpedia.org/ontology/Building"><code>dbo:Building</code></a> from the DBpedia ontology. Its identifier is preserved via the <code>schema:identifier</code> property from <a href="http://schema.org">Schema.org</a>, as well as a part of the building's IRI. The building links the shape of its ground view captured as an instance of <a href="http://schema.org/GeoShape"><code>schema:GeoShape</code></a> that is described by a series of coordinates in the <a href="https://en.wikipedia.org/wiki/World_Geodetic_System">WGS 84</a> system. These coordinates allow you to plot the building on a map.</p>
+
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <img alt="Žižkov Television Tower on a map"
+         class="responsive-img"
+         data-caption="Žižkov Television Tower on a map"
+         src="{% link /assets/tutorials/how-to/img/zizkov_television_tower_map.png %}"/>
+  </div>
+</div>
+
+<p class="flow-text">The pipeline transforming the discussed XML data to RDF is available <a href="{% link /assets/tutorials/how-to/pipelines/how_to_convert_xml_to_rdf.jsonld %}">here</a>.</p>
+
+<h3 class="header center orange-text">Discussion</h3>
+
+<p class="flow-text">If you have multiple input XML files, you can treat each output file as a chunk to be processed separately in parallel with other chunks. To do so, you can use the <a href="{% link _components/t-filestordfchunked.html %}">Files to RDF chunked</a> component instead of the usual <a href="{% link _components/t-filestordfsinglegraph.html %}">Files to RDF single graph</a> component. Splitting RDF into smaller chunks is an optimization that reduces memory use and improves the speed of pipeline execution, especially when processing larger datasets. Building pipelines operating on RDF chunks is explained in the tutorial about <a href="{% link _tutorials/how-to/process_large_rdf_data.html %}">processing large RDF data</a>.</p>
+
+<h3 class="header center orange-text">See also</h3>
+
+<p class="flow-text">Thanks to XML and RDF libraries available in many programming languages you can transform XML to RDF by implementing the conversion directly on top of these libraries. Nevertheless, in doing so you would lose much of the benefits of the declarative specification that XSL stylesheets give you, such as its high-level formulation.</p>
+
+<p class="flow-text">An alternative approach for converting XML to RDF is <a href="http://daverog.github.io/tripliser">Tripliser</a>. Similarly to XSLT, it is based on a declarative mapping written in XML, but it offers more and it may give you better leverage for processing large or volatile data.</p>
