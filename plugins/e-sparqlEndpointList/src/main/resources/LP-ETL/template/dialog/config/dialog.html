@@ -19,4 +19,10 @@
         <md-tooltip>Fix IRI by encoding unencoded special characters
         </md-tooltip>
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.taskPerGroupLimit.hide">
+        <label>Limit task per group (0 to no limit)</label>
+        <input ng-model="dialog.taskPerGroupLimit.value"
+               ng-disabled="dialog.taskPerGroupLimit.disabled || dialog.taskPerGroupLimit.inherit"
+               type="number" min="0">
+    </md-input-container>
 </div>

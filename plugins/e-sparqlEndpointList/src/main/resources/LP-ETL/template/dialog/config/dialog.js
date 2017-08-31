@@ -19,6 +19,10 @@ define([], function () {
         "encodeRdf": {
             "$type": "bool",
             "$label": "Encode RDF"
+        },
+        "taskPerGroupLimit" : {
+            "$type": "int",
+            "$label": "Limit task per group"
         }
     };
 

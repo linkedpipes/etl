@@ -17,25 +17,16 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_HEADER_ACCEPT = PREFIX + "headerAccept";
 
-    public static final String REPORT = PREFIX + "Report";
-
-    public static final String HAS_TASK = PREFIX + "task";
-
-    public static final String HAS_EXCEPTION = PREFIX + "exception";
-
-    public static final String EXCEPTION = PREFIX + "Exception";
-
-    public static final String HAS_EXCEPTION_MESSAGE =
-            PREFIX + "message";
-
-    public static final String HAS_EXCEPTION_CLASS =
-            PREFIX + "class";
-
     public static final String HAS_USED_THREADS = PREFIX + "threads";
 
     public static final String HAS_TIME_LIMIT = PREFIX + "timeLimit";
 
     public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
+
+    public static final String HAS_GROUP = PREFIX + "group";
+
+    public static final String HAS_TASK_PER_GROUP =
+            PREFIX + "taskPerGroupLimit";
 
     private SparqlEndpointListVocabulary() {
     }

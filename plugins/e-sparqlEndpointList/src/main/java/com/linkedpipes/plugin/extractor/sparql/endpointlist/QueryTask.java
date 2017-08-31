@@ -1,33 +1,39 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
+import com.linkedpipes.etl.executor.api.v1.component.task.GroupTask;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = SparqlEndpointListVocabulary.TASK)
-public class Task {
+public class QueryTask implements GroupTask {
 
-    private final String iri;
+    @RdfToPojo.Resource
+    public String iri;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_QUERY)
-    private String query;
+    public String query;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_ENDPOINT)
-    private String endpoint;
+    public String endpoint;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_DEFAULT_GRAPH)
-    private List<String> defaultGraphs = new ArrayList<>();
+    public List<String> defaultGraphs = new ArrayList<>();
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_HEADER_ACCEPT)
-    private String transferMimeType = null;
+    public String transferMimeType = null;
 
-    public Task(String iri) {
-        this.iri = iri;
-    }
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_GROUP)
+    public Integer group = null;
 
+    @Override
     public String getIri() {
         return iri;
+    }
+
+    public void setIri(String iri) {
+        this.iri = iri;
     }
 
     public String getQuery() {
@@ -62,4 +68,12 @@ public class Task {
         this.transferMimeType = transferMimeType;
     }
 
+    @Override
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
+    }
 }

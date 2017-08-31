@@ -1,12 +1,14 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 @RdfToPojo.Type(iri = SparqlEndpointListVocabulary.CONFIG)
-public class SparqlEndpointListConfiguration {
+public class SparqlEndpointListConfiguration implements
+        TaskExecutionConfiguration {
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_USED_THREADS)
-    private int usedThreads = 1;
+    private int threadsNumber = 1;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_TIME_LIMIT)
     private int executionTimeLimit = -1;
@@ -14,15 +16,19 @@ public class SparqlEndpointListConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_ENCODE_RDF)
     private boolean fixIncomingRdf = false;
 
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_TASK_PER_GROUP)
+    private int taskPerGroupLimit = 0;
+
     public SparqlEndpointListConfiguration() {
     }
 
-    public int getUsedThreads() {
-        return usedThreads;
+    @Override
+    public int getThreadsNumber() {
+        return threadsNumber;
     }
 
-    public void setUsedThreads(int usedThreads) {
-        this.usedThreads = usedThreads;
+    public void setThreadsNumber(int threadsNumber) {
+        this.threadsNumber = threadsNumber;
     }
 
     public int getExecutionTimeLimit() {
@@ -41,4 +47,16 @@ public class SparqlEndpointListConfiguration {
         this.fixIncomingRdf = fixIncomingRdf;
     }
 
+    @Override
+    public boolean isSkipOnError() {
+        return true;
+    }
+
+    public int getTaskPerGroupLimit() {
+        return taskPerGroupLimit;
+    }
+
+    public void setTaskPerGroupLimit(int taskPerGroupLimit) {
+        this.taskPerGroupLimit = taskPerGroupLimit;
+    }
 }

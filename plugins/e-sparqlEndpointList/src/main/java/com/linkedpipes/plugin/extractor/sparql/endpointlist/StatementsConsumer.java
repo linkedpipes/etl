@@ -6,11 +6,11 @@ import org.eclipse.rdf4j.model.Statement;
 
 import java.util.List;
 
-class TaskResultConsumer {
+class StatementsConsumer {
 
     private final WritableSingleGraphDataUnit outputRdf;
 
-    public TaskResultConsumer(WritableSingleGraphDataUnit outputRdf) {
+    public StatementsConsumer(WritableSingleGraphDataUnit outputRdf) {
         this.outputRdf = outputRdf;
     }
 

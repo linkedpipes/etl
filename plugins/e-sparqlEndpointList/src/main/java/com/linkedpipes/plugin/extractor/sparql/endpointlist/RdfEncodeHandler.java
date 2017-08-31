@@ -97,6 +97,4 @@ class RdfEncodeHandler extends AbstractRDFHandler {
         handler.handleComment(comment);
     }
 
-
 }
-
