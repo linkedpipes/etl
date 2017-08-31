@@ -63,10 +63,12 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             + "" // core API
             + "com.linkedpipes.etl.executor.api.v1;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.component;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.component.task;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.dataunit;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.event;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.rdf;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.service;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.report;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.vocabulary;version=\"0.0.0\","
             + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\","
             + "com.linkedpipes.etl.rdf.utils.entity;version=\"0.0.0\","
