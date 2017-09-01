@@ -13,6 +13,10 @@
         "http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirect": false,
         "http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirectControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#userAgent": "",
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#userAgentControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }
 ]
