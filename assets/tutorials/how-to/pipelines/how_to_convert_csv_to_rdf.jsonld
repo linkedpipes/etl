@@ -173,7 +173,7 @@
               "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
             }
           ],
-          "http://plugins.linkedpipes.com/ontology/t-tabular#encodeType": "emptyHost",
+          "http://plugins.linkedpipes.com/ontology/t-tabular#encodeType": "default",
           "http://plugins.linkedpipes.com/ontology/t-tabular#encodeTypeControl": [
             {
               "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
@@ -213,7 +213,7 @@
               "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
             }
           ],
-          "http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUri": true,
+          "http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUri": false,
           "http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUriControl": [
             {
               "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
