@@ -44,7 +44,7 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
         }
     }
 
-    private final Map<Integer, Group> groups = new HashMap<>();
+    private final Map<Object, Group> groups = new HashMap<>();
 
     private final int runningLimit;
 

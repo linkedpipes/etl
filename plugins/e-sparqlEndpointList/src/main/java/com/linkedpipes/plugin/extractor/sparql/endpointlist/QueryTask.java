@@ -25,7 +25,7 @@ public class QueryTask implements GroupTask {
     public String transferMimeType = null;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_GROUP)
-    public Integer group = null;
+    public String group = null;
 
     @Override
     public String getIri() {
@@ -69,11 +69,11 @@ public class QueryTask implements GroupTask {
     }
 
     @Override
-    public Integer getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Integer group) {
+    public void setGroup(String group) {
         this.group = group;
     }
 }
