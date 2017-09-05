@@ -77,6 +77,22 @@ class RdfEncodeHandler extends AbstractRDFHandler {
                     builder.append("%5C");
                     valueChanged = true;
                     break;
+                case '>':
+                    builder.append("%3E");
+                    valueChanged = true;
+                    break;
+                case '<':
+                    builder.append("%3C");
+                    valueChanged = true;
+                    break;
+                case '{':
+                    builder.append("%7B");
+                    valueChanged = true;
+                    break;
+                case '}':
+                    builder.append("%7D");
+                    valueChanged = true;
+                    break;
                 default:
                     builder.append(character);
                     break;
