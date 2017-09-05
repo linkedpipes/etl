@@ -57,6 +57,7 @@ public class ExecutionStatusMonitor {
     public void onExecutionEnd() {
         if (failed) {
             status = ExecutionStatus.FAILED;
+            return;
         }
         switch (status) {
             case CANCELLING:
