@@ -172,6 +172,9 @@ public class ComponentServlet {
                 templateFacade.getEffectiveConfiguration(template));
     }
 
+    /**
+     * Return configuration for instance based on given template.
+     */
     @RequestMapping(value = "/configTemplate",
             method = RequestMethod.GET)
     @ResponseBody

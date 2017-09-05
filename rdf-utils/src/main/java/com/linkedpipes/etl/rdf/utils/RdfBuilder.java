@@ -6,8 +6,6 @@ import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
 /**
  * Can be used to produce RDF statements.
- *
- * The builder must be closed to submit the transaction.
  */
 public class RdfBuilder {
 
