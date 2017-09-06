@@ -13,19 +13,17 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(QueryTaskExecutor.class);
+    private static final int COMMIT_SIZE = 10000;
 
     private final SparqlEndpointListConfiguration configuration;
 
@@ -34,6 +32,8 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
     private final ProgressReport progressReport;
 
     private QueryTask task;
+
+    private List<Statement> statements = new ArrayList<>(COMMIT_SIZE);
 
     public QueryTaskExecutor(
             SparqlEndpointListConfiguration configuration,
@@ -49,8 +49,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         this.task = task;
         Repository repository = createRepository();
         try {
-            List<Statement> queryResult = executeQuery(repository);
-            consumer.consume(queryResult);
+            executeQuery(repository);
         } finally {
             repository.shutDown();
             progressReport.entryProcessed();
@@ -73,22 +72,41 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         repository.setAdditionalHttpHeaders(headers);
     }
 
-    private List<Statement> executeQuery(Repository repository)
-            throws LpException {
+    private void executeQuery(Repository repository) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             GraphQuery preparedQuery = createQuery(connection);
-            List<Statement> statements = new LinkedList<>();
-            RDFHandler handler = new AbstractRDFHandler() {
-                @Override
-                public void handleStatement(Statement st) {
-                    statements.add(st);
-                }
-            };
+            RDFHandler handler = createRdfHandler();
             if (configuration.isFixIncomingRdf()) {
                 handler = new RdfEncodeHandler(handler);
             }
             preparedQuery.evaluate(handler);
-            return statements;
+        }
+    }
+
+    private RDFHandler createRdfHandler() {
+        return new AbstractRDFHandler() {
+            @Override
+            public void handleStatement(Statement st)
+                    throws RDFHandlerException {
+                statements.add(st);
+                if (statements.size() >= COMMIT_SIZE) {
+                    commitStatementsToConsumer();
+                }
+            }
+
+            @Override
+            public void endRDF() throws RDFHandlerException {
+                commitStatementsToConsumer();
+            }
+        };
+    }
+
+    private void commitStatementsToConsumer() throws RDFHandlerException {
+        try {
+            consumer.consume(statements);
+            statements.clear();
+        } catch (LpException exception) {
+            throw new RDFHandlerException("Can't save data.", exception);
         }
     }
 
