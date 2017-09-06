@@ -3,11 +3,11 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 public class LP_REPORT {
 
     public static final String PREFIX =
-            "http://linkedpipes.com/ontology/";
+            "https://vocabulary.etl.linkedpipes.com/report/";
 
     public static final String REPORT = PREFIX + "Report";
 
-    public static final String HAS_TASK  = PREFIX + "Task";
+    public static final String HAS_TASK  = PREFIX + "task";
 
     public static final String HAS_EXCEPTION = PREFIX + "exception";
 
