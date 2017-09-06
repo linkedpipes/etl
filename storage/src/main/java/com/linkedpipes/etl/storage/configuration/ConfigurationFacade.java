@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+// TODO Add test where the instance configuration does not contains Configuration class.
 // TODO Replace with function from RdfUtils module (EntityMerger).
 public class ConfigurationFacade {
 
@@ -262,7 +263,7 @@ public class ConfigurationFacade {
             LOG.warn("Skipping configuration due to missing " +
                             "configuration entity for: {}",
                     description.getType());
-            return createCopy(instanceRdf);
+            return createCopy(instanceRdf, graph);
         }
         // Create instance of current configuration.
         Model instanceModel = Model.create(instanceRdf);
@@ -271,7 +272,7 @@ public class ConfigurationFacade {
         if (instanceConfiguration == null) {
             LOG.warn("Skipping configuration due to missing " +
                     "configuration entity.");
-            return createCopy(templateRdf);
+            return createCopy(templateRdf, graph);
         }
         // Handle global control.
         {
@@ -285,14 +286,14 @@ public class ConfigurationFacade {
                 // The configuration of the template is inherited from
                 // another level of template. So we skip merging
                 // with this level of template.
-                return createCopy(instanceRdf);
+                return createCopy(instanceRdf, graph);
             }
             if (INHERIT_AND_FORCE.equals(templateControl)) {
                 // We need to load configuration from another level of template.
                 return Collections.emptyList();
             }
             if (FORCE.equals(templateControl)) {
-                return createCopy(templateRdf);
+                return createCopy(templateRdf, graph);
             }
             String instanceControl = null;
             if (description.getControl() != null) {
@@ -302,13 +303,13 @@ public class ConfigurationFacade {
             if (INHERIT.equals(instanceControl) ||
                     INHERIT_AND_FORCE.equals(instanceControl)) {
                 // Instance inherit from parent.
-                return createCopy(templateRdf);
+                return createCopy(templateRdf, graph);
             }
         }
         // Merge child and template.
         if (description.getMembers().isEmpty()) {
             // We use the child's configuration.
-            return createCopy(instanceRdf);
+            return createCopy(instanceRdf, graph);
         } else {
             for (ConfigDescription.Member member : description.getMembers()) {
                 mergeFromBottom(member, templateConfiguration,
@@ -320,9 +321,18 @@ public class ConfigurationFacade {
         return instanceModel.asStatements(instanceConfiguration, graph);
     }
 
-    private static Collection<Statement> createCopy(Collection<Statement> data) {
+    private static Collection<Statement> createCopy(Collection<Statement> data,
+            IRI graph) {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
         Collection<Statement> output = new ArrayList<>(data.size());
-        output.addAll(data);
+        for (Statement statement : data) {
+            output.add(valueFactory.createStatement(
+                    statement.getSubject(),
+                    statement.getPredicate(),
+                    statement.getObject(),
+                    graph
+            ));
+        }
         return output;
     }
 
