@@ -1,5 +1,5 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/t-sparqlSelectMulti/0.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/t-sparqlSelectMultiple/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-sparqlSelectMulti#Configuration> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-sparqlSelectMultiple#Configuration> .
