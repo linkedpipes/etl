@@ -50,6 +50,7 @@ class ExecutionChecker {
         if (!definitionFile.exists()) {
             // No execution directory, the execution must be queued.
             loadQueued(execution);
+            execution.getOverviewResource().missing(execution);
         } else {
             try (InputStream input = new FileInputStream(definitionFile)) {
                 checkExecution(execution, input);
