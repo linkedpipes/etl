@@ -23,7 +23,11 @@ define([], function () {
         "taskPerGroupLimit" : {
             "$type": "int",
             "$label": "Limit task per group"
-        }
+        },
+        "commitSize" : {
+            "$type": "int",
+            "$label": "Commit size"
+        },
     };
 
     function controller($scope, $service) {

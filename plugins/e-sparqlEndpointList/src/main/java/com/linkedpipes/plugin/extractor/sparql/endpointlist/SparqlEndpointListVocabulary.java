@@ -28,6 +28,8 @@ public final class SparqlEndpointListVocabulary {
     public static final String HAS_TASK_PER_GROUP =
             PREFIX + "taskPerGroupLimit";
 
+    public static final String HAS_COMMIT_SIZE = PREFIX + "commitSize";
+
     private SparqlEndpointListVocabulary() {
     }
 

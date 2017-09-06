@@ -19,6 +19,9 @@ public class SparqlEndpointListConfiguration implements
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_TASK_PER_GROUP)
     private int taskPerGroupLimit = 0;
 
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_COMMIT_SIZE)
+    private int commitSize = 0;
+
     public SparqlEndpointListConfiguration() {
     }
 
@@ -59,4 +62,13 @@ public class SparqlEndpointListConfiguration implements
     public void setTaskPerGroupLimit(int taskPerGroupLimit) {
         this.taskPerGroupLimit = taskPerGroupLimit;
     }
+
+    public int getCommitSize() {
+        return commitSize;
+    }
+
+    public void setCommitSize(int commitSize) {
+        this.commitSize = commitSize;
+    }
+
 }

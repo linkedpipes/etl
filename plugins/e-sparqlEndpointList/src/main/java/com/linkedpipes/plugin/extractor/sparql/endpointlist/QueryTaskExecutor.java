@@ -23,25 +23,83 @@ import java.util.Map;
 
 class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
-    private static final int COMMIT_SIZE = 10000;
-
     private final SparqlEndpointListConfiguration configuration;
-
-    private final StatementsConsumer consumer;
 
     private final ProgressReport progressReport;
 
     private QueryTask task;
 
-    private List<Statement> statements = new ArrayList<>(COMMIT_SIZE);
+    private List<Statement> statements = new ArrayList<>();
+
+    private final StatementsConsumer consumer;
+
+    private final RDFHandler rdfHandler;
 
     public QueryTaskExecutor(
             SparqlEndpointListConfiguration configuration,
             StatementsConsumer consumer,
             ProgressReport progressReport) {
         this.configuration = configuration;
-        this.consumer = consumer;
         this.progressReport = progressReport;
+        this.consumer = consumer;
+        this.rdfHandler = createRdfHandler(configuration);
+    }
+
+    private RDFHandler createRdfHandler(
+            SparqlEndpointListConfiguration configuration) {
+        int commitSize = configuration.getCommitSize();
+        RDFHandler handler;
+        if (commitSize == 0) {
+            handler = handlerCommitAtEnd();
+        } else {
+            handler = handlerCommitAfterSize(commitSize);
+        }
+        if (configuration.isFixIncomingRdf()) {
+            handler = new RdfEncodeHandler(handler);
+        }
+        return handler;
+    }
+
+    private RDFHandler handlerCommitAtEnd() {
+        return new AbstractRDFHandler() {
+            @Override
+            public void handleStatement(Statement st)
+                    throws RDFHandlerException {
+                statements.add(st);
+            }
+
+            @Override
+            public void endRDF() throws RDFHandlerException {
+                commitStatementsToConsumer();
+            }
+        };
+    }
+
+    private RDFHandler handlerCommitAfterSize(int size) {
+        return new AbstractRDFHandler() {
+            @Override
+            public void handleStatement(Statement st)
+                    throws RDFHandlerException {
+                statements.add(st);
+                if (statements.size() >= size) {
+                    commitStatementsToConsumer();
+                }
+            }
+
+            @Override
+            public void endRDF() throws RDFHandlerException {
+                commitStatementsToConsumer();
+            }
+        };
+    }
+
+    private void commitStatementsToConsumer() throws RDFHandlerException {
+        try {
+            consumer.consume(statements);
+            statements.clear();
+        } catch (LpException exception) {
+            throw new RDFHandlerException("Can't save data.", exception);
+        }
     }
 
     @Override
@@ -75,38 +133,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
     private void executeQuery(Repository repository) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             GraphQuery preparedQuery = createQuery(connection);
-            RDFHandler handler = createRdfHandler();
-            if (configuration.isFixIncomingRdf()) {
-                handler = new RdfEncodeHandler(handler);
-            }
-            preparedQuery.evaluate(handler);
-        }
-    }
-
-    private RDFHandler createRdfHandler() {
-        return new AbstractRDFHandler() {
-            @Override
-            public void handleStatement(Statement st)
-                    throws RDFHandlerException {
-                statements.add(st);
-                if (statements.size() >= COMMIT_SIZE) {
-                    commitStatementsToConsumer();
-                }
-            }
-
-            @Override
-            public void endRDF() throws RDFHandlerException {
-                commitStatementsToConsumer();
-            }
-        };
-    }
-
-    private void commitStatementsToConsumer() throws RDFHandlerException {
-        try {
-            consumer.consume(statements);
-            statements.clear();
-        } catch (LpException exception) {
-            throw new RDFHandlerException("Can't save data.", exception);
+            preparedQuery.evaluate(this.rdfHandler);
         }
     }
 

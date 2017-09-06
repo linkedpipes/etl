@@ -25,4 +25,10 @@
                ng-disabled="dialog.taskPerGroupLimit.disabled || dialog.taskPerGroupLimit.inherit"
                type="number" min="0">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.commitSize.hide">
+        <label>Query commit size (0 to commit all triples at once)</label>
+        <input ng-model="dialog.commitSize.value"
+               ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit"
+               type="number" min="0">
+    </md-input-container>
 </div>
