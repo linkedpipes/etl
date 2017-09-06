@@ -33,7 +33,7 @@
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpointList/0.0.0/errorOutput",
-        "http://www.w3.org/2004/02/skos/core#prefLabel": "Error",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Report",
         "@type": [
             "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
             "http://linkedpipes.com/ontology/Output"
