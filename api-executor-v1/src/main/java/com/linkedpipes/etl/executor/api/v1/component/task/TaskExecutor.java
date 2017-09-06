@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import java.util.Date;
 import java.util.Map;
 
 class TaskExecutor<T extends Task> implements Runnable {
@@ -56,13 +57,23 @@ class TaskExecutor<T extends Task> implements Runnable {
     }
 
     private void executeTask(T task) {
+        Date taskStart = new Date();
         try {
             taskConsumer.accept(task);
-            taskSource.onTaskFinished(task);
+            onTaskFinished(task, taskStart);
         } catch (Throwable throwable) {
-            reportWriter.onTaskFailed(task, throwable);
-            taskSource.onTaskFailed(task);
+            onTaskFailed(task, taskStart, throwable);
         }
+    }
+
+    private void onTaskFinished(T task, Date startTime) {
+        reportWriter.onTaskFinished(task, startTime, new Date());
+        taskSource.onTaskFinished(task);
+    }
+
+    private void onTaskFailed(T task, Date startTime, Throwable throwable) {
+        reportWriter.onTaskFailed(task, startTime, new Date(), throwable);
+        taskSource.onTaskFailed(task);
     }
 
 }
