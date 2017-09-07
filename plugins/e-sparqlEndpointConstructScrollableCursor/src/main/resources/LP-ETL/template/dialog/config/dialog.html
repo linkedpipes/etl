@@ -13,6 +13,13 @@
                ng-disabled="dialog.pageSize.disabled || dialog.pageSize.inherit"
                min="1000" step="100">
     </md-input-container>
+    <md-switch ng-model="dialog.encodeRdf.value"
+               ng-hide="dialog.encodeRdf.hide"
+               ng-disabled="dialog.encodeRdf.disabled || dialog.encodeRdf.inherit">
+        Encode RDF
+        <md-tooltip>Fix IRI by encoding unencoded special characters
+        </md-tooltip>
+    </md-switch>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
                  lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"

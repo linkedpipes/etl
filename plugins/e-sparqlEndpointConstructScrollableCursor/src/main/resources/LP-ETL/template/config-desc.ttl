@@ -10,7 +10,8 @@
         <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/endpoint> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/defaultGraph> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/fileName> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/pageSize> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/pageSize> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/encodeRdf> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/outerConstruct>
     a config:ConfigurationMember ;
@@ -46,3 +47,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSize> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSizeControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/encodeRdf>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdf> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdfControl> .

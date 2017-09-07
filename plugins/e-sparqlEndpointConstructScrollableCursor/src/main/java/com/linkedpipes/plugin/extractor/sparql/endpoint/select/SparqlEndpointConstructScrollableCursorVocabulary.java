@@ -19,6 +19,8 @@ final class SparqlEndpointConstructScrollableCursorVocabulary {
 
     public static final String HAS_PAGE_SIZE = PREFIX + "pageSize";
 
+    public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
+
     private SparqlEndpointConstructScrollableCursorVocabulary() {
     }
 

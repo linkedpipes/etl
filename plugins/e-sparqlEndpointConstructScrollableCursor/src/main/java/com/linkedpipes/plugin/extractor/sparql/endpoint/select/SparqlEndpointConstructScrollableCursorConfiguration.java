@@ -32,6 +32,10 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
             iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PAGE_SIZE)
     private Integer pageSize;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENCODE_RDF)
+    private boolean fixIncomingRdf = false;
+
     public SparqlEndpointConstructScrollableCursorConfiguration() {
     }
 
@@ -81,5 +85,13 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public boolean isFixIncomingRdf() {
+        return fixIncomingRdf;
+    }
+
+    public void setFixIncomingRdf(boolean fixIncomingRdf) {
+        this.fixIncomingRdf = fixIncomingRdf;
     }
 }

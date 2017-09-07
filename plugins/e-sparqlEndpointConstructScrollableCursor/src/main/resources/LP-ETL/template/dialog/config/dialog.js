@@ -32,6 +32,10 @@ define([], function () {
         "innerSelect": {
             "$type": "str",
             "$label": "Inner select query"
+        },
+        "encodeRdf": {
+            "$type": "bool",
+            "$label": "Encode RDF"
         }
     };
 
