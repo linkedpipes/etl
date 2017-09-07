@@ -7,11 +7,12 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -50,6 +51,8 @@ class TaskExecutor implements Runnable {
 
     private final Map<String, List<File>> inputFilesByName;
 
+    private boolean fixIncomingRdf;
+
     public TaskExecutor(
             List<Task> tasks,
             ErrorReportConsumer errorReportConsumer,
@@ -57,7 +60,8 @@ class TaskExecutor implements Runnable {
             ProgressReport progressReport,
             ExceptionFactory exceptionFactory,
             int executionTimeLimit,
-            Map<String, List<File>> inputFilesByName) {
+            Map<String, List<File>> inputFilesByName,
+            boolean fixIncomingRdf) {
         this.tasks = tasks;
         this.errorReportConsumer = errorReportConsumer;
         this.resultConsumer = resultConsumer;
@@ -65,6 +69,7 @@ class TaskExecutor implements Runnable {
         this.exceptionFactory = exceptionFactory;
         this.executionTimeLimit = executionTimeLimit;
         this.inputFilesByName = inputFilesByName;
+        this.fixIncomingRdf = fixIncomingRdf;
     }
 
     @Override
@@ -154,12 +159,24 @@ class TaskExecutor implements Runnable {
                     QueryLanguage.SPARQL, query);
             setGraphsToQuery(task, preparedQuery);
             preparedQuery.setMaxExecutionTime(executionTimeLimit);
-            try (GraphQueryResult result = preparedQuery.evaluate()) {
-                return collectResults(result);
+            //
+            List<Statement> statements = new LinkedList<>();
+            RDFHandler handler = new AbstractRDFHandler() {
+                @Override
+                public void handleStatement(Statement st) {
+                    statements.add(st);
+                }
+            };
+            if (fixIncomingRdf) {
+                handler = new RdfEncodeHandler(handler);
+            }
+            try {
+                preparedQuery.evaluate(handler);
             } catch (RuntimeException ex) {
                 LOG.error("Can't execute query: {}", query);
                 throw ex;
             }
+            return statements;
         }
     }
 
@@ -171,12 +188,5 @@ class TaskExecutor implements Runnable {
         preparedQuery.setDataset(dataset);
     }
 
-    private List<Statement> collectResults(GraphQueryResult result) {
-        List<Statement> statements = new LinkedList<>();
-        while (result.hasNext()) {
-            statements.add(result.next());
-        }
-        return statements;
-    }
 
 }

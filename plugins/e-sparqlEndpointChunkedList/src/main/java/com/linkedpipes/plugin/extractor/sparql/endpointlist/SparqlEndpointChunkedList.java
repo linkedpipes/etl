@@ -153,7 +153,7 @@ public final class SparqlEndpointChunkedList implements Component,
         executorService.submit(new TaskExecutor(tasks,
                 errorConsumer, resultConsumer, progressReport,
                 exceptionFactory, configuration.getExecutionTimeLimit(),
-                inputFilesByName));
+                inputFilesByName, configuration.isFixIncomingRdf()));
     }
 
     private void waitForSpaceInQueue() {

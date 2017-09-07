@@ -15,6 +15,10 @@ define([], function () {
         "timeLimit" : {
             "$type": "int",
             "$label": "Query time limit"
+        },
+        "encodeRdf": {
+            "$type": "bool",
+            "$label": "Encode RDF"
         }
     };
 

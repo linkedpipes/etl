@@ -39,6 +39,8 @@ final class SparqlEndpointChunkedListVocabulary {
 
     public static final String HAS_CHUNK_SIZE = PREFIX + "chunkSize";
 
+    public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
+
     private SparqlEndpointChunkedListVocabulary() {
     }
 

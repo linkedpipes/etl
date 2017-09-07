@@ -17,6 +17,10 @@ public class SparqlEndpointChunkedListConfiguration {
             iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
     private Integer chunkSize;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointChunkedListVocabulary.HAS_ENCODE_RDF)
+    private boolean fixIncomingRdf = false;
+
     public SparqlEndpointChunkedListConfiguration() {
     }
 
@@ -42,5 +46,13 @@ public class SparqlEndpointChunkedListConfiguration {
 
     public void setChunkSize(Integer chunkSize) {
         this.chunkSize = chunkSize;
+    }
+
+    public boolean isFixIncomingRdf() {
+        return fixIncomingRdf;
+    }
+
+    public void setFixIncomingRdf(boolean fixIncomingRdf) {
+        this.fixIncomingRdf = fixIncomingRdf;
     }
 }
