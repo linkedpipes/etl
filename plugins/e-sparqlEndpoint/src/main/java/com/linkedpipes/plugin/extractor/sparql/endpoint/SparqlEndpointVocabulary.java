@@ -15,6 +15,8 @@ final class SparqlEndpointVocabulary {
 
     public static final String HAS_HEADER_ACCEPT = PREFIX + "headerAccept";
 
+    public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
+
     private SparqlEndpointVocabulary() {
     }
 

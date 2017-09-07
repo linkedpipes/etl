@@ -8,15 +8,18 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,8 +109,17 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
                     dataset.addDefaultGraph(valueFactory.createIRI(iri));
                 }
                 preparedQuery.setDataset(dataset);
-                final GraphQueryResult result = preparedQuery.evaluate();
-                localConnection.add(result, graph);
+                RDFHandler handler = new AbstractRDFHandler() {
+                    @Override
+                    public void handleStatement(Statement st)
+                            throws RDFHandlerException {
+                        localConnection.add(st, graph);
+                    }
+                };
+                if (configuration.isFixIncomingRdf()) {
+                    handler = new RdfEncodeHandler(handler);
+                }
+                preparedQuery.evaluate(handler);
             }
             localConnection.commit();
         }

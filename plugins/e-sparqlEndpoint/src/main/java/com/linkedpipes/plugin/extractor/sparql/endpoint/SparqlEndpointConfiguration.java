@@ -26,6 +26,9 @@ public class SparqlEndpointConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointVocabulary.HAS_HEADER_ACCEPT)
     private String transferMimeType = null;
 
+    @RdfToPojo.Property(iri = SparqlEndpointVocabulary.HAS_ENCODE_RDF)
+    private boolean fixIncomingRdf = false;
+
     public SparqlEndpointConfiguration() {
     }
 
@@ -59,5 +62,13 @@ public class SparqlEndpointConfiguration {
 
     public void setTransferMimeType(String transferMimeType) {
         this.transferMimeType = transferMimeType;
+    }
+
+    public boolean isFixIncomingRdf() {
+        return fixIncomingRdf;
+    }
+
+    public void setFixIncomingRdf(boolean fixIncomingRdf) {
+        this.fixIncomingRdf = fixIncomingRdf;
     }
 }

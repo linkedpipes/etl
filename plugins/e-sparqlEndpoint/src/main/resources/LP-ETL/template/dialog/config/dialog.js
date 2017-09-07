@@ -28,6 +28,10 @@ define([], function () {
             "$property" : "headerAccept",
             "$control": "headerAcceptControl",
             "$label" : "Used MimeType"
+        },
+        "encodeRdf": {
+            "$type": "bool",
+            "$label": "Encode RDF"
         }
     };
 
