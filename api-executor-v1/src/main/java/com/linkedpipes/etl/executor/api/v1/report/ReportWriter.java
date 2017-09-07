@@ -11,9 +11,6 @@ public interface ReportWriter {
 
     void onTaskFailed(Task task, Date start, Date end, Throwable throwable);
 
-    /**
-     * Returned instance can not be used in asynchronous way.
-     */
     static ReportWriter create(TripleWriter writer) {
         return new DefaultReportWriter(writer);
     }

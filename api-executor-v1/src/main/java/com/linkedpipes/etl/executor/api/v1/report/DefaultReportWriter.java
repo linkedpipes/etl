@@ -24,7 +24,7 @@ class DefaultReportWriter implements ReportWriter {
     }
 
     @Override
-    public void onTaskFinished(Task task, Date start, Date end) {
+    public synchronized void onTaskFinished(Task task, Date start, Date end) {
         String reportIri = task.getIri() + "/report";
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
@@ -52,7 +52,7 @@ class DefaultReportWriter implements ReportWriter {
     }
 
     @Override
-    public void onTaskFailed(
+    public synchronized void onTaskFailed(
             Task task, Date start, Date end, Throwable throwable) {
         LOG.error("Task ({}) failed.", task.getIri(), throwable);
         String reportIri = task.getIri() + "/report";
