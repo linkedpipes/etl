@@ -1,16 +1,16 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
+import com.linkedpipes.etl.executor.api.v1.component.task.GroupTask;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = SparqlEndpointChunkedListVocabulary.TASK)
-public class Task {
+public class QueryTask implements GroupTask {
 
-    private final String iri;
+    @RdfToPojo.Resource
+    public String iri;
 
     @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_QUERY)
     private String query;
@@ -34,26 +34,13 @@ public class Task {
             iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
     private int chunkSize;
 
-    private File fileWithChunks;
-
-    public Task(String iri) {
-        this.iri = iri;
-    }
-
-    public Task(Task task, File fileWithChunks)
-            throws UnsupportedEncodingException {
-        this.iri = task.iri;
-        this.query = task.query;
-        this.endpoint = task.endpoint;
-        this.defaultGraphs = task.defaultGraphs;
-        this.transferMimeType = task.transferMimeType;
-        this.fileName = task.fileName;
-        this.chunkSize = task.chunkSize;
-        this.fileWithChunks = fileWithChunks;
-    }
-
+    @Override
     public String getIri() {
         return iri;
+    }
+
+    public void setIri(String iri) {
+        this.iri = iri;
     }
 
     public String getQuery() {
@@ -104,11 +91,9 @@ public class Task {
         this.chunkSize = chunkSize;
     }
 
-    public File getFileWithChunks() {
-        return fileWithChunks;
+    @Override
+    public Object getGroup() {
+        return this.endpoint;
     }
 
-    public void setFileWithChunks(File fileWithChunks) {
-        this.fileWithChunks = fileWithChunks;
-    }
 }

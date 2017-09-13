@@ -6,11 +6,11 @@ import org.eclipse.rdf4j.model.Statement;
 
 import java.util.List;
 
-class TaskResultConsumer {
+class StatementsConsumer {
 
     private final WritableChunkedTriples outputRdf;
 
-    public TaskResultConsumer(WritableChunkedTriples outputRdf) {
+    public StatementsConsumer(WritableChunkedTriples outputRdf) {
         this.outputRdf = outputRdf;
     }
 

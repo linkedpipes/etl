@@ -12,58 +12,71 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-class ValuesReader {
+class CsvValuesReader {
 
-    public interface ValueHandler {
+    @FunctionalInterface
+    public interface ValueConsumer {
 
-        void handle(String valuesClause) throws LpException;
+        void accept(String valuesClause) throws LpException;
 
     }
 
-    private final CsvPreference CSV_PREFERENCE = new CsvPreference.Builder(
-            '"', ',', "\\n").build();
-
-    private final File inputFile;
+    private final CsvPreference CSV_PREFERENCE
+            = new CsvPreference.Builder('"', ',', "\\n").build();
 
     private final ExceptionFactory exceptionFactory;
 
     private final int chunkSize;
 
-    public ValuesReader(File inputFile, ExceptionFactory exceptionFactory,
-            int chunkSize) {
-        this.inputFile = inputFile;
+    private ValueConsumer handler;
+
+    private List<String> header;
+
+    public CsvValuesReader(ExceptionFactory exceptionFactory, int chunkSize) {
         this.exceptionFactory = exceptionFactory;
         this.chunkSize = chunkSize;
     }
 
-    public void readSource(ValueHandler handler) throws LpException {
-        try (final FileInputStream fileInputStream
+    public void setHandler(ValueConsumer handler) {
+        this.handler = handler;
+    }
+
+    public void readFile(File inputFile) throws LpException {
+        try (FileInputStream fileInputStream
                      = new FileInputStream(inputFile);
-             final InputStreamReader inputStreamReader
+             InputStreamReader inputStreamReader
                      = new InputStreamReader(fileInputStream, "UTF-8");
-             final CsvListReader csvReader
+             CsvListReader csvReader
                      = new CsvListReader(inputStreamReader, CSV_PREFERENCE)) {
-            final List<String> header = csvReader.read();
-            final List<List<String>> rows = new ArrayList<>(chunkSize);
-            List<String> row = csvReader.read();
-            while (row != null) {
-                rows.add(row);
-                row = csvReader.read();
-                if (rows.size() >= chunkSize) {
-                    handle(header, rows, handler);
-                    rows.clear();
-                }
-            }
-            if (!rows.isEmpty()) {
-                handle(header, rows, handler);
-            }
+            readCsvTable(csvReader);
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't read input file.", ex);
         }
     }
 
-    protected void handle(List<String> header, List<List<String>> rows,
-            ValueHandler handler) throws LpException {
+    private void readCsvTable(CsvListReader csvReader)
+            throws IOException, LpException {
+        this.header = csvReader.read();
+        List<List<String>> rows = new ArrayList<>(chunkSize);
+        List<String> row = csvReader.read();
+        while (row != null) {
+            rows.add(row);
+            row = csvReader.read();
+            if (rows.size() >= chunkSize) {
+                handleRows(rows);
+                rows.clear();
+            }
+        }
+        if (!rows.isEmpty()) {
+            handleRows(rows);
+        }
+    }
+
+    private void handleRows(List<List<String>> rows) throws LpException {
+        handler.accept(buildSparqlValuesClause(rows));
+    }
+
+    private String buildSparqlValuesClause(List<List<String>> rows) {
         StringBuilder builder = new StringBuilder();
         builder.append("VALUES (");
         for (String s : header) {
@@ -82,7 +95,7 @@ class ValuesReader {
             builder.append(" ) \n");
         }
         builder.append(" } \n");
-        handler.handle(builder.toString());
+        return builder.toString();
     }
 
 }
