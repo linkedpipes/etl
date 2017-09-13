@@ -34,13 +34,18 @@
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
-                    <md-button ng-click="onDownload()">
-                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
+                    <md-button ng-click="onBackupDownload()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download backup (without templates)
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
-                    <md-button ng-click="onDowloadNoCredentials($event)">
-                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download without credentials
+                    <md-button ng-click="onDownload()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Save and download
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onDownloadNoCredentials($event)">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Save and download without credentials
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
