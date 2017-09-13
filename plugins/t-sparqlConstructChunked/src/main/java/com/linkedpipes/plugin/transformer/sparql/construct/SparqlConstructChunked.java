@@ -112,7 +112,7 @@ public final class SparqlConstructChunked implements Component,
         for (SparqlConstructExecutor constructExecutor : executors) {
             if (constructExecutor.isFailed()) {
                 throw exceptionFactory.failure(
-                        "At least construct failed. See logs for more info.");
+                        "At least one construct failed. See logs for more info.");
             }
         }
     }
