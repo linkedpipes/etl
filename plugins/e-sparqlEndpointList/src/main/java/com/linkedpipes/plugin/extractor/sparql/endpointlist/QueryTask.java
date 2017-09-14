@@ -10,22 +10,22 @@ import java.util.List;
 public class QueryTask implements GroupTask {
 
     @RdfToPojo.Resource
-    public String iri;
+    private String iri;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_QUERY)
-    public String query;
+    private String query;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_ENDPOINT)
-    public String endpoint;
+    private String endpoint;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_DEFAULT_GRAPH)
-    public List<String> defaultGraphs = new ArrayList<>();
+    private List<String> defaultGraphs = new ArrayList<>();
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_HEADER_ACCEPT)
-    public String transferMimeType = null;
+    private String transferMimeType = null;
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_GROUP)
-    public String group = null;
+    private String group = null;
 
     @Override
     public String getIri() {
