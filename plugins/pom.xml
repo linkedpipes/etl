@@ -91,6 +91,7 @@
         <module>t-rdfToWrappedJsonLdChunked</module>
         <module>t-rdfDifference</module>
         <module>t-xmlToChunks</module>
+        <module>c-rdfSingleGraph</module>
     </modules>
 
 </project>
