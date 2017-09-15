@@ -22,9 +22,9 @@ requirejs.config({
         //
         'hammerjs': 'libraries/hammerjs/2.0.6/hammer.min',
         // JoinJS and dependencies.
-        'jointjs': 'app/components/pipelines/canvas/libraries/jointjs/0.9.7/joint',
-        'lodash': '/app/components/pipelines/canvas/libraries/lodash/3.10.1/lodash.min',
-        'backbone': '/app/components/pipelines/canvas/libraries/backbone/1.2.3/backbone',
+        'jointjs': 'libraries/jointjs/0.9.7/joint',
+        'lodash': 'libraries/lodash/3.10.1/lodash.min',
+        'backbone': 'libraries/backbone/1.2.3/backbone',
         // Library for client side download
         'file-saver': 'libraries/filesaver/FileSaver',
         // https://github.com/omichelsen/angular-clipboard
