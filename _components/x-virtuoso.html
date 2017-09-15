@@ -10,24 +10,24 @@ description: Instructs Virtuoso to load a file.
 Special purpose component, allows the user to instruct <a href="http://virtuoso.openlinksw.com/">OpenLink Virtuoso</a> triplestore to load a file from the remote file system. Uses <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader">Virtuoso Bulk Loader</a> functionality.
 </p>
 <dl class="flow-text">
-    <dt>Host address</dt>
-    <dd>JDBC database connection string to connect to the Virtuoso iSQL port (typically <code>1111</code>)</dd>
-    <dt>Name of file to load</dt>
+    <dt>Virtuoso JDBC connection string</dt>
+    <dd>JDBC database connection string to connect to the Virtuoso iSQL port, e.g. <code>jdbc:virtuoso://localhost:1111/charset=UTF-8/</code></dd>
+    <dt>Virtuoso user name</dt>
+    <dd>User name to Virtuoso (default in Virtuoso is <code>dba</code>)</dd>
+    <dt>Virtuoso password</dt>
+    <dd>Password to Virtuoso. Note that this is plain text and in no way secured. (default in Virtuoso is <code>dba</code>)</dd>
+    <dt>Remote directory with source files</dt>
+    <dd>Directory on the remote file system (local to Virtuoso) where the files to be loaded are located</dd>
+    <dt>Filename to load</dt>
     <dd>File name of the file to load</dd>
     <dt>Target graph IRI</dt>
     <dd>Target RDF graph for input triple files and default graph in quad files</dd>
-    <dt>Directory with files to upload</dt>
-    <dd>Directory on the remote file system (local to Virtuoso) where the files to be loaded are located</dd>
     <dt>Clear target graph before loading</dt>
     <dd>When checked, executes SPARQL CLEAR GRAPH on the target graph before loading</dd>
-    <dt>Clear load list</dt>
-    <dd>When checked, deletes the db.dba.load_list table in Virtuoso</dd>
-    <dt>User name</dt>
-    <dd>User name to Virtuoso</dd>
-    <dt>Password</dt>
-    <dd>Password to Virtuoso. Note that this is plain text and in no way secured</dd>
     <dt>Number of loaders to use</dt>
     <dd>Virtuoso can load multiple files in parallel. This specifies how many and it should correspond to the available number of cores on the server.</dd>
+    <dt>Status update interval in seconds</dt>
+    <dd>Interval for polling Virtuoso for load status update</dd>
 </dl>
 <!--more-->
 <div class="row" id="characteristics">
