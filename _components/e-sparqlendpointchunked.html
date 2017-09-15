@@ -14,7 +14,7 @@ It is suitable for bigger data, as it queries the endpoint for descriptions of a
     <dt>Endpoint URL</dt>
     <dd>URL of the SPARQL endpoint to be queried</dd>
     <dt>MimeType</dt>
-    <dd>Some SPARQL endpoint (e.g. DBpedia) return invalid RDF data for the default MIME type and it is necessary to specify another one here.</dd>
+    <dd>Some SPARQL endpoints (e.g. DBpedia) return invalid RDF data with the default MIME type and it is necessary to specify another one here. This is sent in the SPARQL query HTTP request <code>Accept</code> header.</dd>
     <dt>Chunk size</dt>
     <dd>Number of entities to be queried for at once. This is done by using the <a href="https://www.w3.org/TR/sparql11-query/#inline-data" title="VALUES clause">VALUES clause</a> in the SPARQL query, so this number corresponds to the number of items in the VALUES clause.</dd>
     <dt>Default graph</dt>
