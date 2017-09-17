@@ -72,6 +72,10 @@ define([
         'angular-clipboard'
     ]);
     app.config(config);
+    // https://stackoverflow.com/questions/41211875/angularjs-1-6-0-latest-now-routes-not-working
+    app.config(['$locationProvider', function($locationProvider) {
+        $locationProvider.hashPrefix('');
+    }]);
     //
     rdfService(app);
     refreshService(app);

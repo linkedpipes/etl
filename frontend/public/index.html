@@ -6,18 +6,18 @@
         <meta name="theme-color" content="{{index.color}}"/>
         <title ng-bind='index.title'>LinkedPipes ETL</title>
         <!-- JointJs. -->
-        <link rel="stylesheet" href="libraries/jointjs/0.9.7/css/joint.css">
+        <link rel="stylesheet" href="libraries/jointjs/joint.core.min.css">
         <!-- Application styles. -->
         <link rel="stylesheet" href="assets/style.css">
         <link rel="stylesheet" href="app/components/pipelines/canvas/assets/style.css">
         <link rel="stylesheet" href="app/components/pipelines/listView/assets/style.css">
         <link rel="stylesheet" href="app/components/executions/listView/assets/style.css">
         <!-- Import Angular Material. -->
-        <link type="text/css" rel="stylesheet" href="libraries/angularjs.material/angular-material.css"/>
+        <link type="text/css" rel="stylesheet" href="libraries/angularjs.material/angular-material.min.css"/>
         <!-- Google icons and font. -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <!-- Support for notifications: https://github.com/alexcrack/angular-ui-notification -->
-        <link rel="stylesheet" href="libraries/ui-notification/0.0.14/angular-ui-notification.min.css">
+        <link rel="stylesheet" href="libraries/ui-notification/angular-ui-notification.min.css">
         <!-- We need to hyde the page until the Angular is loaded.-->
         <style>
             .ng-cloak {
@@ -60,7 +60,7 @@
             <div ng-view></div>
         </md-content>
     </div>
-    <script data-main="app/main.js" src="libraries/requirejs/2.1.22/require.js"></script>
+    <script data-main="app/main.js" src="libraries/requirejs/require.min.js"></script>
 </body>
 </html>
 

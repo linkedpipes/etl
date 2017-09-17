@@ -8,7 +8,6 @@ define([], function () {
         };
 
         var jsonld = jsonldService.jsonld();
-        console.log(jsonld);
 
         service.component.getIri = function (component) {
             return component['@id'];

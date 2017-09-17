@@ -1,34 +1,34 @@
 requirejs.config({
     baseUrl: '',
     paths: {
-        'jquery': 'libraries/jquery/2.2.0/jquery',
+        'jquery': 'libraries/jquery/jquery.min',
         // Angular.
-        'angular': 'libraries/angularjs/1.5.5/angular',
-        'angular-route': 'libraries/angularjs/1.5.5/angular-route',
-        'angular-resource': 'libraries/angularjs/1.5.5/angular-resource',
-        'angular-messages': 'libraries/angularjs/1.5.5/angular-messages',
-        'angular-cookies': 'libraries/angularjs/1.5.5/angular-cookies',
+        'angular': 'libraries/angularjs/angular.min',
+        'angular-route': 'libraries/angularjs/angular-route.min',
+        'angular-resource': 'libraries/angularjs/angular-resource.min',
+        'angular-messages': 'libraries/angularjs/angular-messages.min',
+        'angular-cookies': 'libraries/angularjs/angular-cookies.min',
         // Angular Material and dependencies.
         // https://github.com/angular/material/tree/v1.0.4
         // http://stackoverflow.com/questions/27567822/angular-material-with-requirejs
         // http://stackoverflow.com/questions/29542275/angular-material-requirejs-not-working-together
-        'angular-aria': 'libraries/angularjs/1.5.5/angular-aria',
-        'angular-animate': 'libraries/angularjs/1.5.5/angular-animate',
-        'angular-material': 'libraries/angularjs.material/angular-material',
+        'angular-aria': 'libraries/angularjs/angular-aria.min',
+        'angular-animate': 'libraries/angularjs/angular-animate.min',
+        'angular-material': 'libraries/angularjs.material/angular-material.min',
         //
-        'angular-file-upload': 'libraries/ng-file-upload/11.2.3/ng-file-upload',
+        'angular-file-upload': 'libraries/ng-file-upload/ng-file-upload.min',
         // https://github.com/alexcrack/angular-ui-notification
-        'angular-ui-notification': 'libraries/ui-notification/0.0.14/angular-ui-notification.min',
+        'angular-ui-notification': 'libraries/ui-notification/angular-ui-notification.min',
         //
-        'hammerjs': 'libraries/hammerjs/2.0.6/hammer.min',
+        'hammerjs': 'libraries/hammerjs/hammer.min',
         // JoinJS and dependencies.
-        'jointjs': 'libraries/jointjs/0.9.7/joint',
-        'lodash': 'libraries/lodash/3.10.1/lodash.min',
-        'backbone': 'libraries/backbone/1.2.3/backbone',
+        'jointjs': 'libraries/jointjs/joint.core.min',
+        'lodash': 'libraries/lodash/lodash.min',
+        'backbone': 'libraries/backbone/backbone.min',
         // Library for client side download
-        'file-saver': 'libraries/filesaver/FileSaver',
-        // https://github.com/omichelsen/angular-clipboard
-        'angular-clipboard' : 'libraries/angular-clipboard/1.4.2/angular-clipboard',
+        'file-saver': 'libraries/filesaver/FileSaver.min',
+        //
+        'angular-clipboard' : 'libraries/angular-clipboard/angular-clipboard',
         // Custom modules.
         'jsonld': '/app/modules/jsonld',
         'lp': '/app/modules/lp'
