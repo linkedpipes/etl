@@ -54,51 +54,11 @@ define([
                     'ref': '.body',
                     'text-anchor': 'middle',
                     'fill': '#000000'
-                },
-                // '.inPorts .port-label': {
-                //     'x': -15,
-                //     'dy': 4,
-                //     'text-anchor': 'end',
-                //     'fill': '#000000'
-                // },
-                // '.outPorts .port-label': {
-                //     'x': 15,
-                //     'dy': 4,
-                //     'fill': '#000000'
-                // }
+                }
             },
             "ports": {
                 'groups': {
-                    'configuration': {
-                        'position': { 'name': 'left' },
-                        'attrs': {
-                            '.port-label': { 'fill': '#000000' },
-                            '.port-body': {
-                                'fill': '#FFAAFF',
-                                'stroke': '#000000',
-                                'r': 10,
-                                'magnet': 'passive'
-                            }
-                        },
-                        'label': {
-                            'position': {'name': 'left'}
-                        }
-                    },
-                    'task': {
-                        'position': { 'name': 'left' },
-                        'attrs': {
-                            '.port-label': { 'fill': '#000000' },
-                            '.port-body': {
-                                'fill': '#CCCCFF',
-                                'stroke': '#000000',
-                                'r': 10,
-                                'magnet': 'passive'
-                            }
-                        },
-                        'label': {
-                            'position': {'name': 'left'}
-                        }
-                    },
+                    // TODO Introduce groups for different input types. We need to fix problem with overlapping ports.
                     'input': {
                         'position': { 'name': 'left' },
                         'attrs': {
@@ -131,7 +91,7 @@ define([
                     }
                 }
             }
-        }, joint.shapes.basic.Generic.prototype.defaults),
+        }, joint.shapes.basic.Generic.prototype.defaults)
     });
 
     function validateConnection(cellS, magnetS, cellT, magnetT, end, linkView) {
@@ -173,15 +133,19 @@ define([
         if (template['inputs'] !== undefined) {
             template['inputs'].forEach(function (port) {
                 let type;
+                let color;
                 let useLabel;
                 if (port.isRuntimeConfiguration) {
-                    type = "configuration";
+                    type = "input";
+                    color = "#FFAAFF";
                     useLabel = template.isDisplayLabels.runtimeConfiguration;
                 } else if (port.isTaskList) {
-                    type = "task";
+                    type = "input";
+                    color = "#CCCCFF";
                     useLabel = template.isDisplayLabels.taskList;
                 } else {
                     type = "input";
+                    color = "#CCFFCC";
                     useLabel = template.isDisplayLabels.dataInput;
                 }
                 portsData[port['binding']] = {
@@ -191,6 +155,9 @@ define([
                     'id': port['binding'],
                     'group' : type,
                     'attrs': {
+                        '.port-body': {
+                            'fill': color
+                        },
                         '.port-label': {
                             'text': useLabel ? port['label'] : undefined
                         }
