@@ -36,6 +36,18 @@ define([], function () {
         "encodeRdf": {
             "$type": "bool",
             "$label": "Encode RDF"
+        },
+        "useAuthentication": {
+            "$type": "bool",
+            "$label": "Use authentication"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Password"
         }
     };
 

@@ -6,6 +6,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.GraphQuery;
@@ -47,9 +53,10 @@ public final class SparqlEndpointConstructScrollableCursor
 
     @Override
     public void execute() throws LpException {
-        final Repository repository = new SPARQLRepository(
+        SPARQLRepository repository = new SPARQLRepository(
                 configuration.getEndpoint());
         repository.initialize();
+        repository.setHttpClient(getHttpClient());
         //
         LOG.info("Used query: {}", prepareQuery(0));
         try {
@@ -74,6 +81,19 @@ public final class SparqlEndpointConstructScrollableCursor
                 LOG.error("Can't close repository.", ex);
             }
         }
+    }
+
+    private CloseableHttpClient getHttpClient() {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (configuration.isUseAuthentication()) {
+            provider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            configuration.getUsername(),
+                            configuration.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(provider).build();
     }
 
     /**
