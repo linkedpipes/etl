@@ -92,6 +92,7 @@
         <module>t-rdfDifference</module>
         <module>t-xmlToChunks</module>
         <module>c-rdfSingleGraph</module>
+        <module>c-rdfChunkedTriples</module>
     </modules>
 
 </project>
