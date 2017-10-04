@@ -36,6 +36,18 @@ define([], function () {
         "innerSelect": {
             "$type": "str",
             "$label": "Inner select query"
+        },
+        "useAuthentication": {
+            "$type": "bool",
+            "$label": "Use authentication"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Password"
         }
     };
 
