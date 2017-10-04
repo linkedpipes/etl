@@ -17,6 +17,12 @@ final class SparqlEndpointVocabulary {
 
     public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
 
+    public static final String HAS_AUTH = PREFIX + "useAuthentication";
+
+    public static final String HAS_USERNAME = PREFIX + "userName";
+
+    public static final String HAS_PASSWORD = PREFIX + "password";
+
     private SparqlEndpointVocabulary() {
     }
 
