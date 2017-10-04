@@ -6,7 +6,10 @@
     config:member <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/query>  ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/fileName> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/endpoint> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/defaultGraph> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/defaultGraph> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/useAuthentication> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/userName> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/password> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
@@ -27,3 +30,18 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#defaultGraph> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#defaultGraphControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/useAuthentication>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#useAuthentication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#useAuthenticationControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/userName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#userNameControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#passwordControl> .

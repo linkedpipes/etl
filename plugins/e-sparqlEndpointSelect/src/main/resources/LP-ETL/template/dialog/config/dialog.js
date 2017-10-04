@@ -28,6 +28,18 @@ define([], function () {
             "$property" : "fileName",
             "$control": "fileNameControl",
             "$label" : "File name"
+        },
+        "useAuthentication": {
+            "$type": "bool",
+            "$label": "Use authentication"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Password"
         }
     };
 
