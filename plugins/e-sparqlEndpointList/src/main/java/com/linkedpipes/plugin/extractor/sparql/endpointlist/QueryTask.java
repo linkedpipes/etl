@@ -27,6 +27,15 @@ public class QueryTask implements GroupTask {
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_GROUP)
     private String group = null;
 
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_AUTH)
+    private boolean useAuthentication = false;
+
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_USERNAME)
+    private String username;
+
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_PASSWORD)
+    private String password;
+
     @Override
     public String getIri() {
         return iri;
@@ -76,4 +85,29 @@ public class QueryTask implements GroupTask {
     public void setGroup(String group) {
         this.group = group;
     }
+
+    public boolean isUseAuthentication() {
+        return useAuthentication;
+    }
+
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

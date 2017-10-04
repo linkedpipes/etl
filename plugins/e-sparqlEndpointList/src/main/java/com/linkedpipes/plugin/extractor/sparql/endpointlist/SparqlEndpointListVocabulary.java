@@ -30,6 +30,12 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_COMMIT_SIZE = PREFIX + "commitSize";
 
+    public static final String HAS_AUTH = PREFIX + "useAuthentication";
+
+    public static final String HAS_USERNAME = PREFIX + "userName";
+
+    public static final String HAS_PASSWORD = PREFIX + "password";
+
     private SparqlEndpointListVocabulary() {
     }
 

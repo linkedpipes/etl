@@ -3,6 +3,12 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -118,6 +124,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         SPARQLRepository repository = new SPARQLRepository(task.getEndpoint());
         setHeaders(repository);
         repository.initialize();
+        repository.setHttpClient(getHttpClient());
         return repository;
     }
 
@@ -128,6 +135,19 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
             headers.put("Accept", task.getTransferMimeType());
         }
         repository.setAdditionalHttpHeaders(headers);
+    }
+
+    private CloseableHttpClient getHttpClient() {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (task.isUseAuthentication()) {
+            provider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            task.getUsername(),
+                            task.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(provider).build();
     }
 
     private void executeQuery(Repository repository) throws LpException {
