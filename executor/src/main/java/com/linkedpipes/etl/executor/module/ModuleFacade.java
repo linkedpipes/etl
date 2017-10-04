@@ -43,6 +43,11 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             + "" // javax additional - FIND BUNDLE WITH THIS !
             + "javax.servlet;version=\"2.4.0\","
             + "javax.servlet.http;version=\"2.4.0\","
+            + "" // Added after update to Java 9
+            + "javax.crypto,"
+            + "javax.crypto.spec,"
+            + "javax.net,"
+            + "javax.net.ssl,"
             + "" // slf4j
             + "org.slf4j;version=\"1.7.21\","
             + "org.slf4j.helpers;version=\"1.7.21\","
