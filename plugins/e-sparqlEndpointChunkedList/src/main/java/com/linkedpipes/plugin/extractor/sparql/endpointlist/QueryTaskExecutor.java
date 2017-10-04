@@ -4,6 +4,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -19,7 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
@@ -111,6 +120,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         this.repository = new SPARQLRepository(this.task.getEndpoint());
         setRepositoryHeaders(this.repository);
         this.repository.initialize();
+        this.repository.setHttpClient(getHttpClient());
     }
 
     private void setRepositoryHeaders(SPARQLRepository repository) {
@@ -121,6 +131,19 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
             headers.put("Accept", mimeType);
         }
         repository.setAdditionalHttpHeaders(headers);
+    }
+
+    private CloseableHttpClient getHttpClient() {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (task.isUseAuthentication()) {
+            provider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            task.getUsername(),
+                            task.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(provider).build();
     }
 
     private void executeTask() throws LpException {
