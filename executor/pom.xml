@@ -18,6 +18,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <!-- -->
+        <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>api-executor-v1</artifactId>
             <version>${lp.version}</version>
@@ -90,7 +96,7 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
-            <version>5.0.1</version>
+            <version>5.6.8</version>
             <scope>compile</scope>
         </dependency>
         <!-- Logging -->
@@ -153,7 +159,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.0.2</version>
                 <configuration>
                     <archive>
                         <manifest>

@@ -99,7 +99,7 @@
                                         <dependency>
                                             <groupId>commons-net</groupId>
                                             <artifactId>commons-net</artifactId>
-                                            <version>3.5</version>
+                                            <version>3.6</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
