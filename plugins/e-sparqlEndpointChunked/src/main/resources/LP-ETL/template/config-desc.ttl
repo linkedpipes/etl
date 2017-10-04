@@ -9,7 +9,10 @@
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/headerAccept> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/chunkSize> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/skipOnError> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/encodeRdf> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/encodeRdf> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/useAuthentication> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/userName> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/password> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
@@ -45,3 +48,18 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdf> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdfControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/useAuthentication>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useAuthentication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useAuthenticationControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/userName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#userNameControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#passwordControl> .
