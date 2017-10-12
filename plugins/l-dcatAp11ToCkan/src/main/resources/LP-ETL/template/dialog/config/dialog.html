@@ -51,4 +51,16 @@
                ng-disabled="dialog.voidSparqlEndpoint.disabled || dialog.voidSparqlEndpoint.inherit"
                flex-gt-sm>Generate CKAN resource from VoID SPARQL endpoint
     </md-switch>
+    <md-switch ng-model="dialog.overrideCkanOrganization.value"
+               ng-hide="dialog.overrideCkanOrganization.hide"
+               ng-disabled="dialog.overrideCkanOrganization.disabled || dialog.overrideCkanOrganization.inherit"
+               flex-gt-sm>Specify CKAN organization overriding the input one
+    </md-switch>
+    <md-input-container class="md-block"
+                        ng-hide="dialog.ckanOrganization.hide">
+        <label>CKAN organization ID</label>
+        <input ng-model="dialog.ckanOrganization.value"
+               ng-disabled="dialog.ckanOrganization.disabled || dialog.ckanOrganization.inherit || dialog.overrideCkanOrganization.value"
+               placeholder="my-organization">
+    </md-input-container>
 </div>

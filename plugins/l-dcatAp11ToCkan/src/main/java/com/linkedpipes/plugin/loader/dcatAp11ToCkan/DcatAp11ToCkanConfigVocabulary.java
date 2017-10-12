@@ -21,4 +21,8 @@ public final class DcatAp11ToCkanConfigVocabulary {
 
     public static final String PROFILE = PREFIX + "profile";
 
+    public static final String OVERRIDE_CKAN_ORGANIZATION = PREFIX + "overrideCkanOrganization";
+
+    public static final String CKAN_ORGANIZATION = PREFIX + "ckanOrganization";
+
 }

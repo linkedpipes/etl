@@ -21,6 +21,10 @@ define([], function () {
             "$type" : "str",
             "$label" : "CKAN dataset ID"
         },
+        "ckanOrganization" : {
+            "$type" : "str",
+            "$label" : "CKAN organization ID"
+        },
         "loadLanguage" : {
             "$type" : "str",
             "$label" : "Load language (cs|en)"
@@ -28,6 +32,10 @@ define([], function () {
         "voidExampleResources" : {
             "$type" : "bool",
             "$label" : "Generate CKAN resources from VoID example resources"
+        },
+        "overrideCkanOrganization" : {
+            "$type" : "bool",
+            "$label" : "Specify CKAN organization overriding the input one"
         },
         "voidSparqlEndpoint" : {
             "$type" : "bool",

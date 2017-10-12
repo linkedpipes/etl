@@ -232,7 +232,10 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
         String publisher_uri = executeSimpleSelectQuery("SELECT ?publisher_uri WHERE {<" + datasetURI + "> <" + DCTERMS.PUBLISHER + "> ?publisher_uri }", "publisher_uri");
         String publisher_name = executeSimpleSelectQuery("SELECT ?publisher_name WHERE {<" + datasetURI + "> <" + DCTERMS.PUBLISHER + ">/<" + FOAF.NAME + "> ?publisher_name FILTER(LANGMATCHES(LANG(?publisher_name), \"" + configuration.getLoadLanguage() + "\"))}", "publisher_name");
 
-        if (publisher_uri != null && !publisher_uri.isEmpty() && !organizations.containsKey(publisher_uri)) {
+        if ((configuration.getOverrideCkanOrganization() == null || !configuration.getOverrideCkanOrganization())
+                && publisher_uri != null
+                && !publisher_uri.isEmpty()
+                && !organizations.containsKey(publisher_uri)) {
             LOG.debug("Creating organization " + publisher_uri);
             JSONObject root = new JSONObject();
 
@@ -565,7 +568,9 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
 
             createRoot.put("name", datasetID);
             createRoot.put("title", title);
-            if (publisher_uri != null && !publisher_uri.isEmpty()) {
+            if (configuration.getOverrideCkanOrganization() != null && configuration.getOverrideCkanOrganization()) {
+                createRoot.put("owner_org", configuration.getCkanOrganization());
+            } else if (publisher_uri != null && !publisher_uri.isEmpty()) {
                 createRoot.put("owner_org", organizations.get(publisher_uri));
             }
 

@@ -26,6 +26,12 @@ public class DcatAp11ToCkanConfiguration {
     @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.VOID_SPARQL_ENDPOINT)
     private Boolean voidSparqlEndpoint;
 
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.OVERRIDE_CKAN_ORGANIZATION)
+    private Boolean overrideCkanOrganization;
+
+    @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.CKAN_ORGANIZATION)
+    private String ckanOrganization;
+
     public DcatAp11ToCkanConfiguration() {
     }
 
@@ -83,5 +89,21 @@ public class DcatAp11ToCkanConfiguration {
 
     public void setVoidSparqlEndpoint(Boolean voidSparqlEndpoint) {
         this.voidSparqlEndpoint = voidSparqlEndpoint;
+    }
+
+    public Boolean getOverrideCkanOrganization() {
+        return overrideCkanOrganization;
+    }
+
+    public void setOverrideCkanOrganization(Boolean overrideCkanOrganization) {
+        this.overrideCkanOrganization = overrideCkanOrganization;
+    }
+
+    public String getCkanOrganization() {
+        return ckanOrganization;
+    }
+
+    public void setCkanOrganization(String ckanOrganization) {
+        this.ckanOrganization = ckanOrganization;
     }
 }
