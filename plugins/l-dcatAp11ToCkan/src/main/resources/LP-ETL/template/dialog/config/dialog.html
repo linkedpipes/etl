@@ -60,7 +60,7 @@
                         ng-hide="dialog.ckanOrganization.hide">
         <label>CKAN organization ID</label>
         <input ng-model="dialog.ckanOrganization.value"
-               ng-disabled="dialog.ckanOrganization.disabled || dialog.ckanOrganization.inherit || dialog.overrideCkanOrganization.value"
+               ng-disabled="dialog.ckanOrganization.disabled || dialog.ckanOrganization.inherit || !dialog.overrideCkanOrganization.value"
                placeholder="my-organization">
     </md-input-container>
 </div>
