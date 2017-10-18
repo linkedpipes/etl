@@ -145,6 +145,10 @@ public class PipelineExecutor {
         } catch (ExecutorException ex) {
             execution.onComponentsLoadingFailed(ex);
             return false;
+        } catch (Throwable ex) {
+            execution.onComponentsLoadingFailed(
+                    new LpException("Initialization failed on throwable.",ex));
+            return false;
         }
         return true;
     }
