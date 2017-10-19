@@ -43,11 +43,6 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             + "" // javax additional - FIND BUNDLE WITH THIS !
             + "javax.servlet;version=\"2.4.0\","
             + "javax.servlet.http;version=\"2.4.0\","
-            + "" // Added after update to Java 9
-            + "javax.crypto,"
-            + "javax.crypto.spec,"
-            + "javax.net,"
-            + "javax.net.ssl,"
             + "" // slf4j
             + "org.slf4j;version=\"1.7.21\","
             + "org.slf4j.helpers;version=\"1.7.21\","
@@ -217,6 +212,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
     protected void start() {
         final FrameworkFactory frameworkFactory
                 = ServiceLoader.load(FrameworkFactory.class).iterator().next();
+
         final Map<String, String> config = new HashMap<>();
         config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
                 EXPORT_PACKAGE_LIST);
@@ -224,6 +220,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
                 configuration.getOsgiStorageDirectory());
         config.put(Constants.FRAMEWORK_STORAGE_CLEAN,
                 Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+
         framework = frameworkFactory.newFramework(config);
         try {
             framework.start();
