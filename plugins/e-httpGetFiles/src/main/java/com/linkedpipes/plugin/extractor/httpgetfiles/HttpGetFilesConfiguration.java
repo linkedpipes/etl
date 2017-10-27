@@ -1,12 +1,13 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpGetFilesVocabulary.CONFIG)
-public class HttpGetFilesConfiguration {
+public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
 
     /**
      * Force custom redirect. The Java follow only redirect in scope of
@@ -48,6 +49,7 @@ public class HttpGetFilesConfiguration {
         this.forceFollowRedirect = forceFollowRedirect;
     }
 
+    @Override
     public boolean isSkipOnError() {
         return skipOnError;
     }
@@ -86,6 +88,11 @@ public class HttpGetFilesConfiguration {
 
     public void setTimeout(Integer timeout) {
         this.timeout = timeout;
+    }
+
+    @Override
+    public int getThreadsNumber() {
+        return threads;
     }
 
 }

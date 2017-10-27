@@ -1,12 +1,16 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
+import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpGetFilesVocabulary.REFERENCE)
-public class FileToDownload {
+public class DownloadTask implements Task {
+
+    @RdfToPojo.Resource
+    private String iri;
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_URI)
     private String uri;
@@ -20,7 +24,16 @@ public class FileToDownload {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TMEOUT)
     private Integer timeOut = null;
 
-    public FileToDownload() {
+    public DownloadTask() {
+    }
+
+    @Override
+    public String getIri() {
+        return iri;
+    }
+
+    public void setIri(String iri) {
+        this.iri = iri;
     }
 
     public String getUri() {
@@ -54,5 +67,4 @@ public class FileToDownload {
     public void setTimeOut(Integer timeOut) {
         this.timeOut = timeOut;
     }
-
 }
