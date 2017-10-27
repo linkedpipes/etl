@@ -566,7 +566,7 @@ define([
                     'locals': {
                         'data': {
                             'iri': data.pipeline.iri,
-                            'label': $scope.data.pipelineLabel + '.jsonld'
+                            'label': $scope.data.pipelineLabel
                         }
                     }
                 });
