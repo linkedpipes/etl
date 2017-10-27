@@ -83,6 +83,9 @@ public class HttpRequestTask {
 
     }
 
+    @RdfToPojo.Resource
+    private String iri;
+
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_URL)
     private String url;
 
@@ -97,6 +100,17 @@ public class HttpRequestTask {
 
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_FILE_NAME)
     private String outputFileName;
+
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_OUTPUT_HEADERS)
+    private boolean outputHeaders = false;
+
+    public String getIri() {
+        return iri;
+    }
+
+    public void setIri(String iri) {
+        this.iri = iri;
+    }
 
     public String getUrl() {
         return url;
@@ -138,5 +152,14 @@ public class HttpRequestTask {
     public void setOutputFileName(String outputFileName) {
         this.outputFileName = outputFileName;
     }
+
+    public boolean isOutputHeaders() {
+        return outputHeaders;
+    }
+
+    public void setOutputHeaders(boolean outputHeaders) {
+        this.outputHeaders = outputHeaders;
+    }
+
 }
 

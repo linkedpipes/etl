@@ -25,41 +25,67 @@ class TaskExecutor {
 
     private final TaskContentWriter taskContentWriter;
 
+    private HeaderReporter headerReporter;
+
     public TaskExecutor(
             ExceptionFactory exceptionFactory,
             WritableFilesDataUnit outputFiles,
-            Map<String, File> inputFilesMap) {
+            Map<String, File> inputFilesMap,
+            StatementsConsumer consumer) {
         this.exceptionFactory = exceptionFactory;
         this.outputFiles = outputFiles;
         this.taskContentWriter = new TaskContentWriter(
                 exceptionFactory, inputFilesMap);
+        this.headerReporter = new HeaderReporter(consumer);
     }
 
     public void execute(HttpRequestTask task) throws LpException {
         LOG.info("Executing '{}' on '{}' to '{}'", task.getMethod(),
                 task.getUrl(), task.getOutputFileName());
-        try (MultipartConnection connection = createHttpConnection(task)) {
-            taskContentWriter.addTaskContent(connection, task);
+        try (Connection connection = createHttpConnection(task)) {
             connection.finishRequest();
             checkStatus(connection);
-            saveResponse(connection.getConnection(), task);
+            HttpURLConnection urlConnection = connection.getConnection();
+            saveHeaders(urlConnection, task);
+            saveFileResponse(urlConnection, task);
         } catch (Exception ex) {
             throw exceptionFactory.failure("Can't create connection.", ex);
         }
     }
 
-    private MultipartConnection createHttpConnection(HttpRequestTask task)
-            throws IOException {
+    private Connection createHttpConnection(HttpRequestTask task)
+            throws IOException, LpException {
+        // TODO Add support for single body request.
+        if (task.getContent().isEmpty()) {
+            return createConnection(task);
+        } else {
+            return createMultipartyConnection(task);
+        }
+    }
+
+    private Connection createConnection(
+            HttpRequestTask task) throws IOException {
+        URL url = new URL(task.getUrl());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(task.getMethod());
+        return new Connection(connection);
+    }
+
+    private Connection createMultipartyConnection(
+            HttpRequestTask task) throws IOException, LpException {
         URL url = new URL(task.getUrl());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(task.getMethod());
         for (HttpRequestTask.Header header : task.getHeaders()) {
             connection.setRequestProperty(header.getName(), header.getValue());
         }
-        return new MultipartConnection(connection);
+        MultipartConnection multipartConnection =
+                new MultipartConnection(connection);
+        taskContentWriter.addTaskContent(multipartConnection, task);
+        return multipartConnection;
     }
 
-    private void checkStatus(MultipartConnection connection)
+    private void checkStatus(Connection connection)
             throws IOException, LpException {
         if (connection.requestFailed()) {
             throw exceptionFactory.failure("Request failed with status: {}",
@@ -67,8 +93,16 @@ class TaskExecutor {
         }
     }
 
-    private void saveResponse(HttpURLConnection connection,
-            HttpRequestTask task)
+    private void saveHeaders(
+            HttpURLConnection connection, HttpRequestTask task)
+            throws LpException {
+        if (task.isOutputHeaders()) {
+            headerReporter.reportHeaderResponse(connection, task);
+        }
+    }
+
+    private void saveFileResponse(
+            HttpURLConnection connection, HttpRequestTask task)
             throws LpException, IOException {
         String fileName = task.getOutputFileName();
         if (fileName == null || fileName.isEmpty()) {

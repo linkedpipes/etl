@@ -3,6 +3,7 @@ package com.linkedpipes.plugin.exec.httprequest;
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -30,12 +31,14 @@ public final class HttpRequest implements Component, SequentialExecution {
     @Component.InputPort(iri = "FilesOutput")
     public WritableFilesDataUnit outputFiles;
 
+    @Component.InputPort(iri = "ReportRdf")
+    public WritableSingleGraphDataUnit reportRdf;
+
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
-
 
     @Override
     public void execute() throws LpException {
@@ -63,8 +66,12 @@ public final class HttpRequest implements Component, SequentialExecution {
         }
     }
 
-    private void executeTasks(List<HttpRequestTask> tasks, Map<String, File> inputFilesMap) throws LpException {
-        TaskExecutor executor = new TaskExecutor(exceptionFactory, outputFiles, inputFilesMap);
+    private void executeTasks(
+            List<HttpRequestTask> tasks, Map<String, File> inputFilesMap)
+            throws LpException {
+        TaskExecutor executor = new TaskExecutor(
+                exceptionFactory, outputFiles, inputFilesMap,
+                new StatementsConsumer(reportRdf));
         progressReport.start(tasks.size());
         for (HttpRequestTask task : tasks) {
             try {

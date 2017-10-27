@@ -5,13 +5,11 @@ import org.apache.commons.io.FileUtils;
 import java.io.*;
 import java.net.HttpURLConnection;
 
-class MultipartConnection implements AutoCloseable {
+class MultipartConnection extends Connection {
 
     public static final String EOL = "\r\n";
 
     private final String boundary;
-
-    private final HttpURLConnection connection;
 
     private final OutputStream outputStream;
 
@@ -19,8 +17,8 @@ class MultipartConnection implements AutoCloseable {
 
     public MultipartConnection(HttpURLConnection connection)
             throws IOException {
+        super(connection);
         this.boundary = "=----------------------" + System.currentTimeMillis();
-        this.connection = connection;
 
         initializeConnection();
 
@@ -41,7 +39,6 @@ class MultipartConnection implements AutoCloseable {
         connection.setChunkedStreamingMode(0);
         connection.setRequestProperty("Content-Type",
                 "multipart/form-data; boundary=" + boundary);
-
     }
 
     public void addField(String name, String value) {
@@ -87,6 +84,7 @@ class MultipartConnection implements AutoCloseable {
         writer.append(EOL);
     }
 
+    @Override
     public void finishRequest() throws IOException {
         writeEndOfRequest();
         writer.close();
@@ -96,24 +94,6 @@ class MultipartConnection implements AutoCloseable {
         writer.append(EOL);
         writer.append("--" + boundary + "--").append(EOL);
         writer.flush();
-    }
-
-    public HttpURLConnection getConnection() {
-        return connection;
-    }
-
-    public boolean requestFailed() throws IOException {
-        int status = connection.getResponseCode();
-        return status < 200 || status > 299;
-    }
-
-    public int getResponseCode() throws IOException {
-        return connection.getResponseCode();
-    }
-
-    @Override
-    public void close() throws Exception {
-        connection.disconnect();
     }
 
 }

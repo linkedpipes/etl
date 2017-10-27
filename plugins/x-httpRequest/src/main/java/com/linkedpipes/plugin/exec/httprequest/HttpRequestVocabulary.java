@@ -27,4 +27,12 @@ public final class HttpRequestVocabulary {
 
     public static final String HAS_FILE_REFERENCE = PREFIX + "fileReference";
 
+    public static final String HAS_OUTPUT_HEADERS = PREFIX + "outputHeaders";
+
+    public static final String HAS_HEADER_OBJECT = PREFIX + "hasHeaderObject";
+
+    public static final String HAS_RESPONSE_LINE = PREFIX + "responseLine";
+
+    public static final String REQUEST_TYPE = PREFIX + "requestType";
+
 }
