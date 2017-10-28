@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: 0.0.0
   title: "LinkedPipes ETL : Executor"
-  description: This document describes the HTTP API of the LinkedPipes ELT Executor component.
+  description: This document describes the HTTP API of the LinkedPipes ETL Executor component.
   contact:
     name: ""
   license:

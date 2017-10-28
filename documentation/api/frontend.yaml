@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: 0.0.0
   title: "LinkedPipes ETL : Frontend"
-  description: This document describes the HTT API of the LinkedPipes ELT Frontned component. This component include the HTTP API of Executor-Monitor - this API is NOT documented here.
+  description: This document describes the HTTP API of the LinkedPipes ETL Frontned component. This component include the HTTP API of Executor-Monitor - this API is NOT documented here.
   contact:
     name: ""
   license:

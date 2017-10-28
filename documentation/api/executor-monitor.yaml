@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: 0.0.0
   title: "LinkedPipes ETL : Executor-Monitor"
-  description: This document describes the HTTP API of the LinkedPipes ELT Executor-Monitor component.
+  description: This document describes the HTTP API of the LinkedPipes ETL Executor-Monitor component.
   contact:
     name: ""
   license:
