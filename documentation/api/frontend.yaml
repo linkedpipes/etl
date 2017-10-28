@@ -195,6 +195,11 @@ paths:
           description: Pipeline definition.
           required: false
           type: file
+        - name: unpacked_pipeline
+          in: query
+          description: If true the pipeline must be in an execution-ready format.
+          required: false
+          type: boolean
       consumes:
         - multipart/form-data
         - undefined
