@@ -12,6 +12,13 @@ schemes:
   - http
 paths:
   /resources/components:
+    get:
+      description: List of all components.
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
     post:
       description: Create new component.
       parameters:
@@ -472,6 +479,24 @@ paths:
       responses:
         "200":
           description: OK
+  "/api/v1/components/usage":
+    get:
+      description: Return information about component use in pipelines.
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      responses:
+        "200":
+          description: OK
+
 definitions:
   CreatedExecution:
     type: object
