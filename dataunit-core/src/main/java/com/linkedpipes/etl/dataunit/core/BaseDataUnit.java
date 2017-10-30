@@ -105,7 +105,7 @@ public abstract class BaseDataUnit implements ManageableDataUnit {
 
     private List<String> relativeAsString(
             Collection<File> paths, File root) {
-        final Path rootPath = root.toPath();
+        Path rootPath = root.getAbsoluteFile().toPath();
         return paths.stream().map(
                 (file) -> rootPath.relativize(file.toPath()).toString()
         ).collect(Collectors.toList());
