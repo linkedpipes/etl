@@ -17,11 +17,14 @@ homepage: true
 		</div>
       </div>
       <div class="row center hide-on-med-and-down">
-        <div class="col l6">
+        <div class="col l4">
 			<a href="./documentation/" class="btn-large waves-effect waves-light blue"><i class="material-icons left">description</i>Read</a>
 		</div>
-        <div class="col l6">
+        <div class="col l4">
 			<a href="./tutorials/" class="btn-large waves-effect waves-light blue"><i class="material-icons left">school</i>Learn</a>
+		</div>
+        <div class="col l4">
+			<a href="https://goo.gl/zfcbhg" class="btn-large waves-effect waves-light blue"><i class="material-icons left">slideshow</i>Slides</a>
 		</div>
       </div>
       <div class="row center hide-on-large-only">
@@ -41,9 +44,12 @@ homepage: true
 		</div>
       </div>
       <div class="row center hide-on-large-only">
-        <div class="col s12">
+        <div class="col s6">
 			<a href="./installation/" class="btn-large waves-effect waves-light orange"><i class="material-icons left">file_download</i>Install</a>
 		</div>
+        <div class="col s6">
+			<a href="https://goo.gl/zfcbhg" class="btn-large waves-effect waves-light blue"><i class="material-icons left">slideshow</i>Slides</a>
+		</div>        
       </div>
     </div>
   </div>
@@ -80,7 +86,7 @@ homepage: true
           </div>
           <div class="col l4 hide-on-med-and-down">
             <h3 class="center orange-text">Featured component</h3>
-            {% assign featured = site.components | where:"short","e-pipelineinput" %}
+            {% assign featured = site.components | where:"short","l-dcatap11tockan" %}
             {% for component in featured %}
             <div class="card small {{component.color}} lighten-4 hoverable">
                 <div class="card-image waves-effect waves-block waves-light">
