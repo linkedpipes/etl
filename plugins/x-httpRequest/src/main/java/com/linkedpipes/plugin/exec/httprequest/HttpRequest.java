@@ -6,21 +6,31 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import org.eclipse.rdf4j.repository.Repository;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class HttpRequest implements Component, SequentialExecution {
+public final class HttpRequest extends TaskExecution<HttpRequestTask> {
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "Task")
     public SingleGraphDataUnit taskRdf;
@@ -34,21 +44,37 @@ public final class HttpRequest implements Component, SequentialExecution {
     @Component.InputPort(iri = "ReportRdf")
     public WritableSingleGraphDataUnit reportRdf;
 
+    @Component.Configuration
+    public HttpRequestConfiguration configuration;
+
     @Component.Inject
     public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
 
+    private Map<String, File> inputFilesMap;
+
+    private List<HttpRequestTask> tasks;
+
     @Override
-    public void execute() throws LpException {
-        Map<String, File> inputFilesMap = initializeInputFilesMap();
-        List<HttpRequestTask> tasks = loadTasks();
-        executeTasks(tasks, inputFilesMap);
+    protected TaskExecutionConfiguration getExecutionConfiguration() {
+        return this.configuration;
+    }
+
+    @Override
+    protected TaskSource<HttpRequestTask> createTaskSource()
+            throws LpException {
+        initializeInputFilesMap();
+        tasks = loadTasks();
+        TaskSource<HttpRequestTask> source =
+                TaskSource.defaultTaskSource(this.tasks);
+        source.setSkipOnError(configuration.isSkipOnError());
+        return source;
     }
 
     private Map<String, File> initializeInputFilesMap() {
-        Map<String, File> inputFilesMap = new HashMap<>();
+        inputFilesMap = new HashMap<>();
         for (FilesDataUnit.Entry entry : inputFiles) {
             inputFilesMap.put(entry.getFileName(), entry.toFile());
         }
@@ -66,24 +92,32 @@ public final class HttpRequest implements Component, SequentialExecution {
         }
     }
 
-    private void executeTasks(
-            List<HttpRequestTask> tasks, Map<String, File> inputFilesMap)
-            throws LpException {
-        TaskExecutor executor = new TaskExecutor(
+    @Override
+    protected TaskConsumer<HttpRequestTask> createConsumer() {
+        return new TaskExecutor(
                 exceptionFactory, outputFiles, inputFilesMap,
-                new StatementsConsumer(reportRdf));
-        progressReport.start(tasks.size());
-        for (HttpRequestTask task : tasks) {
-            try {
-                executor.execute(task);
-            } catch (LpException ex) {
-                throw ex;
-            } catch (Exception ex) {
-                throw exceptionFactory.failure("Can't execute task.", ex);
-            }
-            progressReport.entryProcessed();
-        }
-        progressReport.done();
+                new StatementsConsumer(reportRdf), progressReport);
+    }
+
+    @Override
+    protected ReportWriter createReportWriter() {
+        String graph = reportRdf.getWriteGraph().stringValue();
+        Repository repository = reportRdf.getRepository();
+        TripleWriter writer =
+                Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
+        return ReportWriter.create(writer);
+    }
+
+    @Override
+    protected void beforeExecution() throws LpException {
+        super.beforeExecution();
+        this.progressReport.start(tasks);
+    }
+
+    @Override
+    protected void afterExecution() throws LpException {
+        super.afterExecution();
+        this.progressReport.done();
     }
 
 }

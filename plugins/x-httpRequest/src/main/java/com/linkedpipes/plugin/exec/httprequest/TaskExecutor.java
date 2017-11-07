@@ -2,7 +2,9 @@ package com.linkedpipes.plugin.exec.httprequest;
 
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-class TaskExecutor {
+class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(TaskExecutor.class);
@@ -27,19 +29,24 @@ class TaskExecutor {
 
     private HeaderReporter headerReporter;
 
+    private ProgressReport progressReport;
+
     public TaskExecutor(
             ExceptionFactory exceptionFactory,
             WritableFilesDataUnit outputFiles,
             Map<String, File> inputFilesMap,
-            StatementsConsumer consumer) {
+            StatementsConsumer consumer,
+            ProgressReport progressReport) {
         this.exceptionFactory = exceptionFactory;
         this.outputFiles = outputFiles;
         this.taskContentWriter = new TaskContentWriter(
                 exceptionFactory, inputFilesMap);
         this.headerReporter = new HeaderReporter(consumer);
+        this.progressReport  = progressReport;
     }
 
-    public void execute(HttpRequestTask task) throws LpException {
+    @Override
+    public void accept(HttpRequestTask task) throws LpException {
         LOG.info("Executing '{}' on '{}' to '{}'", task.getMethod(),
                 task.getUrl(), task.getOutputFileName());
         try (Connection connection = createHttpConnection(task)) {
@@ -50,6 +57,8 @@ class TaskExecutor {
             saveFileResponse(urlConnection, task);
         } catch (Exception ex) {
             throw exceptionFactory.failure("Can't create connection.", ex);
+        } finally {
+            progressReport.entryProcessed();
         }
     }
 

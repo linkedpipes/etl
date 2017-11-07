@@ -1,0 +1,18 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.threads.hide">
+        <label>Number of threads used for execution</label>
+        <input ng-model="dialog.threads.value"
+               ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
+               type="number" placeholder="1" min="1">
+    </md-input-container>
+    </md-switch>
+    <md-switch ng-model="dialog.skipOnError.value"
+               ng-hide="dialog.skipOnError.hide"
+               ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit">
+        Skip on error
+        <md-tooltip>If set and request failed, the task is skipped. If
+            not set and request failed the component fail.
+        </md-tooltip>
+    </md-switch>
+</div>

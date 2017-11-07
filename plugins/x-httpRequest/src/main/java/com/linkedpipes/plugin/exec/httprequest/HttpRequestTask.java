@@ -1,12 +1,13 @@
 package com.linkedpipes.plugin.exec.httprequest;
 
+import com.linkedpipes.etl.executor.api.v1.component.task.GroupTask;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpRequestVocabulary.TASK_CLASS)
-public class HttpRequestTask {
+public class HttpRequestTask implements GroupTask {
 
     @RdfToPojo.Type(iri = HttpRequestVocabulary.HEADER)
     public static class Header {
@@ -104,6 +105,10 @@ public class HttpRequestTask {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_OUTPUT_HEADERS)
     private boolean outputHeaders = false;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_GROUP)
+    private Integer group = null;
+
+    @Override
     public String getIri() {
         return iri;
     }
@@ -161,5 +166,13 @@ public class HttpRequestTask {
         this.outputHeaders = outputHeaders;
     }
 
+    @Override
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
+    }
 }
 
