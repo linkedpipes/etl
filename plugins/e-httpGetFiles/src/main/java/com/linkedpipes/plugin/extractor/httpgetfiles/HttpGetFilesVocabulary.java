@@ -33,6 +33,11 @@ public final class HttpGetFilesVocabulary {
 
     public static final String HAS_DETAIL_LOG = PREFIX + "detailLog";
 
-    public static final String HAS_TMEOUT = PREFIX + "timeout";
+    public static final String HAS_TIMEOUT = PREFIX + "timeout";
+
+    public static final String HAS_GROUP = PREFIX + "group";
+
+    public static final String HAS_THREADS_PER_GROUP =
+            PREFIX + "threadsPerGroup";
 
 }

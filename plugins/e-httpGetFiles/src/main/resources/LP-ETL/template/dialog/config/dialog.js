@@ -27,6 +27,10 @@ define([], function () {
         "timeout" : {
             "$type" : "int",
             "$label" : "Timeout"
+        },
+        "threadsPerGroup": {
+            "$type" : "int",
+            "$label" : "Threads per group"
         }
     };
 

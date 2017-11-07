@@ -1,13 +1,13 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.Task;
+import com.linkedpipes.etl.executor.api.v1.component.task.GroupTask;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpGetFilesVocabulary.REFERENCE)
-public class DownloadTask implements Task {
+public class DownloadTask implements GroupTask {
 
     @RdfToPojo.Resource
     private String iri;
@@ -21,8 +21,11 @@ public class DownloadTask implements Task {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
     private List<RequestHeader> headers = new LinkedList<>();
 
-    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TMEOUT)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TIMEOUT)
     private Integer timeOut = null;
+
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_GROUP)
+    private Object group = null;
 
     public DownloadTask() {
     }
@@ -66,5 +69,14 @@ public class DownloadTask implements Task {
 
     public void setTimeOut(Integer timeOut) {
         this.timeOut = timeOut;
+    }
+
+    @Override
+    public Object getGroup() {
+        return group;
+    }
+
+    public void setGroup(Object group) {
+        this.group = group;
     }
 }

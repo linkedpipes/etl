@@ -8,7 +8,8 @@
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threads> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/detailLog> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/header> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/timeout> .
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/timeout> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threadsPerGroup> .
 
 [] config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference> .
 
@@ -41,3 +42,9 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#timeout> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#timeoutControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threadsPerGroup>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threadsPerGroup> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threadsPerGroupControl> .
+

@@ -7,6 +7,12 @@
                ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
                type="number" placeholder="1" min="1">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.threadsPerGroup.hide">
+        <label>Threads per group</label>
+        <input ng-model="dialog.threadsPerGroup.value"
+               ng-disabled="dialog.threadsPerGroup.disabled || dialog.threadsPerGroup.inherit"
+               type="number" placeholder="1" min="1">
+    </md-input-container>
     <md-switch ng-model="dialog.hardRedirect.value"
                ng-hide="dialog.hardRedirect.hide"
                ng-disabled="dialog.hardRedirect.disabled || dialog.hardRedirect.inherit">

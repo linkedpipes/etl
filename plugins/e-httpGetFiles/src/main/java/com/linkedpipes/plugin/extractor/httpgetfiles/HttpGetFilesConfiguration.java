@@ -35,8 +35,11 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_DETAIL_LOG)
     private boolean detailLogging = false;
 
-    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TMEOUT)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TIMEOUT)
     private Integer timeout;
+
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_THREADS_PER_GROUP)
+    private int threadsPerGroup = 1;
 
     public HttpGetFilesConfiguration() {
     }
@@ -95,4 +98,11 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
         return threads;
     }
 
+    public int getThreadsPerGroup() {
+        return threadsPerGroup;
+    }
+
+    public void setThreadsPerGroup(int threadsPerGroup) {
+        this.threadsPerGroup = threadsPerGroup;
+    }
 }

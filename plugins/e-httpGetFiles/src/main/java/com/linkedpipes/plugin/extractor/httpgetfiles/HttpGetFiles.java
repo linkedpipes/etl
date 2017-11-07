@@ -56,8 +56,8 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
     @Override
     protected TaskSource<DownloadTask> createTaskSource() throws LpException {
         loadTasks();
-        TaskSource<DownloadTask> source =
-                TaskSource.defaultTaskSource(this.tasks);
+        TaskSource<DownloadTask> source = TaskSource.groupTaskSource(
+                        this.tasks, configuration.getThreadsPerGroup());
         source.setSkipOnError(configuration.isSkipOnError());
         return source;
     }
