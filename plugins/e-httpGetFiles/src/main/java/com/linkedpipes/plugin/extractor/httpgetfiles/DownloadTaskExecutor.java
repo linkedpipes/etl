@@ -47,8 +47,9 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
         } catch (Exception ex) {
             LOG.error("Can't download file from: {}", task.getUri(), ex);
             throw exceptionFactory.failure("Cam't download file.", ex);
+        } finally {
+            progressReport.entryProcessed();
         }
-
     }
 
     private Downloader.Task createDownloaderTask(DownloadTask task)
