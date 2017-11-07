@@ -15,6 +15,10 @@ define([], function () {
         "threads" : {
             "$type": "int",
             "$label": "Number of threads used for download"
+        },
+        "threadsPerGroup": {
+            "$type" : "int",
+            "$label" : "Threads per group"
         }
     };
 

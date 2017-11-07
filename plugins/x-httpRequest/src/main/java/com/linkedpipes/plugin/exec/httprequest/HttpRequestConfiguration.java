@@ -12,6 +12,9 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_SKIP_ON_ERROR)
     private boolean skipOnError = false;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_THREADS_PER_GROUP)
+    private int threadsPerGroup = 1;
+
     @Override
     public int getThreadsNumber() {
         return threadsNumber;
@@ -30,4 +33,11 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
         this.skipOnError = skipOnError;
     }
 
+    public int getThreadsPerGroup() {
+        return threadsPerGroup;
+    }
+
+    public void setThreadsPerGroup(int threadsPerGroup) {
+        this.threadsPerGroup = threadsPerGroup;
+    }
 }

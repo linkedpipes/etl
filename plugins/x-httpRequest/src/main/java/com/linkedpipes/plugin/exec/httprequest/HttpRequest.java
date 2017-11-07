@@ -67,8 +67,8 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
             throws LpException {
         initializeInputFilesMap();
         tasks = loadTasks();
-        TaskSource<HttpRequestTask> source =
-                TaskSource.defaultTaskSource(this.tasks);
+        TaskSource<HttpRequestTask> source = TaskSource.groupTaskSource(
+                this.tasks, configuration.getThreadsPerGroup());
         source.setSkipOnError(configuration.isSkipOnError());
         return source;
     }

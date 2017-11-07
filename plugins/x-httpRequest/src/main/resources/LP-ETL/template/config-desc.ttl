@@ -4,7 +4,8 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/x-httpRequest#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/skipOnError> ,
-        <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/threads> .
+        <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/threads> ,
+        <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/threadsPerGroup> .
 
 <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/skipOnError>
     a config:ConfigurationMember ;
@@ -16,4 +17,8 @@
     config:property <http://plugins.linkedpipes.com/ontology/x-httpRequest#threads> ;
     config:control <http://plugins.linkedpipes.com/ontology/x-httpRequest#threadsControl> .
 
+<http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/threadsPerGroup>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-httpRequest#threadsPerGroup> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-httpRequest#threadsPerGroupControl> .
 
