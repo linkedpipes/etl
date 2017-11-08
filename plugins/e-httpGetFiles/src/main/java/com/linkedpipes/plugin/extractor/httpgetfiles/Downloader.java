@@ -176,9 +176,8 @@ class Downloader {
             throws IOException {
         int responseCode = connection.getResponseCode();
         if (responseCode < 200 || responseCode > 299) {
-            IOException ex = new IOException("Invalid response code: " +
-                    responseCode + " message: " +
-                    connection.getResponseMessage());
+            IOException ex = new IOException(
+                    responseCode + " : " + connection.getResponseMessage());
             LOG.error("Can't download file: {}", toDownload.getSourceUrl(), ex);
             throw ex;
         }
