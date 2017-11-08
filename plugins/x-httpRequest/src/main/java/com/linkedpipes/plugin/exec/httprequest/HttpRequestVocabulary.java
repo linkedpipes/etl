@@ -5,13 +5,13 @@ public final class HttpRequestVocabulary {
     private static final String PREFIX =
             "http://plugins.linkedpipes.com/ontology/x-httpRequest#";
 
-    public static final String CONFIGURATION = PREFIX + "Task";
+    public static final String CONFIGURATION = PREFIX + "Configuration";
+
+    public static final String TASK = PREFIX + "Task";
 
     public static final String HAS_SKIP_ON_ERROR = PREFIX + "skipOnError";
 
     public static final String HAS_THREADS = PREFIX + "threads";
-
-    public static final String TASK_CLASS = PREFIX + "Task";
 
     public static final String HAS_URL = PREFIX + "url";
 

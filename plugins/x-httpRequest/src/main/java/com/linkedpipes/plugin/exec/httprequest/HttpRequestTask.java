@@ -6,7 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import java.util.LinkedList;
 import java.util.List;
 
-@RdfToPojo.Type(iri = HttpRequestVocabulary.TASK_CLASS)
+@RdfToPojo.Type(iri = HttpRequestVocabulary.TASK)
 public class HttpRequestTask implements GroupTask {
 
     @RdfToPojo.Type(iri = HttpRequestVocabulary.HEADER)
