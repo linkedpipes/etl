@@ -106,7 +106,7 @@ public class HttpRequestTask implements GroupTask {
     private boolean outputHeaders = false;
 
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_GROUP)
-    private Integer group = null;
+    private String group = null;
 
     @Override
     public String getIri() {
@@ -167,11 +167,11 @@ public class HttpRequestTask implements GroupTask {
     }
 
     @Override
-    public Integer getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Integer group) {
+    public void setGroup(String group) {
         this.group = group;
     }
 }

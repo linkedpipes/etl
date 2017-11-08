@@ -25,7 +25,7 @@ public class DownloadTask implements GroupTask {
     private Integer timeOut = null;
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_GROUP)
-    private Object group = null;
+    private String group = null;
 
     public DownloadTask() {
     }
@@ -72,11 +72,12 @@ public class DownloadTask implements GroupTask {
     }
 
     @Override
-    public Object getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Object group) {
+    public void setGroup(String group) {
         this.group = group;
     }
+
 }
