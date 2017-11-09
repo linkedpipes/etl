@@ -44,6 +44,6 @@ public final class HttpRequestVocabulary {
     public static final String HAS_THREADS_PER_GROUP =
             PREFIX + "threadsPerGroup";
 
-    public static final String HAS_RESPONSE_REPORT = PREFIX + "responseReport";
+    public static final String HAS_RESPONSE_REPORT = PREFIX + "response";
 
 }

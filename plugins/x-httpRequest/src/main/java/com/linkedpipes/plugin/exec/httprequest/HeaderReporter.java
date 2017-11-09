@@ -65,7 +65,8 @@ class HeaderReporter {
     private void prepareForReporting(HttpRequestTask task) {
         this.statements.clear();
         this.counter = 0;
-        this.objectIri = valueFactory.createIRI(task.getIri() + "headerReport");
+        this.objectIri = valueFactory.createIRI(
+                task.getIri() + "/response");
         this.task = task;
     }
 
