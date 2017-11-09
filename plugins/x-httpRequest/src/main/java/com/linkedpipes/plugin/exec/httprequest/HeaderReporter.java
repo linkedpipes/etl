@@ -22,13 +22,15 @@ class HeaderReporter {
 
     private final IRI valuePredicate;
 
+    private final IRI responseReportPredicate;
+
     private final StatementsConsumer consumer;
 
     private final List<Statement> statements = new ArrayList<>();
 
     private Integer counter = 0;
 
-    private IRI taskIri;
+    private IRI objectIri;
 
     private HttpRequestTask task;
 
@@ -41,17 +43,20 @@ class HeaderReporter {
                 HttpRequestVocabulary.HAS_VALUE);
         responseLinePredicate = valueFactory.createIRI(
                 HttpRequestVocabulary.HAS_RESPONSE_LINE);
+        responseReportPredicate = valueFactory.createIRI(
+                HttpRequestVocabulary.HAS_RESPONSE_REPORT);
         this.consumer = consumer;
     }
 
     public void reportHeaderResponse(
             HttpURLConnection connection, HttpRequestTask task)
-            throws LpException  {
+            throws LpException {
         if (!task.isOutputHeaders()) {
             return;
         }
         prepareForReporting(task);
         connection.getHeaderFields().entrySet().forEach((entry) -> {
+            addConnectionToReport();
             reportHeaders(entry.getKey(), entry.getValue());
         });
         consumer.consume(statements);
@@ -60,8 +65,15 @@ class HeaderReporter {
     private void prepareForReporting(HttpRequestTask task) {
         this.statements.clear();
         this.counter = 0;
-        this.taskIri = valueFactory.createIRI(task.getIri());
+        this.objectIri = valueFactory.createIRI(task.getIri() + "headerReport");
         this.task = task;
+    }
+
+    private void addConnectionToReport() {
+        statements.add(valueFactory.createStatement(
+                valueFactory.createIRI(task.getIri() + "/report"),
+                responseReportPredicate,
+                objectIri));
     }
 
     private void reportHeaders(String header, List<String> values) {
@@ -75,7 +87,7 @@ class HeaderReporter {
     private void reportResponseLine(List<String> values) {
         for (String value : values) {
             statements.add(valueFactory.createStatement(
-                    taskIri, responseLinePredicate,
+                    objectIri, responseLinePredicate,
                     valueFactory.createLiteral(value)));
         }
     }
@@ -83,7 +95,7 @@ class HeaderReporter {
     private void reportHeader(String header, List<String> values) {
         IRI headerIri = createHeaderIri();
         statements.add(valueFactory.createStatement(
-                taskIri, headerObjectPredicate, headerIri));
+                objectIri, headerObjectPredicate, headerIri));
         statements.add(valueFactory.createStatement(
                 headerIri, namePredicate, valueFactory.createLiteral(header)));
         for (String value : values) {
@@ -92,7 +104,6 @@ class HeaderReporter {
                     valueFactory.createLiteral(value)));
         }
     }
-
 
     private IRI createHeaderIri() {
         return valueFactory.createIRI(task.getIri() + "/header/" + ++counter);
