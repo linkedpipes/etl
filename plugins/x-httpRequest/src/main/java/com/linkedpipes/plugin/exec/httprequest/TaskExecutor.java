@@ -42,14 +42,14 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         this.taskContentWriter = new TaskContentWriter(
                 exceptionFactory, inputFilesMap);
         this.headerReporter = new HeaderReporter(consumer);
-        this.progressReport  = progressReport;
+        this.progressReport = progressReport;
     }
 
     @Override
     public void accept(HttpRequestTask task) throws LpException {
         LOG.info("Executing '{}' on '{}' to '{}'", task.getMethod(),
                 task.getUrl(), task.getOutputFileName());
-        try (Connection connection = createHttpConnection(task)) {
+        try (Connection connection = createConnection(task)) {
             connection.finishRequest();
             checkStatus(connection);
             HttpURLConnection urlConnection = connection.getConnection();
@@ -62,32 +62,35 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         }
     }
 
-    private Connection createHttpConnection(HttpRequestTask task)
+    private Connection createConnection(HttpRequestTask task)
             throws IOException, LpException {
         // TODO Add support for single body request.
+        HttpURLConnection connection = createHttpConnection(task);
         if (task.getContent().isEmpty()) {
-            return createConnection(task);
+            return wrapConnection(connection);
         } else {
-            return createMultipartyConnection(task);
+            return wrapMultipart(connection, task);
         }
     }
 
-    private Connection createConnection(
-            HttpRequestTask task) throws IOException {
-        URL url = new URL(task.getUrl());
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(task.getMethod());
-        return new Connection(connection);
-    }
-
-    private Connection createMultipartyConnection(
-            HttpRequestTask task) throws IOException, LpException {
+    private HttpURLConnection createHttpConnection(HttpRequestTask task)
+            throws IOException {
         URL url = new URL(task.getUrl());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(task.getMethod());
         for (HttpRequestTask.Header header : task.getHeaders()) {
             connection.setRequestProperty(header.getName(), header.getValue());
         }
+        return connection;
+    }
+
+    private Connection wrapConnection(HttpURLConnection connection) {
+        return new Connection(connection);
+    }
+
+    private Connection wrapMultipart(
+            HttpURLConnection connection, HttpRequestTask task)
+            throws IOException, LpException {
         MultipartConnection multipartConnection =
                 new MultipartConnection(connection);
         taskContentWriter.addTaskContent(multipartConnection, task);
