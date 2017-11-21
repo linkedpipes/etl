@@ -21,7 +21,7 @@
     <md-input-container class="md-block" ng-hide="dialog.commitSize.hide">
         <label>Files per chunk</label>
         <input type="number" ng-model="dialog.commitSize.value"
-               min="1" step="1"
+               min="1"
                ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit">
     </md-input-container>
     <md-switch ng-model="dialog.softFail.value"
