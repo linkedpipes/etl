@@ -15,6 +15,9 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_THREADS_PER_GROUP)
     private int threadsPerGroup = 1;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_FOLLOW_REDIRECT)
+    private boolean followRedirect = false;
+
     @Override
     public int getThreadsNumber() {
         return threadsNumber;
@@ -40,4 +43,13 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
     public void setThreadsPerGroup(int threadsPerGroup) {
         this.threadsPerGroup = threadsPerGroup;
     }
+
+    public boolean isFollowRedirect() {
+        return followRedirect;
+    }
+
+    public void setFollowRedirect(boolean followRedirect) {
+        this.followRedirect = followRedirect;
+    }
+
 }

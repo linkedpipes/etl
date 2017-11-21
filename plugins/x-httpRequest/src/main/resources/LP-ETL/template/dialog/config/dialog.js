@@ -19,6 +19,10 @@ define([], function () {
         "threadsPerGroup": {
             "$type" : "int",
             "$label" : "Threads per group"
+        },
+        "followRedirect" : {
+            "$type" : "bool",
+            "$label" : "Follow redirects"
         }
     };
 

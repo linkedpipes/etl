@@ -20,5 +20,10 @@
             not set and request failed the component fail.
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.followRedirect.value"
+               ng-hide="dialog.followRedirect.hide"
+               ng-disabled="dialog.followRedirect.disabled || dialog.followRedirect.inherit">
+        Follow redirects
+    </md-switch>
 </div>
 

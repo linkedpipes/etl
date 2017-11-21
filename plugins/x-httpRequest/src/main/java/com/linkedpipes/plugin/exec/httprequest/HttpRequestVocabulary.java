@@ -46,4 +46,6 @@ public final class HttpRequestVocabulary {
 
     public static final String HAS_RESPONSE_REPORT = PREFIX + "response";
 
+    public static final String HAS_FOLLOW_REDIRECT = PREFIX + "followRedirect";
+
 }

@@ -108,6 +108,9 @@ public class HttpRequestTask implements GroupTask {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_GROUP)
     private String group = null;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_FOLLOW_REDIRECT)
+    private Boolean followRedirect = null;
+
     @Override
     public String getIri() {
         return iri;
@@ -174,5 +177,13 @@ public class HttpRequestTask implements GroupTask {
     public void setGroup(String group) {
         this.group = group;
     }
-}
 
+    public Boolean isFollowRedirect() {
+        return followRedirect;
+    }
+
+    public void setFollowRedirect(Boolean followRedirect) {
+        this.followRedirect = followRedirect;
+    }
+
+}

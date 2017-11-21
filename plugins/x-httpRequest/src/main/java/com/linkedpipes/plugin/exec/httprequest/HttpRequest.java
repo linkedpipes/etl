@@ -66,7 +66,8 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     protected TaskSource<HttpRequestTask> createTaskSource()
             throws LpException {
         initializeInputFilesMap();
-        tasks = loadTasks();
+        loadTasks();
+        propagateConfigurationToTask();
         TaskSource<HttpRequestTask> source = TaskSource.groupTaskSource(
                 this.tasks, configuration.getThreadsPerGroup());
         source.setSkipOnError(configuration.isSkipOnError());
@@ -81,14 +82,22 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
         return inputFilesMap;
     }
 
-    private List<HttpRequestTask> loadTasks() throws LpException {
+    private void loadTasks() throws LpException {
         RdfSource source = Rdf4jSource.wrapRepository(taskRdf.getRepository());
         try {
-            return RdfUtils.loadList(source,
+            tasks = RdfUtils.loadList(source,
                     taskRdf.getReadGraph().stringValue(),
                     RdfToPojo.descriptorFactory(), HttpRequestTask.class);
         } catch (RdfUtilsException ex) {
             throw exceptionFactory.failure("Can't load tasks.", ex);
+        }
+    }
+
+    private void propagateConfigurationToTask() {
+        for (HttpRequestTask task : tasks) {
+            if (task.isFollowRedirect() == null) {
+                task.setFollowRedirect(configuration.isFollowRedirect());
+            }
         }
     }
 

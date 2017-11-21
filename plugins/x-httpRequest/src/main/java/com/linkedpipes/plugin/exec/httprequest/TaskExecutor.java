@@ -31,6 +31,8 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private ProgressReport progressReport;
 
+    private HttpRequestTask task;
+
     public TaskExecutor(
             ExceptionFactory exceptionFactory,
             WritableFilesDataUnit outputFiles,
@@ -49,23 +51,46 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     public void accept(HttpRequestTask task) throws LpException {
         LOG.info("Executing '{}' on '{}' to '{}'", task.getMethod(),
                 task.getUrl(), task.getOutputFileName());
-        try (Connection connection = createConnection(task)) {
+        this.task = task;
+        URL url = createUrl(task.getUrl());
+        performRequest(url);
+    }
+
+    private URL createUrl(String url) throws LpException {
+        try {
+            return new URL(task.getUrl());
+        } catch (IOException ex) {
+            throw new LpException("Invalid URL: {}", url);
+        }
+    }
+
+    private void performRequest(URL url) throws LpException {
+        try (Connection connection = createConnection(url)) {
             connection.finishRequest();
-            checkStatus(connection);
-            HttpURLConnection urlConnection = connection.getConnection();
-            saveHeaders(urlConnection, task);
-            saveFileResponse(urlConnection, task);
+            if (shouldFollowRedirect(connection)) {
+                handleRedirect(connection);
+            } else {
+                handleResponse(connection);
+            }
         } catch (Exception ex) {
-            throw exceptionFactory.failure("Can't create connection.", ex);
+            throw exceptionFactory.failure("Request failed for: {}", url, ex);
         } finally {
             progressReport.entryProcessed();
         }
     }
 
-    private Connection createConnection(HttpRequestTask task)
+    private boolean shouldFollowRedirect(Connection connection)
+            throws IOException {
+        if (task.isFollowRedirect() == null) {
+            return false;
+        }
+        return task.isFollowRedirect() && connection.requestRedirect();
+    }
+
+    private Connection createConnection(URL url)
             throws IOException, LpException {
         // TODO Add support for single body request.
-        HttpURLConnection connection = createHttpConnection(task);
+        HttpURLConnection connection = createHttpConnection(url);
         if (task.getContent().isEmpty()) {
             return wrapConnection(connection);
         } else {
@@ -73,9 +98,8 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         }
     }
 
-    private HttpURLConnection createHttpConnection(HttpRequestTask task)
+    private HttpURLConnection createHttpConnection(URL url)
             throws IOException {
-        URL url = new URL(task.getUrl());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(task.getMethod());
         for (HttpRequestTask.Header header : task.getHeaders()) {
@@ -97,20 +121,27 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return multipartConnection;
     }
 
-    private void checkStatus(Connection connection)
-            throws IOException, LpException {
-        if (connection.requestFailed()) {
-            throw exceptionFactory.failure("Request failed with status: {}",
-                    connection.getResponseCode());
-        }
+    private void handleRedirect(Connection connection)
+            throws Exception {
+        URL urlToFollow = new URL(connection.getResponseHeader("Location"));
+        connection.close();
+        performRequest(urlToFollow);
     }
 
-    private void saveHeaders(
-            HttpURLConnection connection, HttpRequestTask task)
-            throws LpException {
-        if (task.isOutputHeaders()) {
-            headerReporter.reportHeaderResponse(connection, task);
+    private void handleResponse(Connection connection)
+            throws IOException, LpException {
+        HttpURLConnection urlConnection = connection.getConnection();
+        if (connection.requestFailed()) {
+            headerReporter.reportHeaderResponse(urlConnection, task);
+            throw exceptionFactory.failure(
+                    "{} : {}",
+                    connection.getResponseCode(),
+                    connection.getResponseMessage());
         }
+        if (task.isOutputHeaders()) {
+            headerReporter.reportHeaderResponse(urlConnection, task);
+        }
+        saveFileResponse(urlConnection, task);
     }
 
     private void saveFileResponse(

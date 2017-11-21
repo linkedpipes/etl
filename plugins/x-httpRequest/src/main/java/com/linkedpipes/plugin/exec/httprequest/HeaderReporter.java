@@ -51,9 +51,6 @@ class HeaderReporter {
     public void reportHeaderResponse(
             HttpURLConnection connection, HttpRequestTask task)
             throws LpException {
-        if (!task.isOutputHeaders()) {
-            return;
-        }
         prepareForReporting(task);
         connection.getHeaderFields().entrySet().forEach((entry) -> {
             addConnectionToReport();
@@ -79,13 +76,13 @@ class HeaderReporter {
 
     private void reportHeaders(String header, List<String> values) {
         if (header == null) {
-            reportResponseLine(values);
+            reportAsResponseLine(values);
         } else {
-            reportHeader(header, values);
+            reportAsHeader(header, values);
         }
     }
 
-    private void reportResponseLine(List<String> values) {
+    private void reportAsResponseLine(List<String> values) {
         for (String value : values) {
             statements.add(valueFactory.createStatement(
                     objectIri, responseLinePredicate,
@@ -93,7 +90,7 @@ class HeaderReporter {
         }
     }
 
-    private void reportHeader(String header, List<String> values) {
+    private void reportAsHeader(String header, List<String> values) {
         IRI headerIri = createHeaderIri();
         statements.add(valueFactory.createStatement(
                 objectIri, headerObjectPredicate, headerIri));

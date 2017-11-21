@@ -20,12 +20,26 @@ class Connection implements AutoCloseable {
         return status < 200 || status > 299;
     }
 
+    public boolean requestRedirect() throws IOException {
+        int status = connection.getResponseCode();
+        return status > 299 && status < 400;
+    }
+
     public int getResponseCode() throws IOException {
         return connection.getResponseCode();
     }
 
+    public String getResponseMessage() throws IOException {
+        return connection.getResponseMessage();
+    }
+
     public void finishRequest() throws IOException {
-        // No operation here.
+        // This force connection to happen.
+        connection.getResponseCode();
+    }
+
+    public String getResponseHeader(String name) {
+        return connection.getHeaderField(name);
     }
 
     @Override
