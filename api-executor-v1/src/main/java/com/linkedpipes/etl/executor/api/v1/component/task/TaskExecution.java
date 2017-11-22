@@ -20,16 +20,24 @@ public abstract class TaskExecution<T extends Task>
 
     @Override
     public void execute() throws LpException {
+        initialization();
         this.configuration = getExecutionConfiguration();
         ExecutorService executor = createExecutorService();
         TaskSource<T> taskSource = createTaskSource();
         taskSource.setSkipOnError(this.configuration.isSkipOnError());
-        beforeExecution();
         createWorkers(executor, taskSource);
+        beforeExecution();
         startWorkers(executor);
         waitForShutdown(executor);
         afterExecution();
         checkForFailures(taskSource);
+    }
+
+    /**
+     * This function is called before any other method.
+     */
+    protected void initialization() throws LpException {
+        // No operation here.
     }
 
     protected abstract TaskExecutionConfiguration getExecutionConfiguration();
@@ -41,6 +49,9 @@ public abstract class TaskExecution<T extends Task>
 
     protected abstract TaskSource<T> createTaskSource() throws LpException;
 
+    /**
+     * This function is called before the workers are started.
+     */
     protected void beforeExecution() throws LpException {
         // No operation here.
     }
