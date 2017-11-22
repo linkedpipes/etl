@@ -53,11 +53,15 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
     private List<DownloadTask> tasks;
 
+    private StatementsConsumer statementsConsumer;
+
+    private ReportWriter reportWriter;
+
     @Override
     protected TaskSource<DownloadTask> createTaskSource() throws LpException {
         loadTasks();
         TaskSource<DownloadTask> source = TaskSource.groupTaskSource(
-                        this.tasks, configuration.getThreadsPerGroup());
+                this.tasks, configuration.getThreadsPerGroup());
         source.setSkipOnError(configuration.isSkipOnError());
         return source;
     }
@@ -67,8 +71,7 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
                 configurationRdf.getRepository());
         try {
             this.tasks = RdfUtils.loadList(
-                    source,
-                    configurationRdf.getReadGraph().stringValue(),
+                    source, configurationRdf.getReadGraph().stringValue(),
                     RdfToPojo.descriptorFactory(),
                     DownloadTask.class);
         } catch (RdfUtilsException ex) {
@@ -83,25 +86,37 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
     @Override
     protected TaskConsumer<DownloadTask> createConsumer() {
+
         return new DownloadTaskExecutor(
-                configuration, progressReport, output, exceptionFactory);
+                configuration, progressReport, output, exceptionFactory,
+                statementsConsumer, reportWriter);
     }
 
     @Override
     protected ReportWriter createReportWriter() {
+        if (reportWriter != null) {
+            return reportWriter;
+        }
         String graph = reportRdf.getWriteGraph().stringValue();
         Repository repository = reportRdf.getRepository();
         TripleWriter writer =
                 Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
-        return ReportWriter.create(writer);
+        reportWriter = ReportWriter.create(writer);
+        return reportWriter;
+    }
 
+    @Override
+    protected void initialization() throws LpException {
+        super.initialization();
+        statementsConsumer = new StatementsConsumer(reportRdf);
+        reportWriter = createReportWriter();
     }
 
     @Override
     protected void beforeExecution() throws LpException {
         super.beforeExecution();
         setTrustAllCerts();
-        this.progressReport.start(tasks);
+        progressReport.start(tasks);
     }
 
     private void setTrustAllCerts() throws LpException {

@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
+import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,14 +59,18 @@ class Downloader {
 
     private boolean logDetail = false;
 
-    public Downloader(boolean followRedirect,
-            Task toDownload, boolean logDetail) {
+    private final HttpRequestReport requestReport;
+
+    public Downloader(
+            boolean followRedirect, Task toDownload, boolean logDetail,
+            HttpRequestReport requestReport) {
         this.followRedirect = followRedirect;
         this.toDownload = toDownload;
         this.logDetail = logDetail;
+        this.requestReport = requestReport;
     }
 
-    public void download() throws IOException {
+    public void download() throws IOException, LpException {
         LOG.info("Downloading: {} -> {}", toDownload.getSourceUrl(),
                 toDownload.getTargetFile().toString());
         //
@@ -96,7 +100,7 @@ class Downloader {
     }
 
     private HttpURLConnection createConnectionFollowRedirect(URL target)
-            throws IOException {
+            throws IOException, LpException {
         HttpURLConnection connection = createConnection(target);
         if (followRedirect) {
             return updateConnectionIfRedirected(connection);
@@ -105,7 +109,8 @@ class Downloader {
         }
     }
 
-    private HttpURLConnection createConnection(URL target) throws IOException {
+    private HttpURLConnection createConnection(URL target)
+            throws IOException, LpException {
         HttpURLConnection connection =
                 (HttpURLConnection) target.openConnection();
         setHeaders(connection);
@@ -131,30 +136,13 @@ class Downloader {
         }
     }
 
-    private void logConnectionDetails(HttpURLConnection connection) {
-        final InputStream errStream = connection.getErrorStream();
-        if (errStream != null) {
-            try {
-                LOG.debug("Error stream: {}",
-                        IOUtils.toString(errStream, "UTF-8"));
-            } catch (Throwable ex) {
-                // Ignore.
-            }
-        }
-        try {
-            LOG.debug(" response code: {}", connection.getResponseCode());
-        } catch (IOException ex) {
-            LOG.warn("Can't read status code.");
-        }
-        for (String header : connection.getHeaderFields().keySet()) {
-            for (String value : connection.getHeaderFields().get(header)) {
-                LOG.debug(" header: {} : {}", header, value);
-            }
-        }
+    private void logConnectionDetails(HttpURLConnection connection)
+            throws LpException {
+        requestReport.reportHeaderResponse(connection);
     }
 
     private HttpURLConnection updateConnectionIfRedirected(
-            HttpURLConnection connection) throws IOException {
+            HttpURLConnection connection) throws IOException, LpException {
         int responseCode = connection.getResponseCode();
         if (isResponseRedirect(responseCode)) {
             connection.disconnect();
@@ -188,14 +176,6 @@ class Downloader {
         try (InputStream inputStream = connection.getInputStream()) {
             FileUtils.copyInputStreamToFile(inputStream, file);
         }
-    }
-
-    public void setFollowRedirect(boolean followRedirect) {
-        this.followRedirect = followRedirect;
-    }
-
-    public boolean isLogDetail() {
-        return logDetail;
     }
 
 }

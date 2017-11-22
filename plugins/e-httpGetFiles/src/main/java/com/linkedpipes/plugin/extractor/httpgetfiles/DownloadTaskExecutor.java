@@ -3,6 +3,7 @@ package com.linkedpipes.plugin.extractor.httpgetfiles;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
+import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
@@ -25,23 +26,31 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
 
     private ExceptionFactory exceptionFactory;
 
+    private final HttpRequestReport requestReport;
+
     public DownloadTaskExecutor(
             HttpGetFilesConfiguration configuration,
             ProgressReport progressReport,
             WritableFilesDataUnit output,
-            ExceptionFactory exceptionFactory) {
+            ExceptionFactory exceptionFactory,
+            StatementsConsumer statementsConsumer,
+            ReportWriter reportWriter) {
         this.configuration = configuration;
         this.progressReport = progressReport;
         this.output = output;
         this.exceptionFactory = exceptionFactory;
+        this.requestReport =
+                new HttpRequestReport(statementsConsumer, reportWriter);
     }
 
     @Override
     public void accept(DownloadTask task) throws LpException {
+        requestReport.setTask(task);
         Downloader downloader = new Downloader(
                 configuration.isForceFollowRedirect(),
                 createDownloaderTask(task),
-                configuration.isDetailLogging());
+                configuration.isDetailLogging(),
+                requestReport);
         try {
             downloader.download();
         } catch (Exception ex) {

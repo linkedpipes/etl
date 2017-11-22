@@ -40,4 +40,14 @@ public final class HttpGetFilesVocabulary {
     public static final String HAS_THREADS_PER_GROUP =
             PREFIX + "threadsPerGroup";
 
+    public static final String HAS_HEADER_OBJECT = PREFIX + "hasHeaderObject";
+
+    public static final String HAS_RESPONSE_LINE = PREFIX + "responseLine";
+
+    public static final String HAS_RESPONSE_REPORT = PREFIX + "response";
+
+    public static final String HAS_ERROR_MESSAGE = PREFIX + "errorMessage";
+
+    public static final String HAS_RESPONSE_CODE = PREFIX + "responseCode";
+
 }
