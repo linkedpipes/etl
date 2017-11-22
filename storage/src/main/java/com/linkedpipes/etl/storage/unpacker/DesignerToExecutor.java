@@ -201,9 +201,10 @@ public class DesignerToExecutor {
                 targetPort.getBinding());
         if (sourcePort == null) {
             logMissingPort(sourceComponent, targetPort);
+        } else {
+            targetPort.setDataSource(
+                    createDataSource(sourcePort, executionMapping));
         }
-        targetPort.setDataSource(
-                createDataSource(sourcePort, executionMapping));
     }
 
     private void logMissingPort(
@@ -220,7 +221,7 @@ public class DesignerToExecutor {
     private ExecutorDataSource createDataSource(
             ExecutionPort sourcePort,
             UnpackOptions.ExecutionMapping executionMapping) {
-        if (sourcePort == null || sourcePort.getExecution() == null) {
+        if (sourcePort.getExecution() == null) {
             return new ExecutorDataSource(sourcePort.getDataPath(),
                     executionMapping.getExecution());
         } else {
