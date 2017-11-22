@@ -186,25 +186,29 @@ public class DesignerToExecutor {
                 ExecutionPort sourcePort = sourceComponent.getPortByBinding(
                         targetPort.getBinding());
                 if (sourcePort == null) {
-                    LOG.error(
-                            "Source port is null for source '{}' " +
-                                    "required by target " +
-                                    "'{}' port '{}':'{}'",
-                            sourceComponent.getIri(),
-                            targetComponent.getIri(),
-                            targetPort.getIri(),
-                            targetPort.getBinding());
+                    logMissingPort(sourceComponent, targetPort);
                 }
-                targetPort.setDataSource(createDataSource(
-                        sourcePort, executionMapping));
+                targetPort.setDataSource(
+                        createDataSource(sourcePort, executionMapping));
             }
         }
+    }
+
+    private void logMissingPort(
+            ExecutionComponent sourceComponent,
+            ExecutorPort targetPort) {
+        // TODO Add to a report.
+        LOG.error("Source port is null for component '{}' port '{}':'{}'. "
+                        + " This can happen when a new port is added.",
+                sourceComponent.getIri(),
+                targetPort.getIri(),
+                targetPort.getBinding());
     }
 
     private ExecutorDataSource createDataSource(
             ExecutionPort sourcePort,
             UnpackOptions.ExecutionMapping executionMapping) {
-        if (sourcePort.getExecution() == null) {
+        if (sourcePort == null || sourcePort.getExecution() == null) {
             return new ExecutorDataSource(sourcePort.getDataPath(),
                     executionMapping.getExecution());
         } else {
