@@ -114,21 +114,22 @@ public class DesignerToExecutor {
         metadata.setTargetComponent(options.getRunToComponent());
         metadata.setDeleteWorkingData(options.isDeleteWorkingDirectory());
         metadata.setSaveDebugData(options.isSaveDebugData());
+        target.getExecutorMetadata()
+                .setExecutionType(getExecutionType(options));
+    }
+
+    private String getExecutionType(UnpackOptions options) {
         if (options.getRunToComponent() == null) {
             if (options.getExecutionMapping().isEmpty()) {
-                target.getExecutorMetadata().setExecutionType(
-                        LP_EXEC.EXECUTION_FULL);
+                return LP_EXEC.EXECUTION_FULL;
             } else {
-                target.getExecutorMetadata().setExecutionType(
-                        LP_EXEC.EXECUTION_DEBUG_FROM);
+                return LP_EXEC.EXECUTION_DEBUG_FROM;
             }
         } else {
             if (options.getExecutionMapping().isEmpty()) {
-                target.getExecutorMetadata().setExecutionType(
-                        LP_EXEC.EXECUTION_DEBUG_TO);
+                return LP_EXEC.EXECUTION_DEBUG_TO;
             } else {
-                target.getExecutorMetadata().setExecutionType(
-                        LP_EXEC.EXECUTION_DEBUG_FROM_TO);
+                return LP_EXEC.EXECUTION_DEBUG_FROM_TO;
             }
         }
     }
@@ -171,27 +172,38 @@ public class DesignerToExecutor {
         }
     }
 
+    // TODO Extract mapping functionality to another class.
     private void mapExecution(Execution execution,
             UnpackOptions.ExecutionMapping executionMapping) {
         for (UnpackOptions.ComponentMapping mapping
                 : executionMapping.getComponents()) {
-            ExecutionComponent sourceComponent = execution.getComponent(
-                    mapping.getSource());
-            ExecutorComponent targetComponent = target.getComponent(
-                    mapping.getTarget()
-            );
-            targetComponent.setExecutionType(LP_EXEC.TYPE_MAPPED);
-            //
-            for (ExecutorPort targetPort : targetComponent.getPorts()) {
-                ExecutionPort sourcePort = sourceComponent.getPortByBinding(
-                        targetPort.getBinding());
-                if (sourcePort == null) {
-                    logMissingPort(sourceComponent, targetPort);
-                }
-                targetPort.setDataSource(
-                        createDataSource(sourcePort, executionMapping));
-            }
+            mapComponent(execution, mapping, executionMapping);
         }
+    }
+
+    private void mapComponent(
+            Execution execution, UnpackOptions.ComponentMapping mapping,
+            UnpackOptions.ExecutionMapping executionMapping) {
+        ExecutionComponent sourceComponent =
+                execution.getComponent(mapping.getSource());
+        ExecutorComponent targetComponent =
+                target.getComponent(mapping.getTarget());
+        targetComponent.setExecutionType(LP_EXEC.TYPE_MAPPED);
+        for (ExecutorPort targetPort : targetComponent.getPorts()) {
+            mapPort(sourceComponent, targetPort, executionMapping);
+        }
+    }
+
+    private void mapPort(
+            ExecutionComponent sourceComponent, ExecutorPort targetPort,
+            UnpackOptions.ExecutionMapping executionMapping) {
+        ExecutionPort sourcePort = sourceComponent.getPortByBinding(
+                targetPort.getBinding());
+        if (sourcePort == null) {
+            logMissingPort(sourceComponent, targetPort);
+        }
+        targetPort.setDataSource(
+                createDataSource(sourcePort, executionMapping));
     }
 
     private void logMissingPort(
