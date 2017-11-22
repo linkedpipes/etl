@@ -53,7 +53,11 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
                 task.getUrl(), task.getOutputFileName());
         this.task = task;
         URL url = createUrl(task.getUrl());
-        performRequest(url);
+        try {
+            performRequest(url);
+        } finally {
+            progressReport.entryProcessed();
+        }
     }
 
     private URL createUrl(String url) throws LpException {
@@ -74,8 +78,6 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             }
         } catch (Exception ex) {
             throw exceptionFactory.failure("Request failed for: {}", url, ex);
-        } finally {
-            progressReport.entryProcessed();
         }
     }
 
