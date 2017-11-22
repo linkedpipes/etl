@@ -11,6 +11,8 @@ public interface ReportWriter {
 
     void onTaskFailed(Task task, Date start, Date end, Throwable throwable);
 
+    String getIriForReport(Task task);
+
     static ReportWriter create(TripleWriter writer) {
         return new DefaultReportWriter(writer);
     }

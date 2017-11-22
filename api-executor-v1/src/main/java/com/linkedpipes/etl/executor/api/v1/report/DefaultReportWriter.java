@@ -25,7 +25,7 @@ class DefaultReportWriter implements ReportWriter {
 
     @Override
     public synchronized void onTaskFinished(Task task, Date start, Date end) {
-        String reportIri = task.getIri() + "/report";
+        String reportIri = getIriForReport(task);
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
         writeStatusSuccess(reportIri);
@@ -55,7 +55,7 @@ class DefaultReportWriter implements ReportWriter {
     public synchronized void onTaskFailed(
             Task task, Date start, Date end, Throwable throwable) {
         LOG.error("Task ({}) failed.", task.getIri(), throwable);
-        String reportIri = task.getIri() + "/report";
+        String reportIri = getIriForReport(task);
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
         writeStatusFailed(reportIri);
@@ -95,6 +95,11 @@ class DefaultReportWriter implements ReportWriter {
             LOG.error("Can't flush report.{} for task {}",
                     reportIri, task.getIri());
         }
+    }
+
+    @Override
+    public String getIriForReport(Task task) {
+        return task.getIri() + "/report";
     }
 
 }
