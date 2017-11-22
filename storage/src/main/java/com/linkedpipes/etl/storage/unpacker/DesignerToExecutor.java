@@ -13,12 +13,17 @@ import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionComponent;
 import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionPort;
 import com.linkedpipes.etl.storage.unpacker.model.executor.*;
 import org.eclipse.rdf4j.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class DesignerToExecutor {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(DesignerToExecutor.class);
 
     private DesignerPipeline source;
 
@@ -180,13 +185,24 @@ public class DesignerToExecutor {
             for (ExecutorPort targetPort : targetComponent.getPorts()) {
                 ExecutionPort sourcePort = sourceComponent.getPortByBinding(
                         targetPort.getBinding());
+                if (sourcePort == null) {
+                    LOG.error(
+                            "Source port is null for source '{}' " +
+                                    "required by target " +
+                                    "'{}' port '{}':'{}'",
+                            sourceComponent.getIri(),
+                            targetComponent.getIri(),
+                            targetPort.getIri(),
+                            targetPort.getBinding());
+                }
                 targetPort.setDataSource(createDataSource(
                         sourcePort, executionMapping));
             }
         }
     }
 
-    private ExecutorDataSource createDataSource(ExecutionPort sourcePort,
+    private ExecutorDataSource createDataSource(
+            ExecutionPort sourcePort,
             UnpackOptions.ExecutionMapping executionMapping) {
         if (sourcePort.getExecution() == null) {
             return new ExecutorDataSource(sourcePort.getDataPath(),
