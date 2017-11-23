@@ -7,7 +7,7 @@ public final class XSD {
     }
 
     public static final String DATETIME =
-            "http://www.w3.org/2001/XMLSchema#datetime";
+            "http://www.w3.org/2001/XMLSchema#dateTime";
 
     public static final String LONG =
             "http://www.w3.org/2001/XMLSchema#long";
