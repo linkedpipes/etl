@@ -269,4 +269,9 @@ public class Execution implements ExecutionObserver {
         }
     }
 
+    public boolean isExecutionSuccessful() {
+        return !executionModelV1.isPipelineFailed() &&
+                !executionModelV1.isPipelineCancelled();
+    }
+
 }

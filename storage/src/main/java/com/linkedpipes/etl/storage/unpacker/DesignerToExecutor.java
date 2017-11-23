@@ -80,6 +80,7 @@ public class DesignerToExecutor {
         //
         target.setRepositoryPolicy(source.getRdfRepositoryPolicy());
         target.setRepositoryType(source.getRdfRepositoryType());
+        target.setLogPolicy(source.getLogPolicy());
     }
 
     private void convertConnections() {

@@ -67,6 +67,15 @@ public final class LP_PIPELINE {
     public static final String MEMORY_STORE = PREFIX +
             "repository/MemoryStore";
 
+    public static final String HAS_LOG_POLICY =
+            PREFIX + "logPolicy";
+
+    public static final String LOG_PRESERVE =
+            PREFIX + "log/Preserve";
+
+    public static final String LOG_DELETE_ON_SUCCESS =
+            PREFIX + "log/DeleteOnSuccess";
+
     /**
      * TODO Update to ../dataUnit/files/DirectoryMirror
      */

@@ -11,6 +11,8 @@ public class ExecutorProfile {
 
     private String repositoryType = LP_PIPELINE.NATIVE_STORE;
 
+    private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
+
     public ExecutorProfile(String iri) {
         this.iri = iri;
     }
@@ -19,6 +21,7 @@ public class ExecutorProfile {
         // TODO Add class for ExecutionProfile
         writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryPolicy);
         writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE, repositoryType);
+        writer.iri(iri, LP_PIPELINE.HAS_LOG_POLICY, logPolicy);
     }
 
     public String getIri() {
@@ -31,6 +34,10 @@ public class ExecutorProfile {
 
     public void setRepositoryType(String repositoryType) {
         this.repositoryType = repositoryType;
+    }
+
+    public void setLogPolicy(String logPolicy) {
+        this.logPolicy = logPolicy;
     }
 
 }

@@ -13,8 +13,10 @@
         lp:profile <http://localhost/execution/profile> ;
         lp:repository <http://localhost/repository/sesame> .
 
-    <http://localhost/execution/profile> lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> ;
-        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/NativeStore> .
+    <http://localhost/execution/profile>
+        lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/NativeStore> ;
+        lp:logPolicy <http://linkedpipes.com/ontology/log/Preserve> .
 
     <http://localhost/execution/metadata> a lp:ExecutionMetadata ;
         lp:deleteWorkingData true ;

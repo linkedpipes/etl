@@ -533,4 +533,12 @@ class ExecutionModelV1 {
         return statements;
     }
 
+    public boolean isPipelineFailed() {
+        return pipelineFailed;
+    }
+
+    public boolean isPipelineCancelled() {
+        return pipelineCancelled;
+    }
+
 }

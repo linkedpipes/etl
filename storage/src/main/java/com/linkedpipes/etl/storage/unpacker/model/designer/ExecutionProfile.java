@@ -10,6 +10,8 @@ public class ExecutionProfile implements Loadable {
 
     private String rdfRepositoryType = LP_PIPELINE.NATIVE_STORE;
 
+    private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
+
     @Override
     public Loadable load(String predicate, RdfValue value) {
         switch (predicate) {
@@ -18,6 +20,9 @@ public class ExecutionProfile implements Loadable {
                 return null;
             case LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE:
                 rdfRepositoryType = value.asString();
+                return null;
+            case LP_PIPELINE.HAS_LOG_POLICY:
+                logPolicy = value.asString();
                 return null;
             default:
                 return null;
@@ -30,6 +35,10 @@ public class ExecutionProfile implements Loadable {
 
     public String getRdfRepositoryType() {
         return rdfRepositoryType;
+    }
+
+    public String getLogPolicy() {
+        return logPolicy;
     }
 
 }
