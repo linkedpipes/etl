@@ -35,8 +35,6 @@ public class HttpRequestReport {
 
     private final IRI errorPredicate;
 
-    private final IRI responseCode;
-
     private final StatementsConsumer consumer;
 
     private final List<Statement> statements = new ArrayList<>();
@@ -63,8 +61,6 @@ public class HttpRequestReport {
                 HttpGetFilesVocabulary.HAS_RESPONSE_REPORT);
         errorPredicate = valueFactory.createIRI(
                 HttpGetFilesVocabulary.HAS_ERROR_MESSAGE);
-        responseCode = valueFactory.createIRI(
-                HttpGetFilesVocabulary.HAS_RESPONSE_CODE);
         this.consumer = consumer;
         this.reportWriter = reportWriter;
     }

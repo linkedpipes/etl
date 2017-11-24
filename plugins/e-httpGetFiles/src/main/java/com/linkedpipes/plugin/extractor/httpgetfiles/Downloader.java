@@ -78,7 +78,10 @@ class Downloader {
         HttpURLConnection connection = null;
         Date startTime = new Date();
         try {
-            connection = createConnectionFollowRedirect(url);
+            connection = createConnectionResolveRedirect(url);
+            if (logDetail) {
+                requestReport.reportHeaderResponse(connection);
+            }
             checkResponseCode(connection);
             saveContentToFile(connection, toDownload.getTargetFile());
         } catch (RuntimeException ex) {
@@ -99,7 +102,7 @@ class Downloader {
         return new URL(stringAsUrl);
     }
 
-    private HttpURLConnection createConnectionFollowRedirect(URL target)
+    private HttpURLConnection createConnectionResolveRedirect(URL target)
             throws IOException, LpException {
         HttpURLConnection connection = createConnection(target);
         if (followRedirect) {
@@ -115,9 +118,6 @@ class Downloader {
                 (HttpURLConnection) target.openConnection();
         setHeaders(connection);
         setTimeOut(connection);
-        if (logDetail) {
-            logConnectionDetails(connection);
-        }
         return connection;
     }
 
@@ -134,11 +134,6 @@ class Downloader {
             connection.setConnectTimeout(timeOut);
             connection.setReadTimeout(timeOut);
         }
-    }
-
-    private void logConnectionDetails(HttpURLConnection connection)
-            throws LpException {
-        requestReport.reportHeaderResponse(connection);
     }
 
     private HttpURLConnection updateConnectionIfRedirected(

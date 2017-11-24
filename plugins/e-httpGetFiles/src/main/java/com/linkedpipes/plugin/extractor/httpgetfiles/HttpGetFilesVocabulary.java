@@ -14,7 +14,9 @@ public final class HttpGetFilesVocabulary {
 
     public static final String HAS_URI = PREFIX + "fileUri";
 
-    public static final String HAS_NAME = PREFIX + "fileName";
+    public static final String HAS_FILE_NAME = PREFIX + "fileName";
+
+    public static final String HAS_NAME = PREFIX + "name";
 
     public static final String SKIP_ON_ERROR = PREFIX + "skipOnError";
 
