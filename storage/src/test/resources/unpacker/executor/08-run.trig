@@ -22,12 +22,12 @@
 
     <http://localhost/execution/profile>
         lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> ;
-        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/InMemoryStore> ;
-        lp:logPolicy <http://linkedpipes.com/ontology/log/Preserve> .
+        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/InMemoryStore> .
 
     <http://localhost/execution/metadata> a lp:ExecutionMetadata ;
         lp:deleteWorkingData true ;
         lp:saveDebugData false ;
+        lp:logPolicy <http://linkedpipes.com/ontology/log/Preserve> ;
         <http://linkedpipes.com/ontology/execution/type> <http://linkedpipes.com/resources/executionType/Full> .
 
     <http://localhost/pipeline/lt> a lp:Component ;

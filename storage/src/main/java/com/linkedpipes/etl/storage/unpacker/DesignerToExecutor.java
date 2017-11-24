@@ -77,10 +77,8 @@ public class DesignerToExecutor {
     private void initializePipelineProfile() {
         ExecutionProfile source = this.source.getExecutionProfile();
         ExecutorProfile target = this.target.getExecutorProfile();
-        //
         target.setRepositoryPolicy(source.getRdfRepositoryPolicy());
         target.setRepositoryType(source.getRdfRepositoryType());
-        target.setLogPolicy(source.getLogPolicy());
     }
 
     private void convertConnections() {
@@ -115,6 +113,7 @@ public class DesignerToExecutor {
         metadata.setTargetComponent(options.getRunToComponent());
         metadata.setDeleteWorkingData(options.isDeleteWorkingDirectory());
         metadata.setSaveDebugData(options.isSaveDebugData());
+        metadata.setLogPolicy(options.getLogPolicy());
         target.getExecutorMetadata()
                 .setExecutionType(getExecutionType(options));
     }

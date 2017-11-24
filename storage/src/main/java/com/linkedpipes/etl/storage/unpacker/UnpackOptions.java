@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
@@ -90,6 +91,8 @@ class UnpackOptions implements Loadable {
 
     private String executionIri;
 
+    private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
+
     @Override
     public Loadable load(String predicate, RdfValue value)
             throws RdfUtilsException {
@@ -109,6 +112,10 @@ class UnpackOptions implements Loadable {
                 return null;
             case LP_EXEC.HAS_EXECUTION:
                 executionIri = value.asString();
+                return null;
+            case LP_PIPELINE.HAS_LOG_POLICY:
+                logPolicy = value.asString();
+                return null;
             default:
                 return null;
         }
@@ -132,6 +139,10 @@ class UnpackOptions implements Loadable {
 
     public String getExecutionIri() {
         return executionIri;
+    }
+
+    public String getLogPolicy() {
+        return logPolicy;
     }
 
 }

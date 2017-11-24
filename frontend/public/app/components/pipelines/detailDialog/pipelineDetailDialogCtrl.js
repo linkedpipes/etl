@@ -21,8 +21,7 @@ define([], function () {
 
         $scope.profile = {
             "rdfRepositoryPolicy" : jsonld.getReference(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryPolicy'),
-            "rdfRepositoryType" : jsonld.getReference(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryType'),
-            "logPolicy" : jsonld.getReference(data.profile, 'http://linkedpipes.com/ontology/logPolicy')
+            "rdfRepositoryType" : jsonld.getReference(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryType')
         };
 
         $scope.onCancel = function () {
@@ -35,7 +34,6 @@ define([], function () {
             jsonld.setValues(data.definition, 'http://etl.linkedpipes.com/ontology/tag', undefined, $scope.detail.tags);
             setResource(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryPolicy', $scope.profile.rdfRepositoryPolicy);
             setResource(data.profile, 'http://linkedpipes.com/ontology/rdfRepositoryType', $scope.profile.rdfRepositoryType);
-            setResource(data.profile, 'http://linkedpipes.com/ontology/logPolicy', $scope.profile.logPolicy);
             // Close the dialog.
             $mdDialog.hide();
         };

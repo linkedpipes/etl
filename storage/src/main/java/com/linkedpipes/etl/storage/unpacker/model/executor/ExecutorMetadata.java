@@ -20,6 +20,8 @@ public class ExecutorMetadata {
 
     private boolean saveDebugData;
 
+    private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
+
     public ExecutorMetadata(String iri) {
         this.iri = iri;
     }
@@ -28,6 +30,7 @@ public class ExecutorMetadata {
         writer.iri(iri, RDF.TYPE, LP_PIPELINE.EXECUTION_METADATA);
         writer.bool(iri, LP_PIPELINE.HAS_DELETE_WORKING, deleteWorkingData);
         writer.bool(iri, LP_PIPELINE.HAS_SAVE_DEBUG_DATA, saveDebugData);
+        writer.iri(iri, LP_PIPELINE.HAS_LOG_POLICY, logPolicy);
         if (targetComponent != null && !targetComponent.isEmpty()) {
             writer.iri(iri, LP_EXEC.HAS_TARGET_COMPONENT, targetComponent);
         }
@@ -52,6 +55,10 @@ public class ExecutorMetadata {
 
     public void setSaveDebugData(boolean saveDebugData) {
         this.saveDebugData = saveDebugData;
+    }
+
+    public void setLogPolicy(String logPolicy) {
+        this.logPolicy = logPolicy;
     }
 
 }

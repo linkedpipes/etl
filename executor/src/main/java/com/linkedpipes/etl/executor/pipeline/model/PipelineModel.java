@@ -101,7 +101,7 @@ public class PipelineModel implements Loadable {
 
     public boolean isDeleteLogDataOnSuccess() {
         return LP_PIPELINE.LOG_DELETE_ON_SUCCESS.equals(
-                executionProfile.getLogPolicy());
+                executionMetadata.getLogPolicy());
     }
 
 }
