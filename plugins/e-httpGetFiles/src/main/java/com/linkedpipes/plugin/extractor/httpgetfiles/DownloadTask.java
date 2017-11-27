@@ -15,7 +15,7 @@ public class DownloadTask implements GroupTask {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_URI)
     private String uri;
 
-    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_NAME)
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_FILE_NAME)
     private String fileName;
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
