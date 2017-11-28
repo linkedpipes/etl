@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Default implementation of progress report.
@@ -57,7 +58,7 @@ class DefaultProgressReport implements ProgressReport {
 
     }
 
-    private long current;
+    private AtomicInteger current = new AtomicInteger();
 
     private long total;
 
@@ -68,6 +69,8 @@ class DefaultProgressReport implements ProgressReport {
     private final Component.Context context;
 
     private final String component;
+
+    private final Object lock = new Object();
 
     /**
      * @param context
@@ -80,8 +83,8 @@ class DefaultProgressReport implements ProgressReport {
 
     @Override
     public void start(long entriesToProcess) {
-        LOG.info("Progress report 0/{}", entriesToProcess);
-        current = 0;
+        LOG.info("Progress report start 0/{}", entriesToProcess);
+        current.set(0);
         total = entriesToProcess;
         reportStep = (long) (total * 0.1f);
         reportNext = reportStep;
@@ -94,12 +97,12 @@ class DefaultProgressReport implements ProgressReport {
     }
 
     @Override
-    public void entryProcessed() {
-        ++current;
-        if (current >= reportNext) {
+    public void  entryProcessed() {
+        int value = current.incrementAndGet();
+        if (value >= reportNext) {
             reportNext += reportStep;
             LOG.info("Progress report {}/{}", current, total);
-            context.sendMessage(new ReportProgress(current, total, component));
+            context.sendMessage(new ReportProgress(value, total, component));
         }
     }
 

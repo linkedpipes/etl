@@ -25,9 +25,8 @@ public abstract class TaskExecution<T extends Task>
         ExecutorService executor = createExecutorService();
         TaskSource<T> taskSource = createTaskSource();
         taskSource.setSkipOnError(this.configuration.isSkipOnError());
-        createWorkers(executor, taskSource);
         beforeExecution();
-        startWorkers(executor);
+        createWorkers(executor, taskSource);
         waitForShutdown(executor);
         afterExecution();
         checkForFailures(taskSource);
@@ -75,15 +74,12 @@ public abstract class TaskExecution<T extends Task>
 
     protected abstract ReportWriter createReportWriter();
 
-    private void startWorkers(ExecutorService executor) {
-        executor.shutdown();
-    }
-
     protected void afterExecution() throws LpException {
         // No operation here.
     }
 
     private void waitForShutdown(ExecutorService executor) {
+        executor.shutdown();
         while (true) {
             try {
                 if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
