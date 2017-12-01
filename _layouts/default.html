@@ -15,10 +15,11 @@
 
     {% include footer.html %}
 
-<!--Import jQuery before materialize.js-->
-		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-		<script type="text/javascript" src="{{ "/js/bin/materialize.min.js" | prepend: site.baseurl }}" ></script>
-		<script type="text/javascript" src="{{ "/js/init.js" | prepend: site.baseurl }}" ></script>
+		<!--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script>if (!window.jQuery) { document.write('<script src="bin/jquery-3.2.1.min.js"><\/script>'); }
+        </script>-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.1/js/materialize.min.js"></script>
+		<!--<script type="text/javascript" src="{{ "/js/init.js" | prepend: site.baseurl }}" ></script>-->
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
