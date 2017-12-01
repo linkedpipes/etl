@@ -101,7 +101,7 @@ class DefaultProgressReport implements ProgressReport {
     public void entryProcessed() {
         synchronized (lock) {
             int value = ++current;
-            if (value == reportNext) {
+            if (value >= reportNext) {
                 reportNext += reportStep;
                 sendReportMessage(value);
             }
