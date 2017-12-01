@@ -6,8 +6,8 @@ import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.EntityMerger;
-import com.linkedpipes.etl.rdf.utils.entity.EntityReference;
+import com.linkedpipes.etl.executor.rdf.entity.EntityMerger;
+import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
 import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 

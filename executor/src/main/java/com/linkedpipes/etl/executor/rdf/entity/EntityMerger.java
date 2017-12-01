@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.rdf.utils.entity;
+package com.linkedpipes.etl.executor.rdf.entity;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.*;

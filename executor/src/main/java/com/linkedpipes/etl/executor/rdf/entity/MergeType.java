@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.rdf.utils.entity;
+package com.linkedpipes.etl.executor.rdf.entity;
 
 /**
  * Define merge operation.

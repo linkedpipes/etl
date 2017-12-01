@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.MergeControl;
-import com.linkedpipes.etl.rdf.utils.entity.MergeControlFactory;
+import com.linkedpipes.etl.executor.rdf.entity.MergeControl;
+import com.linkedpipes.etl.executor.rdf.entity.MergeControlFactory;
 import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
 class DefaultControlFactory implements MergeControlFactory {
