@@ -84,6 +84,15 @@
         <module>c-files</module>
         <module>l-solr</module>
         <module>t-chunkedToFiles</module>
+        <module>x-httpRequest</module>
+        <module>l-couchDb</module>
+        <module>t-mustacheChunked</module>
+        <module>t-chunkSplitter</module>
+        <module>t-rdfToWrappedJsonLdChunked</module>
+        <module>t-rdfDifference</module>
+        <module>t-xmlToChunks</module>
+        <module>c-rdfSingleGraph</module>
+        <module>c-rdfChunkedTriples</module>
     </modules>
 
 </project>

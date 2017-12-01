@@ -1,8 +1,9 @@
 package com.linkedpipes.etl.executor.api.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,8 +39,8 @@ class DefaultDefinitionReader implements DefinitionReader {
     private List<Map<String, String>> queryForProperty(String property)
             throws LpException {
         try {
-            return definition.sparqlSelect(
-                    getQueryForProperty(property), String.class);
+            return RdfUtils.sparqlSelect(definition,
+                    getQueryForProperty(property));
         } catch (RdfUtilsException ex) {
             throw new LpException("Can't query source.", ex);
         }

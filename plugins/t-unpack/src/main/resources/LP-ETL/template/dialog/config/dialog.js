@@ -15,6 +15,10 @@ define([], function () {
         "format": {
             "$type": "str",
             "$label": "Format"
+        },
+        "skipOnError" : {
+            "$type" : "bool",
+            "$label" : "Skip on error"
         }
     };
 

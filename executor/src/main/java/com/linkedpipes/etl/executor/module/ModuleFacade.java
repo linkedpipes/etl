@@ -63,13 +63,16 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             + "" // core API
             + "com.linkedpipes.etl.executor.api.v1;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.component;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.component.task;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.dataunit;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.event;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.rdf;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.service;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.report;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.vocabulary;version=\"0.0.0\","
             + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\","
             + "com.linkedpipes.etl.rdf.utils.entity;version=\"0.0.0\","
+            + "com.linkedpipes.etl.rdf.utils.model;version=\"0.0.0\","
             + "com.linkedpipes.etl.rdf.utils.pojo;version=\"0.0.0\","
             + "com.linkedpipes.etl.rdf.utils.vocabulary;version=\"0.0.0\"";
 
@@ -209,6 +212,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
     protected void start() {
         final FrameworkFactory frameworkFactory
                 = ServiceLoader.load(FrameworkFactory.class).iterator().next();
+
         final Map<String, String> config = new HashMap<>();
         config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
                 EXPORT_PACKAGE_LIST);
@@ -216,6 +220,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
                 configuration.getOsgiStorageDirectory());
         config.put(Constants.FRAMEWORK_STORAGE_CLEAN,
                 Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+
         framework = frameworkFactory.newFramework(config);
         try {
             framework.start();

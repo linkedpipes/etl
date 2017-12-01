@@ -104,19 +104,24 @@ class DataObjectLoader {
         return objectsOutput;
     }
 
-    private Object createDataObject(Resource resource) {
+    private Map<String, Object> createDataObject(Resource resource) {
         Map<IRI, List<Value>> data = objects.get(resource);
         if (data == null || data.isEmpty()) {
-            // There are no data, return string representation ie. IRI
-            return resource.stringValue();
+            return buildEmptyDataObject(resource);
         }
-        return buildDataObject(resource, data);
+        return buildNonEmptyDataObject(resource, data);
     }
 
-    private Map<String, Object> buildDataObject(Resource resource,
+    private Map<String, Object> buildEmptyDataObject(Resource resource) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("@id", resource.stringValue());
+        return result;
+    }
+
+    private Map<String, Object> buildNonEmptyDataObject(Resource resource,
             Map<IRI, List<Value>> objectData) {
         Map<String, Object> result = new HashMap<>();
-        result.put("@id", resource);
+        result.put("@id", resource.stringValue());
         for (Map.Entry<IRI, List<Value>> entry : objectData.entrySet()) {
             if (entry.getValue().isEmpty()) {
                 continue;
@@ -135,8 +140,11 @@ class DataObjectLoader {
         Map<String, Object> output = new HashMap<>();
         if (entry.getValue().size() == 1) {
             Resource resource = (Resource) entry.getValue().get(0);
-            output.put(entry.getKey().stringValue(),
-                    createDataObject(resource));
+            Map<String, Object> resourceObject = createDataObject(resource);
+            if (includeFirstFlag) {
+                addFirstFlag(resourceObject);
+            }
+            output.put(entry.getKey().stringValue(), resourceObject);
         } else {
             output.put(entry.getKey().stringValue(),
                     transformResourceList(entry));
@@ -155,7 +163,7 @@ class DataObjectLoader {
             outputData.add(dataObject);
         }
         if (includeFirstFlag) {
-            addFirstFlag(outputData.get(0));
+            addFirstFlagToList(outputData);
         }
         return outputData;
     }
@@ -179,18 +187,20 @@ class DataObjectLoader {
 
     private Map<String, Object> transformValue(
             Map.Entry<IRI, List<Value>> entry) {
-        Map<String, Object> output = new HashMap<>();
+        String predicate = entry.getKey().stringValue();
         if (entry.getValue().size() == 1) {
-            output.put(entry.getKey().stringValue(),
-                    getValue(entry.getValue().get(0)));
+            Map<String, Object> output = new HashMap<>();
+            output.put(predicate, getValue(entry.getValue().get(0)));
+            return output;
         } else {
+            Map<String, Object> output = new HashMap<>();
             List<Object> newData = new ArrayList<>(entry.getValue().size());
             for (Value value : entry.getValue()) {
                 newData.add(getValue(value));
             }
-            output.put(entry.getKey().stringValue(), newData);
+            output.put(predicate, newData);
+            return output;
         }
-        return output;
     }
 
     private static Object getValue(Value value) {
@@ -209,5 +219,16 @@ class DataObjectLoader {
             ((Map) object).put(MustacheVocabulary.HAS_IS_FIRST, true);
         }
     }
+
+    private void addFirstFlagToList(List<Object> objects) {
+        boolean isFirst = true;
+        for (Object object : objects) {
+            if (object instanceof Map) {
+                ((Map) object).put(MustacheVocabulary.HAS_IS_FIRST, isFirst);
+                isFirst = false;
+            }
+        }
+    }
+
 
 }

@@ -5,6 +5,12 @@
         "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}",
         "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#outputMode" : {
+            "@id": "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#createNewChunk"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#outputModeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }
 ]

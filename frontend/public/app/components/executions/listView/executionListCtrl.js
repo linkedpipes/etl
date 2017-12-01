@@ -79,6 +79,9 @@ define([
         };
 
         var decorator = function (execution) {
+            execution['onClickUrl'] = "#/pipelines/edit/canvas?" +
+                "pipeline=" + encodeURIComponent(execution.pipeline.iri) +
+                "&execution=" + encodeURIComponent(execution.iri);
             //
             execution.id = execution.iri.substring(
                     execution.iri.lastIndexOf('executions/') + 11);
@@ -280,12 +283,6 @@ define([
             $location.path('/executions/detail').search({
                 'execution': execution.iri
             });
-        };
-
-        $scope.onPipeline = function (execution) {
-            $location.path('/pipelines/edit/canvas').search({
-                'pipeline': execution.pipeline.iri,
-                'execution': execution.iri});
         };
 
         $scope.onExecute = function (execution) {

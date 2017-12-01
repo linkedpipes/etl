@@ -3,7 +3,9 @@
     <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiUri> "" ;
     <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKey> "" ;
     <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetID> "" ;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#ckanOrganization> "" ;
     <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#loadLanguage> "en" ;
     <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#profile> <http://plugins.etl.linkedpipes.com/resource/l-dcatAp11ToCkan/profiles/CKAN> ;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#overrideCkanOrganization> false ;
     <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidExampleResources> true ;
     <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidSparqlEndpoint> true .

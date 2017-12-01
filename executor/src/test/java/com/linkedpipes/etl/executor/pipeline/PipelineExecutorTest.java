@@ -7,7 +7,7 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import org.apache.commons.io.FileUtils;
 import org.mockito.Mockito;
 import org.slf4j.Logger;

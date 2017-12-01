@@ -1,4 +1,4 @@
-<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <md-input-container class="md-block" ng-hide="dialog.uri.hide">
         <label>File URL</label>
@@ -22,6 +22,11 @@
             to https.
         </md-tooltip>
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.userAgent.hide">
+        <label>User agent</label>
+        <input type="text" ng-model="dialog.userAgent.value"
+               ng-disabled="dialog.userAgent.disabled || dialog.userAgent.inherit">
+    </md-input-container>
 </div>
 
 

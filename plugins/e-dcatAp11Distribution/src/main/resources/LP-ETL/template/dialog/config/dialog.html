@@ -1,6 +1,6 @@
 <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="Basics">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-subheader class="md-primary">Mandatory</md-subheader>
         <md-switch ng-model="dialog.getDatasetIRIFromInput.value"
                    ng-hide="dialog.getDatasetIRIFromInput.hide"
@@ -79,7 +79,7 @@
         </lp-localized-text-input>
     </md-tab>
     <md-tab label="Download">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <lp-iri-list label-top="Download URLs"
                      label-item="Download URL"
                      ng-model="dialog.downloadURLs.value"
@@ -95,7 +95,7 @@
         </md-input-container>
     </md-tab>
     <md-tab label="Documentation">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <lp-localized-text-input class="md-block"
                                  label-top="Distribution title"
                                  label-item="Title"
@@ -191,14 +191,14 @@
         </md-input-container>
     </md-tab>
     <md-tab label="Verification">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-input-container class="md-block"
                             ng-hide="dialog.byteSize.hide"
                             flex-gt-sm>
             <label>Byte size</label>
             <input type="number" ng-model="dialog.byteSize.value"
                    ng-disabled="dialog.byteSize.disabled || dialog.byteSize.inherit"
-                   placeholder="10000" step="1" min="0">
+                   placeholder="10000" min="0">
         </md-input-container>
         <md-input-container class="md-block"
                             ng-hide="dialog.checksum.hide"
@@ -210,7 +210,7 @@
         </md-input-container>
     </md-tab>
     <md-tab label="Series">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-input-container class="md-block" flex-gt-sm>
             See <a href="https://joinup.ec.europa.eu/node/150348"
                    target="_blank">DCAT-AP v1.1 Implementation Guideline for
@@ -235,7 +235,7 @@
         </div>
     </md-tab>
     <md-tab label="StatDCAT-AP">
-        <lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+        <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
         <md-input-container class="md-block" flex-gt-sm>
             See <a target="_blank"
                    href="https://joinup.ec.europa.eu/asset/stat_dcat_application_profile/asset_release/statdcat-ap-draft-4">

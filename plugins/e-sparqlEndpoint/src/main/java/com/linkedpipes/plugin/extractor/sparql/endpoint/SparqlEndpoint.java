@@ -6,17 +6,26 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +80,7 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
         } catch (OpenRDFException ex) {
             throw exceptionFactory.failure("Can't connnect to endpoint.", ex);
         }
+        repository.setHttpClient(getHttpClient());
         //
         try {
             queryRemote(repository);
@@ -84,6 +94,20 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
             }
         }
     }
+
+    private CloseableHttpClient getHttpClient() {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (configuration.isUseAuthentication()) {
+            provider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            configuration.getUsername(),
+                            configuration.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(provider).build();
+    }
+
 
     public void queryRemote(SPARQLRepository repository) throws LpException {
         final IRI graph = outputRdf.getWriteGraph();
@@ -106,8 +130,17 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
                     dataset.addDefaultGraph(valueFactory.createIRI(iri));
                 }
                 preparedQuery.setDataset(dataset);
-                final GraphQueryResult result = preparedQuery.evaluate();
-                localConnection.add(result, graph);
+                RDFHandler handler = new AbstractRDFHandler() {
+                    @Override
+                    public void handleStatement(Statement st)
+                            throws RDFHandlerException {
+                        localConnection.add(st, graph);
+                    }
+                };
+                if (configuration.isFixIncomingRdf()) {
+                    handler = new RdfEncodeHandler(handler);
+                }
+                preparedQuery.evaluate(handler);
             }
             localConnection.commit();
         }

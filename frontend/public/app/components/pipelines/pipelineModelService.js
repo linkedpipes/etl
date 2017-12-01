@@ -55,7 +55,17 @@ define([], function () {
          * @param id ID used to create an URI.
          */
         service.component.setIriFromId = function (model, component, id) {
-            component['@id'] = model.definition.iri + '/components/' + id;
+            var componentIri = model.definition.iri + '/components/' + id
+            if (service.getResource(model, componentIri) === undefined) {
+                component['@id'] = componentIri;
+                return;
+            }
+            console.log("iri collision ", componentIri);
+            componentIri += "-a";
+            while (service.getResource(model, componentIri) !== undefined) {
+                componentIri += Math.ceil(Math.random() * 100);
+            }
+            component['@id'] = componentIri;
         };
 
         /**
@@ -153,7 +163,17 @@ define([], function () {
          * @param id ID used to create an URI.
          */
         service.connection.setIriFromId = function (model, component, id) {
-            component['@id'] = model.definition.iri + '/connection/' + id;
+            var componentIri = model.definition.iri + '/connection/' + id
+            if (service.getResource(model, componentIri) === undefined) {
+                component['@id'] = componentIri;
+                return;
+            }
+            console.log("iri collision ", componentIri);
+            componentIri += "-a";
+            while (service.getResource(model, componentIri) !== undefined) {
+                componentIri += Math.ceil(Math.random() * 100);
+            }
+            component['@id'] = componentIri;
         };
 
         service.connection.setSource = function (connection, component, binding) {
@@ -574,6 +594,29 @@ define([], function () {
         service.deleteGraph = function (model, iri) {
             delete model['graphs'][iri];
             console.log('deleteGraph', iri, model);
+        };
+
+        service.getOrCreateExecutionProfile = function (model) {
+            var pipeline = service.getPipeline(model);
+            var profileIri = jsonld.getReference(pipeline,
+                "http://linkedpipes.com/ontology/profile");
+            console.log("PIPELINE", pipeline);
+            console.log("PROFILE", profileIri);
+            if (profileIri === undefined) {
+                var profileIri = pipeline["@id"] + "/profile/default";
+                pipeline["http://linkedpipes.com/ontology/profile"] = {"@id" :profileIri};
+                var profile = {
+                    "@id": profileIri,
+                    "@type": ["http://linkedpipes.com/ontology/ExecutionProfile"],
+                    "http://linkedpipes.com/ontology/rdfRepositoryPolicy" : {
+                        "@id": "http://linkedpipes.com/ontology/repository/SingleRepository"
+                    }
+                };
+                service.getDefinitionGraph(model).push(profile);
+                return profile;
+            } else {
+                return service.getResource(model, profileIri);
+            }
         };
 
         return service;

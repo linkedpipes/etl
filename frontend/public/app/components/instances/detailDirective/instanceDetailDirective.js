@@ -20,6 +20,9 @@ define([
 
             // Scope used by the dialog.
             $scope.dialogScope = $rootScope.$new(true);
+            $scope.dialogScope.application = {
+                "changeToHierarchyTab": changeToHierarchyTab
+            };
 
             // Services to bind to the dialog.
             $scope.dialogLocals = {
@@ -68,6 +71,11 @@ define([
             if ($scope.api.store) {
                 load();
             }
+
+            function changeToHierarchyTab() {
+                $scope.activeTab = $scope.dialogs.length + 1;
+            }
+
         }
 
         return {

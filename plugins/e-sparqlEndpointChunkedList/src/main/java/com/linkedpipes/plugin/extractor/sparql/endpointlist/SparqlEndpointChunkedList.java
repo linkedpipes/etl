@@ -6,17 +6,25 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import org.eclipse.rdf4j.repository.Repository;
 
 import java.io.File;
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Takes CSV files on input. The CSV file rows are used as IRIs and mapped
@@ -26,11 +34,15 @@ import java.util.concurrent.TimeUnit;
  * CONSTRUCT { ?obec ?p ?o } WHERE { ?obec ?p ?o ${VALUES} }
  * where the input CSV file contains column "obec".
  */
-public final class SparqlEndpointChunkedList implements Component,
-        SequentialExecution {
+public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(SparqlEndpointChunkedList.class);
+    private static final int THREADS_PER_GROUP = 1;
+
+    private static final int EXPECTED_FILES_WITH_SAME_NAME = 1;
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit inputFiles;
@@ -39,7 +51,7 @@ public final class SparqlEndpointChunkedList implements Component,
     public WritableChunkedTriples outputRdf;
 
     @Component.InputPort(iri = "ErrorOutputRdf")
-    public WritableSingleGraphDataUnit errorOutputRdf;
+    public WritableSingleGraphDataUnit reportRdf;
 
     @Component.InputPort(iri = "Tasks")
     public SingleGraphDataUnit tasksRdf;
@@ -53,124 +65,73 @@ public final class SparqlEndpointChunkedList implements Component,
     @Component.Configuration
     public SparqlEndpointChunkedListConfiguration configuration;
 
-    private TaskLoader taskLoader;
+    private StatementsConsumer consumer;
 
-    private ThreadPoolExecutor executorService;
-
-    private ErrorReportConsumer errorConsumer;
-
-    private TaskResultConsumer resultConsumer;
+    private List<QueryTask> tasks;
 
     private Map<String, List<File>> inputFilesByName;
 
     @Override
-    public void execute() throws LpException {
-        initializeTaskLoader();
-        initializeInputFileMap();
-        initializeExecutor();
-        initializeConsumers();
+    protected TaskExecutionConfiguration getExecutionConfiguration() {
+        return this.configuration;
+    }
+
+    @Override
+    protected TaskSource<QueryTask> createTaskSource() throws LpException {
+        loadTasks();
+        return TaskSource.groupTaskSource(this.tasks, THREADS_PER_GROUP);
+    }
+
+    private void loadTasks() throws LpException {
         try {
-            progressReport.start(taskLoader.getTasks().size());
-            executeTasks();
-            awaitExecutorShutdown();
-            progressReport.done();
-        } finally {
-            closeTaskLoader();
+            this.tasks = RdfUtils.loadList(
+                    Rdf4jSource.wrapRepository(tasksRdf.getRepository()),
+                    tasksRdf.getReadGraph().stringValue(),
+                    RdfToPojo.descriptorFactory(),
+                    QueryTask.class);
+        } catch (RdfUtilsException ex) {
+            throw exceptionFactory.failure("Can't load tasks.", ex);
         }
     }
 
-    private void initializeTaskLoader() throws LpException {
-        taskLoader = new TaskLoader(tasksRdf, exceptionFactory);
-        taskLoader.initialize();
+    @Override
+    protected TaskConsumer<QueryTask> createConsumer() {
+        return new QueryTaskExecutor(
+                this.configuration, this.consumer, this.progressReport,
+                this.exceptionFactory, this.inputFilesByName
+        );
+    }
+
+    @Override
+    protected ReportWriter createReportWriter() {
+        String graph = reportRdf.getWriteGraph().stringValue();
+        Repository repository = reportRdf.getRepository();
+        TripleWriter writer =
+                Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
+        return ReportWriter.create(writer);
+    }
+
+    @Override
+    protected void beforeExecution() throws LpException {
+        super.beforeExecution();
+        this.consumer = new StatementsConsumer(outputRdf);
+        this.progressReport.start(tasks);
+        initializeInputFileMap();
     }
 
     private void initializeInputFileMap() {
-        inputFilesByName = new HashMap<>();
-        for (FilesDataUnit.Entry entry : inputFiles) {
-            getOrCreate(inputFilesByName, entry.getFileName())
+        this.inputFilesByName = new HashMap<>();
+        for (FilesDataUnit.Entry entry : this.inputFiles) {
+            this.inputFilesByName.computeIfAbsent(entry.getFileName(),
+                    (name) -> new ArrayList<>(EXPECTED_FILES_WITH_SAME_NAME))
                     .add(entry.toFile());
         }
     }
 
-    private <T> List<T> getOrCreate(Map<String, List<T>> map, String key) {
-        if (map.containsKey(key)) {
-            return map.get(key);
-        }
-        List<T> newList = new LinkedList<>();
-        map.put(key, newList);
-        return newList;
-    }
-
-    private void initializeExecutor() {
-        LOG.info("Using {} executors", configuration.getUsedThreads());
-        executorService = new ThreadPoolExecutor(
-                configuration.getUsedThreads(),
-                configuration.getUsedThreads(),
-                1, TimeUnit.MINUTES,
-                new LinkedBlockingQueue<>());
-    }
-
-    private void executeTasks() throws LpException {
-        for (Map.Entry<String, List<Task>> entry
-                : groupTaskByEndpoint(taskLoader.getTasks()).entrySet()) {
-            LOG.info("Submitting {} task for {}", entry.getValue().size(),
-                    entry.getKey());
-            submitTasks(entry.getValue());
-        }
-        LOG.info("executorService.shutdown");
-        executorService.shutdown();
-    }
-
-    private void initializeConsumers() {
-        errorConsumer = new ErrorReportConsumer(errorOutputRdf);
-        resultConsumer = new TaskResultConsumer(outputRdf);
-    }
-
-    private void awaitExecutorShutdown() {
-        LOG.info("executorService.awaitTermination");
-        while (true) {
-            try {
-                if (executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-                    break;
-                }
-            } catch (InterruptedException ex) {
-                // Ignore.
-            }
-        }
-    }
-
-    private Map<String, List<Task>> groupTaskByEndpoint(
-            Collection<Task> tasks) {
-        Map<String, List<Task>> endpointMap = new HashMap<>();
-        for (Task task : tasks) {
-            getOrCreate(endpointMap, task.getEndpoint()).add(task);
-        }
-        return endpointMap;
-    }
-
-    private void submitTasks(List<Task> tasks) throws LpException {
-        waitForSpaceInQueue();
-        executorService.submit(new TaskExecutor(tasks,
-                errorConsumer, resultConsumer, progressReport,
-                exceptionFactory, configuration.getExecutionTimeLimit(),
-                inputFilesByName));
-    }
-
-    private void waitForSpaceInQueue() {
-        int maxQueueSize = configuration.getUsedThreads() * 2;
-        while (executorService.getQueue().size() > maxQueueSize) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                // Do nothing here.
-            }
-        }
-    }
-
-    private void closeTaskLoader() {
-        if (taskLoader != null) {
-            taskLoader.close();
-        }
+    @Override
+    protected void afterExecution() throws LpException {
+        super.afterExecution();
+        this.progressReport.done();
     }
 
 }

@@ -11,6 +11,9 @@ public class FilesToRdfConfiguration {
     @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_COMMIT_SIZE)
     private int filesPerChunk = 1;
 
+    @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_SKIP_ON_FAILURE)
+    private boolean skipOnFailure = false;
+
     public FilesToRdfConfiguration() {
     }
 
@@ -29,4 +32,13 @@ public class FilesToRdfConfiguration {
     public void setFilesPerChunk(int filesPerChunk) {
         this.filesPerChunk = filesPerChunk;
     }
+
+    public boolean isSkipOnFailure() {
+        return skipOnFailure;
+    }
+
+    public void setSkipOnFailure(boolean skipOnFailure) {
+        this.skipOnFailure = skipOnFailure;
+    }
+
 }

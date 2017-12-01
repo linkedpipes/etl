@@ -1,15 +1,15 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -17,27 +17,14 @@ import java.util.*;
  * Can be used to load values into a properties of an object.
  *
  * Known limitations:
- * <ul>
- * <li>Does not support arrays.</li>
- * <li>Does not support generics with more then one argument.</li>
- * <li>Does not support nested collections.</li>
- * <li>Does not support language tags.</li>
- * </ul>
+ * - Does not support arrays.
+ * - Does not support generics with more then one argument.
+ * - Does not support nested collections.
+ * - Does not support language tags.
  *
  * This class can be extended to provide additional functionality.
  */
-class FieldLoader<ValueType> {
-
-    public static class CantLoadValue extends Exception {
-
-        public CantLoadValue(String message) {
-            super(message);
-        }
-
-        public CantLoadValue(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
+class FieldLoader {
 
     private static final Set<Class<?>> WRAP_TYPES;
 
@@ -65,12 +52,6 @@ class FieldLoader<ValueType> {
         XSD_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    private final RdfSource.ValueConverter<ValueType> converter;
-
-    public FieldLoader(RdfSource.ValueConverter<ValueType> converter) {
-        this.converter = converter;
-    }
-
     /**
      * If the field represent a primitive type, then the value is converted
      * to given type and stored in the field.
@@ -90,244 +71,152 @@ class FieldLoader<ValueType> {
      * @param extendExisting
      * @return
      */
-    public Object set(Object target, Field field, ValueType value,
+    public Object set(Object target, Field field, RdfValue value,
             boolean extendExisting)
-            throws CantLoadValue {
+            throws LoaderException {
         final Class<?> fieldType = field.getType();
         if (Collection.class.isAssignableFrom(fieldType)) {
-            final Class<?> genericType =
-                    getCollectionType(field.getGenericType());
-            if (Collection.class.isAssignableFrom(genericType)) {
-                throw new CantLoadValue("Nested collection are not supported.");
-            } else if (isPrimitive(genericType)) {
-                addValue(target, field,
-                        valueToPrimitive(genericType, value), extendExisting);
-            } else if (genericType.isEnum()) {
-                addValue(target, field, valueToEnum(genericType, value),
-                        extendExisting);
-            } else if (genericType.isArray()) {
-                throw new CantLoadValue("Arrays are not supported.");
-            } else {
-                if (RdfLoader.LangString.class.isAssignableFrom(genericType)) {
-                    addValue(target, field, valueToStringLang(genericType, value),
-                            extendExisting);
-                    return null;
-                } else {
-                    final Object newObject = valueToObject(genericType);
-                    addValue(target, field, newObject, extendExisting);
-                    return newObject;
-                }
-            }
+            return setCollection(target, field, value, extendExisting);
         } else if (isPrimitive(fieldType)) {
-            setValue(target, field, valueToPrimitive(fieldType, value));
+            FieldUtils.setValue(target, field,
+                    valueToPrimitive(fieldType, value));
         } else if (fieldType.isEnum()) {
-            setValue(target, field, valueToEnum(fieldType, value));
+            FieldUtils.setValue(target, field, valueToEnum(fieldType, value));
         } else if (fieldType.isArray()) {
-            throw new CantLoadValue("Arrays are not supported.");
+            throw new LoaderException("Arrays are not supported.");
         } else {
-            if (RdfLoader.LangString.class.isAssignableFrom(fieldType)) {
-                setValue(target, field, valueToStringLang(fieldType, value));
+            if (LangString.class.isAssignableFrom(fieldType)) {
+                FieldUtils.setValue(target, field,
+                        valueToStringLang(fieldType, value));
                 return null;
             }
             // It's a regular object.
             if (extendExisting) {
-                final Object currentObject = getValue(target, field);
+                final Object currentObject = FieldUtils.getValue(target, field);
                 if (currentObject != null) {
                     return currentObject;
                 }
             }
             // Create and set new object.
-            final Object newObject = valueToObject(fieldType);
-            setValue(target, field, newObject);
+            final Object newObject = createInstance(fieldType);
+            FieldUtils.setValue(target, field, newObject);
             return newObject;
         }
         return null;
     }
 
-    private static Object getValue(Object object, Field field)
-            throws CantLoadValue {
-        final PropertyDescriptor descriptor;
-        try {
-            descriptor = new PropertyDescriptor(field.getName(),
-                    field.getDeclaringClass());
-        } catch (IntrospectionException ex) {
-            throw new CantLoadValue("Can't handle property descriptor.");
+    private static Object setCollection(Object target, Field field,
+            RdfValue value, boolean extendExisting) throws LoaderException {
+        final Class<?> genericType =
+                getCollectionType(field.getGenericType());
+        if (Collection.class.isAssignableFrom(genericType)) {
+            throw new LoaderException(
+                    "Nested collection are not supported.");
+        } else if (isPrimitive(genericType)) {
+            addToCollection(target, field,
+                    valueToPrimitive(genericType, value), extendExisting);
+        } else if (genericType.isEnum()) {
+            addToCollection(target, field, valueToEnum(genericType, value),
+                    extendExisting);
+        } else if (genericType.isArray()) {
+            throw new LoaderException("Arrays are not supported.");
+        } else {
+            if (LangString.class.isAssignableFrom(genericType)) {
+                addToCollection(target, field,
+                        valueToStringLang(genericType, value),
+                        extendExisting);
+                return null;
+            } else {
+                final Object newObject = createInstance(genericType);
+                addToCollection(target, field, newObject, extendExisting);
+                return newObject;
+            }
         }
-        try {
-            return descriptor.getReadMethod().invoke(object);
-        } catch (Throwable ex) {
-            throw new CantLoadValue("Can't set value", ex);
-        }
+        return null;
     }
 
-    /**
-     * Set given value to given field.
-     *
-     * @param object
-     * @param field
-     * @param value
-     */
-    private static void setValue(Object object, Field field, Object value)
-            throws CantLoadValue {
-        final PropertyDescriptor descriptor;
-        try {
-            descriptor = new PropertyDescriptor(field.getName(),
-                    field.getDeclaringClass());
-        } catch (IntrospectionException ex) {
-            throw new CantLoadValue("Can't handle property descriptor.");
-        }
-        try {
-            descriptor.getWriteMethod().invoke(object, value);
-        } catch (Throwable ex) {
-            throw new CantLoadValue("Can't set value", ex);
-        }
-    }
-
-    /**
-     * Add given value to a collection.
-     *
-     * @param object
-     * @param field
-     * @param value
-     * @param extendExisting
-     */
-    private static void addValue(Object object, Field field, Object value,
-            boolean extendExisting) throws CantLoadValue {
-        final PropertyDescriptor descriptor;
-        try {
-            descriptor = new PropertyDescriptor(field.getName(),
-                    field.getDeclaringClass());
-        } catch (IntrospectionException ex) {
-            throw new CantLoadValue("Can't handle property descriptor.");
-        }
-        // Read collection.
-        final Collection collection;
-        try {
-            collection = (Collection) descriptor.getReadMethod().invoke(object);
-        } catch (Exception ex) {
-            throw new CantLoadValue(
-                    "Can't readByReflection value of collection: "
-                            + field.getName(), ex);
-        }
+    private static void addToCollection(Object object, Field field,
+            Object value, boolean extend) throws LoaderException {
+        Collection collection = (Collection) FieldUtils.getValue(object, field);
         if (collection == null) {
-            throw new CantLoadValue(
+            throw new LoaderException(
                     "Collection must be initialized prior to loading."
                             + " Collection: '" + field.getName()
                             + "' on class: '" +
                             object.getClass().getCanonicalName()
                             + "'");
         }
-        // Add value.
-        if (!extendExisting) {
+        if (!extend) {
             collection.clear();
         }
         collection.add(value);
     }
 
-    /**
-     * Create new object of given type.
-     *
-     * @param fieldType
-     * @return
-     */
-    private Object valueToObject(Class<?> fieldType) throws CantLoadValue {
-        // We need to check if the value represent a literal or
-        // a resource.
-        final Object newObject;
+    private static Object createInstance(Class<?> type) throws LoaderException {
         try {
-            newObject = fieldType.newInstance();
+            return type.newInstance();
         } catch (IllegalAccessException | InstantiationException ex) {
-            throw new CantLoadValue("Can't handle object instance.", ex);
+            throw new LoaderException("Can't handle object instance.", ex);
         }
-        return newObject;
     }
 
-    private Object valueToEnum(Class<?> fieldType, ValueType value) {
-        return Enum.valueOf((Class<Enum>) fieldType, converter.asString(value));
+    private static Object valueToEnum(Class<?> type, RdfValue value) {
+        return Enum.valueOf((Class<Enum>) type, value.asString());
     }
 
-    /**
-     * Create and return new object that represent a string with language tag.
-     *
-     * @param fieldType Type must be assignable to RdfLoader.LangString.
-     * @param value
-     * @return
-     */
-    private Object valueToStringLang(Class<?> fieldType, ValueType value)
-            throws CantLoadValue {
-        final RdfLoader.LangString object =
-                (RdfLoader.LangString) valueToObject(fieldType);
-        object.setValue(converter.asString(value),
-                converter.langTag(value));
-        return object;
+    private static Object valueToStringLang(Class<?> fieldType, RdfValue value)
+            throws LoaderException {
+        LangString langString = (LangString) createInstance(fieldType);
+        String language = value.getLanguage();
+        langString.setValue(value.asString(), language);
+        return langString;
     }
 
-    /**
-     * Convert given value to primitive of required type.
-     *
-     * @param fieldType
-     * @param value
-     * @return
-     */
-    private Object valueToPrimitive(Class<?> fieldType, ValueType value)
-            throws CantLoadValue {
+    private static Object valueToPrimitive(Class<?> type, RdfValue value)
+            throws LoaderException {
         try {
-            if (fieldType == String.class) {
-                return converter.asString(value);
-            } else if (fieldType == boolean.class ||
-                    fieldType == Boolean.class) {
-                return converter.asBoolean(value);
-            } else if (fieldType == byte.class || fieldType == Byte.class) {
-                return converter.asInteger(value);
-            } else if (fieldType == short.class || fieldType == Short.class) {
-                return converter.asInteger(value);
-            } else if (fieldType == int.class || fieldType == Integer.class) {
-                return converter.asInteger(value);
-            } else if (fieldType == long.class || fieldType == Long.class) {
-                return converter.asLong(value);
-            } else if (fieldType == float.class || fieldType == Float.class) {
-                return converter.asFloat(value);
-            } else if (fieldType == double.class || fieldType == Double.class) {
-                return converter.asDouble(value);
-            } else if (fieldType == Date.class) {
-                return XSD_DATE_FORMAT.parse(converter.asString(value));
+            if (type == String.class) {
+                return value.asString();
+            } else if (type == boolean.class ||
+                    type == Boolean.class) {
+                return value.asBoolean();
+            } else if (type == byte.class || type == Byte.class) {
+                return (byte)value.asLong();
+            } else if (type == short.class || type == Short.class) {
+                return (short)value.asLong();
+            } else if (type == int.class || type == Integer.class) {
+                return (int)value.asLong();
+            } else if (type == long.class || type == Long.class) {
+                return value.asLong();
+            } else if (type == Date.class) {
+                return XSD_DATE_FORMAT.parse(value.asString());
             } else {
-                LOG.error("Unknown property type: {}", fieldType);
-                return null;
+                throw new LoaderException("Unknown type: {}", type.getName());
             }
-        } catch (Exception ex) {
-            throw new CantLoadValue("Can't convert to primitive.", ex);
+        } catch (RdfUtilsException | ParseException ex) {
+            throw new LoaderException("Can't convert to primitive.", ex);
         }
     }
 
-    /**
-     * @param fieldClass
-     * @return True if the class represent a primitive type.
-     */
     private static boolean isPrimitive(Class<?> fieldClass) {
         return fieldClass.isPrimitive() || WRAP_TYPES.contains(fieldClass);
     }
 
-    /**
-     * Return generic type of a collection.
-     *
-     * @param type
-     * @return
-     */
-    private static Class<?> getCollectionType(Type type) throws CantLoadValue {
+    private static Class<?> getCollectionType(Type type)
+            throws LoaderException {
         if (!(type instanceof ParameterizedType)) {
             LOG.warn("Superclass it not instance of ParameterizedType");
             return null;
         }
-        final Type[] params =
-                ((ParameterizedType) type).getActualTypeArguments();
+        Type[] params = ((ParameterizedType) type).getActualTypeArguments();
         // We know there should be just one for Collection.
         if (params.length != 1) {
-            throw new CantLoadValue("Unexpected number of generic types: "
+            throw new LoaderException("Unexpected number of generic types: "
                     + params.length + " (1 expected)");
         }
         if (!(params[0] instanceof Class)) {
-            throw new CantLoadValue("Unexpected type: " + params[0].toString());
+            throw new LoaderException(
+                    "Unexpected type: " + params[0].toString());
         }
         return (Class<?>) params[0];
     }

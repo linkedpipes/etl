@@ -1,0 +1,184 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix sparqlConstruct: <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#> .
+
+<http://localhost/pipeline> {
+
+
+	<http://localhost/execution> a lp:Pipeline ;
+        lp:executionMetadata <http://localhost/execution/metadata> ;
+        lp:component <http://localhost/pipeline/lt> ,
+            <http://localhost/pipeline/lb> ,
+            <http://localhost/pipeline/rt> ,
+            <http://localhost/pipeline/rb> ;
+        lp:connection <http://localhost/pipeline/connection/c1> ,
+            <http://localhost/pipeline/connection/c2> ,
+            <http://localhost/pipeline/connection/c3> ;
+		skos:prefLabel "Test focused on lp:dataUnitGroup" ;
+		lp:profile <http://localhost/execution/profile> ;
+        lp:repository <http://localhost/repository/sesame> .
+
+    <http://localhost/execution/profile>
+        lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> ;
+        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/InMemoryStore> .
+
+    <http://localhost/execution/metadata> a lp:ExecutionMetadata ;
+        lp:deleteWorkingData true ;
+        lp:saveDebugData false ;
+        lp:logPolicy <http://linkedpipes.com/ontology/log/Preserve> ;
+        <http://linkedpipes.com/ontology/execution/type> <http://linkedpipes.com/resources/executionType/Full> .
+
+    <http://localhost/pipeline/lt> a lp:Component ;
+		lp:executionOrder 2 ;
+		lp:port <http://localhost/pipeline/lt/port/InputRdf> ,
+		    <http://localhost/pipeline/lt/port/Configuration> ,
+		    <http://localhost/pipeline/lt/port/OutputRdf> ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/lt/port/InputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup  5 ;
+	    lp:saveDebugData false ;
+        lp:binding "InputRdf" .
+
+    <http://localhost/pipeline/lt/port/Configuration> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup  4 ;
+	    lp:saveDebugData false ;
+        lp:binding "Configuration" .
+
+    <http://localhost/pipeline/lt/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Output> ;
+        lp:dataUnitGroup  3 ;
+	    lp:saveDebugData false ;
+        lp:binding "OutputRdf" .
+
+    <http://localhost/pipeline/lb> a lp:Component ;
+		lp:executionOrder 1 ;
+		lp:port <http://localhost/pipeline/lb/port/InputRdf> ,
+		    <http://localhost/pipeline/lb/port/Configuration> ,
+		    <http://localhost/pipeline/lb/port/OutputRdf> ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/lb/port/InputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup 2 ;
+	    lp:saveDebugData false ;
+        lp:binding "InputRdf" .
+
+    <http://localhost/pipeline/lb/port/Configuration> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup 1 ;
+	    lp:saveDebugData false ;
+        lp:binding "Configuration" .
+
+    <http://localhost/pipeline/lb/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Output> ;
+        lp:dataUnitGroup 3 ;
+	    lp:saveDebugData false ;
+        lp:binding "OutputRdf" .
+
+    <http://localhost/pipeline/rt> a lp:Component ;
+		lp:executionOrder 4 ;
+		lp:port <http://localhost/pipeline/rt/port/InputRdf> ,
+		    <http://localhost/pipeline/rt/port/Configuration> ,
+		    <http://localhost/pipeline/rt/port/OutputRdf> ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/rt/port/InputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup 3 ;
+	    lp:saveDebugData false ;
+        lp:binding "InputRdf" .
+
+    <http://localhost/pipeline/rt/port/Configuration> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup 8 ;
+	    lp:saveDebugData false ;
+        lp:binding "Configuration" .
+
+    <http://localhost/pipeline/rt/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Output> ;
+        lp:dataUnitGroup 9 ;
+	    lp:saveDebugData false ;
+        lp:binding "OutputRdf" .
+
+    <http://localhost/pipeline/rb> a lp:Component ;
+		lp:executionOrder 3 ;
+		lp:port <http://localhost/pipeline/rb/port/InputRdf> ,
+		    <http://localhost/pipeline/rb/port/Configuration> ,
+		    <http://localhost/pipeline/rb/port/OutputRdf> ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/rb/port/InputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup 3 ;
+	    lp:saveDebugData false ;
+        lp:binding "InputRdf" .
+
+    <http://localhost/pipeline/rb/port/Configuration> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Input> ;
+        lp:dataUnitGroup 6 ;
+	    lp:saveDebugData false ;
+        lp:binding "Configuration" .
+
+    <http://localhost/pipeline/rb/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Port> , <http://linkedpipes.com/ontology/Output> ;
+        lp:dataUnitGroup 7 ;
+	    lp:saveDebugData false ;
+        lp:binding "OutputRdf" .
+
+    <http://localhost/pipeline/connection/c1>
+        a lp:Connection ;
+        lp:sourceBinding "OutputRdf" ;
+        lp:sourceComponent <http://localhost/pipeline/lt> ;
+        lp:targetBinding "InputRdf" ;
+        lp:targetComponent <http://localhost/pipeline/rt> .
+
+    <http://localhost/pipeline/connection/c2>
+        a lp:Connection ;
+        lp:sourceBinding "OutputRdf" ;
+        lp:sourceComponent <http://localhost/pipeline/lb> ;
+        lp:targetBinding "InputRdf" ;
+        lp:targetComponent <http://localhost/pipeline/rb> .
+
+    <http://localhost/pipeline/connection/c3>
+        a lp:Connection ;
+        lp:sourceBinding "OutputRdf" ;
+        lp:sourceComponent <http://localhost/pipeline/lt> ;
+        lp:targetBinding "InputRdf" ;
+        lp:targetComponent <http://localhost/pipeline/rb> .
+
+    <http://localhost/repository/sesame> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> .
+
+}
+
+<http://localhost/pipeline/c67542e2/configuration> {
+
+    <http://localhost/pipeline/c67542e2/configuration/1>
+        a sparqlConstruct:Configuration ;
+        sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
+        sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+
+}
+
+<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> {
+	<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+		config:type <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration> ;
+		config:member <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> .
+
+	<http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query> ;
+		config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> .
+}

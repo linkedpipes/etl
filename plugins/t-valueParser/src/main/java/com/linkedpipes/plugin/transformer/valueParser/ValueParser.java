@@ -19,6 +19,14 @@ import java.util.regex.Pattern;
 
 public final class ValueParser implements Component, SequentialExecution {
 
+    public static final String VALUES = "Values";
+
+    public static final String LIST_WITH_INDEX = "ListWithIndexes";
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
@@ -78,14 +86,14 @@ public final class ValueParser implements Component, SequentialExecution {
             throws LpException {
         // For backward compatibility.
         if (type == null) {
-            type = ValueParserVocabulary.VALUES;
+            type = VALUES;
         }
         switch (type) {
-            case ValueParserVocabulary.LIST_WITH_INDEX:
+            case LIST_WITH_INDEX:
                 return new ListProducer(outputRdf, predicate,
                         configuration.isKeepMetadata(),
                         true);
-            case ValueParserVocabulary.VALUES:
+            case VALUES:
                 return new DefaultProducer(outputRdf, predicate,
                         configuration.isKeepMetadata());
             default:

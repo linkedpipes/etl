@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.mapping.MappingFacade;
@@ -208,12 +209,27 @@ class PipelineManager {
      */
     private final Collection<Statement> createEmptyPipeline(IRI iri) {
         final ValueFactory vf = SimpleValueFactory.getInstance();
+
+        IRI profileIri = vf.createIRI(iri.stringValue() +
+                "/profile/default");
+
         return Arrays.asList(
                 vf.createStatement(iri, RDF.TYPE, Pipeline.TYPE, iri),
                 vf.createStatement(iri, Pipeline.HAS_VERSION,
                         vf.createLiteral(Pipeline.VERSION_NUMBER), iri),
                 vf.createStatement(iri, SKOS.PREF_LABEL,
-                        vf.createLiteral(iri.stringValue()), iri)
+                        vf.createLiteral(iri.stringValue()), iri),
+                vf.createStatement(iri,
+                        vf.createIRI(LP_PIPELINE.HAS_PROFILE)
+                        , profileIri, iri),
+                vf.createStatement(profileIri, RDF.TYPE,
+                        vf.createIRI(LP_PIPELINE.PROFILE), iri),
+                vf.createStatement(profileIri,
+                        vf.createIRI(LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY),
+                        vf.createIRI(LP_PIPELINE.SINGLE_REPOSITORY), iri),
+                vf.createStatement(profileIri,
+                        vf.createIRI(LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE),
+                        vf.createIRI(LP_PIPELINE.NATIVE_STORE), iri)
         );
     }
 

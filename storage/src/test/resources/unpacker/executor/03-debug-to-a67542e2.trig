@@ -1,0 +1,148 @@
+@prefix lp : <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix textHolder: <http://plugins.linkedpipes.com/ontology/e-textHolder#> .
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+@prefix filesToRdf: <http://plugins.linkedpipes.com/ontology/t-filesToRdf#> .
+@prefix sparqlConstruct: <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#> .
+
+<http://localhost/pipeline> {
+
+   <http://localhost/execution-debug> a lp:Pipeline ;
+        lp:executionMetadata <http://localhost/execution-debug/metadata> ;
+        lp:component <http://localhost/pipeline/9d21ebd5> ,
+            <http://localhost/pipeline/b67542e2> ,
+            <http://localhost/pipeline/a67542e2> ,
+            <http://localhost/pipeline/c67542e2> ;
+        lp:connection <http://localhost/pipeline/connection/aff7b779> ;
+        skos:prefLabel "TextHolder and FilesToRdf, FilesToRdf, SparqlConstruct" ;
+        lp:profile <http://localhost/execution-debug/profile> ;
+        lp:repository <http://localhost/repository/sesame> .
+
+    <http://localhost/execution-debug/profile>
+        lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/NativeStore> .
+
+    <http://localhost/execution-debug/metadata> a lp:ExecutionMetadata ;
+        lp:deleteWorkingData false ;
+        lp:saveDebugData true ;
+        lp:logPolicy <http://linkedpipes.com/ontology/log/Preserve> ;
+        <http://linkedpipes.com/ontology/execution/type> <http://linkedpipes.com/resources/executionType/DebugTo> ;
+        <http://linkedpipes.com/ontology/execution/targetComponent> <http://localhost/pipeline/a67542e2> .
+
+	<http://localhost/pipeline/9d21ebd5> a lp:Component ;
+		lp:executionOrder 1 ;
+		lp:port <http://localhost/pipeline/9d21ebd5/port/FilesOutput> ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/e-textHolder/0.0.0> ;
+        lp:configurationGraph <http://localhost/pipeline/9d21ebd5/configuration> ;
+        lp:configurationDescription <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+        skos:prefLabel "Text holder" .
+
+	<http://localhost/pipeline/9d21ebd5/port/FilesOutput> a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror> , <http://linkedpipes.com/ontology/Output> ;
+	    lp:dataUnitGroup 1 ;
+	    lp:saveDebugData true ;
+		lp:binding "FilesOutput" ;
+		lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> .
+
+    <http://localhost/pipeline/b67542e2> a lp:Component ;
+		lp:executionOrder 3 ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/skip> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/t-filesToRdfGraph/0.0.0> ;
+        skos:prefLabel "Files to RDF" .
+
+    <http://localhost/pipeline/a67542e2> a lp:Component ;
+		lp:executionOrder 2 ;
+		lp:port <http://localhost/pipeline/a67542e2/port/InputFiles> , <http://localhost/pipeline/a67542e2/port/OutputRdf>;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/t-filesToRdfGraph/0.0.0> ;
+        lp:configurationGraph <http://localhost/pipeline/a67542e2/configuration> ;
+        lp:configurationDescription <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
+        skos:prefLabel "Files to RDF" .
+
+	<http://localhost/pipeline/a67542e2/port/InputFiles> a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror> , <http://linkedpipes.com/ontology/Input> ;
+	    lp:dataUnitGroup 1 ;
+	    lp:saveDebugData true ;
+		lp:binding "InputFiles" ;
+		lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> .
+
+	<http://localhost/pipeline/a67542e2/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph> , <http://linkedpipes.com/ontology/Output> ;
+	    lp:dataUnitGroup 2 ;
+	    lp:saveDebugData true ;
+		lp:binding "OutputRdf" .
+
+    <http://localhost/pipeline/connection/aff7b779>
+        a lp:Connection ;
+        lp:sourceBinding "FilesOutput" ;
+        lp:sourceComponent <http://localhost/pipeline/9d21ebd5> ;
+        lp:targetBinding "InputFiles" ;
+        lp:targetComponent <http://localhost/pipeline/a67542e2> .
+
+    <http://localhost/pipeline/c67542e2> a lp:Component ;
+		lp:executionOrder 4 ;
+        lp:executionType <http://linkedpipes.com/resources/execution/type/skip> ;
+        lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/repository/sesame> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> .
+
+}
+
+<http://localhost/pipeline/9d21ebd5/configuration> {
+
+    <http://localhost/pipeline/9d21ebd5/configuration/1>
+        a textHolder:Configuration ;
+        textHolder:content "<http://localhost/value> a  <http://localhost/Object> ."  ;
+        textHolder:contentControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+        textHolder:fileName "file.ttl" ;
+        textHolder:fileNameControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+
+}
+
+<http://localhost/pipeline/a67542e2/configuration> {
+
+    <http://localhost/pipeline/a67542e2/configuration/1>
+        a filesToRdf:Configuration ;
+        filesToRdf:commitSize "50000"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        filesToRdf:commitSizeControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+        filesToRdf:mimeType "" ;
+        filesToRdf:mimeTypeControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+
+}
+
+<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc> {
+
+	<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+		config:type textHolder:Configuration ;
+		config:member <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName> ,
+		    <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content> .
+
+	<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		config:property textHolder:fileName ;
+		config:control textHolder:fileNameControl .
+
+	<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		config:property textHolder:content ;
+		config:control textHolder:contentControl .
+
+}
+
+<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc> {
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+		config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> ;
+		config:member <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize> , <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> , <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> .
+
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		config:property filesToRdf:commitSize ;
+		config:control filesToRdf:commitSizeControl .
+
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		config:property filesToRdf:mimeType ;
+		config:control filesToRdf:mimeTypeControl .
+
+	<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		config:property filesToRdf:softFail ;
+		config:control filesToRdf:softFailControl .
+}

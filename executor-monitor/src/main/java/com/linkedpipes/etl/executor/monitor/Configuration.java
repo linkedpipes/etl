@@ -31,9 +31,11 @@ public class Configuration {
 
     private int ftpCommandPort;
 
-    private String ftpDataPort;
-
     private String executionPrefix;
+
+    private int ftpDataPortsStart;
+
+    private int ftpDataPortsEnd;
 
     private final Properties properties = new Properties();
 
@@ -68,11 +70,10 @@ public class Configuration {
                 getPropertyInteger("executor-monitor.ftp.command_port");
         executionPrefix = getProperty("executor.execution.uriPrefix");
         //
-        final Integer ftpDataPortsStart = getPropertyInteger(
+        ftpDataPortsStart = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.start");
-        final Integer ftpDataPortsEnd = getPropertyInteger(
+        ftpDataPortsEnd = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.end");
-        ftpDataPort = ftpDataPortsStart + "-" + ftpDataPortsEnd;
         //
         validateUri(executorUri, "executor.execution.working_directory");
         validateDirectory(workingDirectoryPath);
@@ -108,12 +109,16 @@ public class Configuration {
         return ftpCommandPort;
     }
 
-    public String getFtpDataPort() {
-        return ftpDataPort;
-    }
-
     public String getExecutionPrefix() {
         return executionPrefix;
+    }
+
+    public int getFtpDataPortsStart() {
+        return ftpDataPortsStart;
+    }
+
+    public int getFtpDataPortsEnd() {
+        return ftpDataPortsEnd;
     }
 
     protected void validateUri(String value, String name) {
@@ -145,11 +150,10 @@ public class Configuration {
         }
     }
 
-    protected Integer getPropertyInteger(String name) {
+    protected int getPropertyInteger(String name) {
         final String value = getProperty(name);
         try {
-            final Integer valueAsInteger = Integer.parseInt(value);
-            return valueAsInteger;
+            return Integer.parseInt(value);
         } catch (Exception ex) {
             LOG.error("Invalid configuration property: '{}'", name);
             throw new RuntimeException(ex);

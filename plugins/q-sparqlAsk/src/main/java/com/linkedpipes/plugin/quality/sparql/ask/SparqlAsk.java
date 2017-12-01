@@ -11,6 +11,10 @@ import org.eclipse.rdf4j.query.impl.SimpleDataset;
 
 public final class SparqlAsk implements Component, SequentialExecution {
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 

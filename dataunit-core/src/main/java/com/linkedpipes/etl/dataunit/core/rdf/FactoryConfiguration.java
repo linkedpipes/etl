@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
 import java.io.File;
 import java.net.URI;
@@ -10,16 +10,16 @@ import java.net.URI;
 /**
  * Configuration for {@link RdfDataUnitFactory}.
  */
-class FactoryConfiguration implements RdfLoader.Loadable<String> {
+class FactoryConfiguration implements Loadable {
 
     private String directory;
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, RdfValue object) {
         switch (predicate) {
             case LP_EXEC.HAS_WORKING_DIRECTORY:
-                directory = object;
+                directory = object.asString();
+                break;
         }
         return null;
     }

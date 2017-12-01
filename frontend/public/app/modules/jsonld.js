@@ -112,7 +112,7 @@
                 return {
                     "@value": value
                 };
-            } else if (value["@lang"] === undefined) {
+            } else if (value["@language"] === undefined) {
                 return {
                     "@value": value["@value"]
                 };
@@ -147,7 +147,7 @@
      * @param lang Optional.
      */
     const setStrings = function (resource, predicate, value) {
-        if (value === undefined) {
+        if (value === undefined || value === null) {
             delete resource[predicate];
             return;
         }
@@ -161,10 +161,17 @@
                     "@value": item
                 });
             } else {
-                resourceValue.push({
-                    "@value": item["@value"],
-                    "@language": item["@language"]
-                });
+                const lang = item["@language"];
+                if (lang === undefined || lang === "") {
+                    resourceValue.push({
+                        "@value": item["@value"]
+                    });
+                } else {
+                    resourceValue.push({
+                        "@value": item["@value"],
+                        "@language": item["@language"]
+                    });
+                }
             }
         });
         resource[predicate] = resourceValue;

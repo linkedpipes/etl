@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -8,6 +9,8 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.rio.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,6 +18,12 @@ import java.io.InputStream;
 import java.util.Optional;
 
 public final class FilesToRdf implements Component, SequentialExecution {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FilesToRdf.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
@@ -65,7 +74,15 @@ public final class FilesToRdf implements Component, SequentialExecution {
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
             inserter.setTargetGraph(outputRdf.createGraph());
-            loadEntry(entry);
+            try {
+                loadEntry(entry);
+            } catch (LpException ex) {
+                if (configuration.isSkipOnFailure()) {
+                    LOG.error("Can't load file: {}", entry.getFileName());
+                } else {
+                    throw  ex;
+                }
+            }
             progressReport.entryProcessed();
         }
         progressReport.done();

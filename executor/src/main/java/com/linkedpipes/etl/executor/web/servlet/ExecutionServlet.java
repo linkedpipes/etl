@@ -64,13 +64,15 @@ class ExecutionServlet {
     @ResponseBody
     @RequestMapping(value = "/cancel", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void cancel() {
+    public void cancel(HttpServletResponse response) {
         final PipelineExecutor executorSnp = executor;
         synchronized (lock) {
             if (executorSnp == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
             executorSnp.cancelExecution();
+            response.setStatus(HttpServletResponse.SC_CREATED);
         }
     }
 

@@ -8,4 +8,4 @@
 <http://linkedpipes.com/resources/components/e-filesFromLocal/1.0.0/configuration/desc/path>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-filesFromLocal#path> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-filesFromLocal#pathontrol> .
+    config:control <http://plugins.linkedpipes.com/ontology/e-filesFromLocal#pathControl> .

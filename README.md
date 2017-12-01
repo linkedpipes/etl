@@ -8,7 +8,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 
 ## Requirements
 - Linux, Windows, iOS
-- [Java 8], update 101 or newer
+- [Java] 9 or [Java] 8 update 101 or newer
 - [Git]
 - [Maven], 3.2.5 or newer
 - [Node.js] & npm
@@ -25,7 +25,8 @@ $ cp configuration.properties.sample deploy/configuration.properties
 $ vi deploy/configuration.properties
 ```
 ### Windows
-We recommend using [Cygwin] and proceeding as with Linux.
+We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux.
+Nevertheless, it is possible to build and use LP-ETL with pure Windows-based versions of tools.
 
 ### Configuration
 Now edit the configuration file, mainly adding paths to working, storage, log and library directories. Especially:
@@ -64,6 +65,7 @@ There are components in the ```jars``` directory. Detailed description of how to
 
 ## Known issues
  * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
+ * If you are using Oracle Java 8, accessing HTTPS based URLs and getting ```SSLHandshakeException : Received fatal alert: handshake_failure``` when the same URL works from, e.g. Chrome, try installing the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
  
 ## Update notes
 > Update note 3: When upgrading from develop prior to 2017-02-14, you need to delete ```{deploy}/jars``` and ```{deploy}/osgi```. 
@@ -102,8 +104,9 @@ echo Disowning
 disown
 ```
 
-[Java 8]: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
+[Java]: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
 [Git]: <https://git-scm.com/>
 [Maven]: <https://maven.apache.org/>
 [Node.js]: <https://nodejs.org>
 [Cygwin]: <https://www.cygwin.com/>
+[Bash on Ubuntu on Windows]: <https://msdn.microsoft.com/en-us/commandline/wsl/about>

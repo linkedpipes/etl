@@ -64,8 +64,7 @@ public class PipelineExecutor {
         this.resources = new ResourceManager(
                 directory.getParentFile(), directory);
         this.loggerFacade.prepareAppendersForExecution(
-                resources.getExecutionDebugLogFile(),
-                resources.getExecutionInfoLogFile());
+                resources.getExecutionDebugLogFile());
         this.moduleFacade = modules;
         this.execution = new Execution(resources, iri);
         this.execution.onExecutionBegin();
@@ -144,6 +143,10 @@ public class PipelineExecutor {
             loadComponents();
         } catch (ExecutorException ex) {
             execution.onComponentsLoadingFailed(ex);
+            return false;
+        } catch (Throwable ex) {
+            execution.onComponentsLoadingFailed(
+                    new LpException("Initialization failed on throwable.", ex));
             return false;
         }
         return true;
@@ -279,8 +282,8 @@ public class PipelineExecutor {
         execution.onExecutionEnd();
         execution.close();
         pipeline.closeRepository();
-        afterExecutionCleanUp();
         loggerFacade.destroyExecutionAppenders();
+        afterExecutionCleanUp();
     }
 
     private void notifyObserversOnEnding() {
@@ -300,6 +303,14 @@ public class PipelineExecutor {
                 FileUtils.deleteDirectory(resources.getRootWorkingDirectory());
             } catch (IOException ex) {
                 LOG.error("Can't delete working directory.", ex);
+            }
+        }
+        if (pipeline.getModel().isDeleteLogDataOnSuccess() &&
+                execution.isExecutionSuccessful()) {
+            try {
+                FileUtils.deleteDirectory(resources.getExecutionLogDirectory());
+            } catch (IOException ex) {
+                LOG.error("Can't delete log directory.", ex);
             }
         }
     }

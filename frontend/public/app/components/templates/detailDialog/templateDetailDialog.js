@@ -179,9 +179,21 @@ define([
          * directive.
          */
         function initDirective() {
+            // The HierarchyTab list all parents of given template, but
+            // as the new template is not yet created we can list only from
+            // grandparents. A solution is to create a stub template.
+            const parents = [];
+            Array.prototype.push.apply(parents, $scope.component._parents)
+            parents.push($scope.component);
+
+            // We use shallow copy here as we know we will not modify it.
+            const template = jQuery.extend(false, [],  $scope.component);
+            template._parents = parents;
+
+            // $scope.component
 
             $scope.api.store = {
-                "template": $scope.component,
+                "template": template,
                 "templateToEdit": $scope.templateToEdit,
                 "configuration": $scope.configuration
             };
@@ -189,7 +201,6 @@ define([
             if ($scope.api.load !== undefined) {
                 $scope.api.load();
             }
-
         }
 
         function init() {

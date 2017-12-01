@@ -10,7 +10,8 @@ define([
     'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
     'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
     'app/components/templates/detailDialog/templateDetailDialog',
-    'app/components/instances/detailDialog/instanceDetailDialog'
+    'app/components/instances/detailDialog/instanceDetailDialog',
+    'file-saver'
 ], function (jQuery, jsonld,
              pipelineCanvasDirective,
              canvasPipelineFactory,
@@ -21,7 +22,8 @@ define([
              importPipelineDialog,
              pipelineDetailDialog,
              templateDetailDialog,
-             instanceDetailDialog) {
+             instanceDetailDialog,
+             saveAs) {
     function controler($scope,
                        $mdDialog,
                        $mdMedia,
@@ -533,37 +535,41 @@ define([
         /**
          * Button action.
          */
-        $scope.onDownload = function () {
+
+        $scope.onBackupDownload = function() {
             var jsonld = pipelineCanvas.storePipeline();
             saveAs(new Blob([JSON.stringify(jsonld, null, 2)],
                 {'type': 'text/json'}),
                 $scope.data.pipelineLabel + '.jsonld');
         };
 
-        $scope.onDowloadNoCredentials = function ($event) {
-            var jsonld = pipelineCanvas.storePipeline();
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            // Dialog is used to display progress.
-            // TODO Introduce general progress dialog and move
-            // logic to another service / function.
-            $mdDialog.show({
-                'controller': 'components.pipelines.export.dialog',
-                'templateUrl': 'app/components/pipelines/exportDialog/pipelineExportDialogView.html',
-                'parent': angular.element(document.body),
-                'targetEvent': $event,
-                'clickOutsideToClose': false,
-                'fullscreen': useFullScreen,
-                'locals': {
-                    'data': {
-                        'iri': $scope.data.iri,
-                        'label': $scope.data.pipelineLabel,
-                        'pipeline': jQuery.extend(true, {}, jsonld)
+        $scope.onDownload = function ($event) {
+            storePipeline(data.pipeline.iri, true, () => {
+                $http.get(data.pipeline.iri).then(function (response) {
+                    saveAs(new Blob([JSON.stringify(response.data, null, 2)],
+                        {type: 'text/json'}),
+                        $scope.data.pipelineLabel + '.jsonld');
+                });
+            });
+        };
+
+        $scope.onDownloadNoCredentials = function ($event) {
+            storePipeline(data.pipeline.iri, true, () => {
+                var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+                $mdDialog.show({
+                    'controller': 'components.pipelines.export.dialog',
+                    'templateUrl': 'app/components/pipelines/exportDialog/pipelineExportDialogView.html',
+                    'parent': angular.element(document.body),
+                    'targetEvent': $event,
+                    'clickOutsideToClose': false,
+                    'fullscreen': useFullScreen,
+                    'locals': {
+                        'data': {
+                            'iri': data.pipeline.iri,
+                            'label': $scope.data.pipelineLabel
+                        }
                     }
-                }
-            }).then(function (result) {
-                // No action here.
-            }, function () {
-                // No action here.
+                });
             });
         };
 
@@ -680,7 +686,8 @@ define([
                 'locals': {
                     // TODO Update dialog and argumetn passing.
                     'data': {
-                        'definition': data.pipeline.resource
+                        'definition': data.pipeline.resource,
+                        'profile': pipelineService.getOrCreateExecutionProfile(data.pipeline.model)
                     }
                 }
             }).then(function () {

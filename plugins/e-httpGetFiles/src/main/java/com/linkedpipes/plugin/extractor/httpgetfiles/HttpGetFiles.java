@@ -2,36 +2,45 @@ package com.linkedpipes.plugin.extractor.httpgetfiles;
 
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import org.eclipse.rdf4j.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 
-public final class HttpGetFiles implements Component, SequentialExecution {
+public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(HttpGetFiles.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(HttpGetFiles.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
+
+    @Component.InputPort(iri = "ReportRdf")
+    public WritableSingleGraphDataUnit reportRdf;
 
     @Component.Configuration
     public HttpGetFilesConfiguration configuration;
@@ -39,87 +48,79 @@ public final class HttpGetFiles implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
+
+    private List<DownloadTask> tasks;
+
+    private StatementsConsumer statementsConsumer;
+
+    private ReportWriter reportWriter;
+
     @Override
-    public void execute() throws LpException {
-        // TODO Do not use this, but be selective about certs we trust.
+    protected TaskSource<DownloadTask> createTaskSource() throws LpException {
+        loadTasks();
+        TaskSource<DownloadTask> source = TaskSource.groupTaskSource(
+                this.tasks, configuration.getThreadsPerGroup());
+        source.setSkipOnError(configuration.isSkipOnError());
+        return source;
+    }
+
+    private void loadTasks() throws LpException {
+        RdfSource source = Rdf4jSource.wrapRepository(
+                configurationRdf.getRepository());
         try {
-            LOG.warn("'Trust all certs' policy used -> security risk!");
-            setTrustAllCerts();
-        } catch (Exception ex) {
-            throw exceptionFactory.failure(
-                    "Can't set trust all certificates.", ex);
-        }
-        // Prepare work.
-        final ConcurrentLinkedQueue<UriDownloader.FileToDownload> workQueue =
-                new ConcurrentLinkedQueue<>();
-        for (HttpGetFilesConfiguration.Reference reference
-                : configuration.getReferences()) {
-            if (reference.getUri() == null
-                    || reference.getUri().isEmpty()) {
-                if (configuration.isSkipOnError()) {
-                    continue;
-                } else {
-                    throw exceptionFactory.failure("Missing property: {}",
-                            HttpGetFilesVocabulary.HAS_URI);
-                }
-            }
-            if (reference.getFileName() == null
-                    || reference.getFileName().isEmpty()) {
-                if (configuration.isSkipOnError()) {
-                    continue;
-                } else {
-                    throw exceptionFactory.failure("Missing property: {}",
-                            HttpGetFilesVocabulary.HAS_NAME);
-                }
-            }
-            final File target = output.createFile(
-                    reference.getFileName());
-            final URL source;
-            try {
-                source = new URL(reference.getUri());
-            } catch (MalformedURLException ex) {
-                if (configuration.isSkipOnError()) {
-                    LOG.warn("Invalid property: {} on {}");
-                    continue;
-                } else {
-                    throw exceptionFactory.failure("Invalid property: {} on {}",
-                            HttpGetFilesVocabulary.HAS_URI,
-                            reference.getUri(), ex);
-                }
-            }
-            // Prepare and and job.
-            final UriDownloader.FileToDownload job =
-                    new UriDownloader.FileToDownload(source, target);
-            for (HttpGetFilesConfiguration.Header header
-                    : configuration.getHeaders()) {
-                job.setHeader(header.getKey(), header.getValue());
-            }
-            for (HttpGetFilesConfiguration.Header header
-                    : reference.getHeaders()) {
-                job.setHeader(header.getKey(), header.getValue());
-            }
-            workQueue.add(job);
-        }
-        // Execute.
-        final UriDownloader downloader =
-                new UriDownloader(progressReport, configuration);
-        downloader.download(workQueue, configuration.getReferences().size());
-        if (!downloader.getExceptions().isEmpty()) {
-            LOG.info("Downloaded {}/{}", downloader.getExceptions().size(),
-                    configuration.getReferences().size());
-            if (!configuration.isSkipOnError()) {
-                throw exceptionFactory.failure("Can't download all entities.");
-            }
-        } else {
-            LOG.info("Downloaded {}/{}", configuration.getReferences().size(),
-                    configuration.getReferences().size());
+            this.tasks = RdfUtils.loadList(
+                    source, configurationRdf.getReadGraph().stringValue(),
+                    RdfToPojo.descriptorFactory(),
+                    DownloadTask.class);
+        } catch (RdfUtilsException ex) {
+            throw exceptionFactory.failure("Can't load tasks.", ex);
         }
     }
 
-    /**
-     * Add trust to all certificates.
-     */
-    private static void setTrustAllCerts() throws Exception {
+    @Override
+    protected TaskExecutionConfiguration getExecutionConfiguration() {
+        return this.configuration;
+    }
+
+    @Override
+    protected TaskConsumer<DownloadTask> createConsumer() {
+
+        return new DownloadTaskExecutor(
+                configuration, progressReport, output, exceptionFactory,
+                statementsConsumer, reportWriter);
+    }
+
+    @Override
+    protected ReportWriter createReportWriter() {
+        if (reportWriter != null) {
+            return reportWriter;
+        }
+        String graph = reportRdf.getWriteGraph().stringValue();
+        Repository repository = reportRdf.getRepository();
+        TripleWriter writer =
+                Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
+        reportWriter = ReportWriter.create(writer);
+        return reportWriter;
+    }
+
+    @Override
+    protected void initialization() throws LpException {
+        super.initialization();
+        statementsConsumer = new StatementsConsumer(reportRdf);
+        reportWriter = createReportWriter();
+    }
+
+    @Override
+    protected void beforeExecution() throws LpException {
+        super.beforeExecution();
+        setTrustAllCerts();
+        progressReport.start(tasks);
+    }
+
+    private void setTrustAllCerts() throws LpException {
+        LOG.warn("'Trust all certs' policy used -> security risk!");
         final TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
@@ -150,8 +151,15 @@ public final class HttpGetFiles implements Component, SequentialExecution {
             HttpsURLConnection.setDefaultHostnameVerifier(
                     (String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
-            throw ex;
+            throw exceptionFactory.failure(
+                    "Can't set trust all certificates.", ex);
         }
+    }
+
+    @Override
+    protected void afterExecution() throws LpException {
+        super.afterExecution();
+        this.progressReport.done();
     }
 
 }

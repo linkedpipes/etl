@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.util.NumberToTextConverter;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -12,8 +13,6 @@ import java.util.GregorianCalendar;
 class CellConverter {
 
     private final ExcelToCsvConfiguration configuration;
-
-    private final CsvDataFormatter valueFormatter = new CsvDataFormatter(true);
 
     private FormulaEvaluator evaluator = null;
 
@@ -66,7 +65,7 @@ class CellConverter {
     private String convertFormulaCell(Cell cell) {
         if (!configuration.isEvaluateFormulas()) {
             throw new IllegalArgumentException(
-                    "Cells with formulas are not supported, "
+                    "Evaluation of cells with formulas are not enabled, "
                             + "  row: " + Integer.toString(cell.getRowIndex())
                             + " column: " +
                             Integer.toString(cell.getColumnIndex()));
@@ -97,7 +96,7 @@ class CellConverter {
                 DateUtil.isCellDateFormatted(cell)) {
             return convertToDate(cell, cell.getNumericCellValue());
         }
-        return valueFormatter.formatCellValue(cell);
+        return NumberToTextConverter.toText(cell.getNumericCellValue());
     }
 
     private String convertToDate(Cell cell, double value) {
@@ -117,7 +116,7 @@ class CellConverter {
                 DateUtil.isCellDateFormatted(cell)) {
             return convertToDate(cell, value);
         }
-        return valueFormatter.formatCellValue(cell, evaluator);
+        return NumberToTextConverter.toText(cell.getNumericCellValue());
     }
 
 }

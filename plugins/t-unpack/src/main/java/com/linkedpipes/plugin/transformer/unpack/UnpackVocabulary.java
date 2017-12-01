@@ -21,4 +21,6 @@ public final class UnpackVocabulary {
 
     public static final String FORMAT_GZIP = PREFIX + "gz";
 
+    public static final String SKIP_ON_ERROR = PREFIX + "skipOnError";
+
 }

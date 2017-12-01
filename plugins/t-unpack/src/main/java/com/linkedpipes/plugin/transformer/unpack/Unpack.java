@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.transformer.unpack;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -23,6 +24,10 @@ import java.util.zip.GZIPInputStream;
 public final class Unpack implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Unpack.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit input;
@@ -67,11 +72,10 @@ public final class Unpack implements Component, SequentialExecution {
         if (ArchiveStreamFactory.SEVEN_Z.equals(extension)) {
             try {
                 unpackSevenZip(inputEntry.toFile(), targetDirectory);
-                return;
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Extraction failure: {}",
-                        inputEntry.getFileName(), ex);
+                handleUnpackFailed(inputEntry, ex);
             }
+            return;
         }
         try (final InputStream stream = new FileInputStream(
                 inputEntry.toFile())) {
@@ -90,6 +94,16 @@ public final class Unpack implements Component, SequentialExecution {
                             extension + ") : " + inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
+            handleUnpackFailed(inputEntry, ex);
+        }
+    }
+
+    private void handleUnpackFailed(FilesDataUnit.Entry inputEntry,
+            Exception ex) throws LpException {
+        if (configuration.isSkipOnError()) {
+            LOG.error("Extraction failure: {}",
+                    inputEntry.getFileName(), ex);
+        } else {
             throw exceptionFactory.failure("Extraction failure: {}",
                     inputEntry.getFileName(), ex);
         }

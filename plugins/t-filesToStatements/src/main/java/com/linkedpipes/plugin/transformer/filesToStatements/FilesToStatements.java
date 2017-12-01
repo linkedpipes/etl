@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.filesToStatements;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -20,6 +21,10 @@ import java.util.List;
 public final class FilesToStatements implements Component, SequentialExecution {
 
     private static final int BUFFER_SIZE = 64;
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.OutputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;

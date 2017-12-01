@@ -1,0 +1,31 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix textHolder: <http://plugins.linkedpipes.com/ontology/e-textHolder#> .
+
+<http://localhost/pipeline> {
+
+	<http://localhost/pipeline> a lp:Pipeline ;
+		lp:version "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		lp:profile <http://localhost/pipeline/profile/default> ;
+		skos:prefLabel "TextHolder" ;
+        dcterms:description "Pipeline with two components and no configuration." .
+	
+	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
+		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+		lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/NativeStore> .
+	
+	<http://localhost/pipeline/3405c1ee> a lp:Component ;
+		lp:template <http://etl.linkedpipes.com/resources/components/1476115743178/0.0.0> ;
+		lp:x "100"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		lp:y "60"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		skos:prefLabel "Text holder template" .
+
+	<http://localhost/pipeline/9405c1ee> a lp:Component ;
+		lp:template <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> ;
+		lp:x "100"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		lp:y "120"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		skos:prefLabel "Text holder component" .
+
+}
+

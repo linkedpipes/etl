@@ -1,4 +1,4 @@
-<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <md-input-container class="md-block" ng-hide="dialog.endpoint.hide">
         <label>Endpoint URL</label>
@@ -7,12 +7,45 @@
                ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
                required>
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.headerAccept.hide">
-        <label>MimeType</label>
-        <input type="text" ng-model="dialog.headerAccept.value"
-               ng-disabled="dialog.headerAccept.disabled || dialog.headerAccept.inherit"
-               required>
-    </md-input-container>
+    <md-switch ng-model="dialog.useAuthentication.value"
+               ng-disabled="dialog.useAuthentication.disabled || dialog.useAuthentication.inherit"
+               ng-hide="dialog.useAuthentication.hide">Use authentication
+    </md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.useAuthentication.value">
+        <md-input-container class="md-block" ng-hide="dialog.userName.hide"
+                            flex>
+            <label>User name</label>
+            <input ng-model="dialog.userName.value"
+                   ng-disabled="dialog.userName.disabled || dialog.userName.inherit"
+                   placeholder="dba">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.password.hide"
+                            flex>
+            <label>Password</label>
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit">
+        </md-input-container>
+    </div>
+    <md-autocomplete
+            ng-hide="dialog.headerAccept.hide"
+            ng-disabled="dialog.headerAccept.disabled || dialog.headerAccept.inherit"
+            md-no-cache="true"
+            md-min-length="0"
+            md-clear-button="false"
+            md-selected-item="dialog.headerAccept.value"
+            md-search-text="mimeTypeSearchText"
+            md-items="item in getMimeTypes(mimeTypeSearchText)"
+            md-item-text="item"
+            md-floating-label="MIME type">
+        <span>{{item}}</span>
+    </md-autocomplete>
+    <md-switch ng-model="dialog.encodeRdf.value"
+               ng-hide="dialog.encodeRdf.hide"
+               ng-disabled="dialog.encodeRdf.disabled || dialog.encodeRdf.inherit">
+        Encode invalid IRIs
+        <md-tooltip>Fix IRI by encoding unencoded special characters
+        </md-tooltip>
+    </md-switch>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
                  lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"

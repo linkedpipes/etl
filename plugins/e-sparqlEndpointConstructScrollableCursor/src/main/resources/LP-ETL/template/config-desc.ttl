@@ -10,7 +10,11 @@
         <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/endpoint> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/defaultGraph> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/fileName> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/pageSize> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/pageSize> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/encodeRdf> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/useAuthentication> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/userName> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/password> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/outerConstruct>
     a config:ConfigurationMember ;
@@ -46,3 +50,23 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSize> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSizeControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/1.0.0/configuration/desc/encodeRdf>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdf> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdfControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/useAuthentication>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useAuthentication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useAuthenticationControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/userName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userNameControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#passwordControl> .

@@ -498,7 +498,7 @@ gApiRouter.post('/executions', function (request, response) {
                         'value': result,
                         'options': {
                             'contentType': 'application/octet-stream',
-                            'filename': 'pipeline.jsonld'
+                            'filename': 'options.jsonld'
                         }
                     }
                 };

@@ -4,7 +4,8 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-unpack#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/usePrefix> ,
-        <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/format> .
+        <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/format> ,
+        <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/skipOnError> .
 
 <http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/usePrefix>
     a config:ConfigurationMember ;
@@ -15,3 +16,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-unpack#format> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-unpack#formatControl> .
+
+<http://linkedpipes.com/resources/components/t-unpack/0.0.0/configuration/desc/skipOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-unpack#skipOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-unpack#skipOnErrorControl> .

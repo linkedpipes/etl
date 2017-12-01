@@ -1,4 +1,4 @@
-<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <md-input-container class="md-block" ng-hide="dialog.uri.hide">
         <label>Virtuoso JDBC connection string</label>
@@ -7,13 +7,13 @@
                ng-disabled="dialog.uri.disabled || dialog.uri.inherit">
     </md-input-container>
     <div layout-gt-sm="row">
-        <md-input-container class="md-block" ng-hide="dialog.username.hide">
+        <md-input-container class="md-block" ng-hide="dialog.username.hide" flex>
             <label>Virtuoso user name</label>
             <input ng-model="dialog.username.value"
                    ng-disabled="dialog.username.disabled || dialog.username.inherit"
                    placeholder="dba">
         </md-input-container>
-        <md-input-container class="md-block" ng-hide="dialog.password.hide">
+        <md-input-container class="md-block" ng-hide="dialog.password.hide" flex>
             <label>Virtuoso password</label>
             <input type="password" ng-model="dialog.password.value"
                    ng-disabled="dialog.password.disabled || dialog.password.inherit"
@@ -22,14 +22,14 @@
     </div>
     <div layout-gt-sm="row">
         <md-input-container class="md-block"
-                            ng-hide="dialog.directory.hide">
+                            ng-hide="dialog.directory.hide" flex>
             <label>Remote directory with source files</label>
             <input ng-model="dialog.directory.value"
                    ng-disabled="dialog.directory.disabled || dialog.directory.inherit"
                    placeholder="/data/upload">
         </md-input-container>
-        <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
-            <label>Filename to load</label>
+        <md-input-container class="md-block" ng-hide="dialog.fileName.hide" flex>
+            <label>Filename pattern to load</label>
             <input ng-model="dialog.fileName.value"
                    ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
                    placeholder="my.ttl">
@@ -56,6 +56,6 @@
         <label>Status update interval in seconds</label>
         <input type="number" ng-model="dialog.updateInterval.value"
                ng-disabled="dialog.updateInterval.disabled || dialog.updateInterval.inherit"
-               placeholder="5" step="1" min="1">
+               placeholder="5" min="1">
     </md-input-container>
 </div>

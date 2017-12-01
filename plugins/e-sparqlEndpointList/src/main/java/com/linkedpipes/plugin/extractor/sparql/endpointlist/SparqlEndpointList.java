@@ -4,27 +4,34 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import org.eclipse.rdf4j.repository.Repository;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
-public final class SparqlEndpointList
-        implements Component, SequentialExecution {
+public final class SparqlEndpointList extends TaskExecution<QueryTask> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SparqlEndpointList.class);
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
+    // TODO Add report handling.
     @Component.InputPort(iri = "ErrorOutputRdf")
-    public WritableSingleGraphDataUnit errorOutputRdf;
+    public WritableSingleGraphDataUnit reportRdf;
 
     @Component.InputPort(iri = "Tasks")
     public SingleGraphDataUnit tasksRdf;
@@ -32,71 +39,71 @@ public final class SparqlEndpointList
     @Component.Configuration
     public SparqlEndpointListConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
+    // TODO Add to report handler.
     @Component.Inject
     public ProgressReport progressReport;
 
-    private TaskLoader taskLoader;
+    @Component.Inject
+    public ExceptionFactory exceptionFactory;
 
-    private ExecutorService executorService;
+    private StatementsConsumer consumer;
+
+    private List<QueryTask> tasks;
 
     @Override
-    public void execute() throws LpException {
-        initializeTaskLoader();
-        initializeExecutor();
+    protected TaskSource<QueryTask> createTaskSource() throws LpException {
+        loadTasks();
+        if (configuration.getTaskPerGroupLimit() == 0) {
+            return TaskSource.defaultTaskSource(this.tasks);
+        } else {
+            return TaskSource.groupTaskSource(
+                    this.tasks,
+                    configuration.getTaskPerGroupLimit());
+        }
+    }
+
+    private void loadTasks() throws LpException {
         try {
-            progressReport.start(taskLoader.getTasks().size());
-            executeTasks();
-            awaitExecutorShutdown();
-            progressReport.done();
-        } finally {
-            closeTaskLoader();
+            this.tasks = RdfUtils.loadList(
+                    Rdf4jSource.wrapRepository(tasksRdf.getRepository()),
+                    tasksRdf.getReadGraph().stringValue(),
+                    RdfToPojo.descriptorFactory(),
+                    QueryTask.class);
+        } catch (RdfUtilsException ex) {
+            throw exceptionFactory.failure("Can't load tasks.", ex);
         }
     }
 
-    private void initializeTaskLoader() throws LpException {
-        taskLoader = new TaskLoader(tasksRdf, exceptionFactory);
-        taskLoader.initialize();
+    @Override
+    protected TaskExecutionConfiguration getExecutionConfiguration() {
+        return this.configuration;
     }
 
-    private void closeTaskLoader() {
-        if (taskLoader != null) {
-            taskLoader.close();
-        }
+    @Override
+    protected TaskConsumer<QueryTask> createConsumer() {
+        return new QueryTaskExecutor(configuration, consumer, progressReport);
     }
 
-    private void executeTasks() {
-        ErrorReportConsumer errorConsumer =
-                new ErrorReportConsumer(errorOutputRdf);
-        TaskResultConsumer resultConsumer =
-                new TaskResultConsumer(outputRdf);
-        LOG.info("Number of tasks {}", taskLoader.getTasks().size());
-        for (Task task : taskLoader.getTasks()) {
-            executorService.submit(new TaskExecutor(
-                    task, errorConsumer, resultConsumer, progressReport,
-                    configuration.getExecutionTimeLimit()));
-        }
-        executorService.shutdown();
+    @Override
+    protected ReportWriter createReportWriter() {
+        String graph = reportRdf.getWriteGraph().stringValue();
+        Repository repository = reportRdf.getRepository();
+        TripleWriter writer =
+                Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
+        return ReportWriter.create(writer);
+
     }
 
-    private void initializeExecutor() {
-        LOG.info("Using {} executors", configuration.getUsedThreads());
-        executorService = Executors.newFixedThreadPool(
-                configuration.getUsedThreads());
+    @Override
+    protected void beforeExecution() throws LpException {
+        super.beforeExecution();
+        this.consumer = new StatementsConsumer(outputRdf);
+        this.progressReport.start(tasks);
     }
 
-    private void awaitExecutorShutdown() {
-        while (true) {
-            try {
-                if (executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-                    break;
-                }
-            } catch (InterruptedException ex) {
-                // Ignore.
-            }
-        }
+    @Override
+    protected void afterExecution() throws LpException {
+        super.afterExecution();
+        this.progressReport.done();
     }
-
 }

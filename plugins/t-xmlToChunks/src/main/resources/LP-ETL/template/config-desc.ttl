@@ -1,0 +1,19 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-xmlToChunks/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-xmlToChunks#Configuration>  ;
+    config:member <http://linkedpipes.com/resources/components/t-xmlToChunks/0.0.0/configuration/desc/chunk_size>  ,
+            <http://linkedpipes.com/resources/components/t-xmlToChunks/0.0.0/configuration/desc/reference> .
+
+<http://linkedpipes.com/resources/components/t-xmlToChunks/0.0.0/configuration/desc/chunk_size>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xmlToChunks#chunk_size> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xmlToChunks#chunk_sizeControl> .
+
+<http://linkedpipes.com/resources/components/t-xmlToChunks/0.0.0/configuration/desc/reference>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-xmlToChunks#reference> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-xmlToChunks#referenceControl> .
+
+

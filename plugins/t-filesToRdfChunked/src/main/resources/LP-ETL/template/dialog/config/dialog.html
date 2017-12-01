@@ -1,4 +1,4 @@
-<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <md-input-container class="md-block" ng-hide="dialog.mimeType.hide">
         <label>Format</label>
@@ -21,7 +21,12 @@
     <md-input-container class="md-block" ng-hide="dialog.commitSize.hide">
         <label>Files per chunk</label>
         <input type="number" ng-model="dialog.commitSize.value"
-               min="1" step="1"
+               min="1"
                ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit">
     </md-input-container>
+    <md-switch ng-model="dialog.softFail.value"
+               ng-disabled="dialog.softFail.disabled || dialog.softFail.inherit"
+               ng-hide="dialog.softFail.hide">
+        Skip file on failure
+    </md-switch>
 </div>

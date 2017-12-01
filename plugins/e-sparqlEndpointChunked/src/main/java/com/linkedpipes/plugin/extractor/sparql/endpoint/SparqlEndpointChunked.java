@@ -7,6 +7,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -17,7 +23,7 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +103,21 @@ public final class SparqlEndpointChunked implements Component,
             headers.put("Accept", configuration.getTransferMimeType());
         }
         repository.setAdditionalHttpHeaders(headers);
+        repository.setHttpClient(getHttpClient());
         return repository;
+    }
+
+    private CloseableHttpClient getHttpClient() {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (configuration.isUseAuthentication()) {
+            provider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            configuration.getUsername(),
+                            configuration.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(provider).build();
     }
 
     protected SimpleDataset createDataset() {
@@ -114,20 +134,37 @@ public final class SparqlEndpointChunked implements Component,
         final String query = configuration.getQuery().replace("${VALUES}",
                 valueClause);
         LOG.debug("query:\n{}", query);
+        try {
+            tryToExecuteQuery(repository, query, buffer);
+        } catch (LpException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            if (configuration.isSkipOnError()) {
+                LOG.error("Failed to execute query.", ex);
+            } else {
+                throw exceptionFactory.failure("Failed to execute query.", ex);
+            }
+        }
+    }
+
+    protected void tryToExecuteQuery(Repository repository, String query,
+            List<Statement> buffer) throws LpException {
         try (final RepositoryConnection connection =
                      repository.getConnection()) {
             final GraphQuery preparedQuery = connection.prepareGraphQuery(
                     QueryLanguage.SPARQL, query);
             preparedQuery.setDataset(createDataset());
-            preparedQuery.evaluate(new AbstractRDFHandler() {
+            RDFHandler handler = new AbstractRDFHandler() {
                 @Override
-                public void handleStatement(Statement st)
-                        throws RDFHandlerException {
+                public void handleStatement(Statement st) {
                     buffer.add(st);
                 }
-            });
+            };
+            if (configuration.isFixIncomingRdf()) {
+                handler = new RdfEncodeHandler(handler);
+            }
+            preparedQuery.evaluate(handler);
         }
     }
-
 
 }

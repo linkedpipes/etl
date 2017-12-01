@@ -274,7 +274,8 @@ public class PipelineUpdate {
             final Collection<TemplateInfo> toRemove = new LinkedList<>();
             for (TemplateInfo templateInfo : templates) {
                 // Translate IRI.
-                final String templateIri = mapping.map(templateInfo.getIri());
+                final String templateIri = mapping.remoteToLocal(
+                        templateInfo.getIri());
                 // Check if we know the template.
                 final Template localTemplate = templateFacade.getTemplate(
                         templateIri);
@@ -286,6 +287,7 @@ public class PipelineUpdate {
                         templateFacade.updateConfig(localTemplate,
                                 templateInfo.getConfiguration());
                     }
+                    toRemove.add(templateInfo);
                     continue;
                 }
                 // Continue only if we should import.
@@ -293,15 +295,17 @@ public class PipelineUpdate {
                     LOG.info("skip: {}", templateIri);
                     continue;
                 }
-                LOG.info("import: {}", templateIri);
                 // We import the hierarchy from the top, so for every
                 // template to import we require its parent to be
                 // already imported.
-                final Template parent = templateFacade.getTemplate(mapping.map(
-                        templateInfo.getTemplate().stringValue()));
+                String parentIri = templateInfo.getTemplate().stringValue();
+                String localParentIri = mapping.remoteToLocal(parentIri);
+                final Template parent = templateFacade.getTemplate(
+                        localParentIri);
                 if (parent == null) {
                     continue;
                 }
+                LOG.info("import: {}", templateIri);
                 // Update the parent reference.
                 templateInfo.setTemplate(vf.createIRI(parent.getIri()));
                 //
@@ -311,7 +315,8 @@ public class PipelineUpdate {
                             templateInfo.getDefinition(),
                             templateInfo.getConfiguration());
                     // Add mapping, so it can be used by other templates.
-                    mappingFacade.add(template, mapping.original(
+                    LOG.info(" --> {}", template.getIri());
+                    mappingFacade.add(template, mapping.toOriginal(
                             templateInfo.getIri()));
                 } catch (BaseException ex) {
                     // TODO Can't create template, for now skip the template.
@@ -324,6 +329,10 @@ public class PipelineUpdate {
             if (toRemove.isEmpty()) {
                 // TODO We failed to import any template.
                 // Could we be missing dependencies?
+                LOG.error("There might be missing templates!");
+                for (TemplateInfo templateInfo : templates) {
+                    LOG.info("{}", templateInfo.getIri());
+                }
                 break;
             }
         }
@@ -345,16 +354,13 @@ public class PipelineUpdate {
             if (statement.getPredicate().stringValue().equals(
                     "http://linkedpipes.com/ontology/template")) {
                 // Check for import. Now all templates should be imported
-                // so we can just ask for mapping. Here we first need to
-                // resolve component ot original mapping (if given),
-                // then we use mapping to map the original mapping to this
-                // instance.
-                final String templateIri = mapping.map(mapping.original(
-                        statement.getObject().stringValue()));
+                // so we can just ask for mapping.
+                String localTemplateIri = mapping.remoteToLocal(
+                        statement.getObject().stringValue());
                 toRemove.add(statement);
                 toAdd.add(vf.createStatement(statement.getSubject(),
                         statement.getPredicate(),
-                        vf.createIRI(templateIri),
+                        vf.createIRI(localTemplateIri),
                         statement.getContext()));
             }
         }

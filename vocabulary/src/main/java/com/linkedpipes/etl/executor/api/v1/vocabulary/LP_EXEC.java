@@ -17,17 +17,45 @@ public final class LP_EXEC {
     public static final String TYPE_SKIP =
             "http://linkedpipes.com/resources/execution/type/skip";
 
+    public static final String EXECUTION_FULL =
+            "http://linkedpipes.com/resources/executionType/Full";
+
+    public static final String EXECUTION_DEBUG_TO =
+            "http://linkedpipes.com/resources/executionType/DebugTo";
+
+    public static final String EXECUTION_DEBUG_FROM =
+            "http://linkedpipes.com/resources/executionType/DebugFrom";
+
+    public static final String EXECUTION_DEBUG_FROM_TO =
+            "http://linkedpipes.com/resources/executionType/DebugFromTo";
+
+    public static final String EXECUTION =
+            "http://etl.linkedpipes.com/ontology/Execution";
+
     /**
      * The working directory is assigned under this predicate.
      */
     public static final String HAS_WORKING_DIRECTORY =
             PREFIX + "workingDirectory";
 
+    public static final String HAS_TARGET_COMPONENT =
+            "http://linkedpipes.com/ontology/execution/targetComponent";
+
+    public static final String HAS_PIPELINE_EXECUTION_TYPE =
+            "http://linkedpipes.com/ontology/execution/type";
+
+    public static final String HAS_METADATA = PREFIX + "executionMetadata";
+
+    public static final String HAS_EXECUTION_PROFILE = PREFIX + "profile";
+
     /**
      * Input directory.
      */
     public static final String HAS_INPUT_DIRECTORY =
             PREFIX + "inputDirectory";
+
+    public static final String HAS_DEBUG_PATH = PREFIX + "debugPath";
+    ;
 
     /**
      * Relative path to the execution root, from which
@@ -41,6 +69,12 @@ public final class LP_EXEC {
     public static final String HAS_EXECUTION = PREFIX + "execution";
 
     /**
+     * Relative path to the data used by port.
+     */
+    public static final String HAS_DATA_PATH =
+            "http://etl.linkedpipes.com/ontology/dataPath";
+
+    /**
      * Dataunit can have a data source, in such case the content
      * is loaded from the source instead of loading from sources.
      */
@@ -52,11 +86,6 @@ public final class LP_EXEC {
      */
     public static final String HAS_SAVE_DEBUG_DATA =
             "http://linkedpipes.com/ontology/saveDebugData";
-
-    /**
-     * Component has a reference to the configuration entity.
-     */
-    public static final String HAS_CONFIGURATION = PREFIX + "configuration";
 
     /**
      * Delete working data after pipeline execution.
@@ -102,5 +131,17 @@ public final class LP_EXEC {
     public static final String STATUS_UNKNOWN =
             "http://etl.linkedpipes.com/resources/status/unknown";
 
+    public static final String PORT_SOURCE = PREFIX + "PortSource";
+
+    public static final String HAS_DATA_SOURCE = PREFIX + "dataSource";
+
+    public static final String HAS_DATA_UNIT =
+            "http://etl.linkedpipes.com/ontology/dataUnit";
+
+    /**
+     * Define groups of data units of same type that must share the same
+     * repository.
+     */
+    public static final String HAS_DATA_UNIT_GROUP = PREFIX + "dataUnitGroup";
 
 }

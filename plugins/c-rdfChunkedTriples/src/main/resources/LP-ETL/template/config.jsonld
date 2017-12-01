@@ -1,0 +1,6 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/c-rdfChunkedTriples/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/c-rdfChunkedTriples#Configuration"]
+    }
+]

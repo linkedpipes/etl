@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 
 /**
  * Interface for runtime configuration.
@@ -13,6 +13,6 @@ public interface RuntimeConfiguration {
      *
      * @param writer
      */
-    void write(RdfSource.TripleWriter writer) throws LpException;
+    void write(TripleWriter writer) throws LpException;
 
 }

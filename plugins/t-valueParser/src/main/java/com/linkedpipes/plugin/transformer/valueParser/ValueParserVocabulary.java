@@ -23,11 +23,7 @@ final class ValueParserVocabulary {
 
     public static final String HAS_TYPE = PREFIX + "type";
 
-    public static final String LIST_WITH_INDEX = "ListWithIndexes";
-
     public static final String HAS_ORDER = PREFIX + "order";
-
-    public static final String VALUES = PREFIX + "Values";
 
     private ValueParserVocabulary() {
     }

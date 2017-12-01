@@ -1,10 +1,16 @@
-<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <p>Files to download can be specified via the configuration input.</p>
     <md-input-container class="md-block" ng-hide="dialog.threads.hide">
         <label>Number of threads used for download</label>
         <input ng-model="dialog.threads.value"
                ng-disabled="dialog.threads.disabled || dialog.threads.inherit"
+               type="number" placeholder="1" min="1">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.threadsPerGroup.hide">
+        <label>Threads per group</label>
+        <input ng-model="dialog.threadsPerGroup.value"
+               ng-disabled="dialog.threadsPerGroup.disabled || dialog.threadsPerGroup.inherit"
                type="number" placeholder="1" min="1">
     </md-input-container>
     <md-switch ng-model="dialog.hardRedirect.value"
@@ -28,8 +34,13 @@
     <md-switch ng-model="dialog.detailLog.value"
                ng-hide="dialog.detailLog.hide"
                ng-disabled="dialog.detailLog.disabled || dialog.detailLog.inherit">
-        Detail log
-        <md-tooltip>If set aditional information are logged for every download.
+        Detailed log
+        <md-tooltip>If set, additional information is logged for every download.
         </md-tooltip>
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.timeout.hide">
+        <label>Timeout (in milliseconds)</label>
+        <input type="number" ng-model="dialog.timeout.value"
+               ng-disabled="dialog.timeout.disabled || dialog.timeout.inherit">
+    </md-input-container>
 </div>

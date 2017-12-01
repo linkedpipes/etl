@@ -1,0 +1,114 @@
+swagger: "2.0"
+info:
+  version: 0.0.0
+  title: "LinkedPipes ETL : Executor"
+  description: This document describes the HTTP API of the LinkedPipes ETL Executor component.
+  contact:
+    name: ""
+  license:
+    name: MIT
+basePath: /api/v1
+schemes:
+  - http
+paths:
+  /executions:
+    post:
+      description: Start new execution of pipeline in given local directory.
+      consumes:
+        - application/json
+      parameters:
+        - name: new execution
+          in: body
+          description: Information about execution to start.
+          required: true
+          schema:
+            $ref: "#/definitions/NewExecution"
+      responses:
+        "201":
+          description: Execution started.
+        "503":
+          description: Other execution is running.
+    get:
+      description: Return full information about running execution.
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: No execution is running.
+  /executions/cancel:
+    post:
+      description: Request cancell of running pipeline.
+      responses:
+        "200":
+          description: Cancell request accepted.
+        "404":
+          description: There is no running execution.
+  /executions/overview:
+    get:
+      description: Overview of current execution.
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/ExecutionOverview"
+        "404":
+          description: There is no running execution.
+definitions:
+  NewExecution:
+    type: object
+    title: New execution definition.
+    required:
+      - iri
+      - directory
+    properties:
+      iri:
+        type: string
+      directory:
+        type: string
+  ExecutionOverview:
+    type: object
+    title: Execution overview.
+    properties:
+      pipeline:
+        type: object
+        properties:
+          "@id":
+            type: string
+      execution:
+        type: object
+        properties:
+          "@id":
+            type: string
+      executionStarted:
+        type: string
+      executionFinished:
+        type: string
+      status:
+        type: object
+        properties:
+          "@id":
+            type: string
+      lastChange:
+        type: string
+      pipelineProgress:
+        type: object
+        properties:
+          "@id":
+            type: string
+          total:
+            type: integer
+          current:
+            type: integer

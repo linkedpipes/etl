@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1;
 
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
 /**
  * Observer for pipeline execution events. Can be used by
@@ -8,13 +8,9 @@ import com.linkedpipes.etl.rdf.utils.RdfSource;
  */
 public interface PipelineExecutionObserver {
 
-    default void onPipelineBegin(String pipeline, String graph,
-            RdfSource definition) throws LpException {
-        // No operation.
-    }
+    void onPipelineBegin(String pipeline, String graph,
+            RdfSource definition) throws LpException;
 
-    default void onPipelineEnd() {
-        // No operation.
-    }
+    void onPipelineEnd();
 
 }

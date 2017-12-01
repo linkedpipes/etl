@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.executor.pipeline.model;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 
 import java.util.LinkedList;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Represents a connection between components.
  */
-public class Connection implements RdfLoader.Loadable<String> {
+public class Connection implements Loadable {
 
     private final List<String> types = new LinkedList<>();
 
@@ -24,23 +24,22 @@ public class Connection implements RdfLoader.Loadable<String> {
     private String targetBinding;
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, RdfValue object) {
         switch (predicate) {
             case RDF.TYPE:
-                types.add(object);
+                types.add(object.asString());
                 return null;
             case LP_PIPELINE.HAS_SOURCE_BINDING:
-                sourceBinding = object;
+                sourceBinding = object.asString();
                 return null;
             case LP_PIPELINE.HAS_SOURCE_COMPONENT:
-                sourceComponent = object;
+                sourceComponent = object.asString();
                 return null;
             case LP_PIPELINE.HAS_TARGET_BINDING:
-                targetBinding = object;
+                targetBinding = object.asString();
                 return null;
             case LP_PIPELINE.HAS_TARGET_COMPONENT:
-                targetComponent = object;
+                targetComponent = object.asString();
                 return null;
             default:
                 return null;

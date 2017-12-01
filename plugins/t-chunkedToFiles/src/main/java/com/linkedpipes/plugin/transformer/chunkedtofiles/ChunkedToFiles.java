@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.transformer.chunkedtofiles;
 
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -23,6 +24,10 @@ import java.util.Optional;
 public class ChunkedToFiles implements Component, SequentialExecution {
 
     private static final String FILE_ENCODE = "UTF-8";
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "InputChunked")
     public ChunkedTriples inputChunked;

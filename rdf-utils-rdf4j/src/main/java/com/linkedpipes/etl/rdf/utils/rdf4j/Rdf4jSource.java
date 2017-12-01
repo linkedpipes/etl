@@ -1,8 +1,13 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import org.eclipse.rdf4j.model.*;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.TripleHandler;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.query.BindingSet;
@@ -13,56 +18,17 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.util.Repositories;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-/**
- * A specific implementation of a source class.
- */
-public class Rdf4jSource implements RdfSource<Value> {
+public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
 
-    @FunctionalInterface
-    private interface Converter<ValueType> {
+    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-        ValueType convert(Value value);
+    protected final Repository repository;
 
-    }
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(Rdf4jSource.class);
-
-    private static final ValueFactory VF = SimpleValueFactory.getInstance();
-
-    private final Repository repository;
-
-    /**
-     * If true the repository is closed upon shutdown of the source.
-     */
-    private final boolean closeOnShutdown;
-
-    /**
-     *
-     * @param repository Initialized repository.
-     * @param closeOnShutdown True if shutdown the repository on close, ie.
-     * the repository is not shared by multiple sources.
-     */
-    protected Rdf4jSource(Repository repository, boolean closeOnShutdown) {
+    protected Rdf4jSource(Repository repository) {
         this.repository = repository;
-        this.closeOnShutdown = closeOnShutdown;
-    }
-
-    @Override
-    public Class<Value> getDefaultType() {
-        return Value.class;
-    }
-
-    @Override
-    public void shutdown() {
-        if (closeOnShutdown) {
-            repository.shutDown();
-        }
     }
 
     @Override
@@ -71,120 +37,126 @@ public class Rdf4jSource implements RdfSource<Value> {
     }
 
     @Override
-    public TypedTripleWriter<Value> getTypedTripleWriter(String graph) {
-        return new BufferedTripleWriter(graph, repository);
-    }
-
-    @Override
-    public ValueInfo<Value> getValueInfo() {
-        return (value) -> value instanceof Resource;
-    }
-
-    @Override
-    public <ValueType> void triples(String resource, String graph,
-            Class<ValueType> clazz, TripleHandler<ValueType> handler)
+    public List<Map<String, RdfValue>> sparqlSelect(String query)
             throws RdfUtilsException {
-        final Converter<ValueType> converter = getConverter(clazz);
-        if (converter == null) {
-            throw new RdfUtilsException("Missing converter to: {}",
-                    clazz.getName());
-        }
+        List<Map<String, RdfValue>> output = new LinkedList<>();
         try (RepositoryConnection connection = repository.getConnection()) {
-            Resource subject = null;
-            if (resource != null) {
-                subject = VF.createIRI(resource);
-            }
-            final RepositoryResult<Statement> result =
-                    connection.getStatements(subject,
-                            null, null, VF.createIRI(graph));
+            TupleQueryResult result =
+                    connection.prepareTupleQuery(query).evaluate();
             while (result.hasNext()) {
-                final Statement s = result.next();
-                handler.handle(s.getSubject().stringValue(),
-                        s.getPredicate().stringValue(),
-                        converter.convert(s.getObject()));
+                BindingSet bindingSet = result.next();
+                output.add(convertBinding(bindingSet));
             }
+        } catch (RuntimeException ex) {
+            throw new RdfUtilsException("Can't execute query.", ex);
         }
-    }
-
-    @Override
-    public ValueConverter<Value> valueConverter() {
-        return new Rdf4jConverter();
-    }
-
-    @Override
-    public <T> ValueToString<T> toStringConverter(Class<T> clazz) {
-        ValueToString<T> converter = null;
-        if (clazz.equals(String.class)) {
-            converter = value -> (String) value;
-        } else if (clazz.equals(Value.class)) {
-            converter = value -> ((Value) value).stringValue();
-        }
-        return converter;
-    }
-
-    @Override
-    public <T> List<Map<String, T>> sparqlSelect(String query, Class<T> clazz)
-            throws RdfUtilsException {
-        final Converter<T> converter = getConverter(clazz);
-        final List<Map<String, T>> output = new LinkedList<>();
-        Repositories.consume(repository, (connection) -> {
-            final TupleQueryResult result;
-            try {
-                result = connection.prepareTupleQuery(query).evaluate();
-            } catch (RuntimeException ex) {
-                LOG.info("Failed query: {}", query);
-                throw ex;
-            }
-            while (result.hasNext()) {
-                final Map<String, T> item = new HashMap<>();
-                final BindingSet bindingSet = result.next();
-                for (Binding binding : bindingSet) {
-                    item.put(binding.getName(),
-                            converter.convert(binding.getValue()));
-                }
-                output.add(item);
-            }
-        });
         return output;
+    }
+
+    private Map<String, RdfValue> convertBinding(BindingSet bindingSet) {
+        Map<String, RdfValue> output = new HashMap<>();
+        for (Binding binding : bindingSet) {
+            output.put(binding.getName(), new Rdf4jValue(binding.getValue()));
+        }
+        return output;
+    }
+
+    @Override
+    public void triples(String graph, TripleHandler handler)
+            throws RdfUtilsException {
+        triples(null, graph, handler);
+    }
+
+    @Override
+    public void triples(String resource, String graph, TripleHandler handler)
+            throws RdfUtilsException {
+        Resource resourceFilter = resourceOrNull(resource);
+        try (RepositoryConnection connection = repository.getConnection()) {
+            RepositoryResult<Statement> result;
+            if (graph == null) {
+                result = connection.getStatements(
+                        resourceFilter, null, null);
+            } else {
+                result = connection.getStatements(
+                        resourceFilter, null, null,
+                        valueFactory.createIRI(graph));
+            }
+            while (result.hasNext()) {
+                try {
+                    handler.handle(new Rdf4jTriple(result.next()));
+                } catch (Exception ex) {
+                    throw new RdfUtilsException("Handler failed.", ex);
+                }
+            }
+        }
+    }
+
+    public void statements(String graph, StatementHandler handler)
+            throws RdfUtilsException {
+        statements(null, graph, handler);
+    }
+
+    public void statements(String resource, String graph,
+            StatementHandler handler) throws RdfUtilsException {
+        Resource resourceFilter = resourceOrNull(resource);
+        try (RepositoryConnection connection = repository.getConnection()) {
+            RepositoryResult<Statement> result;
+            if (graph == null) {
+                result = connection.getStatements(
+                        resourceFilter, null, null);
+            } else {
+                result = connection.getStatements(
+                        resourceFilter, null, null,
+                        valueFactory.createIRI(graph));
+            }
+            while (result.hasNext()) {
+                try {
+                    handler.handle(result.next());
+                } catch (Exception ex) {
+                    throw new RdfUtilsException("Handler failed.", ex);
+                }
+            }
+        }
+    }
+
+    private Resource resourceOrNull(String resource) {
+        if (resource == null) {
+            return null;
+        }
+        try {
+            return valueFactory.createIRI(resource);
+        } catch (IllegalArgumentException ex) {
+            // Implement this in better way.
+            return valueFactory.createBNode(resource);
+        }
+    }
+
+    @Override
+    public SparqlQueryable asQueryable() {
+        return this;
     }
 
     public Repository getRepository() {
         return repository;
     }
 
-    /**
-     * @return RDF4J source backed up with InMemory store.
-     */
-    public static Rdf4jSource createInMemory() {
+    public static ClosableRdf4jSource createInMemory() {
         final Repository repository = new SailRepository(new MemoryStore());
         repository.initialize();
-        return new Rdf4jSource(repository, true);
+        return new ClosableRdf4jSource(repository);
     }
 
-    /**
-     * @param repository
-     * @return Wrap of given repository.
-     */
-    public static Rdf4jSource createWrap(Repository repository) {
-        return new Rdf4jSource(repository, false);
+    public static ClosableRdf4jSource wrapInMemory(
+            Collection<Statement> statements) {
+        final Repository repository = new SailRepository(new MemoryStore());
+        repository.initialize();
+        Repositories.consume(repository,
+                connection -> connection.add(statements));
+        return new ClosableRdf4jSource(repository);
     }
 
-    /**
-     * Converter from value to given type.
-     *
-     * @param clazz
-     * @param <ValueType>
-     * @return
-     */
-    private static <ValueType> Converter<ValueType> getConverter(
-            Class<ValueType> clazz) {
-        Converter converter = null;
-        if (clazz.equals(String.class)) {
-            converter = (value) -> value.stringValue();
-        } else if (clazz.equals(Value.class)) {
-            converter = (value) -> value;
-        }
-        return converter;
+    public static Rdf4jSource wrapRepository(Repository repository) {
+        return new Rdf4jSource(repository);
     }
 
 }

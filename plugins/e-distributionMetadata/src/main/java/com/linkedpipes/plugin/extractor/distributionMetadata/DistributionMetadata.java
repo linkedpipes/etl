@@ -18,8 +18,6 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,7 +27,9 @@ import java.util.List;
 
 public class DistributionMetadata implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DistributionMetadata.class);
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "DatasetMetadata")
     public SingleGraphDataUnit inputRdf;

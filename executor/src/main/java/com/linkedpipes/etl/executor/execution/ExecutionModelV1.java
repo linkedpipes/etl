@@ -7,8 +7,10 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.model.*;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -187,12 +189,28 @@ class ExecutionModelV1 {
 
         event.setIri(eventIri.stringValue());
 
-        event.write(new RdfSource.TripleWriter() {
+        TripleWriter writer = new TripleWriter() {
+
+            @Override
+            public void add(String subject, String predicate, RdfValue value) {
+
+            }
+
+            @Override
+            public void add(RdfTriple triple) {
+
+            }
 
             @Override
             public void iri(String s, String p, String o) {
                 eventStatements.add(vf.createStatement(vf.createIRI(s),
                         vf.createIRI(p), vf.createIRI(o), executionIri));
+            }
+
+            @Override
+            public void bool(String s, String p, boolean o) {
+                eventStatements.add(vf.createStatement(vf.createIRI(s),
+                        vf.createIRI(p), vf.createLiteral(o), executionIri));
             }
 
             @Override
@@ -217,11 +235,17 @@ class ExecutionModelV1 {
             }
 
             @Override
-            public void submit() throws RdfUtilsException {
+            public void flush() throws RdfUtilsException {
                 // Do nothing here.
             }
 
-        });
+        };
+
+        try {
+            event.write(writer);
+        } catch (RdfUtilsException ex) {
+            LOG.error("Can't save event.", ex);
+        }
         eventsStatements.add(eventStatements);
         lastChange = new Date();
         writeToDisk();
@@ -507,6 +531,14 @@ class ExecutionModelV1 {
                     executionIri));
         }
         return statements;
+    }
+
+    public boolean isPipelineFailed() {
+        return pipelineFailed;
+    }
+
+    public boolean isPipelineCancelled() {
+        return pipelineCancelled;
     }
 
 }

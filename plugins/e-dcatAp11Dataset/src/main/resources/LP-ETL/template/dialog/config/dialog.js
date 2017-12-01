@@ -13,12 +13,12 @@ define([], function () {
             "$label": "Dataset IRI"
         },
         "titles" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Title"
         },
         "descriptions" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Description"
         },
@@ -35,7 +35,7 @@ define([], function () {
             "$label": "Contact point email"
         },
         "keywords" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Keywords"
         },
@@ -53,7 +53,7 @@ define([], function () {
             "$label": "Publisher"
         },
         "publisherNames" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Publisher names"
         },
@@ -115,7 +115,7 @@ define([], function () {
             "$label": "Dataset type"
         },
         "provenances" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Provenance statement"
         },
@@ -163,7 +163,7 @@ define([], function () {
             "$label": "Version number"
         },
         "versionNotes" : {
-            "$type": "value",
+            "$type": "str-lang",
             "$array": true,
             "$label": "Version notes"
         },
@@ -1754,6 +1754,21 @@ define([], function () {
         if ($scope.dialog === undefined) {
             $scope.dialog = {};
         }
+
+        DESC.otherThemeIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.spatialIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.documentationIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.sampleIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.landingPageIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.relatedIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.conformsToIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.sourceIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.hasVersionIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.isVersionOfIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.attributeIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.dimensionIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.qualityAnnotationIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
+        DESC.unitOfMeasurementIRIs["$onSave"] = $service.v1.fnc.removeEmptyIri;
 
         const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 

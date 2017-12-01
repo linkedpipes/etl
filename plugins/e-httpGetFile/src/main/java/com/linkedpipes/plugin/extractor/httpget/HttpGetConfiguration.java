@@ -22,6 +22,9 @@ public class HttpGetConfiguration {
     @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_FOLLOW_REDIRECT)
     private boolean forceFollowRedirect;
 
+    @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_USER_AGENT)
+    private String userAgent = null;
+
     public HttpGetConfiguration() {
     }
 
@@ -47,6 +50,14 @@ public class HttpGetConfiguration {
 
     public void setForceFollowRedirect(boolean forceFollowRedirect) {
         this.forceFollowRedirect = forceFollowRedirect;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
 }

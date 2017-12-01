@@ -4,11 +4,11 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.rdf.AnnotationDescriptionFactory;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -37,6 +37,10 @@ public class GraphStorePurger implements Component, SequentialExecution {
     private static final Logger LOG =
             LoggerFactory.getLogger(GraphStorePurger.class);
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "Tasks")
     public SingleGraphDataUnit taskRdf;
 
@@ -62,16 +66,14 @@ public class GraphStorePurger implements Component, SequentialExecution {
     }
 
     private void loadTasks() throws LpException {
-        RdfSource source = Rdf4jSource.createWrap(taskRdf.getRepository());
+        RdfSource source = Rdf4jSource.wrapRepository(taskRdf.getRepository());
         try {
-            graphsToPurge = RdfUtils.loadTypedByReflection(source,
+            graphsToPurge = RdfUtils.loadList(source,
                     taskRdf.getReadGraph().stringValue(),
-                    GraphsToPurge.class,
-                    new AnnotationDescriptionFactory());
+                    RdfToPojo.descriptorFactory(),
+                    GraphsToPurge.class);
         } catch (RdfUtilsException ex) {
             exceptionFactory.failure("Can't load input tasks.", ex);
-        } finally {
-            source.shutdown();
         }
     }
 

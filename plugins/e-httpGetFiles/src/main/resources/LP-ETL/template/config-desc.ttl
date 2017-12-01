@@ -8,7 +8,10 @@
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threads> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/detailLog> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/header> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference> .
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/timeout> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threadsPerGroup> .
+
+[] config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/skipOnError>
     a config:ConfigurationMember ;
@@ -35,7 +38,13 @@
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#header> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#headerControl> .
 
-<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference>
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/timeout>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#reference> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#referenceControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#timeout> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#timeoutControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threadsPerGroup>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threadsPerGroup> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threadsPerGroupControl> .
+

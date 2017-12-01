@@ -72,6 +72,10 @@ define([
         'angular-clipboard'
     ]);
     app.config(config);
+    // https://stackoverflow.com/questions/41211875/angularjs-1-6-0-latest-now-routes-not-working
+    app.config(['$locationProvider', function($locationProvider) {
+        $locationProvider.hashPrefix('');
+    }]);
     //
     rdfService(app);
     refreshService(app);
@@ -161,7 +165,7 @@ define([
     // Execute after the application is loaded, we can take care about
     // some initialization: redirect
     app.run(function ($location, $cookies) {
-        // If user acess the 'root' page redirect to the
+        // If user access the 'root' page redirect to the
         // configured landing page.
         if ($location.path() === '') {
             var landingPage = $cookies.get('lp-landing');

@@ -1,0 +1,38 @@
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix etl: <http://etl.linkedpipes.com/ontology/> .
+
+<http://localhost:8080/resources/executions/69df93d8> {
+
+	<http://localhost:8080/resources/executions/69df93d8> a etl:Execution ;
+		etl:pipeline <http://localhost/pipeline> ;
+    	etl:lastChange "2017-04-13T14:01:17.736+02:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+		etl:status <http://etl.linkedpipes.com/resources/status/finished> ;
+		lp:component <http://localhost/pipeline/9d21ebd5/exec> ,
+		    <http://localhost/pipeline/a67542e2/exec> .
+
+	<http://localhost/pipeline/9d21ebd5/exec> a lp:Component ;
+		etl:dataUnit <http://localhost/pipeline/9d21ebd5/port/FilesOutput/dataunit> ;
+		etl:status <http://etl.linkedpipes.com/resources/status/finished> .
+
+	<http://localhost/pipeline/9d21ebd5/port/FilesOutput/dataunit> a etl:DataUnit ;
+		etl:binding "FilesOutput" ;
+		lp:execution <http://localhost:8080/resources/executions/f97245c9cc74> ;
+		etl:dataPath "working\\dataunit-001" ;
+		lp:loadPath "working\\dataunit-005" ;
+		etl:debug "001" .
+
+    <http://localhost/pipeline/a67542e2/exec> a lp:Component ;
+        etl:dataUnit <http://localhost/pipeline/a67542e2/port/InputFiles/dataunit>, <http://localhost/pipeline/a67542e2/port/OutputRdf/dataunit> ;
+        etl:status <http://etl.linkedpipes.com/resources/status/finished> .
+
+	<http://localhost/pipeline/a67542e2/port/InputFiles/dataunit> a etl:DataUnit ;
+		etl:binding "InputFiles" ;
+	    etl:dataPath "working\\dataunit-002" ;
+		etl:debug "002" .
+
+	<http://localhost/pipeline/a67542e2/port/OutputRdf/dataunit> a etl:DataUnit ;
+		etl:binding "OutputRdf" ;
+	    etl:dataPath "working\\dataunit-003" ;
+		etl:debug "003" .
+
+}

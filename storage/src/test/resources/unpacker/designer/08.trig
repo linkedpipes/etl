@@ -1,0 +1,81 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix textHolder: <http://plugins.linkedpipes.com/ontology/e-textHolder#> .
+@prefix filesToRdf: <http://plugins.linkedpipes.com/ontology/t-filesToRdf#> .
+@prefix sparqlConstruct: <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#> .
+
+<http://localhost/pipeline> {
+
+	<http://localhost/pipeline> a lp:Pipeline ;
+		lp:version "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		lp:profile <http://localhost/pipeline/profile/default> ;
+		skos:prefLabel "Test focused on lp:dataUnitGroup" ;
+		dcterms:description "Test port group (4 components), use specific order of connections to test group merging." .
+
+	<http://localhost/pipeline/profile/default> a lp:ExecutionProfile ;
+		lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/PerInputRepository> ;
+		lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/InMemoryStore> .
+
+    <http://localhost/pipeline/lt> a lp:Component ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:template <http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0> ;
+        lp:x "380"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        lp:y "140"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/lb> a lp:Component ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:template <http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0> ;
+        lp:x "380"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        lp:y "740"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/rt> a lp:Component ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:template <http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0> ;
+        lp:x "780"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        lp:y "140"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/rb> a lp:Component ;
+        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:template <http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0> ;
+        lp:x "780"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        lp:y "740"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+        skos:prefLabel "SPARQL Construct" .
+
+    <http://localhost/pipeline/connection/c1>
+        a lp:Connection ;
+        lp:sourceBinding "OutputRdf" ;
+        lp:sourceComponent <http://localhost/pipeline/lt> ;
+        lp:targetBinding "InputRdf" ;
+        lp:targetComponent <http://localhost/pipeline/rt> .
+
+    <http://localhost/pipeline/connection/c2>
+        a lp:Connection ;
+        lp:sourceBinding "OutputRdf" ;
+        lp:sourceComponent <http://localhost/pipeline/lb> ;
+        lp:targetBinding "InputRdf" ;
+        lp:targetComponent <http://localhost/pipeline/rb> .
+
+    <http://localhost/pipeline/connection/c3>
+        a lp:Connection ;
+        lp:sourceBinding "OutputRdf" ;
+        lp:sourceComponent <http://localhost/pipeline/lt> ;
+        lp:targetBinding "InputRdf" ;
+        lp:targetComponent <http://localhost/pipeline/rb> .
+
+
+    <http://localhost/repository/sesame> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> .
+
+}
+
+<http://localhost/pipeline/c67542e2/configuration> {
+
+    <http://localhost/pipeline/c67542e2/configuration>
+        a sparqlConstruct:Configuration ;
+        sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" .
+
+}

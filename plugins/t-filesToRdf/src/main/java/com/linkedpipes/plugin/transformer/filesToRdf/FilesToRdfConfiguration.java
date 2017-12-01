@@ -11,6 +11,9 @@ public class FilesToRdfConfiguration {
     @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_MIME_TYPE)
     private String mimeType = null;
 
+    @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_SKIP_ON_FAILURE)
+    private boolean skipOnFailure = false;
+
     public FilesToRdfConfiguration() {
     }
 
@@ -28,6 +31,14 @@ public class FilesToRdfConfiguration {
 
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
+    }
+
+    public boolean isSkipOnFailure() {
+        return skipOnFailure;
+    }
+
+    public void setSkipOnFailure(boolean skipOnFailure) {
+        this.skipOnFailure = skipOnFailure;
     }
 
 }

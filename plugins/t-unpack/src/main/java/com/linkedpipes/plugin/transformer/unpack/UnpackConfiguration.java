@@ -11,6 +11,9 @@ public class UnpackConfiguration {
     @RdfToPojo.Property(iri = UnpackVocabulary.HAS_FORMAT)
     private String format;
 
+    @RdfToPojo.Property(iri = UnpackVocabulary.SKIP_ON_ERROR)
+    private boolean skipOnError = false;
+
     public UnpackConfiguration() {
     }
 
@@ -30,4 +33,11 @@ public class UnpackConfiguration {
         this.format = format;
     }
 
+    public boolean isSkipOnError() {
+        return skipOnError;
+    }
+
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
+    }
 }

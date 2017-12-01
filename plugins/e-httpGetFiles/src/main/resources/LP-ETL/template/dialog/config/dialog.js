@@ -23,6 +23,14 @@ define([], function () {
         "detailLog" : {
             "$type" : "bool",
             "$label" : "Detail log"
+        },
+        "timeout" : {
+            "$type" : "int",
+            "$label" : "Timeout"
+        },
+        "threadsPerGroup": {
+            "$type" : "int",
+            "$label" : "Threads per group"
         }
     };
 

@@ -3,9 +3,21 @@
 <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> .
+    config:member <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> ,
+        <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/threads> ,
+        <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/deduplication> .
 
 <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> .
+
+<http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/threads>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threadsControl> .
+
+<http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/deduplication>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#deduplication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#deduplicationControl> .

@@ -17,6 +17,16 @@ final class SparqlEndpointChunkedVocabulary {
 
     public static final String HAS_CHUNK_SIZE = PREFIX + "chunkSize";
 
+    public static final String HAS_SKIP_ON_ERROR = PREFIX + "skipOnError";
+
+    public static final String HAS_ENCODE_RDF = PREFIX + "encodeRdf";
+
+    public static final String HAS_AUTH = PREFIX + "useAuthentication";
+
+    public static final String HAS_USERNAME = PREFIX + "userName";
+
+    public static final String HAS_PASSWORD = PREFIX + "password";
+
     private SparqlEndpointChunkedVocabulary() {
     }
 

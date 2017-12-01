@@ -17,6 +17,7 @@ define([
             model.components[iri] = {
                 'iri': iri,
                 'messages': [],
+                'message-iri': [],
                 'mapping': {
                     /**
                      * True if mapping is on for this component.
@@ -167,11 +168,18 @@ define([
         var progress = component.progress;
         var current = jsonld.getInteger(resource,
                 'http://linkedpipes.com/ontology/progress/current');
+        // Update component progress (ie. max progress).
         if (current <= progress.current) {
-            return;
+            progress.current = current;
+            progress.value = 100 * (progress.current / progress.total);
         }
-        progress.current = current;
-        progress.value = 100 * (progress.current / progress.total);
+        // Do not add already added messages.
+        const iri = resource["@id"];
+        if (component["message-iri"].indexOf(iri) > -1) {
+            return;
+        } else {
+            component["message-iri"].push(iri);
+        }
         // Save message.
         component.messages.push({
             'label': jsonld.getString(resource,
@@ -223,6 +231,7 @@ define([
                 var action = loadActions[types[index]];
                 if (action !== undefined) {
                     action(model, resource, jsonld);
+                } else {
                 }
             }
         });

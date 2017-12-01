@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.dataunit.core;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class ConfigurationTest {
 
     @Test
     public void loadWithSources() throws Exception {
-        final RdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
         final RdfBuilder builder = RdfBuilder.create(source, "http://graph");
         builder.entity("http://component/a")
                 .iri(RDF.TYPE, LP_PIPELINE.COMPONENT)
@@ -52,8 +52,7 @@ public class ConfigurationTest {
         //
         final BaseConfiguration config =
                 new BaseConfiguration("http://dataunit/a", "http://graph");
-        RdfLoader.load(source, config,
-                "http://dataunit/a", "http://graph", String.class);
+        RdfUtils.load(source, "http://dataunit/a", "http://graph", config);
         config.loadSources(source);
         //
         Assert.assertEquals("binding/a", config.getBinding());
@@ -63,7 +62,7 @@ public class ConfigurationTest {
         Assert.assertTrue(config.getSources().contains("http://dataunit/b"));
         Assert.assertTrue(config.getSources().contains("http://dataunit/c"));
         //
-        source.shutdown();
+        source.close();
     }
 
 }

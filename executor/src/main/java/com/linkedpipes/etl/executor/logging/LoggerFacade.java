@@ -25,15 +25,11 @@ public class LoggerFacade {
 
     public static final String WEB_MDC = "web";
 
-    private Appender debugAppender = null;
+    private FileAppender debugAppender = null;
 
-    private Appender infoAppender = null;
-
-    public void prepareAppendersForExecution(
-            File debugLogFile, File infoLogFile) {
+    public void prepareAppendersForExecution(File debugLogFile) {
         destroyExecutionAppenders();
         debugAppender = createExecutionAppender(debugLogFile, "DEBUG");
-        infoAppender = createExecutionAppender(infoLogFile, "INFO");
     }
 
     public void destroyExecutionAppenders() {
@@ -41,12 +37,9 @@ public class LoggerFacade {
             destroyAppender(debugAppender);
             debugAppender = null;
         }
-        if (infoAppender != null) {
-            destroyAppender(infoAppender);
-            infoAppender = null;
-        }
     }
 
+    // TODO Extract to another class to not confuse with non static functionality.
     public static Appender<ILoggingEvent> createRollingFileAppender(
             File logDirectory, String logFileName, LoggerContext loggerContext,
             String levelFilter) {
@@ -63,7 +56,7 @@ public class LoggerFacade {
         return appender;
     }
 
-    private static void destroyAppender(Appender appender) {
+    private static void destroyAppender(FileAppender appender) {
         final LoggerContext loggerContext
                 = (LoggerContext) LoggerFactory.getILoggerFactory();
         final ch.qos.logback.classic.Logger logbackLogger

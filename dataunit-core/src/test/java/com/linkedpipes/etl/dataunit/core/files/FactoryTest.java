@@ -3,10 +3,11 @@ package com.linkedpipes.etl.dataunit.core.files;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,17 +22,17 @@ public class FactoryTest {
     @Test
     public void noInformationAboutDataUnit() throws Exception {
         final FilesDataUnitFactory factory = new FilesDataUnitFactory();
-        final RdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
         final DataUnit dataUnit = factory.create(
                 "http://dataunit", "http://graph", source);
         Assert.assertNull(dataUnit);
-        source.shutdown();
+        source.close();
     }
 
     @Test
     public void initialization() throws Exception {
         final FilesDataUnitFactory factory = new FilesDataUnitFactory();
-        final RdfSource source = Rdf4jSource.createInMemory();
+        final ClosableRdfSource source = Rdf4jSource.createInMemory();
         final File file = getTempDirectory();
         initialize(source, file.toURI().toString());
         //
@@ -44,7 +45,7 @@ public class FactoryTest {
         Assert.assertEquals("http://dataunit", files.getIri());
         Assert.assertEquals(file, files.getWriteDirectory());
         //
-        source.shutdown();
+        source.close();
     }
 
     protected void initialize(RdfSource source, String file)

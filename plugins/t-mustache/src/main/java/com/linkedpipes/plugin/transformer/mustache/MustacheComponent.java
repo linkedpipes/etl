@@ -16,6 +16,10 @@ import java.util.List;
 
 public final class MustacheComponent implements Component, SequentialExecution {
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit input;
 
@@ -64,8 +68,10 @@ public final class MustacheComponent implements Component, SequentialExecution {
     private void outputData(Mustache mustache, List<ObjectDataHolder> data)
             throws LpException {
         progressReport.start(data.size());
-
         for (ObjectDataHolder object : data) {
+            if (object.data == null) {
+                continue;
+            }
             String fileName = getFileName(object);
             File outputFile = output.createFile(fileName);
             try (OutputStreamWriter outputStream = new OutputStreamWriter(

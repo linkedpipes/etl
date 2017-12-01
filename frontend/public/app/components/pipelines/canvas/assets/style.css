@@ -33,7 +33,7 @@
 /* Buttons. */
 
 .component-selection {
-    position:absolute;
+    position:fixed;
     pointer-events:none;
     border:1px dashed #000;
     border-radius:5px;
@@ -47,13 +47,10 @@
 }
 
 .component-selection .action {
-    /*width:30px;*/
-    /*height:30px;*/
-    /*color: red;*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: center center;*/
-    /*background-size: 29px 29px;*/
     pointer-events:auto;
     cursor: pointer;
 }
 
+.joint-paper > svg {
+    position: relative;
+}

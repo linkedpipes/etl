@@ -24,18 +24,38 @@ public final class TextHolder implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        final File outputFile = outputFiles.createFile(
-                configuration.getFileName());
-        final byte[] content;
+        validateConfiguration();
+        File outputFile = createOutputFile();
+        byte[] content = getContentAsBytes();
+        writeBytesToFile(outputFile, content);
+    }
+
+    private void validateConfiguration() throws LpException {
+        String fileName = configuration.getFileName();
+        if (fileName == null || fileName.isEmpty()) {
+            throw exceptionFactory.failure("Missing file name.", fileName);
+        }
+    }
+
+    private File createOutputFile() throws LpException {
+        return outputFiles.createFile(configuration.getFileName());
+    }
+
+    private byte[] getContentAsBytes() throws LpException {
         try {
-            content = configuration.getContent().getBytes("UTF-8");
+            return configuration.getContent().getBytes("UTF-8");
         } catch (UnsupportedEncodingException ex) {
             throw exceptionFactory.failure("Can't resolved encoding.", ex);
         }
+    }
+
+    private void writeBytesToFile(File file, byte[] content)
+            throws LpException {
         try {
-            Files.write(outputFile.toPath(), content);
+            Files.write(file.toPath(), content);
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't write content to file.", ex);
         }
     }
+
 }

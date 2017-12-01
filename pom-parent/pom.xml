@@ -10,8 +10,6 @@
     </description>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>
             UTF-8
@@ -21,7 +19,7 @@
         <logback.version>1.1.7</logback.version>
         <jackson.version>2.7.2</jackson.version>
         <springframework.version>4.3.4.RELEASE</springframework.version>
-        <rdf4j.version>2.2</rdf4j.version>
+        <rdf4j.version>2.2.1</rdf4j.version>
         <jetty.version>9.3.14.v20161028</jetty.version>
         <lp.version>0.0.0</lp.version>
     </properties>
@@ -139,18 +137,18 @@
             <dependency> <!-- Interfaces for bundles. -->
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.core</artifactId>
-                <version>5.0.0</version>
+                <version>4.3.1</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.compendium</artifactId>
-                <version>5.0.0</version>
+                <version>4.3.1</version>
             </dependency>
             <!-- OSGI implementation and support. -->
             <dependency> <!-- Felix for declarative services. -->
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
-                <version>1.2.8</version>
+                <version>1.2.10</version>
             </dependency>
             <!-- Test. -->
             <dependency>
@@ -211,6 +209,26 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>java-8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>1.8</maven.compiler.source>
+                <maven.compiler.target>1.8</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>java-9</id>
+            <activation>
+                <jdk>9</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>1.9</maven.compiler.source>
+                <maven.compiler.target>1.9</maven.compiler.target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -219,30 +237,13 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.5.4</version>
+                    <version>3.3.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
                             <Embed-Transitive>false</Embed-Transitive>
                         </instructions>
                     </configuration>
-                </plugin>
-                <!--
-                Felix plugin with support for declarative services via
-                annotations.
-                -->
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-scr-plugin</artifactId>
-                    <version>1.21.0</version>
-                    <executions>
-                        <execution>
-                            <id>generate-scr-scrdescriptor</id>
-                            <goals>
-                                <goal>scr</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

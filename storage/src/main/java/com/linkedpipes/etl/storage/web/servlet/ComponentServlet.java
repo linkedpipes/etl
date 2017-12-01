@@ -172,6 +172,9 @@ public class ComponentServlet {
                 templateFacade.getEffectiveConfiguration(template));
     }
 
+    /**
+     * Return configuration for instance based on given template.
+     */
     @RequestMapping(value = "/configTemplate",
             method = RequestMethod.GET)
     @ResponseBody
@@ -225,6 +228,12 @@ public class ComponentServlet {
         if (file == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
+        }
+        // Set headers.
+        if (filePath.toLowerCase().endsWith(".js")) {
+            response.setHeader("Content-Type", "application/javascript");
+        } else if (filePath.toLowerCase().endsWith(".html")) {
+            response.setHeader("Content-Type", "text/html; charset=UTF-8");
         }
         try (OutputStream stream = response.getOutputStream()) {
             FileUtils.copyFile(file, stream);

@@ -1,84 +1,13 @@
 package com.linkedpipes.plugin.extractor.httpgetfiles;
 
+import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpGetFilesVocabulary.CONFIG)
-public class HttpGetFilesConfiguration {
-
-    @RdfToPojo.Type(iri = HttpGetFilesVocabulary.HEADER)
-    public static class Header {
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_KEY)
-        private String key;
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_VALUE)
-        private String value;
-
-        public Header() {
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public void setKey(String key) {
-            this.key = key;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-    @RdfToPojo.Type(iri = HttpGetFilesVocabulary.REFERENCE)
-    public static class Reference {
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_URI)
-        private String uri;
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_NAME)
-        private String fileName;
-
-        @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
-        private List<Header> headers = new LinkedList<>();
-
-        public Reference() {
-        }
-
-        public String getUri() {
-            return uri;
-        }
-
-        public void setUri(String uri) {
-            this.uri = uri;
-        }
-
-        public String getFileName() {
-            return fileName;
-        }
-
-        public void setFileName(String fileName) {
-            this.fileName = fileName;
-        }
-
-        public List<Header> getHeaders() {
-            return headers;
-        }
-
-        public void setHeaders(List<Header> headers) {
-            this.headers = headers;
-        }
-    }
-
-    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_REFERENCE)
-    private List<Reference> references = new LinkedList<>();
+public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
 
     /**
      * Force custom redirect. The Java follow only redirect in scope of
@@ -98,7 +27,7 @@ public class HttpGetFilesConfiguration {
     private boolean skipOnError = false;
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_HEADER)
-    private List<Header> headers = new LinkedList<>();
+    private List<RequestHeader> headers = new LinkedList<>();
 
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_THREADS)
     private int threads = 1;
@@ -106,15 +35,13 @@ public class HttpGetFilesConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_DETAIL_LOG)
     private boolean detailLogging = false;
 
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_TIMEOUT)
+    private Integer timeout;
+
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_THREADS_PER_GROUP)
+    private int threadsPerGroup = 1;
+
     public HttpGetFilesConfiguration() {
-    }
-
-    public List<Reference> getReferences() {
-        return references;
-    }
-
-    public void setReferences(List<Reference> references) {
-        this.references = references;
     }
 
     public boolean isForceFollowRedirect() {
@@ -125,6 +52,7 @@ public class HttpGetFilesConfiguration {
         this.forceFollowRedirect = forceFollowRedirect;
     }
 
+    @Override
     public boolean isSkipOnError() {
         return skipOnError;
     }
@@ -133,11 +61,11 @@ public class HttpGetFilesConfiguration {
         this.skipOnError = skipOnError;
     }
 
-    public List<Header> getHeaders() {
+    public List<RequestHeader> getHeaders() {
         return headers;
     }
 
-    public void setHeaders(List<Header> headers) {
+    public void setHeaders(List<RequestHeader> headers) {
         this.headers = headers;
     }
 
@@ -155,5 +83,26 @@ public class HttpGetFilesConfiguration {
 
     public void setDetailLogging(boolean detailLogging) {
         this.detailLogging = detailLogging;
+    }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
+    }
+
+    @Override
+    public int getThreadsNumber() {
+        return threads;
+    }
+
+    public int getThreadsPerGroup() {
+        return threadsPerGroup;
+    }
+
+    public void setThreadsPerGroup(int threadsPerGroup) {
+        this.threadsPerGroup = threadsPerGroup;
     }
 }

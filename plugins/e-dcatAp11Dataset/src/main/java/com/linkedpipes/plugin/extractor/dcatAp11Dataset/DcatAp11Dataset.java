@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -20,6 +21,10 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class DcatAp11Dataset implements Component, SequentialExecution {
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.OutputPort(iri = "Metadata")
     public WritableSingleGraphDataUnit outputRdf;
@@ -174,29 +179,10 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
 
     }
 
-    /**
-     * Add string value with given language tag if the given string is not empty.
-     *
-     * @param predicate
-     * @param value
-     * @param language Is not used if null.
-     */
-    private void addStringIfNotBlank(IRI subject, IRI predicate, String value, String language) {
-        if (isBlank(value)) {
-            return;
-        }
-        final Value object;
-        if (language == null)  {
-            object = valueFactory.createLiteral(value);
-        } else {
-            object = valueFactory.createLiteral(value, language);
-        }
-        statements.add(valueFactory.createStatement(subject, predicate, object));
-    }
-
     private void addLocalizedString(IRI subject, IRI predicate, List<LocalizedString> strings) {
         for (LocalizedString s : strings) {
-        	statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(s.getValue(), s.getLanguage())));
+        	statements.add(valueFactory.createStatement(subject, predicate,
+                    createString(s.getValue(), s.getLanguage())));
         }
     }
 
@@ -229,6 +215,14 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
 
     private static boolean isBlank(String string) {
         return string == null || string.isEmpty();
+    }
+
+    private Value createString(String value, String language) {
+        if (language == null || language.isEmpty()) {
+            return valueFactory.createLiteral(value);
+        } else {
+            return valueFactory.createLiteral(value, language);
+        }
     }
 
 }

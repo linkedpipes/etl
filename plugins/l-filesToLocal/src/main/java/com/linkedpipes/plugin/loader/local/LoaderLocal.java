@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.loader.local;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -18,6 +19,10 @@ public final class LoaderLocal implements Component, SequentialExecution {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(LoaderLocal.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit input;

@@ -1,0 +1,9 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/x-httpRequest#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/x-httpRequest#threads": 1,
+        "http://plugins.linkedpipes.com/ontology/x-httpRequest#threadsPerGroup": 1,
+        "http://plugins.linkedpipes.com/ontology/x-httpRequest#followRedirect": false
+    }
+]

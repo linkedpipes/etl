@@ -3,18 +3,18 @@ package com.linkedpipes.etl.executor.pipeline.model;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Component in a pipeline.
  */
-public class Component implements RdfLoader.Loadable<String> {
+public class Component implements Loadable {
 
     private final String iri;
 
@@ -22,7 +22,7 @@ public class Component implements RdfLoader.Loadable<String> {
 
     private final List<Port> ports = new ArrayList<>(2);
 
-    private final List<Configuration> configurations = new ArrayList<>(3);
+    private String configurationGraph;
 
     private Integer executionOrder;
 
@@ -84,34 +84,26 @@ public class Component implements RdfLoader.Loadable<String> {
         return configurationDescription;
     }
 
-    /**
-     * @return Ordered configuration entities for this component.
-     */
-    public List<Configuration> getConfigurations() {
-        return configurations;
+    public String getConfigurationGraph() {
+        return configurationGraph;
     }
 
     @Override
-    public RdfLoader.Loadable load(String predicate, String object)
+    public Loadable load(String predicate, RdfValue object)
             throws RdfUtilsException {
         switch (predicate) {
             case SKOS.PREF_LABEL:
-                label = object;
+                label = object.asString();
                 return null;
             case LP_EXEC.HAS_ORDER_EXEC:
-                try {
-                    executionOrder = Integer.parseInt(object);
-                } catch (NumberFormatException ex) {
-                    throw new RdfUtilsException(
-                            "Value is not an integer: {}", object);
-                }
+                executionOrder = (int)object.asLong();
                 return null;
             case LP_PIPELINE.HAS_DATA_UNIT:
-                final Port newDataUnit = new Port(object, this);
+                final Port newDataUnit = new Port(object.asString(), this);
                 ports.add(newDataUnit);
                 return newDataUnit;
             case LP_EXEC.HAS_EXECUTION_TYPE:
-                switch (object) {
+                switch (object.asString()) {
                     case LP_EXEC.TYPE_EXECUTE:
                         executionType = ExecutionType.EXECUTE;
                         break;
@@ -126,17 +118,15 @@ public class Component implements RdfLoader.Loadable<String> {
                                 "Invalid exec. type : {} {}", iri, object);
                 }
                 return null;
-            case LP_EXEC.HAS_CONFIGURATION:
-                final Configuration configuration =
-                        new Configuration(object);
-                configurations.add(configuration);
-                return configuration;
+            case LP_PIPELINE.HAS_CONFIGURATION_GRAPH:
+                configurationGraph = object.asString();
+                return null;
             case LP_PIPELINE.HAS_JAR_URL:
-                jarPath = object;
+                jarPath = object.asString();
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
                 configurationDescription =
-                        new ConfigurationDescription(object);
+                        new ConfigurationDescription(object.asString());
                 return configurationDescription;
             default:
                 return null;
@@ -145,7 +135,6 @@ public class Component implements RdfLoader.Loadable<String> {
 
     public void afterLoad() throws InvalidPipelineException {
         check();
-        sortConfigurations();
     }
 
     private void check() throws InvalidPipelineException {
@@ -162,20 +151,19 @@ public class Component implements RdfLoader.Loadable<String> {
             throw new InvalidPipelineException(
                     "Missing execution executionOrder: {}", iri);
         }
+        if (executionType == ExecutionType.MAP) {
+            return;
+        }
         if (configurationDescription == null) {
             throw new InvalidPipelineException(
-                    "Missing configuration description: {} jar: {}",
+                    "Missing configurationGraph description: {} jar: {}",
                     iri, jarPath);
         }
-        configurationDescription.check();
-        for (Configuration configuration : configurations) {
-            configuration.check();
+        if (configurationGraph == null) {
+            throw new InvalidPipelineException(
+                    "Missing configurationGraph for: {}", iri);
         }
-    }
-
-    private void sortConfigurations() {
-        Collections.sort(configurations,
-                Comparator.comparingInt(x -> -x.getOrder()));
+        configurationDescription.check();
     }
 
 }

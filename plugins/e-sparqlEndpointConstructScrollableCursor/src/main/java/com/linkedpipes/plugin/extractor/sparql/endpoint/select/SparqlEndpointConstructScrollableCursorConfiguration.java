@@ -32,6 +32,22 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
             iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PAGE_SIZE)
     private Integer pageSize;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENCODE_RDF)
+    private boolean fixIncomingRdf = false;
+
+    @RdfToPojo.Property(
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_AUTH)
+    private boolean useAuthentication = false;
+
+    @RdfToPojo.Property(
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_USERNAME)
+    private String username;
+
+    @RdfToPojo.Property(
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PASSWORD)
+    private String password;
+
     public SparqlEndpointConstructScrollableCursorConfiguration() {
     }
 
@@ -82,4 +98,37 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
+
+    public boolean isFixIncomingRdf() {
+        return fixIncomingRdf;
+    }
+
+    public void setFixIncomingRdf(boolean fixIncomingRdf) {
+        this.fixIncomingRdf = fixIncomingRdf;
+    }
+
+    public boolean isUseAuthentication() {
+        return useAuthentication;
+    }
+
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

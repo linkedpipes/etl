@@ -27,7 +27,7 @@ public class ResourceManager {
      * @return Pipeline as given for execution.
      */
     public File getDefinitionFile() {
-        final File directory = new File(executionRoot, "definition");
+        final File directory = (new File(executionRoot, "definition")).getAbsoluteFile();
         for (File file : directory.listFiles()) {
             final String fileName = file.getName();
             // @TODO Rename to pipeline
@@ -72,14 +72,12 @@ public class ResourceManager {
     }
 
     public File getExecutionDebugLogFile() {
-        final File file = new File(executionRoot, "log/execution.log");
-        file.getParentFile().mkdir();
-        return file;
+        return new File(getExecutionLogDirectory(), "execution.log");
     }
 
-    public File getExecutionInfoLogFile() {
-        final File file = new File(executionRoot, "log/execution_info.log");
-        file.getParentFile().mkdir();
+    public File getExecutionLogDirectory() {
+        final File file = new File(executionRoot, "log");
+        file.mkdirs();
         return file;
     }
 

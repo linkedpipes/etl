@@ -1,0 +1,363 @@
+swagger: "2.0"
+info:
+  version: 0.0.0
+  title: "LinkedPipes ETL : Storage"
+  description: This document describes the HTTP API of the LinkedPipes ETL Storage component.
+  contact:
+    name: ""
+  license:
+    name: MIT
+basePath: /api/v1
+schemes:
+  - http
+paths:
+  "/jars/file":
+    get:
+      description: Return JAR file of a component.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      description: Create new component.
+      parameters:
+        - name: component
+          in: formData
+          description: Component definition.
+          type: file
+        - name: configuration
+          in: formData
+          description: Component configuration.
+          type: file
+      consumes:
+        - multipart/form-data
+      responses:
+        '200':
+          description: OK
+    delete:
+      description: Delete a component.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+  "/components/list":
+    get:
+      description: List of all pipelines.
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/interface":
+    get:
+      description: Component interface.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/definition":
+    get:
+      description: Component definition.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/component":
+    post:
+      description: Update component definition.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+        - name: component
+          in: body
+          description: Component definition.
+          schema:
+            type: object
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/config":
+    get:
+      description: Configuration as provided by the user.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+    post:
+      description: Set component configuration.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+        - in: body
+          name: configuration
+          description: New configuration.
+          schema:
+            type: object
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/configEffective":
+    get:
+      description: Effective configuration, is configuration the component will used in runtime.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/configTemplate":
+    get:
+      description: Configuration as should be set to a new instance of a component.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/configDescription":
+    get:
+      description: Configuration description.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      produces:
+        - application/ld+json
+      responses:
+        "200":
+          description: OK
+  "/components/dialog":
+    get:
+      description: Configuration description.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+        - name: file
+          in: query
+          description: Name of dialog's file.
+          required: true
+          type: string
+        - name: name
+          in: query
+          description: Name of the dialog.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+  "/components/static":
+    get:
+      description: Configuration description.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+        - name: file
+          in: query
+          description: Name of static file to server.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+  "/components/usage":
+    get:
+      description: Return information about component use in pipelines.
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      responses:
+        "200":
+          description: OK
+  "/pipelines/list":
+    get:
+      description: List of all pipelines.
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      responses:
+        "200":
+          description: OK
+  "/pipelines":
+    get:
+      description: Return a pipeline.
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      parameters:
+        - name: templates
+          in: query
+          description: Include templates definition.
+          required: true
+          type: boolean
+        - name: mappping
+          in: query
+          description: Add component mapping.
+          required: true
+          type: boolean
+      responses:
+        "200":
+          description: OK
+    post:
+      description: Create new pipeline.
+      parameters:
+        - name: options
+          in: formData
+          description: Options used to create a pipeline.
+          type: file
+        - name: pipeline
+          in: formData
+          description: Pipeline definition.
+          type: file
+      consumes:
+        - multipart/form-data
+      responses:
+        '200':
+          description: OK
+    put:
+      description: Update pipeline.
+      parameters:
+        - name: iri
+          in: query
+          description: Pipeline IRI.
+          type: string
+        - name: pipeline
+          in: formData
+          description: Pipeline definition.
+          type: file
+      consumes:
+        - multipart/form-data
+      responses:
+        '200':
+          description: OK
+    delete:
+      description: Delete a pipeline.
+      parameters:
+        - name: iri
+          in: query
+          description: Component IRI.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+  "/pipeline/unpack":
+    post:
+      description: Unpack and return a pipeline definition.
+      parameters:
+        - name: iri
+          in: query
+          description: Pipeline IRI.
+          type: string
+        - name: options
+          in: formData
+          description: Unpacking options.
+          type: file
+        - name: pipeline
+          in: formData
+          description: Pipeline definition.
+          type: file
+      consumes:
+        - multipart/form-data
+      responses:
+        '200':
+          description: OK
+  "/pipeline/localize":
+    post:
+      description: Convert pipeline so it use local IRI and components, ie. prepare pipeline for import.
+      parameters:
+        - name: options
+          in: formData
+          description: Options.
+          type: file
+        - name: pipeline
+          in: formData
+          description: Pipeline definition.
+          type: file
+      consumes:
+        - multipart/form-data
+      responses:
+        '200':
+          description: OK

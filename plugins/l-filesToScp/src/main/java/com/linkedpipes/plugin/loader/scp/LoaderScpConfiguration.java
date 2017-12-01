@@ -15,7 +15,7 @@ public class LoaderScpConfiguration {
     private String host;
 
     @RdfToPojo.Property(iri = LoaderScpVocabulary.HAS_PORT)
-    private int port;
+    private Integer port = null;
 
     @RdfToPojo.Property(iri = LoaderScpVocabulary.HAS_TARGET_DIRECTORY)
     private String targetDirectory;
@@ -53,11 +53,11 @@ public class LoaderScpConfiguration {
         this.host = host;
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 

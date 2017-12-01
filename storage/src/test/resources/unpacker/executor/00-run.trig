@@ -1,0 +1,25 @@
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://localhost/pipeline> {
+
+    <http://localhost/execution> a lp:Pipeline ;
+        lp:executionMetadata <http://localhost/execution/metadata> ;
+		skos:prefLabel "Empty pipeline" ;
+        lp:profile <http://localhost/execution/profile> ;
+        lp:repository <http://localhost/repository/sesame> .
+
+    <http://localhost/execution/profile>
+        lp:rdfRepositoryPolicy <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+        lp:rdfRepositoryType <http://linkedpipes.com/ontology/repository/NativeStore> .
+
+    <http://localhost/execution/metadata> a lp:ExecutionMetadata ;
+        lp:deleteWorkingData true ;
+        lp:saveDebugData false ;
+        lp:logPolicy <http://linkedpipes.com/ontology/log/Preserve> ;
+        <http://linkedpipes.com/ontology/execution/type> <http://linkedpipes.com/resources/executionType/Full> .
+
+    <http://localhost/repository/sesame> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository> ;
+        lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> .
+
+}

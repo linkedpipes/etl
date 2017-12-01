@@ -3,6 +3,7 @@ package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 import com.linkedpipes.etl.test.TestEnvironment;
 import com.linkedpipes.etl.test.TestUtils;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +18,11 @@ public class DcatAp11ToCkanTest {
         component.configuration = new DcatAp11ToCkanConfiguration();
         component.configuration.setApiUri("");
         component.configuration.setApiKey("");
+        component.configuration.setCkanOrganization("");
         component.configuration.setLoadLanguage("cs");
         component.configuration.setDatasetID("test9999");
         component.configuration.setProfile("http://plugins.etl.linkedpipes.com/resource/l-DcatAp11ToCkan/profiles/CKAN");
+        component.configuration.setOverrideCkanOrganization(false);
 
         try (final TestEnvironment env = TestEnvironment
                 .create(component, TestUtils

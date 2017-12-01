@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker;
 
-import com.linkedpipes.etl.storage.rdf.PojoLoader;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -13,31 +13,27 @@ import java.util.List;
 /**
  * Describe options that can be used to modify pipeline unpacking.
  */
-class UnpackOptions implements PojoLoader.Loadable {
+class UnpackOptions implements Loadable {
 
-    public static final IRI TYPE;
+    public static final String TYPE =
+            "http://etl.linkedpipes.com/ontology/ExecutionOptions";
 
-    static {
-        final ValueFactory fv = SimpleValueFactory.getInstance();
-        TYPE = fv.createIRI(
-                "http://etl.linkedpipes.com/ontology/ExecutionOptions");
-    }
-
-    public static class ComponentMapping implements PojoLoader.Loadable {
+    public static class ComponentMapping
+            implements Loadable {
 
         private String source;
 
         private String target;
 
         @Override
-        public PojoLoader.Loadable load(String predicate, Value value)
-                throws PojoLoader.CantLoadException {
+        public Loadable load(String predicate, RdfValue value)
+                throws RdfUtilsException {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/mappingSource":
-                    source = value.stringValue();
+                    source = value.asString();
                     break;
                 case "http://etl.linkedpipes.com/ontology/mappingTarget":
-                    target = value.stringValue();
+                    target = value.asString();
                     break;
             }
             return null;
@@ -52,18 +48,19 @@ class UnpackOptions implements PojoLoader.Loadable {
         }
     }
 
-    public static class ExecutionMapping implements PojoLoader.Loadable {
+    public static class ExecutionMapping
+            implements Loadable {
 
         private String execution;
 
         private final List<ComponentMapping> components = new LinkedList<>();
 
         @Override
-        public PojoLoader.Loadable load(String predicate, Value value)
-                throws PojoLoader.CantLoadException {
+        public Loadable load(String predicate, RdfValue value)
+                throws RdfUtilsException {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/execution":
-                    execution = value.stringValue();
+                    execution = value.asString();
                     return null;
                 case "http://etl.linkedpipes.com/ontology/mapping":
                     final ComponentMapping mapping = new ComponentMapping();
@@ -72,6 +69,7 @@ class UnpackOptions implements PojoLoader.Loadable {
                 default:
                     return null;
             }
+
         }
 
         public String getExecution() {
@@ -91,24 +89,32 @@ class UnpackOptions implements PojoLoader.Loadable {
 
     private boolean deleteWorkingDirectory = false;
 
+    private String executionIri;
+
+    private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
+
     @Override
-    public PojoLoader.Loadable load(String predicate, Value value)
-            throws PojoLoader.CantLoadException {
+    public Loadable load(String predicate, RdfValue value)
+            throws RdfUtilsException {
         switch (predicate) {
             case "http://etl.linkedpipes.com/ontology/runTo":
-                runToComponent = value.stringValue();
+                runToComponent = value.asString();
                 return null;
             case "http://etl.linkedpipes.com/ontology/executionMapping":
                 final ExecutionMapping mapping = new ExecutionMapping();
                 executionMapping.add(mapping);
                 return mapping;
             case "http://linkedpipes.com/ontology/saveDebugData":
-                saveDebugData = "true".equals(
-                        value.stringValue().toLowerCase());
+                saveDebugData = value.asBoolean();
                 return null;
             case "http://linkedpipes.com/ontology/deleteWorkingData":
-                deleteWorkingDirectory = "true".equals(
-                        value.stringValue().toLowerCase());
+                deleteWorkingDirectory = value.asBoolean();
+                return null;
+            case LP_EXEC.HAS_EXECUTION:
+                executionIri = value.asString();
+                return null;
+            case LP_PIPELINE.HAS_LOG_POLICY:
+                logPolicy = value.asString();
                 return null;
             default:
                 return null;
@@ -130,4 +136,13 @@ class UnpackOptions implements PojoLoader.Loadable {
     public boolean isDeleteWorkingDirectory() {
         return deleteWorkingDirectory;
     }
+
+    public String getExecutionIri() {
+        return executionIri;
+    }
+
+    public String getLogPolicy() {
+        return logPolicy;
+    }
+
 }

@@ -148,7 +148,7 @@ define([
             boundingBox.y += canvasPosition.f;
             //
             boundingBox.x += -8;
-            boundingBox.y += -8;
+            boundingBox.y += -8 + 110;
             boundingBox.width += 26;
             boundingBox.height += 18;
             this.$el.css({

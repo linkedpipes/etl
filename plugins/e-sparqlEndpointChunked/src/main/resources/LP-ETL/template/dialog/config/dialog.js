@@ -12,6 +12,10 @@ define([], function () {
             "$type" : "str",
             "$label" : "Endpoint URL"
         },
+        "skipOnError" : {
+            "$type" : "bool",
+            "$label" : "Skip on error"
+        },
         "endpoint" : {
             "$type" : "str",
             "$label" : "SPARQL CONSTRUCT query"
@@ -28,8 +32,44 @@ define([], function () {
         "chunkSize" : {
             "$type" : "int",
             "$label" : "Chunk size"
+        },
+        "encodeRdf": {
+            "$type": "bool",
+            "$label": "Encode RDF"
+        },
+        "useAuthentication": {
+            "$type": "bool",
+            "$label": "Use authentication"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Password"
         }
     };
+
+    const MIME_TYPES = [
+        "application/rdf+xml",
+        "application/xml",
+        "application/n-triples",
+        "application/trix",
+        "application/trig",
+        "application/n-quads",
+        "application/ld+json",
+        "application/rdf+json",
+        "application/xhtml+xml",
+        "application/html",
+        "text/xml",
+        "text/n3",
+        "text/plain",
+        "text/turtle",
+        "text/rdf+n3",
+        "text/nquads",
+        "text/html"
+    ];
 
     function controller($scope, $service) {
 
@@ -37,11 +77,22 @@ define([], function () {
             $scope.dialog = {};
         }
 
+        DESC.defaultGraph["$onSave"] = $service.v1.fnc.removeEmptyIri;
+
         const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 
         $service.onStore = function () {
             dialogManager.save();
         };
+
+        $scope.getMimeTypes = function (query) {
+            return query ? MIME_TYPES.filter(createFilter(query)) : MIME_TYPES;
+        };
+
+        function createFilter(query) {
+            query = angular.lowercase(query);
+            return (item) => (item.indexOf(query) !== -1);
+        }
 
         dialogManager.load();
 

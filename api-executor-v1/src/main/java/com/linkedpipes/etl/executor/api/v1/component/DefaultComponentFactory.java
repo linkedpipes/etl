@@ -2,9 +2,7 @@ package com.linkedpipes.etl.executor.api.v1.component;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.DefaultServiceFactory;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.wiring.BundleRevision;
@@ -54,12 +52,6 @@ public class DefaultComponentFactory implements ComponentFactory {
         }
         // Load information about the component.
         final ComponentInfo componentInfo = new ComponentInfo(component, graph);
-        try {
-            RdfUtils.load(definition, componentInfo, component, graph,
-                    String.class);
-        } catch (RdfUtilsException ex) {
-            throw new LpException("Can't load component information.", ex);
-        }
         // Create abd return a wrap.
         if (SequentialExecution.class.isAssignableFrom(instance.getClass())) {
             return new SequentialWrap((SequentialExecution) instance,

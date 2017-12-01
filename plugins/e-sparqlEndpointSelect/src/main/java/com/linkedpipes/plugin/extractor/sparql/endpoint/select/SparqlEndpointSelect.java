@@ -6,6 +6,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -80,6 +86,7 @@ public final class SparqlEndpointSelect implements Component,
         } catch (OpenRDFException ex) {
             throw exceptionFactory.failure("Can't connect to endpoint.", ex);
         }
+        repository.setHttpClient(getHttpClient());
         //
         final File outputFile = outputFiles.createFile(
                 configuration.getFileName());
@@ -120,6 +127,19 @@ public final class SparqlEndpointSelect implements Component,
                 throw exceptionFactory.failure("Can't save data.", ex);
             }
         }
+    }
+
+    private CloseableHttpClient getHttpClient() {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (configuration.isUseAuthentication()) {
+            provider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            configuration.getUsername(),
+                            configuration.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(provider).build();
     }
 
 }

@@ -20,93 +20,83 @@ define([
     /**
      * Definition of a component JointJs shape.
      */
-    var ComponenModel = joint.shapes.basic.Generic.extend(_.extend({},
-            joint.shapes.basic.PortsModelInterface, {
-                'markup': '<g class="rotatable"><g class="scalable">\
-                           <rect class="body"/></g>\
-                           <text class="label"/>\
-                           <g class="inPorts"/><g class="outPorts"/></g>',
-                'portMarkup': '<g class="port port<%= id %>">\
-                               <circle class="port-body"/>\
-                               <text class="port-label"/></g>',
-                'defaults': joint.util.deepSupplement({
-                    'type': 'devs.Model',
-                    'size': {'width': 1, 'height': 1},
-                    'inPorts': [],
-                    'outPorts': [],
-                    'attrs': {
-                        '.': {'magnet': false},
-                        '.body': {
-                            'width': 150, 'height': 250,
-                            'stroke': 'black',
-                            'stroke-width': 1
-                        },
-                        '.port-body': {
-                            'r': 10,
-                            'magnet': true,
-                            'stroke': '#000000'
-                        },
-                        'text': {
-                            'pointer-events': 'none'
-                        },
-                        '.label': {
-                            'text': 'Model',
-                            'ref-x': .5,
-                            'ref-y': 10,
-                            'ref': '.body',
-                            'text-anchor': 'middle',
-                            'fill': '#000000'
-                        },
-                        '.inPorts .port-label': {
-                            'x': -15,
-                            'dy': 4,
-                            'text-anchor': 'end',
-                            'fill': '#000000'
-                        },
-                        '.outPorts .port-label': {
-                            'x': 15,
-                            'dy': 4,
-                            'fill': '#000000'
-                        }
-                    }
-
+    var ComponenModel = joint.shapes.basic.Generic.extend({
+        'markup': '<g class="rotatable"><g class="scalable"><rect class="body"/></g><text class="label"/></g>',
+        'portMarkup': '<circle class="port-body"/>',
+        'portLabelMarkup': '<text class="port-label"/>',
+        'portContainerMarkup': '<g class="joint-port"/>',
+        'defaults': joint.util.deepSupplement({
+            'type': 'component.Model',
+            'inPorts': [],
+            'outPorts': [],
+            'size': {'width': 1, 'height': 1},
+            'attrs': {
+                '.': {
+                    'magnet': false
                 },
-                        joint.shapes.basic.Generic.prototype.defaults),
-                'getPortAttrs': function (portName, index, total, selector, type) {
-                    var port = this.attributes.portsData[portName];
-                    var portClass = 'port' + index;
-                    var portSelector = selector + '>.' + portClass;
-                    var portLabelSelector = portSelector + '>.port-label';
-                    var portBodySelector = portSelector + '>.port-body';
-                    var attrs = {};
-                    attrs[portLabelSelector] = {
-                        'text': port['useLabel'] ? port['label'] : ''
-                    };
-                    attrs[portBodySelector] = {
-                        'port': {
-                            'id': portName,
-                            'type': type
-                        }
-                    };
-                    attrs[portSelector] = {
-                        'ref': '.body',
-                        'ref-y': (index + 0.5) * (1 / total),
-                        'fill': port['color']
-                    };
-                    if (selector === '.outPorts') {
-                        attrs[portSelector]['ref-dx'] = 0;
-                    }
-                    return attrs;
+                '.body': {
+                    'width': 150, 'height': 250,
+                    'stroke': 'black',
+                    'stroke-width': 1
+                },
+                '.port-body': {
+                    'r': 10,
+                    'magnet': true,
+                    'stroke': '#000000'
+                },
+                'text': {
+                    'pointer-events': 'none'
+                },
+                '.label': {
+                    'text': 'Model',
+                    'ref-x': .5,
+                    'ref-y': 10,
+                    'ref': '.body',
+                    'text-anchor': 'middle',
+                    'fill': '#000000'
                 }
-            }));
+            },
+            "ports": {
+                'groups': {
+                    // TODO Introduce groups for different input types. We need to fix problem with overlapping ports.
+                    'input': {
+                        'position': { 'name': 'left' },
+                        'attrs': {
+                            '.port-label': { 'fill': '#000000' },
+                            '.port-body': {
+                                'fill': '#CCFFCC',
+                                'stroke': '#000000',
+                                'r': 10,
+                                'magnet': 'passive'
+                            }
+                        },
+                        'label': {
+                            'position': {'name': 'left'}
+                        }
+                    },
+                    'output': {
+                        'position': {'name': 'right'},
+                        'attrs': {
+                            '.port-label': {'fill': '#000000'},
+                            '.port-body': {
+                                'fill': '#FFFFCC',
+                                'stroke': '#000000',
+                                'r': 10,
+                                'magnet': true
+                            }
+                        },
+                        'label': {
+                            'position': { 'name': 'right' }
+                        }
+                    }
+                }
+            }
+        }, joint.shapes.basic.Generic.prototype.defaults)
+    });
 
     function validateConnection(cellS, magnetS, cellT, magnetT, end, linkView) {
         // Return false for run after edges.
         if (linkView.model.attributes.edgeType === 'run_after') {
-            return false;
-        }
-        // Prevent linking from input ports.
-        if (!magnetS || magnetS.getAttribute('type') === 'input') {
             return false;
         }
         // Prevent linking from output ports to input ports
@@ -115,7 +105,7 @@ define([
             return false;
         }
         // Only link to target elements.
-        if (!magnetT || magnetT.getAttribute('type') !== 'input') {
+        if (!magnetT || magnetT.getAttribute('port-group') === 'output') {
             return false;
         }
         // Check for type - this can be slow, we may wan't to
@@ -132,52 +122,71 @@ define([
      * saved to the template and returned.
      */
     function createPorts(template) {
+        // TODO Emphasize utilization of caching, does this really help?
         if (template['_ports'] !== undefined) {
             return template['_ports'];
         }
-        var inPorts = [];
-        var outPorts = [];
-        var portsData = {};
-        // Use labels only if there is more than one data unit.
+
+        const ports = [];
+        const portsData = {};
+
         if (template['inputs'] !== undefined) {
             template['inputs'].forEach(function (port) {
-                var color;
-                var useLabel;
+                let type;
+                let color;
+                let useLabel;
                 if (port.isRuntimeConfiguration) {
-                    color = '#FFAAFF';
+                    type = "input";
+                    color = "#FFAAFF";
                     useLabel = template.isDisplayLabels.runtimeConfiguration;
                 } else if (port.isTaskList) {
-                    color = '#CCCCFF';
+                    type = "input";
+                    color = "#CCCCFF";
                     useLabel = template.isDisplayLabels.taskList;
                 } else {
-                    color = '#CCFFCC';
+                    type = "input";
+                    color = "#CCFFCC";
                     useLabel = template.isDisplayLabels.dataInput;
                 }
                 portsData[port['binding']] = {
-                    'binding': port['binding'],
-                    'label': port['label'],
-                    'dataType': port['content'],
-                    'useLabel': useLabel,
-                    'color': color
+                    'dataType': port['content']
                 };
-                inPorts.push(port['binding']);
+                ports.push({
+                    'id': port['binding'],
+                    'group' : type,
+                    'attrs': {
+                        '.port-body': {
+                            'fill': color
+                        },
+                        '.port-label': {
+                            'text': useLabel ? port['label'] : undefined
+                        }
+                    }
+                });
             });
         }
+
         if (template['outputs'] !== undefined) {
+            const useLabel = template['outputs'].length > 1;
             template['outputs'].forEach(function (port) {
                 portsData[port['binding']] = {
-                    'binding': port['binding'],
-                    'label': port['label'],
-                    'dataType': port['content'],
-                    'useLabel': template['outputs'].length > 1
+                    'dataType': port['content']
                 };
-                outPorts.push(port['binding']);
+                ports.push({
+                    'id': port['binding'],
+                    'group' : 'output',
+                    'attrs': {
+                        '.port-label': {
+                            'text': useLabel ? port['label'] : undefined
+                        }
+                    }
+                });
             });
         }
+
         template['_ports'] = {
-            'in': inPorts,
-            'out': outPorts,
-            'data': portsData
+            "items": ports,
+            "data": portsData
         };
         return template['_ports'];
     }
@@ -217,23 +226,19 @@ define([
             return;
         }
         var ports = createPorts(this.templates.getCoreTemplate(template));
+
         var cell = new ComponenModel({
             'position': {
                 'x': componentService.getX(component),
                 'y': componentService.getY(component)
             },
-            'inPorts': ports['in'],
-            'outPorts': ports['out'],
-            'portsData': ports['data'],
-            'attrs': {
-                '.inPorts circle': {
-                    'magnet': 'passive',
-                    'type': 'input'},
-                '.outPorts circle': {
-                    'fill': '#FFFFCC',
-                    'type': 'output'}
+            // TODO Replace with a reference to the template.
+            'portsData' : ports['data'],
+            'ports': {
+                'items': ports['items']
             }
         });
+
         service.updateComponent(cell, component, template, componentService);
 
         // TODO Document this (ID assignment )
@@ -305,20 +310,19 @@ define([
                 'text': label,
                 'ref-y': '50%',
                 'y-alignment': 'middle',
-                'x-alignment': 'left'
             });
         } else {
             cell.attr('.label', {
                 'text': label,
                 'ref-y': '20%',
-                'y-alignment': 'bottom',
-                'x-alignment': 'left'
+                'y-alignment': 'top'
             });
         }
         // Calculate size.
         var portCount = Math.max(
-                cell.attributes.inPorts.length,
-                cell.attributes.outPorts.length, 1);
+                template['inputs'] ? template['inputs'].length : 0,
+                template['outputs'] ? template['outputs'].length : 0,
+                1);
         var labelSplit = label.split('\n');
         var height = Math.max(portCount * 25 + 10, labelSplit.length * 23);
         /**
@@ -411,7 +415,6 @@ define([
             vertices) {
         var sourceId = this.getCell(source['@id']).id;
         var targetId = this.getCell(target['@id']).id;
-        console.log(source, sourceId, target, targetId);
         var cell = this.createLink(
                 sourceId, sourcePort,
                 targetId, targetPort,

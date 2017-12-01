@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-chunkSplitter/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-chunkSplitter#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-chunkSplitter/0.0.0/configuration/desc/type> ,
+        <http://linkedpipes.com/resources/components/t-chunkSplitter/0.0.0/configuration/desc/incomingLevelDepth> .
+
+<http://linkedpipes.com/resources/components/t-chunkSplitter/0.0.0/configuration/desc/type>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-chunkSplitter#type> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-chunkSplitter#typeControl> .
+
+<http://linkedpipes.com/resources/components/t-chunkSplitter/0.0.0/configuration/desc/incomingLevelDepth>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-chunkSplitter#incomingLevelDepth> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-chunkSplitter#incomingLevelDepthControl> .

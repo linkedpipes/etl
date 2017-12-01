@@ -13,9 +13,12 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+// TODO Add test where the instance configuration does not contains Configuration class.
+// TODO Replace with function from RdfUtils module (EntityMerger).
 public class ConfigurationFacade {
 
     static final String NONE =
@@ -177,7 +180,7 @@ public class ConfigurationFacade {
      */
     private static ConfigDescription loadDescription(
             Collection<Statement> descriptionRdf) throws BaseException {
-        final ConfigDescription description = new ConfigDescription();
+        ConfigDescription description = new ConfigDescription();
         PojoLoader.loadOfType(descriptionRdf, ConfigDescription.TYPE,
                 description);
         if (description.getType() == null) {
@@ -241,6 +244,137 @@ public class ConfigurationFacade {
                         childrenValue, true);
                 parent.setIri(member.getControl(), NONE);
                 break;
+        }
+    }
+
+    /**
+     * Designed to be used to merge configuration from instance to templates.
+     */
+    public static Collection<Statement> mergeFromBottom(
+            Collection<Statement> templateRdf,
+            Collection<Statement> instanceRdf,
+            Collection<Statement> descriptionRdf,
+            String baseIri, IRI graph) throws BaseException {
+        ConfigDescription description = loadDescription(descriptionRdf);
+        Model templateModel = Model.create(templateRdf);
+        Model.Entity templateConfiguration = templateModel.select(
+                null, RDF.TYPE, description.getType()).single();
+        if (templateConfiguration == null) {
+            LOG.warn("Skipping configuration due to missing " +
+                            "configuration entity for: {}",
+                    description.getType());
+            return createCopy(instanceRdf, graph);
+        }
+        // Create instance of current configuration.
+        Model instanceModel = Model.create(instanceRdf);
+        Model.Entity instanceConfiguration = instanceModel.select(null,
+                RDF.TYPE, description.getType()).single();
+        if (instanceConfiguration == null) {
+            LOG.warn("Skipping configuration due to missing " +
+                    "configuration entity.");
+            return createCopy(templateRdf, graph);
+        }
+        // Handle global control.
+        {
+            String templateControl = null;
+            if (description.getControl() != null) {
+                templateControl = templateConfiguration.getPropertyAsStr(
+                        description.getControl());
+            }
+            // Check control.
+            if (INHERIT.equals(templateControl)) {
+                // The configuration of the template is inherited from
+                // another level of template. So we skip merging
+                // with this level of template.
+                return createCopy(instanceRdf, graph);
+            }
+            if (INHERIT_AND_FORCE.equals(templateControl)) {
+                // We need to load configuration from another level of template.
+                return Collections.emptyList();
+            }
+            if (FORCE.equals(templateControl)) {
+                return createCopy(templateRdf, graph);
+            }
+            String instanceControl = null;
+            if (description.getControl() != null) {
+                instanceControl = instanceConfiguration.getPropertyAsStr(
+                        description.getControl());
+            }
+            if (INHERIT.equals(instanceControl) ||
+                    INHERIT_AND_FORCE.equals(instanceControl)) {
+                // Instance inherit from parent.
+                return createCopy(templateRdf, graph);
+            }
+        }
+        // Merge child and template.
+        if (description.getMembers().isEmpty()) {
+            // We use the child's configuration.
+            return createCopy(instanceRdf, graph);
+        } else {
+            for (ConfigDescription.Member member : description.getMembers()) {
+                mergeFromBottom(member, templateConfiguration,
+                        instanceConfiguration);
+            }
+        }
+        //
+        instanceModel.updateResources(baseIri);
+        return instanceModel.asStatements(instanceConfiguration, graph);
+    }
+
+    private static Collection<Statement> createCopy(Collection<Statement> data,
+            IRI graph) {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        Collection<Statement> output = new ArrayList<>(data.size());
+        for (Statement statement : data) {
+            output.add(valueFactory.createStatement(
+                    statement.getSubject(),
+                    statement.getPredicate(),
+                    statement.getObject(),
+                    graph
+            ));
+        }
+        return output;
+    }
+
+    /**
+     * Merge member into !instance!.
+     */
+    private static void mergeFromBottom(ConfigDescription.Member member,
+            Model.Entity template, Model.Entity instance) {
+        // First check if template does not force values to instance.
+        String templateControl = template.getPropertyAsStr(member.getControl());
+        Value templateValue = template.getProperty(member.getProperty());
+        if (FORCE.equals(templateControl)) {
+            instance.replace(member.getProperty(), instance, templateValue,
+                    true);
+            instance.setIri(member.getControl(), FORCED);
+            return;
+        }
+        if (INHERIT_AND_FORCE.equals(templateControl)) {
+            // Remove value - the value will be load from next level template.
+            template.replace(member.getProperty(), instance,  null, false);
+            template.setIri(member.getControl(), FORCED);
+            return;
+        }
+        // If the value is missing we need to load if from a template.
+        // This can happen if the instance has INHERIT_AND_FORCE control.
+        Value instanceValue = instance.getProperty(member.getProperty());
+        if (instanceValue == null) {
+            instance.replace(member.getProperty(), instance, templateValue,
+                    true);
+            return;
+        }
+        // Instance can also inherit on demand.
+        String instanceControl = instance.getPropertyAsStr(member.getControl());
+        if (INHERIT.equals(instanceControl)) {
+            instance.replace(member.getProperty(), instance, templateValue,
+                    true);
+            instance.setIri(member.getControl(), NONE);
+        }
+        // In every other case we keep value from the instance, so just check
+        // the control.
+        if (instanceControl == null) {
+            instance.setIri(member.getControl(), NONE);
         }
     }
 

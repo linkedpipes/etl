@@ -349,6 +349,9 @@ public class Model {
         toOutput.forEach((entity) -> {
             entity.properties.entrySet().forEach((entry) -> {
                 entry.getValue().forEach((value) -> {
+                    if (value == null) {
+                        return;
+                    }
                     statements.add(vf.createStatement(entity.resource,
                             entry.getKey(), value, graph
                     ));

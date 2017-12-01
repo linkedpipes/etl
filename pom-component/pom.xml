@@ -9,14 +9,12 @@
     <description>Base POM for LinkedPipes ETL components.</description>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>
             UTF-8
         </project.reporting.outputEncoding>
         <!-- Libraries. -->
-        <rdf4j.version>2.2</rdf4j.version>
+        <rdf4j.version>2.2.1</rdf4j.version>
         <lp.version>0.0.0</lp.version>
     </properties>
 
@@ -75,13 +73,13 @@
             <dependency>
                 <groupId>commons-net</groupId>
                 <artifactId>commons-net</artifactId>
-                <version>3.5</version>
+                <version>3.6</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient-osgi</artifactId>
-                <version>4.4.1</version>
+                <version>4.5.2</version>
                 <scope>provided</scope>
             </dependency>
             <!-- Test libraries. -->
@@ -100,13 +98,36 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <profile>
+            <id>java-8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>1.8</maven.compiler.source>
+                <maven.compiler.target>1.8</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>java-9</id>
+            <activation>
+                <jdk>9</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>1.9</maven.compiler.source>
+                <maven.compiler.target>1.9</maven.compiler.target>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.5.4</version>
+                    <version>3.3.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>

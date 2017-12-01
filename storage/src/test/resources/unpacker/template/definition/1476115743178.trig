@@ -1,0 +1,10 @@
+@prefix lp: <http://linkedpipes.com/ontology/> .
+
+<http://localhost:8080/resources/components/1476115743178/0.0.0> {
+
+	<http://localhost:8080/resources/components/1476115743178/0.0.0> a <http://linkedpipes.com/ontology/Template> ;
+		lp:template <http://etl.linkedpipes.com/resources/components/1476168977169/0.0.0> ;
+		lp:configurationGraph <http://localhost:8080/resources/components/1476115743178/configuration>;
+        lp:configurationDescription <http://localhost:8080/resources/components/1476115743178/configuration/desc> .
+
+}

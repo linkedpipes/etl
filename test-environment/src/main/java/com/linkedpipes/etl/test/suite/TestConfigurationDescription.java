@@ -3,10 +3,10 @@ package com.linkedpipes.etl.test.suite;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.pojo.RdfLoader;
+import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.test.TestUtils;
 import org.eclipse.rdf4j.model.IRI;
@@ -55,16 +55,16 @@ public class TestConfigurationDescription {
 
     private void loadDescriptions() throws IOException, RdfUtilsException,
             InvalidDescription {
-        final Rdf4jSource source = Rdf4jSource.createInMemory();
+        final ClosableRdf4jSource source = Rdf4jSource.createInMemory();
         loadToRepository(getDescriptorFile(), source.getRepository());
         for (String resource : getDescriptionResources(source)) {
             final ConfigurationDescription instance =
                     new ConfigurationDescription(resource);
-            RdfLoader.load(source, instance, resource, GRAPH, String.class);
+            RdfUtils.load(source,  resource, GRAPH, instance);
             instance.validate();
             descriptions.add(instance);
         }
-        source.shutdown();
+        source.close();
     }
 
     private File getDescriptorFile() {

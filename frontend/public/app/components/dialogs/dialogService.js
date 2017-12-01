@@ -129,7 +129,23 @@ define([
                 "manager": (description, dialog) => {
                     return dialogManager(service, description, dialog);
                 },
-                "jsonld": jsonld
+                "jsonld": jsonld,
+                "fnc": {
+                    "removeEmptyIri" : function(values) {
+                        if (values === undefined) {
+                            return [];
+                        }
+                        const output = [];
+                        values.forEach((item) => {
+                            const iri = item["@id"];
+                            if (iri === undefined || iri === "") {
+                                return;
+                            }
+                            output.push({"@id" : iri});
+                        });
+                        return output;
+                    }
+                }
             };
 
             // API used by host to manage this service.

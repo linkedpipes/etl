@@ -1,0 +1,28 @@
+<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.chunk_size.hide">
+        <label>Chunk size in MB</label>
+        <input ng-model="dialog.chunk_size.value"
+               ng-disabled="dialog.chunk_size.disabled || dialog.chunk_size.inherit"
+               type="number" min="1">
+    </md-input-container>
+    <div ng-hide="dialog.reference.disabled || dialog.reference.inherit || dialog.reference.hide">
+        Nodes for which the data shouldn't be split<br/>
+        <section style="margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.reference.value">
+            <md-input-container class="md-block" flex>
+                <label>Node namespace URI</label>
+                <input ng-model="item.prefix.value">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>Node local name</label>
+                <input ng-model="item.local.value">
+            </md-input-container>
+            <button ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                <md-icon md-svg-icon="clear" class="lp-icon"></md-icon>
+            </button>
+        </section>
+        <button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple">
+            <md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon>
+        </button>
+    </div>
+</div>

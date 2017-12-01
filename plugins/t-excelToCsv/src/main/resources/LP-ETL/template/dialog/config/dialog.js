@@ -18,19 +18,27 @@ define([], function () {
         },
         "rowStart": {
             "$type": "int",
-            "$label": "Row start"
+            "$label": "Row start",
+            "$onLoad": increase,
+            "$onSave": decrease
         },
         "rowEnd": {
             "$type": "int",
-            "$label": "Row end"
+            "$label": "Row end",
+            "$onLoad": increase,
+            "$onSave": decrease
         },
         "columnStart": {
             "$type": "int",
-            "$label": "Column start"
+            "$label": "Column start",
+            "$onLoad": increase,
+            "$onSave": decrease
         },
         "columnEnd": {
             "$type": "int",
-            "$label": "Column end"
+            "$label": "Column end",
+            "$onLoad": increase,
+            "$onSave": decrease
         },
         "header": {
             "$type": "bool",
@@ -53,6 +61,22 @@ define([], function () {
             "$label": "Evaluate formulas"
         }
     };
+
+    function increase(value) {
+        if (value === undefined || value === null) {
+            return undefined;
+        } else {
+            return value + 1;
+        }
+    }
+
+    function decrease(value) {
+        if (value === undefined || value === null) {
+            return undefined;
+        } else {
+            return value - 1;
+        }
+    }
 
     function controller($scope, $service) {
 

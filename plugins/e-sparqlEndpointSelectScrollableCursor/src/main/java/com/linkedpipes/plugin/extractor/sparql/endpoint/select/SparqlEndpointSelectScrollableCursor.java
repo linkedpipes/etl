@@ -6,6 +6,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
@@ -103,9 +109,10 @@ public final class SparqlEndpointSelectScrollableCursor
 
     @Override
     public void execute() throws LpException {
-        final Repository repository = new SPARQLRepository(
+        SPARQLRepository repository = new SPARQLRepository(
                 configuration.getEndpoint());
         repository.initialize();
+        repository.setHttpClient(getHttpClient());
         //
         LOG.info("Used query: {}", prepareQuery(0));
         final File outputFile = outputFiles.createFile(
@@ -176,6 +183,19 @@ public final class SparqlEndpointSelectScrollableCursor
                 "\n} }" +
                 "\nLIMIT " + Integer.toString(configuration.getPageSize()) +
                 "\nOFFSET " + Integer.toString(offset);
+    }
+
+    private CloseableHttpClient getHttpClient() {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (configuration.isUseAuthentication()) {
+            provider.setCredentials(
+                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                    new UsernamePasswordCredentials(
+                            configuration.getUsername(),
+                            configuration.getPassword()));
+        }
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(provider).build();
     }
 
 }

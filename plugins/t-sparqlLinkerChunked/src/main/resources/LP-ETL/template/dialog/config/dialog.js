@@ -11,8 +11,21 @@ define([], function () {
         "query": {
             "$type": "str",
             "$label": "SPARQL CONSTRUCT query"
+        },
+        "outputMode": {
+            "$type": "iri",
+            "$label": "Output mode",
+            "$onLoad": defaultOutputMode
         }
     };
+
+    function defaultOutputMode(value) {
+        if (value === undefined) {
+           return DESC["$namespace"] + "createNewChunk";
+        } else {
+            return value;
+        }
+    }
 
     function controller($scope, $service) {
 

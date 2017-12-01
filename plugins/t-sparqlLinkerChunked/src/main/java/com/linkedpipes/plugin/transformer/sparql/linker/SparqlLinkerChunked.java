@@ -82,6 +82,12 @@ public final class SparqlLinkerChunked implements Component,
             }, referenceRdf.getReadGraph());
         });
         //
+        boolean isAddToChunk = SparqlConstructVocabulary.ADD_TO_CHUNK.equals(
+                configuration.getOutputMode());
+
+        LOG.info("Output mode (add to chunk: {}) : {}", isAddToChunk,
+                configuration.getOutputMode());
+
         for (ChunkedTriples.Chunk data : dataRdf) {
             LOG.info("processing ..");
             // Prepare repository and load data.
@@ -104,6 +110,9 @@ public final class SparqlLinkerChunked implements Component,
                     outputBuffer.add(result.next());
                 }
             });
+            if (isAddToChunk) {
+                outputBuffer.addAll(statements);
+            }
             outputRdf.submit(outputBuffer);
             LOG.info("\tcleanup ..");
             // Cleanup.
@@ -114,5 +123,6 @@ public final class SparqlLinkerChunked implements Component,
         }
         progressReport.done();
     }
+
 
 }

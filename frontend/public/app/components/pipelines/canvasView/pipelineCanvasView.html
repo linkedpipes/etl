@@ -1,9 +1,10 @@
 <div flex layout="column">
     <md-content style="width:100%;" layout="row" layout-align="space-around center">
         <div flex layout-padding style="padding-top: 4px;padding-bottom: 4px">
-            <div style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align: left;">
+            <md-button style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align:left;width:100%;margin:0px;line-height:normal;text-transform: none;"
+                       ng-click="onPipelineDetail($event)">
                 {{data.pipelineLabel}}
-            </div>
+            </md-button>
         </div>
         <md-menu style="padding-top: 4px;padding-bottom: 4px">
             <md-button class="md-icon-button" ng-click="onOpenMenu($mdOpenMenu, $event)">
@@ -34,12 +35,17 @@
                 </md-menu-item>
                 <md-menu-item>
                     <md-button ng-click="onDownload()">
-                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Save and download
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
-                    <md-button ng-click="onDowloadNoCredentials($event)">
-                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download without credentials
+                    <md-button ng-click="onDownloadNoCredentials($event)">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Save and download without credentials
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onBackupDownload()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download backup (without templates)
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>

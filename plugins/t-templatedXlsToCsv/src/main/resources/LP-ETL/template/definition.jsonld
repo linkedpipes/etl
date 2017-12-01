@@ -1,57 +1,67 @@
 [
-     {
-         "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0",
-         "@type": "http://linkedpipes.com/ontology/JarTemplate",
-         "http://www.w3.org/2004/02/skos/core#prefLabel": "Templated XLS to CSV",
-         "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/t-templatedXlsToCsv/0.0.0"},
-         "http://linkedpipes.com/ontology/color": "#CED8F6",
-         "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Transformer"},
-         "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
-         "http://linkedpipes.com/ontology/supportControl" : true,
-         "http://linkedpipes.com/ontology/port": [
-             {"@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/output"},
-             {"@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/data"},
-             {"@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/templates"}
-         ],
-         "http://linkedpipes.com/ontology/keyword": [
-             "xls", "csv", "template"
-         ],
-         "http://linkedpipes.com/ontology/infoLink": {"@id" : "http://etl.linkedpipes.com/components/t-templatedxlstocsv"},
-         "http://linkedpipes.com/ontology/configurationDescription": [
-             {"@id": "http://linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/configuration/desc"}
-         ]
-     },
-     {
-         "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/data",
-         "http://www.w3.org/2004/02/skos/core#prefLabel": "Data",
-         "@type": [
-             "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
-             "http://linkedpipes.com/ontology/Port",
-             "http://linkedpipes.com/ontology/Input"
-         ],
-         "http://linkedpipes.com/ontology/binding": "Xls",
-         "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
-     },
-     {
-         "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/templates",
-         "http://www.w3.org/2004/02/skos/core#prefLabel": "Templates",
-         "@type": [
-             "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
-             "http://linkedpipes.com/ontology/Port",
-             "http://linkedpipes.com/ontology/Input"
-         ],
-         "http://linkedpipes.com/ontology/binding": "Templates",
-         "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
-     },
-     {
-         "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/output",
-         "http://www.w3.org/2004/02/skos/core#prefLabel": "Output",
-         "@type": [
-             "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
-             "http://linkedpipes.com/ontology/Port",
-             "http://linkedpipes.com/ontology/Output"
-         ],
-         "http://linkedpipes.com/ontology/binding": "Output",
-         "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
-     }
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0",
+        "@type": "http://linkedpipes.com/ontology/JarTemplate",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Templated XLS to CSV",
+        "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/t-templatedXlsToCsv/0.0.0"},
+        "http://linkedpipes.com/ontology/color": "#CED8F6",
+        "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Transformer"},
+        "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
+        "http://linkedpipes.com/ontology/supportControl" : true,
+        "http://linkedpipes.com/ontology/port": [
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/output"},
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/data"},
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/templates"},
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/configuration"}
+        ],
+        "http://linkedpipes.com/ontology/keyword": [
+            "xls", "csv", "template"
+        ],
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/t-templatedxlstocsv"},
+        "http://linkedpipes.com/ontology/configurationDescription": [
+            {"@id": "http://linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/configuration/desc"}
+        ]
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/data",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Data",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
+            "http://linkedpipes.com/ontology/Port",
+            "http://linkedpipes.com/ontology/Input"
+        ],
+        "http://linkedpipes.com/ontology/binding": "Xls",
+        "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/templates",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Templates",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
+            "http://linkedpipes.com/ontology/Port",
+            "http://linkedpipes.com/ontology/Input"
+        ],
+        "http://linkedpipes.com/ontology/binding": "Templates",
+        "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/output",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Output",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror",
+            "http://linkedpipes.com/ontology/Port",
+            "http://linkedpipes.com/ontology/Output"
+        ],
+        "http://linkedpipes.com/ontology/binding": "Output",
+        "http://linkedpipes.com/ontology/requirement": [ {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"} ]
+    },
+    {
+        "@id": "http://etl.linkedpipes.com/resources/components/t-templatedXlsToCsv/0.0.0/configuration",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Configuration",
+        "@type": [
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
+            "http://linkedpipes.com/ontology/RuntimeConfiguration"
+        ],
+        "http://linkedpipes.com/ontology/binding": "Configuration"
+    }
  ]

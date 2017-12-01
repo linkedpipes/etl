@@ -36,6 +36,18 @@ public class SparqlEndpointSelectScrollableCursorConfiguration {
             iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PAGE_SIZE)
     private Integer pageSize;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_AUTH)
+    private boolean useAuthentication = false;
+
+    @RdfToPojo.Property(
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_USERNAME)
+    private String username;
+
+    @RdfToPojo.Property(
+            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PASSWORD)
+    private String password;
+
     public SparqlEndpointSelectScrollableCursorConfiguration() {
     }
 
@@ -94,4 +106,29 @@ public class SparqlEndpointSelectScrollableCursorConfiguration {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
+
+    public boolean isUseAuthentication() {
+        return useAuthentication;
+    }
+
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

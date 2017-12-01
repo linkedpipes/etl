@@ -164,6 +164,7 @@ public class Execution implements ExecutionObserver {
     @Override
     public void onInvalidPipeline(PipelineModel pipeline,
             LpException exception) {
+        LOG.error("Can't invalid pipeline.", exception);
         if (pipeline != null) {
             executionModelV1.bindToPipeline(pipeline);
         }
@@ -266,6 +267,11 @@ public class Execution implements ExecutionObserver {
         } catch (IOException ex) {
             LOG.error("Can't save execution overview", ex);
         }
+    }
+
+    public boolean isExecutionSuccessful() {
+        return !executionModelV1.isPipelineFailed() &&
+                !executionModelV1.isPipelineCancelled();
     }
 
 }

@@ -14,9 +14,67 @@ public final class LP_PIPELINE {
 
     public static final String CONNECTION = PREFIX + "Connection";
 
+    public static final String RUN_AFTER = PREFIX + "RunAfter";
+
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
     public static final String JAS_TEMPLATE = PREFIX + "JarTemplate";
+
+    public static final String REFERENCE_TEMPLATE = PREFIX + "Template";
+
+    public static final String HAS_PROFILE = PREFIX + "profile";
+
+    public static final String HAS_VERSION = PREFIX + "version";
+
+    public static final String EXECUTION_METADATA =
+            PREFIX + "ExecutionMetadata";
+
+    // TODO Move to execution ?
+    public static final String HAS_EXECUTION_METADATA =
+            PREFIX + "executionMetadata";
+
+    public static final String HAS_SAVE_DEBUG_DATA = PREFIX + "saveDebugData";
+
+    public static final String HAS_DELETE_WORKING =
+            PREFIX + "deleteWorkingData";
+
+    /**
+     * Pipeline has execution profile.
+     */
+    public static final String PROFILE = PREFIX + "ExecutionProfile";
+
+    public static final String HAS_RDF_REPOSITORY_POLICY = PREFIX +
+            "rdfRepositoryPolicy";
+
+    public static final String HAS_RDF_REPOSITORY_TYPE = PREFIX +
+            "rdfRepositoryType";
+
+    /**
+     * Use single RDF repository per execution.
+     */
+    public static final String SINGLE_REPOSITORY = PREFIX +
+            "repository/SingleRepository";
+
+    /**
+     * Use RDF repository per input.
+     */
+    public static final String PER_INPUT_REPOSITORY = PREFIX +
+            "repository/PerInputRepository";
+
+    public static final String NATIVE_STORE = PREFIX +
+            "repository/NativeStore";
+
+    public static final String MEMORY_STORE = PREFIX +
+            "repository/MemoryStore";
+
+    public static final String HAS_LOG_POLICY =
+            PREFIX + "logPolicy";
+
+    public static final String LOG_PRESERVE =
+            PREFIX + "log/Preserve";
+
+    public static final String LOG_DELETE_ON_SUCCESS =
+            PREFIX + "log/DeleteOnSuccess";
 
     /**
      * TODO Update to ../dataUnit/files/DirectoryMirror
@@ -124,13 +182,17 @@ public final class LP_PIPELINE {
             "http://linkedpipes.com/ontology/jar";
 
     /**
+     * If true component support configuration control/inheritance.
+     */
+    public static final String HAS_SUPPORT_CONTROLS =
+            PREFIX + "supportControl";
+
+    /**
      * Reference to a graph with a configuration, used to reference
      * configuration by frontend.
-     *
-     * TODO: Change to lp:configurationGraph
      */
     public static final String HAS_CONFIGURATION_GRAPH =
-            "http://linkedpipes.com/ontology/configuration/graph";
+            "http://linkedpipes.com/ontology/configurationGraph";
 
     /**
      * Component has a template.
@@ -142,5 +204,7 @@ public final class LP_PIPELINE {
      */
     public static final String HAS_CONFIGURATION_ENTITY_DESCRIPTION =
             PREFIX + "configurationDescription";
+
+    public static final String HAS_DISABLED = PREFIX + "disabled";
 
 }

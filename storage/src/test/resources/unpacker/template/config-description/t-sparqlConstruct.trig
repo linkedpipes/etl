@@ -1,0 +1,10 @@
+
+<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> {
+	<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/type> <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/member> <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> .
+	
+	<http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query> ;
+		<http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> .
+}

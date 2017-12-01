@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-chunkSplitter/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-chunkSplitter#Configuration"],
+        "http://linkedpipes.com/resources/components/t-chunkSplitter/0.0.0/configuration/desc/incomingLevelDepth": "0",
+        "http://plugins.linkedpipes.com/ontology/t-chunkSplitter#incomingLevelDepthControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

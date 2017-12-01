@@ -1,0 +1,211 @@
+swagger: "2.0"
+info:
+  version: 0.0.0
+  title: "LinkedPipes ETL : Executor-Monitor"
+  description: This document describes the HTTP API of the LinkedPipes ETL Executor-Monitor component.
+  contact:
+    name: ""
+  license:
+    name: MIT
+basePath: /api/v1
+schemes:
+  - http
+paths:
+
+  /executions:
+    get:
+      description: Return list of stored execution.
+      parameters:
+        - name: changedSince
+          in: query
+          description: Only executions updated after this time are returned.
+          required: false
+          type: integer
+          format: int
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      responses:
+        "200":
+          description: OK
+    post:
+      description: Create execution for given pipeline. TODO
+      parameters:
+        - name: pipeline
+          in: formData
+          description: Definition of pipeline to execute.
+          type: file
+        - name: inputs
+          in: formData
+          description: Files to give to pipeline input.
+          required: false
+          type: file
+      consumes:
+        - multipart/form-data
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref : "#/definitions/CreatedExecution"
+  "/executions/{id}":
+    get:
+      description: Information about execution.
+      parameters:
+        - name: id
+          in: path
+          description: Execution ID.
+          required: true
+          type: integer
+          format: int
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      responses:
+        "200":
+          description: OK
+    delete:
+      parameters:
+        - name: id
+          in: path
+          description: Execution ID.
+          required: true
+          type: integer
+          format: int
+      description: Delete execution.
+      responses:
+        "200":
+          description: OK
+  "/executions/{id}/cancel":
+    post:
+      description: Request cancell of running pipeline.
+      parameters:
+        - name: id
+          in: path
+          description: Execution ID.
+          required: true
+          type: integer
+          format: int
+      responses:
+        "200":
+          description: Cancell request accepted.
+        "404":
+          description: There is no running execution.
+  "/executions/{id}/logs":
+    get:
+      parameters:
+        - name: id
+          in: path
+          description: Execution ID.
+          required: true
+          type: integer
+          format: int
+      produces:
+        - text/plain
+      description: Return log file of the execution.
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Missing resource.
+  "/executions/{id}/pipeline":
+    get:
+      description: Return definition of pipeline as used to create the execution.
+      parameters:
+        - name: id
+          in: path
+          description: Execution ID.
+          required: true
+          type: integer
+          format: int
+      produces:
+        - application/rdf+xml
+        - application/n-triples
+        - text/turtle
+        - text/n3
+        - application/trix
+        - application/trig
+        - application/n-quads
+        - application/ld+json
+        - application/rdf+json
+        - application/xhtml+xml
+      responses:
+        "200":
+          description: OK
+  "/executions/{id}/overview":
+    get:
+      description: Overview of given execution.
+      parameters:
+        - name: id
+          in: path
+          description: Execution ID.
+          required: true
+          type: integer
+          format: int
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/ExecutionOverview"
+        "404":
+          description: There is no running execution.
+definitions:
+  CreatedExecution:
+    type: object
+    title: Reference to new execution.
+    properties:
+      iri:
+        type: string
+        description: Execution IRI.
+  ExecutionOverview:
+    type: object
+    title: Execution overview.
+    properties:
+      pipeline:
+        type: object
+        properties:
+          "@id":
+            type: string
+      execution:
+        type: object
+        properties:
+          "@id":
+            type: string
+      executionStarted:
+        type: string
+      executionFinished:
+        type: string
+      status:
+        type: object
+        properties:
+          "@id":
+            type: string
+      lastChange:
+        type: string
+      pipelineProgress:
+        type: object
+        properties:
+          "@id":
+            type: string
+          total:
+            type: integer
+          current:
+            type: integer
+

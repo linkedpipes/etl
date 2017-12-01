@@ -1,4 +1,4 @@
-<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <md-input-container ng-hide="dialog.usePrefix.hide" flex>
         <md-switch ng-disabled="dialog.usePrefix.disabled || dialog.usePrefix.inherit"
@@ -27,4 +27,9 @@
             </md-option>
         </md-select>
     </md-input-container>
+    <md-switch ng-model="dialog.skipOnError.value"
+               ng-hide="dialog.skipOnError.hide"
+               ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit">
+        Skip file on error
+    </md-switch>
 </div>

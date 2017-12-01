@@ -4,15 +4,23 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.event.AbstractEvent;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EVENTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
 /**
  * Default implementation of progress report.
+ *
+ * TODO Take care of parallel execution.
  */
 class DefaultProgressReport implements ProgressReport {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(DefaultProgressReport.class);
 
     /**
      * Specific implementation or event to report component progress.
@@ -40,7 +48,7 @@ class DefaultProgressReport implements ProgressReport {
         }
 
         @Override
-        public void write(RdfSource.TripleWriter writer) {
+        public void write(TripleWriter writer) throws RdfUtilsException {
             super.write(writer);
             writer.typed(iri, LP_EVENTS.HAS_TOTAL,
                     Long.toString(total), XSD.LONG);
@@ -51,7 +59,7 @@ class DefaultProgressReport implements ProgressReport {
 
     }
 
-    private long current;
+    private int current = 0;
 
     private long total;
 
@@ -62,6 +70,8 @@ class DefaultProgressReport implements ProgressReport {
     private final Component.Context context;
 
     private final String component;
+
+    private final Object lock = new Object();
 
     /**
      * @param context
@@ -74,6 +84,7 @@ class DefaultProgressReport implements ProgressReport {
 
     @Override
     public void start(long entriesToProcess) {
+        LOG.info("Progress report start 0/{}", entriesToProcess);
         current = 0;
         total = entriesToProcess;
         reportStep = (long) (total * 0.1f);
@@ -88,15 +99,24 @@ class DefaultProgressReport implements ProgressReport {
 
     @Override
     public void entryProcessed() {
-        ++current;
-        if (current >= reportNext) {
-            reportNext += reportStep;
-            context.sendMessage(new ReportProgress(current, total, component));
+        synchronized (lock) {
+            int value = ++current;
+            if (value >= reportNext) {
+                reportNext += reportStep;
+                sendReportMessage(value);
+            }
         }
+    }
+
+    private void sendReportMessage(int currentProgress) {
+        LOG.info("Progress report {}/{}", current, total);
+        context.sendMessage(
+                new ReportProgress(currentProgress, total, component));
     }
 
     @Override
     public void done() {
+        LOG.info("Progress report {}/{} (actual: {})", total, total, current);
         context.sendMessage(new ReportProgress(total, total, component));
     }
 

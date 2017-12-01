@@ -29,6 +29,10 @@ import java.util.*;
 
 public class DcatAp11Distribution implements Component, SequentialExecution {
 
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
+
     @Component.InputPort(iri = "Dataset")
     public SingleGraphDataUnit inputDataset;
 

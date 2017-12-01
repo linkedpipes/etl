@@ -32,6 +32,22 @@ define([], function () {
         "innerSelect": {
             "$type": "str",
             "$label": "Inner select query"
+        },
+        "encodeRdf": {
+            "$type": "bool",
+            "$label": "Encode RDF"
+        },
+        "useAuthentication": {
+            "$type": "bool",
+            "$label": "Use authentication"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Password"
         }
     };
 
@@ -40,6 +56,8 @@ define([], function () {
         if ($scope.dialog === undefined) {
             $scope.dialog = {};
         }
+
+        DESC.defaultGraph["$onSave"] = $service.v1.fnc.removeEmptyIri;
 
         const dialogManager = $service.v1.manager(DESC, $scope.dialog);
 

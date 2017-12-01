@@ -1,4 +1,4 @@
-<lp-dialog-control-config ng-model="dialog"></lp-dialog-control-config>
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <div class="row">
         <md-input-container class="md-block" ng-hide="dialog.endpoint.hide"
@@ -26,7 +26,7 @@
         <label>Commit size</label>
         <input type="number" ng-model="dialog.commitSize.value"
                ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit"
-               placeholder="100000" min="10" step="1000">
+               placeholder="100000" min="10">
     </md-input-container>
     <md-switch ng-model="dialog.useAuthentication.value"
                ng-disabled="dialog.useAuthentication.disabled || dialog.useAuthentication.inherit"

@@ -1,0 +1,14 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.template.hide">
+        <label>Output document template:</label>
+        <textarea id="query" ng-model="dialog.template.value"
+                  ng-disabled="dialog.template.disabled || dialog.template.inherit"/>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.idResourceType.hide">
+        <label>Type of resource used for ID placeholder</label>
+        <input ng-model="dialog.idResourceType.value"
+               ng-disabled="dialog.idResourceType.disabled || dialog.idResourceType.inherit">
+    </md-input-container>    
+</div>
+

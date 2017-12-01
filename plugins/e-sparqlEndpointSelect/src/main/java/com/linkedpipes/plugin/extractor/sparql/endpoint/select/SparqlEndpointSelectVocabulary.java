@@ -15,6 +15,12 @@ final class SparqlEndpointSelectVocabulary {
 
     public static final String HAS_FILE_NAME = PREFIX + "fileName";
 
+    public static final String HAS_AUTH = PREFIX + "useAuthentication";
+
+    public static final String HAS_USERNAME = PREFIX + "userName";
+
+    public static final String HAS_PASSWORD = PREFIX + "password";
+
     private SparqlEndpointSelectVocabulary() {
     }
 

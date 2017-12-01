@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.geotools;
 
 import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -45,6 +46,10 @@ public final class GeoTools implements Component, SequentialExecution {
 
     public static final IRI GML_SRS_NAME = SimpleValueFactory.getInstance()
             .createIRI("http://www.opengis.net/ont/gml#srsName");
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "InputRdf")
     public ChunkedTriples inputRdf;

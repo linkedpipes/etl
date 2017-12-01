@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
@@ -28,6 +29,10 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(FilesToRdfChunked.class);
+
+    @Component.ContainsConfiguration
+    @Component.InputPort(iri = "Configuration")
+    public SingleGraphDataUnit configurationRdf;
 
     @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
@@ -71,20 +76,27 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
 
     private void loadFiles() throws LpException {
         progressReport.start(inputFiles.size());
+        int filesCounter = 0;
         for (FilesDataUnit.Entry entry : inputFiles) {
             LOG.debug("Loading: {}", entry.getFileName());
-            loadEntry(entry);
-            flushBufferIfBigEnough();
+            try {
+                loadEntry(entry);
+            } catch (LpException ex) {
+                if (configuration.isSkipOnFailure()) {
+                    LOG.error("Can't load file: {}", entry.getFileName());
+                } else {
+                    throw  ex;
+                }
+            }
+            ++filesCounter;
+            if (filesCounter >= configuration.getFilesPerChunk()) {
+                flushBuffer();
+                filesCounter = 0;
+            }
             progressReport.entryProcessed();
         }
         flushBuffer();
         progressReport.done();
-    }
-
-    private void flushBufferIfBigEnough() throws LpException {
-        if (buffer.size() > configuration.getFilesPerChunk()) {
-            flushBuffer();
-        }
     }
 
     private void flushBuffer() throws LpException {
@@ -116,8 +128,8 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
         try (InputStream stream = new FileInputStream(file)) {
             final RDFParser parser = createParser(format);
             parser.parse(stream, "http://localhost/base/");
-        } catch (IOException ex) {
-            exceptionFactory.failure("Can't load file: {}", file, ex);
+        } catch (RuntimeException | IOException ex) {
+            throw exceptionFactory.failure("Can't load file: {}", file, ex);
         }
     }
 
@@ -128,11 +140,9 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
                 buffer.add(st);
             }
         };
-
         if (format == RDFFormat.JSONLD) {
             handler = new BlankNodePrefixUpdater(handler);
         }
-
         RDFParser parser = Rio.createParser(format);
         parser.setRDFHandler(handler);
         return parser;

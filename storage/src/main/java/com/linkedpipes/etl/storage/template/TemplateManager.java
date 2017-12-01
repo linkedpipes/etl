@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.template;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
@@ -49,6 +50,7 @@ class TemplateManager {
             templatesDirectory.mkdir();
         }
         // Create templates from JAR files.
+        LOG.info("Importing jar templates ...");
         for (JarComponent item : jarFacade.getJarComponents()) {
             final File destination = new File(templatesDirectory,
                     "jar-" + item.getFile().getName());
@@ -61,7 +63,9 @@ class TemplateManager {
                 FileUtils.deleteQuietly(destination);
             }
         }
+        LOG.info("Importing jar templates ... done");
         // Load templates.
+        LOG.info("Loading templates ...");
         for (File file : templatesDirectory.listFiles()) {
             if (!file.isDirectory()) {
                 continue;
@@ -73,6 +77,7 @@ class TemplateManager {
                 LOG.error("Can't load template from: {}", file, ex);
             }
         }
+        LOG.info("Loading templates ... done");
     }
 
     public Map<String, BaseTemplate> getTemplates() {
@@ -282,13 +287,18 @@ class TemplateManager {
     private static void loadBaseTemplate(BaseTemplate template, File directory)
             throws BaseException {
         template.setDirectory(directory);
-        //
+        // TODO We update on loading to set the configurationDescriptionGraph
+        // a proper way is to update the storage data.
         template.setDefinitionRdf(RdfUtils.read(
                 new File(directory, Template.DEFINITION_FILE)));
+        String descGraphIri = template.getIri() + "/configurationDescription";
+        addConfigurationDescription(template, descGraphIri);
         template.setConfigRdf(RdfUtils.read(
                 new File(directory, Template.CONFIG_FILE)));
-        template.setConfigDescRdf(RdfUtils.read(
-                new File(directory, Template.CONFIG_DESC_FILE)));
+
+        template.setConfigDescRdf(
+                setGraph(RdfUtils.read(
+                new File(directory, Template.CONFIG_DESC_FILE)), descGraphIri));
         // Create configuration for instances.
         final IRI graph = SimpleValueFactory.getInstance().createIRI(
                 template.getIri() + "/new");
@@ -299,6 +309,31 @@ class TemplateManager {
                         template.getConfigDescRdf(),
                         graph.stringValue(), graph,
                         !isJarTemplate));
+    }
+
+    private static void addConfigurationDescription(BaseTemplate template,
+            String configGraph) {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        IRI templateIri = valueFactory.createIRI(template.getIri());
+        IRI graphIri = valueFactory.createIRI(configGraph);
+        template.getDefinitionRdf().add(valueFactory.createStatement(
+                templateIri,
+                valueFactory.createIRI(
+                        LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION),
+                graphIri, templateIri
+        ));
+    }
+
+    private static Collection<Statement> setGraph(
+            Collection<Statement> statements, String graph) {
+        List<Statement> result = new ArrayList<>(statements.size());
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        IRI graphIri = valueFactory.createIRI(graph);
+        for (Statement statement : statements) {
+            result.add(valueFactory.createStatement(statement.getSubject(),
+                    statement.getPredicate(), statement.getObject(), graphIri));
+        }
+        return result;
     }
 
     public void remove(Template template) throws BaseException {
