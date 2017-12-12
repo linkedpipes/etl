@@ -3,11 +3,9 @@ package com.linkedpipes.etl.executor.api.v1.component;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.service.ServiceFactory;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -96,15 +94,7 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
             throw new LpException("Can't create instance of {} for {}",
                     field.getType().getSimpleName(), field.getName(), ex);
         }
-        //
-        try {
-            RdfUtils.loadByType(definition, graph,
-                    instance, RdfToPojo.descriptorFactory());
-        } catch (RdfUtilsException ex) {
-            throw new LpException("Can't load for field: {}",
-                    field.getName(), ex);
-        }
-        //
+        RdfToPojoLoader.loadByReflection(definition, graph, instance);
         try {
             field.set(component, instance);
         } catch (IllegalAccessException | IllegalArgumentException ex) {

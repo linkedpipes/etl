@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -36,7 +36,7 @@ public class ReflectionLoaderTest {
         loader.initialize();
         loader.resource("http://localhost");
 
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("value");
         loader.load("http://value", value);
 

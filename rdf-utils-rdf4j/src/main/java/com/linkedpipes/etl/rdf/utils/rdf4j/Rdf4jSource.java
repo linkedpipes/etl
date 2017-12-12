@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.TripleHandler;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -21,7 +21,7 @@ import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
 import java.util.*;
 
-public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
+public class Rdf4jSource implements BackendRdfSource, BackendRdfSource.SparqlQueryable {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -32,14 +32,14 @@ public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
     }
 
     @Override
-    public TripleWriter getTripleWriter(String graph) {
+    public BackendTripleWriter getTripleWriter(String graph) {
         return new BufferedTripleWriter(graph, repository);
     }
 
     @Override
-    public List<Map<String, RdfValue>> sparqlSelect(String query)
+    public List<Map<String, BackendRdfValue>> sparqlSelect(String query)
             throws RdfUtilsException {
-        List<Map<String, RdfValue>> output = new LinkedList<>();
+        List<Map<String, BackendRdfValue>> output = new LinkedList<>();
         try (RepositoryConnection connection = repository.getConnection()) {
             TupleQueryResult result =
                     connection.prepareTupleQuery(query).evaluate();
@@ -53,8 +53,8 @@ public class Rdf4jSource implements RdfSource, RdfSource.SparqlQueryable {
         return output;
     }
 
-    private Map<String, RdfValue> convertBinding(BindingSet bindingSet) {
-        Map<String, RdfValue> output = new HashMap<>();
+    private Map<String, BackendRdfValue> convertBinding(BindingSet bindingSet) {
+        Map<String, BackendRdfValue> output = new HashMap<>();
         for (Binding binding : bindingSet) {
             output.put(binding.getName(), new Rdf4jValue(binding.getValue()));
         }

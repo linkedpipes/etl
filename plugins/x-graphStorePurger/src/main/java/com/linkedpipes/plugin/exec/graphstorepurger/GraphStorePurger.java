@@ -4,12 +4,9 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
@@ -30,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GraphStorePurger implements Component, SequentialExecution {
@@ -66,14 +64,16 @@ public class GraphStorePurger implements Component, SequentialExecution {
     }
 
     private void loadTasks() throws LpException {
-        RdfSource source = Rdf4jSource.wrapRepository(taskRdf.getRepository());
-        try {
-            graphsToPurge = RdfUtils.loadList(source,
-                    taskRdf.getReadGraph().stringValue(),
-                    RdfToPojo.descriptorFactory(),
-                    GraphsToPurge.class);
-        } catch (RdfUtilsException ex) {
-            exceptionFactory.failure("Can't load input tasks.", ex);
+        RdfSource source = taskRdf.asRdfSource();
+        String graph = taskRdf.getReadGraph().stringValue();
+        List<String> resources = source.getByType(
+                graph, GraphStorePurgerVocabulary.TASK);
+        graphsToPurge = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            GraphsToPurge item = new GraphsToPurge();
+            RdfToPojoLoader.loadByReflection(
+                    source, resource, graph, item);
+            graphsToPurge.add(item);
         }
     }
 

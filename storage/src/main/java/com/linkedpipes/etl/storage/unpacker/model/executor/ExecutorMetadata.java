@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 
 /**
@@ -26,7 +26,7 @@ public class ExecutorMetadata {
         this.iri = iri;
     }
 
-    public void write(TripleWriter writer) {
+    public void write(BackendTripleWriter writer) {
         writer.iri(iri, RDF.TYPE, LP_PIPELINE.EXECUTION_METADATA);
         writer.bool(iri, LP_PIPELINE.HAS_DELETE_WORKING, deleteWorkingData);
         writer.bool(iri, LP_PIPELINE.HAS_SAVE_DEBUG_DATA, saveDebugData);

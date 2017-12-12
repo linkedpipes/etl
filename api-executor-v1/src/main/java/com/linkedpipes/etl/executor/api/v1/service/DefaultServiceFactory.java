@@ -2,21 +2,22 @@ package com.linkedpipes.etl.executor.api.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 
 import java.net.URI;
+import java.util.List;
 
 public class DefaultServiceFactory implements ServiceFactory {
 
     @Override
-    public Object create(Class<?> serviceType, String component, String graph,
+    public Object create(
+            Class<?> serviceType, String component, String graph,
             RdfSource definition, Component.Context context)
             throws LpException {
         if (serviceType.equals(ExceptionFactory.class)) {
-            return new DefaultExceptionFactory(component);
+            return new DefaultExceptionFactory();
         }
         if (serviceType.equals(ProgressReport.class)) {
             return new DefaultProgressReport(context, component);
@@ -25,26 +26,22 @@ public class DefaultServiceFactory implements ServiceFactory {
             return new DefaultDefinitionReader(component, graph, definition);
         }
         if (serviceType.equals(WorkingDirectory.class)) {
-            try {
-                return createWorkingDirectory(component, graph, definition);
-            } catch (RdfUtilsException ex) {
-                throw new LpException("Can't get working directory for: {}",
-                        component, ex);
-            }
+            return createWorkingDirectory(component, graph, definition);
         }
-        return null;
+        throw new LpException("Invalid service type: {}",
+                serviceType.getName());
     }
 
     private WorkingDirectory createWorkingDirectory(
-            String component, String graph, RdfSource definition) throws
-            RdfUtilsException {
-        final String path = RdfUtils.sparqlSelectSingle(definition, "" +
-                "SELECT ?path WHERE { " +
-                " GRAPH <" + graph + "> { " +
-                "  <" + component + "> <" + LP_EXEC.HAS_WORKING_DIRECTORY +
-                "> ?path . " +
-                "} }", "path");
-        return new WorkingDirectory(URI.create(path));
+            String component, String graph, RdfSource definition)
+            throws LpException {
+        List<RdfValue> paths = definition.getPropertyValues(
+                graph, component, LP.HAS_WORKING_DIRECTORY);
+        if (paths.size() != 1) {
+            throw new LpException("Invalid number of working paths: {}",
+                    paths.size());
+        }
+        return new WorkingDirectory(URI.create(paths.get(0).asString()));
     }
 
 }

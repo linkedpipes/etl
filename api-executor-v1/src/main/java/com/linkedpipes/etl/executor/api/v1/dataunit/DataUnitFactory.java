@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 
 public interface DataUnitFactory {
 

@@ -2,23 +2,20 @@ package com.linkedpipes.etl.executor.api.v1.component;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.service.DefaultServiceFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfBuilder;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,27 +48,27 @@ public class SequentialWrapTest {
     }
 
     @Test
-    public void injectAndExecute() throws LpException, IOException,
-            RdfUtilsException {
-        final TestComponent component = new TestComponent();
-        final ClosableRdfSource source = Rdf4jSource.createInMemory();
-        final ComponentInfo componentInfo = new ComponentInfo(
+    public void injectAndExecute() throws LpException, IOException{
+        TestComponent component = new TestComponent();
+        RdfSource rdfSource = Mockito.mock(RdfSource.class);
+        ComponentInfo componentInfo = new ComponentInfo(
                 "http://component", "http://graph");
-        final SequentialWrap wrap = new SequentialWrap(
-                component, componentInfo, source, new DefaultServiceFactory());
-        final File path = File.createTempFile("lp-test-", "");
-        //
-        final RdfBuilder builder = RdfBuilder.create(source, "http://graph");
-        builder.entity("http://component")
-                .iri(RDF.TYPE, LP_PIPELINE.COMPONENT)
-                .iri(LP_EXEC.HAS_WORKING_DIRECTORY, path.toURI().toString());
-        builder.commit();
-        //
-        final Map<String, DataUnit> dataUnits = new HashMap<>();
-        final DataUnit input = Mockito.mock(DataUnit.class);
+        SequentialWrap wrap = new SequentialWrap(
+                component, componentInfo, rdfSource,
+                new DefaultServiceFactory());
+        File path = File.createTempFile("lp-test-", "");
+
+        RdfValue pathValue = Mockito.mock(RdfValue.class);
+        Mockito.when(pathValue.asString()).thenReturn(path.toURI().toString());
+        Mockito.when(rdfSource.getPropertyValues(
+                "http://graph", "http://component", LP.HAS_WORKING_DIRECTORY))
+                .thenReturn(Arrays.asList(pathValue));
+
+        Map<String, DataUnit> dataUnits = new HashMap<>();
+        DataUnit input = Mockito.mock(DataUnit.class);
         Mockito.when(input.getBinding()).thenReturn("http://dataUnit/input");
         dataUnits.put("http://dataUnit/input", input);
-        final DataUnit output = Mockito.mock(DataUnit.class);
+        DataUnit output = Mockito.mock(DataUnit.class);
         Mockito.when(output.getBinding()).thenReturn("http://dataUnit/output");
         dataUnits.put("http://dataUnit/output", output);
         //
@@ -90,7 +87,6 @@ public class SequentialWrapTest {
         Assert.assertTrue(component.executed);
         //
         path.delete();
-        source.close();
     }
 
 }

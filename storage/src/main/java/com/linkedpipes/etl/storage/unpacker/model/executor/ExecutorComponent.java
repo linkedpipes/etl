@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
@@ -35,7 +35,7 @@ public class ExecutorComponent {
 
     private Integer executionOrder = -1;
 
-    public void write(TripleWriter writer) {
+    public void write(BackendTripleWriter writer) {
         writeSharedInfo(writer);
         switch (executionType) {
             case LP_EXEC.TYPE_EXECUTE:
@@ -50,7 +50,7 @@ public class ExecutorComponent {
         }
     }
 
-    private void writeSharedInfo(TripleWriter writer) {
+    private void writeSharedInfo(BackendTripleWriter writer) {
         for (String type : types) {
             writer.iri(iri, RDF.TYPE, type);
         }
@@ -62,7 +62,7 @@ public class ExecutorComponent {
         writer.string(iri, SKOS.PREF_LABEL, label, null);
     }
 
-    private void writeExecute(TripleWriter writer) {
+    private void writeExecute(BackendTripleWriter writer) {
         for (String requirement : requirements) {
             writer.iri(iri, LP_PIPELINE.HAS_REQUIREMENT, requirement);
         }
@@ -76,7 +76,7 @@ public class ExecutorComponent {
         }
     }
 
-    private void writeMapped(TripleWriter writer) {
+    private void writeMapped(BackendTripleWriter writer) {
         for (ExecutorPort port : ports) {
             writer.iri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
             port.write(writer);

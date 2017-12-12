@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
-import com.linkedpipes.etl.dataunit.core.BaseDataUnit;
+import com.linkedpipes.etl.dataunit.core.AbstractDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.eclipse.rdf4j.model.Statement;
@@ -13,7 +13,7 @@ import java.io.*;
 import java.util.*;
 
 class DefaultChunkedTriples
-        extends BaseDataUnit
+        extends AbstractDataUnit
         implements ChunkedTriples, WritableChunkedTriples,
         ManageableDataUnit {
 

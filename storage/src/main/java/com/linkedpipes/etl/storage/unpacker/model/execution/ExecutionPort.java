@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.unpacker.model.execution;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.pojo.LoaderException;
 
@@ -27,7 +27,7 @@ public class ExecutionPort implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, RdfValue value)
+    public Loadable load(String predicate, BackendRdfValue value)
             throws RdfUtilsException {
         switch (predicate) {
             // TODO Align with case LP_PIPELINE.HAS_BINDING

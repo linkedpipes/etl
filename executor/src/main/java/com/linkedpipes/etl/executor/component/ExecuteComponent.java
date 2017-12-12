@@ -12,9 +12,11 @@ import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
+import com.linkedpipes.etl.executor.rdf.TripleWriterWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,35 +158,36 @@ class ExecuteComponent implements ComponentExecutor {
 
         final String configGraph =
                 pplComponent.getIri() + "/configuration/effective";
-        final TripleWriter writer = pipeline.setConfiguration(
+        final BackendTripleWriter writer = pipeline.setConfiguration(
                 pplComponent, configGraph);
 
         if (runtimeConfig == null) {
             Configuration.prepareConfiguration(configGraph,
                     pplComponent, null, null, writer, pipeline);
         } else {
-            RdfSource runtimeSource = wrapRuntimeConfiguration(runtimeConfig);
+            BackendRdfSource runtimeSource = wrapRuntimeConfiguration(runtimeConfig);
             Configuration.prepareConfiguration(configGraph, pplComponent,
                     runtimeSource, RUNTIME_CONFIGURATION_GRAPH,
                     writer, pipeline);
         }
 
         try {
-            instance.loadConfiguration(configGraph, pipeline.getSource());
+            instance.loadConfiguration(configGraph,
+                    new RdfSourceWrap(pipeline.getSource()));
         } catch (LpException ex) {
             throw new ExecutorException(
                     "Can't load component configuration", ex);
         }
     }
 
-    private RdfSource wrapRuntimeConfiguration(
+    private BackendRdfSource wrapRuntimeConfiguration(
             RuntimeConfiguration runtimeConfiguration)
             throws ExecutorException {
-        final RdfSource source = Rdf4jSource.createInMemory();
-        final TripleWriter writer =
+        final BackendRdfSource source = Rdf4jSource.createInMemory();
+        final BackendTripleWriter writer =
                 source.getTripleWriter(RUNTIME_CONFIGURATION_GRAPH);
         try {
-            runtimeConfiguration.write(writer);
+            runtimeConfiguration.write(new TripleWriterWrap(writer));
             writer.flush();
         } catch (LpException | RdfUtilsException ex) {
             throw new ExecutorException(

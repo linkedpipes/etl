@@ -5,12 +5,10 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -30,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -71,14 +70,16 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
     }
 
     private void loadTasksGroups() throws LpException {
-        Rdf4jSource source = Rdf4jSource.wrapRepository(tasksRdf.getRepository());
-        try {
-            taskGroups = RdfUtils.loadList(source,
-                    tasksRdf.getReadGraph().stringValue(),
-                    RdfToPojo.descriptorFactory(),
-                    TaskGroup.class);
-        } catch (RdfUtilsException ex) {
-            throw exceptionFactory.failure("Can't load task list.", ex);
+        RdfSource source = tasksRdf.asRdfSource();
+        String graph = tasksRdf.getReadGraph().stringValue();
+        List<String> resources = source.getByType(
+                graph, SparqlConstructToFileListVocabulary.TASK);
+        taskGroups = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            TaskGroup task = new TaskGroup();
+            RdfToPojoLoader.loadByReflection(
+                    source, resource, graph, task);
+            taskGroups.add(task);
         }
     }
 

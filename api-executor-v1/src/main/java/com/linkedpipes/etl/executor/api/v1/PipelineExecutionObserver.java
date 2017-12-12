@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1;
 
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 
 /**
  * Observer for pipeline execution events. Can be used by

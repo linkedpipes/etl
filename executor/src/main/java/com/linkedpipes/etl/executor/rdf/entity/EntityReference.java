@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.rdf.entity;
 
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 
 /**
  * Object used to reference RDF entity.
@@ -11,10 +11,10 @@ public class EntityReference {
 
     private final String graph;
 
-    private final RdfSource source;
+    private final BackendRdfSource source;
 
     public EntityReference(String resource, String graph,
-            RdfSource source) {
+            BackendRdfSource source) {
         this.resource = resource;
         this.graph = graph;
         this.source = source;
@@ -28,7 +28,7 @@ public class EntityReference {
         return graph;
     }
 
-    public RdfSource getSource() {
+    public BackendRdfSource getSource() {
         return source;
     }
 

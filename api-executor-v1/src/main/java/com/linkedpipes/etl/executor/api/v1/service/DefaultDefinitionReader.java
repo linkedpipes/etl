@@ -1,14 +1,10 @@
 package com.linkedpipes.etl.executor.api.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 class DefaultDefinitionReader implements DefinitionReader {
 
@@ -28,28 +24,10 @@ class DefaultDefinitionReader implements DefinitionReader {
     @Override
     public Collection<String> getProperties(String property)
             throws LpException {
-        final List<Map<String, String>> bindings = queryForProperty(property);
-        final List<String> result = new ArrayList<>(bindings.size());
-        for (Map<String, String> entry : bindings) {
-            result.add(entry.get("value"));
-        }
-        return result;
-    }
-
-    private List<Map<String, String>> queryForProperty(String property)
-            throws LpException {
-        try {
-            return RdfUtils.sparqlSelect(definition,
-                    getQueryForProperty(property));
-        } catch (RdfUtilsException ex) {
-            throw new LpException("Can't query source.", ex);
-        }
-    }
-
-    private String getQueryForProperty(String property) {
-        return "SELECT ?value FROM <" + graph + "> WHERE {" +
-                " <" + component + "> <" + property + "> ?value . " +
-                "}";
+        return definition.getPropertyValues(graph, component, property)
+                .stream()
+                .map((item) -> (item.asString()))
+                .collect(Collectors.toList());
     }
 
 }

@@ -3,14 +3,14 @@ package com.linkedpipes.etl.executor.component.configuration;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.executor.rdf.entity.MergeControl;
 import com.linkedpipes.etl.executor.rdf.entity.MergeControlFactory;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 
 class DefaultControlFactory implements MergeControlFactory {
 
     /**
      * Source with definitions.
      */
-    private final RdfSource definitionSource;
+    private final BackendRdfSource definitionSource;
 
     /**
      * Graph in {@link #definitionGraph} with definitions.
@@ -21,7 +21,7 @@ class DefaultControlFactory implements MergeControlFactory {
      * @param source Does not manage the given definitionSource.
      * @param graph
      */
-    public DefaultControlFactory(RdfSource source, String graph) {
+    public DefaultControlFactory(BackendRdfSource source, String graph) {
         this.definitionSource = source;
         this.definitionGraph = graph;
     }

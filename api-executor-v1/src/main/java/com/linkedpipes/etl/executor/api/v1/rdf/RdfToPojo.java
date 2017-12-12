@@ -1,7 +1,5 @@
 package com.linkedpipes.etl.executor.api.v1.rdf;
 
-import com.linkedpipes.etl.rdf.utils.pojo.DescriptorFactory;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -42,10 +40,6 @@ public class RdfToPojo {
          */
         String[] alternatives() default {};
 
-    }
-
-    public static DescriptorFactory descriptorFactory() {
-        return new AnnotationDescriptionFactory();
     }
 
 }

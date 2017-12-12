@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.SimpleStore;
 import com.linkedpipes.etl.rdf.utils.model.SimpleTriple;
 import com.linkedpipes.etl.rdf.utils.model.SimpleValue;
@@ -27,7 +27,7 @@ public class RdfToPojoLoaderTest {
         }
 
         @Override
-        public Loadable load(String predicate, RdfValue value)
+        public Loadable load(String predicate, BackendRdfValue value)
                 throws RdfUtilsException {
             switch (predicate) {
                 case "title":

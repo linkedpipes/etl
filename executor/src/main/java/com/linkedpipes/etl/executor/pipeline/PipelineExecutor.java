@@ -14,6 +14,7 @@ import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleFacade;
 import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
+import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,7 +188,8 @@ public class PipelineExecutor {
             for (PipelineExecutionObserver observer :
                     moduleFacade.getPipelineListeners()) {
                 observer.onPipelineBegin(pipeline.getPipelineIri(),
-                        pipeline.getPipelineGraph(), pipeline.getSource());
+                        pipeline.getPipelineGraph(),
+                        new RdfSourceWrap(pipeline.getSource()));
             }
         } catch (LpException ex) {
             throw new ExecutorException("Observer error.", ex);

@@ -2,8 +2,8 @@ package com.linkedpipes.etl.rdf.utils.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
@@ -19,7 +19,7 @@ import java.util.List;
  * TODO Add support for RdfValue implemented by Rdf4j
  * TODO Add support for RdfTriple implemented by Rdf4j
  */
-class BufferedTripleWriter implements TripleWriter {
+class BufferedTripleWriter implements BackendTripleWriter {
 
     private static final ValueFactory VF = SimpleValueFactory.getInstance();
 
@@ -82,7 +82,7 @@ class BufferedTripleWriter implements TripleWriter {
     }
 
     @Override
-    public void add(String subject, String predicate, RdfValue value) {
+    public void add(String subject, String predicate, BackendRdfValue value) {
         Value rdf4jValue = asRdf4jValue(value);
         buffer.add(valueFactory.createStatement(
                 valueFactory.createIRI(subject),
@@ -91,7 +91,7 @@ class BufferedTripleWriter implements TripleWriter {
         ));
     }
 
-    private Value asRdf4jValue(RdfValue value) {
+    private Value asRdf4jValue(BackendRdfValue value) {
         if (value.isIri()) {
             return valueFactory.createIRI(value.asString());
         }

@@ -1,15 +1,13 @@
 package com.linkedpipes.etl.executor.api.v1.rdf;
 
-import com.linkedpipes.etl.rdf.utils.pojo.LangString;
-
 /**
  * Can be used to load language string with a language tag.
  */
-public class LanguageString implements LangString {
+public class LanguageString {
 
-    private String value;
+    protected String value;
 
-    private String language;
+    protected String language;
 
     public LanguageString() {
     }
@@ -19,7 +17,6 @@ public class LanguageString implements LangString {
         this.language = language;
     }
 
-    @Override
     public void setValue(String value, String language) {
         this.value = value;
         this.language = language;

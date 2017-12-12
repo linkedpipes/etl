@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import org.eclipse.rdf4j.model.Statement;
 
 class Rdf4jTriple implements RdfTriple {
@@ -23,7 +23,7 @@ class Rdf4jTriple implements RdfTriple {
     }
 
     @Override
-    public RdfValue getObject() {
+    public BackendRdfValue getObject() {
         return new Rdf4jValue(statement.getObject());
     }
 

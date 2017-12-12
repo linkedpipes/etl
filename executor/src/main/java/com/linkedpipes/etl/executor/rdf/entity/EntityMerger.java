@@ -20,7 +20,7 @@ public class EntityMerger {
 
     private MergeControl descriptor;
 
-    private Map<String, List<RdfValue>> values;
+    private Map<String, List<BackendRdfValue>> values;
 
     private Map<String, List<EntityReference>> entitiesToCopy;
 
@@ -35,7 +35,7 @@ public class EntityMerger {
     public void merge(
             List<EntityReference> references,
             String outputIri,
-            TripleWriter writer
+            BackendTripleWriter writer
     ) throws RdfUtilsException {
         if (references.isEmpty()) {
             throw new RdfUtilsException("Nothing to merge!");
@@ -158,10 +158,10 @@ public class EntityMerger {
                 reference.getSource()));
     }
 
-    private void writeResult(String outputIri, TripleWriter writer)
+    private void writeResult(String outputIri, BackendTripleWriter writer)
             throws RdfUtilsException {
-        for (Map.Entry<String, List<RdfValue>> entry : values.entrySet()) {
-            for (RdfValue value : entry.getValue()) {
+        for (Map.Entry<String, List<BackendRdfValue>> entry : values.entrySet()) {
+            for (BackendRdfValue value : entry.getValue()) {
                 writer.add(outputIri, entry.getKey(), value);
             }
         }
@@ -181,8 +181,8 @@ public class EntityMerger {
         writer.flush();
     }
 
-    private static void copyEntityRecursive(RdfSource source, String resource,
-            String graph, TripleWriter writer) throws RdfUtilsException {
+    private static void copyEntityRecursive(BackendRdfSource source, String resource,
+            String graph, BackendTripleWriter writer) throws RdfUtilsException {
         source.triples(resource, graph, (triple) -> {
             writer.add(triple);
             if (triple.getObject().isIri()) {

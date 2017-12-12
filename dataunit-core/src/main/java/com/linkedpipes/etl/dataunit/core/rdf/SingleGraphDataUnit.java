@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import org.eclipse.rdf4j.model.IRI;
 
 /**
@@ -13,5 +14,7 @@ public interface SingleGraphDataUnit extends Rdf4jDataUnit {
      * @return URI of read graph.
      */
     IRI getReadGraph();
+
+    RdfSource asRdfSource();
 
 }

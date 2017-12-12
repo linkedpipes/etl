@@ -7,8 +7,8 @@ import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -42,7 +42,7 @@ public class Pipeline {
      */
     private Repository repository;
 
-    private RdfSource source;
+    private BackendRdfSource source;
 
     /**
      * Load pipeline definition from given file.
@@ -121,7 +121,7 @@ public class Pipeline {
         return model.getGraph();
     }
 
-    public RdfSource getSource() {
+    public BackendRdfSource getSource() {
         return source;
     }
 
@@ -163,7 +163,7 @@ public class Pipeline {
      * @param graph
      * @return Writer for given configuration.
      */
-    public TripleWriter setConfiguration(
+    public BackendTripleWriter setConfiguration(
             Component component, String graph)
             throws ExecutorException {
         LOG.info("setConfiguration {} {}", component.getIri(), graph);

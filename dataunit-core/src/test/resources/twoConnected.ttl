@@ -1,0 +1,39 @@
+
+<http://pipeline>
+    a <http://linkedpipes.com/ontology/Pipeline> ;
+    <http://linkedpipes.com/ontology/component> 
+        <http://comp/s1> , <http://comp/s2>, <http://comp/t>;
+    <http://linkedpipes.com/ontology/connection>
+        <http://conn/1>, <http://conn/2> .
+
+<http://comp/s1> a <http://linkedpipes.com/ontology/Component> ;
+    <http://linkedpipes.com/ontology/port> <http://comp/s1/1> .
+<http://comp/s1/1>
+    <http://linkedpipes.com/ontology/binding> "s1" ;
+    <http://linkedpipes.com/ontology/dataUnitGroup> 1 .
+
+
+<http://comp/s2> a <http://linkedpipes.com/ontology/Component> ;
+    <http://linkedpipes.com/ontology/port> <http://comp/s2/1> .
+<http://comp/s2/1>
+    <http://linkedpipes.com/ontology/binding> "s2" ;
+    <http://linkedpipes.com/ontology/dataUnitGroup> 2 .
+
+
+<http://comp/t> a <http://linkedpipes.com/ontology/Component> ;
+    <http://linkedpipes.com/ontology/port> <http://comp/t/1> .
+<http://comp/t/1>
+    <http://linkedpipes.com/ontology/binding> "t" ;
+    <http://linkedpipes.com/ontology/dataUnitGroup> 3 .
+
+<http://conn/1> a <http://linkedpipes.com/ontology/Connection> ;
+    <http://linkedpipes.com/ontology/sourceBinding> "s1" ;
+    <http://linkedpipes.com/ontology/sourceComponent> <http://comp/s1> ;
+    <http://linkedpipes.com/ontology/targetBinding> "t" ;
+    <http://linkedpipes.com/ontology/targetComponent> <http://comp/t> .
+
+<http://conn/2> a <http://linkedpipes.com/ontology/Connection> ;
+    <http://linkedpipes.com/ontology/sourceBinding> "s2" ;
+    <http://linkedpipes.com/ontology/sourceComponent> <http://comp/s2> ;
+    <http://linkedpipes.com/ontology/targetBinding> "t" ;
+    <http://linkedpipes.com/ontology/targetComponent> <http://comp/t> .

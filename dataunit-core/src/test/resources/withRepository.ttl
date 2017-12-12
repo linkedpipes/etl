@@ -1,0 +1,12 @@
+
+<http://pipeline>
+    a <http://linkedpipes.com/ontology/Pipeline> ;
+    <http://linkedpipes.com/ontology/repository> <http://repository> ;
+    <http://linkedpipes.com/ontology/profile> <http://profile> .
+
+<http://repository>
+    a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository> .
+
+<http://profile>
+    <http://linkedpipes.com/ontology/rdfRepositoryPolicy> <http://repositoryPolicy> ;
+    <http://linkedpipes.com/ontology/rdfRepositoryType> <http://repositoryType> .

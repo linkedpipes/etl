@@ -6,9 +6,9 @@ public class SimpleTriple implements RdfTriple {
 
     private final String predicate;
 
-    private final RdfValue object;
+    private final BackendRdfValue object;
 
-    public SimpleTriple(String subject, String predicate, RdfValue object) {
+    public SimpleTriple(String subject, String predicate, BackendRdfValue object) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;
@@ -25,7 +25,7 @@ public class SimpleTriple implements RdfTriple {
     }
 
     @Override
-    public RdfValue getObject() {
+    public BackendRdfValue getObject() {
         return object;
     }
 

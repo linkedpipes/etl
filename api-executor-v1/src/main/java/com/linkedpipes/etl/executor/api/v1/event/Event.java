@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.event;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 
 public interface Event {
 
@@ -12,6 +11,6 @@ public interface Event {
      */
     void setIri(String iri);
 
-    void write(TripleWriter builder) throws RdfUtilsException;
+    void write(TripleWriter builder);
 
 }

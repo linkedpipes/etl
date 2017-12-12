@@ -2,21 +2,14 @@ package com.linkedpipes.etl.executor.api.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.event.AbstractEvent;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EVENTS;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
-import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-/**
- * Default implementation of progress report.
- *
- * TODO Take care of parallel execution.
- */
 class DefaultProgressReport implements ProgressReport {
 
     private static final Logger LOG =
@@ -34,12 +27,12 @@ class DefaultProgressReport implements ProgressReport {
         private final String component;
 
         ReportProgress(long current, long total, String componentUri) {
-            super(LP_EVENTS.PROGRESS_REPORT);
+            super(LP.PROGRESS_REPORT);
             this.current = current;
             this.total = total;
             this.component = componentUri;
-            // Create label.
-            final StringBuilder message = new StringBuilder(24);
+            // TODO REFACTORING Extract as a function.
+            StringBuilder message = new StringBuilder(24);
             message.append("Progress ");
             message.append(Long.toString(current));
             message.append(" / ");
@@ -48,13 +41,11 @@ class DefaultProgressReport implements ProgressReport {
         }
 
         @Override
-        public void write(TripleWriter writer) throws RdfUtilsException {
+        public void write(TripleWriter writer) {
             super.write(writer);
-            writer.typed(iri, LP_EVENTS.HAS_TOTAL,
-                    Long.toString(total), XSD.LONG);
-            writer.typed(iri, LP_EVENTS.HAS_CURRENT,
-                    Long.toString(current), XSD.LONG);
-            writer.iri(iri, LP_PIPELINE.HAS_COMPONENT, component);
+            writer.typed(iri, LP.HAS_TOTAL, Long.toString(total), XSD.LONG);
+            writer.typed(iri, LP.HAS_CURRENT, Long.toString(current), XSD.LONG);
+            writer.iri(iri, LP.HAS_COMPONENT, component);
         }
 
     }
@@ -108,15 +99,14 @@ class DefaultProgressReport implements ProgressReport {
         }
     }
 
-    private void sendReportMessage(int currentProgress) {
+    private void sendReportMessage(int progress) {
         LOG.info("Progress report {}/{}", current, total);
-        context.sendMessage(
-                new ReportProgress(currentProgress, total, component));
+        context.sendMessage(new ReportProgress(progress, total, component));
     }
 
     @Override
     public void done() {
-        LOG.info("Progress report {}/{} (actual: {})", total, total, current);
+        LOG.info("Progress report ALL/{}", current);
         context.sendMessage(new ReportProgress(total, total, component));
     }
 

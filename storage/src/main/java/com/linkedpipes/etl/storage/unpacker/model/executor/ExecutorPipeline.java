@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
@@ -28,7 +28,7 @@ public class ExecutorPipeline {
         this.executorProfile = new ExecutorProfile(iri + "/profile");
     }
 
-    public void write(TripleWriter writer) {
+    public void write(BackendTripleWriter writer) {
         writer.iri(iri, RDF.TYPE, LP_PIPELINE.PIPELINE);
         writer.string(iri, SKOS.PREF_LABEL, label, null);
         writer.iri(iri, LP_EXEC.HAS_METADATA, executorMetadata.getIri());
@@ -46,7 +46,7 @@ public class ExecutorPipeline {
         writeStatic(writer);
     }
 
-    private void writeStatic(TripleWriter writer) {
+    private void writeStatic(BackendTripleWriter writer) {
         String sesameIri = "http://localhost/repository/sesame";
         writer.iri(iri, "http://linkedpipes.com/ontology/repository",
                 sesameIri);

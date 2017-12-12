@@ -2,8 +2,8 @@ package com.linkedpipes.etl.rdf.utils.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -14,7 +14,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StatementsCollector implements TripleWriter {
+public class StatementsCollector implements BackendTripleWriter {
 
     private List<Statement> statements = new LinkedList<>();
 
@@ -75,7 +75,7 @@ public class StatementsCollector implements TripleWriter {
     }
 
     @Override
-    public void add(String subject, String predicate, RdfValue value) {
+    public void add(String subject, String predicate, BackendRdfValue value) {
         if(value.getType() == null) {
             iri(subject, predicate, value.asString());
         } else if (value.getType().equals(XSD.LANG_STRING)) {

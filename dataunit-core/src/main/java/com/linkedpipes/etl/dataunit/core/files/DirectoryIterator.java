@@ -40,7 +40,7 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
 
     @Override
     public FilesDataUnit.Entry next() {
-        final FilesDataUnit.Entry output = nextEntry;
+        FilesDataUnit.Entry output = nextEntry;
         // Read next entry.
         nextEntry = getNext();
         if (output == null) {
@@ -55,12 +55,11 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
      */
     private FilesDataUnit.Entry getNext() {
         if (fileIterator.hasNext()) {
-            final File nextFile = fileIterator.next();
+            File nextFile = fileIterator.next();
             return new DefaultEntry(nextFile, currentDirectory);
         } else if (directoryIterator.hasNext()) {
             currentDirectory = directoryIterator.next();
-            fileIterator = FileUtils.iterateFiles(
-                    currentDirectory, null, true);
+            fileIterator = FileUtils.iterateFiles(currentDirectory, null, true);
             return getNext();
         } else {
             return null;

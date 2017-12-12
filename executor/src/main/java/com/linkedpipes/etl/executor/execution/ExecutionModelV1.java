@@ -7,10 +7,11 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.model.*;
+import com.linkedpipes.etl.executor.rdf.TripleWriterWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -189,10 +190,10 @@ class ExecutionModelV1 {
 
         event.setIri(eventIri.stringValue());
 
-        TripleWriter writer = new TripleWriter() {
+        BackendTripleWriter writer = new BackendTripleWriter() {
 
             @Override
-            public void add(String subject, String predicate, RdfValue value) {
+            public void add(String subject, String predicate, BackendRdfValue value) {
 
             }
 
@@ -242,7 +243,8 @@ class ExecutionModelV1 {
         };
 
         try {
-            event.write(writer);
+            event.write(new TripleWriterWrap(writer));
+            writer.flush();
         } catch (RdfUtilsException ex) {
             LOG.error("Can't save event.", ex);
         }

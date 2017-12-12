@@ -10,18 +10,14 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
-import org.eclipse.rdf4j.repository.Repository;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,13 +79,16 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     }
 
     private void loadTasks() throws LpException {
-        RdfSource source = Rdf4jSource.wrapRepository(taskRdf.getRepository());
-        try {
-            tasks = RdfUtils.loadList(source,
-                    taskRdf.getReadGraph().stringValue(),
-                    RdfToPojo.descriptorFactory(), HttpRequestTask.class);
-        } catch (RdfUtilsException ex) {
-            throw exceptionFactory.failure("Can't load tasks.", ex);
+        RdfSource source = taskRdf.asRdfSource();
+        String graph = taskRdf.getReadGraph().stringValue();
+        List<String> resources = source.getByType(
+                graph, HttpRequestVocabulary.TASK);
+        tasks = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            HttpRequestTask task = new HttpRequestTask();
+            RdfToPojoLoader.loadByReflection(
+                    source, resource, graph, task);
+            tasks.add(task);
         }
     }
 
@@ -110,11 +109,7 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
 
     @Override
     protected ReportWriter createReportWriter() {
-        String graph = reportRdf.getWriteGraph().stringValue();
-        Repository repository = reportRdf.getRepository();
-        TripleWriter writer =
-                Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
-        return ReportWriter.create(writer);
+        return ReportWriter.create(reportRdf.getWriter());
     }
 
     @Override

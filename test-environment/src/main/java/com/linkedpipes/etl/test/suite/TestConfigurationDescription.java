@@ -1,22 +1,17 @@
 package com.linkedpipes.etl.test.suite;
 
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.test.TestUtils;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 
@@ -37,7 +32,7 @@ import java.util.*;
  */
 public class TestConfigurationDescription {
 
-    public static final String GRAPH = "http://localhost/graph";
+    public static final String GRAPH = null;
 
     private List<ConfigurationDescription> descriptions =
             new LinkedList<>();
@@ -53,31 +48,21 @@ public class TestConfigurationDescription {
         validateDescriptorsReference();
     }
 
-    private void loadDescriptions() throws IOException, RdfUtilsException,
+    private void loadDescriptions() throws IOException, RdfException,
             InvalidDescription {
-        final ClosableRdf4jSource source = Rdf4jSource.createInMemory();
-        loadToRepository(getDescriptorFile(), source.getRepository());
+        Rdf4jSource source = new Rdf4jSource();
+        source.loadFile(getDescriptorFile());
         for (String resource : getDescriptionResources(source)) {
-            final ConfigurationDescription instance =
+            ConfigurationDescription instance =
                     new ConfigurationDescription(resource);
-            RdfUtils.load(source,  resource, GRAPH, instance);
+            RdfToPojoLoader.load(source, resource, null, instance);
             instance.validate();
             descriptions.add(instance);
         }
-        source.close();
     }
 
     private File getDescriptorFile() {
         return TestUtils.fileFromResource("LP-ETL/template/config-desc.ttl");
-    }
-
-    private void loadToRepository(File file, Repository repository)
-            throws IOException {
-        final IRI graph = SimpleValueFactory.getInstance().createIRI(GRAPH);
-        try (RepositoryConnection connection = repository.getConnection()) {
-            connection.add(file, "http://localhost/default",
-                    getFormat(file), graph);
-        }
     }
 
     private RDFFormat getFormat(File file) {
@@ -88,18 +73,8 @@ public class TestConfigurationDescription {
     }
 
     private List<String> getDescriptionResources(RdfSource source)
-            throws RdfUtilsException {
-        final String query = getSelectDescriptorResourceQuery();
-        final List<String> resources = new LinkedList<>();
-        for (Map<String, String> entry :
-                RdfUtils.sparqlSelect(source, query)) {
-            resources.add(entry.get("s"));
-        }
-        return resources;
-    }
-
-    private static String getSelectDescriptorResourceQuery() {
-        return "SELECT ?s WHERE { ?s a <" + LP_OBJECTS.DESCRIPTION + "> }";
+            throws RdfException {
+        return source.getByType(GRAPH, LP_OBJECTS.DESCRIPTION);
     }
 
     private void validateClass(Class<?> objectClass) throws InvalidDescription {

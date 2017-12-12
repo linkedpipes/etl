@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.report;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 
 import java.util.Date;
 

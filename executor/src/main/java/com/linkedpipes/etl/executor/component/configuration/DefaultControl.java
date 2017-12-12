@@ -6,7 +6,7 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
 import com.linkedpipes.etl.executor.rdf.entity.MergeControl;
 import com.linkedpipes.etl.executor.rdf.entity.MergeType;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ class DefaultControl implements MergeControl {
      * @param source
      * @param type
      */
-    public void loadDefinition(RdfSource source, String type)
+    public void loadDefinition(BackendRdfSource source, String type)
             throws RdfUtilsException {
         // TODO Do not search for all graphs, ie. use definition from
         // given component.
@@ -166,7 +166,7 @@ class DefaultControl implements MergeControl {
         }
     }
 
-    private void loadControlledProperties(RdfSource source,
+    private void loadControlledProperties(BackendRdfSource source,
             String type) throws RdfUtilsException {
         final String query = "SELECT ?property ?control WHERE { \n" +
                 " GRAPH ?g {" +
@@ -185,7 +185,7 @@ class DefaultControl implements MergeControl {
         }
     }
 
-    private void loadComplexProperties(RdfSource source,
+    private void loadComplexProperties(BackendRdfSource source,
             String type) throws RdfUtilsException {
         final String query = "SELECT ?property ?control WHERE { \n" +
                 " GRAPH ?g {" +

@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.files;
 
-import com.linkedpipes.etl.dataunit.core.BaseDataUnit;
+import com.linkedpipes.etl.dataunit.core.AbstractDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.slf4j.Logger;
@@ -13,8 +13,8 @@ import java.util.*;
  * TODO Do not require working directory for input data unit.
  */
 class DefaultFilesDataUnit
-        extends BaseDataUnit
-        implements FilesDataUnit, WritableFilesDataUnit, ManageableDataUnit {
+        extends AbstractDataUnit
+        implements FilesDataUnit, WritableFilesDataUnit {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(DefaultFilesDataUnit.class);
@@ -36,10 +36,10 @@ class DefaultFilesDataUnit
 
     @Override
     public File createFile(String fileName) throws LpException {
-        final File output = new File(writeDirectory, fileName);
+        File output = new File(writeDirectory, fileName);
         if (output.exists()) {
-            throw new LpException("File already exists: {} ({})",
-                    fileName, output);
+            throw new LpException(
+                    "File already exists: {} ({})", fileName, output);
         }
         output.getParentFile().mkdirs();
         return output;
@@ -74,12 +74,13 @@ class DefaultFilesDataUnit
 
     @Override
     public long size() {
-        LOG.debug("Computing size ...");
+        Date start = new Date();
         long size = 0;
         for (FilesDataUnit.Entry item : this) {
             ++size;
         }
-        LOG.debug("Computing size ... done");
+        LOG.debug("Computing size takes: {} ms",
+                (new Date()).getTime() - start.getTime());
         return size;
     }
 
@@ -95,20 +96,24 @@ class DefaultFilesDataUnit
     @Override
     protected List<File> loadDataDirectories(File directory)
             throws LpException {
-        final File dataFile = new File(directory, "data.json");
-        final boolean currentVersion = dataFile.exists();
+        File dataFile = new File(directory, "data.json");
+        boolean currentVersion = dataFile.exists();
         if (currentVersion) {
             return loadRelativePaths(directory, "data.json");
         } else {
-            return loadRelativePaths(new File(directory, "data"), "data.json");
+            return loadDataDirectoriesBackwardCompatible(directory);
         }
+    }
+
+    protected List<File> loadDataDirectoriesBackwardCompatible(File directory)
+            throws LpException {
+        return loadRelativePaths(new File(directory, "data"), "data.json");
     }
 
     @Override
     protected void merge(ManageableDataUnit dataunit) throws LpException {
         if (dataunit instanceof DefaultFilesDataUnit) {
-            final DefaultFilesDataUnit source =
-                    (DefaultFilesDataUnit) dataunit;
+            DefaultFilesDataUnit source = (DefaultFilesDataUnit) dataunit;
             dataDirectories.addAll(source.dataDirectories);
         } else {
             throw new LpException(

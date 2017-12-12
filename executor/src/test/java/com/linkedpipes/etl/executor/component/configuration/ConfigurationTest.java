@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class ConfigurationTest {
         private Map<String, List<String>> values = new HashMap();
 
         @Override
-        public Loadable load(String predicate, RdfValue object)
+        public Loadable load(String predicate, BackendRdfValue object)
                 throws RdfUtilsException {
             if (!values.containsKey(predicate)) {
                 values.put(predicate, new ArrayList<>());
@@ -34,7 +34,7 @@ public class ConfigurationTest {
         private TestObject reference;
 
         @Override
-        public Loadable load(String predicate, RdfValue object)
+        public Loadable load(String predicate, BackendRdfValue object)
                 throws RdfUtilsException {
             if (predicate.equals("http://value/reference")) {
                 reference = new TestObject();

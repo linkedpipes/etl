@@ -1,16 +1,16 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RdfToPojoLoader {
 
-    private final RdfSource source;
+    private final BackendRdfSource source;
 
-    public RdfToPojoLoader(RdfSource source) {
+    public RdfToPojoLoader(BackendRdfSource source) {
         this.source = source;
     }
 

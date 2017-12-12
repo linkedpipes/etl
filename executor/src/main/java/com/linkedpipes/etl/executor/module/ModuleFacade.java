@@ -9,6 +9,7 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
+import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import org.osgi.framework.*;
@@ -67,13 +68,12 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             + "com.linkedpipes.etl.executor.api.v1.dataunit;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.event;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.rdf;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.rdf.model;version=\"0.0.0\","
+            + "com.linkedpipes.etl.executor.api.v1.rdf.pojo;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.service;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.report;version=\"0.0.0\","
             + "com.linkedpipes.etl.executor.api.v1.vocabulary;version=\"0.0.0\","
-            + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\","
-            + "com.linkedpipes.etl.rdf.utils.model;version=\"0.0.0\","
-            + "com.linkedpipes.etl.rdf.utils.pojo;version=\"0.0.0\","
-            + "com.linkedpipes.etl.rdf.utils.vocabulary;version=\"0.0.0\"";
+            + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\"";
 
     private Framework framework;
 
@@ -137,7 +137,8 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
         final ManageableComponent manageableComponent;
         try {
             manageableComponent = factory.create(component,
-                    pipeline.getPipelineGraph(), pipeline.getSource(),
+                    pipeline.getPipelineGraph(),
+                    new RdfSourceWrap(pipeline.getSource()),
                     componentContext);
         } catch (LpException ex) {
             throw new ModuleException("Can't create component from bundle.",
@@ -162,7 +163,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             try {
                 final ManageableDataUnit dataUnit = factory.create(
                         subject, pipeline.getPipelineGraph(),
-                        pipeline.getSource());
+                        new RdfSourceWrap(pipeline.getSource()));
                 if (dataUnit != null) {
                     return dataUnit;
                 }
