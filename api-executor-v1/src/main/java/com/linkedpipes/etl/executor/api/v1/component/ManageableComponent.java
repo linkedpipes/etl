@@ -29,7 +29,7 @@ public interface ManageableComponent {
             throws LpException;
 
     /**
-     * @return If null then there is no no runtime configuration.
+     * @return If null then there is no runtime configuration.
      */
     RuntimeConfiguration getRuntimeConfiguration() throws LpException;
 
