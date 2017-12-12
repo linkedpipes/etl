@@ -12,14 +12,17 @@ public class LpException extends Exception {
     protected final Object[] args;
 
     public LpException(String messages, Object... args) {
-        // Extract cause if given.
+        this.message = messages;
+        this.args = args;
+        extractCause(args);
+    }
+
+    private void extractCause(Object... args) {
         if (args.length > 0) {
             if (args[args.length - 1] instanceof Throwable) {
                 this.initCause((Throwable) args[args.length - 1]);
             }
         }
-        this.message = messages;
-        this.args = args;
     }
 
     @Override
