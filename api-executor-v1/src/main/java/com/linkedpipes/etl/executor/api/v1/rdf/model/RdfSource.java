@@ -4,9 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 
 import java.util.List;
 
-/**
- * TODO Remove information about GRAPH.
- */
 public interface RdfSource {
 
     @FunctionalInterface
@@ -16,14 +13,12 @@ public interface RdfSource {
 
     }
 
-    void statements(String graph, String subject, StatementHandler handler)
+    void statements(String subject, StatementHandler handler)
             throws RdfException;
 
-    List<RdfValue> getPropertyValues(
-            String graph, String subject, String predicate)
+    List<RdfValue> getPropertyValues(String subject, String predicate)
             throws RdfException;
 
-    List<String> getByType(String graph, String type)
-            throws RdfException;
+    List<String> getByType(String type) throws RdfException;
 
 }

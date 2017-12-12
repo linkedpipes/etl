@@ -80,14 +80,12 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
 
     private void loadTasks() throws LpException {
         RdfSource source = taskRdf.asRdfSource();
-        String graph = taskRdf.getReadGraph().stringValue();
         List<String> resources = source.getByType(
-                graph, HttpRequestVocabulary.TASK);
+                HttpRequestVocabulary.TASK);
         tasks = new ArrayList<>(resources.size());
         for (String resource : resources) {
             HttpRequestTask task = new HttpRequestTask();
-            RdfToPojoLoader.loadByReflection(
-                    source, resource, graph, task);
+            RdfToPojoLoader.loadByReflection(source, resource, task);
             tasks.add(task);
         }
     }

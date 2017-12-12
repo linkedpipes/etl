@@ -13,7 +13,7 @@ public class DefaultServiceFactory implements ServiceFactory {
 
     @Override
     public Object create(
-            Class<?> serviceType, String component, String graph,
+            Class<?> serviceType, String component,
             RdfSource definition, Component.Context context)
             throws LpException {
         if (serviceType.equals(ExceptionFactory.class)) {
@@ -23,20 +23,20 @@ public class DefaultServiceFactory implements ServiceFactory {
             return new DefaultProgressReport(context, component);
         }
         if (serviceType.equals(DefinitionReader.class)) {
-            return new DefaultDefinitionReader(component, graph, definition);
+            return new DefaultDefinitionReader(component, definition);
         }
         if (serviceType.equals(WorkingDirectory.class)) {
-            return createWorkingDirectory(component, graph, definition);
+            return createWorkingDirectory(component, definition);
         }
         throw new LpException("Invalid service type: {}",
                 serviceType.getName());
     }
 
     private WorkingDirectory createWorkingDirectory(
-            String component, String graph, RdfSource definition)
+            String component, RdfSource definition)
             throws LpException {
         List<RdfValue> paths = definition.getPropertyValues(
-                graph, component, LP.HAS_WORKING_DIRECTORY);
+                component, LP.HAS_WORKING_DIRECTORY);
         if (paths.size() != 1) {
             throw new LpException("Invalid number of working paths: {}",
                     paths.size());

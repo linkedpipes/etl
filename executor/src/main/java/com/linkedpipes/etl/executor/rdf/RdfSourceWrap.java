@@ -14,13 +14,16 @@ public class RdfSourceWrap implements RdfSource {
 
     private final BackendRdfSource source;
 
-    public RdfSourceWrap(BackendRdfSource source) {
+    private final String graph;
+
+    public RdfSourceWrap(BackendRdfSource source, String graph) {
         this.source = source;
+        this.graph = graph;
     }
 
     @Override
-    public void statements(String graph, String subject,
-            StatementHandler handler) throws RdfException {
+    public void statements(String subject, StatementHandler handler)
+            throws RdfException {
         try {
             source.triples(subject, graph, (triple) -> {
                 RdfValueWrap value = new RdfValueWrap(triple.getObject());
@@ -32,8 +35,8 @@ public class RdfSourceWrap implements RdfSource {
     }
 
     @Override
-    public List<RdfValue> getPropertyValues(String graph, String subject,
-            String predicate) throws RdfException {
+    public List<RdfValue> getPropertyValues(String subject, String predicate)
+            throws RdfException {
         List<RdfValue> result = new ArrayList<>();
         try {
             source.triples(subject, graph, (triple) -> {
@@ -48,8 +51,7 @@ public class RdfSourceWrap implements RdfSource {
     }
 
     @Override
-    public List<String> getByType(String graph, String type)
-            throws RdfException {
+    public List<String> getByType(String type) throws RdfException {
         List<String> result = new ArrayList<>();
         try {
             source.triples(null, graph, (triple) -> {

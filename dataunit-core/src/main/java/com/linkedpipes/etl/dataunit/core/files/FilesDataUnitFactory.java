@@ -38,8 +38,7 @@ public class FilesDataUnitFactory
             String dataUnit, String graph, RdfSource definition)
             throws LpException {
         dataUnitConfiguration = new Configuration(dataUnit, graph);
-        RdfToPojoLoader.load(
-                definition, dataUnit, graph, dataUnitConfiguration);
+        RdfToPojoLoader.load(definition, dataUnit, dataUnitConfiguration);
     }
 
     private ManageableDataUnit createDataUnit(String dataUnit)
@@ -66,9 +65,9 @@ public class FilesDataUnitFactory
     }
 
     @Override
-    public void onPipelineBegin(String pipeline, String graph,
+    public void onPipelineBegin(String pipeline,
             RdfSource definition) throws LpException {
-        pipelineModel.load(pipeline, graph, definition);
+        pipelineModel.load(pipeline, definition);
     }
 
     @Override

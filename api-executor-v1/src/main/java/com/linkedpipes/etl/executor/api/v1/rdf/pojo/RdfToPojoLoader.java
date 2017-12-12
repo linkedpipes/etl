@@ -14,40 +14,39 @@ public class RdfToPojoLoader {
     }
 
     public static void load(
-            RdfSource source, String resource, String graph, Loadable entity)
+            RdfSource source, String resource, Loadable entity)
             throws RdfException {
         Map<Loadable, String> newEntities = new HashMap<>();
 
         entity.resource(resource);
-        source.statements(graph, resource, (predicate, object) -> {
+        source.statements(resource, (predicate, object) -> {
             Loadable newEntity = entity.load(predicate, object);
             if (newEntity != null) {
                 newEntities.put(newEntity, object.asString());
             }
         });
         for (Map.Entry<Loadable, String> entry : newEntities.entrySet()) {
-            load(source, entry.getValue(), graph, entry.getKey());
+            load(source, entry.getValue(), entry.getKey());
         }
     }
 
     public static void loadByReflection(
-            RdfSource source, String graph, Object entity)
-            throws RdfException {
+            RdfSource source, Object entity) throws RdfException {
         Descriptor descriptor = new Descriptor(entity.getClass());
         String typeName = descriptor.getObjectType();
-        List<String> resources = source.getByType(graph, typeName);
+        List<String> resources = source.getByType(typeName);
         if (resources.size() != 1) {
             throw new RdfException("Invalid number of resources ({})",
                     resources.size());
         }
-        loadByReflection(source, resources.get(0), graph, entity);
+        loadByReflection(source, resources.get(0), entity);
     }
 
     public static void loadByReflection(
-            RdfSource source, String resource, String graph, Object entity)
+            RdfSource source, String resource, Object entity)
             throws RdfException {
         ReflectionLoader entityWrap = new ReflectionLoader(entity);
-        load(source, resource, graph, entityWrap);
+        load(source, resource, entityWrap);
     }
 
 }

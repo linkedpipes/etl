@@ -82,9 +82,7 @@ public class RdfDataUnitFactory
             String dataUnit, String graph, RdfSource definition)
             throws LpException {
         Configuration configuration = new Configuration(dataUnit, graph);
-        RdfToPojoLoader.load(
-                definition, dataUnit, graph, configuration);
-
+        RdfToPojoLoader.load(definition, dataUnit, configuration);
         return configuration;
     }
 
@@ -94,23 +92,23 @@ public class RdfDataUnitFactory
     }
 
     @Override
-    public void onPipelineBegin(String pipeline, String graph,
+    public void onPipelineBegin(String pipeline,
             RdfSource definition) throws LpException {
-        pipelineModel.load(pipeline, graph, definition);
+        pipelineModel.load(pipeline, definition);
         if (pipelineModel.getRdfRepository() == null) {
             LOG.info("RDF repository not detected.");
             return;
         }
-        loadFactoryConfiguration(graph, definition);
+        loadFactoryConfiguration(definition);
         initializeRepositoryManager();
     }
 
-    private void loadFactoryConfiguration(String graph, RdfSource definition)
+    private void loadFactoryConfiguration(RdfSource definition)
             throws RdfException {
         factoryConfiguration = new FactoryConfiguration();
         RdfToPojoLoader.load(
                 definition, pipelineModel.getRdfRepository(),
-                graph, factoryConfiguration);
+                factoryConfiguration);
     }
 
     private void initializeRepositoryManager() throws LpException {

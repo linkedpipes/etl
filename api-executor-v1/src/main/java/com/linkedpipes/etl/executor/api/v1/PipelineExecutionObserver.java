@@ -8,8 +8,8 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
  */
 public interface PipelineExecutionObserver {
 
-    void onPipelineBegin(String pipeline, String graph,
-            RdfSource definition) throws LpException;
+    void onPipelineBegin(String pipeline, RdfSource definition)
+            throws LpException;
 
     void onPipelineEnd();
 

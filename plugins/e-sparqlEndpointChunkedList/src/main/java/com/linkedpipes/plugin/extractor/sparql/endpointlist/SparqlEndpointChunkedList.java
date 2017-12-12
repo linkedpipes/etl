@@ -81,14 +81,12 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
 
     private void loadTasks() throws LpException {
         RdfSource source = tasksRdf.asRdfSource();
-        String graph = tasksRdf.getReadGraph().stringValue();
         List<String> resources = source.getByType(
-                graph, SparqlEndpointChunkedListVocabulary.TASK);
+                SparqlEndpointChunkedListVocabulary.TASK);
         tasks = new ArrayList<>(resources.size());
         for (String resource : resources) {
             QueryTask task = new QueryTask();
-            RdfToPojoLoader.loadByReflection(
-                    source, resource, graph, task);
+            RdfToPojoLoader.loadByReflection(source, resource, task);
             tasks.add(task);
         }
     }

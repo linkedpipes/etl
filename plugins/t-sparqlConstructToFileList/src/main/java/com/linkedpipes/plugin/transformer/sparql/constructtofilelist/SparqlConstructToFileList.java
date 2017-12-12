@@ -33,9 +33,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class SparqlConstructToFileList implements Component, SequentialExecution {
+public class SparqlConstructToFileList
+        implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SparqlConstructToFileList.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SparqlConstructToFileList.class);
 
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
@@ -71,14 +73,12 @@ public class SparqlConstructToFileList implements Component, SequentialExecution
 
     private void loadTasksGroups() throws LpException {
         RdfSource source = tasksRdf.asRdfSource();
-        String graph = tasksRdf.getReadGraph().stringValue();
         List<String> resources = source.getByType(
-                graph, SparqlConstructToFileListVocabulary.TASK);
+                SparqlConstructToFileListVocabulary.TASK);
         taskGroups = new ArrayList<>(resources.size());
         for (String resource : resources) {
             TaskGroup task = new TaskGroup();
-            RdfToPojoLoader.loadByReflection(
-                    source, resource, graph, task);
+            RdfToPojoLoader.loadByReflection(source, resource, task);
             taskGroups.add(task);
         }
     }

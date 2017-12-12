@@ -64,14 +64,12 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
     private void loadTasks() throws LpException {
         RdfSource source = configurationRdf.asRdfSource();
-        String graph = configurationRdf.getReadGraph().stringValue();
-        List<String> resources = source.getByType(
-                graph, HttpGetFilesVocabulary.REFERENCE);
+        List<String> resources =
+                source.getByType(HttpGetFilesVocabulary.REFERENCE);
         tasks = new ArrayList<>(resources.size());
         for (String resource : resources) {
             DownloadTask task = new DownloadTask();
-            RdfToPojoLoader.loadByReflection(
-                    source, resource, graph, task);
+            RdfToPojoLoader.loadByReflection(source, resource, task);
             tasks.add(task);
         }
     }

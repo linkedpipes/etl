@@ -65,14 +65,12 @@ public class GraphStorePurger implements Component, SequentialExecution {
 
     private void loadTasks() throws LpException {
         RdfSource source = taskRdf.asRdfSource();
-        String graph = taskRdf.getReadGraph().stringValue();
         List<String> resources = source.getByType(
-                graph, GraphStorePurgerVocabulary.TASK);
+                GraphStorePurgerVocabulary.TASK);
         graphsToPurge = new ArrayList<>(resources.size());
         for (String resource : resources) {
             GraphsToPurge item = new GraphsToPurge();
-            RdfToPojoLoader.loadByReflection(
-                    source, resource, graph, item);
+            RdfToPojoLoader.loadByReflection(source, resource, item);
             graphsToPurge.add(item);
         }
     }

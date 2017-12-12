@@ -65,8 +65,7 @@ class Rdf4jSource implements RdfSource {
     }
 
     @Override
-    public List<String> getByType(
-            String graph, String type) throws RdfException {
+    public List<String> getByType(String type) throws RdfException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         return model.filter(null, RDF.TYPE, valueFactory.createIRI(type))
                 .stream()
@@ -75,15 +74,13 @@ class Rdf4jSource implements RdfSource {
     }
 
     @Override
-    public List<RdfValue> getPropertyValues(
-            String graph, String subject, String predicate)
+    public List<RdfValue> getPropertyValues(String subject, String predicate)
             throws RdfException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void statements(
-            String graph, String subject, StatementHandler handler)
+    public void statements(String subject, StatementHandler handler)
             throws RdfException {
         for (Statement statement : model) {
             if (!statement.getSubject().stringValue().equals(subject)) {

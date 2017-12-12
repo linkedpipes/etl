@@ -188,8 +188,8 @@ public class PipelineExecutor {
             for (PipelineExecutionObserver observer :
                     moduleFacade.getPipelineListeners()) {
                 observer.onPipelineBegin(pipeline.getPipelineIri(),
-                        pipeline.getPipelineGraph(),
-                        new RdfSourceWrap(pipeline.getSource()));
+                        new RdfSourceWrap(pipeline.getSource(),
+                                pipeline.getPipelineGraph()));
             }
         } catch (LpException ex) {
             throw new ExecutorException("Observer error.", ex);

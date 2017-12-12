@@ -32,8 +32,6 @@ import java.util.*;
  */
 public class TestConfigurationDescription {
 
-    public static final String GRAPH = null;
-
     private List<ConfigurationDescription> descriptions =
             new LinkedList<>();
 
@@ -55,7 +53,7 @@ public class TestConfigurationDescription {
         for (String resource : getDescriptionResources(source)) {
             ConfigurationDescription instance =
                     new ConfigurationDescription(resource);
-            RdfToPojoLoader.load(source, resource, null, instance);
+            RdfToPojoLoader.load(source, resource, instance);
             instance.validate();
             descriptions.add(instance);
         }
@@ -74,7 +72,7 @@ public class TestConfigurationDescription {
 
     private List<String> getDescriptionResources(RdfSource source)
             throws RdfException {
-        return source.getByType(GRAPH, LP_OBJECTS.DESCRIPTION);
+        return source.getByType(LP_OBJECTS.DESCRIPTION);
     }
 
     private void validateClass(Class<?> objectClass) throws InvalidDescription {

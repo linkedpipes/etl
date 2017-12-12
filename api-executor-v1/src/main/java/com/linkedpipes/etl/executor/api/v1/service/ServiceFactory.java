@@ -12,12 +12,11 @@ public interface ServiceFactory {
     /**
      * @param serviceType
      * @param component Resource of a component to create service for.
-     * @param graph
      * @param definition
      * @param context
      * @return Null if no service of given type can be instantiated.
      */
-    Object create(Class<?> serviceType, String component, String graph,
+    Object create(Class<?> serviceType, String component,
             RdfSource definition, Component.Context context)
             throws LpException;
 

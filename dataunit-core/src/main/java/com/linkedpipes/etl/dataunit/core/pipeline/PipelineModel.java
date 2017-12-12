@@ -13,10 +13,10 @@ public class PipelineModel {
 
     Pipeline pipeline;
 
-    public void load(String pipeline, String graph, RdfSource source)
+    public void load(String pipeline, RdfSource source)
             throws RdfException {
         this.pipeline = new Pipeline();
-        RdfToPojoLoader.load(source, pipeline, graph, this.pipeline);
+        RdfToPojoLoader.load(source, pipeline, this.pipeline);
     }
 
     public void clear() {

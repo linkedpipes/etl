@@ -51,17 +51,15 @@ public class SequentialWrapTest {
     public void injectAndExecute() throws LpException, IOException{
         TestComponent component = new TestComponent();
         RdfSource rdfSource = Mockito.mock(RdfSource.class);
-        ComponentInfo componentInfo = new ComponentInfo(
-                "http://component", "http://graph");
         SequentialWrap wrap = new SequentialWrap(
-                component, componentInfo, rdfSource,
+                component, "http://component", rdfSource,
                 new DefaultServiceFactory());
         File path = File.createTempFile("lp-test-", "");
 
         RdfValue pathValue = Mockito.mock(RdfValue.class);
         Mockito.when(pathValue.asString()).thenReturn(path.toURI().toString());
         Mockito.when(rdfSource.getPropertyValues(
-                "http://graph", "http://component", LP.HAS_WORKING_DIRECTORY))
+                "http://component", LP.HAS_WORKING_DIRECTORY))
                 .thenReturn(Arrays.asList(pathValue));
 
         Map<String, DataUnit> dataUnits = new HashMap<>();

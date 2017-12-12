@@ -138,7 +138,8 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
         try {
             manageableComponent = factory.create(component,
                     pipeline.getPipelineGraph(),
-                    new RdfSourceWrap(pipeline.getSource()),
+                    new RdfSourceWrap(
+                            pipeline.getSource(), pipeline.getPipelineGraph()),
                     componentContext);
         } catch (LpException ex) {
             throw new ModuleException("Can't create component from bundle.",
@@ -163,7 +164,8 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             try {
                 final ManageableDataUnit dataUnit = factory.create(
                         subject, pipeline.getPipelineGraph(),
-                        new RdfSourceWrap(pipeline.getSource()));
+                        new RdfSourceWrap(pipeline.getSource(),
+                                pipeline.getPipelineGraph()));
                 if (dataUnit != null) {
                     return dataUnit;
                 }

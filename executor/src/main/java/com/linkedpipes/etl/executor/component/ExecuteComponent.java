@@ -165,15 +165,17 @@ class ExecuteComponent implements ComponentExecutor {
             Configuration.prepareConfiguration(configGraph,
                     pplComponent, null, null, writer, pipeline);
         } else {
-            BackendRdfSource runtimeSource = wrapRuntimeConfiguration(runtimeConfig);
+            BackendRdfSource runtimeSource =
+                    wrapRuntimeConfiguration(runtimeConfig);
             Configuration.prepareConfiguration(configGraph, pplComponent,
                     runtimeSource, RUNTIME_CONFIGURATION_GRAPH,
                     writer, pipeline);
         }
 
         try {
-            instance.loadConfiguration(configGraph,
-                    new RdfSourceWrap(pipeline.getSource()));
+            instance.loadConfiguration(configGraph, new RdfSourceWrap(
+                    pipeline.getSource(),
+                    pipeline.getPipelineIri()));
         } catch (LpException ex) {
             throw new ExecutorException(
                     "Can't load component configuration", ex);

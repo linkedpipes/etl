@@ -31,8 +31,8 @@ class Rdf4jRdfSource implements RdfSource {
     }
 
     @Override
-    public void statements(String graph, String subject,
-            StatementHandler handler) throws RdfException {
+    public void statements(String subject, StatementHandler handler)
+            throws RdfException {
         IRI iri = valueFactory.createIRI(subject);
         try {
             dataUnit.execute((connection -> {
@@ -56,8 +56,8 @@ class Rdf4jRdfSource implements RdfSource {
     }
 
     @Override
-    public List<RdfValue> getPropertyValues(String graph, String subject,
-            String predicate) throws RdfException {
+    public List<RdfValue> getPropertyValues(String subject, String predicate)
+            throws RdfException {
         IRI subjectIri = valueFactory.createIRI(subject);
         IRI predicateIri = valueFactory.createIRI(predicate);
         List<RdfValue> result = new ArrayList<>();
@@ -66,7 +66,7 @@ class Rdf4jRdfSource implements RdfSource {
                 RepositoryResult<Statement> statements =
                         connection.getStatements(
                                 subjectIri, predicateIri, null, this.graph);
-                while(statements.hasNext()) {
+                while (statements.hasNext()) {
                     result.add(
                             new Rdf4jValueWrap(statements.next().getObject()));
                 }
@@ -78,8 +78,7 @@ class Rdf4jRdfSource implements RdfSource {
     }
 
     @Override
-    public List<String> getByType(String graph, String type)
-            throws RdfException {
+    public List<String> getByType(String type) throws RdfException {
         IRI typeIri = valueFactory.createIRI(type);
         List<String> result = new ArrayList<>();
         try {
@@ -87,7 +86,7 @@ class Rdf4jRdfSource implements RdfSource {
                 RepositoryResult<Statement> statements =
                         connection.getStatements(
                                 null, RDF.TYPE, typeIri, this.graph);
-                while(statements.hasNext()) {
+                while (statements.hasNext()) {
                     result.add(statements.next().getSubject().stringValue());
                 }
             }));

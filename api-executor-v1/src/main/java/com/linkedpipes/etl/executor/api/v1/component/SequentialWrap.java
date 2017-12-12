@@ -17,21 +17,16 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     private final SequentialExecution component;
 
-    private final ComponentInfo info;
+    private final String componentIri;
 
     private final RdfSource definition;
 
     private final ServiceFactory serviceFactory;
 
-    /**
-     * @param component Must be instance of {@link SequentialExecution}.
-     * @param info
-     * @param definition
-     */
-    public SequentialWrap(SequentialExecution component, ComponentInfo info,
+    public SequentialWrap(SequentialExecution component, String componentIri,
             RdfSource definition, ServiceFactory serviceFactory) {
         this.component = component;
-        this.info = info;
+        this.componentIri = componentIri;
         this.definition = definition;
         this.serviceFactory = serviceFactory;
     }
@@ -167,8 +162,8 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
             }
             final Object instance;
             try {
-                instance = serviceFactory.create(field.getType(),
-                        info.getIri(), info.getGraph(), definition, context);
+                instance = serviceFactory.create(
+                        field.getType(), componentIri, definition, context);
             } catch (LpException ex) {
                 throw new LpException("Can't instantiate: {} : {}",
                         field.getName(), field.getType().getSimpleName(), ex);

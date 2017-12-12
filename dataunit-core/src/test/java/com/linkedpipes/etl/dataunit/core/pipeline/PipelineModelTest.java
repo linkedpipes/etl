@@ -15,7 +15,7 @@ public class PipelineModelTest {
         Rdf4jSource source = new Rdf4jSource();
         source.loadTestResource("withRepository.ttl");
         PipelineModel pipelineModel = new PipelineModel();
-        pipelineModel.load("http://pipeline", null, source);
+        pipelineModel.load("http://pipeline", source);
 
         Assert.assertEquals("http://repositoryPolicy",
                 pipelineModel.getRdfRepositoryPolicy());
@@ -30,7 +30,7 @@ public class PipelineModelTest {
         Rdf4jSource source = new Rdf4jSource();
         source.loadTestResource("pipelineResource.ttl");
         PipelineModel pipelineModel = new PipelineModel();
-        pipelineModel.load("http://pipeline", null, source);
+        pipelineModel.load("http://pipeline", source);
 
         Assert.assertEquals(LP_PIPELINE.SINGLE_REPOSITORY,
                 pipelineModel.getRdfRepositoryPolicy());
@@ -44,7 +44,7 @@ public class PipelineModelTest {
         Rdf4jSource source = new Rdf4jSource();
         source.loadTestResource("twoConnected.ttl");
         PipelineModel pipelineModel = new PipelineModel();
-        pipelineModel.load("http://pipeline", null, source);
+        pipelineModel.load("http://pipeline", source);
 
         List<String> actual = pipelineModel.getSourcesFor("http://comp/t/1");
         List<String> expected = Arrays.asList(
