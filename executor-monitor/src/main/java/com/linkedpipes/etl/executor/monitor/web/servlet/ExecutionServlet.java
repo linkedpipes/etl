@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorFacade;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -154,6 +156,35 @@ public class ExecutionServlet {
         }
         response.setStatus(HttpServletResponse.SC_OK);
         return new FileSystemResource(file);
+    }
+
+    @RequestMapping(value = "/{id}/logs-tail", method = RequestMethod.GET,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public void getExecutionLogsTail(@PathVariable String id,
+            @RequestParam(value = "n", defaultValue = "32") int count,
+            HttpServletResponse response) throws IOException {
+        File file = executionFacade.getExecutionLogFile(
+                executionFacade.getExecution(id));
+        if (file == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return ;
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter writer = response.getWriter();
+        ReversedLinesFileReader reader = new ReversedLinesFileReader(file);
+        String[] lines = new String[count];
+        for (int i = count - 1; i >= 0; --i) {
+            lines[i] = reader.readLine();
+        }
+        for (int i = 0; i < count; ++i) {
+            if (lines[i] != null) {
+                writer.write(lines[i]);
+                writer.write("\n");
+            }
+        }
+        writer.flush();
+        reader.close();
     }
 
     @RequestMapping(value = "/{id}/pipeline", method = RequestMethod.GET)
