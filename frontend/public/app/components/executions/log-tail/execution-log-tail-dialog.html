@@ -1,0 +1,26 @@
+<md-dialog aria-label="Execution logs" flex="70">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h4>Logs tail for "{{::label}}"</h4>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="onClose()">
+                    <md-icon md-svg-src="close" aria-label="Close dialog"/>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div id="log-tail-dialog-content" style="white-space: pre-line">
+                    {{content}}
+                </div>
+                <div id="log-tail-dialog-content-end"/>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button ng-click="onClose()" class="md-primary">
+                CLOSE DIALOG
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
