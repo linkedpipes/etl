@@ -30,8 +30,8 @@ requirejs.config({
         //
         'angular-clipboard' : 'libraries/angular-clipboard/angular-clipboard',
         // Custom modules.
-        'jsonld': '/app/modules/jsonld',
-        'lp': '/app/modules/lp'
+        "jsonld": "/app/modules/jsonld",
+        "lp-vocabulary": "/app/modules/lp-vocabulary"
     },
     map: {
         'backbone': {

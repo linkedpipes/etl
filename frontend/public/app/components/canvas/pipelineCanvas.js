@@ -14,7 +14,7 @@ define([
     'jquery',
     'jointjs',
     'lodash',
-    'lp'
+    'lp-vocabulary'
 ], function (jQuery, joint, _, lp) {
 
     /**

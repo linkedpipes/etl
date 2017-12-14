@@ -1,4 +1,4 @@
-define(["lp"], function (lp) {
+define(["lp-vocabulary"], function (lp) {
     "use strict";
 
     const ICONS = {
