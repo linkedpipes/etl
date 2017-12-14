@@ -705,7 +705,7 @@ gApiRouter.get('/executions/:id/logs', function (request, response) {
 gApiRouter.get('/executions/:id/logs-tail', function (request, response) {
     var uri = gMonitorUri + 'executions/' + request.params.id + '/logs-tail';
     if (request.query.n !== undefined) {
-        uri += 'n=' + request.query.n;
+        uri += '?n=' + request.query.n;
     }
     pipeGet(uri, response);
 });
