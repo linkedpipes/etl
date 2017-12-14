@@ -10,6 +10,8 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -46,6 +48,9 @@ public class ExecutionServlet {
             this.iri = iri;
         }
     }
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ExecutionServlet.class);
 
     @Autowired
     private ExecutionFacade executionFacade;
@@ -166,26 +171,49 @@ public class ExecutionServlet {
             HttpServletResponse response) throws IOException {
         File file = executionFacade.getExecutionLogFile(
                 executionFacade.getExecution(id));
-        if (file == null) {
+        if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return ;
         }
-        response.setContentType("text/plain");
-        response.setStatus(HttpServletResponse.SC_OK);
-        PrintWriter writer = response.getWriter();
+        String[] lines = readLogTail(file, count);
+        writeLinesToResponse(lines, response);
+    }
+
+    private String[] readLogTail(File file, int count) throws IOException {
         ReversedLinesFileReader reader = new ReversedLinesFileReader(file);
         String[] lines = new String[count];
         for (int i = count - 1; i >= 0; --i) {
-            lines[i] = reader.readLine();
+            String line;
+            try {
+                line = reader.readLine();
+            } catch (Exception ex) {
+                LOG.error("Can't read log file, i: {}", i, ex);
+                break;
+            }
+            if (line == null) {
+                break;
+            } else{
+                lines[i] = line;
+            }
         }
-        for (int i = 0; i < count; ++i) {
+        reader.close();
+        return lines;
+    }
+
+    private void writeLinesToResponse(
+            String[] lines, HttpServletResponse response)
+            throws IOException {
+        response.setContentType("text/plain");
+        response.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter writer = response.getWriter();
+        for (int i = 0; i < lines.length; ++i) {
             if (lines[i] != null) {
                 writer.write(lines[i]);
                 writer.write("\n");
             }
         }
         writer.flush();
-        reader.close();
+
     }
 
     @RequestMapping(value = "/{id}/pipeline", method = RequestMethod.GET)
