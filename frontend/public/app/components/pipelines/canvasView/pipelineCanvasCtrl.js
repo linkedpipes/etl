@@ -753,7 +753,7 @@ define([
         'models.execution',
         'canvas.pipeline',
         'canvas.execution',
-        'indexPage',
+        'layout-service',
         'service.pipelineDesign'
     ];
 

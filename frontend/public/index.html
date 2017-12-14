@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html ng-controller="index.ctrl">
+<html ng-controller="layout-page">
     <head lang="en">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="theme-color" content="{{index.color}}"/>
+        <meta name="theme-color" content="{{layout.color}}"/>
         <title ng-bind='index.title'>LinkedPipes ETL</title>
         <!-- JointJs. -->
         <link rel="stylesheet" href="libraries/jointjs/joint.core.min.css">
@@ -26,7 +26,7 @@
         </style>
     </head>
     <body ng-cloak style="height: 100vh" layout="column" class="ng-cloak">
-    <md-toolbar layout="row" style="background-color:{{index.color}}">
+    <md-toolbar layout="row" style="background-color:{{layout.color}}">
         <md-button class="menuBtn" ng-click="toggleSidenav()" hide-gt-sm aria-label="menu">
             <md-icon md-svg-icon="menu" style="color:white;"></md-icon>
         </md-button>
