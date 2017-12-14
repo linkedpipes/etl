@@ -76,7 +76,8 @@ requirejs.config({
         "bootstrap-ui": {
             "deps": ["angular"]
         }
-    }
+    },
+    "waitSeconds": 30
 });
 
 requirejs(["app/app-module"], function (app) {
