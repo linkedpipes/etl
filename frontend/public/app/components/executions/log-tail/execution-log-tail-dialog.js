@@ -5,12 +5,17 @@ define([], function () {
     function controller($scope, $mdDialog, $interval, $http, execution) {
 
         function setContent(data) {
-            document.getElementById("log-tail-dialog-content").innerHTML = data;
+            document.getElementById(htmlPrefix + "content").innerHTML = data;
         }
 
         function scrollToBottom() {
             const div = document.getElementById(htmlPrefix + "content-end");
             div.scrollIntoView(false);
+        }
+
+        function isExecutionFinished(execution) {
+            return execution["status-monitor"] ==
+                "http://etl.linkedpipes.com/resources/status/finished";
         }
 
         const refreshData = () => {
@@ -19,8 +24,12 @@ define([], function () {
             $http.get(url).then((response) => {
                     setContent(response.data);
                     scrollToBottom();
+                    if (isExecutionFinished(execution)) {
+                        $interval.cancel(refreshStop);
+                    }
                 }, (response) => {
-                    console.error("Request failed.", response);
+                    setContent("There are no log data available.");
+                    console.warn("Request failed.", response);
                 }
             );
         };
