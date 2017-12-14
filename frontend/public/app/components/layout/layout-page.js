@@ -7,7 +7,7 @@ define([], () => {
 
         $scope.layout = layout;
 
-        $scope.$on("$routeChangeSuccess", function (event, current, previous) {
+        $scope.$on("$routeChangeSuccess", (event, current, previous) => {
             if (current.$$route && current.$$route.pageTitle) {
                 $scope.layout.title = current.$$route.pageTitle;
                 if (current.$$route.color !== undefined) {
@@ -17,40 +17,47 @@ define([], () => {
         });
 
         const sidenavId = "left";
-        $scope.toggleSidenav = function () {
+        $scope.toggleSidenav = () => {
             $mdSidenav(sidenavId).toggle();
         };
 
-        $scope.closeSidenav = function () {
+        $scope.closeSidenav = () => {
             $mdSidenav(sidenavId).close();
         };
 
-        $scope.onPipelines = function () {
+        $scope.onPipelines = () => {
             $scope.closeSidenav();
             $location.path("/pipelines").search({});
         };
 
-        $scope.onExecutions = function () {
+        $scope.onExecutions = () => {
             $scope.closeSidenav();
             $location.path("/executions").search({});
         };
 
-        $scope.onTemplates = function () {
+        $scope.onTemplates = () => {
             $scope.closeSidenav();
             $location.path("/templates").search({});
         };
 
-        $scope.onPersonalization = function () {
+        $scope.onPersonalization = () => {
             $scope.closeSidenav();
             $location.path("/personalization").search({});
         };
 
-        $scope.onHelp = function () {
+        $scope.onHelp = () => {
             $scope.closeSidenav();
             $location.path("/help").search({});
         };
 
     }
+
+    controller.$inject = [
+        "$scope",
+        "$mdSidenav",
+        "$location",
+        "layout-service"
+    ];
 
     let _initialized = false;
     return function init(app) {
@@ -58,14 +65,7 @@ define([], () => {
             return;
         }
         _initialized = true;
-        app.controller("layout-page",
-            [
-                "$scope",
-                "$mdSidenav",
-                "$location",
-                "layout-service",
-                controller]
-        );
+        app.controller("layout-page", controller);
     };
 
 });
