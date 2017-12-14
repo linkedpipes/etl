@@ -170,6 +170,7 @@ public class ExecutionServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return ;
         }
+        response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter writer = response.getWriter();
         ReversedLinesFileReader reader = new ReversedLinesFileReader(file);
