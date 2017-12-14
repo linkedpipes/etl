@@ -203,6 +203,7 @@ public class ExecutionServlet {
     private void writeLinesToResponse(
             String[] lines, HttpServletResponse response)
             throws IOException {
+        response.setCharacterEncoding("utf-8");
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter writer = response.getWriter();
@@ -213,7 +214,6 @@ public class ExecutionServlet {
             }
         }
         writer.flush();
-
     }
 
     @RequestMapping(value = "/{id}/pipeline", method = RequestMethod.GET)
