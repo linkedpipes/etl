@@ -173,9 +173,9 @@ class ExecuteComponent implements ComponentExecutor {
         }
 
         try {
-            instance.loadConfiguration(configGraph, new RdfSourceWrap(
+            instance.loadConfiguration(new RdfSourceWrap(
                     pipeline.getSource(),
-                    pipeline.getPipelineIri()));
+                    configGraph));
         } catch (LpException ex) {
             throw new ExecutorException(
                     "Can't load component configuration", ex);

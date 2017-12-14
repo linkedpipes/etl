@@ -32,9 +32,9 @@ public class PipelineExecutorTest {
         }
 
         @Override
-        public void loadConfiguration(String graph, RdfSource definition)
+        public void loadConfiguration(RdfSource definition)
                 throws LpException {
-            LOG.info("loadConfiguration {}", graph);
+            LOG.info("loadConfiguration {}");
         }
 
         @Override

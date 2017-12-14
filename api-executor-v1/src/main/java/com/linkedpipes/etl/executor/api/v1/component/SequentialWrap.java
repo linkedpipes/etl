@@ -50,12 +50,12 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
     }
 
     @Override
-    public void loadConfiguration(String graph, RdfSource definition)
+    public void loadConfiguration(RdfSource definition)
             throws LpException {
         // Load configuration.
         for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Configuration.class) != null) {
-                loadConfigurationForField(field, graph, definition);
+                loadConfigurationForField(field, definition);
             }
         }
     }
@@ -77,11 +77,10 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
      * Load configuration for given field.
      *
      * @param field
-     * @param graph
      * @param definition
      */
-    private void loadConfigurationForField(Field field, String graph,
-            RdfSource definition) throws LpException {
+    private void loadConfigurationForField(Field field,  RdfSource definition)
+            throws LpException {
         final Object instance;
         try {
             instance = field.getType().newInstance();
@@ -89,7 +88,7 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
             throw new LpException("Can't create instance of {} for {}",
                     field.getType().getSimpleName(), field.getName(), ex);
         }
-        RdfToPojoLoader.loadByReflection(definition, graph, instance);
+        RdfToPojoLoader.loadByReflection(definition, instance);
         try {
             field.set(component, instance);
         } catch (IllegalAccessException | IllegalArgumentException ex) {

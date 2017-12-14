@@ -22,11 +22,9 @@ public interface ManageableComponent {
     /**
      * Load configuration for a component.
      *
-     * @param graph
      * @param definition Access to configuration.
      */
-    void loadConfiguration(String graph, RdfSource definition)
-            throws LpException;
+    void loadConfiguration(RdfSource definition) throws LpException;
 
     /**
      * @return If null then there is no runtime configuration.
