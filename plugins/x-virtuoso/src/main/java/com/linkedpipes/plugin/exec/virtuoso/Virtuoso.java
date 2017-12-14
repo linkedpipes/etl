@@ -5,6 +5,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.repository.Repository;
@@ -29,6 +30,9 @@ public final class Virtuoso implements Component, SequentialExecution {
 
     @Component.Inject
     public ExceptionFactory exceptionFactory;
+
+    @Component.Inject
+    public ProgressReport progressReport;
 
     private Repository repository;
 
@@ -69,14 +73,16 @@ public final class Virtuoso implements Component, SequentialExecution {
         prepareSqlExecutor();
         clearLoadList();
         fillLoadList();
-        final int filesToLoad = getFilesToLoadCount();
-        if (filesToLoad == 0) {
+        int filesToLoadCount = getFilesToLoadCount();
+        if (filesToLoadCount == 0) {
             throw exceptionFactory.failure("Nothing to load.");
         }
         if (configuration.isClearDestinationGraph()) {
             clearDestinationGraph();
         }
-        runLoaders(filesToLoad);
+        progressReport.start(filesToLoadCount);
+        runLoaders(filesToLoadCount);
+        progressReport.done();
         clearLoadList();
     }
 
@@ -131,8 +137,8 @@ public final class Virtuoso implements Component, SequentialExecution {
     }
 
     private void runLoaders(int filesToLoad) throws LpException {
-        final MultiThreadLoader loader = new MultiThreadLoader(
-                sqlExecutor, configuration, exceptionFactory);
+        MultiThreadLoader loader = new MultiThreadLoader(
+                sqlExecutor, configuration, exceptionFactory, progressReport);
         loader.loadData(filesToLoad);
     }
 

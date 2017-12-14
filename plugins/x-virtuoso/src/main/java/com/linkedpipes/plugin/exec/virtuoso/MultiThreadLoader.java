@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.exec.virtuoso;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,10 @@ class MultiThreadLoader {
 
     private final ExceptionFactory exceptionFactory;
 
+    private final ProgressReport progressReport;
+
+    private int lastReportedProgress = 0;
+
     private ExecutorService executor;
 
     private List<LoadWorker> workers;
@@ -31,10 +36,12 @@ class MultiThreadLoader {
     public MultiThreadLoader(
             SqlExecutor sqlExecutor,
             VirtuosoConfiguration configuration,
-            ExceptionFactory exceptionFactory) {
+            ExceptionFactory exceptionFactory,
+            ProgressReport progressReport) {
         this.sqlExecutor = sqlExecutor;
         this.configuration = configuration;
         this.exceptionFactory = exceptionFactory;
+        this.progressReport = progressReport;
     }
 
     public void loadData(int filesToLoad) throws LpException {
@@ -45,10 +52,9 @@ class MultiThreadLoader {
         while (true) {
             waitBeforeNextCheck();
             LOG.debug("Checking status ... ");
-            final boolean loadingFinished =
-                    checkLoadingFinished(sqlExecutor, filesToLoad);
+            boolean finished = checkLoadingFinished(sqlExecutor, filesToLoad);
             LOG.debug("Checking status ... done");
-            if (loadingFinished) {
+            if (finished) {
                 break;
             }
         }
@@ -66,14 +72,18 @@ class MultiThreadLoader {
         }
     }
 
-    private boolean checkLoadingFinished(SqlExecutor executor, int filesToLoad)
+    private boolean checkLoadingFinished(SqlExecutor executor, int taskCount)
             throws LpException {
         final int filesLoaded = executor.getFilesLoaded(
                 configuration.getLoadDirectoryPath());
-        final int loadedFromStart = filesLoaded - loadedBeforeStart;
-        LOG.debug("Processing {}/{} files", loadedFromStart,
-                filesToLoad);
-        if (loadedFromStart >= filesToLoad) {
+        int loadedFromStart = filesLoaded - loadedBeforeStart;
+        LOG.debug("Processing {}/{} files", loadedFromStart, taskCount);
+        while (loadedFromStart > lastReportedProgress) {
+            progressReport.entryProcessed();
+            ++lastReportedProgress;
+        }
+
+        if (loadedFromStart >= taskCount) {
             return true;
         }
         return false;
@@ -94,7 +104,7 @@ class MultiThreadLoader {
         workers = new ArrayList<>(loaders);
         LOG.info("Using {} loaders", loaders);
         for (int i = 0; i < loaders; ++i) {
-            final LoadWorker worker = new LoadWorker(sqlExecutor);
+            LoadWorker worker = new LoadWorker(sqlExecutor);
             executor.submit(worker);
             workers.add(worker);
         }
