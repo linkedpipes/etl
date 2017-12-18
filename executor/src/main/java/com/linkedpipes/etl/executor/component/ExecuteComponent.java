@@ -75,6 +75,7 @@ class ExecuteComponent implements ComponentExecutor {
             execute();
             execution.onExecuteComponentSuccessful(execComponent);
         } catch (ExecutorException ex) {
+            LOG.error("Component execution failed.", ex);
             try {
                 dataUnitManager.onComponentDidExecute(execComponent);
             } catch (ExecutorException e) {
@@ -86,6 +87,7 @@ class ExecuteComponent implements ComponentExecutor {
         try {
             dataUnitManager.onComponentDidExecute(execComponent);
         } catch (ExecutorException ex) {
+            LOG.error("Can't save data unit.", ex);
             execution.onExecuteComponentCantSaveDataUnit(execComponent, ex);
             return false;
         }
