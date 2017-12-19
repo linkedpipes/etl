@@ -702,7 +702,7 @@
 
     };
 
-    const factory = {
+    const module = {
         "quads": (data) => {
             return new quads(data);
         },
@@ -719,9 +719,11 @@
     };
 
     if (typeof define === "function" && define.amd) {
-        define([], function () {
-            return factory;
-        });
+        define([], () => module);
+    }
+
+    if (typeof module !== "undefined") {
+        module.exports = module;
     }
 
 })();

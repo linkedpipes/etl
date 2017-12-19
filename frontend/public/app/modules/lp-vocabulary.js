@@ -29,15 +29,18 @@
             dataunitCompatibility[source][target] === true;
     }
 
+    const module = {
+        "vocabulary": vocabulary,
+        "dataunit": {
+            "compatible": compatible
+        }
+    };
+
     if (typeof define === "function" && define.amd) {
-        define([], function () {
-            return {
-                "vocabulary": vocabulary,
-                "dataunit": {
-                    "compatible": compatible
-                }
-            };
-        });
+        define([], () => module);
     }
 
+    if (typeof module !== "undefined") {
+        module.exports = module;
+    }
 })();
