@@ -1,6 +1,5 @@
 define([
     "app/app-config",
-    "app/modules/execution-model",
     "app/components/pipelines/listView/pipelineListCtrl",
     "app/components/pipelines/canvasView/pipelineCanvasCtrl",
     "app/components/pipelines/uploadView/pipelineUploadCtrl",
@@ -37,7 +36,6 @@ define([
     "angular-clipboard"
 ], function (
         config,
-        executionModel,
         pipelineListCtrlInit,
         pipelineEditCanvasCtrlInit,
         pipelineUploadCtrlInit,
@@ -105,7 +103,6 @@ define([
     }
 
     function initializeComponents(app) {
-        executionModel(app);
         pipelineListCtrlInit(app);
         pipelineEditCanvasCtrlInit(app);
         pipelineUploadCtrlInit(app);

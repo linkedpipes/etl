@@ -11,7 +11,8 @@ define([
     'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
     'app/components/templates/detailDialog/templateDetailDialog',
     'app/components/instances/detailDialog/instanceDetailDialog',
-    'file-saver'
+    'file-saver',
+    'app/modules/execution-model'
 ], function (jQuery, jsonld,
              pipelineCanvasDirective,
              canvasPipelineFactory,
@@ -23,7 +24,8 @@ define([
              pipelineDetailDialog,
              templateDetailDialog,
              instanceDetailDialog,
-             saveAs) {
+             saveAs,
+             executionModel) {
     function controler($scope,
                        $mdDialog,
                        $mdMedia,
@@ -37,7 +39,6 @@ define([
                        jsonldService,
                        infoService,
                        pipelineService,
-                       executionModel,
                        pipelineCanvas,
                        executionCanvas,
                        indexPage,
@@ -750,7 +751,6 @@ define([
         'services.jsonld',
         'service.info',
         'components.pipelines.services.model',
-        'models.execution',
         'canvas.pipeline',
         'canvas.execution',
         'layout-service',
