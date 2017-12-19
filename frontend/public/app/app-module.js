@@ -1,6 +1,6 @@
 define([
     "app/app-config",
-    "app/models/executionModel",
+    "app/modules/execution-model",
     "app/components/pipelines/listView/pipelineListCtrl",
     "app/components/pipelines/canvasView/pipelineCanvasCtrl",
     "app/components/pipelines/uploadView/pipelineUploadCtrl",
