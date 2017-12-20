@@ -628,6 +628,10 @@
         "getStrings": getStrings,
         "getString": (resource, predicate) =>
             select(getStrings(resource, predicate)),
+        "getPlainString": (resource, predicate) => {
+            const value =  select(getStrings(resource, predicate));
+            return value["@value"];
+        },
         "setStrings": setStrings,
         "getIntegers": getIntegers,
         "getInteger": (resource, predicate) =>

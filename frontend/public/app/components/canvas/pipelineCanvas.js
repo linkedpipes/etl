@@ -13,9 +13,8 @@
 define([
     'jquery',
     'jointjs',
-    'lodash',
-    'lp-vocabulary'
-], function (jQuery, joint, _, lp) {
+    'lodash'
+], function (jQuery, joint, _) {
 
     /**
      * Definition of a component JointJs shape.
@@ -114,7 +113,15 @@ define([
                 magnetS.getAttribute('port')]['dataType'];
         var contentT = cellT.model.attributes.portsData[
                 magnetT.getAttribute('port')]['dataType'];
-        return lp.dataunit.compatible(contentS, contentT);
+        return areDataUnitsCompatible.compatible(contentS, contentT);
+    }
+
+    /**
+     * Check if given source can be connected to given target port.
+     * TODO: Export to single place.
+     */
+    function areDataUnitsCompatible(source, target) {
+        return source === target;
     }
 
     /**
