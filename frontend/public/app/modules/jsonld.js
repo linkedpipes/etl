@@ -707,10 +707,10 @@
     };
 
     const module = {
-        "quads": (data) => {
+        "q": (data) => {
             return new quads(data);
         },
-        "triples": (graph, iri) => {
+        "t": (graph, iri) => {
             if (iri === undefined && graph["@graph"] && graph["@id"]) {
                 iri = graph["@id"];
             }
@@ -724,10 +724,6 @@
 
     if (typeof define === "function" && define.amd) {
         define([], () => module);
-    }
-
-    if (typeof module !== "undefined") {
-        module.exports = module;
     }
 
 })();

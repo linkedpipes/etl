@@ -329,9 +329,9 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                 data.refTemplate = {};
                 data.config = {};
                 // Each component is stored in a single graph.
-                response = jsonld.quads(response.data);
+                response = jsonld.q(response.data);
                 response.iterateGraphs((graph) => {
-                    graph = jsonld.triples(graph);
+                    graph = jsonld.t(graph);
                     graph.iterate((resource) => {
                         const types = jsonld.r.getTypes(resource);
                         if (types.indexOf(LP.JarTemplate) !== -1) {
@@ -644,7 +644,7 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             const url = "/api/v1/usage?iri=" + encodeURI(id);
             const options = {"headers": {"Accept": "application/ld+json"}};
             return $http.get(url, options).then(function (response) {
-                const data = jsonld.quads(response.data);
+                const data = jsonld.q(response.data);
                 const pipelines = {};
                 const templates = {};
                 data.iterateResources((item) => {

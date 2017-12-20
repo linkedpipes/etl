@@ -453,7 +453,7 @@ define(["jsonld"], function (jsonld) {
     function load(desc, dialog, instanceConfig, templateConfig) {
         prepareDescription(desc);
         //
-        const instanceTriples = jsonld.triples(instanceConfig);
+        const instanceTriples = jsonld.t(instanceConfig);
         const instance = {};
         loadObject(desc, instanceTriples.getResource(
             instanceTriples.findByType(desc.$type)),
@@ -463,7 +463,7 @@ define(["jsonld"], function (jsonld) {
             console.error("Core templates are not supported.")
             return;
         }
-        const templateTriples = jsonld.triples(templateConfig);
+        const templateTriples = jsonld.t(templateConfig);
         const template = {};
         loadObject(desc, templateTriples.getResource(
             templateTriples.findByType(desc.$type)),
