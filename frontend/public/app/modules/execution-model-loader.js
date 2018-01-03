@@ -196,7 +196,7 @@
         define([
             "vocabulary",
             "jsonld",
-            "app/modules/mapping",
+            "app/modules/execution-mapping",
         ], (vocabulary, _jsonld, _mapping) => {
             LP = vocabulary.LP;
             SKOS = vocabulary.SKOS;

@@ -174,7 +174,7 @@
         define([
             "vocabulary",
             "app/modules/execution-model-loader",
-            "app/modules/mapping"
+            "app/modules/execution-mapping"
         ], (vocabulary, _loader, _mapping) => {
             LP = vocabulary.LP;
             SKOS = vocabulary.SKOS;
