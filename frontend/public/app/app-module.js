@@ -14,7 +14,7 @@ define([
     "app/services/repositoryService",
     "app/modules/status-service",
     "app/services/jsonldService",
-    "app/services/infoService",
+    "app/modules/instance-info-service",
     "app/services/designService",
     "app/components/inputs/localizedTextInput/localizedTextInput",
     "app/components/inputs/iriList/iriList",
