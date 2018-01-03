@@ -150,7 +150,7 @@ define([
                     $mdDialog.hide();
                 });
             }, () => {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't create template."
                 });
             });

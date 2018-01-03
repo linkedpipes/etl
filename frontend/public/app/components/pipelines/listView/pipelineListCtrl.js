@@ -98,7 +98,7 @@ define([], function () {
                 configuration).then(function (response) {
                 $location.path('/executions').search({});
             }, function (response) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't start the execution.",
                     'response': response
                 });
@@ -116,7 +116,7 @@ define([], function () {
                 configuration).then(function (response) {
                 $location.path('/executions').search({});
             }, function (response) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't start the execution.",
                     'response': response
                 });
@@ -171,7 +171,7 @@ define([], function () {
                         'pipeline': newPipelineUri
                     });
                 }, function (response) {
-                    statusService.postFailed({
+                    statusService.httpPostFailed({
                         'title': "Can't create the pipeline.",
                         'response': response
                     });
@@ -215,7 +215,7 @@ define([], function () {
                 // Force update.
                 $scope.repository.update();
             }, function (response) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't copy pipeline.",
                     'response': response
                 });
@@ -291,7 +291,7 @@ define([], function () {
             $scope.repository.load(function () {
                 },
                 function (response) {
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "Can't load data.",
                         'response': response
                     });

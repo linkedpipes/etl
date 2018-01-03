@@ -292,7 +292,7 @@ define([
                     .then(function () {
                         $scope.repository.update();
                     }, function (response) {
-                        statusService.postFailed({
+                        statusService.httpPostFailed({
                             'title': "Can't start the execution.",
                             'response': response
                         });
@@ -310,7 +310,7 @@ define([
             .then(function () {
                 execution.cancelling = true;
             }, function (response) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't cancel the execution.",
                     'response': response
                 });
@@ -342,7 +342,7 @@ define([
             $scope.repository.load(function () {
                 },
                 function (response) {
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "Can't load data.",
                         'response': response
                     });

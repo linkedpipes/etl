@@ -12,7 +12,7 @@ define([
     "app/services/rdfService",
     "app/services/refreshService",
     "app/services/repositoryService",
-    "app/services/statusService",
+    "app/modules/status-service",
     "app/services/jsonldService",
     "app/services/infoService",
     "app/services/designService",

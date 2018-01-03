@@ -59,7 +59,7 @@ define([], function () {
                         'pipeline': response.data
                     });
                 }, () => {
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "Can't update templates.",
                         'response': response
                     });
@@ -69,7 +69,7 @@ define([], function () {
                 });
             }, function (response) {
                 $scope.importing = false;
-                statusService.getFailed({
+                statusService.httpGetFailed({
                     'title': "Can't load the pipeline.",
                     'response': response
                 });
@@ -115,7 +115,7 @@ define([], function () {
                             'pipeline': response.data
                         });
                     }, () => {
-                        statusService.getFailed({
+                        statusService.httpGetFailed({
                             'title': "Can't update templates.",
                             'response': response
                         });
@@ -125,7 +125,7 @@ define([], function () {
                     });
                 }, function (response) {
                     $scope.importing = false;
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "Can't load the pipeline.",
                         'response': response
                     });
@@ -194,7 +194,7 @@ define([], function () {
                 $scope.repository.load(function () {
                     $scope.pipelineLoaded = true;
                 }, function (response) {
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "Can't load data.",
                         'response': response
                     });
@@ -213,7 +213,7 @@ define([], function () {
                 // Import from IRI on local machine.
                 if ($scope.pipeline === undefined || $scope.pipeline === '') {
                     // Do nothing as no pipeline is selected.
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "No pipeline selected for import."
                     });
                 } else {
@@ -226,7 +226,7 @@ define([], function () {
                         });
                     }, function (response) {
                         $scope.importing = false;
-                        statusService.getFailed({
+                        statusService.httpGetFailed({
                             'title': "Can't load the pipeline.",
                             'response': response
                         });

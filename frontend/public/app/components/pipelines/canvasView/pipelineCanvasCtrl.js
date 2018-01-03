@@ -292,7 +292,7 @@ define([
                     }
                 });
             }, function (message) {
-                statusService.deleteFailed({
+                statusService.httpDeleteFailed({
                     'title': "Can't load data.",
                     'response': message
                 });
@@ -387,7 +387,7 @@ define([
             templateService.load().then(function () {
                 loadData();
             }, function (response) {
-                statusService.deleteFailed({
+                statusService.httpDeleteFailed({
                     'title': "Can't load templates pipeline.",
                     'response': response
                 });
@@ -430,7 +430,7 @@ define([
                     onSucess();
                 }
             }, function (response) {
-                statusService.putFailed({
+                statusService.httpPutFailed({
                     'title': "Can't save the pipeline.",
                     'response': response
                 });
@@ -517,7 +517,7 @@ define([
                     onSucess();
                 }
             }, function (response) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't start the execution.",
                     'response': response
                 });
@@ -625,7 +625,7 @@ define([
                     {'pipeline': newPipelineUri});
             })
             .error(function (data, status, headers) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't create new pipeline.",
                     'response': data
                 });
@@ -647,7 +647,7 @@ define([
                 }).then(function () {
                     $location.path('/pipelines').search({});
                 }, function (response) {
-                    statusService.deleteFailed({
+                    statusService.httpDeleteFailed({
                         'title': "Can't delete the pipeline.",
                         'response': response
                     });

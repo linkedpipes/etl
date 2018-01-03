@@ -46,7 +46,7 @@ define([], function () {
                         'pipeline': response.data[0]['@graph'][0]['@id']
                     });
                 }, () => {
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "Can't update templates.",
                         'response': response
                     });
@@ -56,7 +56,7 @@ define([], function () {
                 });
             }, function (response) {
                 console.log('failed:', response);
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't copy pipeline.",
                     'response': response
                 });
@@ -97,7 +97,7 @@ define([], function () {
                         'pipeline': response.data[0]['@graph'][0]['@id']
                     });
                 }, () => {
-                    statusService.getFailed({
+                    statusService.httpGetFailed({
                         'title': "Can't update templates.",
                         'response': response
                     });
@@ -107,7 +107,7 @@ define([], function () {
                 });
             }, function (response) {
                 console.log('failed:', response);
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't copy pipeline.",
                     'response': response
                 });

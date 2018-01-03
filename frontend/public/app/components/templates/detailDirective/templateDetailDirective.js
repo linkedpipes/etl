@@ -77,7 +77,7 @@ define([
                     });
                     $location.path("/templates").search({});
                 }, (response) => {
-                    statusService.deleteFailed({
+                    statusService.httpDeleteFailed({
                         'title': "Can't delete the pipeline.",
                         'response': response
                     });
