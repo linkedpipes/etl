@@ -101,7 +101,7 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         }
 
         const dialogs = [];
-        jsonld.r.getReferences(graph, resource, LP.dialog).forEach((dialog) => {
+        jsonld.t.getReferences(graph, resource, LP.dialog).forEach((dialog) => {
             dialogs.push({
                 "name": i18.str(jsonld.r.getString(dialog, LP.name))
             });
@@ -112,7 +112,7 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
         let inputDataPortsCount = 0;
         let runtimeConfigurationPortsCount = 0;
         let taskListPortsCount = 0;
-        jsonld.r.getReferences(graph, resource, LP.port).forEach((port) => {
+        jsonld.t.getReferences(graph, resource, LP.port).forEach((port) => {
             const portItem = {
                 "label": i18.str(jsonld.r.getString(port, SKOS.prefLabel)),
                 "binding": i18.str(jsonld.r.getString(port, LP.binding)),
@@ -329,10 +329,8 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                 data.refTemplate = {};
                 data.config = {};
                 // Each component is stored in a single graph.
-                response = jsonld.q(response.data);
-                response.iterateGraphs((graph) => {
-                    graph = jsonld.t(graph);
-                    graph.iterate((resource) => {
+                jsonld.q.iterateGraphs(response.data, (graph) => {
+                    jsonld.t.iterateResources(graph, (resource) => {
                         const types = jsonld.r.getTypes(resource);
                         if (types.indexOf(LP.JarTemplate) !== -1) {
                             parseJarTemplate(data, resource, graph);
@@ -644,10 +642,9 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
             const url = "/api/v1/usage?iri=" + encodeURI(id);
             const options = {"headers": {"Accept": "application/ld+json"}};
             return $http.get(url, options).then(function (response) {
-                const data = jsonld.q(response.data);
                 const pipelines = {};
                 const templates = {};
-                data.iterateResources((item) => {
+                jsonld.q.iterateResources(response.data, (item) => {
                     const id = jsonld.r.getId(item);
                     const types = jsonld.r.getTypes(item);
                     if (types.indexOf(LP.Pipeline) !== -1) {

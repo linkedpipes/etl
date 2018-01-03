@@ -1,9 +1,8 @@
 (function () {
     "use-strict";
 
-    function loadModel(data) {
-        modelLoader.loadModelFromJsonLd(
-            this.data, data, this.jsonldService.jsonld());
+    function loadModel(data, graphIri) {
+        modelLoader.loadModelFromJsonLd(this.data, data, graphIri);
     }
 
     function getComponents() {
@@ -127,7 +126,7 @@
         return this.data.execution.iri;
     }
 
-    function createModel(jsonldService) {
+    function createModel() {
         return {
             "data": {
                 "pipeline": {},
@@ -141,7 +140,6 @@
                     "iri": void 0
                 }
             },
-            "jsonldService": jsonldService,
             //
             "loadJsonLd": loadModel,
             "getComponents": getComponents,
@@ -165,7 +163,6 @@
 
     let LP;
     let SKOS;
-    let jsonld;
     let modelLoader;
     let MAPPING_STATUS;
 
@@ -176,13 +173,11 @@
     if (typeof define === "function" && define.amd) {
         define([
             "vocabulary",
-            "jsonld",
             "app/modules/execution-model-loader",
             "app/modules/mapping"
-        ], (vocabulary, _jsonld, _loader, _mapping) => {
+        ], (vocabulary, _loader, _mapping) => {
             LP = vocabulary.LP;
             SKOS = vocabulary.SKOS;
-            jsonld = _jsonld;
             modelLoader = _loader;
             MAPPING_STATUS = _mapping.MAPPING_STATUS;
             return module;

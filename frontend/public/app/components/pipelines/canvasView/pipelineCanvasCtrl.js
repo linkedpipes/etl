@@ -265,7 +265,7 @@ define([
             }
             // Load execution and convert into a model.
             return $http.get(data.execution.iri).then(function (response) {
-                data.execution.model.loadJsonLd(response.data);
+                data.execution.model.loadJsonLd(response.data, data.execution.iri);
                 executionCanvas.update();
                 // Check if execution is finished and disable refresh.
                 if (data.execution.model.isFinished()) {

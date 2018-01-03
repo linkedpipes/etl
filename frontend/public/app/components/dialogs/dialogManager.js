@@ -234,7 +234,7 @@ define(["jsonld"], function (jsonld) {
                 const iris = jsonld.r.getIRIs(instance, descItem.$property);
                 for (let i = 0; i < iris.length; ++i) {
                     const iri = iris[i];
-                    const objectInstance = triples.getResource(iri);
+                    const objectInstance = jsonld.t.getResource(triples, iri);
                     const object = {};
                     //
                     loadObject(descItem.$object, objectInstance, triples,
@@ -452,23 +452,22 @@ define(["jsonld"], function (jsonld) {
      */
     function load(desc, dialog, instanceConfig, templateConfig) {
         prepareDescription(desc);
-        //
-        const instanceTriples = jsonld.t(instanceConfig);
+
+        const instanceResource =
+            jsonld.t.getResourceByType(instanceConfig, desc.$type);
         const instance = {};
-        loadObject(desc, instanceTriples.getResource(
-            instanceTriples.findByType(desc.$type)),
-            instanceTriples, instance);
+        loadObject(desc, instanceResource, instanceConfig, instance);
 
         if (templateConfig === undefined) {
-            console.error("Core templates are not supported.")
+            console.error("Core templates are not supported.");
             return;
         }
-        const templateTriples = jsonld.t(templateConfig);
+
+        const templateResource =
+            jsonld.t.getResourceByType(templateConfig, desc.$type);
         const template = {};
-        loadObject(desc, templateTriples.getResource(
-            templateTriples.findByType(desc.$type)),
-            templateTriples, template);
-        //
+        loadObject(desc, templateResource, templateConfig, template);
+
         merge(desc, instance, template, dialog);
     }
 

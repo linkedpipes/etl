@@ -36,7 +36,7 @@
                 }
             }
         } else if (Array.isArray(data)) {
-            data.forEach((item)=> {
+            data.forEach((item) => {
                 if (item["@graph"] !== undefined) {
                     graphList.push(item);
                 } else {
@@ -67,10 +67,6 @@
             return undefined;
         }
     };
-
-    //
-    // Manipulation with resources.
-    //
 
     const getId = function (value) {
         if (value["@id"]) {
@@ -321,7 +317,7 @@
     };
 
     const setIntegers = function (resource, predicate, value) {
-        let filteredValues = asArray(value).filter((x)=> x !== "");
+        let filteredValues = asArray(value).filter((x) => x !== "");
         setValues(resource, predicate, filteredValues);
     };
 
@@ -394,85 +390,45 @@
         }
     };
 
-    //
-    // Manipulation with triples.
-    //
-
     /**
-     * Iterate over resources in given graph. The data object must contains
-     * the graph and graphIri.
-     *
-     * If callback returns something else than undefined and false then stops
-     * the iteration and return what callback returned.
+     * Iterate over resources in given graph.
      *
      * @param data Data object.
      * @param callback
      * @returns
      */
-    const iterateResources = function (data, callback) {
-        for (let index in data.graph) {
-            if (!data.graph.hasOwnProperty(index)) {
+    const iterateResources = function (graph, callback) {
+        for (let index in graph) {
+            if (!graph.hasOwnProperty(index)) {
                 continue;
             }
-            const resource = data.graph[index];
-            const result = callback(resource, data.graphIri);
-            if (result) {
+            const resource = graph[index];
+            const result = callback(resource);
+            if (result !== undefined) {
                 return result;
             }
         }
-        return false;
+        return undefined;
     };
 
     /**
      * Return a list of referenced object.
      *
-     * @param data
+     * @param graph
      * @param resource
      * @param predicate
      * @return Array.
      */
-    const getReferences = function (data, resource, predicate) {
+    const getReferences = function (graph, resource, predicate) {
         const results = [];
         const iris = getIRIs(resource, predicate);
-        data._data.graph.forEach((resource) => {
+        graph.forEach((resource) => {
             if (iris.indexOf(getId(resource)) !== -1) {
                 results.push(resource);
             }
         });
         return results;
     };
-
-    /**
-     * Return a single resource defined by given reference.
-     *
-     * @param data
-     * @param ref
-     */
-    const getResource = function (data, ref) {
-        for (let index in data.graph) {
-            if (!data.graph.hasOwnProperty(index)) {
-                continue;
-            }
-            const resource = data.graph[index];
-            if (getId(resource) === ref.resource) {
-                return resource;
-            }
-        }
-    };
-
-    /**
-     * Add a single resource
-     *
-     * @param data
-     * @param resource
-     */
-    const addResource = function (data, resource) {
-        data.graph.push(resource);
-    };
-
-    //
-    // Graph manipulation.
-    //
 
     /**
      * Find and return content of graph with given IRI.
@@ -493,50 +449,6 @@
             }
         }
         return undefined;
-    };
-
-    /**
-     * Create new graph of given IRI. If graph already exists does nothing.
-     *
-     * @param data Normalized JSONLD data.
-     * @param iri
-     * @param Graph content, optional argument.
-     */
-    const createGraph = function (data, iri, content) {
-        const graphs = data["@graph"];
-        // Check existence.
-        if (getGraph(data, iri) !== undefined) {
-            return;
-        }
-        // If no content is given use empty object.
-        if (content === undefined) {
-            content = {};
-        }
-        //
-        graphs.push({
-            "@graph": content,
-            "@id": iri
-        });
-    };
-
-    /**
-     * Find and delete graph with given content.
-     *
-     * @param data Normalized JSONLD data.
-     * @param iri
-     */
-    const deleteGraph = function (data, iri) {
-        const graphs = data["@graph"];
-        for (let index in graphs) {
-            if (!graphs.hasOwnProperty(index)) {
-                continue;
-            }
-            const graph = graphs[index];
-            if (graph["@id"] === iri) {
-                delete graphs[index];
-                return;
-            }
-        }
     };
 
     /**
@@ -563,24 +475,6 @@
     };
 
     /**
-     * Create and return new object for manipulation with
-     * triples on given graph.
-     *
-     * @param data Normalized JSONLD data.
-     * @param status Internal status.
-     * @param iri
-     * @param graph Optional, if given iri is ignored.
-     * @return This for chaining.
-     */
-    const graph = function (data, iri, graph) {
-        if (graph === undefined) {
-            return new triples(getGraph(data, iri), iri);
-        } else {
-            return new triples(graph, iri);
-        }
-    };
-
-    /**
      * Iterate over all resources in all graphs.
      *
      * The callback is given the graph data and the graph IRI as a second
@@ -592,35 +486,11 @@
      */
     const iterateResourcesInGraphs = function (data, callback) {
         return iterateGraphs(data, (graph, iri) => {
-            return iterateResources({"graph": graph, "graphIri": iri},
-                callback);
+            return iterateResources(graph,
+                (resource) => callback(resource, iri)
+            );
         });
     };
-
-    /**
-     * Search for a resource of given type. Return reference to the first
-     * resource that match the given type.
-     *
-     * The reference contains IRI of the graph and resource.
-     *
-     * @param data
-     * @param type
-     */
-    const findByType = function (data, type) {
-        return iterateResourcesInGraphs(data, (resource, iri) => {
-            const types = getTypes(resource);
-            if (types.indexOf(type) !== -1) {
-                return {
-                    "resource": getId(resource),
-                    "graph": iri
-                };
-            }
-        });
-    };
-
-    //
-    // Declaration of main service prototype and API export.
-    //
 
     const resourceService = {
         "getTypes": getTypes,
@@ -629,7 +499,7 @@
         "getString": (resource, predicate) =>
             select(getStrings(resource, predicate)),
         "getPlainString": (resource, predicate) => {
-            const value =  select(getStrings(resource, predicate));
+            const value = select(getStrings(resource, predicate));
             return value["@value"];
         },
         "setStrings": setStrings,
@@ -649,81 +519,58 @@
         "getIRI": (resource, predicate) =>
             select(getIRIs(resource, predicate)),
         "setIRIs": setIRIs,
-        "getReferences": getReferences,
         "getValue": getRawValue,
         "setValue": setRawValue
     };
 
-    /* jshint latedef: false */
-    const triples = function (graph, iri) {
-        this._data = {
-            "graph": graph,
-            "graphIri": iri
-        };
-
-        this.iterate = iterateResources.bind(null, this._data);
-        this.findByType = (type) => {
-            // findByType works with quads so we wrap the triples.
-            const wrap = {
-                "@graph": [
-                    {
-                        "@graph": this._data.graph,
-                        "@id": this._data.graphIri
-                    }
-                ]
-            };
-            return findByType(wrap, type);
-        };
-        this.getResource = (reference) => {
-            // Can be used with IRI or output from findByType.
-            if (reference.resource === undefined) {
-                reference = {"resource": reference};
-            }
-            return getResource(this._data, reference);
-        };
-        this.addResource = (resource) => {
-            addResource(this._data, resource);
-        };
-
-        return this;
+    const triplesService = {
+        "iterateResources": iterateResources,
+        "getResource": (graph, iri) => {
+            return iterateResources(graph, (resource) => {
+                if (getId(resource) === iri) {
+                    return resource;
+                }
+            });
+        },
+        "getResourceByType": (graph, type) => {
+            return iterateResources(graph, (resource) => {
+                const types = getTypes(resource);
+                if (types.indexOf(type) !== -1) {
+                    return resource;
+                }
+            });
+        },
+        "getReferences": getReferences
     };
 
-    const quads = function (data) {
-        // Prepare data and status objects.
-        this._data = normalizeData(data);
-        this._status = {};
-
-        this.createGraph = createGraph.bind(null, this._data);
-        this.deleteGraph = deleteGraph.bind(null, this._data);
-        this.iterateGraphs = iterateGraphs.bind(null, this._data);
-        this.selectGraph = graph.bind(null, this._data);
-        this.iterateResources = iterateResourcesInGraphs.bind(null, this._data);
-        this.findByType = findByType.bind(null, this._data);
-
-        this.asJsonLd = function () {
-            return this._data;
-        };
-
+    // TODO Normalize data only once before first use.
+    const quadsService = {
+        "getGraph": (data, iri) => {
+            const normalized = normalizeData(data);
+            return getGraph(normalized, iri);
+        },
+        "iterateGraphs": (data, callback) => {
+            const normalized = normalizeData(data);
+            return iterateGraphs(normalized, callback);
+        },
+        "iterateResources": (data, callback) => {
+            const normalized = normalizeData(data);
+            return iterateResourcesInGraphs(normalized, callback);
+        }
     };
 
-    const module = {
-        "q": (data) => {
-            return new quads(data);
-        },
-        "t": (graph, iri) => {
-            if (iri === undefined && graph["@graph"] && graph["@id"]) {
-                iri = graph["@id"];
-            }
-            if (graph["@graph"]) {
-                graph = graph["@graph"];
-            }
-            return new triples(graph, iri);
-        },
+    const jsonld = {
+        "q": quadsService,
+        "t": triplesService,
         "r": resourceService
     };
 
     if (typeof define === "function" && define.amd) {
-        define([], () => module);
+        define([], () => jsonld);
+    }
+
+    if (typeof module !== "undefined") {
+        module.exports = jsonld;
     }
 
 })();

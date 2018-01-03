@@ -24,12 +24,12 @@
 
     function onExecution(model, resource) {
         model.execution.iri = resource["@id"];
-        model.pipeline.iri = jsonldModule.r.getIRI(resource, LP.HAS_PIPELINE);
-        const status = jsonldModule.r.getIRI(resource, LP.HAS_STATUS);
+        model.pipeline.iri = jsonld.r.getIRI(resource, LP.HAS_PIPELINE);
+        const status = jsonld.r.getIRI(resource, LP.HAS_STATUS);
         model.execution.status.iri = status;
         model.execution.status.running = isExecutionRunning(status);
         model.execution.deleteWorkingData =
-            jsonldModule.r.getBoolean(resource, LP.HAS_DELETE_WORKING_DATA);
+            jsonld.r.getBoolean(resource, LP.HAS_DELETE_WORKING_DATA);
     }
 
     function isExecutionRunning(status) {
@@ -49,7 +49,7 @@
     }
 
     function getCreated(resource) {
-        return jsonldModule.r.getDate(resource, LP.HAS_EVENT_CREATED);
+        return jsonld.r.getDate(resource, LP.HAS_EVENT_CREATED);
     }
 
     function onExecutionEnd(model, resource) {
@@ -62,7 +62,7 @@
     }
 
     function getReferencedComponent(model, resource) {
-        const iri = jsonldModule.r.getIRI(resource, LP.HAS_COMPONENT);
+        const iri = jsonld.r.getIRI(resource, LP.HAS_COMPONENT);
         return getComponent(model, iri);
     }
 
@@ -75,17 +75,17 @@
         const component = getReferencedComponent(model, resource);
         component.end = getCreated(resource);
         component.failed = {
-            "cause": jsonldModule.r.getPlainString(resource, LP.HAS_EVENT_REASON),
-            "rootCause": jsonldModule.r.getPlainString(resource, LP.HAS_EVENT_ROOT_CAUSE)
+            "cause": jsonld.r.getPlainString(resource, LP.HAS_EVENT_REASON),
+            "rootCause": jsonld.r.getPlainString(resource, LP.HAS_EVENT_ROOT_CAUSE)
         };
     }
 
     function onComponent(model, resource) {
-        const iri = jsonldModule.r.getId(resource);
+        const iri = jsonld.r.getId(resource);
         const component = getComponent(model, iri);
-        component.status = jsonldModule.r.getIRI(resource, LP.HAS_STATUS);
-        component.order = jsonldModule.r.getInteger(resource, LP.HAS_EXEC_ORDER);
-        component.dataUnits = jsonldModule.r.getIRIs(resource, LP.HAS_DU);
+        component.status = jsonld.r.getIRI(resource, LP.HAS_STATUS);
+        component.order = jsonld.r.getInteger(resource, LP.HAS_EXEC_ORDER);
+        component.dataUnits = jsonld.r.getIRIs(resource, LP.HAS_DU);
         component.mapping = convertMapping(component.status);
     }
 
@@ -105,8 +105,8 @@
         const iri = resource["@id"];
         model.dataUnits[iri] = {
             "iri": iri,
-            "binding": jsonldModule.r.getPlainString(resource, LP.HAS_BINDING),
-            "debug": jsonldModule.r.getPlainString(resource, LP.HAS_DEBUG)
+            "binding": jsonld.r.getPlainString(resource, LP.HAS_BINDING),
+            "debug": jsonld.r.getPlainString(resource, LP.HAS_DEBUG)
         };
     }
 
@@ -129,7 +129,7 @@
 
     function createProgress(resource) {
         return {
-            "total": jsonldModule.r.getInteger(resource, LP.PROGRESS_TOTAL),
+            "total": jsonld.r.getInteger(resource, LP.PROGRESS_TOTAL),
             "current": 0,
             "value": 0
         };
@@ -137,7 +137,7 @@
 
     function updateComponentProgress(component, resource) {
         const progress = component.progress;
-        const current = jsonldModule.r.getInteger(resource, LP.PROGRESS_CURRENT);
+        const current = jsonld.r.getInteger(resource, LP.PROGRESS_CURRENT);
         // Update component progress (ie. max progress).
         if (current <= progress.current) {
             progress.current = current;
@@ -147,18 +147,19 @@
 
     function addMessageToComponent(component, resource) {
         component.messages.push({
-            "label": jsonldModule.r.getPlainString(resource, SKOS.PREF_LABEL),
-            "created": getCreated(resource, jsonldModule),
-            "order": jsonldModule.r.getInteger(resource, LP.HAS_ORDER)
+            "label": jsonld.r.getPlainString(resource, SKOS.PREF_LABEL),
+            "created": getCreated(resource, jsonld),
+            "order": jsonld.r.getInteger(resource, LP.HAS_ORDER)
         });
     }
 
     const loadActions = {};
 
-    function loadModelFromJsonLd(model, data, jsonld_service) {
+    function loadModelFromJsonLd(model, data, graphIri) {
         console.time("execution-model.loadModel");
-        jsonld_service.iterateObjects(data, (resource, graph) => {
-            const types = jsonldModule.r.getTypes(resource);
+        const graph = jsonld.q.getGraph(data, graphIri);
+        jsonld.t.iterateResources(graph, (resource) => {
+            const types = jsonld.r.getTypes(resource);
             for (let index in types) {
                 const type = types[index];
                 const action = loadActions[type];
@@ -184,7 +185,7 @@
 
     let LP;
     let SKOS;
-    let jsonldModule;
+    let jsonld;
     let MAPPING_STATUS;
 
     const module = {
@@ -199,7 +200,7 @@
         ], (vocabulary, _jsonld, _mapping) => {
             LP = vocabulary.LP;
             SKOS = vocabulary.SKOS;
-            jsonldModule = _jsonld;
+            jsonld = _jsonld;
             MAPPING_STATUS = _mapping.MAPPING_STATUS;
             initialize();
             return module;
