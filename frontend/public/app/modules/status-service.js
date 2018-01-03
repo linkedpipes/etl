@@ -60,6 +60,9 @@
         showErrorNotification(message);
     };
 
+    //
+    //
+
     let Notification;
 
     function factory(_Notification) {
@@ -69,7 +72,12 @@
 
     factory.$inject = ["Notification"];
 
+    let _initialized = false;
     function init(app) {
+        if (_initialized) {
+            return;
+        }
+        _initialized = true;
         app.factory("services.status", factory);
     }
 
