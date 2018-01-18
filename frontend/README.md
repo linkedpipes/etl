@@ -17,3 +17,4 @@
 * [ng-file-upload 12.2.13](https://raw.githubusercontent.com/danialfarid/ng-file-upload/12.2.13/dist/ng-file-upload.min.js)
 * [requirejs 2.3.5](http://requirejs.org/docs/download.html)
 * [ui-notification 0.3.6](https://github.com/alexcrack/angular-ui-notification/tree/v0.3.6/dist)
+* [yasqe 2.11.18](https://github.com/OpenTriply/YASGUI.YASQE/tree/v2.11.18/dist) we use customized version !

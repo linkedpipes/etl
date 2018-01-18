@@ -25,6 +25,7 @@ define([
     "app/components/templates/hierarchyTab/templateHierarchyTab",
     "app/components/layout/layout-page",
     "app/components/layout/layout-service",
+    "app/components/dialogs/sparqlEditor/yasqe-editor",
     "angular",
     "angular-route",
     "angular-resource",
@@ -61,6 +62,7 @@ define([
         templateHierarchyTab,
         indexPage,
         indexPageService,
+        yasqe,
         angular
         ) {
 
@@ -100,6 +102,7 @@ define([
         templateGeneralTab(app);
         templateHierarchyTab(app);
         indexPageService(app);
+        yasqe(app);
     }
 
     function initializeComponents(app) {

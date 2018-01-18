@@ -27,6 +27,8 @@ requirejs.config({
         "backbone": "libraries/backbone/backbone.min",
         // Library for client side download
         "file-saver": "libraries/filesaver/FileSaver.min",
+        // SPARQL Editor
+        "yasqe" : "libraries/yasqe/yasqe.bundled.min",
         //
         "angular-clipboard": "libraries/angular-clipboard/angular-clipboard",
         // Custom modules.

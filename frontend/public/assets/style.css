@@ -36,3 +36,9 @@ Angular Material.
     color:grey;
 }
 
+/**
+YASQE editor, support for read-only mode.
+*/
+lp-yasqe.readOnly > .yasqe > .CodeMirror {
+    background-color: #E0E0E0;
+}
