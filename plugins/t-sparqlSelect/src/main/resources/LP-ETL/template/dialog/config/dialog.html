@@ -7,10 +7,7 @@
                placeholder="my.csv">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="control.query.hide">
-        <label>SPARQL SELECT query</label>
-        <textarea id="query" ng-model="dialog.query.value"
-                  placeholder="SELECT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 100"
-                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
-                  md-select-on-focus/>
+        SPARQL SELECT query
+        <lp-yasqe ng-model="dialog.query.value" ng-disabled="dialog.query.disabled || dialog.query.inherit"/>
     </md-input-container>
 </div>
