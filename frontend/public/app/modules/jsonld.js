@@ -556,6 +556,15 @@
         "iterateResources": (data, callback) => {
             const normalized = normalizeData(data);
             return iterateResourcesInGraphs(normalized, callback);
+        },
+        "getResource": (data, graphIri, iri) => {
+            const normalized = normalizeData(data);
+            const graph = getGraph(normalized, graphIri);
+            return iterateResources(graph, (resource) => {
+                if (getId(resource) === iri) {
+                    return resource;
+                }
+            });
         }
     };
 
