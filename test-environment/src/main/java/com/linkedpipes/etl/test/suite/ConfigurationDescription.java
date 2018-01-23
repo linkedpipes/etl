@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.test.suite;
 
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +32,7 @@ class ConfigurationDescription implements Loadable {
 
         @Override
         public Loadable load(String predicate, RdfValue object)
-                throws RdfUtilsException {
+                throws RdfException {
             switch (predicate) {
                 case RDF.TYPE:
                     types.add(object.asString());
@@ -101,7 +101,7 @@ class ConfigurationDescription implements Loadable {
 
     @Override
     public Loadable load(String predicate, RdfValue object)
-            throws RdfUtilsException {
+            throws RdfException {
         switch (predicate) {
             case RDF.TYPE:
                 types.add(object.asString());

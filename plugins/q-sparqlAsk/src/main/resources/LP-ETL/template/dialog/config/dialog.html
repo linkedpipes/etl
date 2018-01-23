@@ -5,9 +5,7 @@
                ng-hide="dialog.failOnTrue.hide">Fail on ASK success
     </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.query.hide" flex>
-        <label>SPARQL ASK query</label>
-        <textarea id="query" ng-model="dialog.query.value"
-                  ng-disabled="dialog.query.disabled || dialog.query.inherit"
-                  md-select-on-focus/>
+        SPARQL ASK query
+        <lp-yasqe ng-model="dialog.query.value" ng-disabled="dialog.query.disabled || dialog.query.inherit"/>
     </md-input-container>
 </div>

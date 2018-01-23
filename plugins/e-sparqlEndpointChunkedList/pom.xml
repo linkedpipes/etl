@@ -31,10 +31,6 @@
             <artifactId>rdf4j-repository-sparql</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>rdf-utils-rdf4j</artifactId>
-        </dependency>
-        <dependency>
             <groupId>net.sf.supercsv</groupId>
             <artifactId>super-csv</artifactId>
             <version>2.3.1</version>

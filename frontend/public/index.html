@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html ng-controller="index.ctrl">
+<html ng-controller="layout-page">
     <head lang="en">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="theme-color" content="{{index.color}}"/>
-        <title ng-bind='index.title'>LinkedPipes ETL</title>
+        <meta name="theme-color" content="{{layout.color}}"/>
+        <title ng-bind='layout.title'>LinkedPipes ETL</title>
         <!-- JointJs. -->
         <link rel="stylesheet" href="libraries/jointjs/joint.core.min.css">
         <!-- Application styles. -->
         <link rel="stylesheet" href="assets/style.css">
-        <link rel="stylesheet" href="app/components/pipelines/canvas/assets/style.css">
-        <link rel="stylesheet" href="app/components/pipelines/listView/assets/style.css">
-        <link rel="stylesheet" href="app/components/executions/listView/assets/style.css">
+        <link rel="stylesheet" href="assets/pipeline-canvas.css">
+        <link rel="stylesheet" href="assets/executions.css">
+        <link rel="stylesheet" href="assets/pipelines.css">
         <!-- Import Angular Material. -->
         <link type="text/css" rel="stylesheet" href="libraries/angularjs.material/angular-material.min.css"/>
         <!-- Google icons and font. -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <!-- Support for notifications: https://github.com/alexcrack/angular-ui-notification -->
         <link rel="stylesheet" href="libraries/ui-notification/angular-ui-notification.min.css">
+        <!-- SPARQL Editor. -->
+        <link rel="stylesheet" href="libraries/yasqe/yasqe.min.css">
         <!-- We need to hyde the page until the Angular is loaded.-->
         <style>
             .ng-cloak {
@@ -26,7 +28,7 @@
         </style>
     </head>
     <body ng-cloak style="height: 100vh" layout="column" class="ng-cloak">
-    <md-toolbar layout="row" style="background-color:{{index.color}}">
+    <md-toolbar layout="row" style="background-color:{{layout.color}}">
         <md-button class="menuBtn" ng-click="toggleSidenav()" hide-gt-sm aria-label="menu">
             <md-icon md-svg-icon="menu" style="color:white;"></md-icon>
         </md-button>

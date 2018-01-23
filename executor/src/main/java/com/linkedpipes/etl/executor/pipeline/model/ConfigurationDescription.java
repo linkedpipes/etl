@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.pipeline.model;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
 /**
@@ -18,7 +18,7 @@ public class ConfigurationDescription implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, RdfValue object) {
+    public Loadable load(String predicate, BackendRdfValue object) {
         switch (predicate) {
             case LP_OBJECTS.HAS_DESCRIBE:
                 describedType = object.asString();

@@ -123,6 +123,29 @@ paths:
           description: OK
         "404":
           description: Missing resource.
+  "/executions/{id}/logs-tail":
+    get:
+      parameters:
+        - name: id
+          in: path
+          description: Execution ID.
+          required: true
+          type: integer
+          format: int
+        - name: n
+          in: query
+          description: Number of lines to return.
+          required: false
+          type: integer
+          format: int
+      produces:
+        - text/plain
+      description: Return tauk if log file for given execution.
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Missing resource.
   "/executions/{id}/pipeline":
     get:
       description: Return definition of pipeline as used to create the execution.

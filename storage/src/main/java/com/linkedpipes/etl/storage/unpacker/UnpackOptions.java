@@ -3,7 +3,7 @@ package com.linkedpipes.etl.storage.unpacker;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
 import java.util.Collections;
@@ -26,7 +26,7 @@ class UnpackOptions implements Loadable {
         private String target;
 
         @Override
-        public Loadable load(String predicate, RdfValue value)
+        public Loadable load(String predicate, BackendRdfValue value)
                 throws RdfUtilsException {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/mappingSource":
@@ -56,7 +56,7 @@ class UnpackOptions implements Loadable {
         private final List<ComponentMapping> components = new LinkedList<>();
 
         @Override
-        public Loadable load(String predicate, RdfValue value)
+        public Loadable load(String predicate, BackendRdfValue value)
                 throws RdfUtilsException {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/execution":
@@ -94,7 +94,7 @@ class UnpackOptions implements Loadable {
     private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
 
     @Override
-    public Loadable load(String predicate, RdfValue value)
+    public Loadable load(String predicate, BackendRdfValue value)
             throws RdfUtilsException {
         switch (predicate) {
             case "http://etl.linkedpipes.com/ontology/runTo":

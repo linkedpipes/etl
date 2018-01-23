@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.component;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.service.DefaultServiceFactory;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.wiring.BundleRevision;
@@ -50,12 +50,10 @@ public class DefaultComponentFactory implements ComponentFactory {
         } catch (IllegalAccessException | InstantiationException ex) {
             throw new LpException("Can't create component instance.", ex);
         }
-        // Load information about the component.
-        final ComponentInfo componentInfo = new ComponentInfo(component, graph);
         // Create abd return a wrap.
         if (SequentialExecution.class.isAssignableFrom(instance.getClass())) {
             return new SequentialWrap((SequentialExecution) instance,
-                    componentInfo, definition, new DefaultServiceFactory());
+                    component, definition, new DefaultServiceFactory());
         }
         return null;
     }

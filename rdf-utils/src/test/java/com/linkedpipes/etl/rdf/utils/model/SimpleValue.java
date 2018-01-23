@@ -2,7 +2,7 @@ package com.linkedpipes.etl.rdf.utils.model;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 
-public class SimpleValue implements RdfValue {
+public class SimpleValue implements BackendRdfValue {
 
     private String value;
 

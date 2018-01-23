@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 
 import java.lang.reflect.Field;
 
@@ -38,7 +38,7 @@ class ReflectionLoader implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, RdfValue value)
+    public Loadable load(String predicate, BackendRdfValue value)
             throws LoaderException {
         Field field = descriptor.getFieldForPredicate(predicate);
         if (field == null) {

@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ class FieldLoader {
      * @param extendExisting
      * @return
      */
-    public Object set(Object target, Field field, RdfValue value,
+    public Object set(Object target, Field field, BackendRdfValue value,
             boolean extendExisting)
             throws LoaderException {
         final Class<?> fieldType = field.getType();
@@ -106,7 +106,7 @@ class FieldLoader {
     }
 
     private static Object setCollection(Object target, Field field,
-            RdfValue value, boolean extendExisting) throws LoaderException {
+            BackendRdfValue value, boolean extendExisting) throws LoaderException {
         final Class<?> genericType =
                 getCollectionType(field.getGenericType());
         if (Collection.class.isAssignableFrom(genericType)) {
@@ -160,11 +160,11 @@ class FieldLoader {
         }
     }
 
-    private static Object valueToEnum(Class<?> type, RdfValue value) {
+    private static Object valueToEnum(Class<?> type, BackendRdfValue value) {
         return Enum.valueOf((Class<Enum>) type, value.asString());
     }
 
-    private static Object valueToStringLang(Class<?> fieldType, RdfValue value)
+    private static Object valueToStringLang(Class<?> fieldType, BackendRdfValue value)
             throws LoaderException {
         LangString langString = (LangString) createInstance(fieldType);
         String language = value.getLanguage();
@@ -172,7 +172,7 @@ class FieldLoader {
         return langString;
     }
 
-    private static Object valueToPrimitive(Class<?> type, RdfValue value)
+    private static Object valueToPrimitive(Class<?> type, BackendRdfValue value)
             throws LoaderException {
         try {
             if (type == String.class) {

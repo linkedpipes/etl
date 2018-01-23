@@ -1,12 +1,12 @@
 define([
-    "jquery", "jsonld",
+    "jquery",
     "../generalTab/templateGeneralTab",
     "../hierarchyTab/templateHierarchyTab",
     "../embedDirective/templateEmbedDirective",
     "../usageTab/templateUsageTab",
     "../templateService",
     "../../dialogs/dialogService"
-], function (jQuery, jsonld, generalTab, hierarchyTab, embedDirective,
+], function (jQuery, generalTab, hierarchyTab, embedDirective,
              usageTab, templateService, templateDialogService) {
     "use strict";
 
@@ -77,7 +77,7 @@ define([
                     });
                     $location.path("/templates").search({});
                 }, (response) => {
-                    statusService.deleteFailed({
+                    statusService.httpDeleteFailed({
                         'title': "Can't delete the pipeline.",
                         'response': response
                     });

@@ -1,4 +1,4 @@
-define(["lp"], function (lp) {
+define([], function () {
     "use strict";
 
     const ICONS = {
@@ -52,7 +52,7 @@ define(["lp"], function (lp) {
             }
             const result = [];
             componentCore.inputs.forEach(function (port) {
-                if (lp.dataunit.compatible(sourcePort.content, port.content)) {
+                if (areDataUnitsCompatible(sourcePort.content, port.content)) {
                     const record = {
                         "label": component.label,
                         "search": componentCore.search,
@@ -73,6 +73,13 @@ define(["lp"], function (lp) {
                 result[0].portLabel = "";
             }
             return result;
+        }
+
+        /**
+         * Check if given source can be connected to given target port.
+         */
+        function areDataUnitsCompatible(source, target) {
+            return source === target;
         }
 
         $scope.onSelect = function (component) {

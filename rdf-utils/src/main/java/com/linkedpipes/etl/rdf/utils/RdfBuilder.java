@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils;
 
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
 /**
@@ -70,9 +70,9 @@ public class RdfBuilder {
 
     }
 
-    private final TripleWriter writer;
+    private final BackendTripleWriter writer;
 
-    private RdfBuilder(TripleWriter writer) {
+    private RdfBuilder(BackendTripleWriter writer) {
         this.writer = writer;
     }
 
@@ -87,9 +87,9 @@ public class RdfBuilder {
         writer.flush();
     }
 
-    public static RdfBuilder create(RdfSource source, String graph)
+    public static RdfBuilder create(BackendRdfSource source, String graph)
             throws RdfUtilsException {
-        TripleWriter writer = source.getTripleWriter(graph);
+        BackendTripleWriter writer = source.getTripleWriter(graph);
         return new RdfBuilder(writer);
     }
 

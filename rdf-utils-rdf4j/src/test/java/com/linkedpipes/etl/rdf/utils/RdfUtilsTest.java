@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils;
 
 import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.*;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
@@ -44,7 +44,7 @@ public class RdfUtilsTest {
         }
 
         @Override
-        public Loadable load(String predicate, RdfValue object) {
+        public Loadable load(String predicate, BackendRdfValue object) {
             if ("http://value".equals(predicate)) {
                 value = object.asString();
             }
@@ -68,7 +68,7 @@ public class RdfUtilsTest {
         }
 
         @Override
-        public Loadable load(String predicate, RdfValue object) {
+        public Loadable load(String predicate, BackendRdfValue object) {
             switch (predicate) {
                 case "http://value":
                     value = object.asString();

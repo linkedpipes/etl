@@ -1,12 +1,12 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
 
-class Rdf4jValue implements RdfValue {
+class Rdf4jValue implements BackendRdfValue {
 
     private final Value value;
 

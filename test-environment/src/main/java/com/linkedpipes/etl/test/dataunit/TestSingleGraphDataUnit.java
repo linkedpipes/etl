@@ -3,6 +3,8 @@ package com.linkedpipes.etl.test.dataunit;
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -26,8 +28,18 @@ public class TestSingleGraphDataUnit
     }
 
     @Override
+    public TripleWriter getWriter() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public IRI getReadGraph() {
         return graph;
+    }
+
+    @Override
+    public RdfSource asRdfSource() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

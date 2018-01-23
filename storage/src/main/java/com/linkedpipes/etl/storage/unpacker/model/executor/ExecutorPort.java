@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
@@ -32,7 +32,7 @@ public class ExecutorPort {
         this.iri = iri;
     }
 
-    public void write(TripleWriter writer) {
+    public void write(BackendTripleWriter writer) {
         for (String type : types) {
             writer.iri(iri, RDF.TYPE, type);
         }
@@ -54,7 +54,7 @@ public class ExecutorPort {
         return dataSource != null;
     }
 
-    public void writeDataSource(TripleWriter writer) {
+    public void writeDataSource(BackendTripleWriter writer) {
         String dataSourceIri = iri + "/dataSource";
         writer.iri(iri, LP_EXEC.HAS_DATA_SOURCE, dataSourceIri);
         dataSource.write(dataSourceIri, writer);

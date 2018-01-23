@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker.model.template;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 
@@ -21,7 +21,7 @@ public class TemplatePort implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, RdfValue value) {
+    public Loadable load(String predicate, BackendRdfValue value) {
         switch (predicate) {
             case RDF.TYPE:
                 types.add(value.asString());

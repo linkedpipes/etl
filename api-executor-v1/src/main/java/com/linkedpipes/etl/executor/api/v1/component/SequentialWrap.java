@@ -3,11 +3,9 @@ package com.linkedpipes.etl.executor.api.v1.component;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.service.ServiceFactory;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -19,21 +17,16 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     private final SequentialExecution component;
 
-    private final ComponentInfo info;
+    private final String componentIri;
 
     private final RdfSource definition;
 
     private final ServiceFactory serviceFactory;
 
-    /**
-     * @param component Must be instance of {@link SequentialExecution}.
-     * @param info
-     * @param definition
-     */
-    public SequentialWrap(SequentialExecution component, ComponentInfo info,
+    public SequentialWrap(SequentialExecution component, String componentIri,
             RdfSource definition, ServiceFactory serviceFactory) {
         this.component = component;
-        this.info = info;
+        this.componentIri = componentIri;
         this.definition = definition;
         this.serviceFactory = serviceFactory;
     }
@@ -57,12 +50,12 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
     }
 
     @Override
-    public void loadConfiguration(String graph, RdfSource definition)
+    public void loadConfiguration(RdfSource definition)
             throws LpException {
         // Load configuration.
         for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Configuration.class) != null) {
-                loadConfigurationForField(field, graph, definition);
+                loadConfigurationForField(field, definition);
             }
         }
     }
@@ -84,11 +77,10 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
      * Load configuration for given field.
      *
      * @param field
-     * @param graph
      * @param definition
      */
-    private void loadConfigurationForField(Field field, String graph,
-            RdfSource definition) throws LpException {
+    private void loadConfigurationForField(Field field,  RdfSource definition)
+            throws LpException {
         final Object instance;
         try {
             instance = field.getType().newInstance();
@@ -96,15 +88,7 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
             throw new LpException("Can't create instance of {} for {}",
                     field.getType().getSimpleName(), field.getName(), ex);
         }
-        //
-        try {
-            RdfUtils.loadByType(definition, graph,
-                    instance, RdfToPojo.descriptorFactory());
-        } catch (RdfUtilsException ex) {
-            throw new LpException("Can't load for field: {}",
-                    field.getName(), ex);
-        }
-        //
+        RdfToPojoLoader.loadByReflection(definition, instance);
         try {
             field.set(component, instance);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
@@ -177,8 +161,8 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
             }
             final Object instance;
             try {
-                instance = serviceFactory.create(field.getType(),
-                        info.getIri(), info.getGraph(), definition, context);
+                instance = serviceFactory.create(
+                        field.getType(), componentIri, definition, context);
             } catch (LpException ex) {
                 throw new LpException("Can't instantiate: {} : {}",
                         field.getName(), field.getType().getSimpleName(), ex);

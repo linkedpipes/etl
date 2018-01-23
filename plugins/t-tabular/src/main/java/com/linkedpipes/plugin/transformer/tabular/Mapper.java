@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;

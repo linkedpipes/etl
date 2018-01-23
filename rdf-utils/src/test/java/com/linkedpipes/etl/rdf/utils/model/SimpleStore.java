@@ -4,7 +4,7 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 
 import java.util.List;
 
-public class SimpleStore implements RdfSource {
+public class SimpleStore implements BackendRdfSource {
 
     private List<RdfTriple> triples;
 
@@ -13,7 +13,7 @@ public class SimpleStore implements RdfSource {
     }
 
     @Override
-    public TripleWriter getTripleWriter(String graph) {
+    public BackendTripleWriter getTripleWriter(String graph) {
         throw new UnsupportedOperationException();
     }
 

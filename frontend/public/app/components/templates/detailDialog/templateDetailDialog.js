@@ -126,13 +126,13 @@ define([
                     const config = pipeline.model.graphs[configIRI];
                     // TODO Move this into separated service.
                     const controlProperties = [];
-                    jsonld.triples(description).iterate((resource) => {
+                    jsonld.t.iterateResources(description, (resource) => {
                         const control = jsonld.r.getIRI(resource, LP.control);
                         if (control !== undefined) {
                             controlProperties.push(control);
                         }
                     });
-                    jsonld.triples(config).iterate((resource) => {
+                    jsonld.t.iterateResources(config, (resource) => {
                         for (let key in resource) {
                             if (!resource.hasOwnProperty(key)) {
                                 continue;
@@ -150,7 +150,7 @@ define([
                     $mdDialog.hide();
                 });
             }, () => {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't create template."
                 });
             });

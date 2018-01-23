@@ -6,10 +6,10 @@ import com.linkedpipes.etl.executor.pipeline.model.Component;
 import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.entity.EntityMerger;
-import com.linkedpipes.etl.rdf.utils.entity.EntityReference;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.executor.rdf.entity.EntityMerger;
+import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +46,14 @@ public class Configuration {
      * @param pipeline Pipeline with definitions.
      */
     public static void prepareConfiguration(String iri,
-            Component component, RdfSource runtimeSource,
-            String runtimeGraph, TripleWriter writer,
+            Component component, BackendRdfSource runtimeSource,
+            String runtimeGraph, BackendTripleWriter writer,
             Pipeline pipeline)
             throws ExecutorException {
         final List<EntityReference> references = new ArrayList<>(3);
         final ConfigurationDescription description =
                 component.getConfigurationDescription();
-        final RdfSource pplSource = pipeline.getSource();
+        final BackendRdfSource pplSource = pipeline.getSource();
         final String configurationType = description.getDescribedType();
         // Get definitionGraph and resource for each configuration.
         {

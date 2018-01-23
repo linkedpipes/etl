@@ -13,9 +13,9 @@
             <input ng-model="dialog.encoding" required placeholder="UTF-8">
         </md-input-container>
     </div>
-    <md-switch ng-model="dialog.header">{{dialog.header ? "Table has header row" : "Table does not have header row"}}</md-switch>
+    <md-switch ng-model="dialog.header">Does Table have header row</md-switch>
     <md-switch ng-model="dialog.generateNullHeaderNames">Generate names for null header cells</md-switch>
-    <md-switch ng-model="dialog.trim">{{dialog.trim ? "Trim whitespaces from cells" : "Keeping whitespaces"}}</md-switch>
+    <md-switch ng-model="dialog.trim">Trim whitespaces from cells</md-switch>
     <md-input-container class="md-block" ng-hide="control.mimeType.forced" flex>
         <label>Table IRI prefix:</label>
         <md-select ng-model="dialog.encodeType">
@@ -41,13 +41,13 @@
         <label>Rows skipped (before header)</label>
         <input type="number" ng-model="dialog.skipLines" placeholder="0" min="0">
     </md-input-container>
-    <md-switch ng-model="dialog.normalOutput">{{dialog.normalOutput ? "Table and row entities" : "Data only"}}</md-switch>
-    <md-switch ng-model="dialog.useBaseUri">{{dialog.useBaseUri ? "Specified row and property IRI base" : "Default row and property IRIs"}}</md-switch>
+    <md-switch ng-model="dialog.normalOutput">Generate table and row entities</md-switch>
+    <md-switch ng-model="dialog.useBaseUri">Use specified row and property IRI base</md-switch>
     <md-input-container class="md-block" flex-gt-sm ng-show="dialog.useBaseUri">
         <label>Row and property IRI base</label>
         <input type="uri" ng-model="dialog.baseUri" placeholder="http://ex.org/resource/tabular/">
     </md-input-container>
-    <md-switch ng-model="dialog.fullMapping">{{dialog.fullMapping ? "Using CSV on the Web mapping" : "Using custom mapping"}}</md-switch>
+    <md-switch ng-model="dialog.fullMapping">Use CSV on the Web mapping</md-switch>
     <md-content ng-hide="dialog.fullMapping">
         <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.columns">
             <md-input-container class="md-block" flex-gt-sm>

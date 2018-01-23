@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils;
 
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -9,8 +9,8 @@ public class RdfBuilderTest {
 
     @Test
     public void simple() throws RdfUtilsException {
-        TripleWriter writer = Mockito.mock(TripleWriter.class);
-        RdfSource source = Mockito.mock(RdfSource.class);
+        BackendTripleWriter writer = Mockito.mock(BackendTripleWriter.class);
+        BackendRdfSource source = Mockito.mock(BackendRdfSource.class);
         Mockito.when(source.getTripleWriter(Mockito.any())).thenReturn(writer);
 
         RdfBuilder builder = RdfBuilder.create(source, "http://graph");

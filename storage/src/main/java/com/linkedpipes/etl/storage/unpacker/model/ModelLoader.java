@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.unpacker.model;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerConnection;
@@ -24,7 +24,7 @@ public class ModelLoader {
 
     }
 
-    public static DesignerPipeline loadDesignerPipeline(RdfSource source)
+    public static DesignerPipeline loadDesignerPipeline(BackendRdfSource source)
             throws RdfUtilsException {
         DesignerPipeline pipelineModel = new DesignerPipeline();
         RdfUtils.loadByType(source, null, pipelineModel, DesignerPipeline.TYPE);
@@ -51,7 +51,7 @@ public class ModelLoader {
         return collection;
     }
 
-    public static Execution loadExecution(RdfSource source)
+    public static Execution loadExecution(BackendRdfSource source)
             throws RdfUtilsException {
         Execution execution = new Execution();
         RdfUtils.loadByType(source, null, execution, Execution.TYPE);
@@ -65,7 +65,7 @@ public class ModelLoader {
         return statements;
     }
 
-    public static Template loadTemplate(RdfSource source)
+    public static Template loadTemplate(BackendRdfSource source)
             throws RdfUtilsException {
         List<String> jar = RdfUtils.getResourcesOfType(
                 source, null, JarTemplate.TYPE);

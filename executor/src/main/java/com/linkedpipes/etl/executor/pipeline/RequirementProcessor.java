@@ -7,7 +7,7 @@ import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +28,7 @@ class RequirementProcessor {
      * @param graph
      * @param resourceManager
      */
-    public static void handle(RdfSource definition, String graph,
+    public static void handle(BackendRdfSource definition, String graph,
             ResourceManager resourceManager) throws LpException {
         final List<Map<String, String>> working;
         final List<Map<String, String>> input;

@@ -11,7 +11,8 @@ define([
     'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
     'app/components/templates/detailDialog/templateDetailDialog',
     'app/components/instances/detailDialog/instanceDetailDialog',
-    'file-saver'
+    'file-saver',
+    'app/modules/execution-model'
 ], function (jQuery, jsonld,
              pipelineCanvasDirective,
              canvasPipelineFactory,
@@ -23,7 +24,8 @@ define([
              pipelineDetailDialog,
              templateDetailDialog,
              instanceDetailDialog,
-             saveAs) {
+             saveAs,
+             executionModel) {
     function controler($scope,
                        $mdDialog,
                        $mdMedia,
@@ -37,7 +39,6 @@ define([
                        jsonldService,
                        infoService,
                        pipelineService,
-                       executionModel,
                        pipelineCanvas,
                        executionCanvas,
                        indexPage,
@@ -264,7 +265,7 @@ define([
             }
             // Load execution and convert into a model.
             return $http.get(data.execution.iri).then(function (response) {
-                data.execution.model.loadJsonLd(response.data);
+                data.execution.model.loadJsonLd(response.data, data.execution.iri);
                 executionCanvas.update();
                 // Check if execution is finished and disable refresh.
                 if (data.execution.model.isFinished()) {
@@ -291,7 +292,7 @@ define([
                     }
                 });
             }, function (message) {
-                statusService.deleteFailed({
+                statusService.httpDeleteFailed({
                     'title': "Can't load data.",
                     'response': message
                 });
@@ -386,7 +387,7 @@ define([
             templateService.load().then(function () {
                 loadData();
             }, function (response) {
-                statusService.deleteFailed({
+                statusService.httpDeleteFailed({
                     'title': "Can't load templates pipeline.",
                     'response': response
                 });
@@ -429,7 +430,7 @@ define([
                     onSucess();
                 }
             }, function (response) {
-                statusService.putFailed({
+                statusService.httpPutFailed({
                     'title': "Can't save the pipeline.",
                     'response': response
                 });
@@ -516,7 +517,7 @@ define([
                     onSucess();
                 }
             }, function (response) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't start the execution.",
                     'response': response
                 });
@@ -624,7 +625,7 @@ define([
                     {'pipeline': newPipelineUri});
             })
             .error(function (data, status, headers) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't create new pipeline.",
                     'response': data
                 });
@@ -646,7 +647,7 @@ define([
                 }).then(function () {
                     $location.path('/pipelines').search({});
                 }, function (response) {
-                    statusService.deleteFailed({
+                    statusService.httpDeleteFailed({
                         'title': "Can't delete the pipeline.",
                         'response': response
                     });
@@ -750,10 +751,9 @@ define([
         'services.jsonld',
         'service.info',
         'components.pipelines.services.model',
-        'models.execution',
         'canvas.pipeline',
         'canvas.execution',
-        'indexPage',
+        'layout-service',
         'service.pipelineDesign'
     ];
 

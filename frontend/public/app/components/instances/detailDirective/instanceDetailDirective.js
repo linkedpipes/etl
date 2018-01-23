@@ -1,11 +1,11 @@
 define([
-    "jquery", "jsonld",
+    "jquery",
     "../../templates/generalTab/templateGeneralTab",
     "../../templates/embedDirective/templateEmbedDirective",
     "../../templates/templateService",
     "../../dialogs/dialogService",
     "../hierarchyTab/instanceHierarchyTab"
-], function (jQuery, jsonld, generalTab, embedDirective,
+], function (jQuery, generalTab, embedDirective,
              templateService, templateDialogService, hierarchyTab) {
     "use strict";
 

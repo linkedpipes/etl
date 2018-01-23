@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.model.RdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -88,7 +88,7 @@ public class FieldLoaderTest {
     public void loadInteger() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("intValue");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asLong()).thenReturn(12l);
 
         FieldLoader loader = new FieldLoader();
@@ -101,7 +101,7 @@ public class FieldLoaderTest {
     public void loadString() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("stringValue");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("value");
 
         FieldLoader loader = new FieldLoader();
@@ -114,7 +114,7 @@ public class FieldLoaderTest {
     public void loadBoolean() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("booleanValue");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
@@ -127,7 +127,7 @@ public class FieldLoaderTest {
     public void loadReference() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("reference");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("http://localhost");
 
         Assert.assertNull(instance.reference);
@@ -142,7 +142,7 @@ public class FieldLoaderTest {
     public void loadNewReference() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("reference");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("http://localhost");
 
         FieldLoader loader = new FieldLoader();
@@ -156,7 +156,7 @@ public class FieldLoaderTest {
     public void extendReference() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("reference");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("http://localhost");
 
         FieldLoader loader = new FieldLoader();
@@ -170,7 +170,7 @@ public class FieldLoaderTest {
     public void loadCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("list");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
@@ -185,7 +185,7 @@ public class FieldLoaderTest {
         TestClass instance = new TestClass();
         instance.list = null;
         Field field = TestClass.class.getDeclaredField("list");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
@@ -196,7 +196,7 @@ public class FieldLoaderTest {
     public void loadClearLoadCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("list");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
@@ -210,7 +210,7 @@ public class FieldLoaderTest {
     public void loadArray() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("array");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
@@ -221,7 +221,7 @@ public class FieldLoaderTest {
     public void loadPrimitiveCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("intList");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         FieldLoader loader = new FieldLoader();
 
         Mockito.when(value.asLong()).thenReturn(11l);
@@ -239,7 +239,7 @@ public class FieldLoaderTest {
     public void loadEnum() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("enumValue");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("VALUE_A");
 
         FieldLoader loader = new FieldLoader();
@@ -252,7 +252,7 @@ public class FieldLoaderTest {
     public void loadLangString() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("langString");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("value");
         Mockito.when(value.getLanguage()).thenReturn("cs");
 
@@ -268,7 +268,7 @@ public class FieldLoaderTest {
     public void loadDate() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("dateValue");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("2010-02-20");
 
         FieldLoader loader = new FieldLoader();
@@ -286,7 +286,7 @@ public class FieldLoaderTest {
     public void loadNestedCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("nestedCollection");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
@@ -297,7 +297,7 @@ public class FieldLoaderTest {
     public void loadEnumCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("enumCollection");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("VALUE_A");
 
         FieldLoader loader = new FieldLoader();
@@ -311,7 +311,7 @@ public class FieldLoaderTest {
     public void loadArrayCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("arrayCollection");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
@@ -322,7 +322,7 @@ public class FieldLoaderTest {
     public void loadLangStringCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("langStringCollection");
-        RdfValue value = Mockito.mock(RdfValue.class);
+        BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         Mockito.when(value.asString()).thenReturn("value");
         Mockito.when(value.getLanguage()).thenReturn("cs");
 

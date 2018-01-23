@@ -9,22 +9,18 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfSource;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
-import org.eclipse.rdf4j.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class HttpGetFiles extends TaskExecution<DownloadTask> {
@@ -67,15 +63,14 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
     }
 
     private void loadTasks() throws LpException {
-        RdfSource source = Rdf4jSource.wrapRepository(
-                configurationRdf.getRepository());
-        try {
-            this.tasks = RdfUtils.loadList(
-                    source, configurationRdf.getReadGraph().stringValue(),
-                    RdfToPojo.descriptorFactory(),
-                    DownloadTask.class);
-        } catch (RdfUtilsException ex) {
-            throw exceptionFactory.failure("Can't load tasks.", ex);
+        RdfSource source = configurationRdf.asRdfSource();
+        List<String> resources =
+                source.getByType(HttpGetFilesVocabulary.REFERENCE);
+        tasks = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            DownloadTask task = new DownloadTask();
+            RdfToPojoLoader.loadByReflection(source, resource, task);
+            tasks.add(task);
         }
     }
 
@@ -86,7 +81,6 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
     @Override
     protected TaskConsumer<DownloadTask> createConsumer() {
-
         return new DownloadTaskExecutor(
                 configuration, progressReport, output, exceptionFactory,
                 statementsConsumer, reportWriter);
@@ -97,11 +91,7 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
         if (reportWriter != null) {
             return reportWriter;
         }
-        String graph = reportRdf.getWriteGraph().stringValue();
-        Repository repository = reportRdf.getRepository();
-        TripleWriter writer =
-                Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
-        reportWriter = ReportWriter.create(writer);
+        reportWriter = ReportWriter.create(reportRdf.getWriter());
         return reportWriter;
     }
 

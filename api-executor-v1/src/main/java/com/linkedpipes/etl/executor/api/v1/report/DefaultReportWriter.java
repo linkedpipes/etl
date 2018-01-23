@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.executor.api.v1.report;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_REPORT;
-import com.linkedpipes.etl.rdf.utils.RdfFormatter;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +24,7 @@ class DefaultReportWriter implements ReportWriter {
 
     @Override
     public synchronized void onTaskFinished(Task task, Date start, Date end) {
+        LOG.error("Task ({}) finished.", task.getIri());
         String reportIri = getIriForReport(task);
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
@@ -33,22 +33,19 @@ class DefaultReportWriter implements ReportWriter {
     }
 
     private void writeReportBasic(String reportIri, Date start, Date end) {
-        writer.iri(reportIri, RDF.TYPE, LP_REPORT.REPORT);
-        writer.typed(reportIri, LP_REPORT.HAS_START,
-                RdfFormatter.toXsdDate(start), XSD.DATETIME);
-        writer.typed(reportIri, LP_REPORT.HAS_END,
-                RdfFormatter.toXsdDate(end), XSD.DATETIME);
+        writer.iri(reportIri, RDF.TYPE, LP.REPORT);
+        writer.date(reportIri, LP.HAS_START, start);
+        writer.date(reportIri, LP.HAS_END, end);
         Long duration = end.getTime() - start.getTime();
-        writer.typed(reportIri, LP_REPORT.HAS_DURATION,
-                duration.toString(), XSD.LONG);
+        writer.typed(reportIri, LP.HAS_DURATION, duration.toString(), XSD.LONG);
     }
 
     private void writeTaskReference(String reportIri, Task task) {
-        writer.iri(reportIri, LP_REPORT.HAS_TASK, task.getIri());
+        writer.iri(reportIri, LP.HAS_TASK, task.getIri());
     }
 
     private void writeStatusSuccess(String reportIri) {
-        writer.iri(reportIri, LP_REPORT.HAS_STATUS, LP_REPORT.SUCCESS);
+        writer.iri(reportIri, LP.HAS_STATUS, LP.SUCCESS);
     }
 
     @Override
@@ -65,7 +62,7 @@ class DefaultReportWriter implements ReportWriter {
     }
 
     private void writeStatusFailed(String reportIri) {
-        writer.iri(reportIri, LP_REPORT.HAS_STATUS, LP_REPORT.FAILED);
+        writer.iri(reportIri, LP.HAS_STATUS, LP.FAILED);
     }
 
     private Throwable getRootCause(Throwable throwable) {
@@ -77,21 +74,19 @@ class DefaultReportWriter implements ReportWriter {
 
     private void writeError(String reportIri, Throwable throwable) {
         String errorIri = reportIri + "/error";
-        writer.iri(reportIri, LP_REPORT.HAS_EXCEPTION, errorIri);
-        writer.iri(errorIri, RDF.TYPE, LP_REPORT.EXCEPTION);
+        writer.iri(reportIri, LP.HAS_EXCEPTION, errorIri);
+        writer.iri(errorIri, RDF.TYPE, LP.EXCEPTION);
         String message = throwable.getMessage();
         if (message != null) {
-            writer.string(errorIri, LP_REPORT.HAS_MESSAGE,
-                    throwable.getMessage(), null);
+            writer.string(errorIri, LP.HAS_MESSAGE, throwable.getMessage());
         }
-        writer.string(errorIri, LP_REPORT.HAS_CLASS,
-                throwable.getClass().getName(), null);
+        writer.string(errorIri, LP.HAS_CLASS, throwable.getClass().getName());
     }
 
     private void flushWriter(String reportIri, Task task) {
         try {
             writer.flush();
-        } catch (RdfUtilsException exception) {
+        } catch (RdfException exception) {
             LOG.error("Can't flush report.{} for task {}",
                     reportIri, task.getIri());
         }

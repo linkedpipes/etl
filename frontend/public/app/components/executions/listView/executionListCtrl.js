@@ -1,7 +1,8 @@
 define([
-], function () {
-    function controler($scope, $location, $timeout, $http, refreshService,
-            statusService, jsonldService) {
+    "app/components/executions/log-tail/execution-log-tail-dialog"
+], function (logTailDialogCtrl) {
+    function controler($scope, $location, $timeout, $http, $mdDialog,
+                       $mdMedia, refreshService, statusService, jsonldService) {
 
         var template = {
             'iri': {
@@ -291,7 +292,7 @@ define([
                     .then(function () {
                         $scope.repository.update();
                     }, function (response) {
-                        statusService.postFailed({
+                        statusService.httpPostFailed({
                             'title': "Can't start the execution.",
                             'response': response
                         });
@@ -309,7 +310,7 @@ define([
             .then(function () {
                 execution.cancelling = true;
             }, function (response) {
-                statusService.postFailed({
+                statusService.httpPostFailed({
                     'title': "Can't cancel the execution.",
                     'response': response
                 });
@@ -320,14 +321,32 @@ define([
             $mdOpenMenu(ev);
         };
 
+        $scope.openLogTail = function(execution) {
+            const useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                'controller': 'execution.log-tail.dialog',
+                'templateUrl': 'app/components/executions/log-tail/execution-log-tail-dialog.html',
+                'clickOutsideToClose': false,
+                'fullscreen': useFullScreen,
+                'locals': {
+                    'execution': execution
+                }
+            }).then(function () {
+                // No action here.
+            }, function () {
+                // No action here.
+            });
+        };
+
         var initialize = function () {
-            $scope.repository.load(function () { },
-                    function (response) {
-                        statusService.getFailed({
-                            'title': "Can't load data.",
-                            'response': response
-                        });
+            $scope.repository.load(function () {
+                },
+                function (response) {
+                    statusService.httpGetFailed({
+                        'title': "Can't load data.",
+                        'response': response
                     });
+                });
 
             refreshService.set(function () {
                 $scope.repository.update();
@@ -336,15 +355,18 @@ define([
 
         $timeout(initialize, 0);
     }
+
     //
     controler.$inject = ['$scope', '$location', '$timeout', '$http',
-        'service.refresh', 'services.status',
+        '$mdDialog', '$mdMedia', 'service.refresh', 'services.status',
         'services.jsonld'];
     //
     function init(app) {
         // refreshService
         // repositoryService
         app.controller('components.executions.list', controler);
+        logTailDialogCtrl(app);
     }
+
     return init;
 });

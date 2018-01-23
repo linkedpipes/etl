@@ -10,14 +10,11 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.TripleWriter;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import org.eclipse.rdf4j.repository.Repository;
 
 import java.io.File;
@@ -83,14 +80,14 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
     }
 
     private void loadTasks() throws LpException {
-        try {
-            this.tasks = RdfUtils.loadList(
-                    Rdf4jSource.wrapRepository(tasksRdf.getRepository()),
-                    tasksRdf.getReadGraph().stringValue(),
-                    RdfToPojo.descriptorFactory(),
-                    QueryTask.class);
-        } catch (RdfUtilsException ex) {
-            throw exceptionFactory.failure("Can't load tasks.", ex);
+        RdfSource source = tasksRdf.asRdfSource();
+        List<String> resources = source.getByType(
+                SparqlEndpointChunkedListVocabulary.TASK);
+        tasks = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            QueryTask task = new QueryTask();
+            RdfToPojoLoader.loadByReflection(source, resource, task);
+            tasks.add(task);
         }
     }
 
@@ -106,9 +103,7 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
     protected ReportWriter createReportWriter() {
         String graph = reportRdf.getWriteGraph().stringValue();
         Repository repository = reportRdf.getRepository();
-        TripleWriter writer =
-                Rdf4jSource.wrapRepository(repository).getTripleWriter(graph);
-        return ReportWriter.create(writer);
+        return ReportWriter.create(reportRdf.getWriter());
     }
 
     @Override
