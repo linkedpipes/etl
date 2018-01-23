@@ -500,7 +500,11 @@
             select(getStrings(resource, predicate)),
         "getPlainString": (resource, predicate) => {
             const value = select(getStrings(resource, predicate));
-            return value["@value"];
+            if (value === undefined) {
+                return undefined;
+            } else {
+                return value["@value"];
+            }
         },
         "setStrings": setStrings,
         "getIntegers": getIntegers,
