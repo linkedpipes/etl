@@ -113,7 +113,7 @@ define([
                 magnetS.getAttribute('port')]['dataType'];
         var contentT = cellT.model.attributes.portsData[
                 magnetT.getAttribute('port')]['dataType'];
-        return areDataUnitsCompatible.compatible(contentS, contentT);
+        return areDataUnitsCompatible(contentS, contentT);
     }
 
     /**
