@@ -29,6 +29,10 @@
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSize": "1000",
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSizeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        }
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useTolerantRepository": false,
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useTolerantRepositoryControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+         }
     }
 ]

@@ -9,6 +9,10 @@
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint": "",
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        }        
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepository": false,
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepositoryControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
     }
 ]

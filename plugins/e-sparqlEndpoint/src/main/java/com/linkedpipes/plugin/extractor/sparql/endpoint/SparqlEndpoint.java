@@ -65,8 +65,14 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
                     SparqlEndpointVocabulary.HAS_QUERY);
         }
         //
-        final SPARQLRepository repository
-                = new SPARQLRepository(configuration.getEndpoint());
+        final SPARQLRepository repository;
+        if (configuration.isUseTolerantRepository()) {
+            repository = new TolerantSparqlRepository(
+                    configuration.getEndpoint());
+        } else {
+            repository = new SPARQLRepository(
+                    configuration.getEndpoint());
+        }
         // Customize repository.
         final Map<String, String> headers = new HashMap<>();
         headers.putAll(repository.getAdditionalHttpHeaders());

@@ -21,6 +21,10 @@
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#commitSize": 0,
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#commitSizeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        }
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#useTolerantRepository": false,
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#useTolerantRepositoryControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+         }
     }
 ]

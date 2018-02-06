@@ -53,8 +53,14 @@ public final class SparqlEndpointConstructScrollableCursor
 
     @Override
     public void execute() throws LpException {
-        SPARQLRepository repository = new SPARQLRepository(
-                configuration.getEndpoint());
+        SPARQLRepository repository;
+        if (configuration.isUseTolerantRepository()) {
+            repository = new TolerantSparqlRepository(
+                    configuration.getEndpoint());
+        } else {
+            repository = new SPARQLRepository(
+                    configuration.getEndpoint());
+        }
         repository.initialize();
         repository.setHttpClient(getHttpClient());
         //

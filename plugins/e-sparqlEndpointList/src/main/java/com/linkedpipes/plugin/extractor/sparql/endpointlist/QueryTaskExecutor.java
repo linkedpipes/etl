@@ -121,7 +121,12 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
     }
 
     private SPARQLRepository createRepository() {
-        SPARQLRepository repository = new SPARQLRepository(task.getEndpoint());
+        SPARQLRepository repository;
+        if (configuration.isUseTolerantRepository()) {
+            repository = new TolerantSparqlRepository(task.getEndpoint());
+        } else {
+            repository = new SPARQLRepository(task.getEndpoint());
+        }
         setHeaders(repository);
         repository.initialize();
         repository.setHttpClient(getHttpClient());

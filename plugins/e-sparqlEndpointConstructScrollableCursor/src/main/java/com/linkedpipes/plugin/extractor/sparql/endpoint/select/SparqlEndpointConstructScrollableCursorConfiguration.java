@@ -48,6 +48,10 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
             iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PASSWORD)
     private String password;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    private boolean useTolerantRepository = false;
+
     public SparqlEndpointConstructScrollableCursorConfiguration() {
     }
 
@@ -129,6 +133,14 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isUseTolerantRepository() {
+        return useTolerantRepository;
+    }
+
+    public void setUseTolerantRepository(boolean useTolerantRepository) {
+        this.useTolerantRepository = useTolerantRepository;
     }
 
 }

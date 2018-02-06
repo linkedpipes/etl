@@ -48,6 +48,10 @@ define([], function () {
         "password": {
             "$type": "str",
             "$label": "Password"
+        },
+        "useTolerantRepository": {
+            "$type": "bool",
+            "$label": "Fix invalid types"
         }
     };
 

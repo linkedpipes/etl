@@ -33,6 +33,9 @@ final class SparqlEndpointChunkedListVocabulary {
 
     public static final String HAS_PASSWORD = PREFIX + "password";
 
+    public static final String HAS_USE_TOLERANT_REPOSITORY =
+            PREFIX + "useTolerantRepository";
+
     private SparqlEndpointChunkedListVocabulary() {
     }
 

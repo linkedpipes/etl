@@ -23,6 +23,10 @@ public class SparqlEndpointChunkedListConfiguration implements
             iri = SparqlEndpointChunkedListVocabulary.HAS_ENCODE_RDF)
     private boolean fixIncomingRdf = false;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointChunkedListVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    private boolean useTolerantRepository = false;
+
     public SparqlEndpointChunkedListConfiguration() {
     }
 
@@ -66,6 +70,14 @@ public class SparqlEndpointChunkedListConfiguration implements
     @Override
     public boolean isSkipOnError() {
         return true;
+    }
+
+    public boolean isUseTolerantRepository() {
+        return useTolerantRepository;
+    }
+
+    public void setUseTolerantRepository(boolean useTolerantRepository) {
+        this.useTolerantRepository = useTolerantRepository;
     }
 
 }

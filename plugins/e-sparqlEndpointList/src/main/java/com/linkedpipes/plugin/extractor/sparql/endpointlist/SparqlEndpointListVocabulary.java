@@ -36,6 +36,9 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_PASSWORD = PREFIX + "password";
 
+    public static final String HAS_USE_TOLERANT_REPOSITORY =
+            PREFIX + "useTolerantRepository";
+
     private SparqlEndpointListVocabulary() {
     }
 

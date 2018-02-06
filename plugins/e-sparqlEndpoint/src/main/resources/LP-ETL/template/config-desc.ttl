@@ -10,7 +10,8 @@
         <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/encodeRdf> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/useAuthentication> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/userName> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/password> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/password> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/useTolerantRepository> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
@@ -51,3 +52,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#password> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#passwordControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/useTolerantRepository>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepository> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepositoryControl> .

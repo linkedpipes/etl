@@ -23,6 +23,14 @@
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdf": false,
         "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdfControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        }
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdf": false,
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdfControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useTolerantRepository": false,
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useTolerantRepositoryControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+         }
     }
 ]

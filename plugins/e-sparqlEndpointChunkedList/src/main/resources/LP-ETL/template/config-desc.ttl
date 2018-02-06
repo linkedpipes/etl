@@ -5,7 +5,8 @@
     config:type <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/threads> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/timeLimit> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/encodeRdf> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/encodeRdf> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/useTolerantRepository> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/threads>
     a config:ConfigurationMember ;
@@ -21,3 +22,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#encodeRdf> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#encodeRdfControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunkedList/0.0.0/configuration/desc/useTolerantRepository>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#useTolerantRepository> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunkedList#useTolerantRepositoryControl> .

@@ -22,6 +22,10 @@ public class SparqlEndpointListConfiguration implements
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 0;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointListVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    private boolean useTolerantRepository = false;
+
     public SparqlEndpointListConfiguration() {
     }
 
@@ -69,6 +73,14 @@ public class SparqlEndpointListConfiguration implements
 
     public void setCommitSize(int commitSize) {
         this.commitSize = commitSize;
+    }
+
+    public boolean isUseTolerantRepository() {
+        return useTolerantRepository;
+    }
+
+    public void setUseTolerantRepository(boolean useTolerantRepository) {
+        this.useTolerantRepository = useTolerantRepository;
     }
 
 }

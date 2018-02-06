@@ -47,6 +47,10 @@ public class SparqlEndpointChunkedConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_PASSWORD)
     private String password;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointChunkedVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    private boolean useTolerantRepository = false;
+
     public SparqlEndpointChunkedConfiguration() {
     }
 
@@ -128,6 +132,14 @@ public class SparqlEndpointChunkedConfiguration {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isUseTolerantRepository() {
+        return useTolerantRepository;
+    }
+
+    public void setUseTolerantRepository(boolean useTolerantRepository) {
+        this.useTolerantRepository = useTolerantRepository;
     }
 
 }

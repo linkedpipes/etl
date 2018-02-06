@@ -46,6 +46,13 @@
         <md-tooltip>Fix IRI by encoding unencoded special characters
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.useTolerantRepository.value"
+               ng-hide="dialog.useTolerantRepository.hide"
+               ng-disabled="dialog.useTolerantRepository.disabled || dialog.useTolerantRepository.inherit">
+        Fix invalid types
+        <md-tooltip>Fix rdfs:langString without language tag.
+        </md-tooltip>
+    </md-switch>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
                  lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"
