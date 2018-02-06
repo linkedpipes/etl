@@ -1,5 +1,11 @@
-(function () {
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([], definition);
+    }
+})(() => {
     "use strict";
+
+    // TODO Split into LP and SKOS vocabulary, so it can be used right after import.
 
     const DATA_UNIT = "http://linkedpipes.com/ontology/dataUnit/";
 
@@ -32,20 +38,22 @@
         "CMP_FAILED" : "http://linkedpipes.com/ontology/events/ComponentFailed",
         "COMPONENT": "http://linkedpipes.com/ontology/Component",
         "DATA_UNIT": "http://etl.linkedpipes.com/ontology/DataUnit",
-        "PROGRESS_REPORT": "http://linkedpipes.com/ontology/progress/ProgressReport"
+        "PROGRESS_REPORT": "http://linkedpipes.com/ontology/progress/ProgressReport",
+        "EXEC_OPTIONS" : "http://etl.linkedpipes.com/ontology/ExecutionOptions",
+        "SAVE_DEBUG" : "http://linkedpipes.com/ontology/saveDebugData",
+        "DELETE_WORKING": "http://linkedpipes.com/ontology/deleteWorkingData",
+        "HAS_TAG": "http://etl.linkedpipes.com/ontology/tag",
+        "PIPELINE": "http://linkedpipes.com/ontology/Pipeline",
+        "TOMBSTONE" : "http://linkedpipes.com/ontology/Tombstone"
     };
 
     const SKOS = {
         "PREF_LABEL": "http://www.w3.org/2004/02/skos/core#prefLabel"
     };
 
-    const module = {
+    return {
         "LP" : LP,
         "SKOS": SKOS
     };
 
-    if (typeof define === "function" && define.amd) {
-        define([], () => module);
-    }
-
-})();
+});
