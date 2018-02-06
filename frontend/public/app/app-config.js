@@ -1,5 +1,6 @@
 define([], function () {
     function config($routeProvider, $mdIconProvider, $mdThemingProvider) {
+        // TODO Export to navigation module.
         $routeProvider
                 .when('/help', {
                     'templateUrl': 'app/components/help/view/helpView.html',
@@ -44,7 +45,7 @@ define([], function () {
                     'color': '#2196F3'
                 })
                 .when('/pipelines', {
-                    'templateUrl': 'app/components/pipelines/listView/pipelineListView.html',
+                    'templateUrl': 'app/components/pipelines/listView/pipeline-list-view.html',
                     'controller': 'components.pipelines.list',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipelines - LinkedPipes ETL',
@@ -66,7 +67,7 @@ define([], function () {
                 .otherwise({
                     'redirectTo': '/executions'
                 });
-        //
+        // TODO Replace with icon font.
         $mdIconProvider
                 .icon('add', 'libraries/google.design/ic_add_48px.svg')
                 .icon('add_circle_outline', 'libraries/google.design/ic_add_circle_outline_48px.svg')
