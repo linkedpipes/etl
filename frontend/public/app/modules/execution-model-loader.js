@@ -1,5 +1,21 @@
-(function () {
-    "use-strict";
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([
+            "vocabulary",
+            "jsonld",
+            "app/modules/execution-mapping"
+        ], definition);
+    } else if (typeof module !== "undefined" && require) {
+        const vocabulary = require("./vocabulary");
+        const jsonld = require("./jsonld");
+        const executionMapping = require("./execution-mapping");
+        module.exports = definition(vocabulary, jsonld, executionMapping);
+    }
+})((_vocabulary, jsonld, MAPPING_STATUS) => {
+    "use strict";
+
+    const LP = _vocabulary.LP;
+    const SKOS = _vocabulary.SKOS;
 
     function getComponent(model, iri) {
         if (model.components[iri] === undefined) {
@@ -153,7 +169,7 @@
         });
     }
 
-    const loadActions = {};
+
 
     function loadModelFromJsonLd(model, data, graphIri) {
         console.time("execution-model.loadModel");
@@ -171,7 +187,13 @@
         console.timeEnd("execution-model.loadModel");
     }
 
-    function initialize() {
+    //
+    //
+    //
+
+    const loadActions = {};
+
+    (function initialize() {
         loadActions[LP.EXECUTION] = onExecution;
         loadActions[LP.EXECUTION_BEGIN] = onExecutionBegin;
         loadActions[LP.EXECUTION_END] = onExecutionEnd;
@@ -181,30 +203,10 @@
         loadActions[LP.COMPONENT] = onComponent;
         loadActions[LP.DATA_UNIT] = onDataUnit;
         loadActions[LP.PROGRESS_REPORT] = onProgressReport;
-    }
+    })();
 
-    let LP;
-    let SKOS;
-    let jsonld;
-    let MAPPING_STATUS;
-
-    const module = {
+    return {
         "loadModelFromJsonLd": loadModelFromJsonLd
     };
 
-    if (typeof define === "function" && define.amd) {
-        define([
-            "vocabulary",
-            "jsonld",
-            "app/modules/execution-mapping",
-        ], (vocabulary, _jsonld, _mapping) => {
-            LP = vocabulary.LP;
-            SKOS = vocabulary.SKOS;
-            jsonld = _jsonld;
-            MAPPING_STATUS = _mapping.MAPPING_STATUS;
-            initialize();
-            return module;
-        });
-    }
-
-})();
+});

@@ -1,58 +1,56 @@
 /**
  * Provide access to information about the server.
+ *
+ * TODO Made data available via API.
  */
-(function () {
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([], definition);
+    }
+})(() => {
     "use strict";
 
-    const data = {
+    const cache = {
         "ready": false,
-        "info": {}
+        "data": {}
     };
 
-    function fetchFromRemote() {
-        return $http.get("api/v1/info").then((response) => {
-            data.info = response.data;
-            data.ready = true;
-            return data.info;
-        });
-    }
-
     function fetch() {
-        if (data.ready) {
-            return $q.when(data.info);
+        if (cache.ready) {
+            return Promise.resolve(cache.data);
         } else {
             return fetchFromRemote();
         }
     }
 
-    const service = {
-        "fetch": fetch
-    };
-
-    //
-    //
-
-    let $http, $q;
-
-    function factory(_$http, _$q) {
-        $http = _$http;
-        $q = _$q;
-        return service;
+    function fetchFromRemote() {
+        return $http.get("api/v1/info").then((response) => {
+            cache.data = response.data;
+            cache.ready = true;
+            return cache.data;
+        });
     }
 
-    factory.$inject = ["$http", "$q"];
+    //
+    //
+    //
+
+    let $http;
+
+    function service(_$http) {
+        $http = _$http;
+        this.fetch = fetch;
+    }
+
+    service.$inject = ["$http"];
 
     let _initialized = false;
-    function init(app) {
+    return function init(app) {
         if (_initialized) {
             return;
         }
         _initialized = true;
-        app.factory("service.info", factory);
-    }
+        app.service("service.info", service);
+    };
 
-    if (typeof define === "function" && define.amd) {
-        define([], () => init);
-    }
-
-})();
+});

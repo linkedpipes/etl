@@ -1,5 +1,12 @@
-(function () {
-    "use-strict";
+/**
+ * Define component execution mapping.
+ */
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([], definition);
+    }
+})(() => {
+    "use strict";
 
     const MAPPING_STATUS = {
         /**
@@ -24,12 +31,6 @@
         "CHANGED": 5
     };
 
-    const module = {
-        "MAPPING_STATUS": MAPPING_STATUS
-    };
+    return MAPPING_STATUS;
 
-    if (typeof define === "function" && define.amd) {
-        define([], () => module);
-    }
-
-})();
+});

@@ -1,7 +1,13 @@
 /**
  * Library for R/W manipulation with JSON-LD.
  */
-(function () {
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([], definition);
+    } else if (typeof module !== "undefined") {
+        module.exports = definition();
+    }
+})(() => {
     "use strict";
 
     /**
@@ -572,18 +578,10 @@
         }
     };
 
-    const jsonld = {
+    return {
         "q": quadsService,
         "t": triplesService,
         "r": resourceService
     };
 
-    if (typeof define === "function" && define.amd) {
-        define([], () => jsonld);
-    }
-
-    if (typeof module !== "undefined") {
-        module.exports = jsonld;
-    }
-
-})();
+});

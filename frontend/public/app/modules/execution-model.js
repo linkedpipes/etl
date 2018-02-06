@@ -1,5 +1,12 @@
-(function () {
-    "use-strict";
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([
+            "./execution-model-loader",
+            "./execution-mapping"
+        ], definition);
+    }
+})((modelLoader, MAPPING_STATUS) => {
+    "use strict";
 
     function loadModel(data, graphIri) {
         modelLoader.loadModelFromJsonLd(this.data, data, graphIri);
@@ -161,27 +168,12 @@
         }
     }
 
-    let LP;
-    let SKOS;
-    let modelLoader;
-    let MAPPING_STATUS;
+    //
+    //
+    //
 
-    const module = {
+    return {
         "create": createModel
     };
 
-    if (typeof define === "function" && define.amd) {
-        define([
-            "vocabulary",
-            "app/modules/execution-model-loader",
-            "app/modules/execution-mapping"
-        ], (vocabulary, _loader, _mapping) => {
-            LP = vocabulary.LP;
-            SKOS = vocabulary.SKOS;
-            modelLoader = _loader;
-            MAPPING_STATUS = _mapping.MAPPING_STATUS;
-            return module;
-        });
-    }
-
-})();
+});

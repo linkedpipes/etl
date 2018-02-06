@@ -1,13 +1,19 @@
 /**
  * See link for description of Notification service:
  *  https://github.com/alexcrack/angular-ui-notification
+ *
+ *  TODO Rename to status.js
  */
-(function () {
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([], definition);
+    }
+})(() => {
     "use strict";
 
     function showErrorNotification(message) {
         console.log("Error:", message);
-        Notification.error({
+        $notification.error({
             "title": message.title,
             "message": getMessageText(message),
             "delay": 4000
@@ -28,61 +34,62 @@
     }
 
     function showSuccessNotification(message) {
-        Notification.success({
+        $notification.success({
             "title": message.title,
             "delay": 600
         });
     }
 
-    const service = {};
-
-    service.success = function (message) {
+    function success(message) {
         showSuccessNotification(message);
-    };
+    }
 
-    service.error = function (message) {
+    function error(message) {
         showErrorNotification(message);
-    };
+    }
 
-    service.httpPostFailed = function (message) {
+    function httpPostFailed(message) {
         showErrorNotification(message);
-    };
+    }
 
-    service.httpPutFailed = function (message) {
+    function httpPutFailed(message) {
         showErrorNotification(message);
-    };
+    }
 
-    service.httpGetFailed = function (message) {
+    function httpGetFailed(message) {
         showErrorNotification(message);
-    };
+    }
 
-    service.httpDeleteFailed = function (message) {
+    function httpDeleteFailed(message) {
         showErrorNotification(message);
-    };
+    }
 
     //
     //
 
-    let Notification;
+    let $notification;
 
     function factory(_Notification) {
-        Notification = _Notification;
-        return service;
+        $notification = _Notification;
+        return {
+            "success": success,
+            "error": error,
+            "httpPostFailed": httpPostFailed,
+            "httpPutFailed": httpPutFailed,
+            "httpGetFailed": httpGetFailed,
+            "httpDeleteFailed": httpDeleteFailed
+        }
     }
 
     factory.$inject = ["Notification"];
 
     let _initialized = false;
-    function init(app) {
+    return function init(app) {
         if (_initialized) {
             return;
         }
         _initialized = true;
         app.factory("services.status", factory);
-    }
+    };
 
-    if (typeof define === "function" && define.amd) {
-        define([], () => init);
-    }
-
-})();
+});
