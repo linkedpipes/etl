@@ -18,7 +18,7 @@ class TolerantSparqlRepository extends SPARQLRepository {
         @Override
         public Literal createLiteral(String value, IRI datatype) {
             if (RDF.LANGSTRING.equals(datatype)) {
-                LOG.warn("Missing language tag for '%s'.", value);
+                LOG.warn("Missing language tag for '{}'.", value);
                 return simpleFactory.createLiteral(value, XMLSchema.STRING);
             } else {
                 return simpleFactory.createLiteral(value, datatype);
