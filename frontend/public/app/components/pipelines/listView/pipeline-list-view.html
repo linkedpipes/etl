@@ -1,32 +1,32 @@
 <div layout="row" layout-align="space-around">
     <div class="container" style="max-width: 66em;width: 100%;">
         <md-content>
-            <div ng-show="!repository.loaded" layout="row">
+            <div ng-show="!repository.areDataReady" layout="row">
                 <span flex="50"/>
-                <img src="assets/images/loading.gif" class="center-block" title="Loading..."
-                     style="padding-top: 5em"/>
+                <img src="assets/images/loading.gif" class="center-block" title="Loading..." style="padding-top: 5em"/>
             </div>
-            <div ng-show="repository.loaded" style="margin: 1.2em 2em 0em 1em;">
+            <div ng-show="repository.areDataReady" style="margin: 1.2em 2em 0em 1em;">
                 <md-input-container  class="md-block" style="margin: 0em 0em 0em 0em;">
                     <label>Label search</label>
-                    <input ng-model="searchLabel">
+                    <input ng-model="filter.labelSearch">
                 </md-input-container>
-                <md-chips ng-model="searchTags" md-require-match="true" md-on-add="chipsFilter()" md-on-remove="chipsFilter()" md-autocomplete-snap>
+                <md-chips ng-model="filter.tagsSearch" md-require-match="true" md-on-add="chipsFilter()" md-on-remove="chipsFilter()" md-autocomplete-snap>
                     <md-autocomplete
-                            md-search-text="search.tags.searchText"
-                            md-items="item in search.tags.querySearch(search.tags.searchText)"
+                            md-search-text="filter.tagsSearchString"
+                            md-items="item in getTagsMatchingQuery(filter.tagsSearchString)"
                             placeholder="Search for a tags.">
-                        <span md-highlight-text="search.tags.searchText">{{item}}</span>
+                        <span md-highlight-text="filter.tagsSearchString">{{item}}</span>
                     </md-autocomplete>
                     <md-chip-template>{{$chip}}</md-chip-template>
                 </md-chips>
             </div>
-            <md-list ng-show="repository.loaded">
-                <md-list-item ng-repeat="item in repository.data | orderBy:'-'" ng-href="{{item.onClickUrl}}" class="md-1-line" ng-show="item.show">
-                    <div class="md-primary">
-                        <!--<md-checkbox ng-model="message.selected"></md-checkbox>-->
-                    </div>
-                    <div class="md-list-item-text" layout="row" layout-wrap>
+            <md-list ng-show="repository.areDataReady">
+                <md-list-item ng-repeat="item in repository.visibleItems track by $index"
+                              class="md-1-line"
+                              ng-show="item.isVisible"
+                              ng-click="noAction()"
+                              ng-href="{{item.onClickUrl}}">
+                    <div class="md-list-item-text" layout="row"  layout-wrap>
                         <div class="lp-font-list-label" style="margin-right: 1.5em;">{{item.label}}</div>
                         <div class="lp-font-list-label"
                              ng-repeat="tag in item.tags"
@@ -38,11 +38,16 @@
                         <md-tooltip>Execute</md-tooltip>
                         <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon>
                     </md-button>
-                    <md-menu class="md-secondary" md-position-mode="target-right target" hide-xs>
-                        <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                    <md-menu class="md-secondary" md-position-mode="target-right target">
+                        <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)" aria-label="Open menu">
                             <md-icon md-svg-icon="more_vert" class="lp-icon"></md-icon>
                         </md-button>
                         <md-menu-content>
+                            <md-menu-item hide-gt-xs>
+                                <md-button ng-click="onExecute(item)" aria-label="Execute">
+                                    <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon> Execute
+                                </md-button>
+                            </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="" ng-href="{{item.iri}}?templates=true&mappings=true"
                                            target="_blank" download="{{item.label}}.jsonld" aria-label="Download">
@@ -64,44 +69,7 @@
                                     <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item ng-show="info.clipboard">
-                                <md-button ng-click="onCopyIri(item)">
-                                    <md-icon md-menu-origin md-svg-src="ic_content_paste" class="lp-icon"></md-icon> Copy pipeline IRI
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="onDelete(item, $event)">
-                                    <md-icon md-menu-origin md-svg-icon="delete_forever" class="lp-icon"></md-icon> Delete
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                    <md-menu class="md-secondary" md-position-mode="target-right target" hide-gt-xs>
-                        <md-button aria-label="Open menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
-                            <md-icon md-svg-icon="more_vert" class="lp-icon"></md-icon>
-                        </md-button>
-                        <md-menu-content>
-                            <md-menu-item>
-                                <md-button ng-click="onExecute(item)" aria-label="Execute">
-                                    <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon> Execute
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="onExecuteWithoutDebugData(item)">
-                                    <md-icon md-svg-icon="play_circle_outline" class="lp-icon"></md-icon> Execute without debug data
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="onExport(item, $event)" aria-label="Export">
-                                    <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download without credentials
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="onCopy(item)">
-                                    <md-icon md-menu-origin md-svg-src="copy" class="lp-icon"></md-icon> Copy
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item ng-show="info.clipboard">
+                            <md-menu-item ng-show="isClipboardSupported">
                                 <md-button ng-click="onCopyIri(item)">
                                     <md-icon md-menu-origin md-svg-src="ic_content_paste" class="lp-icon"></md-icon> Copy pipeline IRI
                                 </md-button>
@@ -115,17 +83,21 @@
                     </md-menu>
                     <md-divider></md-divider>
                 </md-list-item>
-                <div ng-hide="repository.data.length" layout="row"
-                     layout-align="center center" flex>
-                    <div style="padding-top: 5em">
-                        Why don't you <a href="javascript:void(0)" ng-click=onCreate()>create</a> or
-                        <a href="javascript:void(0)" ng-click="onUpload()">import</a> one?
-                    </div>
-                </div>
             </md-list>
+            <div ng-show="repository.areDataReady && repository.isEmpty" layout="row"
+                 layout-align="center center" flex>
+                <div style="padding-top: 5em">
+                    Why don't you <a href="javascript:void(0)" ng-click=onCreate()>create</a> or
+                    <a href="javascript:void(0)" ng-click="onUpload()">import</a> one?
+                </div>
+            </div>
+            <lp-scroll-watch-list-tail
+                    ng-show="repository.areDataReady"
+                    total="repository.filteredItemCount"
+                    limit="repository.visibleItemLimit"/>
         </md-content>
-        <div style="height: 5em;"></div>
-        <div class="lock-size" layout="column" ng-show="repository.loaded">
+        <div style="height: 2em;"></div>
+        <div class="lock-size" layout="column" ng-show="repository.areDataReady">
             <md-fab-speed-dial md-direction="up" style="position: fixed;" md-open="fap.isOpen"
                                class="md-scale md-fab-bottom-right speed-dial"
                                ng-mouseenter="fap.isOpen = true" ng-mouseleave="fap.isOpen = false">
@@ -144,5 +116,6 @@
                 </md-fab-actions>
             </md-fab-speed-dial>
         </div>
+
     </div>
 </div>

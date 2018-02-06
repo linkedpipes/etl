@@ -1,12 +1,25 @@
 <div layout="row" layout-align="space-around">
     <md-content flex layout-padding style="max-width: 66em;">
-        <md-input-container class="md-block" style="max-width: 400px">
-            <label>Default landing page</label>
-            <md-select ng-model="landingPage">
-                <md-option value="/executions">Executions</md-option>
-                <md-option value="/pipelines">Pipelines</md-option>
-            </md-select>
-        </md-input-container>
+        <form style="max-width: 20REM" name="personalizationForm">
+            <md-input-container class="md-block">
+                <label>Default landing page</label>
+                <md-select ng-model="landingPage">
+                    <md-option value="/executions">Executions</md-option>
+                    <md-option value="/pipelines">Pipelines</md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label>Maximum initial pipeline list size</label>
+                <input type="number" step="any" name="pplInitSize" ng-model="pipelineInitialSize" ng-pattern="/^[0-9]+$/" min="0"/>
+                <div ng-messages="personalizationForm.pplInitSize.$error" multiple md-auto-hide="false">
+                    <div ng-message="min">
+                        At least one pipeline should be visible at the start.
+                    </div>
+                </div>
+            </md-input-container>
+
+        </form>
         <div layout="row">
             <span flex></span>
             <md-button ng-click="onDiscard()">
