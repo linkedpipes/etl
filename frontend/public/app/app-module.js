@@ -1,6 +1,6 @@
 define([
     "app/app-config",
-    "app/components/pipelines/listView/pipelineListCtrl",
+    "app/components/pipelines/listView/pipeline-list-ctrl",
     "app/components/pipelines/canvasView/pipelineCanvasCtrl",
     "app/components/pipelines/uploadView/pipelineUploadCtrl",
     "app/components/pipelines/exportDialog/pipelineExportDialogCtrl",
@@ -34,7 +34,8 @@ define([
     "angular-material",
     "angular-file-upload",
     "angular-ui-notification",
-    "angular-clipboard"
+    "angular-clipboard",
+    "app/modules/scroll-watch"
 ], function (
         config,
         pipelineListCtrlInit,
@@ -75,7 +76,8 @@ define([
             "ngFileUpload",
             "ngCookies",
             "ui-notification",
-            "angular-clipboard"
+            "angular-clipboard",
+            "lp-scroll-watch"
         ]);
     }
 

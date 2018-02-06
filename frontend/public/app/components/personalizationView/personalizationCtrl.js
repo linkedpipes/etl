@@ -1,45 +1,73 @@
 define([], function () {
-    function controler($scope, $cookies, statusService) {
 
-        // Set expiration for today + 10 years.
-        var expires = new Date();
+    function getExpiration() {
+        const expires = new Date();
         expires.setYear(expires.getFullYear() + 10);
+        return expires;
+    }
 
-        // Available options.
+    function initializeScope($scope) {
         $scope.landingPage = '';
+        $scope.pipelineInitialSize = '';
+    }
 
-        /**
-         * Load values from cookie.
-         */
-        function load() {
+    function controller($scope, $cookies, statusService) {
+
+        function loadFromCookies() {
+
+            // TODO Extract default so that can be used in the application.
+
             $scope.landingPage = $cookies.get('lp-landing');
             if ($scope.landingPage === undefined) {
                 $scope.landingPage = '/executions';
             }
+
+            $scope.pipelineInitialSize = parseInt($cookies.get('lp-pipelines-initial-size'));
+            if ($scope.pipelineInitialSize === undefined) {
+                $scope.pipelineInitialSize = 15;
+            }
         }
 
         $scope.onDiscard = function () {
-            load();
+            loadFromCookies();
         };
 
         $scope.onSave = function () {
-            $cookies.put('lp-landing', $scope.landingPage, {
-                'expires': expires
-            });
+            const pplInitPageSize = parseInt($scope.pipelineInitialSize);
+            if (isNaN(pplInitPageSize)) {
+                statusService.error({
+                    'title': "Invalid input."
+                });
+            }
+
+
+            const expires = getExpiration();
+            const cookiesOptions = {'expires': expires};
+
+            $cookies.put('lp-landing',
+                $scope.landingPage, cookiesOptions);
+
+            $cookies.put('lp-pipelines-initial-size',
+                pplInitPageSize, cookiesOptions);
 
             statusService.success({
                 'title': "Changes saved."
             });
         };
 
-        // Load values from cookies.
-        load();
+        (function initialize() {
+            initializeScope($scope);
+            loadFromCookies();
+        })();
+
     }
+
     //
-    controler.$inject = ['$scope', '$cookies', 'services.status'];
+    controller.$inject = ['$scope', '$cookies', 'services.status'];
     //
     function init(app) {
-        app.controller('personalization', controler);
+        app.controller('personalization', controller);
     }
+
     return init;
 });

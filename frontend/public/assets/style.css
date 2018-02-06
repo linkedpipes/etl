@@ -42,3 +42,24 @@ YASQE editor, support for read-only mode.
 lp-yasqe.readOnly > .yasqe > .CodeMirror {
     background-color: #E0E0E0;
 }
+
+/**
+scroll-watch
+*/
+
+.scroll-watch-list-tail {
+    margin-top: 2REM;
+    text-align: center;
+    min-height: 4REM;
+    line-height: 4REM;
+    cursor: pointer;
+}
+
+.scroll-watch-list-tail:hover {
+    background-color: #DADADA;
+}
+
+/* Remove blue outline after component is clicked. */
+.scroll-watch-list-tail:focus {
+    outline: none;
+}
