@@ -3,19 +3,14 @@
         define([
             "vocabulary",
             "angular",
-            "./pipeline-list-repository"
+            "./pipeline-list-repository",
+            "./../pipeline-api"
         ], definition);
     }
-})((vocabulary, angular, _repository) => {
-
-    // TODO Register on destroy to delete data.
-
-    const LP = vocabulary.LP;
+})((vocabulary, angular, _repository, pipelineApi) => {
 
     function factory($http, $location, $mdDialog, $statusService, $clipboard,
                      repository) {
-
-        console.log("pipeline-list-service : CTOR");
 
         let $scope;
 
@@ -31,26 +26,8 @@
             $scope.repository = repository.create($scope.filter);
         }
 
-        // TODO Move to "execution-api" module.
-
         function executePipeline(pipeline) {
-            const config = createExecutionConfiguration(true, false);
-            postNewExecution(pipeline, config, $http);
-        }
-
-        function createExecutionConfiguration(saveDebug, deleteWorking) {
-            const configuration = {
-                "@id": "",
-                "@type": LP.EXEC_OPTIONS,
-            };
-            configuration[LP.SAVE_DEBUG] = saveDebug;
-            configuration[LP.DELETE_WORKING] = deleteWorking;
-            return configuration;
-        }
-
-        function postNewExecution(pipeline, config, $http) {
-            const url = "/resources/executions?pipeline=" + pipeline.iri;
-            $http.post(url, config)
+            pipelineApi.execute($http, pipeline)
             .then(redirectToExecutionList)
             .catch(handleExecutionPostFailure);
         }
@@ -69,8 +46,9 @@
         }
 
         function executeWithoutDebugData(pipeline) {
-            const config = createExecutionConfiguration(false, true);
-            postNewExecution(pipeline, config)
+            pipelineApi.executeWithoutDebugData($http, pipeline)
+            .then(redirectToExecutionList)
+            .catch(handleExecutionPostFailure);
         }
 
         function exportPipeline(pipeline, $event) {
@@ -91,57 +69,18 @@
             });
         }
 
-        // TODO Move to "pipeline-api" module.
-
         function createPipeline() {
-            const data = createPipelineCreatePostData();
-            const config = createPostConfigWithJsonLd();
-            const url = "/resources/pipelines/";
-            $http.post(url, data, config)
-            .then((response) => {
-                // TODO Use JSONLD
-                const iri = response.data[0]["@graph"][0]["@id"];
-                redirectToPipelineDetail(iri);
-            })
+            pipelineApi.create($http)
+            .then(redirectToPipelineDetail)
             .catch(handleCreatePipelineFailure);
-        }
-
-        function createPipelineCreatePostData() {
-            const data = new FormData();
-            const options = createEmptyPipelineCreateOptions();
-            addOptionsToData(data, options);
-            return data;
-        }
-
-        function createEmptyPipelineCreateOptions() {
-            return {
-                "@id": "http://localhost/options",
-                "@type": "http://linkedpipes.com/ontology/UpdateOptions"
-            };
-        }
-
-        function addOptionsToData(data, options) {
-            data.append("options", new Blob([JSON.stringify(options)], {
-                "type": "application/ld+json"
-            }), "options.jsonld");
-        }
-
-        function createPostConfigWithJsonLd() {
-            return {
-                "transformRequest": angular.identity,
-                "headers": {
-                    // By this angular add Content-Type itself.
-                    "Content-Type": undefined,
-                    "accept": "application/ld+json"
-                }
-            };
         }
 
         // TODO Move to "navigation" module.
 
-        function redirectToPipelineDetail(pipelineIri) {
+        function redirectToPipelineDetail(response) {
+            const iri = response.data[0]["@graph"][0]["@id"];
             $location.path("/pipelines/edit/canvas").search({
-                "pipeline": pipelineIri
+                "pipeline": iri
             });
         }
 
@@ -162,30 +101,10 @@
             $clipboard.copyText(pipeline.iri)
         }
 
-        // TODO Move to "pipeline-api" module.
-
         function copyPipeline(pipeline) {
-            const data = createPipelineCopyPostData();
-            const config = createPostConfigWithJsonLd();
-            const url = "/resources/pipelines?pipeline=" + pipeline.iri;
-            $http.post(url, data, config)
+            pipelineApi.copy($http, pipeline)
             .then(handleCopyPipelineSuccess)
             .catch(reportCopyPipelineFailure);
-        }
-
-        function createPipelineCopyPostData() {
-            const data = new FormData();
-            const options = createCopyPipelineOptions();
-            addOptionsToData(data, options);
-            return data;
-        }
-
-        function createCopyPipelineOptions() {
-            return {
-                "@id": "http://localhost/options",
-                "@type": "http://linkedpipes.com/ontology/UpdateOptions",
-                "http://etl.linkedpipes.com/ontology/local": true
-            };
         }
 
         function handleCopyPipelineSuccess() {
@@ -201,8 +120,6 @@
                 "response": response
             });
         }
-
-        // TODO Move to "pipeline-api" module.
 
         function deletePipeline(pipeline, event) {
             const dialogText = "Would you like to delete pipeline '"

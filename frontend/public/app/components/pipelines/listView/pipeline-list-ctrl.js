@@ -40,17 +40,12 @@
             // with navigation break the application.
         };
 
-        // TODO Replace with code in HTML.
-        $scope.openMenu = (mdOpenMenu, event) => {
-            mdOpenMenu(event);
-        };
-
         let callbackReference = null;
 
         callbackReference = $lpScrollWatch.registerCallback((byButton) => {
             service.increaseVisibleItemLimit();
             if (!byButton) {
-                // This event may come outside of Angular.
+                // This event come outside of Angular scope.
                 $scope.$apply();
             }
         });
