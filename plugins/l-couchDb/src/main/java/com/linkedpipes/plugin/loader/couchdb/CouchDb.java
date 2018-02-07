@@ -77,6 +77,7 @@ public class CouchDb {
     private HttpURLConnection createHttpConnection(String url, String method)
             throws IOException {
         URLConnection connection = (new URL(url)).openConnection();
+        connection.setRequestProperty("Accept", "*/*");
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         httpConnection.setRequestMethod(method);
         return httpConnection;
