@@ -23,7 +23,19 @@ define([], function () {
         "batchSize": {
             "$type": "int",
             "$label": "Batch size"
-        }
+        },
+        "useAuthentication": {
+            "$type": "bool",
+            "$label": "Use authentication"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Password"
+        },
     };
 
     function controller($scope, $service) {

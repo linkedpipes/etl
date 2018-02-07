@@ -2,20 +2,28 @@ package com.linkedpipes.plugin.loader.couchdb;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 public class CouchDb {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CouchDb.class);
+
     private final String server;
 
     private final ExceptionFactory exceptionFactory;
+
+    private String authorizationHeader = null;
 
     public CouchDb(String server, ExceptionFactory exceptionFactory) {
         if (server.endsWith("/")) {
@@ -26,8 +34,15 @@ public class CouchDb {
         this.exceptionFactory = exceptionFactory;
     }
 
+    public void setCredentials(String userName, String password) {
+        String auth = userName + ":" + password;
+        byte[] authBytes = auth.getBytes(Charset.forName("ISO-8859-1"));
+        byte[] encodedAuth = Base64.encodeBase64(authBytes);
+        this.authorizationHeader = "Basic " + new String(encodedAuth);
+    }
+
     public void deleteDatabase(String database) throws LpException {
-        String url = server + database;
+        String url = this.server + database;
         int responseCode;
         try {
             responseCode = executeRequest(url, "DELETE");
@@ -46,7 +61,7 @@ public class CouchDb {
     }
 
     public void createDatabase(String database) throws LpException {
-        String url = server + database;
+        String url = this.server + database;
         int responseCode;
         try {
             responseCode = executeRequest(url, "PUT");
@@ -66,7 +81,11 @@ public class CouchDb {
         try {
             connection = createHttpConnection(url, method);
             connection.connect();
-            return connection.getResponseCode();
+            int responseCode = connection.getResponseCode();
+            if (responseCode > 399) {
+                tryLogErrorResponse(connection);
+            }
+            return responseCode;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -74,13 +93,32 @@ public class CouchDb {
         }
     }
 
+    private void tryLogErrorResponse(HttpURLConnection connection) {
+        try (InputStream errorStream = connection.getErrorStream()) {
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(errorStream, writer, "utf-8");
+            LOG.error("Error stream: {}", writer.toString());
+        } catch (Exception ex) {
+            // Do nothing.
+        }
+    }
+
     private HttpURLConnection createHttpConnection(String url, String method)
             throws IOException {
         URLConnection connection = (new URL(url)).openConnection();
         connection.setRequestProperty("Accept", "*/*");
+        addAuthorizationHeader(connection);
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         httpConnection.setRequestMethod(method);
+
         return httpConnection;
+    }
+
+    public void addAuthorizationHeader(URLConnection connection) {
+        if (authorizationHeader == null) {
+            return;
+        }
+        connection.setRequestProperty("Authorization", authorizationHeader);
     }
 
     public void uploadDocuments(String database, Collection<File> documents)
@@ -105,7 +143,7 @@ public class CouchDb {
 
     private HttpURLConnection createBulkLoadConnection(String database)
             throws IOException {
-        String url = server + database + "/_bulk_docs";
+        String url = this.server + database + "/_bulk_docs";
         URLConnection connection = (new URL(url)).openConnection();
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         httpConnection.setRequestMethod("POST");

@@ -16,4 +16,11 @@ public final class CouchDbLoaderVocabulary {
 
     public static final String HAS_BATCH_SIZE = PREFIX + "batchSize";
 
+    public static final String HAS_USE_AUTHENTICATION =
+            PREFIX + "useAuthentication";
+
+    public static final String HAS_USER_NAME = PREFIX + "userName";
+
+    public static final String HAS_PASSWORD = PREFIX + "password";
+
 }

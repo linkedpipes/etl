@@ -9,6 +9,10 @@
         "http://plugins.linkedpipes.com/ontology/l-couchDb#batchSize": "8",
         "http://plugins.linkedpipes.com/ontology/l-couchDb#batchSizeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
-        }        
+        },
+        "http://plugins.linkedpipes.com/ontology/l-couchDb#useAuthentication": false,
+        "http://plugins.linkedpipes.com/ontology/l-couchDb#useAuthenticationControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
     }
 ]

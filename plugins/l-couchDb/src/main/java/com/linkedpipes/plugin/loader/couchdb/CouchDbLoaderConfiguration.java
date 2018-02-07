@@ -20,6 +20,15 @@ public class CouchDbLoaderConfiguration {
     @RdfToPojo.Property(iri = CouchDbLoaderVocabulary.HAS_BATCH_SIZE)
     private int batchSize = 8;
 
+    @RdfToPojo.Property(iri = CouchDbLoaderVocabulary.HAS_USE_AUTHENTICATION)
+    private boolean useAuthentication = false;
+
+    @RdfToPojo.Property(iri = CouchDbLoaderVocabulary.HAS_USER_NAME)
+    private String userName;
+
+    @RdfToPojo.Property(iri = CouchDbLoaderVocabulary.HAS_PASSWORD)
+    private String password;
+
     public String getUrl() {
         return url;
     }
@@ -52,5 +61,28 @@ public class CouchDbLoaderConfiguration {
         this.batchSize = batchSize;
     }
 
-}
+    public boolean isUseAuthentication() {
+        return useAuthentication;
+    }
 
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+}

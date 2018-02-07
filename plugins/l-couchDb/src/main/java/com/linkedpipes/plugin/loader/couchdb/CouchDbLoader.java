@@ -49,6 +49,10 @@ public final class CouchDbLoader implements Component, SequentialExecution {
 
     private void initializeCouchDb() {
         couchDb = new CouchDb(configuration.getUrl(), exceptionFactory);
+        if (configuration.isUseAuthentication()) {
+            couchDb.setCredentials(configuration.getUserName(),
+                    configuration.getPassword());
+        }
     }
 
     private void initializeComponent() {
