@@ -8,7 +8,7 @@ define([], function () {
 
     function initializeScope($scope) {
         $scope.landingPage = '';
-        $scope.pipelineInitialSize = '';
+        $scope.initialListSize = '';
     }
 
     function controller($scope, $cookies, statusService) {
@@ -22,9 +22,9 @@ define([], function () {
                 $scope.landingPage = '/executions';
             }
 
-            $scope.pipelineInitialSize = parseInt($cookies.get('lp-pipelines-initial-size'));
-            if ($scope.pipelineInitialSize === undefined) {
-                $scope.pipelineInitialSize = 15;
+            $scope.initialListSize = parseInt($cookies.get('lp-initial-list-size'));
+            if ($scope.initialListSize === undefined) {
+                $scope.initialListSize = 15;
             }
         }
 
@@ -33,22 +33,19 @@ define([], function () {
         };
 
         $scope.onSave = function () {
-            const pplInitPageSize = parseInt($scope.pipelineInitialSize);
-            if (isNaN(pplInitPageSize)) {
-                statusService.error({
-                    'title': "Invalid input."
-                });
-            }
-
-
             const expires = getExpiration();
             const cookiesOptions = {'expires': expires};
 
             $cookies.put('lp-landing',
                 $scope.landingPage, cookiesOptions);
 
-            $cookies.put('lp-pipelines-initial-size',
-                pplInitPageSize, cookiesOptions);
+            const initListSize = parseInt($scope.initialListSize);
+            if (isNaN(initListSize)) {
+                $cookies.remove('lp-initial-list-size');
+            } else {
+                $cookies.put('lp-initial-list-size',
+                    initListSize, cookiesOptions);
+            }
 
             statusService.success({
                 'title': "Changes saved."

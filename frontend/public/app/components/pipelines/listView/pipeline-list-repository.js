@@ -119,7 +119,7 @@
         // TODO Move to "cookies" module.
 
         function getVisibleItemLimit() {
-            const initialLimit = $cookies.get("lp-pipelines-initial-size");
+            const initialLimit = $cookies.get("lp-initial-list-size");
             if (initialLimit === undefined) {
                 return 15;
             } else {
