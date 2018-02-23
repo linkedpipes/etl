@@ -17,7 +17,7 @@ define([], function () {
                     'color': '#999999'
                 })
                 .when('/executions', {
-                    'templateUrl': 'app/components/executions/listView/executionListView.html',
+                    'templateUrl': 'app/components/executions/list-view/execution-list-view.html',
                     'controller': 'components.executions.list',
                     'activeView': 'executions',
                     'pageTitle': 'Executions - LinkedPipes ETL',

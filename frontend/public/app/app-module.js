@@ -4,7 +4,7 @@ define([
     "app/components/pipelines/canvasView/pipelineCanvasCtrl",
     "app/components/pipelines/uploadView/pipelineUploadCtrl",
     "app/components/pipelines/exportDialog/pipelineExportDialogCtrl",
-    "app/components/executions/listView/executionListCtrl",
+    "app/components/executions/list-view/execution-list-ctrl",
     "app/components/executions/detailView/executionDetailCtrl",
     "app/components/componentExecutionDetail/componentExecutionDetailCtrl",
     "app/components/personalizationView/personalizationCtrl",
