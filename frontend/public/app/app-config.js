@@ -45,7 +45,7 @@ define([], function () {
                     'color': '#2196F3'
                 })
                 .when('/pipelines', {
-                    'templateUrl': 'app/components/pipelines/listView/pipeline-list-view.html',
+                    'templateUrl': 'app/components/pipelines/list-view/pipeline-list-view.html',
                     'controller': 'components.pipelines.list',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipelines - LinkedPipes ETL',

@@ -1,6 +1,6 @@
 define([
     "app/app-config",
-    "app/components/pipelines/listView/pipeline-list-ctrl",
+    "app/components/pipelines/list-view/pipeline-list-ctrl",
     "app/components/pipelines/canvasView/pipelineCanvasCtrl",
     "app/components/pipelines/uploadView/pipelineUploadCtrl",
     "app/components/pipelines/exportDialog/pipelineExportDialogCtrl",
