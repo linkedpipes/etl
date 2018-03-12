@@ -3,14 +3,14 @@ define([], function () {
         // TODO Export to navigation module.
         $routeProvider
                 .when('/help', {
-                    'templateUrl': 'app/components/help/view/helpView.html',
+                    'templateUrl': 'app/components/help/help-view.html',
                     'controller': 'help',
                     'activeView': 'help',
                     'pageTitle': 'Help - LinkedPipes ETL',
                     'color': '#999999'
                 })
                 .when('/personalization', {
-                    'templateUrl': 'app/components/personalizationView/personalizationView.html',
+                    'templateUrl': 'app/components/personalization/personalization-view.html',
                     'controller': 'personalization',
                     'activeView': 'personalization',
                     'pageTitle': 'Personalization - LinkedPipes ETL',
