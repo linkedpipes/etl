@@ -15,7 +15,7 @@
     const SKOS = vocab.SKOS;
 
     // TODO Export to navigation module.
-    const PIPELINE_EDIT_URL = "#/pipelines/edit/canvas?pipeline=";
+    const PIPELINE_EDIT_URL = "#/pipelines/edit/canvas";
 
     // TODO Merge id and iri into one value.
     // TODO Move predicates to vocabulary.
@@ -110,7 +110,7 @@
 
     function decorateItem(item) {
         item['onClickUrl'] = PIPELINE_EDIT_URL +
-            "pipeline=" + encodeURIComponent(item["pipeline"]["iri"]) +
+            "?pipeline=" + encodeURIComponent(item["pipeline"]["iri"]) +
             "&execution=" + encodeURIComponent(item["iri"]);
         item["id"] = parseIdFromIri(item["iri"]);
         item["label"] = getExecutionLabel(item);
