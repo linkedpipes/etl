@@ -8,7 +8,7 @@ define([
     'app/components/pipelines/pipelineModelService',
     'app/components/templates/selectDialog/templateSelectDialog',
     'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
-    'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
+    'app/components/pipelines/detail-dialog/pipeline-detail-dialog-ctrl',
     'app/components/templates/detailDialog/templateDetailDialog',
     'app/components/instances/detailDialog/instanceDetailDialog',
     'file-saver',
@@ -679,7 +679,7 @@ define([
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 'controller': 'components.pipelines.detail.dialog',
-                'templateUrl': 'app/components/pipelines/detailDialog/pipelineDetailDialogView.html',
+                'templateUrl': 'app/components/pipelines/detail-dialog/pipeline-detail-dialog-view.html',
                 'parent': angular.element(document.body),
                 'targetEvent': $event,
                 'clickOutsideToClose': false,

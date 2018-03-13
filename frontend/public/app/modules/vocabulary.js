@@ -44,7 +44,9 @@
         "DELETE_WORKING": "http://linkedpipes.com/ontology/deleteWorkingData",
         "HAS_TAG": "http://etl.linkedpipes.com/ontology/tag",
         "PIPELINE": "http://linkedpipes.com/ontology/Pipeline",
-        "TOMBSTONE" : "http://linkedpipes.com/ontology/Tombstone"
+        "TOMBSTONE" : "http://linkedpipes.com/ontology/Tombstone",
+        "HAS_REPO_POLICY": "rdfRepositoryPolicy",
+        "HAS_REPO_TYPE": "rdfRepositoryType"
     };
 
     const SKOS = {
