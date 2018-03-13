@@ -5,7 +5,6 @@ define([
     "app/components/pipelines/uploadView/pipelineUploadCtrl",
     "app/components/pipelines/exportDialog/pipelineExportDialogCtrl",
     "app/components/executions/list-view/execution-list-ctrl",
-    "app/components/executions/detailView/executionDetailCtrl",
     "app/components/componentExecutionDetail/componentExecutionDetailCtrl",
     "app/components/personalization/personalization-ctrl",
     "app/components/help/help-ctrl",
@@ -43,7 +42,6 @@ define([
         pipelineUploadCtrlInit,
         pipelineExportDialogCtrlInit,
         executionListCtrlInit,
-        executionDetailCtrlInit,
         componentExecutionDetailCtrl,
         personalizationCtrl,
         helpCtrl,
@@ -113,7 +111,6 @@ define([
         pipelineUploadCtrlInit(app);
         pipelineExportDialogCtrlInit(app);
         executionListCtrlInit(app);
-        executionDetailCtrlInit(app);
         componentExecutionDetailCtrl(app);
         personalizationCtrl(app);
         helpCtrl(app);

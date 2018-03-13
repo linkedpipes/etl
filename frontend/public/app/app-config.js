@@ -23,13 +23,6 @@ define([], function () {
                     'pageTitle': 'Executions - LinkedPipes ETL',
                     'color': '#FF9800'
                 })
-                .when('/executions/detail', {
-                    'templateUrl': 'app/components/executions/detailView/executionDetailView.html',
-                    'controller': 'components.executions.detail',
-                    'activeView': 'executions',
-                    'pageTitle': 'Execution - LinkedPipes ETL',
-                    'color': '#FF9800'
-                })
                 .when('/templates', {
                     'templateUrl': 'app/components/templates/listView/templateListView.html',
                     'controller': 'template.list',
