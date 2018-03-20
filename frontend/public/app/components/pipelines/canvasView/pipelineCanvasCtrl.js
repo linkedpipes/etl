@@ -97,7 +97,8 @@ define([
                     'component': component,
                     'template': template,
                     'data': data.pipeline
-                }
+                },
+                'escapeToClose': false
             }).then(function () {
                 // Notify about change in the
                 $scope.canvas.getPaper().trigger('lp:component:changed',
