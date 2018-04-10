@@ -41,4 +41,11 @@ class DefaultChunk implements ChunkedTriples.Chunk {
         return statements;
     }
 
+    @Override
+    public String toString() {
+        String name = this.file.getParentFile().getName() +
+                "/" + this.file.getName();
+        return "Chunk: " + name;
+    }
+
 }
