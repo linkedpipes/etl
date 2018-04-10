@@ -50,7 +50,7 @@ class SparqlConstructExecutor implements Runnable {
                     break;
                 }
             } catch (Exception ex) {
-                LOG.error("Transformation failed.", ex);
+                LOG.error("Transformation failed for: {}", this.chunk, ex);
                 failed = true;
                 manager.terminate();
             }
