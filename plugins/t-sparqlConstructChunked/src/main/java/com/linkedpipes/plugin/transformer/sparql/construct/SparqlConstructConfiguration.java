@@ -14,6 +14,9 @@ public class SparqlConstructConfiguration {
     @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_DEDUPLICATION)
     private boolean useDeduplication = false;
 
+    @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_SKIP_ON_FAILURE)
+    private boolean skipOnFailure = false;
+
     public SparqlConstructConfiguration() {
     }
 
@@ -39,6 +42,14 @@ public class SparqlConstructConfiguration {
 
     public void setUseDeduplication(boolean useDeduplication) {
         this.useDeduplication = useDeduplication;
+    }
+
+    public boolean isSkipOnFailure() {
+        return skipOnFailure;
+    }
+
+    public void setSkipOnFailure(boolean skipOnFailure) {
+        this.skipOnFailure = skipOnFailure;
     }
 
 }

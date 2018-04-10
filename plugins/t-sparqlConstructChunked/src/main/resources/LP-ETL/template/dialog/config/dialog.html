@@ -9,6 +9,11 @@
     <md-switch ng-hide="dialog.deduplication.hide"
                ng-disabled="dialog.deduplication.disabled || dialog.deduplication.inherit"
                ng-model="dialog.deduplication.value">Use deduplication</md-switch>
+    <md-switch ng-model="dialog.softFail.value"
+               ng-disabled="dialog.softFail.disabled || dialog.softFail.inherit"
+               ng-hide="dialog.softFail.hide">
+        Skip file on failure
+    </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.query.hide">
         SPARQL CONSTRUCT query
         <lp-yasqe ng-model="dialog.query.value" ng-disabled="dialog.query.disabled || dialog.query.inherit"/>

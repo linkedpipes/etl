@@ -33,11 +33,16 @@ class SparqlConstructExecutor implements Runnable {
 
     private final boolean deduplicateResults;
 
+    private final boolean isSoftFail;
+
+    private ChunkedTriples.Chunk chunk;
+
     public SparqlConstructExecutor(ExecutorManager manager, String query,
-            boolean deduplicateResults) {
+            boolean deduplicateResults, boolean isSoftFail) {
         this.manager = manager;
         this.query = query;
         this.deduplicateResults = deduplicateResults;
+        this.isSoftFail = isSoftFail;
     }
 
     @Override
@@ -51,8 +56,10 @@ class SparqlConstructExecutor implements Runnable {
                 }
             } catch (Exception ex) {
                 LOG.error("Transformation failed for: {}", this.chunk, ex);
-                failed = true;
-                manager.terminate();
+                if (!this.isSoftFail) {
+                    failed = true;
+                    manager.terminate();
+                }
             }
         }
         LOG.info("Executor is running ... done");
@@ -84,7 +91,7 @@ class SparqlConstructExecutor implements Runnable {
     }
 
     private Collection<Statement> getInputData() throws LpException {
-        ChunkedTriples.Chunk chunk = manager.getChunk();
+        this.chunk = manager.getChunk();
         if (chunk == null) {
             return null;
         } else {

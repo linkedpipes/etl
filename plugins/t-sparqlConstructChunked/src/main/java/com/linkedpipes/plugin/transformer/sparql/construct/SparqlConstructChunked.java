@@ -74,7 +74,8 @@ public final class SparqlConstructChunked implements Component,
             SparqlConstructExecutor constructExecutor =
                     new SparqlConstructExecutor(executorManager,
                             configuration.getQuery(),
-                            configuration.isUseDeduplication());
+                            configuration.isUseDeduplication(),
+                            configuration.isSkipOnFailure());
             executors.add(constructExecutor);
         }
     }

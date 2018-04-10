@@ -13,6 +13,8 @@ final class SparqlConstructVocabulary {
 
     public static final String HAS_DEDUPLICATION = PREFIX + "deduplication";
 
+    public static final String HAS_SKIP_ON_FAILURE = PREFIX + "softFail";
+
     private SparqlConstructVocabulary() {
     }
 

@@ -19,6 +19,10 @@ define([], function () {
         "deduplication": {
             "$type": "bool",
             "$label": "Deduplication"
+        },
+        "softFail": {
+            "$type": "bool",
+            "$label": "Skip file on failure"
         }
     };
 
