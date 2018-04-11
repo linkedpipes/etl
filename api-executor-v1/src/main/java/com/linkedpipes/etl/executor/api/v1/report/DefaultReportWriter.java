@@ -24,7 +24,7 @@ class DefaultReportWriter implements ReportWriter {
 
     @Override
     public synchronized void onTaskFinished(Task task, Date start, Date end) {
-        LOG.error("Task ({}) finished.", task.getIri());
+        LOG.info("Task ({}) finished.", task.getIri());
         String reportIri = getIriForReport(task);
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
