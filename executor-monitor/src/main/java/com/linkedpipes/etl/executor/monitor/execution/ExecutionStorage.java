@@ -95,7 +95,7 @@ class ExecutionStorage {
 
     public Execution createExecution(MultipartFile pipeline,
             List<MultipartFile> inputs) throws OperationFailed {
-        final String uuid = UUID.randomUUID().toString();
+        final String uuid = this.getPipelineGuid();
         final File directory = new File(
                 configuration.getWorkingDirectory(), uuid);
         if (pipeline.getOriginalFilename() == null) {
@@ -156,6 +156,12 @@ class ExecutionStorage {
         }
         executions.add(newExecution);
         return newExecution;
+    }
+
+    private String getPipelineGuid() {
+        return (new Date()).getTime() + "-" +
+                Integer.toString(executions.size()) + "-" +
+                UUID.randomUUID().toString();
     }
 
     /**

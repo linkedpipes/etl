@@ -86,7 +86,7 @@ public class ExecutionFacade {
     /**
      * Executions with status {@link Execution.StatusType#QUEUED}..
      *
-     * @return List of executions.
+     * @return List of executions, in order in which they should be executed.
      */
     public Collection<Execution> getExecutionsQueued() {
         final List<Execution> result = new LinkedList<>();
@@ -95,6 +95,7 @@ public class ExecutionFacade {
                 result.add(execution);
             }
         }
+        result.sort(Comparator.comparing(Execution::getId));
         return result;
     }
 
