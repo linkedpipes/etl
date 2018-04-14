@@ -21,7 +21,7 @@ define([], function () {
 
         var prefix = {
             'csvw' : 'http://www.w3.org/ns/csvw#',
-            'tabular': 'http://plugins.linkedpipes.com/ontology/t-tabular#'
+            'tabular': 'http://plugins.linkedpipes.com/ontology/t-tabularChunked#'
         };
 
         var toType = function(record) {

@@ -1,72 +1,72 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://www.w3.org/ns/csvw#Table> ;
     config:member
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/tableSchema> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/dialect> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/normalOutput> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/fullMapping> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/rowLimit> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/useBaseUri> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/baseUri> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/generateNullHeaderNames> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/encodeType> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/skipLines> ,
-        <http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/chunkSize> .
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/tableSchema> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/dialect> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/normalOutput> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/fullMapping> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/rowLimit> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/useBaseUri> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/baseUri> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/generateNullHeaderNames> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/encodeType> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/skipLines> ,
+        <http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/chunkSize> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/tableSchema>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/tableSchema>
     a config:ConfigurationMember ;
     config:property <http://www.w3.org/ns/csvw#tableSchema> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#tableSchemaControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#tableSchemaControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/dialect>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/dialect>
     a config:ConfigurationMember ;
     config:property <http://www.w3.org/ns/csvw#dialect> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#dialectControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#dialectControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/normalOutput>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/normalOutput>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#normalOutput> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#normalOutputControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#normalOutput> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#normalOutputControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/fullMapping>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/fullMapping>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#fullMapping> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#fullMappingControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#fullMapping> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#fullMappingControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/rowLimit>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/rowLimit>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#rowLimit> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#rowLimitControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#rowLimit> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#rowLimitControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/useBaseUri>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/useBaseUri>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUri> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#useBaseUriControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#useBaseUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#useBaseUriControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/baseUri>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/baseUri>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#baseUri> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#baseUriControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#baseUri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#baseUriControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/generateNullHeaderNames>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/generateNullHeaderNames>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#generateNullHeaderNames> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#generateNullHeaderNamesControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#generateNullHeaderNames> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#generateNullHeaderNamesControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/encodeType>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/encodeType>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#encodeType> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#encodeTypeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#encodeType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#encodeTypeControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/skipLines>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/skipLines>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#skipLines> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#skipLinesControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#skipLines> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#skipLinesControl> .
 
-<http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration/desc/chunkSize>
+<http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration/desc/chunkSize>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-tabular#chunkSize> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-tabular#chunkSizeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-tabularChunked#chunkSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-tabularChunked#chunkSizeControl> .
