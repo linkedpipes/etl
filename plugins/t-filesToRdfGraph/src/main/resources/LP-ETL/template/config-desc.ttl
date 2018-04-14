@@ -1,23 +1,23 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration/desc/commitSize> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration/desc/mimeType> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration/desc/softFail> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize>
+<http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration/desc/commitSize>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#commitSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#commitSizeControl> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType>
+<http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration/desc/mimeType>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#mimeType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#mimeTypeControl> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail>
+<http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration/desc/softFail>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFailControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#softFailControl> .
