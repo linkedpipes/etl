@@ -51,6 +51,8 @@ class Downloader {
 
     }
 
+    public static final int HTTP_TEMPORARY_REDIRECT = 307;
+
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
 
     private boolean followRedirect = false;
@@ -152,7 +154,8 @@ class Downloader {
     private boolean isResponseRedirect(int responseCode) {
         return responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
                 responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-                responseCode == HttpURLConnection.HTTP_SEE_OTHER;
+                responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
+                responseCode == HTTP_TEMPORARY_REDIRECT;
     }
 
     private void checkResponseCode(HttpURLConnection connection)
