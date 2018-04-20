@@ -9,6 +9,7 @@ import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorConnection;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPipeline;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Assign executionOrder and executionType to the components.
@@ -43,16 +44,23 @@ class ExecutionFlow {
         Map<String, Set<String>> dependencies = createDependencyList();
         int executionOrder = 0;
         List<String> toRemove = new ArrayList<>();
+        List<String> orderedIriList = target.getComponents().stream()
+                .map(component -> component.getIri())
+                .sorted()
+                .collect(Collectors.toList());
         while (!dependencies.isEmpty()) {
             //
-            for (Map.Entry<String, Set<String>> entry
-                    : dependencies.entrySet()) {
-                if (!entry.getValue().isEmpty()) {
+            for (String componentIri : orderedIriList) {
+                Set<String> componentDependencies =
+                        dependencies.get(componentIri);
+                if (componentDependencies == null) {
                     continue;
                 }
-                String iri = entry.getKey();
-                toRemove.add(iri);
-                target.getComponent(iri).setExecutionOrder(++executionOrder);
+                if (componentDependencies.isEmpty()) {
+                    toRemove.add(componentIri);
+                    target.getComponent(componentIri).setExecutionOrder(
+                            ++executionOrder);
+                }
             }
             //
             toRemove.forEach((item) -> {
@@ -70,7 +78,7 @@ class ExecutionFlow {
     }
 
     private Map<String, Set<String>> createDependencyList() {
-        Map<String, Set<String>> dependencies = new LinkedHashMap<>();
+        Map<String, Set<String>> dependencies = new HashMap<>();
         for (ExecutorComponent component : target.getComponents()) {
             dependencies.put(component.getIri(), new HashSet<>());
         }
