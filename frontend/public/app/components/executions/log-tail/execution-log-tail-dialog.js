@@ -4,10 +4,6 @@ define([], function () {
 
     function controller($scope, $mdDialog, $interval, $http, execution) {
 
-        function setContent(data) {
-            document.getElementById(htmlPrefix + "content").innerHTML = data;
-        }
-
         function scrollToBottom() {
             const div = document.getElementById(htmlPrefix + "content-end");
             div.scrollIntoView(false);
@@ -33,6 +29,11 @@ define([], function () {
                 }
             );
         };
+
+        function setContent(data) {
+            const element = document.getElementById(htmlPrefix + "content");
+            element.textContent = data;
+        }
 
         const refreshStop = $interval(refreshData, 5000);
         $scope.label = execution.label;
