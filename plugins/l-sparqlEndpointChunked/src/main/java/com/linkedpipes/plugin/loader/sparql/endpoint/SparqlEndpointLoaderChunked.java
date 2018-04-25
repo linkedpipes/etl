@@ -84,13 +84,13 @@ public class SparqlEndpointLoaderChunked implements Component,
             throws LpException {
         try (final CloseableHttpClient httpclient = getHttpClient()) {
             sparqlRepository.setHttpClient(httpclient);
-            loadData(sparqlRepository);
+            loadDataFromRepository(sparqlRepository);
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't load data.", ex);
         }
     }
 
-    private void loadData(Repository repository) throws LpException {
+    private void loadDataFromRepository(Repository repository) throws LpException {
         final IRI graph = SimpleValueFactory.getInstance().createIRI(
                 configuration.getTargetGraphName());
         progressReport.start(inputRdf.size());
@@ -121,8 +121,7 @@ public class SparqlEndpointLoaderChunked implements Component,
         progressReport.done();
     }
 
-    private void loadData(Repository repository,
-            Collection<Statement> statements, IRI graph) throws LpException {
+    private void loadData(Repository repository, Collection<Statement> statements, IRI graph) {
         try (final RepositoryConnection remote = repository.getConnection()) {
             remote.add(statements, graph);
         }
