@@ -124,6 +124,7 @@ public class ExecutionServlet {
             ExecutionFacade.UnknownExecution, IOException {
         final RDFFormat format = Rio.getParserFormatForMIMEType(
                 request.getHeader("Accept")).orElse(RDFFormat.JSONLD);
+        response.setHeader("Content-Type", format.getDefaultMIMEType());
         executionFacade.writeExecution(executionFacade.getExecution(id), format,
                 response.getOutputStream());
     }
@@ -159,7 +160,7 @@ public class ExecutionServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader("Content-Type", "text/plain");
         return new FileSystemResource(file);
     }
 
@@ -176,6 +177,7 @@ public class ExecutionServlet {
             return ;
         }
         String[] lines = readLogTail(file, count);
+        response.setHeader("Content-Type", "text/plain");
         writeLinesToResponse(lines, response);
     }
 
@@ -224,6 +226,7 @@ public class ExecutionServlet {
             ExecutionFacade.UnknownExecution, IOException {
         final RDFFormat format = Rio.getParserFormatForMIMEType(
                 request.getHeader("Accept")).orElse(RDFFormat.JSONLD);
+        response.setHeader("Content-Type", format.getDefaultMIMEType());
         executionFacade.writePipeline(executionFacade.getExecution(id), format,
                 response.getOutputStream());
     }
@@ -254,6 +257,7 @@ public class ExecutionServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
+        response.setHeader("Content-Type", "application/json");
         executionFacade.writeOverview(execution,
                 response.getOutputStream());
     }
