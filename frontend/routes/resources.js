@@ -137,6 +137,8 @@ function postImportPipeline(request, response, url) {
                 'Accept': 'application/ld+json'
             }
         }, function (error, http, bodyPipeline) {
+            console.error("Can't get pipeline from url:", request.query.pipeline);
+            console.log(error);
             if (error) {
                 response.status(503).json({
                     'exception': {
