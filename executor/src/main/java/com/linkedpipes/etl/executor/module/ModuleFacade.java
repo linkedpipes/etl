@@ -252,7 +252,7 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
                 LOG.error("Can't start bundle: {}",
                         bundle.getSymbolicName(), ex);
                 springContext.stop();
-                throw new RuntimeException(ex);
+                throw new RuntimeException("Can not start bundle, see logs for more details.");
             }
         });
     }
