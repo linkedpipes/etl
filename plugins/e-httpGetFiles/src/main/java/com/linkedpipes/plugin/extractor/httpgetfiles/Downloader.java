@@ -26,7 +26,7 @@ class Downloader {
         private final Integer timeOut;
 
         public Task(String getSourceUrl, File targetFile,
-                Map<String, String> headers, Integer timeOut) {
+                    Map<String, String> headers, Integer timeOut) {
             this.getSourceUrl = getSourceUrl;
             this.targetFile = targetFile;
             this.headers = headers;
@@ -55,11 +55,11 @@ class Downloader {
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
 
-    private boolean followRedirect = false;
+    private final boolean followRedirect;
 
     private final Task toDownload;
 
-    private boolean logDetail = false;
+    private final boolean logDetail;
 
     private final HttpRequestReport requestReport;
 
@@ -89,11 +89,9 @@ class Downloader {
         } catch (RuntimeException ex) {
             throw new IOException("Can't download file.", ex);
         } finally {
-            Date endTime = new Date();
-            long downloadTime = endTime.getTime() - startTime.getTime();
+            long downloadTime = (new Date()).getTime() - startTime.getTime();
             LOG.debug("Processing of: {} takes: {} ms",
                     toDownload.getSourceUrl(), downloadTime);
-            //
             if (connection != null) {
                 connection.disconnect();
             }
@@ -105,17 +103,16 @@ class Downloader {
     }
 
     private HttpURLConnection createConnectionResolveRedirect(URL target)
-            throws IOException, LpException {
+            throws IOException {
         HttpURLConnection connection = createConnection(target);
         if (followRedirect) {
-            return updateConnectionIfRedirected(connection);
+            return resolveRedirects(connection);
         } else {
             return connection;
         }
     }
 
-    private HttpURLConnection createConnection(URL target)
-            throws IOException, LpException {
+    private HttpURLConnection createConnection(URL target) throws IOException {
         HttpURLConnection connection =
                 (HttpURLConnection) target.openConnection();
         setHeaders(connection);
@@ -138,17 +135,17 @@ class Downloader {
         }
     }
 
-    private HttpURLConnection updateConnectionIfRedirected(
-            HttpURLConnection connection) throws IOException, LpException {
+    private HttpURLConnection resolveRedirects(
+            HttpURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();
-        if (isResponseRedirect(responseCode)) {
-            connection.disconnect();
+        while (isResponseRedirect(responseCode)) {
             String location = connection.getHeaderField("Location");
+            connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
-            return createConnection(createUrl(location));
-        } else {
-            return connection;
+            connection = createConnection(createUrl(location));
+            responseCode = connection.getResponseCode();
         }
+        return connection;
     }
 
     private boolean isResponseRedirect(int responseCode) {

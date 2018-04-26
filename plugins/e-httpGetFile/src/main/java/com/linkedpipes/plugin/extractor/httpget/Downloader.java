@@ -26,7 +26,7 @@ class Downloader {
         private final Integer timeOut;
 
         public Task(String getSourceUrl, File targetFile,
-                Map<String, String> headers, Integer timeOut) {
+                    Map<String, String> headers, Integer timeOut) {
             this.getSourceUrl = getSourceUrl;
             this.targetFile = targetFile;
             this.headers = headers;
@@ -55,14 +55,14 @@ class Downloader {
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
 
-    private boolean followRedirect = false;
+    private final boolean followRedirect;
 
     private final Task toDownload;
 
-    private boolean logDetail = false;
+    private final boolean logDetail;
 
     public Downloader(boolean followRedirect,
-            Task toDownload, boolean logDetail) {
+                      Task toDownload, boolean logDetail) {
         this.followRedirect = followRedirect;
         this.toDownload = toDownload;
         this.logDetail = logDetail;
@@ -76,17 +76,15 @@ class Downloader {
         HttpURLConnection connection = null;
         Date startTime = new Date();
         try {
-            connection = createConnectionFollowRedirect(url);
+            connection = connect(url);
             checkResponseCode(connection);
             saveContentToFile(connection, toDownload.getTargetFile());
         } catch (RuntimeException ex) {
             throw new IOException("Can't download file.", ex);
         } finally {
-            Date endTime = new Date();
-            long downloadTime = endTime.getTime() - startTime.getTime();
+            long downloadTime = (new Date()).getTime() - startTime.getTime();
             LOG.debug("Processing of: {} takes: {} ms",
                     toDownload.getSourceUrl(), downloadTime);
-            //
             if (connection != null) {
                 connection.disconnect();
             }
@@ -97,11 +95,11 @@ class Downloader {
         return new URL(stringAsUrl);
     }
 
-    private HttpURLConnection createConnectionFollowRedirect(URL target)
+    private HttpURLConnection connect(URL target)
             throws IOException {
         HttpURLConnection connection = createConnection(target);
         if (followRedirect) {
-            return updateConnectionIfRedirected(connection);
+            return resolveRedirects(connection);
         } else {
             return connection;
         }
@@ -155,17 +153,17 @@ class Downloader {
         }
     }
 
-    private HttpURLConnection updateConnectionIfRedirected(
+    private HttpURLConnection resolveRedirects(
             HttpURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();
-        if (isResponseRedirect(responseCode)) {
-            connection.disconnect();
+        while (isResponseRedirect(responseCode)) {
             String location = connection.getHeaderField("Location");
+            connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
-            return createConnection(createUrl(location));
-        } else {
-            return connection;
+            connection = createConnection(createUrl(location));
+            responseCode = connection.getResponseCode();
         }
+        return connection;
     }
 
     private boolean isResponseRedirect(int responseCode) {
@@ -191,14 +189,6 @@ class Downloader {
         try (InputStream inputStream = connection.getInputStream()) {
             FileUtils.copyInputStreamToFile(inputStream, file);
         }
-    }
-
-    public void setFollowRedirect(boolean followRedirect) {
-        this.followRedirect = followRedirect;
-    }
-
-    public boolean isLogDetail() {
-        return logDetail;
     }
 
 }
