@@ -130,8 +130,7 @@ public class Execution implements ExecutionObserver {
     @Override
     public void onComponentUserCodeFailed(ExecutionModel.Component component,
             Throwable throwable) {
-        LOG.info("Component code failed : {}", component.getComponentIri(),
-                throwable);
+        LOG.info("Component code failed : {}", component.getComponentIri());
     }
 
     @Override

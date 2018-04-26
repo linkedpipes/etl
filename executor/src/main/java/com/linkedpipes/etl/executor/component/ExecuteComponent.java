@@ -75,7 +75,6 @@ class ExecuteComponent implements ComponentExecutor {
             execute();
             execution.onExecuteComponentSuccessful(execComponent);
         } catch (ExecutorException ex) {
-            LOG.error("Component execution failed.", ex);
             try {
                 dataUnitManager.onComponentDidExecute(execComponent);
             } catch (ExecutorException e) {
