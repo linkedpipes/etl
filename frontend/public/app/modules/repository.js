@@ -113,7 +113,7 @@
     }
 
     function onLoadingStarted(repository) {
-        repository.areDataReady = true;
+        repository.areDataReady = false;
     }
 
     function setRepositoryData(repository, data) {
@@ -160,7 +160,6 @@
     function onFilterChange(repository, userData) {
         filterItems(repository, repository.data, userData);
         callOnChange(repository);
-        console.log("onFilterChange", repository);
     }
 
     function filterItems(repository, items, userData) {
@@ -175,7 +174,7 @@
 
     function updateItems(repository) {
         if (!repository.areDataReady) {
-            fetchItems(repository);
+            return fetchItems(repository);
         }
         if (repository._supportMinimalUpdate) {
             // TODO Add support for minimal update using metadata.
