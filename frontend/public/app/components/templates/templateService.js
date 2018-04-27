@@ -317,6 +317,10 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
 
         const service = {};
 
+        service.reload = () => {
+            return service.load(true);
+        };
+
         service.load = (force) => {
             if (data.loaded && !force) {
                 return $q.when();
