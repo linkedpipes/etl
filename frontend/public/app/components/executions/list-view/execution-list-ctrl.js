@@ -8,7 +8,7 @@
 })((angular, _executionListService) => {
     "use strict";
 
-    function controller($scope, $lpScrollWatch, service) {
+    function controller($scope, $lpScrollWatch, service, $refresh) {
 
         service.initialize($scope);
 
@@ -45,6 +45,7 @@
         function initialize() {
             $lpScrollWatch.updateReference();
             service.load();
+            $refresh.set(() => service.update());
         }
 
         angular.element(initialize);
@@ -53,7 +54,8 @@
     controller.$inject = [
         "$scope",
         "$lpScrollWatch",
-        "execution.list.service"
+        "execution.list.service",
+        "service.refresh"
     ];
 
     let initialized = false;

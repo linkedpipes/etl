@@ -11,7 +11,7 @@
     }
 })((vocabulary, angular, _repository, _logTailDialog, executionApi, pipelineApi) => {
 
-    function factory($http, $mdDialog, $statusService, $mdMedia, repository) {
+    function factory($http, $mdDialog, $status, $mdMedia, repository) {
 
         let $scope;
 
@@ -35,11 +35,11 @@
         }
 
         function updateRepository() {
-            $scope.repository.update();
+            repository.update($scope.repository).catch(() => {});
         }
 
         function handleExecutionStartFailure(response) {
-            $statusService.httpPostFailed({
+            $status.httpPostFailed({
                 "title": "Can't start the execution.",
                 "response": response
             });
@@ -53,7 +53,7 @@
         }
 
         function handleExecutionCancelFailure(response) {
-            $statusService.httpPostFailed({
+            $status.httpPostFailed({
                 'title': "Can't cancel the execution.",
                 'response': response
             });
@@ -82,7 +82,12 @@
         }
 
         function loadExecutions() {
-            repository.load($scope.repository);
+            repository.load($scope.repository).catch((response) => {
+                $status.httpGetFailed({
+                    "title": "Can't load executions.",
+                    "response": response
+                });
+            });
         }
 
         function increaseVisibleItemLimit() {
@@ -97,7 +102,8 @@
             "delete": deleteExecution,
             "onSearchStringChange": onSearchStringChange,
             "increaseVisibleItemLimit": increaseVisibleItemLimit,
-            "load": loadExecutions
+            "load": loadExecutions,
+            "update" : updateRepository
         };
     }
 
