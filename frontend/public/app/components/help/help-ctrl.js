@@ -1,22 +1,25 @@
-define([], function () {
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define([
+            "angular",
+            "app/modules/server-info"
+        ], definition);
+    }
+})((angular, $serverInfo) => {
     "use strict";
 
-    function controller($scope, infoService) {
-        fetchCommitVersion($scope, infoService);
+    function controller($scope) {
+
+        function initialize() {
+            $serverInfo.load().then(() => {
+                $scope.commit = $serverInfo.getCommit();
+            });
+        }
+
+        angular.element(initialize);
     }
 
-    function fetchCommitVersion($scope, infoService) {
-        infoService.fetch().then((info) => {
-            if (info.version !== undefined) {
-                $scope.commit = info.version.commit;
-            }
-        });
-    }
-
-    controller.$inject = [
-        "$scope",
-        "service.info"
-    ];
+    controller.$inject = ["$scope"];
 
     let initialized = false;
     return function init(app) {

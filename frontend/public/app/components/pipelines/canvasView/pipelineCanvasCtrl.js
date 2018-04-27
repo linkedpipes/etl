@@ -37,7 +37,6 @@ define([
                        statusService,
                        refreshService,
                        jsonldService,
-                       infoService,
                        pipelineService,
                        pipelineCanvas,
                        executionCanvas,
@@ -281,7 +280,6 @@ define([
         function loadData() {
             console.time('pipelineCanvasCtrl.loadData');
             loadPipeline()
-            .then(infoService.fetch)
             .then(loadExecution)
             .then(function () {
                 console.timeEnd('pipelineCanvasCtrl.loadData');
@@ -749,7 +747,6 @@ define([
         'services.status',
         'service.refresh',
         'services.jsonld',
-        'service.info',
         'components.pipelines.services.model',
         'canvas.pipeline',
         'canvas.execution',

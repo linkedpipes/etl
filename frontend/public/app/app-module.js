@@ -13,7 +13,6 @@ define([
     "app/services/repositoryService",
     "app/modules/status-service",
     "app/services/jsonldService",
-    "app/modules/instance-info-service",
     "app/services/designService",
     "app/components/inputs/localizedTextInput/localizedTextInput",
     "app/components/inputs/iriList/iriList",
@@ -50,7 +49,6 @@ define([
         repositoryService,
         statusService,
         jsonldService,
-        infoService,
         designService,
         localizedTextInputInit,
         iriListInit,
@@ -92,7 +90,6 @@ define([
         repositoryService(app);
         statusService(app);
         jsonldService(app);
-        infoService(app);
         designService(app);
         localizedTextInputInit(app);
         iriListInit(app);
