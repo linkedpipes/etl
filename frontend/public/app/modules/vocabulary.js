@@ -38,6 +38,8 @@
         "CMP_END" : LP + "events/ComponentEnd",
         "CMP_FAILED" : LP + "events/ComponentFailed",
         "COMPONENT": LP + "Component",
+        "TEMPLATE" : LP + "Template",
+        "HAS_TEMPLATE" : LP + "template",
         "DATA_UNIT": ETL_LP + "DataUnit",
         "PROGRESS_REPORT": LP + "progress/ProgressReport",
         "EXEC_OPTIONS" : ETL_LP + "ExecutionOptions",
