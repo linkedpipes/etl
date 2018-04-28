@@ -8,9 +8,9 @@
 })((angular, _pipelineListService) => {
     "use strict";
 
-    function controller($scope, $lpScrollWatch, service) {
+    function controller($scope, $mdMedia, $lpScrollWatch, service) {
 
-        service.initialize($scope);
+        service.initialize($scope, $mdMedia);
 
         $scope.getTagsMatchingQuery = service.getTagsMatchingQuery;
 
@@ -64,6 +64,7 @@
 
     controller.$inject = [
         "$scope",
+        "$mdMedia",
         "$lpScrollWatch",
         "pipeline.list.service"
     ];

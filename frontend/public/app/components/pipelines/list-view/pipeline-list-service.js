@@ -13,9 +13,11 @@
                      repository) {
 
         let $scope;
+        let $mdMedia;
 
-        function initialize(scope) {
+        function initialize(scope, mdMedia) {
             $scope = scope;
+            $mdMedia = mdMedia;
             $scope.isClipboardSupported = $clipboard.supported;
             $scope.filter = {
                 "labelSearch": "",
