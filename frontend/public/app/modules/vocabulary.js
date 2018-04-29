@@ -47,7 +47,9 @@
         "DELETE_WORKING": LP + "deleteWorkingData",
         "HAS_TAG": ETL_LP + "tag",
         "PIPELINE": LP + "Pipeline",
+        // TODO Merge TOMBSTONE and DELETED
         "TOMBSTONE" : LP + "Tombstone",
+        "DELETED": ETL_LP + "Deleted",
         "HAS_REPO_POLICY": LP + "rdfRepositoryPolicy",
         "HAS_REPO_TYPE": LP + "rdfRepositoryType",
         "UPDATE_OPTIONS" : LP + "UpdateOptions",

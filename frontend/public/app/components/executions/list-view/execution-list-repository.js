@@ -2,13 +2,11 @@
     if (typeof define === "function" && define.amd) {
         define([
             "vocabulary",
-            "app/modules/repository",
-            "app/modules/jsonld-repository"
+            "app/modules/repository-infinite-scroll",
+            "app/modules/jsonld-source"
         ], definition);
-    } else if (typeof module !== "undefined") {
-        module.exports = definition();
     }
-})((vocab, repositoryService, jsonLdRepositoryService) => {
+})((vocab, repositoryService, jsonLdSource) => {
     "use strict";
 
     const LP = vocab.LP;
@@ -112,7 +110,6 @@
         item['onClickUrl'] = PIPELINE_EDIT_URL +
             "?pipeline=" + encodeURIComponent(item["pipeline"]["iri"]) +
             "&execution=" + encodeURIComponent(item["iri"]);
-        item["id"] = parseIdFromIri(item["iri"]);
         item["label"] = getExecutionLabel(item);
         item["duration"] = getExecutionDuration(item);
         item["progress"]["value"] = getProgressValue(item["progress"]);
@@ -120,10 +117,6 @@
         updateExecutionMetadata(item);
         item["searchLabel"] = item["label"].toLowerCase();
         item["filterLabel"] = true;
-    }
-
-    function parseIdFromIri(iri) {
-        return iri.substring(iri.lastIndexOf('executions/') + 11);
     }
 
     function getExecutionLabel(execution) {
@@ -316,31 +309,44 @@
 
     function deleteExecution(execution, repository) {
         repositoryService.delete(repository, execution.id)
-        .then(() => repositoryService.update(repository));
+            .then(() => repositoryService.update(repository));
     }
 
     function increaseVisibleItemLimit(repository) {
         repositoryService.increaseVisibleItemsLimit(repository, 10);
     }
 
-    function service($cookies, $http) {
+    function service($cookies) {
 
         function createRepository(filters) {
-            const builder = jsonLdRepositoryService.createConfigBuilder();
-            builder.newItemDecorator(decorateItem);
-            builder.visibleItemLimit(getVisibleItemLimit());
+            const builder = jsonLdSource.createBuilder();
             builder.url("/resources/executions");
-            builder.dataType(LP.EXECUTION);
-            builder.tombstoneType(LP.TOMBSTONE);
+            builder.itemType(LP.EXECUTION);
+            builder.tombstoneType(LP.DELETED);
             builder.itemTemplate(REPOSITORY_TEMPLATE);
-            builder.$http($http);
-            builder.filter((item) => filter(item, filters));
-            const config = builder.build();
-            return jsonLdRepositoryService.createWithInfiniteScroll(config);
+            builder.supportIncrementalUpdate();
+            return repositoryService.createWithInfiniteScroll({
+                "itemSource": builder.build(),
+                "newItemDecorator": decorateItem,
+                "filter": (item, options) => filter(item, filters, options),
+                "order": compareExecutions,
+                "visibleItemLimit": getVisibleItemLimit()
+            });
+        }
+
+        function compareExecutions(left, right) {
+            if (left.start === undefined && right.start === undefined) {
+                return left["id"] - right["id"];
+            } else if (left.start === undefined) {
+                return 1;
+            } else if (right.start === undefined) {
+                return -1;
+            } else {
+                return left.start - right.start;
+            }
         }
 
         // TODO Move to "cookies" module.
-
         function getVisibleItemLimit() {
             const initialLimit = $cookies.get("lp-initial-list-size");
             if (initialLimit === undefined) {
@@ -355,12 +361,12 @@
             "update": repositoryService.update,
             "delete": deleteExecution,
             "onFilterChanged": repositoryService.onFilterChange,
-            "load": repositoryService.fetch,
+            "load": repositoryService.initialFetch,
             "increaseVisibleItemLimit": increaseVisibleItemLimit
         };
     }
 
-    service.$inject = ["$cookies", "$http"];
+    service.$inject = ["$cookies"];
 
     let initialized = false;
     return function init(app) {

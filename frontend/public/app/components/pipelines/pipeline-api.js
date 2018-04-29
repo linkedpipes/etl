@@ -6,9 +6,9 @@
 
     const LP = vocabulary.LP;
 
-    function executePipeline($http, pipeline) {
+    function executePipeline($http, iri) {
         const config = createExecutionConfiguration(true, false);
-        return postPipelineExecution($http, pipeline, config);
+        return postPipelineExecution($http, iri, config);
     }
 
     function createExecutionConfiguration(saveDebug, deleteWorking) {
@@ -21,8 +21,8 @@
         return configuration;
     }
 
-    function postPipelineExecution($http, pipeline, config) {
-        const url = "/resources/executions?pipeline=" + pipeline.iri;
+    function postPipelineExecution($http, iri, config) {
+        const url = "/resources/executions?pipeline=" + iri;
         return $http.post(url, config);
     }
 

@@ -2,24 +2,18 @@
     if (typeof define === "function" && define.amd) {
         define([
             "vocabulary",
-            "app/modules/repository",
-            "app/modules/jsonld-repository"
+            "app/modules/repository-infinite-scroll",
+            "app/modules/jsonld-source"
         ], definition);
-    } else if (typeof module !== "undefined") {
-        module.exports = definition();
     }
-})((vocab, repositoryService, jsonLdRepositoryService) => {
+})((vocab, repositoryService, jsonLdSource) => {
     "use strict";
 
     const LP = vocab.LP;
     const SKOS = vocab.SKOS;
     const PIPELINE_EDIT_URL = "#/pipelines/edit/canvas?pipeline=";
 
-    // TODO Merge id and iri into one value.
     const REPOSITORY_TEMPLATE = {
-        "id": {
-            "$resource": null
-        },
         "iri": {
             "$resource": null
         },
@@ -92,32 +86,31 @@
 
     function deletePipeline(pipeline, repository) {
         repositoryService.delete(repository, pipeline.id)
-        .then(() => repositoryService.update(repository));
+            .then(() => repositoryService.update(repository));
     }
 
     function increaseVisibleItemLimit(repository) {
         repositoryService.increaseVisibleItemsLimit(repository, 10);
     }
 
-    function service($cookies, $http) {
+    function service($cookies) {
 
         function createRepository(filters) {
-            const builder = jsonLdRepositoryService.createConfigBuilder();
-            builder.newItemDecorator(decorateItem);
-            builder.onNewItem((item) => addTagsToTagList(item, filters.tagsAll));
-            builder.visibleItemLimit(getVisibleItemLimit());
+            const builder = jsonLdSource.createBuilder();
             builder.url("/resources/pipelines");
-            builder.dataType(LP.PIPELINE);
+            builder.itemType(LP.PIPELINE);
             builder.tombstoneType(LP.TOMBSTONE);
             builder.itemTemplate(REPOSITORY_TEMPLATE);
-            builder.$http($http);
-            builder.filter((item, options) => filter(item, filters, options));
-            const config = builder.build();
-            return jsonLdRepositoryService.createWithInfiniteScroll(config);
+            return repositoryService.createWithInfiniteScroll({
+                "itemSource": builder.build(),
+                "onNewItem": (item) => addTagsToTagList(item, filters.tagsAll),
+                "newItemDecorator": decorateItem,
+                "filter": (item, options) => filter(item, filters, options),
+                "visibleItemLimit": getVisibleItemLimit()
+            });
         }
 
         // TODO Move to "cookies" module.
-
         function getVisibleItemLimit() {
             const initialLimit = $cookies.get("lp-initial-list-size");
             if (initialLimit === undefined) {
@@ -132,12 +125,12 @@
             "update": repositoryService.update,
             "delete": deletePipeline,
             "onFilterChanged": repositoryService.onFilterChange,
-            "load": repositoryService.fetch,
+            "load": repositoryService.initialFetch,
             "increaseVisibleItemLimit": increaseVisibleItemLimit
         };
     }
 
-    service.$inject = ["$cookies", "$http"];
+    service.$inject = ["$cookies"];
 
     let initialized = false;
     return function init(app) {

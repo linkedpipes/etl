@@ -9,7 +9,7 @@
     }
 })((vocabulary, angular, _repository, pipelineApi) => {
 
-    function factory($http, $location, $mdDialog, $statusService, $clipboard,
+    function factory($http, $location, $mdDialog, $status, $clipboard,
                      repository) {
 
         let $scope;
@@ -41,7 +41,7 @@
         }
 
         function handleExecutionPostFailure(response) {
-            $statusService.httpPostFailed({
+            $status.httpPostFailed({
                 "title": "Can't start the execution.",
                 "response": response
             });
@@ -87,7 +87,7 @@
         }
 
         function handleCreatePipelineFailure(response) {
-            $statusService.httpPostFailed({
+            $status.httpPostFailed({
                 "title": "Can't create the pipeline.",
                 "response": response
             });
@@ -110,14 +110,14 @@
         }
 
         function handleCopyPipelineSuccess() {
-            $statusService.success({
+            $status.success({
                 "title": "Pipeline has been successfully copied."
             });
             repository.update($scope.repository);
         }
 
         function reportCopyPipelineFailure(response) {
-            $statusService.httpPostFailed({
+            $status.httpPostFailed({
                 "title": "Can't create the pipeline.",
                 "response": response
             });
@@ -149,7 +149,12 @@
         }
 
         function loadPipelines() {
-            repository.load($scope.repository);
+            repository.load($scope.repository).catch((response) => {
+                $status.httpGetFailed({
+                    "title": "Can't load pipelines.",
+                    "response": response
+                });
+            });
         }
 
         function getTagsMatchingQuery(query) {

@@ -5,6 +5,16 @@
 })(() => {
     "use strict";
 
+    function getJsonLd(url) {
+        return fetch(url, {
+            "method": "GET",
+            "headers": {
+                "Content-Type": "application/ld+json"
+            }
+        }).then(json);
+    }
+
+
     function getJson(url) {
         return fetch(url).then(json);
     }
@@ -23,9 +33,15 @@
         }).then(json);
     }
 
+    function deleteRrequest(url) {
+        return fetch(url, {"method": "DELETE"});
+    }
+
     return {
+        "getJsonLd": getJsonLd,
         "getJson": getJson,
-        "postJson": postJson
+        "postJson": postJson,
+        "delete": deleteRrequest
     };
 
 });

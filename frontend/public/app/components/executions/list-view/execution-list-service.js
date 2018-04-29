@@ -30,12 +30,12 @@
 
         function executePipeline(iri) {
             pipelineApi.execute($http, iri)
-            .then(updateRepository)
-            .catch(handleExecutionStartFailure);
+                .then(updateRepository)
+                .catch(handleExecutionStartFailure);
         }
 
         function updateRepository() {
-            repository.update($scope.repository).catch(() => {});
+            repository.update($scope.repository);
         }
 
         function handleExecutionStartFailure(response) {
@@ -47,9 +47,9 @@
 
         function cancelExecution(execution) {
             executionApi.cancel($http, execution.id, "User request")
-            .then(() => {
-                execution.cancelling = true;
-            }).catch(handleExecutionCancelFailure);
+                .then(() => {
+                    execution.cancelling = true;
+                }).catch(handleExecutionCancelFailure);
         }
 
         function handleExecutionCancelFailure(response) {
@@ -90,8 +90,12 @@
             });
         }
 
-        function increaseVisibleItemLimit() {
+        function increaseVisibleItemLimit(byButton) {
             repository.increaseVisibleItemLimit($scope.repository);
+            if (!byButton) {
+                // This event come outside of Angular scope.
+                $scope.$apply();
+            }
         }
 
         return {
@@ -103,7 +107,7 @@
             "onSearchStringChange": onSearchStringChange,
             "increaseVisibleItemLimit": increaseVisibleItemLimit,
             "load": loadExecutions,
-            "update" : updateRepository
+            "update": updateRepository
         };
     }
 
