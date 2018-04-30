@@ -70,6 +70,10 @@
     function convertByType(resource, property, type) {
         if (type === "plain-string") {
             return jsonld.r.getPlainString(resource, property);
+        } else if (type === "date") {
+                return jsonld.r.getDate(resource, property);
+        } else if (type === "iri") {
+            return jsonld.r.getIRI(resource, property);
         } else if (type === "plain-array") {
             const values = jsonld.r.getValue(resource, property);
             if (values === undefined) {
@@ -86,7 +90,8 @@
             });
             return plainValues;
         } else {
-            console.error("Unknown type", type, new Error());
+            console.error("Unknown template type", type, "for", property,
+                new Error());
             return undefined;
         }
     }

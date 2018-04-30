@@ -3,31 +3,24 @@ define([], function () {
         // TODO Export to navigation module.
         $routeProvider
                 .when('/help', {
-                    'templateUrl': 'app/components/help/view/helpView.html',
+                    'templateUrl': 'app/components/help/help-view.html',
                     'controller': 'help',
                     'activeView': 'help',
                     'pageTitle': 'Help - LinkedPipes ETL',
                     'color': '#999999'
                 })
                 .when('/personalization', {
-                    'templateUrl': 'app/components/personalizationView/personalizationView.html',
+                    'templateUrl': 'app/components/personalization/personalization-view.html',
                     'controller': 'personalization',
                     'activeView': 'personalization',
                     'pageTitle': 'Personalization - LinkedPipes ETL',
                     'color': '#999999'
                 })
                 .when('/executions', {
-                    'templateUrl': 'app/components/executions/listView/executionListView.html',
+                    'templateUrl': 'app/components/executions/list-view/execution-list-view.html',
                     'controller': 'components.executions.list',
                     'activeView': 'executions',
                     'pageTitle': 'Executions - LinkedPipes ETL',
-                    'color': '#FF9800'
-                })
-                .when('/executions/detail', {
-                    'templateUrl': 'app/components/executions/detailView/executionDetailView.html',
-                    'controller': 'components.executions.detail',
-                    'activeView': 'executions',
-                    'pageTitle': 'Execution - LinkedPipes ETL',
                     'color': '#FF9800'
                 })
                 .when('/templates', {
@@ -45,7 +38,7 @@ define([], function () {
                     'color': '#2196F3'
                 })
                 .when('/pipelines', {
-                    'templateUrl': 'app/components/pipelines/listView/pipeline-list-view.html',
+                    'templateUrl': 'app/components/pipelines/list-view/pipeline-list-view.html',
                     'controller': 'components.pipelines.list',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipelines - LinkedPipes ETL',

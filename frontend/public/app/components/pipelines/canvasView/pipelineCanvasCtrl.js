@@ -7,8 +7,8 @@ define([
     'app/components/pipelineEditDirective/pipelineEditDirective',
     'app/components/pipelines/pipelineModelService',
     'app/components/templates/selectDialog/templateSelectDialog',
-    'app/components/pipelines/importDialog/pipelineImportDialogCtrl',
-    'app/components/pipelines/detailDialog/pipelineDetailDialogCtrl',
+    'app/components/pipelines/import-dialog/pipeline-import-dialog-ctrl',
+    'app/components/pipelines/detail-dialog/pipeline-detail-dialog-ctrl',
     'app/components/templates/detailDialog/templateDetailDialog',
     'app/components/instances/detailDialog/instanceDetailDialog',
     'file-saver',
@@ -37,7 +37,6 @@ define([
                        statusService,
                        refreshService,
                        jsonldService,
-                       infoService,
                        pipelineService,
                        pipelineCanvas,
                        executionCanvas,
@@ -202,7 +201,7 @@ define([
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 'controller': 'components.pipelines.import.dialog',
-                'templateUrl': 'app/components/pipelines/importDialog/pipelineImportDialogView.html',
+                'templateUrl': 'app/components/pipelines/import-dialog/pipeline-import-dialog-view.html',
                 'parent': angular.element(document.body),
                 'hasBackdrop': false,
                 'clickOutsideToClose': true,
@@ -282,7 +281,6 @@ define([
         function loadData() {
             console.time('pipelineCanvasCtrl.loadData');
             loadPipeline()
-            .then(infoService.fetch)
             .then(loadExecution)
             .then(function () {
                 console.timeEnd('pipelineCanvasCtrl.loadData');
@@ -609,23 +607,23 @@ define([
                     'accept': 'application/ld+json'
 
                 }
-            }
+            };
             $http.post('./resources/pipelines', data, config)
-            .success(function (data, status, headers) {
+            .then(function (data) {
                 statusService.success({
                     'title': 'Pipeline has been successfully copied.'
                 });
                 // The response is a reference.
                 // TODO Use JSONLD service to get the value !!
-                var newPipelineUri = data[0]['@graph'][0]['@id'];
+                const jsonld = data.data;
+                var newPipelineUri = jsonld[0]['@graph'][0]['@id'];
                 //
                 statusService.success({
                     'title': 'Pipeline has been successfully copied.'
                 });
                 $location.path('/pipelines/edit/canvas').search(
                     {'pipeline': newPipelineUri});
-            })
-            .error(function (data, status, headers) {
+            }, function (data) {
                 statusService.httpPostFailed({
                     'title': "Can't create new pipeline.",
                     'response': data
@@ -680,7 +678,7 @@ define([
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 'controller': 'components.pipelines.detail.dialog',
-                'templateUrl': 'app/components/pipelines/detailDialog/pipelineDetailDialogView.html',
+                'templateUrl': 'app/components/pipelines/detail-dialog/pipeline-detail-dialog-view.html',
                 'parent': angular.element(document.body),
                 'targetEvent': $event,
                 'clickOutsideToClose': false,
@@ -750,7 +748,6 @@ define([
         'services.status',
         'service.refresh',
         'services.jsonld',
-        'service.info',
         'components.pipelines.services.model',
         'canvas.pipeline',
         'canvas.execution',

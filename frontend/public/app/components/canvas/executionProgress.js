@@ -6,8 +6,9 @@
 
 define([
     'jquery',
-    'jointjs'
-], function (jQuery, joint) {
+    'jointjs',
+    'app/modules/server-info'
+], function (jQuery, joint, $serverInfo) {
 
     // For each status contains component style.
     var statusToHighligh = {
@@ -82,7 +83,6 @@ define([
         'execution': void 0,
         '$mdDialog': void 0,
         'jsonld': void 0,
-        'infoService': void 0,
         'enabled': true
     };
 
@@ -152,8 +152,8 @@ define([
         }
         // Construct path to data unit debug.
         var execIri = this.execution.getIri();
-        this.infoService.fetch().then((info) => {
-            var ftpPath = info.path.ftp + '/' +
+        $serverInfo.load().then(() => {
+            var ftpPath = $serverInfo.getFtpUrl() + '/' +
                 execIri.substring(execIri.lastIndexOf('executions/') + 11)
                 + '/';
             window.open(ftpPath + dataUnit.debug, '_blank');
@@ -350,11 +350,10 @@ define([
 
     };
 
-    function factory($mdDialog, jsonld, infoService, pipelineModel) {
+    function factory($mdDialog, jsonld, pipelineModel) {
         return jQuery.extend({
             '$mdDialog': $mdDialog,
             'jsonld': jsonld,
-            'infoService': infoService,
             'pipelineModel': pipelineModel
         }, service);
     }
@@ -363,7 +362,6 @@ define([
         app.factory('canvas.execution', [
             '$mdDialog',
             'services.jsonld',
-            'service.info',
             'components.pipelines.services.model',
             factory]);
     };

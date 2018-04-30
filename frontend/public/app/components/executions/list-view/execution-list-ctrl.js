@@ -2,35 +2,23 @@
     if (typeof define === "function" && define.amd) {
         define([
             "angular",
-            "./pipeline-list-service"
+            "./execution-list-service"
         ], definition);
     }
-})((angular, _pipelineListService) => {
+})((angular, _executionListService) => {
     "use strict";
 
-    function controller($scope, $lpScrollWatch, service) {
+    function controller($scope, $lpScrollWatch, service, $refresh) {
 
         service.initialize($scope);
 
-        $scope.getTagsMatchingQuery = service.getTagsMatchingQuery;
-
         $scope.onExecute = service.execute;
 
-        $scope.onExecuteWithoutDebugData = service.executeWithoutDebugData;
+        $scope.onCancel = service.cancel;
 
-        $scope.onExport = service.export;
-
-        $scope.onCreate = service.create;
-
-        $scope.onUpload = service.redirectToUpload;
-
-        $scope.onCopy = service.copy;
-
-        $scope.onCopyIri = service.copyIri;
+        $scope.onOpenLogTail = service.openLogTail;
 
         $scope.onDelete = service.delete;
-
-        $scope.chipsFilter = service.onChipsFilterChange;
 
         $scope.$watch("filter.labelSearch", service.onSearchStringChange);
 
@@ -41,15 +29,8 @@
         };
 
         let callbackReference = null;
-
-        callbackReference = $lpScrollWatch.registerCallback((byButton) => {
-            service.increaseVisibleItemLimit();
-            if (!byButton) {
-                // This event come outside of Angular scope.
-                $scope.$apply();
-            }
-        });
-
+        callbackReference = $lpScrollWatch.registerCallback(
+            service.increaseVisibleItemLimit);
         $scope.$on("$destroy", () => {
             $lpScrollWatch.unRegisterCallback(callbackReference);
         });
@@ -57,6 +38,7 @@
         function initialize() {
             $lpScrollWatch.updateReference();
             service.load();
+            $refresh.set(service.update);
         }
 
         angular.element(initialize);
@@ -65,7 +47,8 @@
     controller.$inject = [
         "$scope",
         "$lpScrollWatch",
-        "pipeline.list.service"
+        "execution.list.service",
+        "service.refresh"
     ];
 
     let initialized = false;
@@ -74,8 +57,8 @@
             return;
         }
         initialized = true;
-        _pipelineListService(app);
-        app.controller("components.pipelines.list", controller);
+        _executionListService(app);
+        app.controller("components.executions.list", controller);
     }
 
 });

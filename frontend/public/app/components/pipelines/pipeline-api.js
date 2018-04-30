@@ -6,9 +6,9 @@
 
     const LP = vocabulary.LP;
 
-    function executePipeline($http, pipeline) {
+    function executePipeline($http, iri) {
         const config = createExecutionConfiguration(true, false);
-        return postPipelineExecution($http, pipeline, config);
+        return postPipelineExecution($http, iri, config);
     }
 
     function createExecutionConfiguration(saveDebug, deleteWorking) {
@@ -21,8 +21,8 @@
         return configuration;
     }
 
-    function postPipelineExecution($http, pipeline, config) {
-        const url = "/resources/executions?pipeline=" + pipeline.iri;
+    function postPipelineExecution($http, iri, config) {
+        const url = "/resources/executions?pipeline=" + iri;
         return $http.post(url, config);
     }
 
@@ -54,7 +54,7 @@
     function createEmptyPipelineCreateOptions() {
         return {
             "@id": "http://localhost/options",
-            "@type": "http://linkedpipes.com/ontology/UpdateOptions"
+            "@type": LP.UPDATE_OPTIONS
         };
     }
 
@@ -85,17 +85,66 @@
 
     function createCopyPipelineOptions() {
         return {
-            "@id": "http://localhost/options",
-            "@type": "http://linkedpipes.com/ontology/UpdateOptions",
+            "@id": "http://localhost/pipelineImportOptions",
+            "@type": LP.UPDATE_OPTIONS,
             "http://etl.linkedpipes.com/ontology/local": true
         };
+    }
+
+    function asLocalFromIri($http, pipelineIri, updateTemplates) {
+        const formData = new FormData();
+        addTransformOptions(formData, true, updateTemplates);
+        const iri = '/resources/localize?pipeline=' + pipelineIri;
+        return $http.post(iri, formData, noTransformConfiguration())
+            .then((data) => data["data"]);
+    }
+
+    function asLocalFromFile($http, fileWithPipeline, updateTemplates) {
+        const formData = new FormData();
+        formData.append("pipeline", fileWithPipeline);
+        addTransformOptions(formData, true, updateTemplates);
+        const iri = '/resources/localize';
+        return $http.post(iri, formData, noTransformConfiguration())
+            .then((data) => data["data"]);
+    }
+
+    function addTransformOptions(formData, importTemplates, updateTemplates) {
+        const options = {
+            "@id": "http://localhost/pipelineImportOptions",
+            "@type": LP.UPDATE_OPTIONS,
+            "http://etl.linkedpipes.com/ontology/local": false
+        };
+        options[LP.HAS_IMPORT_TEMPLATES] = importTemplates;
+        options[LP.HAS_UPDATE_TEMPLATES] = updateTemplates;
+        formData.append("options", new Blob([JSON.stringify(options)], {
+            type: "application/ld+json"
+        }), "options.jsonld");
+    }
+
+    function noTransformConfiguration() {
+        return {
+            // Do not transform data.
+            "transformRequest": angular.identity,
+            "headers": {
+                // By this angular add Content-Type itself.
+                "Content-Type": undefined,
+                "accept": "application/ld+json"
+            }
+        };
+    }
+
+    function loadLocal($http, iri) {
+        return $http.get(iri).then(response => response.data);
     }
 
     return {
         "execute": executePipeline,
         "executeWithoutDebugData": executeWithoutDebugData,
         "create": createPipeline,
-        "copy": copyPipeline
+        "copy": copyPipeline,
+        "asLocalFromIri": asLocalFromIri,
+        "asLocalFromFile": asLocalFromFile,
+        "loadLocal": loadLocal
     }
 
 });

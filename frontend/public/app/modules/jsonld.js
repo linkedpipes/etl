@@ -512,6 +512,14 @@
                 return value["@value"];
             }
         },
+        "getPlainStrings": (resource, predicate) => {
+            const values = getStrings(resource, predicate);
+            if (values === undefined) {
+                return undefined;
+            }
+            return values.map((item) => item["@value"]);
+
+        },
         "setStrings": setStrings,
         "getIntegers": getIntegers,
         "getInteger": (resource, predicate) =>
