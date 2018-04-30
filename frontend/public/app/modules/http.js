@@ -10,13 +10,14 @@
             "method": "GET",
             "headers": {
                 "Content-Type": "application/ld+json"
-            }
+            },
+            "credentials": "same-origin"
         }).then(json);
     }
 
 
     function getJson(url) {
-        return fetch(url).then(json);
+        return fetch(url, {"credentials": "same-origin"}).then(json);
     }
 
     function json(response) {
@@ -30,11 +31,12 @@
             "headers": {
                 "Content-Type": "application/json"
             },
+            "credentials": "same-origin"
         }).then(json);
     }
 
     function deleteRrequest(url) {
-        return fetch(url, {"method": "DELETE"});
+        return fetch(url, {"method": "DELETE", "credentials": "same-origin"});
     }
 
     return {
