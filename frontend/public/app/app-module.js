@@ -10,7 +10,6 @@ define([
     "app/components/help/help-ctrl",
     "app/services/rdfService",
     "app/services/refreshService",
-    "app/services/repositoryService",
     "app/modules/status-service",
     "app/services/jsonldService",
     "app/services/designService",
@@ -46,7 +45,6 @@ define([
         helpCtrl,
         rdfService,
         refreshService,
-        repositoryService,
         statusService,
         jsonldService,
         designService,
@@ -87,7 +85,6 @@ define([
     function initializeServices(app) {
         rdfService(app);
         refreshService(app);
-        repositoryService(app);
         statusService(app);
         jsonldService(app);
         designService(app);
