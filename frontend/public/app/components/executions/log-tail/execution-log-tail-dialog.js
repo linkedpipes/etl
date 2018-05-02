@@ -15,8 +15,7 @@ define([], function () {
         }
 
         const refreshData = () => {
-            const url = "/resources/executions/" +
-                execution.id + "/logs-tail?n=100";
+            const url = execution.iri + "/logs-tail?n=100";
             $http.get(url).then((response) => {
                     setContent(response.data);
                     scrollToBottom();
