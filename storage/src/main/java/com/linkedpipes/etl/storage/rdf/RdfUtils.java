@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Contains utilities for RDF IO operations.
@@ -57,8 +58,14 @@ public final class RdfUtils {
         return null;
     }
 
+    public static Collection<Statement> forceContext(
+            Collection<Statement> statements, String context) {
+        final ValueFactory vf = SimpleValueFactory.getInstance();
+        return forceContext(statements, vf.createIRI(context));
+    }
+
     /**
-     * Return a copy of given statements with enforced context.
+     * Return a importJarComponent of given statements with enforced context.
      *
      * @param statements
      * @param context
@@ -339,6 +346,33 @@ public final class RdfUtils {
         } catch (IOException ex) {
             throw new BaseException(ex);
         }
+    }
+
+    public static List<Statement> updateToIriAndGraph(
+            Collection<Statement> statements, IRI iri) {
+        Map<Value, Value> mapping = createResourceMapping(
+                iri.stringValue(), statements);
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        return statements.stream().map(s -> valueFactory.createStatement(
+                (Resource) mapping.get(s.getSubject()),
+                s.getPredicate(),
+                mapping.getOrDefault(s.getObject(), s.getObject()),
+                iri
+        )).collect(Collectors.toList());
+    }
+
+    private static Map<Value, Value> createResourceMapping(
+            String baseIri, Collection<Statement> statements) {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        Map<Value, Value> mapping = new HashMap<>();
+        for (Statement statement : statements) {
+            if (mapping.containsKey(statement.getSubject())) {
+                continue;
+            }
+            String iriAsStr = baseIri + "/" + mapping.size();
+            mapping.put(statement.getSubject(), valueFactory.createIRI(iriAsStr));
+        }
+        return mapping;
     }
 
 }

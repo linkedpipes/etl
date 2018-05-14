@@ -3,34 +3,23 @@ package com.linkedpipes.etl.storage.template;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
-/**
- * Represent a thin template that can modify basic component
- * properties and configuration.
- */
-class ReferenceTemplate extends Template
-        implements PojoLoader.Loadable {
+class JarTemplate extends Template implements PojoLoader.Loadable {
 
     public static final IRI TYPE;
 
     static {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        TYPE = valueFactory.createIRI(LP_PIPELINE.REFERENCE_TEMPLATE);
+        TYPE = valueFactory.createIRI(LP_PIPELINE.JAS_TEMPLATE);
     }
 
-    /**
-     * Template for this template.
-     */
-    private String template;
+    private boolean supportControl;
 
     private String configurationDescription;
-
-    public String getTemplate() {
-        return template;
-    }
 
     @Override
     public void loadIri(String iri) {
@@ -40,8 +29,8 @@ class ReferenceTemplate extends Template
     @Override
     public PojoLoader.Loadable load(String predicate, Value value) {
         switch (predicate) {
-            case LP_PIPELINE.HAS_TEMPLATE:
-                template = value.stringValue();
+            case LP_PIPELINE.HAS_SUPPORT_CONTROL:
+                supportControl = ((Literal) value).booleanValue();
                 break;
             case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
                 configurationDescription = value.stringValue();
@@ -51,25 +40,17 @@ class ReferenceTemplate extends Template
     }
 
     @Override
-    public String getIri() {
-        return iri;
-    }
-
-    @Override
     public Type getType() {
-        return Type.REFERENCE_TEMPLATE;
+        return Type.JAR_TEMPLATE;
     }
 
     @Override
     public boolean isSupportingControl() {
-        // Every reference support control as its parent support control,
-        // because we have template from it.
-        return true;
+        return supportControl;
     }
 
     @Override
     public String getConfigurationDescription() {
         return configurationDescription;
     }
-
 }

@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.pipeline;
+package com.linkedpipes.etl.storage.pipeline.transformation;
 
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.eclipse.rdf4j.model.IRI;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Contains settings for pipeline operations.
  */
-class PipelineOptions implements PojoLoader.Loadable {
+class ImportOptions implements PojoLoader.Loadable {
 
     public static final IRI TYPE;
 

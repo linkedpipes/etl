@@ -37,7 +37,7 @@ final class JarLoader {
         try {
             jar = new JarFile(jarFile);
         } catch (IOException ex) {
-            LOG.warn("Can not read JAR file: {}", jarFile, ex);
+            LOG.warn("Can not createMappingFromStatements JAR file: {}", jarFile, ex);
             return null;
         }
         // We need to load jar/info.* file.
@@ -72,7 +72,7 @@ final class JarLoader {
         try (InputStream stream = jar.getInputStream(entry)) {
             reader.parse(stream, "http://localhost/base");
         } catch (IOException ex) {
-            LOG.info("Can't read info file in JAR file: {}", jarFile, ex);
+            LOG.info("Can't createMappingFromStatements info file in JAR file: {}", jarFile, ex);
             return null;
         }
         // Load definition into the JarComponent.
@@ -84,8 +84,7 @@ final class JarLoader {
             return null;
         }
         //
-        LOG.info("JAR file: {}", component.getIri());
-        LOG.info("\tpath: {}", component.getFile());
+        LOG.info("path: {}", component.getFile());
         return component;
     }
 

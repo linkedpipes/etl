@@ -3,8 +3,10 @@ package com.linkedpipes.etl.storage.pipeline;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
-import com.linkedpipes.etl.storage.mapping.MappingFacade;
+import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
+import com.linkedpipes.etl.storage.pipeline.transformation.TransformationFacade;
+import com.linkedpipes.etl.storage.pipeline.transformation.TransformationFailed;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.Template;
@@ -47,6 +49,9 @@ class PipelineManager {
 
     @Autowired
     private TemplateFacade templatesFacade;
+
+    @Autowired
+    private TransformationFacade transformationFacade;
 
     /**
      * Store pipelines.
@@ -94,62 +99,62 @@ class PipelineManager {
     protected void loadPipeline(File file)
             throws PipelineFacade.OperationFailed {
         Collection<Statement> pipelineRdf;
-        Pipeline.Info info;
+        PipelineInfo info;
         try {
             pipelineRdf = RdfUtils.read(file);
-            info = new Pipeline.Info();
+            info = new PipelineInfo();
             PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
         } catch (PojoLoader.CantLoadException | RdfUtils.RdfException ex) {
-            throw new PipelineFacade.OperationFailed("Can't read pipeline: {}",
+            throw new PipelineFacade.OperationFailed("Can't createMappingFromStatements pipeline: {}",
                     file, ex);
         }
-        // Migration.
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
-            // Perform migrationFacade of the pipeline definition.
+            backupPipeline(file, pipelineRdf);
+            // pipeline.
             try {
-                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
-                        templatesFacade, true);
-                info = new Pipeline.Info();
+                pipelineRdf = transformationFacade
+                        .migrateThrowOnWarning(pipelineRdf);
+                info = new PipelineInfo();
                 PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
-            } catch (PipelineUpdate.UpdateFailed |
-                    PojoLoader.CantLoadException ex) {
+            } catch (TransformationFailed | PojoLoader.CantLoadException ex) {
                 throw new PipelineFacade.OperationFailed(
-                        "Can't migrate pipeline: {}", file, ex);
+                        "Can't pipeline pipeline: {}", file, ex);
             }
-            // Create backup file.
-            String fileName = file.getName();
-            fileName = fileName.substring(0, fileName.lastIndexOf("."));
-            final File backupFile = new File(file.getParent(), fileName +
-                    "_" + DATE_FORMAT.format(new Date()) + ".trig.backup");
-            try {
-                RdfUtils.write(backupFile, RDFFormat.TRIG, pipelineRdf);
-            } catch (RdfUtils.RdfException ex) {
-                throw new PipelineFacade.OperationFailed(
-                        "Can't write backup file: {}", backupFile, ex);
-            }
-            // We need to create backup of the pipeline file
-            // and write updated pipeline to new file.
-            final File newFile = new File(file.getParent(), fileName + ".trig");
-            // Write new file.
-            try {
-                RdfUtils.write(newFile, RDFFormat.TRIG, pipelineRdf);
-            } catch (RdfUtils.RdfException ex) {
-                throw new PipelineFacade.OperationFailed(
-                        "Can't write new pipeline to file: {}", newFile, ex);
-            }
-            // Delete old file and switch to new file.
-            if (!file.equals(newFile)) {
-                file.delete();
-            }
-            file = newFile;
+            updatePipelineFile(file, pipelineRdf);
         }
         // Create pipeline record.
-        final Pipeline pipeline = new Pipeline(file, info);
+        Pipeline pipeline = new Pipeline(file, info);
         createPipelineReference(pipeline);
         infoFacade.onPipelineCreate(pipeline, pipelineRdf);
         //
         pipelines.put(pipeline.getIri(), pipeline);
         reserved.add(pipeline.getIri());
+    }
+
+    private void backupPipeline(File file, Collection<Statement> pipelineRdf)
+            throws PipelineFacade.OperationFailed {
+        String fileName = file.getName();
+        fileName = fileName.substring(0, fileName.lastIndexOf("."));
+        final File backupFile = new File(file.getParent(), fileName +
+                "_" + DATE_FORMAT.format(new Date()) + ".trig.backup");
+        try {
+            RdfUtils.write(backupFile, RDFFormat.TRIG, pipelineRdf);
+        } catch (RdfUtils.RdfException ex) {
+            throw new PipelineFacade.OperationFailed(
+                    "Can't exportForTemplates backup file: {}", backupFile, ex);
+        }
+    }
+
+    private void updatePipelineFile(
+            File file,
+            Collection<Statement> pipelineRdf)
+            throws PipelineFacade.OperationFailed {
+        try {
+            RdfUtils.write(file, RDFFormat.TRIG, pipelineRdf);
+        } catch (RdfUtils.RdfException ex) {
+            throw new PipelineFacade.OperationFailed(
+                    "Can't exportForTemplates updated pipeline to file: {}", file, ex);
+        }
     }
 
     /**
@@ -235,14 +240,14 @@ class PipelineManager {
 
     /**
      * Import pipeline from given data and apply given options. If the
-     * pipelineRdf is empty then create new empty pipeline.
+     * pipelineRdf is empty then importJarComponent new empty pipeline.
      *
      * @param pipelineRdf
      * @param optionsRdf
      * @return
      */
     public Pipeline createPipeline(Collection<Statement> pipelineRdf,
-            Collection<Statement> optionsRdf)
+                                   Collection<Statement> optionsRdf)
             throws PipelineFacade.OperationFailed {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         // Prepare pipeline IRI and update pipeline resources.
@@ -253,12 +258,12 @@ class PipelineManager {
             pipelineRdf = localizePipeline(pipelineRdf, optionsRdf, iri);
         }
         // Read pipeline info.
-        Pipeline.Info info = new Pipeline.Info();
+        PipelineInfo info = new PipelineInfo();
         try {
             PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
         } catch (PojoLoader.CantLoadException ex) {
             throw new PipelineFacade.OperationFailed(
-                    "Can't read pipeline after localization.", ex);
+                    "Can't createMappingFromStatements pipeline after localization.", ex);
         }
         // Add to pipeline list.
         final String fileName = iri.getLocalName() + ".trig";
@@ -274,7 +279,7 @@ class PipelineManager {
             pipeline.getFile().delete();
             //
             throw new PipelineFacade.OperationFailed(
-                    "Can't write pipeline to {}", pipeline.getFile(), ex);
+                    "Can't exportForTemplates pipeline to {}", pipeline.getFile(), ex);
         }
         //
         pipelines.put(iri.stringValue(), pipeline);
@@ -289,10 +294,10 @@ class PipelineManager {
      * @param pipelineRdf
      */
     public void updatePipeline(Pipeline pipeline,
-            Collection<Statement> pipelineRdf)
+                               Collection<Statement> pipelineRdf)
             throws PipelineFacade.OperationFailed {
         // Update pipeline in-memory model.
-        Pipeline.Info info = new Pipeline.Info();
+        PipelineInfo info = new PipelineInfo();
         try {
             PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
             pipeline.setInfo(info);
@@ -300,14 +305,14 @@ class PipelineManager {
             createPipelineReference(pipeline);
         } catch (PojoLoader.CantLoadException ex) {
             throw new PipelineFacade.OperationFailed(
-                    "Can't read pipeline.", ex);
+                    "Can't createMappingFromStatements pipeline.", ex);
         }
         // Write to disk.
         try {
             write(pipeline.getFile(), RDFFormat.TRIG, pipelineRdf);
         } catch (RdfUtils.RdfException ex) {
             throw new PipelineFacade.OperationFailed(
-                    "Can't write pipeline: {}", pipeline.getFile(), ex);
+                    "Can't exportForTemplates pipeline: {}", pipeline.getFile(), ex);
         }
         infoFacade.onPipelineUpdate(pipeline, pipelineRdf);
         // TODO Use events to notify all about pipeline change !
@@ -326,12 +331,6 @@ class PipelineManager {
         // TODO Use event to notify about changes !
     }
 
-    public Collection<Statement> localizePipeline(
-            Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
-            throws PipelineFacade.OperationFailed {
-        return localizePipeline(pipelineRdf, optionsRdf, null);
-    }
-
     /**
      * Return RDF definition of the pipeline with optional additional
      * information.
@@ -342,14 +341,14 @@ class PipelineManager {
      * @return
      */
     public Collection<Statement> getPipelineRdf(Pipeline pipeline,
-            boolean includeTemplate, boolean includeMapping)
-            throws PipelineFacade.OperationFailed {
+                                                boolean includeTemplate, boolean includeMapping)
+            throws BaseException {
         // Read pipeline.
         final Collection<Statement> pipelineRdf;
         try {
             pipelineRdf = RdfUtils.read(pipeline.getFile());
         } catch (Exception ex) {
-            throw new PipelineFacade.OperationFailed("Can't read file.", ex);
+            throw new PipelineFacade.OperationFailed("Can't createMappingFromStatements file.", ex);
         }
         // Add additional data.
         Set<Template> templates = null;
@@ -367,7 +366,7 @@ class PipelineManager {
                 //
                 additionalRdf.addAll(templateRdf);
                 additionalRdf.addAll(templatesFacade
-                        .getConfigurationTemplate(template));
+                        .getConfig(template));
             }
         }
         if (includeMapping) {
@@ -375,7 +374,7 @@ class PipelineManager {
                 templates = getTemplates(pipelineRdf, pipeline.getIri());
             }
             //
-            additionalRdf.addAll(mappingFacade.write(templates));
+            additionalRdf.addAll(mappingFacade.exportForTemplates(templates));
         }
         // Merge and return.
         pipelineRdf.addAll(additionalRdf);
@@ -390,14 +389,16 @@ class PipelineManager {
      * @return
      */
     private Set<Template> getTemplates(Collection<Statement> pipelineRdf,
-            String pipelineIri) {
+                                       String pipelineIri) {
         final Set<Template> templates = new HashSet<>();
         for (Statement statement : pipelineRdf) {
             if (statement.getPredicate().stringValue().equals(
                     "http://linkedpipes.com/ontology/template") &&
                     statement.getContext().stringValue().equals(pipelineIri)) {
-                templates.addAll(templatesFacade.getTemplates(
-                        statement.getObject().stringValue(), false));
+                Template template = templatesFacade.getTemplate(
+                        statement.getObject().stringValue());
+                templates.addAll(templatesFacade.getAncestorsWithoutJarTemplate(
+                        template));
             }
         }
         return templates;
@@ -416,60 +417,26 @@ class PipelineManager {
             Collection<Statement> optionsRdf,
             IRI pipelineIri)
             throws PipelineFacade.OperationFailed {
-        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        // Check if we have some data.
-        if (pipelineRdf.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-        // Load localization import.
-        final PipelineOptions options = new PipelineOptions();
         try {
-            PojoLoader.loadOfType(optionsRdf, PipelineOptions.TYPE, options);
-        } catch (PojoLoader.CantLoadException ex) {
-            throw new PipelineFacade.OperationFailed("Can't load options.", ex);
-        }
-        // Load pipeline info.
-        Pipeline.Info info = new Pipeline.Info();
-        try {
-            PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
-        } catch (PojoLoader.CantLoadException ex) {
+            pipelineRdf = transformationFacade.localizeAndMigrate(
+                    pipelineRdf, optionsRdf, pipelineIri);
+        } catch (TransformationFailed ex) {
             throw new PipelineFacade.OperationFailed(
-                    "Can't read pipeline.", ex);
+                    "Can't transform pipeline.", ex);
         }
-        // Import templates.
-        if (!options.isLocal()) {
-            try {
-                pipelineRdf = PipelineUpdate.updateTemplates(pipelineRdf,
-                        templatesFacade, mappingFacade,
-                        options.isImportTemplates(),
-                        options.isUpdateTemplates());
-            } catch (BaseException ex) {
-                throw new PipelineFacade.OperationFailed(
-                        "Can't import templates.", ex);
-            }
-        }
-        // Migration.
-        if (info.getVersion() != Pipeline.VERSION_NUMBER) {
-            try {
-                pipelineRdf = PipelineUpdate.migrate(pipelineRdf,
-                        templatesFacade, false);
-            } catch (PipelineUpdate.UpdateFailed ex) {
-                throw new PipelineFacade.OperationFailed(
-                        "Migration failed from version: {}",
-                        info.getVersion(), ex);
-            }
-        }
-        // Update pipeline IRI.
-        if (pipelineIri != null) {
-            pipelineRdf = PipelineUpdate.updateResources(pipelineRdf,
-                    pipelineIri.stringValue());
-        } else {
-            pipelineIri = valueFactory.createIRI(info.getIri());
-        }
-        // Update labels.
-        if (options.getLabels() != null && !options.getLabels().isEmpty()) {
-            pipelineRdf = PipelineUpdate.updateLabels(pipelineRdf, pipelineIri,
-                    options.getLabels());
+        return pipelineRdf;
+    }
+
+    public Collection<Statement> localizePipeline(
+            Collection<Statement> pipelineRdf,
+            Collection<Statement> optionsRdf)
+            throws PipelineFacade.OperationFailed {
+        try {
+            pipelineRdf = transformationFacade.localizeAndMigrate(
+                    pipelineRdf, optionsRdf, null);
+        } catch (TransformationFailed ex) {
+            throw new PipelineFacade.OperationFailed(
+                    "Can't transform pipeline.", ex);
         }
         return pipelineRdf;
     }

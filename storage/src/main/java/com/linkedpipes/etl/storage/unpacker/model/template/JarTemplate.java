@@ -40,7 +40,7 @@ public class JarTemplate extends Template {
                 TemplatePort port = new TemplatePort();
                 ports.add(port);
                 return port;
-            case LP_PIPELINE.HAS_SUPPORT_CONTROLS:
+            case LP_PIPELINE.HAS_SUPPORT_CONTROL:
                 supportControl = value.asBoolean();
                 return null;
             default:

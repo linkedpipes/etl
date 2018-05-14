@@ -64,13 +64,13 @@ public class PipelineFacade {
         try {
             return RdfUtils.read(pipelineFile);
         } catch (Exception ex) {
-            throw new OperationFailed("Can't read file.", ex);
+            throw new OperationFailed("Can't createMappingFromStatements file.", ex);
         }
     }
 
     public Collection<Statement> getPipelineRdf(Pipeline pipeline,
             boolean includeTemplate, boolean includeMapping)
-            throws OperationFailed {
+            throws BaseException {
         return pipelines.getPipelineRdf(pipeline, includeTemplate,
                 includeMapping);
     }
