@@ -106,7 +106,7 @@ public class MigrateV1ToV2 {
         String template = component.getReference(HAS_TEMPLATE)
                 .getResource().stringValue();
         String coreTemplate = getCoreTemplate(template);
-        if (shouldUpdate(coreTemplate)) {
+        if (shouldUpdate(coreTemplate) && hasConfiguration(component)) {
             String configuration = component.getReference(HAS_CONFIGURATION)
                     .getResource().stringValue();
             updateConfigurations(configuration, coreTemplate);
@@ -117,8 +117,15 @@ public class MigrateV1ToV2 {
         return MAPPING.containsKey(iri);
     }
 
+    public static boolean hasConfiguration(RdfObjects.Entity component) {
+        return component.getReferences(HAS_CONFIGURATION).size() == 1;
+    }
+
     private String getCoreTemplate(String iri) {
         Template template = templateFacade.getTemplate(iri);
+        if (template == null) {
+            throw new RuntimeException("Missing template: " + iri);
+        }
         return templateFacade.getRootTemplate(template).getIri();
     }
 
