@@ -84,7 +84,7 @@ final class JarLoader {
             return null;
         }
         //
-        LOG.info("path: {}", component.getFile());
+        LOG.debug("path: {}", component.getFile());
         return component;
     }
 
