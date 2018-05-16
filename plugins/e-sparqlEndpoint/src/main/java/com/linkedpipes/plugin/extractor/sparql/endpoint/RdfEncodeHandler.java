@@ -8,7 +8,30 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.BitSet;
+
 class RdfEncodeHandler extends AbstractRDFHandler {
+
+    private static BitSet allowed = new BitSet(256);
+
+    static {
+        // IRIREF ::=  '<' ([^#x00-#x20<>"{}|^`\] | UCHAR)* '>'
+        allowed.set(0, 256);
+        for (int i = 0; i < 32; ++i) {
+            allowed.clear(i);
+        }
+        allowed.clear('<');
+        allowed.clear('>');
+        allowed.clear('"');
+        allowed.clear('{');
+        allowed.clear('}');
+        allowed.clear('|');
+        allowed.clear('^');
+        allowed.clear('`');
+        allowed.clear('\\');
+    }
 
     private static final Logger LOG =
             LoggerFactory.getLogger(RdfEncodeHandler.class);
@@ -42,15 +65,20 @@ class RdfEncodeHandler extends AbstractRDFHandler {
     @Override
     public void handleStatement(Statement st)
             throws RDFHandlerException {
-        handler.handleStatement(checkStatement(st));
+        try {
+            handler.handleStatement(checkStatement(st));
+        } catch (UnsupportedEncodingException ex) {
+            throw new RDFHandlerException(ex);
+        }
     }
 
-    private Statement checkStatement(Statement st) {
+    private Statement checkStatement(Statement st)
+            throws UnsupportedEncodingException {
         statementChanged = false;
-        Resource subject = escapeOrReturnNull(st.getSubject());
-        IRI predicate = escapeOrReturnNull(st.getPredicate());
-        Value object = escapeOrReturnNull(st.getObject());
-        Resource context = escapeOrReturnNull(st.getContext());
+        Resource subject = makeSave(st.getSubject());
+        IRI predicate = makeSave(st.getPredicate());
+        Value object = makeSave(st.getObject());
+        Resource context = makeSave(st.getContext());
         if (statementChanged) {
             return valueFactory.createStatement(
                     subject, predicate, object, context);
@@ -59,50 +87,49 @@ class RdfEncodeHandler extends AbstractRDFHandler {
         }
     }
 
-    private <T extends Value> T escapeOrReturnNull(T value) {
+    private <T extends Value> T makeSave(T value)
+            throws UnsupportedEncodingException {
         if (!(value instanceof IRI)) {
             return value;
         }
-        String strValue = value.stringValue();
-        StringBuilder builder = new StringBuilder(strValue.length());
+        //
+        String iriAsString = value.stringValue();
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream(
+                iriAsString.length() + 6);
+        // Inspired by URLCodec.encodeUrl
         boolean valueChanged = false;
-        for (int index = 0; index < strValue.length(); ++index) {
-            char character = strValue.charAt(index);
-            switch (character) {
-                case ' ':
-                    builder.append("%20");
+        for (byte c : iriAsString.getBytes("UTF-8")) {
+            int b = c;
+            if (b < 0) {
+                b = 256 + b;
+            }
+            if (allowed.get(b)) {
+                // Special handling of a space, we do not use '+'.
+                if (b == ' ') {
                     valueChanged = true;
-                    break;
-                case '\\':
-                    builder.append("%5C");
-                    valueChanged = true;
-                    break;
-                case '>':
-                    builder.append("%3E");
-                    valueChanged = true;
-                    break;
-                case '<':
-                    builder.append("%3C");
-                    valueChanged = true;
-                    break;
-                case '{':
-                    builder.append("%7B");
-                    valueChanged = true;
-                    break;
-                case '}':
-                    builder.append("%7D");
-                    valueChanged = true;
-                    break;
-                default:
-                    builder.append(character);
-                    break;
+                    buffer.write('%');
+                    buffer.write('2');
+                    buffer.write('0');
+                } else {
+                    buffer.write(b);
+                }
+            } else {
+                valueChanged = true;
+                buffer.write('%');
+                char hex1 = Character.toUpperCase(
+                        Character.forDigit((b >> 4) & 0xF, 16));
+                char hex2 = Character.toUpperCase(
+                        Character.forDigit(b & 0xF, 16));
+                buffer.write(hex1);
+                buffer.write(hex2);
             }
         }
         if (valueChanged) {
+            String encoded = new String(buffer.toByteArray(), "UTF-8");
             LOG.warn("Invalid value changed: {} -> {}",
-                    value.stringValue(), builder.toString());
+                    iriAsString, encoded);
             statementChanged = true;
-            return (T) valueFactory.createIRI(builder.toString());
+            return (T) valueFactory.createIRI(encoded);
         } else {
             return value;
         }
