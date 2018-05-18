@@ -17,6 +17,8 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,9 @@ import static com.linkedpipes.etl.storage.rdf.RdfUtils.write;
  */
 @Service
 class PipelineManager {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(PipelineManager.class);
 
     private static final SimpleDateFormat DATE_FORMAT
             = new SimpleDateFormat("yyyy-MM-dd");
@@ -79,7 +84,7 @@ class PipelineManager {
             try {
                 loadPipeline(file);
             } catch (Exception ex) {
-                throw new RuntimeException("Invalid pipeline: " + file, ex);
+                LOG.error("Ignoring invalid pipeline: {}", file, ex);
             }
         }
     }
