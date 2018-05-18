@@ -91,7 +91,7 @@ public class PipelineUpdate {
             case 1: // Current version.
                 break;
             default:
-                throw new UpdateFailed("Invalid version!");
+                throw new UpdateFailed("Invalid version: {}", version);
         }
         // Replace information about version.
         pipeline.delete(Pipeline.HAS_VERSION);
