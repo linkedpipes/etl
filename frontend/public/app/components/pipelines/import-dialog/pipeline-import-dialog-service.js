@@ -49,7 +49,6 @@
                     return;
             }
             promise.then((pipeline) => {
-                console.log(">",pipeline);
                 $mdDialog.hide({"pipeline": pipeline});
             }).catch((error) => {
                 $mdDialog.cancel();
@@ -99,7 +98,6 @@
         }
 
         function onPipelineTab() {
-            console.log("onPipelineTab");
             if ($scope.pipelineLoaded) {
                 return;
             } else {

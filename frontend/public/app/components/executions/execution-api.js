@@ -4,9 +4,9 @@
     }
 })(() => {
 
-    function cancelExecution($http, id, message) {
+    function cancelExecution($http, iri, message) {
         const body = {"reason": message};
-        const url = '/resources/executions/cancel?id=' + id;
+        const url = '/resources/executions/cancel?id=' + iri;
         return $http.post(url, body);
     }
 

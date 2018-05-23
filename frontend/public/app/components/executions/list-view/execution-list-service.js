@@ -25,15 +25,10 @@
 
         function execute(execution) {
             const iri = execution["pipeline"]["iri"];
-            executePipeline(iri);
-        }
-
-        function executePipeline(iri) {
             pipelineApi.execute($http, iri)
                 .then(updateRepository)
                 .catch(handleExecutionStartFailure);
         }
-
         function updateRepository() {
             repository.update($scope.repository);
         }
@@ -54,20 +49,20 @@
 
         function handleExecutionCancelFailure(response) {
             $status.httpPostFailed({
-                'title': "Can't cancel the execution.",
-                'response': response
+                "title": "Can't cancel the execution.",
+                "response": response
             });
         }
 
         function openLogTail(execution) {
             const useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                'controller': 'execution.log-tail.dialog',
-                'templateUrl': 'app/components/executions/log-tail/execution-log-tail-dialog.html',
-                'clickOutsideToClose': false,
-                'fullscreen': useFullScreen,
-                'locals': {
-                    'execution': execution
+                "controller": "execution.log-tail.dialog",
+                "templateUrl": "app/components/executions/log-tail/execution-log-tail-dialog.html",
+                "clickOutsideToClose": false,
+                "fullscreen": useFullScreen,
+                "locals": {
+                    "execution": execution
                 }
             });
         }

@@ -39,7 +39,7 @@
 
     function addTagsToTagList(item, allTagList) {
         item["tags"].forEach((tag) => {
-            var tagIndex = allTagList.indexOf(tag);
+            const tagIndex = allTagList.indexOf(tag);
             if (tagIndex === -1) {
                 allTagList.push(tag);
             }

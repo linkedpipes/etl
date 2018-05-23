@@ -73,8 +73,8 @@
 
         function createPipeline() {
             pipelineApi.create($http)
-            .then(redirectToPipelineDetail)
-            .catch(handleCreatePipelineFailure);
+                .then(redirectToPipelineDetail)
+                .catch(handleCreatePipelineFailure);
         }
 
         // TODO Move to "navigation" module.
