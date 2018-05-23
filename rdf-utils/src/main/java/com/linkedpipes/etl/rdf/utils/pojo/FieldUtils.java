@@ -47,8 +47,9 @@ class FieldUtils {
             return new PropertyDescriptor(field.getName(),
                     field.getDeclaringClass());
         } catch (IntrospectionException ex) {
-            throw new LoaderException("Can't create property descriptor: {}.{}",
-                    field.getDeclaringClass().getName(), field.getName(), ex);
+            throw new LoaderException(
+                    "Can't create property descriptor for '{}' on class '{}'",
+                    field.getName(), field.getDeclaringClass().getName(), ex);
         }
     }
 
