@@ -29,9 +29,9 @@
         }
 
         function executePipeline(pipeline) {
-            pipelineApi.execute($http, pipeline)
-            .then(redirectToExecutionList)
-            .catch(handleExecutionPostFailure);
+            pipelineApi.execute($http, pipeline.iri)
+                .then(redirectToExecutionList)
+                .catch(handleExecutionPostFailure);
         }
 
         // TODO Move to "navigation" module.
@@ -48,9 +48,9 @@
         }
 
         function executeWithoutDebugData(pipeline) {
-            pipelineApi.executeWithoutDebugData($http, pipeline)
-            .then(redirectToExecutionList)
-            .catch(handleExecutionPostFailure);
+            pipelineApi.executeWithoutDebugData($http, pipeline.iri)
+                .then(redirectToExecutionList)
+                .catch(handleExecutionPostFailure);
         }
 
         function exportPipeline(pipeline, $event) {
