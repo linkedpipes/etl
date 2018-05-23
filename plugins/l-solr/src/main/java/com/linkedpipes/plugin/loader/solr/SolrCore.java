@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.loader.solr;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.List;
 
 class SolrCore {
@@ -22,12 +25,22 @@ class SolrCore {
 
     private final ExceptionFactory exceptionFactory;
 
+    private String authorizationHeader = null;
+
     public SolrCore(String url, String coreName,
-            ExceptionFactory exceptionFactory) {
+                    ExceptionFactory exceptionFactory) {
         this.serverUrl = url;
         this.coreName = coreName;
         this.exceptionFactory = exceptionFactory;
     }
+
+    public void setCredentials(String userName, String password) {
+        String auth = userName + ":" + password;
+        byte[] authBytes = auth.getBytes(Charset.forName("ISO-8859-1"));
+        byte[] encodedAuth = Base64.encodeBase64(authBytes);
+        this.authorizationHeader = "Basic " + new String(encodedAuth);
+    }
+
 
     public void deleteData() throws LpException {
         URL url = createDeleteUrl();
@@ -91,14 +104,6 @@ class SolrCore {
         }
     }
 
-    private URL createUrl() throws LpException {
-        try {
-            return new URL(serverUrl);
-        } catch (MalformedURLException ex) {
-            throw exceptionFactory.failure("Invalid Solr URL.", ex);
-        }
-    }
-
     private HttpURLConnection createHttpConnection(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
@@ -111,7 +116,15 @@ class SolrCore {
         // large data, otherwise HttpURLConnection tries to store all
         // the data to calculate length (for header).
         connection.setChunkedStreamingMode(0);
+        addAuthorizationHeader(connection);
         return connection;
+    }
+
+    private void addAuthorizationHeader(URLConnection connection) {
+        if (authorizationHeader == null) {
+            return;
+        }
+        connection.setRequestProperty("Authorization", authorizationHeader);
     }
 
     private void checkResponse(HttpURLConnection connection)

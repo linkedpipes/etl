@@ -19,6 +19,18 @@ define([], function () {
         "replace": {
             "$type": "bool",
             "$label": "Replace data"
+        },
+        "useAuthentication": {
+            "$type": "bool",
+            "$label": "Use authentication"
+        },
+        "userName": {
+            "$type": "str",
+            "$label": "User name"
+        },
+        "password": {
+            "$type": "str",
+            "$label": "Password"
         }
     };
 

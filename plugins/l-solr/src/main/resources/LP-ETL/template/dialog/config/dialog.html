@@ -13,5 +13,24 @@
     <md-switch ng-hide="dialog.replace.hide"
                ng-disabled="dialog.replace.disabled || dialog.replace.inherit"
                ng-model="dialog.replace.value">Clear target core
-    </md-switch>    
+    </md-switch>
+    <md-switch ng-model="dialog.useAuthentication.value"
+               ng-disabled="dialog.useAuthentication.disabled || dialog.useAuthentication.inherit"
+               ng-hide="dialog.useAuthentication.hide">Use authentication
+    </md-switch>
+    <div layout-gt-sm="row" ng-show="dialog.useAuthentication.value">
+        <md-input-container class="md-block" ng-hide="dialog.userName.hide"
+                            flex>
+            <label>User name</label>
+            <input ng-model="dialog.userName.value"
+                   ng-disabled="dialog.userName.disabled || dialog.userName.inherit"
+                   placeholder="dba">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.password.hide"
+                            flex>
+            <label>Password</label>
+            <input type="password" ng-model="dialog.password.value"
+                   ng-disabled="dialog.password.disabled || dialog.password.inherit">
+        </md-input-container>
+    </div>
 </div>

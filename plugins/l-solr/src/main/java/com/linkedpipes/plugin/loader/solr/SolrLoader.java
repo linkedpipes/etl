@@ -43,9 +43,17 @@ public final class SolrLoader implements Component, SequentialExecution {
         progressReport.done();
     }
 
-    private void initializeSolr() throws LpException {
-        solr = new SolrCore(configuration.getServer(), configuration.getCore(),
+    private void initializeSolr() {
+        solr = new SolrCore(
+                configuration.getServer(), configuration.getCore(),
                 exceptionFactory);
+
+        if (configuration.isUseAuthentication()) {
+            solr.setCredentials(
+                    configuration.getUserName(), configuration.getPassword());
+        }
+
+
     }
 
 }
