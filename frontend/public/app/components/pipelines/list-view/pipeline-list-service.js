@@ -104,16 +104,17 @@
         }
 
         function copyPipeline(pipeline) {
+            // TODO As we remove $http we need to notify $scope manually.
             pipelineApi.copy($http, pipeline)
-            .then(handleCopyPipelineSuccess)
-            .catch(reportCopyPipelineFailure);
+                .then(handleCopyPipelineSuccess)
+                .catch(reportCopyPipelineFailure)
         }
 
         function handleCopyPipelineSuccess() {
             $status.success({
                 "title": "Pipeline has been successfully copied."
             });
-            repository.update($scope.repository);
+            return repository.update($scope.repository);
         }
 
         function reportCopyPipelineFailure(response) {
@@ -127,17 +128,23 @@
             const dialogText = "Would you like to delete pipeline '"
                 + pipeline.label + "'?";
 
-            const confirmDialog =
-                $mdDialog.confirm()
+            const confirmDialog = $mdDialog.confirm()
                 .title(dialogText)
                 .ariaLabel("Delete pipeline.")
                 .targetEvent(event)
                 .ok("Delete pipeline")
                 .cancel("Cancel");
 
-            $mdDialog.show(confirmDialog).then(() => {
-                repository.delete(pipeline, $scope.repository);
-            });
+            $mdDialog.show(confirmDialog)
+                .then(() => {
+                        // This is out of angular scope.
+                        repository.delete($scope.repository, pipeline)
+                            .then(() => $scope.$apply());
+                    },
+                    () => {
+                        // No action.
+                    }
+                );
         }
 
         function onChipsFilterChange() {
@@ -149,12 +156,14 @@
         }
 
         function loadPipelines() {
-            repository.load($scope.repository).catch((response) => {
-                $status.httpGetFailed({
-                    "title": "Can't load pipelines.",
-                    "response": response
-                });
-            });
+            return repository.load($scope.repository)
+                .catch((response) => {
+                    $status.httpGetFailed({
+                        "title": "Can't load pipelines.",
+                        "response": response
+                    });
+                })
+                .then(() => $scope.$apply());
         }
 
         function getTagsMatchingQuery(query) {
@@ -164,8 +173,11 @@
             });
         }
 
-        function increaseVisibleItemLimit() {
+        function increaseVisibleItemLimit(byButton) {
             repository.increaseVisibleItemLimit($scope.repository);
+            if (!byButton) {
+                $scope.$apply();
+            }
         }
 
         return {

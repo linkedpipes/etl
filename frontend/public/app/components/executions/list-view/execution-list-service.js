@@ -87,7 +87,7 @@
                     "title": "Can't load executions.",
                     "response": response
                 });
-            });
+            }).then(() => $scope.$apply());
         }
 
         function increaseVisibleItemLimit(byButton) {

@@ -111,7 +111,7 @@
                         "title": "Can't load local pipelines.",
                         "response": response
                     });
-                });
+                }).then(() => $scope.$apply());;
             }
         }
 

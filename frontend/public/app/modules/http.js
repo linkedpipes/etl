@@ -1,3 +1,8 @@
+/**
+ * Then use with Angular instead of $http, a call of $scope.$apply() must
+ * be called to notify Angular about changes in scope.
+ * Internal $http utilizes $q, which would do thus for us.
+ */
 ((definition) => {
     if (typeof define === "function" && define.amd) {
         define([], definition);
