@@ -110,11 +110,10 @@ public class CouchDb {
         addAuthorizationHeader(connection);
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         httpConnection.setRequestMethod(method);
-
         return httpConnection;
     }
 
-    public void addAuthorizationHeader(URLConnection connection) {
+    private void addAuthorizationHeader(URLConnection connection) {
         if (authorizationHeader == null) {
             return;
         }
@@ -152,8 +151,8 @@ public class CouchDb {
         return httpConnection;
     }
 
-    private void writeFilesAsBulkDocument(OutputStream stream,
-            Collection<File> files) throws IOException {
+    private void writeFilesAsBulkDocument(
+            OutputStream stream, Collection<File> files) throws IOException {
         PrintWriter writer = new PrintWriter(
                 new OutputStreamWriter(stream, "UTF-8"),
                 true);
@@ -172,8 +171,7 @@ public class CouchDb {
         writer.flush();
     }
 
-    private void checkStatus(HttpURLConnection connection)
-            throws IOException, LpException {
+    private void checkStatus(HttpURLConnection connection) throws LpException {
         int responseCode;
         try {
             responseCode = connection.getResponseCode();
