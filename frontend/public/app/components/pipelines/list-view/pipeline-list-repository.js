@@ -84,8 +84,8 @@
         item["filterTags"] = true;
     }
 
-    function deletePipeline(pipeline, repository) {
-        repositoryService.delete(repository, pipeline.id)
+    function deletePipeline(repository, pipeline) {
+        return repositoryService.deleteItem(repository, pipeline)
             .then(() => repositoryService.update(repository));
     }
 
@@ -106,7 +106,8 @@
                 "onNewItem": (item) => addTagsToTagList(item, filters.tagsAll),
                 "newItemDecorator": decorateItem,
                 "filter": (item, options) => filter(item, filters, options),
-                "visibleItemLimit": getVisibleItemLimit()
+                "visibleItemLimit": getVisibleItemLimit(),
+                "id": (item) => item["iri"]
             });
         }
 

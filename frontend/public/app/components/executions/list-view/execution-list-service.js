@@ -46,7 +46,7 @@
         }
 
         function cancelExecution(execution) {
-            executionApi.cancel($http, execution.id, "User request")
+            executionApi.cancel($http, execution.iri, "User request")
                 .then(() => {
                     execution.cancelling = true;
                 }).catch(handleExecutionCancelFailure);

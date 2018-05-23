@@ -15,12 +15,8 @@
     // TODO Export to navigation module.
     const PIPELINE_EDIT_URL = "#/pipelines/edit/canvas";
 
-    // TODO Merge id and iri into one value.
     // TODO Move predicates to vocabulary.
     const REPOSITORY_TEMPLATE = {
-        'id': {
-            '$resource': null
-        },
         'iri': {
             '$resource': null
         },
@@ -308,7 +304,7 @@
     }
 
     function deleteExecution(execution, repository) {
-        repositoryService.delete(repository, execution.id)
+        return repositoryService.deleteItem(repository, execution)
             .then(() => repositoryService.update(repository));
     }
 
@@ -330,7 +326,8 @@
                 "newItemDecorator": decorateItem,
                 "filter": (item, options) => filter(item, filters, options),
                 "order": compareExecutions,
-                "visibleItemLimit": getVisibleItemLimit()
+                "visibleItemLimit": getVisibleItemLimit(),
+                "id": (item) => item["iri"]
             });
         }
 

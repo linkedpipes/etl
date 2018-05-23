@@ -3,9 +3,6 @@
  *
  * We can also add optimization of digest cycle (component site):
  * https://coderwall.com/p/d_aisq/speeding-up-angularjs-s-digest-loop
- *
- * In order to use updates the template must contains 'id' property
- * unique for each item.
  */
 ((definition) => {
     if (typeof define === "function" && define.amd) {
@@ -62,6 +59,8 @@
             // filter change, ..
             "_onChange": () => {
             },
+            // Function that returns ID for the given record.
+            "_id": config.id,
             // Function used to filter items.
             "_filterFunction": filter,
             // Used to incremental update, key to used when fetching next data.
@@ -162,11 +161,11 @@
 
     function onUpdateFailed(error) {
         // TODO Propagate and show error message.
-        console.log("Repository updating failed.", error);
+        console.error("Repository updating failed.", error);
     }
 
     function updateRepositoryFromFetch(repository, response) {
-        if (response.data.length == 0 && response.tombstones.length == 0) {
+        if (response.data.length === 0 && response.tombstones.length === 0) {
             return false;
         }
         mergeItemsToRepository(repository, response.data);
@@ -177,7 +176,7 @@
 
     function mergeItemsToRepository(repository, newData) {
         newData.forEach((item) => {
-            const index = getIndexOfItem(repository, item.id);
+            const index = getIndexOfItem(repository, repository._id(item));
             if (index === undefined) {
                 repository._onNewItem(item);
                 repository.data.push(item);
@@ -191,7 +190,8 @@
     function getIndexOfItem(repository, id) {
         // TODO We can optimize this with id-index map.
         for (let index = 0; index < repository.data.length; index++) {
-            if (repository.data[index].id === id) {
+            const indexId = repository._id(repository.data[index]);
+            if (indexId === id) {
                 return index;
             }
         }
@@ -222,31 +222,33 @@
         return repository._itemSource.fetch().then((response) => {
             console.time("repository.fullUpdate");
             updateRepositoryFromFetch(repository, response);
-            removeMissingItems(repository.data, response.data);
-            // TODO Do not refresh all filters.
+            removeMissingItems(repository, response.data);
+            // TODO OPTIMIZE Do not refresh all filters.
             filterItems(repository, repository.data);
             callOnChange(repository);
             console.timeEnd("repository.fullUpdate");
         }).catch(onUpdateFailed);
     }
 
-
-    function removeMissingItems(data, referenceData) {
+    function removeMissingItems(repository, referenceData) {
+        const data = repository.data;
         const referenceIds = new Set();
-        referenceData.forEach(item => referenceIds.add(item["id"]));
+        referenceData.forEach(item => referenceIds.add(repository._id(item)));
         for (let index = data.length - 1; index >= 0; --index) {
-            if (referenceIds.has(data[index].id)) {
+            const id = repository._id(data[index]);
+            if (referenceIds.has(id)) {
                 continue;
             }
             data.splice(index, 1);
         }
     }
 
-    function deleteItem(repository, id) {
-        return repository._itemSource.delete(id).catch((error) => {
+    function deleteItem(repository, item) {
+        const id = repository._id(item);
+        return repository._itemSource.deleteById(id).catch((error) => {
             console.warn("Repository delete request failed.", error);
             throw error;
-        })
+        });
     }
 
     return {
@@ -262,7 +264,7 @@
          */
         "onFilterChange": onFilterChange,
         "update": updateItems,
-        "delete": deleteItem
+        "deleteItem": deleteItem
     }
 
 });

@@ -13,11 +13,7 @@
     const LP = vocab.LP;
     const SKOS = vocab.SKOS;
 
-    // TODO Merge id and iri into one value.
     const REPOSITORY_TEMPLATE = {
-        "id": {
-            "$resource": null
-        },
         "iri": {
             "$resource": null
         },
@@ -65,7 +61,8 @@
                 "itemSource": builder.build(),
                 "newItemDecorator": decorateItem,
                 "filter": (item, options) => filter(item, filters, options),
-                "visibleItemLimit": getVisibleItemLimit()
+                "visibleItemLimit": getVisibleItemLimit(),
+                "id": (item) => item["iri"]
             });
         }
 

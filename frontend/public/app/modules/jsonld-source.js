@@ -38,7 +38,7 @@
     function createWithIncrementalUpdateSupport(config) {
         return {
             "fetch": (changedSince) => fetchChangedSince(changedSince, config),
-            "delete": (id) => deleteItem(id),
+            "deleteById": deleteById,
             "incrementalUpdateSupport": true
         };
     }
@@ -83,7 +83,7 @@
     function create(config) {
         return {
             "fetch": () => fetch(config),
-            "delete": (id) => deleteItem(id),
+            "deleteById": deleteById,
             "incrementalUpdateSupport": false
         };
     }
@@ -96,7 +96,7 @@
             config.itemTemplate);
     }
 
-    function deleteItem(id) {
+    function deleteById(id) {
         const url = id;
         return http.delete(url);
     }
