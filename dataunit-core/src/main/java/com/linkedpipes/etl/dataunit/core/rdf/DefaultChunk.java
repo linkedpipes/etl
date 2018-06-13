@@ -35,8 +35,8 @@ class DefaultChunk implements ChunkedTriples.Chunk {
                 }
             });
             parser.parse(reader, "http://localhost/base/");
-        } catch (IOException ex) {
-            throw new LpException("Can't load chunk.", ex);
+        } catch (Exception ex) {
+            throw new LpException("Can't load chunk: {}", file.getName(), ex);
         }
         return statements;
     }
