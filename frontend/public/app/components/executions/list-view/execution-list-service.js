@@ -30,7 +30,8 @@
                 .catch(handleExecutionStartFailure);
         }
         function updateRepository() {
-            repository.update($scope.repository);
+            repository.update($scope.repository)
+                .catch(angular.noop);
         }
 
         function handleExecutionStartFailure(response) {
@@ -77,12 +78,9 @@
         }
 
         function loadExecutions() {
-            repository.load($scope.repository).catch((response) => {
-                $status.httpGetFailed({
-                    "title": "Can't load executions.",
-                    "response": response
-                });
-            }).then(() => $scope.$apply());
+            repository.load($scope.repository)
+                .catch(angular.noop)
+                .then(() => $scope.$apply());
         }
 
         function increaseVisibleItemLimit(byButton) {

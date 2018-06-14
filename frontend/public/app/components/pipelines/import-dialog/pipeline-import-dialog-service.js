@@ -104,12 +104,7 @@
                 repository.load($scope.repository).then(() => {
                     console.log("Pipeline loaded.", $scope.repository);
                     $scope.pipelineLoaded = true;
-                }).catch((response) => {
-                    $status.httpGetFailed({
-                        "title": "Can't load local pipelines.",
-                        "response": response
-                    });
-                }).then(() => $scope.$apply());;
+                }).catch(angular.noop).then(() => $scope.$apply());
             }
         }
 

@@ -156,14 +156,10 @@
         }
 
         function loadPipelines() {
-            return repository.load($scope.repository)
-                .catch((response) => {
-                    $status.httpGetFailed({
-                        "title": "Can't load pipelines.",
-                        "response": response
-                    });
-                })
-                .then(() => $scope.$apply());
+            return repository
+                .load($scope.repository)
+                .catch(angular.noop)
+                .then(() => {console.log($scope.repository); $scope.$apply()});
         }
 
         function getTagsMatchingQuery(query) {

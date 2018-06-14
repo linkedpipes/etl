@@ -41,6 +41,10 @@
             "areDataReady": false,
             // True if there are no data in the data source.
             "isEmpty": true,
+            // If set there was error during loading the data,
+            // in such case the error message should be displayed instead of
+            // data.
+            "error": undefined,
             // All the data retrieved from the source, contains also
             // filtered out items.
             "data": [],
@@ -80,10 +84,9 @@
                 repository._lastUpdateStamp = response.timeStamp;
             }
             onLoadingFinished(repository);
-        }).catch((error) => {
-            console.warn("Repository initial fetch failed.", error);
-            onLoadingFailed(repository);
-            throw error;
+        }).catch((response) => {
+            onLoadingFailed(repository, response);
+            return Promise.reject(response);
         });
     }
 
@@ -117,10 +120,35 @@
 
     function onLoadingFinished(repository) {
         repository.areDataReady = true;
+        repository.error = undefined;
     }
 
-    function onLoadingFailed(repository) {
+    function onLoadingFailed(repository, response) {
         repository.areDataReady = false;
+        repository.error = errorMessage(response);
+    }
+
+    function errorMessage(response) {
+        console.warn("repository.errorMessage", response);
+        switch(response.error) {
+            case "server":
+                return serverErrorMessage(response);
+            case "parsing":
+                return "Failed to parser server response";
+            case "offline":
+                return "Can't connect to the server.";
+            default:
+                return "Unexpected type of error.";
+        }
+    }
+
+    function serverErrorMessage(response){
+        switch (response.status) {
+            case 503:
+                return "Backend service is unavailable.";
+            default:
+                return "Request failed with status: " + response.status + ".";
+        }
     }
 
     /**
@@ -133,12 +161,14 @@
 
     function updateItems(repository) {
         if (!repository.areDataReady) {
-            console.warn("Calling update before finishing initial fetch, " +
+            console.log("Calling update before finishing initial fetch, " +
                 "calling initialFetch instead.");
             return initialFetch(repository);
         }
+        // If there was an error we request full data refresh.
         if (repository._supportIncrementalUpdate &&
-            repository._lastUpdateStamp !== undefined) {
+            repository._lastUpdateStamp !== undefined &&
+            !repository.error) {
             return incrementalUpdate(repository);
         } else {
             return fullUpdate(repository);
@@ -156,12 +186,22 @@
                 callOnChange(repository);
             }
             console.timeEnd("repository.incrementalUpdate");
-        }).catch(onUpdateFailed);
+            onUpdateFinished(repository);
+        }).catch((response) => {
+            onUpdateFailed(repository, response);
+            return Promise.reject(response);
+        });
     }
 
-    function onUpdateFailed(error) {
-        // TODO Propagate and show error message.
-        console.error("Repository updating failed.", error);
+    function onUpdateFinished(repository) {
+        repository.areDataReady = true;
+        repository.error = undefined;
+    }
+
+    function onUpdateFailed(repository, error) {
+        repository.areDataReady = false;
+        repository.error = errorMessage(error);
+        return Promise.reject(error);
     }
 
     function updateRepositoryFromFetch(repository, response) {
@@ -227,7 +267,11 @@
             filterItems(repository, repository.data);
             callOnChange(repository);
             console.timeEnd("repository.fullUpdate");
-        }).catch(onUpdateFailed);
+            onUpdateFinished(repository);
+        }).catch((response) => {
+            onUpdateFailed(repository, response);
+            return Promise.reject(response);
+        });
     }
 
     function removeMissingItems(repository, referenceData) {

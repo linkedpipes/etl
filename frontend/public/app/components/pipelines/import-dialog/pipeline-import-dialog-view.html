@@ -41,10 +41,15 @@
                             <label>Filter</label>
                             <input ng-model="pipelineFilter.labelSearch"/>
                         </md-input-container>
-                        <div ng-show="!repository.areDataReady" layout="row">
-                            <span flex="50"/>
-                            <img src="assets/images/loading.gif" class="center-block" title="Loading..."
-                                 style="padding-top: 1em"/>
+                        <div ng-show="!repository.areDataReady && !repository.error" layout="column" layout-align="center center">
+                            <img src="assets/images/loading.gif" class="center-block" title="Loading..." style="padding-top: 5rem"/>
+                        </div>
+                        <div ng-show="!repository.areDataReady && repository.error" layout="column" layout-align="center center">
+                            <div style="margin-top: 2rem;font-size: 2rem">Can't load data</div>
+                            <br/>
+                            <div>{{repository.error}}</div>
+                            <br/>
+                            <div>Please try it later.</div>
                         </div>
                         <md-radio-group ng-model="pipeline" ng-show="repository.areDataReady">
                             <md-radio-button ng-repeat="item in repository.visibleItems track by $index"

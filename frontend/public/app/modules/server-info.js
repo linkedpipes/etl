@@ -20,8 +20,8 @@
     }
 
     function fetchFromRemote() {
-        return http.getJson("api/v1/info").then((json) => {
-            cache.data = json;
+        return http.getJson("api/v1/info").then((response) => {
+            cache.data = response.json;
             cache.ready = true;
             return cache.data;
         });

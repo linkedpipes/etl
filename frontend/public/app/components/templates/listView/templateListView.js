@@ -43,6 +43,9 @@ define([], function () {
                     $scope.templates.push(template);
                 });
                 $scope.loaded = true;
+                $scope.error = undefined;
+            }).catch((error) => {
+                $scope.error = error["statusText"];
             });
         })();
 

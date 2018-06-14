@@ -1,7 +1,8 @@
 /**
- * Then use with Angular instead of $http, a call of $scope.$apply() must
+ * If used with Angular instead of $http, a $scope.$apply() must
  * be called to notify Angular about changes in scope.
- * Internal $http utilizes $q, which would do thus for us.
+ *
+ * Internal $http utilizes $q, which would do this for us.
  */
 ((definition) => {
     if (typeof define === "function" && define.amd) {
@@ -14,19 +15,46 @@
         return fetch(url, {
             "method": "GET",
             "headers": {
-                "Content-Type": "application/ld+json"
+                "Accept": "application/ld+json"
             },
             "credentials": "same-origin"
-        }).then(json);
-    }
-
-
-    function getJson(url) {
-        return fetch(url, {"credentials": "same-origin"}).then(json);
+        }).catch(failureToResponse).then(json);
     }
 
     function json(response) {
-        return response.json();
+        return response.json().catch(() => {
+            return Promise.reject({
+                "error": "parsing"
+            })
+        }).then((data) => {
+            if (response.ok) {
+                return {
+                    "status": response.status,
+                    "json": data
+                }
+            } else {
+                return Promise.reject({
+                    "error": "server",
+                    "status": response.status,
+                    "json": data
+                });
+            }
+        });
+    }
+
+    function failureToResponse(error) {
+        console.log("Fetch request failed:", error);
+        return Promise.reject({
+            "error": "offline"
+        })
+    }
+
+    function getJson(url) {
+        return fetch(url, {
+            "method": "GET",
+            "credentials": "same-origin"
+        }).then(json)
+            .catch(failureToResponse);
     }
 
     function postJson(url, body) {
@@ -34,21 +62,26 @@
             "body": JSON.stringify(body),
             "method": "POST",
             "headers": {
+                "Accept": "application/json",
                 "Content-Type": "application/json"
             },
             "credentials": "same-origin"
-        }).then(json);
+        }).then(json)
+            .catch(failureToResponse);
     }
 
-    function deleteRrequest(url) {
-        return fetch(url, {"method": "DELETE", "credentials": "same-origin"});
+    function deleteRequest(url) {
+        return fetch(url, {
+            "method": "DELETE",
+            "credentials": "same-origin"
+        });
     }
 
     return {
         "getJsonLd": getJsonLd,
         "getJson": getJson,
         "postJson": postJson,
-        "delete": deleteRrequest
+        "delete": deleteRequest
     };
 
 });

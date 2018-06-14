@@ -1,10 +1,14 @@
 <div layout="row" layout-align="space-around">
     <div class="container" style="max-width: 66em;width: 100%;">
-        <div ng-show="!loaded" layout="row">
-            <span flex="50"/>
-            <img src="assets/images/loading.gif" class="center-block" title="Loading..."
-                 class="center-block" title="Loading..."
-                 style="padding-top: 5em"/>
+        <div ng-show="!loaded && !error" layout="column" layout-align="center center">
+            <img src="assets/images/loading.gif" class="center-block" title="Loading..." style="padding-top: 5rem"/>
+        </div>
+        <div ng-show="!loaded && error" layout="column" layout-align="center center">
+            <div style="margin-top: 2rem;font-size: 2rem">Can't load data</div>
+            <br/>
+            <div>{{error}}</div>
+            <br/>
+            <div>Please try it later.</div>
         </div>
         <div ng-show="loaded" style="margin: 1.2em 2em 0em 1em;">
             <md-input-container class="md-block"
