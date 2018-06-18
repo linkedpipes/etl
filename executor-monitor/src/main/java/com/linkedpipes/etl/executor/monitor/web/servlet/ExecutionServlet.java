@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.web.servlet;
 
+import com.linkedpipes.etl.executor.monitor.MemoryMonitor;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorFacade;
@@ -65,6 +66,7 @@ public class ExecutionServlet {
                     required = false) Long changedSince,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        MemoryMonitor.log(LOG, "getExecutions.before");
         //
         final Collection<Execution> executions;
         if (changedSince == null) {
@@ -114,6 +116,7 @@ public class ExecutionServlet {
             writer.endRDF();
             stream.flush();
         }
+        MemoryMonitor.log(LOG, "getExecutions.after");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -122,11 +125,13 @@ public class ExecutionServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws ExecutionFacade.OperationFailed,
             ExecutionFacade.UnknownExecution, IOException {
+        MemoryMonitor.log(LOG, "getExecution.before");
         final RDFFormat format = Rio.getParserFormatForMIMEType(
                 request.getHeader("Accept")).orElse(RDFFormat.JSONLD);
         response.setHeader("Content-Type", format.getDefaultMIMEType());
         executionFacade.writeExecution(executionFacade.getExecution(id), format,
                 response.getOutputStream());
+        MemoryMonitor.log(LOG, "getExecution.after");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -242,7 +247,9 @@ public class ExecutionServlet {
         final Execution execution = executionFacade.createExecution(pipeline,
                 inputs);
         // TODO Execution in other thread !
+        MemoryMonitor.log(LOG, "startExecutions.before");
         executorFacade.startExecutions();
+        MemoryMonitor.log(LOG, "startExecutions.after");
         return new CreateExecution(execution);
     }
 
