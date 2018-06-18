@@ -22,6 +22,14 @@
             to https.
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.encodeUrl.value"
+               ng-hide="dialog.encodeUrl.hide"
+               ng-disabled="dialog.encodeUrl.disabled">
+        Encode input URL
+        <md-tooltip>If true (percent) encode input URL, can be used when
+            URL contains non-ASCI characters.
+        </md-tooltip>
+    </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.userAgent.hide">
         <label>User agent</label>
         <input type="text" ng-model="dialog.userAgent.value"
