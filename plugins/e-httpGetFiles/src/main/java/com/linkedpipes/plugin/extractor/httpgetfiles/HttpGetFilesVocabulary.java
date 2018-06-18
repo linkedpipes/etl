@@ -52,4 +52,6 @@ public final class HttpGetFilesVocabulary {
 
     public static final String HAS_RESPONSE_CODE = PREFIX + "responseCode";
 
+    public static final String ENCODE_URL = PREFIX + "encodeUrl";
+
 }

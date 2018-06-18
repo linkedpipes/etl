@@ -50,7 +50,7 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
                 configuration.isForceFollowRedirect(),
                 createDownloaderTask(task),
                 configuration.isDetailLogging(),
-                requestReport);
+                requestReport, configuration.isEncodeUrl());
         try {
             downloader.download();
         } catch (Exception ex) {

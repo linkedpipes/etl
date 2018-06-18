@@ -31,6 +31,10 @@ define([], function () {
         "threadsPerGroup": {
             "$type" : "int",
             "$label" : "Threads per group"
+        },
+        "encodeUrl": {
+            "$type" : "bool",
+            "$label" : "Encode input URL"
         }
     };
 

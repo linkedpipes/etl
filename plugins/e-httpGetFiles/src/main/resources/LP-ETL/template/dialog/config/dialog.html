@@ -38,6 +38,14 @@
         <md-tooltip>If set, additional information is logged for every download.
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.encodeUrl.value"
+               ng-hide="dialog.encodeUrl.hide"
+               ng-disabled="dialog.encodeUrl.disabled">
+        Encode input URL
+        <md-tooltip>If true (percent) encode input URL, can be used when
+            URL contains non-ASCI characters.
+        </md-tooltip>
+    </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.timeout.hide">
         <label>Timeout (in milliseconds)</label>
         <input type="number" ng-model="dialog.timeout.value"

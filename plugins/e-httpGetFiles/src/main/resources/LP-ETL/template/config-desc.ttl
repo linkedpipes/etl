@@ -9,7 +9,8 @@
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/detailLog> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/header> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/timeout> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threadsPerGroup> .
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threadsPerGroup> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/encodeUrl> .
 
 [] config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference> .
 
@@ -48,3 +49,7 @@
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threadsPerGroup> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#threadsPerGroupControl> .
 
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/encodeUrl>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#encodeUrl> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#encodeUrlControl> .

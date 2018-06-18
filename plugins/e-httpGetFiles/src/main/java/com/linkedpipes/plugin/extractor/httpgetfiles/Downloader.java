@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
@@ -63,13 +64,16 @@ class Downloader {
 
     private final HttpRequestReport requestReport;
 
+    private final boolean encodeUrl;
+
     public Downloader(
             boolean followRedirect, Task toDownload, boolean logDetail,
-            HttpRequestReport requestReport) {
+            HttpRequestReport requestReport, boolean encodeUrl) {
         this.followRedirect = followRedirect;
         this.toDownload = toDownload;
         this.logDetail = logDetail;
         this.requestReport = requestReport;
+        this.encodeUrl = encodeUrl;
     }
 
     public void download() throws IOException, LpException {
@@ -99,6 +103,13 @@ class Downloader {
     }
 
     private URL createUrl(String stringAsUrl) throws IOException {
+        if (encodeUrl) {
+            try {
+                stringAsUrl = (new URL(stringAsUrl)).toURI().toASCIIString();
+            } catch (URISyntaxException ex) {
+                throw new IOException("Can't convert to URI:" + stringAsUrl, ex);
+            }
+        }
         return new URL(stringAsUrl);
     }
 
