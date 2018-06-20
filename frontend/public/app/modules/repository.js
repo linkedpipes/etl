@@ -134,7 +134,7 @@
             case "server":
                 return serverErrorMessage(response);
             case "parsing":
-                return "Failed to parser server response";
+                return "Failed to parse server response.";
             case "offline":
                 return "Can't connect to the server.";
             default:
