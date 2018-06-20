@@ -48,4 +48,6 @@ public final class HttpRequestVocabulary {
 
     public static final String HAS_FOLLOW_REDIRECT = PREFIX + "followRedirect";
 
+    public static final String ENCODE_URL = PREFIX + "encodeUrl";
+
 }
