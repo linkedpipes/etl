@@ -20,7 +20,7 @@
         <jackson.version>2.7.2</jackson.version>
         <springframework.version>4.3.4.RELEASE</springframework.version>
         <rdf4j.version>2.2.1</rdf4j.version>
-        <jetty.version>9.3.14.v20161028</jetty.version>
+        <jetty.version>9.4.11.v20180605</jetty.version>
         <lp.version>0.0.0</lp.version>
     </properties>
 
@@ -229,6 +229,16 @@
                 <maven.compiler.target>1.9</maven.compiler.target>
             </properties>
         </profile>
+        <profile>
+            <id>java-10</id>
+            <activation>
+                <jdk>10</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>10</maven.compiler.source>
+                <maven.compiler.target>10</maven.compiler.target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -237,13 +247,20 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.5.1</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
                             <Embed-Transitive>false</Embed-Transitive>
                         </instructions>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>biz.aQute.bnd</groupId>
+                            <artifactId>biz.aQute.bndlib</artifactId>
+                            <version>4.0.0</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
