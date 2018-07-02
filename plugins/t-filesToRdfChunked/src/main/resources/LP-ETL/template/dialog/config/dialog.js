@@ -33,6 +33,14 @@ define([], function () {
         "softFail": {
             "$type": "bool",
             "$label": "Skip file on failure"
+        },
+        "fileReference": {
+            "$type": "bool",
+            "$label" : "Add file reference"
+        },
+        "filePredicate": {
+            "$type": "iri",
+            "$label" : "File name predicate"
         }
     };
 

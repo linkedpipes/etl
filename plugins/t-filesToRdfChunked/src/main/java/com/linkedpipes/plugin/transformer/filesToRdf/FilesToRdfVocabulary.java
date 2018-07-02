@@ -13,6 +13,10 @@ public final class FilesToRdfVocabulary {
 
     public static final String HAS_SKIP_ON_FAILURE = PREFIX + "softFail";
 
+    public static final String HAS_FILE_REFERENCE = PREFIX + "fileReference";
+
+    public static final String HAS_FILE_PREDICATE = PREFIX + "filePredicate";
+
     private FilesToRdfVocabulary() {
     }
 

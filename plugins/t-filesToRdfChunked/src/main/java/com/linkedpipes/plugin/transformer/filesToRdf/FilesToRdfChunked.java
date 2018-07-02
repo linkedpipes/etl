@@ -9,6 +9,8 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFParser;
@@ -85,7 +87,7 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
                 if (configuration.isSkipOnFailure()) {
                     LOG.error("Can't load file: {}", entry.getFileName());
                 } else {
-                    throw  ex;
+                    throw ex;
                 }
             }
             ++filesCounter;
@@ -110,6 +112,14 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
     private void loadEntry(FilesDataUnit.Entry entry) throws LpException {
         RDFFormat format = getFormat(entry.getFileName());
         loadFile(entry.toFile(), format);
+        if (configuration.isFileReference()) {
+            ValueFactory valueFactory = SimpleValueFactory.getInstance();
+            buffer.add(valueFactory.createStatement(
+                    valueFactory.createBNode(),
+                    valueFactory.createIRI(configuration.getFilePredicate()),
+                    valueFactory.createLiteral(entry.getFileName())
+            ));
+        }
     }
 
     private RDFFormat getFormat(String fileName) throws LpException {
@@ -133,7 +143,7 @@ public final class FilesToRdfChunked implements Component, SequentialExecution {
         }
     }
 
-    private final RDFParser createParser(RDFFormat format) {
+    private RDFParser createParser(RDFFormat format) {
         RDFHandler handler = new AbstractRDFHandler() {
             @Override
             public void handleStatement(Statement st) {
