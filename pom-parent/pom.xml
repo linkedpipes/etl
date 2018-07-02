@@ -20,7 +20,7 @@
         <jackson.version>2.7.2</jackson.version>
         <springframework.version>4.3.4.RELEASE</springframework.version>
         <rdf4j.version>2.2.1</rdf4j.version>
-        <jetty.version>9.3.14.v20161028</jetty.version>
+        <jetty.version>9.4.11.v20180605</jetty.version>
         <lp.version>0.0.0</lp.version>
     </properties>
 

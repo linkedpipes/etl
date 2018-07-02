@@ -108,7 +108,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     }
 
     private static QueuedThreadPool createThreadPool() {
-        final QueuedThreadPool threadPool = new QueuedThreadPool(3, 1);
+        final QueuedThreadPool threadPool = new QueuedThreadPool(4, 1);
         threadPool.setName("web-server");
         return threadPool;
     }
