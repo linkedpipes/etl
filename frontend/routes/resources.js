@@ -679,8 +679,8 @@ gApiRouter.get('/executions/:id', function (request, response) {
     pipeGet(uri, response);
 });
 
-gApiRouter.post('/executions/cancel', function (request, response) {
-    var url = gMonitorUri + 'executions/' + request.query.id + '/cancel';
+gApiRouter.post('/executions/:id/cancel', function (request, response) {
+    var url = gMonitorUri + 'executions/' + request.params.id + '/cancel';
     request.pipe(gRequest.post(url)).pipe(response);
 });
 
