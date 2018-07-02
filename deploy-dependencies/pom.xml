@@ -136,18 +136,6 @@
                                         </dependency>
                                         <!-- OSGI. -->
                                         <dependency>
-                                            <groupId>org.apache.httpcomponents</groupId>
-                                            <artifactId>httpclient-osgi</artifactId>
-                                            <version>4.4.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.apache.httpcomponents</groupId>
-                                            <artifactId>httpcore-osgi</artifactId>
-                                            <version>4.4.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
                                             <groupId>org.osgi</groupId>
                                             <artifactId>org.osgi.compendium</artifactId>
                                             <version>5.0.0</version>
