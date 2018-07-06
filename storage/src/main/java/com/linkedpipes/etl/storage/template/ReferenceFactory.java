@@ -1,106 +1,150 @@
 package com.linkedpipes.etl.storage.template;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
+import com.linkedpipes.etl.storage.template.repository.RepositoryReference;
+import com.linkedpipes.etl.storage.template.repository.WritableTemplateRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.rio.RDFFormat;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
- * Create a component content that can be loaded as a component reference.
+ * Create new component from user provided input.
  */
-final class ReferenceFactory {
+class ReferenceFactory {
 
-    private ReferenceFactory() {
+    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
+    private final TemplateManager manager;
+
+    private final WritableTemplateRepository repository;
+
+    private Resource templateResource = null;
+
+    private String label = null;
+
+    private IRI iri;
+
+    private IRI configIri;
+
+    private IRI configDescriptionIri;
+
+    public ReferenceFactory(
+            TemplateManager manager,
+            WritableTemplateRepository repository) {
+        this.manager = manager;
+        this.repository = repository;
     }
 
-    /**
-     * Create a component in given directory from given RDF.
-     *
-     * @param templateRdf
-     * @param configurationRdf
-     * @param destination
-     * @param iriAsString
-     * @param templates
-     */
-    public static void create(Collection<Statement> templateRdf,
-            Collection<Statement> configurationRdf, File destination,
-            String iriAsString, TemplateManager templates)
+    public ReferenceTemplate create(
+            Collection<Statement> content,
+            Collection<Statement> config,
+            String id, String iriAsString)
             throws BaseException {
-        final Resource sourceResource = RdfUtils.find(templateRdf,
-                ReferenceTemplate.TYPE);
-        if (sourceResource == null) {
+        clear();
+        parseContent(content);
+        this.iri = valueFactory.createIRI(iriAsString);
+        this.configIri = valueFactory.createIRI(
+                iriAsString + "/configuration");
+        this.configDescriptionIri = valueFactory.createIRI(
+                iriAsString + "/configurationDescription");
+        //
+        List<Statement> interfaceRdf = createInterface();
+        List<Statement> definitionRdf = createDefinition();
+        List<Statement> configRdf = updateConfig(config);
+        List<Statement> configDescriptionRdf = createConfigDescription();
+        //
+        RepositoryReference ref = RepositoryReference.Reference(id);
+        this.repository.setInterface(ref, interfaceRdf);
+        this.repository.setDefinition(ref, definitionRdf);
+        this.repository.setConfig(ref, configRdf);
+        this.repository.setConfigDescription(ref, configDescriptionRdf);
+        //
+        TemplateLoader loader = new TemplateLoader(this.repository);
+        return loader.loadReferenceTemplate(RepositoryReference.Reference(id));
+    }
+
+    private void clear() {
+        this.templateResource = null;
+        this.label = null;
+    }
+
+    private void parseContent(Collection<Statement> statements)
+            throws BaseException {
+        Resource resource = RdfUtils.find(statements, ReferenceTemplate.TYPE);
+        if (resource == null) {
             throw new BaseException("Missing resource of reference type");
         }
-        final ValueFactory vf = SimpleValueFactory.getInstance();
-        final IRI iri = vf.createIRI(iriAsString);
-        // We need to create a definition and an interface
-        final Collection<Statement> interfaceRdf = new ArrayList<>(4);
-        final Collection<Statement> definitionRdf = new ArrayList<>(4);
-        definitionRdf.add(vf.createStatement(iri,
-                RDF.TYPE, ReferenceTemplate.TYPE, iri));
-        String templateIri = null;
-        // Parse template - update and create an definition.
-        for (Statement statement : templateRdf) {
-            // Add some predicates to the definition.
+        for (Statement statement : statements) {
             switch (statement.getPredicate().stringValue()) {
-                case "http://linkedpipes.com/ontology/configurationGraph":
-                    // Skip
-                    continue;
-                case "http://linkedpipes.com/ontology/template":
-                    // Also store to definition.
-                    templateIri = statement.getObject().stringValue();
-                    definitionRdf.add(vf.createStatement(iri,
-                            statement.getPredicate(),
-                            statement.getObject(),
-                            iri
-                    ));
+                case LP_PIPELINE.HAS_TEMPLATE:
+                    templateResource = (Resource) statement.getObject();
+                    break;
+                case SKOS.PREF_LABEL:
+                    label = statement.getObject().stringValue();
                     break;
             }
-            //
-            interfaceRdf.add(vf.createStatement(iri,
-                    statement.getPredicate(),
-                    statement.getObject(),
-                    iri
-            ));
         }
-
-        // Add a reference to the configuration.
-        final Resource configIri = vf.createIRI(iriAsString + "/configuration");
-        definitionRdf.add(vf.createStatement(iri, vf.createIRI(
-                "http://linkedpipes.com/ontology/configurationGraph"),
-                configIri, iri));
-
-        final BaseTemplate template = templates.getTemplates().get(templateIri);
-        if (template == null) {
+        if (templateResource == null) {
             throw new BaseException("Missing template reference.");
         }
-        destination.mkdirs();
-        // Component interface.
-        RdfUtils.write(new File(destination, Template.INTERFACE_FILE),
-                RDFFormat.TRIG, interfaceRdf);
-        // Component definition.
-        RdfUtils.write(new File(destination, Template.DEFINITION_FILE),
-                RDFFormat.TRIG, definitionRdf);
-        // Component configuration.
-        final Collection<Statement> configRdf = RdfUtils.renameResources(
-                configurationRdf, configIri.stringValue(), configIri);
-        RdfUtils.write(new File(destination, Template.CONFIG_FILE),
-                RDFFormat.TRIG, configRdf);
-        // Component configuration description.
-        final Collection<Statement> configDescRdf = RdfUtils.renameResources(
-                template.getConfigDescRdf(),
-                iriAsString + "/configuration/desc", configIri);
-        RdfUtils.write(new File(destination, Template.CONFIG_DESC_FILE),
-                RDFFormat.TRIG, configDescRdf);
+    }
+
+    private List<Statement> createInterface() {
+        List<Statement> output = new ArrayList<>(4);
+        output.add(valueFactory.createStatement(iri,
+                RDF.TYPE, ReferenceTemplate.TYPE, iri));
+        output.add(valueFactory.createStatement(iri,
+                valueFactory.createIRI(LP_PIPELINE.HAS_TEMPLATE),
+                templateResource, iri));
+        output.add(valueFactory.createStatement(iri,
+                valueFactory.createIRI(SKOS.PREF_LABEL),
+                valueFactory.createLiteral(label), iri));
+        return output;
+    }
+
+    private List<Statement> createDefinition() {
+        List<Statement> output = new ArrayList<>(4);
+        output.add(valueFactory.createStatement(iri,
+                RDF.TYPE, ReferenceTemplate.TYPE, iri));
+        output.add(valueFactory.createStatement(iri,
+                valueFactory.createIRI(LP_PIPELINE.HAS_TEMPLATE),
+                templateResource, iri));
+        output.add(valueFactory.createStatement(iri,
+                valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
+                configIri, iri));
+        output.add(valueFactory.createStatement(iri,
+                valueFactory.createIRI(
+                        LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION),
+                configDescriptionIri, iri));
+        return output;
+    }
+
+    private List<Statement> updateConfig(Collection<Statement> input) {
+        return RdfUtils.updateToIriAndGraph(input, this.configIri);
+    }
+
+    private List<Statement> createConfigDescription()
+            throws BaseException {
+        Template parent = this.manager.getTemplates().get(
+                this.templateResource.stringValue());
+        if (parent == null) {
+            throw new BaseException("Missing parent: {}",
+                    this.templateResource);
+        }
+        Collection<Statement> configDesc =
+                this.repository.getConfigDescription(parent);
+        return RdfUtils.updateToIriAndGraph(configDesc,
+                this.configDescriptionIri);
     }
 
 }

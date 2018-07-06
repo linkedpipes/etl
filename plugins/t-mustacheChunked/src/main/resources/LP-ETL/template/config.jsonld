@@ -1,6 +1,6 @@
 [
     {
-        "@id": "http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/t-mustache#Configuration"]
+        "@id": "http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-mustacheChunked#Configuration"]
     }
 ]

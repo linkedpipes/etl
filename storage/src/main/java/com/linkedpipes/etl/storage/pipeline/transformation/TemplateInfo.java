@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.storage.pipeline;
+package com.linkedpipes.etl.storage.pipeline.transformation;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;

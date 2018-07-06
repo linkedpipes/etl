@@ -2,7 +2,7 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace": "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#",
         "$type": "Configuration",
         "$options": {
             "$predicate": "auto",

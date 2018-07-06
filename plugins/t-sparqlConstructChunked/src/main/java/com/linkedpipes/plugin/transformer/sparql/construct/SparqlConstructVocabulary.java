@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.transformer.sparql.construct;
 final class SparqlConstructVocabulary {
 
     private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#";
+            = "http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 

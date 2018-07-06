@@ -1,15 +1,15 @@
 [
     {
-        "@id": "http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration"],
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize" : 1,
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl" : {
+        "@id": "http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#commitSize" : 1,
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#commitSizeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType": "",
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl" : {
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#mimeType": "",
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#mimeTypeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail" : false
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#softFail" : false
     }
 ]

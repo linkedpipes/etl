@@ -53,7 +53,7 @@ public class UnpackerFacade {
         } catch (InvalidNumberOfResults ex) {
             // Ignore as the option is optional.
         } catch (RdfUtilsException ex) {
-            throw new BaseException("Can't read execution options.", ex);
+            throw new BaseException("Can't createMappingFromStatements execution options.", ex);
         } finally {
             optionsSource.close();
         }

@@ -2,7 +2,7 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace": "http://plugins.linkedpipes.com/ontology/t-mustache#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-mustacheChunked#",
         "$type": "Configuration",
         "$options": {
             "$predicate": "auto",

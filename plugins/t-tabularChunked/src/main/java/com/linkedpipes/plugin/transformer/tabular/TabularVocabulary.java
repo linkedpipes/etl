@@ -5,7 +5,7 @@ public final class TabularVocabulary {
     private static final String PREFIX = "http://www.w3.org/ns/csvw#";
 
     public static final String LOCAL_PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-tabular#";
+            = "http://plugins.linkedpipes.com/ontology/t-tabularChunked#";
 
     public static final String TABLE = PREFIX + "Table";
 

@@ -57,7 +57,7 @@ public class Model {
 
         /**
          * Set value of given property to point to given entity. In
-         * recursive mode also copy the entity. Any previous values
+         * recursive mode also importJarComponent the entity. Any previous values
          * are deleted.
          *
          * This does not delete any referenced entities.
@@ -182,7 +182,7 @@ public class Model {
     }
 
     /**
-     * Add copy of entity to this model.
+     * Add importJarComponent of entity to this model.
      *
      * @param entity
      */

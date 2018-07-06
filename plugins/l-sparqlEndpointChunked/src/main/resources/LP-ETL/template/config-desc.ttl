@@ -1,48 +1,48 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/endpoint> ,
-        <http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/targetGraphURI> ,
-        <http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/clearGraph> ,
-        <http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/commitSize> ,
-        <http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/useAuthentication> ,
-        <http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/userName> ,
-        <http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/password> .
+    config:type <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/endpoint> ,
+        <http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/targetGraphURI> ,
+        <http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/clearGraph> ,
+        <http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/commitSize> ,
+        <http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/useAuthentication> ,
+        <http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/userName> ,
+        <http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/password> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/endpoint>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#endpoint> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#endpointControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#endpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#endpointControl> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/targetGraphURI>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/targetGraphURI>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#targetGraphURI> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#targetGraphURIControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#targetGraphURI> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#targetGraphURIControl> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/clearGraph>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/clearGraph>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraph> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraphControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#clearGraph> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#clearGraphControl> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/commitSize>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/commitSize>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#commitSize> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#commitSizeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#commitSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#commitSizeControl> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/useAuthentication>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/useAuthentication>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#useAuthentication> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#useAuthenticationControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#useAuthentication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#useAuthenticationControl> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/userName>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userNameControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#userNameControl> .
 
-<http://linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0/configuration/desc/password>
+<http://linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#passwordControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#passwordControl> .
 

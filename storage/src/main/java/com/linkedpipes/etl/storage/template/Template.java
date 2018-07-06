@@ -1,18 +1,39 @@
 package com.linkedpipes.etl.storage.template;
 
-/**
- * Public interface for a template typed component.
- */
-public interface Template {
+import com.linkedpipes.etl.storage.template.repository.RepositoryReference;
 
-    String INTERFACE_FILE = "interface.trig";
+public abstract class Template implements RepositoryReference {
 
-    String DEFINITION_FILE = "definition.trig";
+    public enum Type {
+        JAR_TEMPLATE,
+        REFERENCE_TEMPLATE
+    }
 
-    String CONFIG_FILE = "configuration.trig";
+    protected String id;
 
-    String CONFIG_DESC_FILE = "configuration-description.trig";
+    protected String iri;
 
-    String getIri();
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIri() {
+        return iri;
+    }
+
+    public void setIri(String iri) {
+        this.iri = iri;
+    }
+
+    /**
+     * @return True if component support configuration control/inheritance.
+     */
+    public abstract boolean isSupportingControl();
+
+    public  abstract String getConfigurationDescription();
 
 }

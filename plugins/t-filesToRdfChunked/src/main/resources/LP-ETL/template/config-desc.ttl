@@ -1,35 +1,35 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-filesToRdf/1.0.0/configuration/desc/commitSize> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdf/1.0.0/configuration/desc/mimeType> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/fileReference> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/filePredicate> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/commitSize> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/mimeType> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/softFail> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/fileReference> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/filePredicate> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/1.0.0/configuration/desc/commitSize>
+<http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/commitSize>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#commitSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#commitSizeControl> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/1.0.0/configuration/desc/mimeType>
+<http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/mimeType>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#mimeType> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#mimeTypeControl> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail>
+<http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/softFail>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFailControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#softFailControl> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/fileReference>
+<http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/fileReference>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#fileReference> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#fileReferenceControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#fileReference> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#fileReferenceControl> .
 
-<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/filePredicate>
+<http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/filePredicate>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdf#filePredicate> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdf#filePredicateControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#filePredicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#filePredicateControl> .

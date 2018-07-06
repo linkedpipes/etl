@@ -1,21 +1,24 @@
 package com.linkedpipes.etl.storage.template;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 /**
  * Represent a thin template that can modify basic component
  * properties and configuration.
  */
-class ReferenceTemplate extends BaseTemplate implements PojoLoader.Loadable {
+class ReferenceTemplate extends Template
+        implements PojoLoader.Loadable {
 
     public static final IRI TYPE;
 
     static {
-        TYPE = SimpleValueFactory.getInstance().createIRI(
-                "http://linkedpipes.com/ontology/Template");
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        TYPE = valueFactory.createIRI(LP_PIPELINE.REFERENCE_TEMPLATE);
     }
 
     /**
@@ -23,8 +26,7 @@ class ReferenceTemplate extends BaseTemplate implements PojoLoader.Loadable {
      */
     private String template;
 
-    public ReferenceTemplate() {
-    }
+    private String configurationDescription;
 
     public String getTemplate() {
         return template;
@@ -36,11 +38,13 @@ class ReferenceTemplate extends BaseTemplate implements PojoLoader.Loadable {
     }
 
     @Override
-    public PojoLoader.Loadable load(String predicate, Value value)
-            throws PojoLoader.CantLoadException {
+    public PojoLoader.Loadable load(String predicate, Value value) {
         switch (predicate) {
-            case "http://linkedpipes.com/ontology/template":
+            case LP_PIPELINE.HAS_TEMPLATE:
                 template = value.stringValue();
+                break;
+            case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
+                configurationDescription = value.stringValue();
                 break;
         }
         return null;
@@ -52,9 +56,20 @@ class ReferenceTemplate extends BaseTemplate implements PojoLoader.Loadable {
     }
 
     @Override
-    public boolean isSupportControl() {
+    public Type getType() {
+        return Type.REFERENCE_TEMPLATE;
+    }
+
+    @Override
+    public boolean isSupportingControl() {
         // Every reference support control as its parent support control,
         // because we have template from it.
         return true;
     }
+
+    @Override
+    public String getConfigurationDescription() {
+        return configurationDescription;
+    }
+
 }

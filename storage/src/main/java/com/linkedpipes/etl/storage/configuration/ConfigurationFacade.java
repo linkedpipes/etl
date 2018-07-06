@@ -47,10 +47,10 @@ public class ConfigurationFacade {
      * Create a configuration that should be used by the children.
      *
      * @param configurationRdf Configuration.
-     * @param descriptionRdf Description of the configuration.
-     * @param baseIri Resource used for generated configuration.
-     * @param graph Graph used for generated configuration.
-     * @param inheritAll If true all control properties are set to inherit.
+     * @param descriptionRdf   Description of the configuration.
+     * @param baseIri          Resource used for generated configuration.
+     * @param graph            Graph used for generated configuration.
+     * @param inheritAll       If true all control properties are set to inherit.
      * @return
      */
     public static Collection<Statement> createNewConfiguration(
@@ -84,14 +84,14 @@ public class ConfigurationFacade {
     /**
      * Compute and return effective configuration for the given list of the
      * configuration.
-     *
+     * <p>
      * The configuration must be given in natural order - ie. parent before
      * children. So the instance configuration is the last one.
      *
      * @param configurationsRdf
      * @param descriptionRdf
-     * @param baseIri Resource used for generated configuration.
-     * @param graph Graph used for generated configuration.
+     * @param baseIri           Resource used for generated configuration.
+     * @param graph             Graph used for generated configuration.
      * @return
      */
     public static Collection<Statement> merge(
@@ -198,7 +198,7 @@ public class ConfigurationFacade {
      * @param children
      */
     private static void merge(ConfigDescription.Member member,
-            Model.Entity parent, Model.Entity children) {
+                              Model.Entity parent, Model.Entity children) {
         // Check parent options.
         // The parent can only FORCE(D) option, in such case
         // the value remains unchanged.
@@ -322,7 +322,7 @@ public class ConfigurationFacade {
     }
 
     private static Collection<Statement> createCopy(Collection<Statement> data,
-            IRI graph) {
+                                                    IRI graph) {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         Collection<Statement> output = new ArrayList<>(data.size());
         for (Statement statement : data) {
@@ -340,7 +340,7 @@ public class ConfigurationFacade {
      * Merge member into !instance!.
      */
     private static void mergeFromBottom(ConfigDescription.Member member,
-            Model.Entity template, Model.Entity instance) {
+                                        Model.Entity template, Model.Entity instance) {
         // First check if template does not force values to instance.
         String templateControl = template.getPropertyAsStr(member.getControl());
         Value templateValue = template.getProperty(member.getProperty());
@@ -352,7 +352,7 @@ public class ConfigurationFacade {
         }
         if (INHERIT_AND_FORCE.equals(templateControl)) {
             // Remove value - the value will be load from next level template.
-            template.replace(member.getProperty(), instance,  null, false);
+            template.replace(member.getProperty(), instance, null, false);
             template.setIri(member.getControl(), FORCED);
             return;
         }

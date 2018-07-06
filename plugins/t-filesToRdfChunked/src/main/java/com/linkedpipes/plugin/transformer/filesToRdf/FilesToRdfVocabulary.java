@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.transformer.filesToRdf;
 public final class FilesToRdfVocabulary {
 
     private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-filesToRdf#";
+            = "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 

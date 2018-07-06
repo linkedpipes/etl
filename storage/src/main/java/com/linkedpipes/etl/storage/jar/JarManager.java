@@ -19,8 +19,12 @@ class JarManager {
     private static final Logger LOG
             = LoggerFactory.getLogger(JarManager.class);
 
+    private final Configuration config;
+
     @Autowired
-    private Configuration config;
+    public JarManager(Configuration config) {
+        this.config = config;
+    }
 
     /**
      * Store JAR components under IRI key.

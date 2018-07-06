@@ -272,7 +272,7 @@ class Unpacker {
      * Recursively expand all templates and instances in the pipeline.
      * Also update the configurations.
      */
-    private void expandComponents() {
+    private void expandComponents() throws BaseException {
         Collection<RdfObjects.Entity> toUnpack =
                 pipelineObject.getTyped(COMPONENT, TEMPLATE);
         while (!toUnpack.isEmpty()) {
@@ -307,17 +307,17 @@ class Unpacker {
                 // can work with the configuration.
                 if (!addedConfigurations.contains(templateIri)) {
                     configurations.addAll(templates
-                            .getConfigurationTemplate(template));
+                            .getConfig(template));
                     // TODO Do not add same description twice -
                     // under different names. Requires change
                     // in a component description.
                     configurations.addAll(templates
-                            .getConfigurationDescription(template));
+                            .getConfigDescription(template));
                     addedConfigurations.add(templateIri);
                 }
                 // Add configuration description.
                 pipelineObject.addAll(
-                        templates.getConfigurationDescription(template));
+                        templates.getConfigDescription(template));
             }
             toUnpack = pipelineObject.getTyped(COMPONENT, TEMPLATE);
         }

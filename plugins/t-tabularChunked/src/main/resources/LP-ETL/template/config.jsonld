@@ -1,17 +1,17 @@
 [
     {
-        "@id": "http://linkedpipes.com/resources/components/t-tabular/0.0.0/configuration",
+        "@id": "http://linkedpipes.com/resources/components/t-tabularChunked/0.0.0/configuration",
         "@type" : ["http://www.w3.org/ns/csvw#Table"],
-        "http://plugins.linkedpipes.com/ontology/t-tabular#normalOutput" : false,
-        "http://plugins.linkedpipes.com/ontology/t-tabular#fullMapping" : true,
+        "http://plugins.linkedpipes.com/ontology/t-tabularChunked#normalOutput" : false,
+        "http://plugins.linkedpipes.com/ontology/t-tabularChunked#fullMapping" : true,
         "http://www.w3.org/ns/csvw#tableSchema" : {
             "@id" : "http://localhost/resources/configuration/schema"
         },
         "http://www.w3.org/ns/csvw#dialect" : {
             "@id" : "http://localhost/resources/configuration/dialect"
         },
-        "http://plugins.linkedpipes.com/ontology/t-tabular#chunkSize" : "1000",
-        "http://plugins.linkedpipes.com/ontology/t-tabular#skipLines" : 0
+        "http://plugins.linkedpipes.com/ontology/t-tabularChunked#chunkSize" : "1000",
+        "http://plugins.linkedpipes.com/ontology/t-tabularChunked#skipLines" : 0
     },
     {
         "@id": "http://localhost/resources/configuration/schema",

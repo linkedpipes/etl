@@ -1,0 +1,67 @@
+package com.linkedpipes.etl.storage.pipeline.transformation;
+
+import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
+import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineInfo;
+import com.linkedpipes.etl.storage.rdf.PojoLoader;
+import com.linkedpipes.etl.storage.template.TemplateFacade;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+
+@Service
+public class TransformationFacade {
+
+    @Autowired
+    private TemplateFacade templateFacade;
+
+    @Autowired
+    private MappingFacade mappingFacade;
+
+    public Collection<Statement> migrateThrowOnWarning(
+            Collection<Statement> pipeline)
+            throws TransformationFailed {
+        Migration migration = new Migration(templateFacade);
+        migration.setThrowOnWarning(true);
+        return migration.migrate(pipeline);
+    }
+
+    public Collection<Statement> localizeAndMigrate(
+            Collection<Statement> pipeline,
+            Collection<Statement> options,
+            IRI newIri) throws TransformationFailed {
+        PipelineInfo info = loadPipelineInfo(pipeline);
+
+        ImportTransformer transformer = new ImportTransformer(
+                templateFacade, mappingFacade);
+
+        // Localization may import templates, which may be needed to migrate
+        // as well.
+        pipeline = transformer.localizePipeline(
+                pipeline, options, info, newIri);
+
+        if (info.getVersion() != Pipeline.VERSION_NUMBER) {
+            Migration migration = new Migration(templateFacade);
+            migration.setThrowOnWarning(false);
+            pipeline = migration.migrate(pipeline);
+        }
+
+        return pipeline;
+    }
+
+    private PipelineInfo loadPipelineInfo(Collection<Statement> pipeline)
+            throws TransformationFailed {
+        PipelineInfo info = new PipelineInfo();
+        try {
+            PojoLoader.loadOfType(pipeline, Pipeline.TYPE, info);
+        } catch (PojoLoader.CantLoadException ex) {
+            throw new TransformationFailed(
+                    "Can't createMappingFromStatements pipeline info.", ex);
+        }
+        return info;
+    }
+
+}
