@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.configuration;
 
+import com.linkedpipes.etl.storage.Vocabulary;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
@@ -11,17 +12,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a description of the configuration. For one only the first
- * level of the configuration.
+ * Represents a description of the component configuration.
+ * For one only the first level of the configuration.
  */
 class ConfigDescription implements PojoLoader.Loadable {
 
     static final IRI TYPE;
 
     static {
-        final ValueFactory vf = SimpleValueFactory.getInstance();
-        TYPE = vf.createIRI(
-                "http://plugins.linkedpipes.com/ontology/ConfigurationDescription");
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        TYPE = valueFactory.createIRI(Vocabulary.CONFIG_DESCRIPTION);
     }
 
     public static class Member implements PojoLoader.Loadable {
@@ -31,13 +31,12 @@ class ConfigDescription implements PojoLoader.Loadable {
         private IRI control;
 
         @Override
-        public PojoLoader.Loadable load(String predicate, Value value)
-                throws PojoLoader.CantLoadException {
+        public PojoLoader.Loadable load(String predicate, Value value) {
             switch (predicate) {
-                case "http://plugins.linkedpipes.com/ontology/configuration/property":
+                case Vocabulary.CONFIG_DESC_PROPERTY:
                     property = (IRI) value;
                     break;
-                case "http://plugins.linkedpipes.com/ontology/configuration/control":
+                case Vocabulary.CONFIG_DESC_CONTROL:
                     control = (IRI) value;
                     break;
             }
@@ -54,7 +53,7 @@ class ConfigDescription implements PojoLoader.Loadable {
     }
 
     /**
-     * Type of configuration object.
+     * IRI of configuration object.
      */
     private IRI type;
 
@@ -64,20 +63,19 @@ class ConfigDescription implements PojoLoader.Loadable {
      */
     private IRI control;
 
-    private List<Member> members = new ArrayList<>(12);
+    private List<Member> members = new ArrayList<>();
 
     @Override
-    public PojoLoader.Loadable load(String predicate, Value value)
-            throws PojoLoader.CantLoadException {
+    public PojoLoader.Loadable load(String predicate, Value value) {
         switch (predicate) {
-            case "http://plugins.linkedpipes.com/ontology/configuration/type":
+            case Vocabulary.CONFIG_DESC_TYPE:
                 this.type = (IRI) value;
                 break;
-            case "http://plugins.linkedpipes.com/ontology/configuration/member":
-                final Member newMember = new Member();
+            case Vocabulary.CONFIG_DESC_MEMBER:
+                Member newMember = new Member();
                 members.add(newMember);
                 return newMember;
-            case "http://plugins.linkedpipes.com/ontology/configuration/control":
+            case Vocabulary.CONFIG_DESC_CONTROL:
                 this.control = (IRI) value;
                 break;
         }
@@ -95,4 +93,5 @@ class ConfigDescription implements PojoLoader.Loadable {
     public List<Member> getMembers() {
         return Collections.unmodifiableList(members);
     }
+
 }

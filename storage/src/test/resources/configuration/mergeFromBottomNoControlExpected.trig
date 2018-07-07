@@ -1,0 +1,19 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+
+<http://graph> {
+
+    <http://base/2> a component:Configuration ;
+        component:first "c-1" ;
+        component:firstControl config:None ;
+        component:second "c-2" ;
+        component:secondControl config:None ;
+        component:third "p-3" ;
+        component:thirdControl config:Forced ;
+        component:fourth <http://base/1> , <http://base/3> ;
+        component:fourthControl config:None .
+
+    <http://base/1> <http://localhost/value> "c-o-1" .
+    <http://base/3> <http://localhost/value> "c-o-2" .
+
+}

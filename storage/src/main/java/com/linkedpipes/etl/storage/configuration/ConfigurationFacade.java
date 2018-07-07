@@ -13,13 +13,16 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 // TODO Add test where the instance configuration does not contains Configuration class.
 // TODO Replace with function from RdfUtils module (EntityMerger).
 public class ConfigurationFacade {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ConfigurationFacade.class);
 
     static final String NONE =
             "http://plugins.linkedpipes.com/resource/configuration/None";
@@ -35,9 +38,6 @@ public class ConfigurationFacade {
 
     static final String FORCED =
             "http://plugins.linkedpipes.com/resource/configuration/Forced";
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ConfigurationFacade.class);
 
     private ConfigurationFacade() {
 
@@ -100,15 +100,15 @@ public class ConfigurationFacade {
             String baseIri, IRI graph) throws BaseException {
         final ConfigDescription description = loadDescription(descriptionRdf);
         Model model = null;
-        Model.Entity modelConfiguration = null;
+        Model.Entity configurationEntity = null;
         for (Collection<Statement> configurationRdf : configurationsRdf) {
             if (model == null) {
                 // First configuration - just load, the template
                 // configuration does not contains control.
                 model = Model.create(configurationRdf);
-                modelConfiguration = model.select(null, RDF.TYPE,
+                configurationEntity = model.select(null, RDF.TYPE,
                         description.getType()).single();
-                if (modelConfiguration == null) {
+                if (configurationEntity == null) {
                     model = null;
                     LOG.warn("Skipping configuration due to missing " +
                                     "configuration entity for: {}",
@@ -140,7 +140,7 @@ public class ConfigurationFacade {
             }
             if (INHERIT_AND_FORCE.equals(control)) {
                 // Do not load anything from this instance, not any further.
-                modelConfiguration.setIri(description.getControl(), FORCED);
+                configurationEntity.setIri(description.getControl(), FORCED);
                 break;
             }
             // Merge from children to model.
@@ -148,17 +148,18 @@ public class ConfigurationFacade {
                 // We should load all properties from children, ald overwrite
                 // those in parent -> this can be done by simply swapping
                 //                    the configurations.
-                modelConfiguration = childConfiguration;
+                model = childModel;
+                configurationEntity = childConfiguration;
             } else {
                 // Use from definition.
                 for (ConfigDescription.Member member :
                         description.getMembers()) {
-                    merge(member, modelConfiguration, childConfiguration);
+                    merge(member, configurationEntity, childConfiguration);
                 }
             }
             if (FORCE.equals(control)) {
                 // Do not load anything in any further instance.
-                modelConfiguration.setIri(description.getControl(), FORCED);
+                configurationEntity.setIri(description.getControl(), FORCED);
                 break;
             }
         }
@@ -168,8 +169,8 @@ public class ConfigurationFacade {
             return Collections.EMPTY_LIST;
         }
         //
-        model.updateResources(baseIri);
-        return model.asStatements(modelConfiguration, graph);
+        model.updateResources(baseIri + "/");
+        return model.asStatements(configurationEntity, graph);
     }
 
     /**
@@ -248,37 +249,41 @@ public class ConfigurationFacade {
     }
 
     /**
-     * Designed to be used to merge configuration from instance to templates.
+     * Designed to be used to merge configuration from instance to templates,
+     * thus enabling another merge with other ancestor.
      */
     public static Collection<Statement> mergeFromBottom(
             Collection<Statement> templateRdf,
             Collection<Statement> instanceRdf,
             Collection<Statement> descriptionRdf,
             String baseIri, IRI graph) throws BaseException {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
         ConfigDescription description = loadDescription(descriptionRdf);
         Model templateModel = Model.create(templateRdf);
-        Model.Entity templateConfiguration = templateModel.select(
+        Model.Entity templateEntity = templateModel.select(
                 null, RDF.TYPE, description.getType()).single();
-        if (templateConfiguration == null) {
+        if (templateEntity == null) {
             LOG.warn("Skipping configuration due to missing " +
                             "configuration entity for: {}",
                     description.getType());
-            return createCopy(instanceRdf, graph);
+            templateModel.updateResources(baseIri + "/");
+            return templateModel.asStatements(templateEntity, graph);
         }
         // Create instance of current configuration.
         Model instanceModel = Model.create(instanceRdf);
-        Model.Entity instanceConfiguration = instanceModel.select(null,
+        Model.Entity instanceEntity = instanceModel.select(null,
                 RDF.TYPE, description.getType()).single();
-        if (instanceConfiguration == null) {
+        if (instanceEntity == null) {
             LOG.warn("Skipping configuration due to missing " +
                     "configuration entity.");
-            return createCopy(templateRdf, graph);
+            templateModel.updateResources(baseIri + "/");
+            return templateModel.asStatements(templateEntity, graph);
         }
         // Handle global control.
         {
             String templateControl = null;
             if (description.getControl() != null) {
-                templateControl = templateConfiguration.getPropertyAsStr(
+                templateControl = templateEntity.getPropertyAsStr(
                         description.getControl());
             }
             // Check control.
@@ -286,54 +291,55 @@ public class ConfigurationFacade {
                 // The configuration of the template is inherited from
                 // another level of template. So we skip merging
                 // with this level of template.
-                return createCopy(instanceRdf, graph);
+                instanceModel.updateResources(baseIri + "/");
+                return instanceModel.asStatements(instanceEntity, graph);
             }
             if (INHERIT_AND_FORCE.equals(templateControl)) {
                 // We need to load configuration from another level of template.
-                return Collections.emptyList();
+                return Arrays.asList(
+                        valueFactory.createStatement(
+                                instanceEntity.getResource(),
+                                RDF.TYPE,
+                                description.getType()),
+                        valueFactory.createStatement(
+                                instanceEntity.getResource(),
+                                description.getControl(),
+                                valueFactory.createIRI(INHERIT_AND_FORCE)));
             }
             if (FORCE.equals(templateControl)) {
-                return createCopy(templateRdf, graph);
+                templateModel.updateResources(baseIri + "/");
+                templateEntity.set(description.getControl(),
+                        valueFactory.createIRI(FORCED));
+                return templateModel.asStatements(templateEntity, graph);
             }
             String instanceControl = null;
             if (description.getControl() != null) {
-                instanceControl = instanceConfiguration.getPropertyAsStr(
+                instanceControl = instanceEntity.getPropertyAsStr(
                         description.getControl());
             }
-            if (INHERIT.equals(instanceControl) ||
-                    INHERIT_AND_FORCE.equals(instanceControl)) {
-                // Instance inherit from parent.
-                return createCopy(templateRdf, graph);
+            if (INHERIT.equals(instanceControl)) {
+                templateModel.updateResources(baseIri + "/");
+                return templateModel.asStatements(templateEntity, graph);
+            }
+            if (INHERIT_AND_FORCE.equals(instanceControl)) {
+                templateModel.updateResources(baseIri + "/");
+                templateEntity.set(description.getControl(),
+                        valueFactory.createIRI(FORCED));
+                return templateModel.asStatements(templateEntity, graph);
             }
         }
-        // Merge child and template.
         if (description.getMembers().isEmpty()) {
             // We use the child's configuration.
-            return createCopy(instanceRdf, graph);
-        } else {
-            for (ConfigDescription.Member member : description.getMembers()) {
-                mergeFromBottom(member, templateConfiguration,
-                        instanceConfiguration);
-            }
+            instanceModel.updateResources(baseIri + "/");
+            return instanceModel.asStatements(instanceEntity, graph);
+        }
+        for (ConfigDescription.Member member : description.getMembers()) {
+            mergeFromBottom(member, templateEntity,
+                    instanceEntity);
         }
         //
-        instanceModel.updateResources(baseIri);
-        return instanceModel.asStatements(instanceConfiguration, graph);
-    }
-
-    private static Collection<Statement> createCopy(Collection<Statement> data,
-                                                    IRI graph) {
-        ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        Collection<Statement> output = new ArrayList<>(data.size());
-        for (Statement statement : data) {
-            output.add(valueFactory.createStatement(
-                    statement.getSubject(),
-                    statement.getPredicate(),
-                    statement.getObject(),
-                    graph
-            ));
-        }
-        return output;
+        instanceModel.updateResources(baseIri + "/");
+        return instanceModel.asStatements(instanceEntity, graph);
     }
 
     /**
@@ -345,15 +351,15 @@ public class ConfigurationFacade {
         String templateControl = template.getPropertyAsStr(member.getControl());
         Value templateValue = template.getProperty(member.getProperty());
         if (FORCE.equals(templateControl)) {
-            instance.replace(member.getProperty(), instance, templateValue,
-                    true);
+            instance.replace(
+                    member.getProperty(), instance, templateValue, true);
             instance.setIri(member.getControl(), FORCED);
             return;
         }
         if (INHERIT_AND_FORCE.equals(templateControl)) {
             // Remove value - the value will be load from next level template.
-            template.replace(member.getProperty(), instance, null, false);
-            template.setIri(member.getControl(), FORCED);
+            instance.replace(member.getProperty(), instance, null, false);
+            instance.setIri(member.getControl(), FORCED);
             return;
         }
         // If the value is missing we need to load if from a template.
