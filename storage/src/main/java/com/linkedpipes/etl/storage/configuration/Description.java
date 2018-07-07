@@ -15,7 +15,7 @@ import java.util.List;
  * Represents a description of the component configuration.
  * For one only the first level of the configuration.
  */
-class ConfigDescription implements PojoLoader.Loadable {
+class Description implements PojoLoader.Loadable {
 
     static final IRI TYPE;
 

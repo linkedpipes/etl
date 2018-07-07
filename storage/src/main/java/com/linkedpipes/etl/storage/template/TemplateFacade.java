@@ -30,6 +30,9 @@ public class TemplateFacade implements TemplateSource {
 
     private final TemplateRepository repository;
 
+    private final ConfigurationFacade configurationFacade =
+            new ConfigurationFacade();
+
     @Autowired
     public TemplateFacade(
             TemplateManager manager,
@@ -175,7 +178,7 @@ public class TemplateFacade implements TemplateSource {
             configurations.add(getConfig(item));
         }
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        return ConfigurationFacade.merge(configurations,
+        return configurationFacade.merge(configurations,
                 getConfigDescription(template),
                 template.getIri() + "/effective/",
                 valueFactory.createIRI(template.getIri()));
@@ -196,16 +199,19 @@ public class TemplateFacade implements TemplateSource {
             throws BaseException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         IRI graph = valueFactory.createIRI(template.getIri() + "/new");
-        boolean isJarTemplate =
-                template.getType() == Template.Type.JAR_TEMPLATE;
-        Collection<Statement> statements =
-                ConfigurationFacade.createNewConfiguration(
-                        this.repository.getConfig(template),
-                        this.repository.getConfigDescription(template),
-                        graph.stringValue(),
-                        graph,
-                        !isJarTemplate);
-        return statements;
+        if (template.getType() == Template.Type.JAR_TEMPLATE) {
+            return configurationFacade.createNewFromJarFile(
+                    this.repository.getConfig(template),
+                    this.repository.getConfigDescription(template),
+                    graph.stringValue(),
+                    graph);
+        } else {
+            return configurationFacade.createNewFromTemplate(
+                    this.repository.getConfig(template),
+                    this.repository.getConfigDescription(template),
+                    graph.stringValue(),
+                    graph);
+        }
     }
 
     public Collection<Statement> getConfigDescription(Template template)

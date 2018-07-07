@@ -78,8 +78,9 @@ class ConfigurationMerger {
 
         String baseIri = componentConfigurationGraph + "/";
 
+        ConfigurationFacade configurationFacade = new ConfigurationFacade();
         Collection<Statement> configuration =
-                ConfigurationFacade.mergeFromBottom(
+                configurationFacade.mergeFromBottom(
                         templateTriples, componentTriples,
                         descriptionTriples, baseIri,
                         valueFactory.createIRI(componentConfigurationGraph));

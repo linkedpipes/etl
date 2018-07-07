@@ -18,15 +18,15 @@ public class ConfigurationFacadeTest {
 
     private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
+    private ConfigurationFacade facade = new ConfigurationFacade();
+
     @Test
     public void createNew() throws Exception {
-        Collection<Statement> actual = ConfigurationFacade.createNewConfiguration(
+        Collection<Statement> actual = facade.createNewFromTemplate(
                 TestUtils.rdfFromResource("configuration/parentConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base",
-                valueFactory.createIRI("http://graph"),
-                false
-        );
+                valueFactory.createIRI("http://graph"));
         Collection<Statement> expected = TestUtils.rdfFromResource(
                 "configuration/createNewExpected.trig");
         Assert.assertTrue(Models.isomorphic(actual, expected));
@@ -38,13 +38,11 @@ public class ConfigurationFacadeTest {
      */
     @Test
     public void createNewInheritAll() throws Exception {
-        Collection<Statement> actual = ConfigurationFacade.createNewConfiguration(
+        Collection<Statement> actual = facade.createNewFromJarFile(
                 TestUtils.rdfFromResource("configuration/jarConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base",
-                valueFactory.createIRI("http://graph"),
-                true
-        );
+                valueFactory.createIRI("http://graph"));
 
         Collection<Statement> expected = TestUtils.rdfFromResource(
                 "configuration/createNewInheritAllExpected.trig");
@@ -59,7 +57,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/childConfigInherit.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -77,7 +75,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/childConfigInheritAndForce.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -95,7 +93,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/childConfigNoControl.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -113,7 +111,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/childConfigNone.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -133,7 +131,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/level-2.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -146,7 +144,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void mergeFromBottomInherit() throws Exception {
-        Collection<Statement> actual = ConfigurationFacade.mergeFromBottom(
+        Collection<Statement> actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/parentConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/childConfigInherit.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
@@ -160,7 +158,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void mergeFromBottomInheritAndForce() throws Exception {
-        Collection<Statement> actual = ConfigurationFacade.mergeFromBottom(
+        Collection<Statement> actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/parentConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/childConfigInheritAndForce.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
@@ -174,7 +172,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void mergeFromBottomNoControl() throws Exception {
-        Collection<Statement> actual = ConfigurationFacade.mergeFromBottom(
+        Collection<Statement> actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/parentConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/childConfigNoControl.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
@@ -188,7 +186,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void mergeFromBottomNone() throws Exception {
-        Collection<Statement> actual = ConfigurationFacade.mergeFromBottom(
+        Collection<Statement> actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/parentConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/childConfigNone.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
@@ -206,14 +204,14 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/desc.ttl");
         Collection<Statement> actual;
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/level-1.ttl"),
                 TestUtils.rdfFromResource("configuration/level-2.ttl"),
                 description,
                 "http://base", valueFactory.createIRI("http://graph")
         );
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/level-0.ttl"),
                 actual,
                 description,
@@ -234,7 +232,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/globalControlForce.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/descWithComponentControl.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -253,7 +251,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/globalControlInheritAndForce.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/descWithComponentControl.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -261,6 +259,7 @@ public class ConfigurationFacadeTest {
 
         Collection<Statement> expected = TestUtils.rdfFromResource(
                 "configuration/mergeGlobalControlFIaF.trig");
+        Rdf4jUtils.rdfEqual(actual, expected);
         Assert.assertTrue(Models.isomorphic(actual, expected));
     }
 
@@ -273,7 +272,7 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/globalControlForce.ttl")
         );
 
-        Collection<Statement> actual = ConfigurationFacade.merge(
+        Collection<Statement> actual = facade.merge(
                 configurations,
                 TestUtils.rdfFromResource("configuration/descWithComponentControl.ttl"),
                 "http://base", valueFactory.createIRI("http://graph")
@@ -290,13 +289,13 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/descWithComponentControl.ttl");
         Collection<Statement> actual;
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/globalControlInheritAndForce.ttl"),
                 TestUtils.rdfFromResource("configuration/globalControlForce.ttl"),
                 description, "http://base", valueFactory.createIRI("http://graph")
         );
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/globalControl.ttl"),
                 actual,
                 description, "http://base", valueFactory.createIRI("http://graph")
@@ -314,13 +313,13 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/descWithComponentControl.ttl");
         Collection<Statement> actual;
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/globalControlForce.ttl"),
                 TestUtils.rdfFromResource("configuration/globalControlInheritAndForce.ttl"),
                 description, "http://base", valueFactory.createIRI("http://graph")
         );
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/globalControl.ttl"),
                 actual,
                 description, "http://base", valueFactory.createIRI("http://graph")
@@ -328,7 +327,6 @@ public class ConfigurationFacadeTest {
 
         Collection<Statement> expected = TestUtils.rdfFromResource(
                 "configuration/mergeGlobalControlFIaF.trig");
-        Rdf4jUtils.rdfEqual(actual, expected);
         Assert.assertTrue(Models.isomorphic(actual, expected));
     }
 
@@ -338,19 +336,19 @@ public class ConfigurationFacadeTest {
                 TestUtils.rdfFromResource("configuration/descWithComponentControl.ttl");
         Collection<Statement> actual;
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/globalControlInheritAndForce.ttl"),
                 TestUtils.rdfFromResource("configuration/globalControlForce.ttl"),
                 description, "http://base", valueFactory.createIRI("http://graph")
         );
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/globalControlInherit.ttl"),
                 actual,
                 description, "http://base", valueFactory.createIRI("http://graph")
         );
 
-        actual = ConfigurationFacade.mergeFromBottom(
+        actual = facade.mergeFromBottom(
                 TestUtils.rdfFromResource("configuration/globalControl.ttl"),
                 actual,
                 description, "http://base", valueFactory.createIRI("http://graph")
