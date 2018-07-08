@@ -76,7 +76,7 @@ class ConfigurationMerger {
         Collection<Statement> descriptionTriples =
                 graphs.get(template.getConfigDescriptionGraph());
 
-        String baseIri = componentConfigurationGraph + "/";
+        String baseIri = componentConfigurationGraph;
 
         ConfigurationFacade configurationFacade = new ConfigurationFacade();
         Collection<Statement> configuration =
