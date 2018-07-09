@@ -24,6 +24,9 @@ public final class LoaderScpVocabulary {
     public static final String HAS_CLEAR_DIRECTORY
             = PREFIX + "clearDirectory";
 
+    public static final String HAS_CONNECTION_TIME_OUT
+            = PREFIX + "connectionTimeOut";
+
     private LoaderScpVocabulary() {
     }
 

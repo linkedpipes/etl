@@ -35,6 +35,10 @@ define([], function () {
         "password": {
             "$type": "str",
             "$label": "Password"
+        },
+        "connectionTimeOut": {
+            "$type": "int",
+            "$label": "Connection time out"
         }
     };
 
