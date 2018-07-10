@@ -22,7 +22,7 @@ class CreateNewConfiguration {
             String baseIri, IRI graph)
             throws BaseException {
         return createNew(configurationRdf, descriptionRdf,
-                baseIri, graph, valueFactory.createIRI(LP_OBJECTS.INHERIT));
+                baseIri, graph, valueFactory.createIRI(LP_OBJECTS.NONE));
     }
 
     Collection<Statement> createNewFromTemplate(
@@ -31,7 +31,7 @@ class CreateNewConfiguration {
             String baseIri, IRI graph)
             throws BaseException {
         return createNew(configurationRdf, descriptionRdf,
-                baseIri, graph, valueFactory.createIRI(LP_OBJECTS.NONE));
+                baseIri, graph, valueFactory.createIRI(LP_OBJECTS.INHERIT));
     }
 
     private Collection<Statement> createNew(
