@@ -31,6 +31,9 @@ class MergeHierarchy {
             Collection<Statement> descriptionRdf,
             String baseIri, IRI graph) throws BaseException {
         this.description = this.descriptionLoader.load(descriptionRdf);
+        this.templateModel = null;
+        this.templateEntity = null;
+        //
         for (Collection<Statement> configurationRdf : configurationsRdf) {
             if (this.templateModel == null) {
                 this.loadModel(configurationRdf);
