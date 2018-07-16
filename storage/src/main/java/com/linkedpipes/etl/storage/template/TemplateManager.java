@@ -98,8 +98,18 @@ public class TemplateManager {
     private void migrateV1ToV2() throws BaseException {
         LOG.info("Migrating to version 2");
         TemplateV1ToV2 v1Tov2 = new TemplateV1ToV2(this, this.repository);
+        boolean migrationFailed = false;
         for (Template template : templates.values()) {
-            v1Tov2.migrate(template);
+            try {
+                v1Tov2.migrate(template);
+            } catch (Exception ex) {
+                LOG.error("Migration of component '{}' failed",
+                        template.getIri(), ex);
+                migrationFailed = true;
+            }
+        }
+        if (migrationFailed) {
+            throw new BaseException("Migration failed");
         }
     }
 
