@@ -49,11 +49,16 @@ class TemplateV1ToV2 {
         updateConfigDescriptionReference();
     }
 
-    private JarTemplate getJarTemplate() {
+    private JarTemplate getJarTemplate() throws BaseException {
         ReferenceTemplate reference = this.template;
         while (true) {
             Template parent = manager.getTemplates().get(
                     reference.getTemplate());
+            if (parent == null) {
+                throw new BaseException(
+                        "Missing parent ('{}') for template: {}",
+                        reference.getTemplate(), reference.getIri());
+            }
             if (parent.getType() == Template.Type.JAR_TEMPLATE) {
                 return (JarTemplate) parent;
             }
@@ -111,7 +116,7 @@ class TemplateV1ToV2 {
             throws RdfUtils.RdfException {
         Collection<Statement> statements =
                 this.repository.getConfigDescription(this.template);
-        List<Statement> updated =  RdfUtils.updateToIriAndGraph(
+        List<Statement> updated = RdfUtils.updateToIriAndGraph(
                 statements, configDescription);
         this.repository.setConfigDescription(this.template, updated);
     }
