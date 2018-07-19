@@ -39,7 +39,7 @@ public class PipelineServlet {
     @ResponseBody
     public void getPipelines(HttpServletRequest request,
             HttpServletResponse response) throws BaseException {
-        RdfUtils.write(request, response, pipelines.getReferenceRdf());
+        RdfUtils.write(request, response, pipelines.getReferenceAsRdf());
     }
 
     /**
@@ -58,6 +58,8 @@ public class PipelineServlet {
                     boolean includeTemplates,
             @RequestParam(name = "mappings", defaultValue = "true")
                     boolean includeMapping,
+            @RequestParam(name = "removePrivateConfig", defaultValue = "false")
+                        boolean removePrivateConfig,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         final Pipeline pipeline = pipelines.getPipeline(iri);
@@ -66,7 +68,7 @@ public class PipelineServlet {
             return;
         }
         RdfUtils.write(request, response, pipelines.getPipelineRdf(pipeline,
-                includeTemplates, includeMapping));
+                includeTemplates, includeMapping, removePrivateConfig));
     }
 
     /**
@@ -93,7 +95,7 @@ public class PipelineServlet {
         final Pipeline pipelineObject = pipelines.createPipeline(
                 pipelineRdf, optionsRdf);
         RdfUtils.write(request, response,
-                pipelines.getReferenceRdf(pipelineObject));
+                pipelines.getReferenceAsRdf(pipelineObject));
     }
 
     /**

@@ -53,24 +53,6 @@
                 .catch(handleExecutionPostFailure);
         }
 
-        function exportPipeline(pipeline, $event) {
-            const useFullScreen = ($mdMedia("sm") || $mdMedia("xs"));
-            $mdDialog.show({
-                "controller": "components.pipelines.export.dialog",
-                "templateUrl": "app/components/pipelines/exportDialog/pipelineExportDialogView.html",
-                "parent": angular.element(document.body),
-                "targetEvent": $event,
-                "clickOutsideToClose": false,
-                "fullscreen": useFullScreen,
-                "locals": {
-                    "data": {
-                        "iri": pipeline.iri,
-                        "label": pipeline.label
-                    }
-                }
-            });
-        }
-
         function createPipeline() {
             pipelineApi.create($http)
                 .then(redirectToPipelineDetail)
@@ -180,7 +162,6 @@
             "initialize": initialize,
             "execute": executePipeline,
             "executeWithoutDebugData": executeWithoutDebugData,
-            "export": exportPipeline,
             "create": createPipeline,
             "redirectToUpload": redirectToPipelineUpload,
             "copy": copyPipeline,

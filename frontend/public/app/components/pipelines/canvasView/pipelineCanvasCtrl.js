@@ -242,7 +242,8 @@ define([
          * a promise.
          */
         function loadPipeline() {
-            const iri = data.pipeline.iri + '&templates=false&mappings=false'
+            const iri = data.pipeline.iri +
+                '&templates=false&mappings=false&removePrivateConfig=false';
             return $http.get(iri).then(function (response) {
                 data.pipeline.model = pipelineService.fromJsonLd(response.data);
                 data.pipeline.resource = pipelineService.getPipeline(
@@ -545,7 +546,9 @@ define([
 
         $scope.onDownload = function ($event) {
             storePipeline(data.pipeline.iri, true, () => {
-                $http.get(data.pipeline.iri).then(function (response) {
+                const url = data.pipeline.iri +
+                    "?templates=true&mappings=true&removePrivateConfig=false";
+                $http.get(url).then(function (response) {
                     saveAs(new Blob([JSON.stringify(response.data, null, 2)],
                         {type: 'text/json'}),
                         $scope.data.pipelineLabel + '.jsonld');
@@ -555,20 +558,12 @@ define([
 
         $scope.onDownloadNoCredentials = function ($event) {
             storePipeline(data.pipeline.iri, true, () => {
-                var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-                $mdDialog.show({
-                    'controller': 'components.pipelines.export.dialog',
-                    'templateUrl': 'app/components/pipelines/exportDialog/pipelineExportDialogView.html',
-                    'parent': angular.element(document.body),
-                    'targetEvent': $event,
-                    'clickOutsideToClose': false,
-                    'fullscreen': useFullScreen,
-                    'locals': {
-                        'data': {
-                            'iri': data.pipeline.iri,
-                            'label': $scope.data.pipelineLabel
-                        }
-                    }
+                const url = data.pipeline.iri +
+                    "?templates=true&mappings=true&removePrivateConfig=true";
+                $http.get(url).then(function (response) {
+                    saveAs(new Blob([JSON.stringify(response.data, null, 2)],
+                        {type: 'text/json'}),
+                        $scope.data.pipelineLabel + '.jsonld');
                 });
             });
         };

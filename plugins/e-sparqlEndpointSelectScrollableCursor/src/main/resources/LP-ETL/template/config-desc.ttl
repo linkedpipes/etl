@@ -58,9 +58,11 @@
 <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#userNameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#userNameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#passwordControl> ;
+    config:private true .

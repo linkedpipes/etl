@@ -48,6 +48,7 @@ class ReferenceFactory {
     public ReferenceTemplate create(
             Collection<Statement> content,
             Collection<Statement> config,
+            Collection<Statement> description,
             String id, String iriAsString)
             throws BaseException {
         clear();
@@ -61,7 +62,14 @@ class ReferenceFactory {
         List<Statement> interfaceRdf = createInterface();
         List<Statement> definitionRdf = createDefinition();
         List<Statement> configRdf = updateConfig(config);
-        List<Statement> configDescriptionRdf = createConfigDescription();
+        Collection<Statement> configDescriptionRdf;
+        if (description == null) {
+            // Create without description, for example creating local template.
+            configDescriptionRdf = createConfigDescription();
+        } else {
+            // Import with description.
+            configDescriptionRdf = description;
+        }
         //
         RepositoryReference ref = RepositoryReference.Reference(id);
         this.repository.setInterface(ref, interfaceRdf);

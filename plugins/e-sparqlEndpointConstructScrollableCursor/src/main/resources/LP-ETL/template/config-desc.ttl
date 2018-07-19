@@ -65,12 +65,14 @@
 <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userNameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userNameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#passwordControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0/configuration/desc/useTolerantRepository>
     a config:ConfigurationMember ;

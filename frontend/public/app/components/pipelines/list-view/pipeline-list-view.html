@@ -55,13 +55,14 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="" ng-href="{{item.iri}}?templates=true&mappings=true"
+                                <md-button ng-click="" ng-href="{{item.iri}}?templates=true&mappings=true&removePrivateConfig=false"
                                            target="_blank" download="{{item.label}}.jsonld" aria-label="Download">
                                     <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="onExport(item, $event)" aria-label="Download anonymized">
+                                <md-button ng-click="" ng-href="{{item.iri}}?templates=true&mappings=true&removePrivateConfig=true"
+                                           target="_blank" download="{{item.label}}.jsonld" aria-label="Download without credentials">
                                     <md-icon md-svg-icon="file_download" class="lp-icon"></md-icon> Download without credentials
                                 </md-button>
                             </md-menu-item>

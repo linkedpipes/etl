@@ -22,7 +22,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void createNew() throws Exception {
-        Collection<Statement> actual = facade.createNewFromTemplate(
+        Collection<Statement> actual = facade.createNewFromJarFile(
                 TestUtils.rdfFromResource("configuration/parentConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base",
@@ -38,7 +38,7 @@ public class ConfigurationFacadeTest {
      */
     @Test
     public void createNewInheritAll() throws Exception {
-        Collection<Statement> actual = facade.createNewFromJarFile(
+        Collection<Statement> actual = facade.createNewFromTemplate(
                 TestUtils.rdfFromResource("configuration/jarConfig.ttl"),
                 TestUtils.rdfFromResource("configuration/desc.ttl"),
                 "http://base",

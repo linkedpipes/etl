@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.storage.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -12,36 +11,34 @@ import java.util.Collection;
 
 class CreateNewConfiguration {
 
-    private final DescriptionLoader descriptionLoader = new DescriptionLoader();
+    private static final IRI CONTROL_NONE;
 
-    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+    private static final IRI CONTROL_INHERIT;
+
+    static {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        CONTROL_NONE = valueFactory.createIRI(LP_OBJECTS.NONE);
+        CONTROL_INHERIT = valueFactory.createIRI(LP_OBJECTS.INHERIT);
+    }
 
     Collection<Statement> createNewFromJarFile(
             Collection<Statement> configurationRdf,
-            Collection<Statement> descriptionRdf,
-            String baseIri, IRI graph)
-            throws BaseException {
-        return createNew(configurationRdf, descriptionRdf,
-                baseIri, graph, valueFactory.createIRI(LP_OBJECTS.NONE));
+            Description description, String baseIri, IRI graph) {
+        return createNew(configurationRdf, description,
+                baseIri, graph, CONTROL_NONE);
     }
 
     Collection<Statement> createNewFromTemplate(
             Collection<Statement> configurationRdf,
-            Collection<Statement> descriptionRdf,
-            String baseIri, IRI graph)
-            throws BaseException {
-        return createNew(configurationRdf, descriptionRdf,
-                baseIri, graph, valueFactory.createIRI(LP_OBJECTS.INHERIT));
+            Description description, String baseIri, IRI graph) {
+        return createNew(configurationRdf, description,
+                baseIri, graph, CONTROL_INHERIT);
     }
 
     private Collection<Statement> createNew(
-            Collection<Statement> configurationRdf,
-            Collection<Statement> descriptionRdf,
-            String baseIri, IRI graph, IRI control) throws BaseException {
-        Description description =
-                descriptionLoader.load(descriptionRdf);
+            Collection<Statement> configurationRdf, Description description,
+            String baseIri, IRI graph, IRI control) {
         RdfObjects configuration = new RdfObjects(configurationRdf);
-        // Update configuration.
         configuration.getTyped(description.getType()).forEach((instance) -> {
             for (Description.Member member : description.getMembers()) {
                 instance.deleteReferences(member.getControl());

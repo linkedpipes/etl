@@ -18,8 +18,6 @@
 
         $scope.onExecuteWithoutDebugData = service.executeWithoutDebugData;
 
-        $scope.onExport = service.export;
-
         $scope.onCreate = service.create;
 
         $scope.onUpload = service.redirectToUpload;

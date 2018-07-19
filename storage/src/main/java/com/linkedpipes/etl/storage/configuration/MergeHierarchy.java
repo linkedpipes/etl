@@ -18,8 +18,6 @@ class MergeHierarchy {
     private static final Logger LOG =
             LoggerFactory.getLogger(MergeHierarchy.class);
 
-    private final DescriptionLoader descriptionLoader = new DescriptionLoader();
-
     private Description description;
 
     private Model templateModel;
@@ -28,11 +26,9 @@ class MergeHierarchy {
 
     Collection<Statement> merge(
             Collection<Collection<Statement>> configurationsRdf,
-            Collection<Statement> descriptionRdf,
+            Description description,
             String baseIri, IRI graph) throws BaseException {
-        this.description = this.descriptionLoader.load(descriptionRdf);
-        this.templateModel = null;
-        this.templateEntity = null;
+        this.initialize(description);
         //
         for (Collection<Statement> configurationRdf : configurationsRdf) {
             if (this.templateModel == null) {
@@ -59,10 +55,16 @@ class MergeHierarchy {
         }
         if (this.templateModel == null) {
             LOG.warn("No configuration found.");
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         this.templateModel.updateResources(baseIri + "/");
         return this.templateModel.asStatements(this.templateEntity, graph);
+    }
+
+    private void initialize(Description description) {
+        this.description = description;
+        this.templateModel = null;
+        this.templateEntity = null;
     }
 
     private void loadModel(Collection<Statement> statements) {

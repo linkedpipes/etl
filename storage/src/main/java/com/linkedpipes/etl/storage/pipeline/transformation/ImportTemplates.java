@@ -104,7 +104,6 @@ class ImportTemplates {
                 this.pipelineGraph = statement.getContext();
             }
             graph.add(statement);
-
         }
     }
 
@@ -127,7 +126,7 @@ class ImportTemplates {
             if (resolvedTemplates.isEmpty()) {
                 LOG.error("Failed to import following templates:");
                 for (TemplateInfo templateInfo : templates) {
-                    LOG.info("{}", templateInfo.getIri());
+                    LOG.info("   {}", templateInfo.getIri());
                 }
                 return;
             }
@@ -160,22 +159,23 @@ class ImportTemplates {
             throws BaseException {
         this.templateFacade.updateInterface(local, remote.getDefinition());
         Template parent = this.templateFacade.getParent(local);
-        Collection<Statement> config = prepareConfiguration(remote, parent);
+        prepareTemplateForImport(remote, parent);
+        Collection<Statement> config = remote.getConfiguration();
         this.templateFacade.updateConfig(local, config);
     }
 
-    private Collection<Statement> prepareConfiguration(
+    private void prepareTemplateForImport(
             TemplateInfo remote, Template localParent) {
         if (!this.migrateConfigurations) {
-            return remote.getConfiguration();
+            return;
         }
         Template root = this.templateFacade.getRootTemplate(localParent);
         if (MigrateV1ToV2.shouldUpdate(root.getIri())) {
-            return MigrateV1ToV2.updateConfiguration(
+            remote.setConfiguration(MigrateV1ToV2.updateConfiguration(
                     remote.getConfiguration(),
-                    root.getIri());
-        } else {
-            return remote.getConfiguration();
+                    root.getIri()));
+            // We do not need to migrate description, as it was not exported
+            // in prior versions.
         }
     }
 
@@ -187,10 +187,12 @@ class ImportTemplates {
         LOG.info("Importing: {} with local parent: {}",
                 remoteTemplate.getIri(), parent.getIri());
         remoteTemplate.setTemplate(this.valueFactory.createIRI(parent.getIri()));
+        prepareTemplateForImport(remoteTemplate, parent);
         try {
             Template template = this.templateFacade.createTemplate(
                     remoteTemplate.getDefinition(),
-                    prepareConfiguration(remoteTemplate, parent));
+                    remoteTemplate.getConfiguration(),
+                    remoteTemplate.getConfigurationDescription());
             String originalTemplateIri =
                     this.mapping.toOriginal(remoteTemplate.getIri());
             this.mappingFacade.add(template, originalTemplateIri);

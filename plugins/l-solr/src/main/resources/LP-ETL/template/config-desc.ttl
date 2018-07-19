@@ -33,12 +33,14 @@
 <http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-solr#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-solr#userNameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-solr#userNameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-solr#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-solr#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-solr#passwordControl> ;
+    config:private true .
 
 
 

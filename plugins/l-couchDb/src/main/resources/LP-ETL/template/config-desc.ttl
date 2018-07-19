@@ -39,9 +39,11 @@
 <http://linkedpipes.com/resources/components/l-couchDb/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-couchDb#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-couchDb#userNameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-couchDb#userNameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-couchDb/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-couchDb#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-couchDb#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-couchDb#passwordControl> ;
+    config:private true .

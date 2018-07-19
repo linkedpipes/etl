@@ -149,7 +149,8 @@ desc:sparqlEndpointDescription
 desc:apiKey
     a config:ConfigurationMember ;
     config:property lodcloud:apiKey ;
-    config:control lodcloud:apiKeyControl .
+    config:control lodcloud:apiKeyControl ;
+    config:private true .
 
 desc:datasetID
     a config:ConfigurationMember ;

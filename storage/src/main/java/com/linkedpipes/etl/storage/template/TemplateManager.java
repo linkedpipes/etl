@@ -52,12 +52,17 @@ public class TemplateManager {
 
     @PostConstruct
     public void initialize() throws BaseException {
-        importJarFiles();
-        importTemplates();
-        if (this.repository.getInitialVersion() < 1) {
-            migrate();
+        try {
+            importJarFiles();
+            importTemplates();
+            if (this.repository.getInitialVersion() < 1) {
+                migrate();
+            }
+            this.repository.updateFinished();
+        } catch (RuntimeException ex) {
+            LOG.error("Initialization failed.", ex);
+            throw ex;
         }
-        this.repository.updateFinished();
     }
 
     private void importJarFiles() {
@@ -126,9 +131,13 @@ public class TemplateManager {
         return Collections.unmodifiableMap(templates);
     }
 
+    /**
+     * @param descriptionRdf If null
+     */
     public Template createTemplate(
             Collection<Statement> interfaceRdf,
-            Collection<Statement> configurationRdf)
+            Collection<Statement> configurationRdf,
+            Collection<Statement> descriptionRdf)
             throws BaseException {
         String id = this.repository.reserveReferenceId();
         String iri = this.configuration.getDomainName() +
@@ -136,7 +145,8 @@ public class TemplateManager {
         ReferenceFactory factory = new ReferenceFactory(this, this.repository);
         try {
             Template template = factory.create(
-                    interfaceRdf, configurationRdf, id, iri);
+                    interfaceRdf, configurationRdf,
+                    descriptionRdf, id, iri);
             templates.put(template.getIri(), template);
             return template;
         } catch (BaseException ex) {

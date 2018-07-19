@@ -30,15 +30,16 @@ public class TemplateFacade implements TemplateSource {
 
     private final TemplateRepository repository;
 
-    private final ConfigurationFacade configurationFacade =
-            new ConfigurationFacade();
+    private final ConfigurationFacade configurationFacade;
 
     @Autowired
     public TemplateFacade(
             TemplateManager manager,
-            MappingFacade mapping) {
+            MappingFacade mapping,
+            ConfigurationFacade configuration) {
         this.manager = manager;
         this.mapping = mapping;
+        this.configurationFacade = configuration;
         this.repository = manager.getRepository();
     }
 
@@ -232,7 +233,18 @@ public class TemplateFacade implements TemplateSource {
             Collection<Statement> definition,
             Collection<Statement> configuration)
             throws BaseException {
-        Template template = manager.createTemplate(definition, configuration);
+        Template template = manager.createTemplate(
+                definition, configuration, null);
+        return template;
+    }
+
+    public Template createTemplate(
+            Collection<Statement> definition,
+            Collection<Statement> configuration,
+            Collection<Statement> configurationDescription)
+            throws BaseException {
+        Template template = manager.createTemplate(
+                definition, configuration, configurationDescription);
         return template;
     }
 

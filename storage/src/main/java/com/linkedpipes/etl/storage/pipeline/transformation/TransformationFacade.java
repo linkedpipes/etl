@@ -15,11 +15,16 @@ import java.util.Collection;
 @Service
 public class TransformationFacade {
 
-    @Autowired
-    private TemplateFacade templateFacade;
+    private final TemplateFacade templateFacade;
+
+    private final MappingFacade mappingFacade;
 
     @Autowired
-    private MappingFacade mappingFacade;
+    public TransformationFacade(
+            TemplateFacade templates, MappingFacade mappings) {
+        this.templateFacade = templates;
+        this.mappingFacade = mappings;
+    }
 
     public Collection<Statement> migrateThrowOnWarning(
             Collection<Statement> pipeline)
@@ -35,11 +40,10 @@ public class TransformationFacade {
             IRI newIri) throws TransformationFailed {
         PipelineInfo info = loadPipelineInfo(pipeline);
 
+        // Localization may import templates, which may needed to be localized
+        // as well, this is done in the transformer.
         ImportTransformer transformer = new ImportTransformer(
                 templateFacade, mappingFacade);
-
-        // Localization may import templates, which may be needed to migrate
-        // as well.
         pipeline = transformer.localizePipeline(
                 pipeline, options, info, newIri);
 

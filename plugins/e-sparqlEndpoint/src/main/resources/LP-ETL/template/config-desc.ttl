@@ -46,12 +46,14 @@
 <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#userNameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#userNameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#passwordControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0/configuration/desc/useTolerantRepository>
     a config:ConfigurationMember ;

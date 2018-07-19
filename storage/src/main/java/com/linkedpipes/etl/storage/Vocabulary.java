@@ -11,6 +11,9 @@ public class Vocabulary {
     public static final String CONFIG_DESC_CONTROL =
             "http://plugins.linkedpipes.com/ontology/configuration/control";
 
+    public static final String IS_PRIVATE =
+            "http://plugins.linkedpipes.com/ontology/configuration/private";
+
     public static final String CONFIG_DESC_MEMBER =
             "http://plugins.linkedpipes.com/ontology/configuration/member";
 

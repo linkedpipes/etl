@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.storage.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.rdf.Model;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -45,11 +44,9 @@ class MergeFromBottom {
     Collection<Statement> merge(
             Collection<Statement> templateRdf,
             Collection<Statement> instanceRdf,
-            Collection<Statement> descriptionRdf,
-            String baseIri, IRI graph) throws BaseException {
-        this.description = this.descriptionLoader.load(descriptionRdf);
-        this.baseIri = baseIri;
-        this.graph = graph;
+            Description description,
+            String baseIri, IRI graph) {
+        this.initialize(description, baseIri, graph);
         //
         this.loadTemplateModel(templateRdf);
         if (this.templateEntity == null) {
@@ -68,6 +65,15 @@ class MergeFromBottom {
         } else {
             return this.mergeGlobal();
         }
+    }
+
+    private void initialize(Description description, String baseIri, IRI graph) {
+        this.description = description;
+        this.templateModel = null;
+        this.templateEntity = null;
+        this.instanceModel = null;
+        this.baseIri = baseIri;
+        this.graph = graph;
     }
 
     private void loadTemplateModel(Collection<Statement> statements) {

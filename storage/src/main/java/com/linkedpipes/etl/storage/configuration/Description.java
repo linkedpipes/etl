@@ -3,6 +3,7 @@ package com.linkedpipes.etl.storage.configuration;
 import com.linkedpipes.etl.storage.Vocabulary;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -30,14 +31,19 @@ class Description implements PojoLoader.Loadable {
 
         private IRI control;
 
+        private boolean isPrivate = false;
+
         @Override
         public PojoLoader.Loadable load(String predicate, Value value) {
             switch (predicate) {
                 case Vocabulary.CONFIG_DESC_PROPERTY:
-                    property = (IRI) value;
+                    this.property = (IRI) value;
                     break;
                 case Vocabulary.CONFIG_DESC_CONTROL:
-                    control = (IRI) value;
+                    this.control = (IRI) value;
+                    break;
+                case Vocabulary.IS_PRIVATE:
+                    this.isPrivate = ((Literal)value).booleanValue();
                     break;
             }
             return null;
@@ -49,6 +55,10 @@ class Description implements PojoLoader.Loadable {
 
         public IRI getControl() {
             return control;
+        }
+
+        public boolean isPrivate() {
+            return isPrivate;
         }
     }
 

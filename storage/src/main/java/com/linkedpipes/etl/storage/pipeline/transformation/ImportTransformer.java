@@ -37,7 +37,7 @@ class ImportTransformer {
             IRI pipelineIri)
             throws TransformationFailed {
         if (pipelineRdf.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         this.loadOptions(optionsRdf);
         this.loadPipelineInfo(pipelineRdf);

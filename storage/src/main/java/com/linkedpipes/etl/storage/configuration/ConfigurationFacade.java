@@ -3,25 +3,24 @@ package com.linkedpipes.etl.storage.configuration;
 import com.linkedpipes.etl.storage.BaseException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+@Service
 public class ConfigurationFacade {
 
-    private final CreateNewConfiguration createNewConfiguration =
-            new CreateNewConfiguration();
-
-    private final MergeHierarchy mergeHierarchy = new MergeHierarchy();
-
-    private final MergeFromBottom mergeFromBottom = new MergeFromBottom();
+    private final DescriptionLoader descriptionLoader = new DescriptionLoader();
 
     public Collection<Statement> createNewFromJarFile(
             Collection<Statement> configurationRdf,
             Collection<Statement> descriptionRdf,
             String baseIri, IRI graph)
             throws BaseException {
-        return createNewConfiguration.createNewFromJarFile(
-                configurationRdf, descriptionRdf, baseIri, graph);
+        Description description = this.descriptionLoader.load(descriptionRdf);
+        CreateNewConfiguration worker = new CreateNewConfiguration();
+        return worker.createNewFromJarFile(
+                configurationRdf, description, baseIri, graph);
     }
 
     public Collection<Statement> createNewFromTemplate(
@@ -29,8 +28,10 @@ public class ConfigurationFacade {
             Collection<Statement> descriptionRdf,
             String baseIri, IRI graph)
             throws BaseException {
-        return createNewConfiguration.createNewFromTemplate(
-                configurationRdf, descriptionRdf, baseIri, graph);
+        Description description = this.descriptionLoader.load(descriptionRdf);
+        CreateNewConfiguration worker = new CreateNewConfiguration();
+        return worker.createNewFromTemplate(
+                configurationRdf, description, baseIri, graph);
     }
 
     /**
@@ -41,8 +42,9 @@ public class ConfigurationFacade {
             Collection<Collection<Statement>> configurationsRdf,
             Collection<Statement> descriptionRdf,
             String baseIri, IRI graph) throws BaseException {
-        return mergeHierarchy.merge(
-                configurationsRdf, descriptionRdf, baseIri, graph);
+        Description description = this.descriptionLoader.load(descriptionRdf);
+        MergeHierarchy worker = new MergeHierarchy();
+        return worker.merge(configurationsRdf, description, baseIri, graph);
     }
 
 
@@ -55,8 +57,22 @@ public class ConfigurationFacade {
             Collection<Statement> instanceRdf,
             Collection<Statement> descriptionRdf,
             String baseIri, IRI graph) throws BaseException {
-        return mergeFromBottom.merge(
-                templateRdf, instanceRdf, descriptionRdf, baseIri, graph);
+        Description description = this.descriptionLoader.load(descriptionRdf);
+        MergeFromBottom worker = new MergeFromBottom();
+        return worker.merge(
+                templateRdf, instanceRdf, description, baseIri, graph);
+    }
+
+    /**
+     * Select and return private configuration properties.
+     */
+    public Collection<Statement> selectPrivateStatements(
+            Collection<Statement> configurationRdf,
+            Collection<Statement> descriptionRdf) throws BaseException {
+        Description description = this.descriptionLoader.load(descriptionRdf);
+
+        SelectPrivateStatements worker = new SelectPrivateStatements();
+        return worker.selectPrivate(configurationRdf, description);
     }
 
 }

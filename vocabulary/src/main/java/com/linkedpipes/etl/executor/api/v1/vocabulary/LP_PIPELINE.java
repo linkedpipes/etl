@@ -206,4 +206,7 @@ public final class LP_PIPELINE {
      */
     public static final String HAS_SUPPORT_CONTROL = PREFIX + "supportControl";
 
+    public static final String HAS_TAG =
+            "http://etl.linkedpipes.com/ontology/tag";
+
 }
