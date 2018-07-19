@@ -80,6 +80,7 @@ class ScpClient implements AutoCloseable {
                 break;
             }
             buffer.append((char) value);
+            LOG.debug("  {} ({})", (char)value, value);
         }
         LOG.debug("readResponse ... done");
         return buffer.toString();
