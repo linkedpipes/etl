@@ -1,16 +1,16 @@
 define([
     'jquery',
     'jsonld',
-    'app/components/canvas/canvasDirective',
-    'app/components/canvas/pipelineCanvas',
-    'app/components/canvas/executionProgress',
-    'app/components/pipelineEditDirective/pipelineEditDirective',
+    'app/components/pipelines/canvas-edit-view/canvas/canvasDirective',
+    'app/components/pipelines/canvas-edit-view/canvas/pipelineCanvas',
+    'app/components/pipelines/canvas-edit-view/canvas/executionProgress',
+    'app/components/pipelines/canvas-edit-view/pipelineEditDirective/pipelineEditDirective',
     'app/components/pipelines/pipelineModelService',
     'app/components/templates/selectDialog/templateSelectDialog',
     'app/components/pipelines/import-dialog/pipeline-import-dialog-ctrl',
     'app/components/pipelines/detail-dialog/pipeline-detail-dialog-ctrl',
-    'app/components/templates/detailDialog/templateDetailDialog',
-    'app/components/instances/detailDialog/instanceDetailDialog',
+    'app/components/pipelines/canvas-edit-view/templateDetailDialog/templateDetailDialog',
+    'app/components/dialogs/detailDialog/instanceDetailDialog',
     'file-saver',
     'app/modules/execution-model'
 ], function (jQuery, jsonld,
@@ -89,7 +89,7 @@ define([
             var template = templateService.getTemplate(templateIri);
             $mdDialog.show({
                 'controller': 'instance.detail.dialog',
-                'templateUrl': 'app/components/instances/detailDialog/instanceDetailDialog.html',
+                'templateUrl': 'app/components/dialogs/detailDialog/instanceDetailDialog.html',
                 'clickOutsideToClose': false,
                 'fullscreen': useFullScreen,
                 'locals': {
@@ -114,7 +114,7 @@ define([
             var template = templateService.getTemplate(templateIri);
             $mdDialog.show({
                 'controller': 'template.detail.dialog',
-                'templateUrl': 'app/components/templates/detailDialog/templateDetailDialog.html',
+                'templateUrl': 'app/components/pipelines/canvas-edit-view/templateDetailDialog/templateDetailDialog.html',
                 'clickOutsideToClose': false,
                 'fullscreen': useFullScreen,
                 'locals': {

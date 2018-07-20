@@ -9,7 +9,7 @@ define([
              templateService, templateDialogService, hierarchyTab) {
     "use strict";
 
-    const PARENT_PATH = "app/components/instances/detailDirective/";
+    const PARENT_PATH = "app/components/dialogs/detailDirective/";
 
     function directive($rootScope, templateService, templateDialogService) {
 

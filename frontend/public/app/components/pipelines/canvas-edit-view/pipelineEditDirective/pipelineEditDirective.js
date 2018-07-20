@@ -457,7 +457,7 @@ define([
         return {
             'restrict': 'E',
             'scope': {'api': '='},
-            'templateUrl': 'app/components/pipelineEditDirective/pipelineEditHtml.html',
+            'templateUrl': 'app/components/pipelines/canvas-edit-view/pipelineEditDirective/pipelineEditHtml.html',
             'link': function ($scope, element, attrs) {
                 instance = jQuery.extend($scope.api, service);
                 // Get references.

@@ -1,5 +1,5 @@
 /**
- * Directive for list of IRIs.
+ * Directive for a text label with support for multiple languages.
  *
  * The ngModel must be set to the value of predicate in JSON-LD.
  */
@@ -12,11 +12,12 @@ define(["jquery"], function (jQuery) {
             scope: {
                 "topLabel": "@labelTop",
                 "itemLabel": "@labelItem",
-                "disabled": "=lpDisabled"
+                "disabled": "=lpDisabled",
+                "multiline" : "@multiline"
             },
             replace: true,
             restrict: "E",
-            templateUrl: "app/components/inputs/iriList/iriList.html",
+            templateUrl: "app/components/dialogs/ui/localizedTextInput/localizedTextInput.html",
             link: function ($scope, element, attrs, ngModel) {
 
                 if (!ngModel) {
@@ -35,18 +36,21 @@ define(["jquery"], function (jQuery) {
                  * Propagate changed from outside.
                  */
                 ngModel.$render = function () {
-                    const modelValue = ngModel.$modelValue;
-                    if (modelValue === undefined || modelValue === null) {
-                        $scope.data = [];
-                    } else if (Array.isArray(modelValue)) {
-                        $scope.data = modelValue;
+                    if (jQuery.isArray(ngModel.$modelValue)) {
+                        $scope.data = ngModel.$modelValue;
                     } else {
-                        $scope.data = [{"@id": modelValue}];
+                        $scope.data = [{
+                            "@language": "en",
+                            "@value": ngModel.$modelValue
+                        }];
                     }
                 };
 
                 $scope.onAdd = function (index) {
-                    $scope.data.splice(index + 1, 0, {"@id": ""});
+                    $scope.data.splice(index + 1, 0, {
+                        "@language": "",
+                        "@value": ""
+                    });
                     $scope.onChange();
                 };
 
@@ -67,6 +71,6 @@ define(["jquery"], function (jQuery) {
         } else {
             isInitialized = true;
         }
-        app.directive("lpIriList", directive);
+        app.directive("lpLocalizedTextInput", directive);
     };
 });

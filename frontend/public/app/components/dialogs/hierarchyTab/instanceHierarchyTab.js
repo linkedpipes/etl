@@ -1,7 +1,7 @@
 define([], function () {
     "use strict";
 
-    const PARENT_PATH = "app/components/instances/hierarchyTab/";
+    const PARENT_PATH = "app/components/dialogs/hierarchyTab/";
 
     function directive(templateService) {
         return {

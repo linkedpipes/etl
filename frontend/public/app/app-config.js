@@ -52,7 +52,7 @@ define([], function () {
                     'color': '#2196F3'
                 })
                 .when('/pipelines/edit/canvas', {
-                    'templateUrl': 'app/components/pipelines/canvasView/pipelineCanvasView.html',
+                    'templateUrl': 'app/components/pipelines/canvas-edit-view/pipelineCanvasView.html',
                     'controller': 'components.pipeline.canvas.view',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipeline - LinkedPipes ETL'
