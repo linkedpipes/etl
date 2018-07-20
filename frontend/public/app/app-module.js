@@ -2,7 +2,7 @@ define([
     "app/app-config",
     "app/components/pipelines/list-view/pipeline-list-ctrl",
     "app/components/pipelines/canvasView/pipelineCanvasCtrl",
-    "app/components/pipelines/uploadView/pipelineUploadCtrl",
+    "app/components/pipelines/upload-view/pipeline-upload-ctrl",
     "app/components/executions/list-view/execution-list-ctrl",
     "app/components/componentExecutionDetail/componentExecutionDetailCtrl",
     "app/components/personalization/personalization-ctrl",
