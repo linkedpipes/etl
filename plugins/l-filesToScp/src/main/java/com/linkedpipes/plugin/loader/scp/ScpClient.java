@@ -30,9 +30,7 @@ class ScpClient implements AutoCloseable {
 
     private Session session = null;
 
-    private String welcomeMessage = null;
-
-    private int timeOut = 0;
+    private int timeOut;
 
     public ScpClient(int timeOut) {
         this.timeOut = timeOut;
@@ -44,28 +42,49 @@ class ScpClient implements AutoCloseable {
         LOG.debug("connect ...");
         session = jsch.getSession(username, hostname, port);
         session.setPassword(password);
-        ignoreUnknownKey();
-        session.connect(this.timeOut);
-        readWelcomeMessage();
+        session.setTimeout(this.timeOut);
+        configureSession();
+        session.connect();
+        LOG.debug("session.isConnected: {}", session.isConnected());
         LOG.debug("connect ... done");
     }
 
-    private void ignoreUnknownKey() {
+    private void configureSession() {
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);
     }
 
-    private void readWelcomeMessage() throws Exception {
-        LOG.debug("readWelcomeMessage ...");
+    public void createDirectory(String directory) throws Exception {
+        LOG.info("createDirectory ...");
         withChannelExec((channel) -> {
-            channel.setCommand(":");
-            channel.connect();
-            InputStream inputStream = channel.getExtInputStream();
-            welcomeMessage = readResponse(inputStream);
-            LOG.info("Welcome message: {}", welcomeMessage);
+            channel.setCommand(this.createDirectoryCommand(directory));
+            this.executeChannel(channel);
         });
-        LOG.debug("readWelcomeMessage ... done");
+        LOG.info("createDirectory ... done");
+    }
+
+    private String createDirectoryCommand(String directory) {
+        return "[ -d " + directory + " ] || mkdir " + directory;
+    }
+
+    private void withChannelExec(ChanelConsumer consumer) throws Exception {
+        ChannelExec channel = null;
+        try {
+            channel = (ChannelExec) session.openChannel("exec");
+            consumer.accept(channel);
+        } finally {
+            if (channel != null) {
+                channel.disconnect();
+            }
+        }
+    }
+
+    private void executeChannel(ChannelExec channel) throws Exception {
+        channel.connect();
+        InputStream inputStream = channel.getExtInputStream();
+        String response = readResponse(inputStream);
+        checkResponseStream(channel.getExitStatus(), response);
     }
 
     private static String readResponse(InputStream stream) throws IOException {
@@ -80,59 +99,21 @@ class ScpClient implements AutoCloseable {
                 break;
             }
             buffer.append((char) value);
-            LOG.debug("  {} ({})", (char)value, value);
         }
         LOG.debug("readResponse ... done");
         return buffer.toString();
     }
 
-    private void withChannelExec(ChanelConsumer consumer) throws Exception {
-        LOG.debug("withChannelExec ...");
-        ChannelExec channel = null;
-        try {
-            channel = (ChannelExec) session.openChannel("exec");
-            consumer.accept(channel);
-        } finally {
-            if (channel != null) {
-                channel.disconnect();
-            }
-        }
-        LOG.debug("withChannelExec ... done");
-    }
-
-    public void createDirectory(String directory) throws Exception {
-        LOG.info("createDirectory ...");
-        String command = "[ -d " + directory + " ] || mkdir " + directory;
-        withChannelExec((channel) -> {
-            channel.setCommand(command);
-            executeChannel(channel);
-        });
-        LOG.info("createDirectory ... done");
-    }
-
-    private String stripWelcomeMessage(String response) {
-        return response.substring(welcomeMessage.length());
-    }
-
-    private void executeChannel(ChannelExec channel) throws Exception {
-        channel.connect();
-        InputStream inputStream = channel.getExtInputStream();
-        String response = stripWelcomeMessage(readResponse(inputStream));
-        checkResponseStream(channel.getExitStatus(), response);
-    }
-
     private void checkResponseStream(int code, String response) throws LpException {
-        LOG.info("checkResponseStream: {} {}", code, response);
+        LOG.info("checkResponseStream ({}) : {}", code, response);
         if (code == 0) {
             return;
-        } else {
-            throw new LpException(
-                    "Action failed, see log for more information.");
         }
+        throw new LpException("Action failed, see log for more information.");
     }
 
     public void clearDirectory(String directory) throws Exception {
-        String command ="[ $(ls -A " + directory + " ) ] && rm -r " +
+        String command = "[ $(ls -A " + directory + " ) ] && rm -r " +
                 directory + "/* || :";
         LOG.info("clearDirectory ... : {}", command);
         withChannelExec((channel) -> {
@@ -142,8 +123,8 @@ class ScpClient implements AutoCloseable {
         LOG.info("clearDirectory ... done");
     }
 
-    public void uploadDirectories(String directory,
-            Collection<File> directories) throws Exception {
+    public void uploadDirectories(
+            String directory, Collection<File> directories) throws Exception {
         LOG.info("uploadDirectories ...");
         String command = "scp -r -t -d " + directory;
         withChannelExec((channel) -> {
@@ -174,8 +155,9 @@ class ScpClient implements AutoCloseable {
         }
     }
 
-    private void sendDirectory(OutputStream remoteOut,
-            InputStream remoteIn, File sourceDirectory, String directoryName)
+    private void sendDirectory(
+            OutputStream remoteOut, InputStream remoteIn,
+            File sourceDirectory, String directoryName)
             throws IOException, LpException {
         LOG.debug("Sending directory: {} ... ", directoryName);
         // Send command.
@@ -191,8 +173,10 @@ class ScpClient implements AutoCloseable {
         LOG.debug("Sending directory: {} ... done", directoryName);
     }
 
-    private void sendFile(OutputStream remoteOut, InputStream remoteIn,
-            File sourceFile, String fileName) throws IOException, LpException {
+    private void sendFile(
+            OutputStream remoteOut, InputStream remoteIn,
+            File sourceFile, String fileName)
+            throws IOException, LpException {
         LOG.debug("Sending file: {} ... ", fileName);
         if (fileName.indexOf('/') > 0) {
             throw new IllegalArgumentException("File name '" + fileName + "'");
