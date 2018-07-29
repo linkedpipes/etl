@@ -19,6 +19,10 @@ class ScpClient implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScpClient.class);
 
+    private static final int DATA_AWAIT_SLEEP_MS = 1000;
+
+    public static final int DATA_AWAIT_MAX_ITERATIONS = 10;
+
     @FunctionalInterface
     interface ChanelConsumer {
 
@@ -40,11 +44,12 @@ class ScpClient implements AutoCloseable {
             String hostname, int port, String username, String password)
             throws Exception {
         LOG.debug("connect ...");
-        session = jsch.getSession(username, hostname, port);
-        session.setPassword(password);
-        session.setTimeout(this.timeOut);
+        this.session = jsch.getSession(username, hostname, port);
+        this.session.setServerAliveInterval(this.timeOut);
+        this.session.setPassword(password);
+        this.session.setTimeout(this.timeOut);
         configureSession();
-        session.connect();
+        this.session.connect();
         LOG.debug("session.isConnected: {}", session.isConnected());
         LOG.debug("connect ... done");
     }
@@ -52,7 +57,7 @@ class ScpClient implements AutoCloseable {
     private void configureSession() {
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
-        session.setConfig(config);
+        this.session.setConfig(config);
     }
 
     public void createDirectory(String directory) throws Exception {
@@ -71,7 +76,7 @@ class ScpClient implements AutoCloseable {
     private void withChannelExec(ChanelConsumer consumer) throws Exception {
         ChannelExec channel = null;
         try {
-            channel = (ChannelExec) session.openChannel("exec");
+            channel = (ChannelExec) this.session.openChannel("exec");
             consumer.accept(channel);
         } finally {
             if (channel != null) {
@@ -82,16 +87,33 @@ class ScpClient implements AutoCloseable {
 
     private void executeChannel(ChannelExec channel) throws Exception {
         channel.connect();
+        // ExtInput also includes err stream.
         InputStream inputStream = channel.getExtInputStream();
-        String response = readResponse(inputStream);
-        checkResponseStream(channel.getExitStatus(), response);
+        LOG.debug("Reading response status ...");
+        int status = channel.getExitStatus();
+        LOG.debug("Reading response status ... done ({})", status);
+        if (status == 0) {
+            // Operation finished correctly.
+            return;
+        }
+        // We know that operation failed.
+        String response;
+        try {
+            response = readResponse(inputStream);
+        } catch (IOException ex) {
+            response = "";
+            LOG.warn("Can't read server response.", ex);
+        }
+        LOG.error("Action failed, status: '{}' output: {}", status, response);
+        throw new LpException("Action failed, see log for more information.");
     }
 
-    private static String readResponse(InputStream stream) throws IOException {
+    private String readResponse(InputStream stream) throws IOException {
         LOG.debug("readResponse ...");
         if (stream == null) {
             return "";
         }
+        this.waitForData(stream);
         StringBuffer buffer = new StringBuffer();
         while (true) {
             int value = stream.read();
@@ -104,13 +126,23 @@ class ScpClient implements AutoCloseable {
         return buffer.toString();
     }
 
-    private void checkResponseStream(int code, String response) throws LpException {
-        LOG.info("checkResponseStream ({}) : {}", code, response);
-        if (code == 0) {
-            return;
-        }
-        throw new LpException("Action failed, see log for more information.");
+    private void waitForData(InputStream stream) throws IOException {
+        int waitCounter = 0;
+        do {
+            try {
+                Thread.sleep(DATA_AWAIT_SLEEP_MS);
+            } catch (Exception e) {
+                // No operation here.
+            }
+            ++waitCounter;
+            if (waitCounter > DATA_AWAIT_MAX_ITERATIONS) {
+                throw new IOException("No data arrived in time: " +
+                        (DATA_AWAIT_MAX_ITERATIONS * DATA_AWAIT_SLEEP_MS) +
+                        " ms");
+            }
+        } while (stream.available() == 0);
     }
+
 
     public void clearDirectory(String directory) throws Exception {
         String command = "[ $(ls -A " + directory + " ) ] && rm -r " +
@@ -219,9 +251,9 @@ class ScpClient implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        if (session != null) {
-            session.disconnect();
+    public void close() {
+        if (this.session != null) {
+            this.session.disconnect();
         }
     }
 
