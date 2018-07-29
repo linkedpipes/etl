@@ -87,16 +87,26 @@ class ScpClient implements AutoCloseable {
 
     private void executeChannel(ChannelExec channel) throws Exception {
         channel.connect();
-        // ExtInput also includes err stream.
-        InputStream inputStream = channel.getExtInputStream();
         LOG.debug("Reading response status ...");
         int status = channel.getExitStatus();
         LOG.debug("Reading response status ... done ({})", status);
-        if (status == 0) {
-            // Operation finished correctly.
-            return;
+        switch (status) {
+            case -1: // Fail with no output
+                throw new LpException("Action failed (-1).");
+            case 0: // Ok
+                return;
+            case 1: // Failure
+            case 2: // Critical failure
+                this.handleError(status, channel);
+            default:
+                throw new LpException("Unexpected status: {}", status);
         }
-        // We know that operation failed.
+    }
+
+    private void handleError(int status, ChannelExec channel)
+            throws IOException, LpException {
+        // ExtInput also includes err stream.
+        InputStream inputStream = channel.getExtInputStream();
         String response;
         try {
             response = readResponse(inputStream);
