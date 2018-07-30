@@ -276,7 +276,17 @@ define(["jquery", "jsonld"], function (jQuery, jsonld) {
                 break;
             }
             if (!templateExpanded) {
-                console.error("Fail to expand all templates!");
+                console.error("Missing parent for templates:");
+                for (let iri in data.refTemplate) {
+                    if (!data.refTemplate.hasOwnProperty(iri)) {
+                        continue;
+                    }
+                    if (templateMap[iri] === undefined) {
+                        const instance = data.refTemplate[iri];
+                        console.info("  ", instance.label, " (",
+                            iri, ") template: ", instance.template);
+                    }
+                }
                 break;
             }
         }
