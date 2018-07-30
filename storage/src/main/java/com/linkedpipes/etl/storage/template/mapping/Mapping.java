@@ -1,63 +1,52 @@
 package com.linkedpipes.etl.storage.template.mapping;
 
+
+import com.linkedpipes.etl.storage.template.Template;
+
 import java.util.Map;
 
 /**
  * Provide access to mapping stored on instance and also loaded.
- * <p>
  * Any change to instance mapping is immediately reflected in this class.
  */
 public class Mapping {
 
     /**
-     * Imported mapping.
+     * Imported mappings, remote to original. Used to get reference
+     * from remote to original after import.
      */
-    private Map<String, String> remoteToOriginal;
+    private final Map<String, String> remoteToOriginal;
 
     /**
-     * Imported mapping.
+     * Resolved mapping, ie. from remote to local. New mapping
+     * can be added during import.
      */
-    private Map<String, String> remoteToLocal;
+    private final Map<String, String> remoteToLocal;
 
-    /**
-     * Our local mapping.
-     */
-    private Map<String, String> originalToLocal;
+    private final MappingFacade mappingFacade;
 
     public Mapping(Map<String, String> remoteToOriginal,
                    Map<String, String> remoteToLocal,
-                   Map<String, String> originalToLocal) {
+                   MappingFacade mappingFacade) {
         this.remoteToOriginal = remoteToOriginal;
         this.remoteToLocal = remoteToLocal;
-        this.originalToLocal = originalToLocal;
+        this.mappingFacade = mappingFacade;
     }
 
     /**
      * Try to resolve local IRI for given remote IRI.
      */
-    public String toLocal(String iri) {
-        String localMapping = originalToLocal.get(iri);
-        if (localMapping != null) {
-            return localMapping;
-        }
-        // Check additional mappings (from the pipeline).
-        localMapping = remoteToLocal.get(iri);
-        if (localMapping != null) {
-            return localMapping;
-        }
-        // The mapping could be newly added during pipeline import
-        // we need to check for original.
-        String original = remoteToOriginal.getOrDefault(iri, iri);
-        return originalToLocal.getOrDefault(original, original);
+    public String remoteToLocal(String iri) {
+        return this.remoteToLocal.get(iri);
     }
 
     /**
-     * For given component return its original IRI. Can be used to set
-     * original IRI for newly imported templates.
+     * Add temporary mapping.
      */
-    public String toOriginal(String iri) {
-        // TODO Add information from toLocal ?
-        return remoteToOriginal.getOrDefault(iri, iri);
+    public void onImport(Template local, String remote) {
+        this.remoteToLocal.put(remote, local.getIri());
+        String original = this.remoteToOriginal.get(remote);
+        this.mappingFacade.add(local, original);
     }
 
 }

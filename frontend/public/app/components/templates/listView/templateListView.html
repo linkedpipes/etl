@@ -21,6 +21,11 @@
             <md-list-item class="md-2-line" ng-click="onClick(template)"
                           ng-repeat="template in templates"
                           ng-show="template._templateListView">
+                <div class="md-primary" ng-if="::template.isInvalid">
+                    <md-icon md-svg-icon="error"
+                             class="lp-icon-avatar md-avatar"
+                             style="color: red;"/>
+                </div>
                 <div class="md-list-item-text" layout="column">
                     <h3>{{::template.label}}</h3>
                     <p>

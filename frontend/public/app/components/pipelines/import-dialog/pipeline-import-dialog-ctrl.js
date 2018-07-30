@@ -47,7 +47,8 @@
         "$scope",
         "$mdDialog",
         "$lpScrollWatch",
-        "pipeline.import.dialog.service"
+        "pipeline.import.dialog.service",
+        "template.service"
     ];
 
     let initialized = false;

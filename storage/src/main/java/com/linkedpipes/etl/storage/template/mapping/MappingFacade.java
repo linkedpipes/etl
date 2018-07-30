@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.template.mapping;
 
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.Template;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -44,7 +46,7 @@ public class MappingFacade {
     /**
      * Name of graph used to store mapping data.
      */
-    private static final IRI GRAPH;
+    static final IRI GRAPH;
 
     private static final String MAPPING_FILE = "mapping.trig";
 
@@ -56,20 +58,23 @@ public class MappingFacade {
 
     private Configuration configuration;
 
+    private MappingFromStatements factory;
+
     @Autowired
     public MappingFacade(Configuration configuration) {
         this.configuration = configuration;
+        this.factory = new MappingFromStatements(this);
     }
 
     /**
-     * Mapping original template -> local component.
+     * Mapping original from ORIGINAL template to LOCAL component.
      */
     private Map<String, String> originalToLocal = new HashMap<>();
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @PostConstruct
-    public void initialize() throws RdfUtils.RdfException {
+    public void initialize() throws IOException {
         File mappingFile = getMappingFile();
         configuration.getKnowledgeDirectory().mkdirs();
         if (!mappingFile.exists()) {
@@ -78,14 +83,17 @@ public class MappingFacade {
         loadMappingFromFile(mappingFile);
     }
 
+    String originalToLocal(String iri) {
+        return this.originalToLocal.get(iri);
+    }
+
     private File getMappingFile() {
         return new File(configuration.getKnowledgeDirectory(), MAPPING_FILE);
     }
 
-    private void loadMappingFromFile(File mappingFile)
-            throws RdfUtils.RdfException {
-        Collection<Statement> statements = RdfUtils.read(mappingFile);
-
+    private void loadMappingFromFile(File mappingFile) throws IOException {
+        Statements statements = Statements.ArrayList();
+        statements.addAll(mappingFile);
         statements.stream()
                 .filter((s) -> s.getContext().equals(GRAPH))
                 .filter((s) -> s.getPredicate().equals(OWL.SAMEAS))
@@ -94,7 +102,8 @@ public class MappingFacade {
     }
 
     private void addMapping(Statement statement) {
-        originalToLocal.put(statement.getSubject().stringValue(),
+        originalToLocal.put(
+                statement.getSubject().stringValue(),
                 statement.getObject().stringValue());
     }
 
@@ -129,9 +138,7 @@ public class MappingFacade {
      */
     public Mapping createMappingFromStatements(
             Collection<Statement> statements) {
-        MappingFromStatements factory = new MappingFromStatements(
-                Collections.unmodifiableMap(this.originalToLocal), GRAPH);
-        return factory.create(statements);
+        return this.factory.create(statements);
     }
 
     /**
@@ -139,16 +146,31 @@ public class MappingFacade {
      */
     public void add(Template template, String originalIri) {
         if (originalToLocal.containsKey(originalIri)) {
-            LOG.error("There is already a local template form given IRI.");
+            LOG.error("There is already a local template for given IRI: {}",
+                    originalIri);
+            return;
         }
         originalToLocal.put(originalIri, template.getIri());
     }
 
     /**
-     * Remove toLocal for given template.
+     * Remove mapping for given template.
      */
-    public void remove(Template template) {
-        originalToLocal.values().remove(template);
+    public void remove(String iri) {
+        String keyToRemove = null;
+        for (Map.Entry<String, String> entry : this.originalToLocal.entrySet()) {
+            if (iri.equals(entry.getValue())) {
+                keyToRemove = entry.getKey();
+                break;
+            }
+        }
+        if (keyToRemove != null) {
+            this.originalToLocal.remove(keyToRemove);
+        }
+    }
+
+    public Collection<String> getLocalMapping() {
+        return this.originalToLocal.values();
     }
 
     /**
@@ -161,18 +183,17 @@ public class MappingFacade {
         try {
             RdfUtils.write(mappingFile, RDFFormat.TRIG, statements);
         } catch (RdfUtils.RdfException ex) {
-            LOG.error("Can't save toLocal.", ex);
+            LOG.error("Can't save template mapping.", ex);
         }
     }
 
     private Collection<Statement> collectAsStatements() {
-        List<Statement> output = new ArrayList<>(originalToLocal.size());
+        Statements output = Statements.ArrayList(originalToLocal.size());
+        output.setDefaultGraph(GRAPH);
         for (Map.Entry<String, String> entry : originalToLocal.entrySet()) {
-            output.add(valueFactory.createStatement(
-                    valueFactory.createIRI(entry.getKey()),
+            output.addIri(valueFactory.createIRI(entry.getKey()),
                     OWL.SAMEAS,
-                    valueFactory.createIRI(entry.getValue()),
-                    GRAPH));
+                    entry.getValue());
         }
         return output;
     }

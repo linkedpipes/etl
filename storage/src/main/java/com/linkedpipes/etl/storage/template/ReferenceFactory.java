@@ -36,8 +36,6 @@ class ReferenceFactory {
 
     private IRI configIri;
 
-    private IRI configDescriptionIri;
-
     public ReferenceFactory(
             TemplateManager manager,
             WritableTemplateRepository repository) {
@@ -56,26 +54,20 @@ class ReferenceFactory {
         this.iri = valueFactory.createIRI(iriAsString);
         this.configIri = valueFactory.createIRI(
                 iriAsString + "/configuration");
-        this.configDescriptionIri = valueFactory.createIRI(
-                iriAsString + "/configurationDescription");
         //
         List<Statement> interfaceRdf = createInterface();
         List<Statement> definitionRdf = createDefinition();
         List<Statement> configRdf = updateConfig(config);
-        Collection<Statement> configDescriptionRdf;
-        if (description == null) {
-            // Create without description, for example creating local template.
-            configDescriptionRdf = createConfigDescription();
-        } else {
-            // Import with description.
-            configDescriptionRdf = description;
-        }
         //
         RepositoryReference ref = RepositoryReference.Reference(id);
         this.repository.setInterface(ref, interfaceRdf);
         this.repository.setDefinition(ref, definitionRdf);
         this.repository.setConfig(ref, configRdf);
-        this.repository.setConfigDescription(ref, configDescriptionRdf);
+        if (description == null) {
+            // Create without description, ReferenceTemplates.
+        } else {
+            this.repository.setConfigDescription(ref, description);
+        }
         //
         TemplateLoader loader = new TemplateLoader(this.repository);
         return loader.loadReferenceTemplate(RepositoryReference.Reference(id));
@@ -127,13 +119,6 @@ class ReferenceFactory {
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_TEMPLATE),
                 templateResource, iri));
-        output.add(valueFactory.createStatement(iri,
-                valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
-                configIri, iri));
-        output.add(valueFactory.createStatement(iri,
-                valueFactory.createIRI(
-                        LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION),
-                configDescriptionIri, iri));
         return output;
     }
 
@@ -141,18 +126,5 @@ class ReferenceFactory {
         return RdfUtils.updateToIriAndGraph(input, this.configIri);
     }
 
-    private List<Statement> createConfigDescription()
-            throws BaseException {
-        Template parent = this.manager.getTemplates().get(
-                this.templateResource.stringValue());
-        if (parent == null) {
-            throw new BaseException("Missing parent: {}",
-                    this.templateResource);
-        }
-        Collection<Statement> configDesc =
-                this.repository.getConfigDescription(parent);
-        return RdfUtils.updateToIriAndGraph(configDesc,
-                this.configDescriptionIri);
-    }
 
 }

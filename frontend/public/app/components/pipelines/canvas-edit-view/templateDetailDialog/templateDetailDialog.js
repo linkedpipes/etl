@@ -1,7 +1,7 @@
 define([
     "jquery", "jsonld",
     "../../../templates/detailDirective/templateDetailDirective",
-    "app/components/templates/templateService"
+    "app/components/templates/template-service"
 ], function (jQuery, jsonld, detailDirective, templateService) {
     "use strict";
 

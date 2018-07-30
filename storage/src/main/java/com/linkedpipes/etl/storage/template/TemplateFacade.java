@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -41,6 +43,25 @@ public class TemplateFacade implements TemplateSource {
         this.mapping = mapping;
         this.configurationFacade = configuration;
         this.repository = manager.getRepository();
+    }
+
+    @PostConstruct
+    public void initialize() {
+        this.cleanMapping();
+    }
+
+    /**
+     * Remove mapping for components that are no longer in the system.
+     */
+    private void cleanMapping() {
+        List<String> iriToRemove = this.mapping.getLocalMapping().stream()
+                .filter(iri -> !manager.getTemplates().containsKey(iri))
+                .collect(Collectors.toList());
+        for (String iri : iriToRemove) {
+            LOG.debug("Removing mapping for: {}", iri);
+            this.mapping.remove(iri);
+        }
+        this.mapping.save();
     }
 
     public Template getTemplate(String iri) {
@@ -203,13 +224,13 @@ public class TemplateFacade implements TemplateSource {
         if (template.getType() == Template.Type.JAR_TEMPLATE) {
             return configurationFacade.createNewFromJarFile(
                     this.repository.getConfig(template),
-                    this.repository.getConfigDescription(template),
+                    this.getConfigDescription(template),
                     graph.stringValue(),
                     graph);
         } else {
             return configurationFacade.createNewFromTemplate(
                     this.repository.getConfig(template),
-                    this.repository.getConfigDescription(template),
+                    this.getConfigDescription(template),
                     graph.stringValue(),
                     graph);
         }
@@ -217,7 +238,8 @@ public class TemplateFacade implements TemplateSource {
 
     public Collection<Statement> getConfigDescription(Template template)
             throws BaseException {
-        return repository.getConfigDescription(template);
+        Template rootTemplate = this.getRootTemplate(template);
+        return repository.getConfigDescription(rootTemplate);
     }
 
     public File getDialogResource(
@@ -233,9 +255,7 @@ public class TemplateFacade implements TemplateSource {
             Collection<Statement> definition,
             Collection<Statement> configuration)
             throws BaseException {
-        Template template = manager.createTemplate(
-                definition, configuration, null);
-        return template;
+        return this.createTemplate(definition, configuration, null);
     }
 
     public Template createTemplate(
@@ -262,7 +282,8 @@ public class TemplateFacade implements TemplateSource {
 
     public void remove(Template template) throws BaseException {
         manager.remove(template);
-        mapping.remove(template);
+        mapping.remove(template.getIri());
+        mapping.save();
     }
 
     // Implementation of unpacker.TemplateSource .

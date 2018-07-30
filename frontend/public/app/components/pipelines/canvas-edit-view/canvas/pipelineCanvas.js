@@ -229,13 +229,13 @@ define([
      */
     service.createComponent = function (component, template, componentService) {
         if (template === undefined) {
-            console.error('Ignored component without a template: ',
+            console.warn('Ignored component without a template: ',
                 template);
             return;
         }
         const templateInstance = this.templates.getCoreTemplate(template);
         if (templateInstance === undefined) {
-            console.error("Ignored component with missing template: ",
+            console.warn("Ignored component with missing template: ",
                 template);
             return;
         }
@@ -516,17 +516,15 @@ define([
         var leftTopX = void 0;
         var leftTopY = void 0;
         var missingTemplates = {};
-        console.log("components", components);
         components.forEach(function (component) {
             var templateIri = comService.getTemplateIri(component);
             var template = this.templates.getTemplate(templateIri);
             if (template === undefined) {
                 // FIXME Missing template !
-                console.error('Missing template.', templateIri, component);
                 if (missingTemplates[templateIri] === undefined) {
                     this.statusService.error({
                         'title': 'Missing template',
-                        'message': template.label
+                        'message': templateIri
                     });
                     missingTemplates[templateIri] = [];
                 }
@@ -541,7 +539,7 @@ define([
                 // may not be present - ie. parent can be missing ...
                 if (missingTemplates[templateIri] === undefined) {
                     this.statusService.error({
-                        'title': 'Missing template',
+                        'title': 'Missing template definition.',
                         'message': template.label
                     });
                     missingTemplates[templateIri] = [];
@@ -599,6 +597,7 @@ define([
             this.data.idToResource[id] = connection;
             this.data.iriToId[connection['@id']] = id;
         }.bind(this));
+        console.info('Missing templates:', missingTemplates);
         //
         console.time('canvasPipeline.load.addCells');
         this.canvas.getGraph().addCells(cellsToAdd);

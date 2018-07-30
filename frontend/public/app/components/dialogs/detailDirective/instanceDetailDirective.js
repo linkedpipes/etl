@@ -2,7 +2,7 @@ define([
     "jquery",
     "../../templates/generalTab/templateGeneralTab",
     "../../templates/embedDirective/templateEmbedDirective",
-    "../../templates/templateService",
+    "../../templates/template-service",
     "../../dialogs/dialogService",
     "../hierarchyTab/instanceHierarchyTab"
 ], function (jQuery, generalTab, embedDirective,

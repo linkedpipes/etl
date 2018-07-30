@@ -113,6 +113,9 @@ define([], function () {
                 const templatesList = templateService.getTemplatesList();
                 if (filter.source === undefined) {
                     templatesList.forEach(function (item) {
+                        if (item.isInvalid) {
+                            return;
+                        }
                         $scope.templates.push(transform(item));
                     });
                 } else {

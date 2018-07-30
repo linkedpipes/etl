@@ -63,7 +63,7 @@ public class TransformationFacade {
             PojoLoader.loadOfType(pipeline, Pipeline.TYPE, info);
         } catch (PojoLoader.CantLoadException ex) {
             throw new TransformationFailed(
-                    "Can't createMappingFromStatements pipeline info.", ex);
+                    "Can't load pipeline info.", ex);
         }
         return info;
     }

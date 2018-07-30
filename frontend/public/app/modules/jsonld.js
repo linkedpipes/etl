@@ -440,11 +440,14 @@
      * Find and return content of graph with given IRI.
      *
      * @param data Normalized JSONLD data.
-     * @param iri
+     * @param iri If null return first graph.
      * @returns undefined if no graph of given name exists.
      */
     const getGraph = function (data, iri) {
         const graphs = data["@graph"];
+        if (iri === null) {
+            return graphs[0]["@graph"];
+        }
         for (let index in graphs) {
             if (!graphs.hasOwnProperty(index)) {
                 continue;

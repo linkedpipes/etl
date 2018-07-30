@@ -58,17 +58,12 @@ class ExportPipeline {
             throws BaseException {
         List<Statement> output = new LinkedList<>();
         for (Template template : templates) {
-            // Remove duplicities.
+            // Use set to remove duplicities.
             Set<Statement> templateRdf = new HashSet<>();
             templateRdf.addAll(templatesFacade.getInterface(template));
             templateRdf.addAll(templatesFacade.getDefinition(template));
             output.addAll(templateRdf);
-            //
             output.addAll(templatesFacade.getConfig(template));
-            // Add description for non-jar templates.
-            if (template.getType() != Template.Type.JAR_TEMPLATE) {
-                output.addAll(templatesFacade.getConfigDescription(template));
-            }
         }
         return output;
     }

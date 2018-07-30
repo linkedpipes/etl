@@ -4,7 +4,7 @@ define([
     "../hierarchyTab/templateHierarchyTab",
     "../embedDirective/templateEmbedDirective",
     "../usageTab/templateUsageTab",
-    "../templateService",
+    "../template-service",
     "../../dialogs/dialogService"
 ], function (jQuery, generalTab, hierarchyTab, embedDirective,
              usageTab, templateService, templateDialogService) {
@@ -65,6 +65,7 @@ define([
                 });
                 // Load usage.
                 templateService.getUsage(template.id).then((usage) => {
+                    console.log("usage", usage);
                     $scope.usage = usage;
                     $scope.isUsed = Object.keys(usage).length !== 0;
                 });
@@ -78,7 +79,7 @@ define([
                     $location.path("/templates").search({});
                 }, (response) => {
                     statusService.httpDeleteFailed({
-                        'title': "Can't delete the pipeline.",
+                        'title': "Can't delete the template.",
                         'response': response
                     });
                 });

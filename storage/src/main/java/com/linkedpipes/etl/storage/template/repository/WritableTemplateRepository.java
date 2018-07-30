@@ -90,7 +90,7 @@ public class WritableTemplateRepository extends TemplateRepository {
      */
     public void updateFinished() {
         // TODO Export version to some shared single space.
-        this.info.version = RepositoryInfo.LATEST_VERSION;
+        this.info.version = TemplateRepository.LATEST_VERSION;
         try {
             saveRepositoryInfo();
         } catch (IOException ex) {

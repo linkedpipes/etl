@@ -31,8 +31,8 @@ define([], function () {
                     'color': '#2196F3'
                 })
                 .when('/templates/detail', {
-                    'templateUrl': 'app/components/templates/detailView/templateDetailView.html',
-                    'controller': 'template.detail',
+                    'templateUrl': 'app/components/templates/detail-view/template-detail-view.html',
+                    'controller': 'template.detail.view',
                     'activeView': 'templates',
                     'pageTitle': 'Templates - LinkedPipes ETL',
                     'color': '#2196F3'

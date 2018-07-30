@@ -183,7 +183,7 @@ public final class LP_PIPELINE {
 
     /**
      * Reference to a graph with a configuration, used to reference
-     * configuration by frontend.
+     * configuration by frontend. Is not set for reference tempaltes.
      */
     public static final String HAS_CONFIGURATION_GRAPH =
             "http://linkedpipes.com/ontology/configurationGraph";

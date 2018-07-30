@@ -1,0 +1,18 @@
+<div layout="row" layout-align="space-around">
+    <div style="max-width: 66em;width: 100%;"
+         ng-if="template !== undefined &&!template.isInvalid">
+        <lp-template-detail api="api"
+                            show-template-management="true"
+                            enable-template-link="true"/>
+        <div layout="row" style="max-width: 66em;width: 100%;">
+            <span flex></span>
+            <md-button ng-click="onSave()" class="md-primary">
+                SAVE CHANGES
+            </md-button>
+        </div>
+    </div>
+    <div style="max-width: 66em;width: 100%;"
+         ng-if="template !== undefined &&template.isInvalid">
+        <lp-invalid-template-detail api="api"/>
+    </div>
+</div>

@@ -98,7 +98,7 @@
         }
 
         function reloadTemplates() {
-            return $templates.load(true);
+            return $templates.forceLoad();
         }
 
         function redirectToPipeline(response) {

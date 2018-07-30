@@ -36,7 +36,7 @@ define([], function () {
                 const templateList = templateService.getTemplatesList();
                 templateList.forEach((template) => {
                     // Filter out core templates.
-                    if (template.core) {
+                    if (template.isCore) {
                         return;
                     }
                     template._templateListView = true;
@@ -46,6 +46,7 @@ define([], function () {
                 $scope.error = undefined;
             }).catch((error) => {
                 $scope.error = error["statusText"];
+                console.log("Can't load tempatels", error);
             });
         })();
 

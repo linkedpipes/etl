@@ -54,4 +54,13 @@ public final class LP_EVENTS {
 
     public static final String HAS_CURRENT = PREFIX + "progress/current";
 
+    public static final String HAS_ORDER =
+            "http://linkedpipes.com/ontology/order";
+
+    public static final String EVENT =
+            "http://linkedpipes.com/ontology/Event";
+
+    public static final String HAS_EVENT =
+            "http://etl.linkdpipes.com/ontology/event";
+
 }

@@ -55,7 +55,8 @@ public class TemplateManager {
         try {
             importJarFiles();
             importTemplates();
-            if (this.repository.getInitialVersion() < 1) {
+            if (this.repository.getInitialVersion() !=
+                    TemplateRepository.LATEST_VERSION) {
                 migrate();
             }
             this.repository.updateFinished();
@@ -95,6 +96,10 @@ public class TemplateManager {
             case 1:
                 migrateV1ToV2();
                 reloadTemplates();
+            case 2:
+                migrateV2ToV3();
+                reloadTemplates();
+            case 3: // Current version
             default:
                 break;
         }
@@ -102,8 +107,8 @@ public class TemplateManager {
 
     private void migrateV1ToV2() throws BaseException {
         LOG.info("Migrating to version 2");
-        TemplateV1ToV2 v1Tov2 = new TemplateV1ToV2(this, this.repository);
         boolean migrationFailed = false;
+        TemplateV1ToV2 v1Tov2 = new TemplateV1ToV2(this, this.repository);
         for (Template template : templates.values()) {
             try {
                 v1Tov2.migrate(template);
@@ -119,9 +124,27 @@ public class TemplateManager {
     }
 
     private void reloadTemplates() {
-        LOG.info("Reloading templates");
+        LOG.info("Reloading templates ...");
         this.templates.clear();
         this.importTemplates();
+    }
+
+    private void migrateV2ToV3() throws BaseException {
+        LOG.info("Migrating to version 3");
+        boolean migrationFailed = false;
+        TemplateV2ToV3 v2Tov3 = new TemplateV2ToV3(this.repository);
+        for (Template template : templates.values()) {
+            try {
+                v2Tov3.migrate(template);
+            } catch (Exception ex) {
+                LOG.error("Migration of component '{}' failed",
+                        template.getIri(), ex);
+                migrationFailed = true;
+            }
+        }
+        if (migrationFailed) {
+            throw new BaseException("Migration failed");
+        }
     }
 
     /**

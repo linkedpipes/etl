@@ -65,7 +65,7 @@
                 .then((pipeline) => {
                     // Update templates.
                     return new Promise((resolve, reject) => {
-                        $templates.reload(true)
+                        $templates.forceLoad()
                             .then(() => resolve(pipeline))
                             .catch(reject);
                     });
@@ -77,8 +77,8 @@
                 $http, $scope.url, $scope.updateTemplates)
                 .then((pipeline) => {
                     // Update templates.
-                    return new Promise(function (resolve, reject) {
-                        $templates.reload(true)
+                    return new Promise((resolve, reject) => {
+                        $templates.forceLoad()
                             .then(() => resolve(pipeline))
                             .catch(reject);
                     });
@@ -102,7 +102,6 @@
                 return;
             } else {
                 repository.load($scope.repository).then(() => {
-                    console.log("Pipeline loaded.", $scope.repository);
                     $scope.pipelineLoaded = true;
                 }).catch(angular.noop).then(() => $scope.$apply());
             }

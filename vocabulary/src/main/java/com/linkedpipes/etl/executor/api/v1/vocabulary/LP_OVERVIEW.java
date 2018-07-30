@@ -9,11 +9,11 @@ public class LP_OVERVIEW {
 
     public static final String HAS_EXECUTION = PREFIX + "execution";
 
-    public static final String HAS_START = PREFIX + "executionStarted";
+    public static final String HAS_START = PREFIX + "execution/start";
 
-    public static final String HAS_END = PREFIX + "executionEnded";
+    public static final String HAS_END = PREFIX + "execution/end";
 
-    public static final String HAS_STATUS = PREFIX + "executionStatus";
+    public static final String HAS_STATUS = PREFIX + "status";
 
     public static final String HAS_LAST_CHANGE = PREFIX + "lastChange";
 
@@ -21,9 +21,9 @@ public class LP_OVERVIEW {
             PREFIX + "pipelineProgress";
 
     public static final String HAS_PROGRESS_TOTAL = PREFIX +
-            "numberOfExecutableComponents";
+            "execution/componentToExecute";
 
     public static final String HAS_PROGRESS_CURRENT = PREFIX +
-            "numberOfExecutedComponents";
+            "execution/componentFinished";
 
 }

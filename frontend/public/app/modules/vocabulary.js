@@ -54,17 +54,38 @@
         "HAS_REPO_TYPE": LP + "rdfRepositoryType",
         "UPDATE_OPTIONS" : LP + "UpdateOptions",
         "HAS_IMPORT_TEMPLATES": LP +  "importTemplates",
-        "HAS_UPDATE_TEMPLATES": LP + "updateTemplates"
-
+        "HAS_UPDATE_TEMPLATES": LP + "updateTemplates",
+        "JAR_TEMPLATE": LP +  "JarTemplate",
+        "REF_TEMPLATE": LP +  "Template",
+        "HAS_KEYWORD": LP + "keyword",
+        "HAS_COLOR": LP + "color",
+        "HAS_CONFIGURATION": LP + "configurationGraph",
+        "HAS_TYPE": LP + "componentType",
+        "HAS_DIALOG": LP + "dialog",
+        "HAS_NAME": LP + "name",
+        "HAS_PORT": LP + "port",
+        "HAS_USED_IN": LP + "usedIn",
+        "HAS_INFO_LINK": LP + "infoLink",
+        "HAS_SUPPORT_CONTROL": LP + "supportControl",
+        "TASK_LIST": LP + "TaskList",
+        "RUNTIME_CONFIGURATION": LP + "RuntimeConfiguration",
+        "PORT": LP + "Port",
+        "OUTPUT": LP + "Output",
+        "INPUT": LP + "Input"
     };
 
     const SKOS_VOCAB = {
         "PREF_LABEL": "http://www.w3.org/2004/02/skos/core#prefLabel"
     };
 
+    const DCTERMS_VOCAB = {
+        "DESCRIPTION": "http://purl.org/dc/terms/description"
+    };
+
     return {
         "LP" : LP_VOCAB,
-        "SKOS": SKOS_VOCAB
+        "SKOS": SKOS_VOCAB,
+        "DCTERMS": DCTERMS_VOCAB
     };
 
 });

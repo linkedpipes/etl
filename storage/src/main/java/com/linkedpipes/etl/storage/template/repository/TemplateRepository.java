@@ -20,6 +20,8 @@ public class TemplateRepository {
     private static final Logger LOG
             = LoggerFactory.getLogger(TemplateRepository.class);
 
+    public static final int LATEST_VERSION = 3;
+
     protected final File repositoryRoot;
 
     protected RepositoryInfo info = null;

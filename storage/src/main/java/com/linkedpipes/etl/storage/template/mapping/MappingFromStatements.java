@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.storage.template.mapping;
 
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 
@@ -10,31 +9,31 @@ import java.util.Map;
 
 class MappingFromStatements {
 
-    private final Map<String, String> originalToLocal;
+    private final MappingFacade mappingFacade;
 
-    private final IRI graph;
-
-    public MappingFromStatements(Map<String, String> mappings, IRI graph) {
-        this.originalToLocal = mappings;
-        this.graph = graph;
+    public MappingFromStatements(MappingFacade mappingFacade) {
+        this.mappingFacade = mappingFacade;
     }
 
     public Mapping create(Collection<Statement> statements) {
         Map<String, String> remoteToOriginal = new HashMap<>();
         Map<String, String> remoteToLocal = new HashMap<>();
+
         statements.stream()
-                .filter((s) -> s.getContext().equals(this.graph))
+                .filter((s) -> s.getContext().equals(MappingFacade.GRAPH))
                 .filter((s) -> s.getPredicate().equals(OWL.SAMEAS))
                 .forEach((s) -> {
                     String original = s.getSubject().stringValue();
                     String remote = s.getObject().stringValue();
                     remoteToOriginal.put(remote, original);
-                    String local = originalToLocal.get(original);
+                    // Try to resolve.
+                    String local = mappingFacade.originalToLocal(original);
                     if (local != null) {
                         remoteToLocal.put(remote, local);
                     }
                 });
-        return new Mapping(remoteToOriginal, remoteToLocal, originalToLocal);
+
+        return new Mapping(remoteToOriginal, remoteToLocal, mappingFacade);
     }
 
 }

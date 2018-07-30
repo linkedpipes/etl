@@ -41,7 +41,7 @@ class ImportTransformer {
         }
         this.loadOptions(optionsRdf);
         this.loadPipelineInfo(pipelineRdf);
-        if (!options.isLocal()) {
+        if (!this.options.isLocal()) {
             pipelineRdf = this.importTemplates(
                     pipelineRdf, pipelineInfo.getVersion());
         }
@@ -50,7 +50,7 @@ class ImportTransformer {
             pipelineRdf = this.updateResources(pipelineRdf, targetIri);
         } else {
             // We have not translate pipeline IRI, so just use the current one.
-            pipelineIri = valueFactory.createIRI(pipelineInfo.getIri());
+            pipelineIri = this.valueFactory.createIRI(pipelineInfo.getIri());
         }
         pipelineRdf = this.replacePipelineLabel(pipelineRdf, pipelineIri);
         return pipelineRdf;
@@ -81,10 +81,12 @@ class ImportTransformer {
             Collection<Statement> pipelineRdf, int pipelineVersion)
             throws TransformationFailed {
         try {
-            importTemplates.setImportMissing(options.isImportTemplates());
-            importTemplates.setUpdateExisting(options.isUpdateTemplates());
-            importTemplates.setMigrateConfigurations(pipelineVersion < 2);
-            return importTemplates.importTemplates(pipelineRdf);
+            this.importTemplates.setImportMissing(
+                    this.options.isImportTemplates());
+            this.importTemplates.setUpdateExisting(
+                    this.options.isUpdateTemplates());
+            this.importTemplates.setPipelineVersion(pipelineVersion);
+            return this.importTemplates.importTemplates(pipelineRdf);
         } catch (BaseException ex) {
             throw new TransformationFailed(
                     "Can't import templates.", ex);
@@ -113,12 +115,12 @@ class ImportTransformer {
             if (s.getPredicate().equals(RDF.TYPE)) {
                 if (s.getObject().equals(Pipeline.TYPE)) {
                     // For pipeline we the IRI as it is, event if
-                    // we should overide existing from the graph.
-                    mapping.put(s.getSubject(), valueFactory.createIRI(
+                    // we should override existing from the graph.
+                    mapping.put(s.getSubject(), this.valueFactory.createIRI(
                             baseIri));
                 } else if (!mapping.containsKey(s.getSubject())) {
                     // Only if the mapping is missing.
-                    mapping.put(s.getSubject(), valueFactory.createIRI(
+                    mapping.put(s.getSubject(), this.valueFactory.createIRI(
                             baseIri + "/" + (mapping.size() + 1)));
                 }
             }
@@ -126,7 +128,7 @@ class ImportTransformer {
             // of configuration graphs may not be same as the name of
             // configuration resource.
             if (!mapping.containsKey(s.getContext())) {
-                mapping.put(s.getContext(), valueFactory.createIRI(
+                mapping.put(s.getContext(), this.valueFactory.createIRI(
                         baseIri + "/graph/" + (mapping.size() + 1)));
             }
         }
@@ -147,7 +149,7 @@ class ImportTransformer {
             final Resource context = mapping.getOrDefault(
                     s.getContext(), s.getContext());
             //
-            result.add(valueFactory.createStatement(
+            result.add(this.valueFactory.createStatement(
                     subject, s.getPredicate(), object, context));
         }
         return result;
@@ -160,7 +162,8 @@ class ImportTransformer {
     private Collection<Statement> replacePipelineLabel(
             Collection<Statement> pipelineRdf, IRI pipelineIri) {
 
-        if (options.getLabels() != null || options.getLabels().isEmpty()) {
+        if (this.options.getLabels() != null ||
+                this.options.getLabels().isEmpty()) {
             return pipelineRdf;
         }
 
@@ -172,8 +175,8 @@ class ImportTransformer {
                 .filter(filterOutPipelineLabel)
                 .collect(Collectors.toList());
 
-        List<Statement> newLabels = options.getLabels().stream().map(
-                value -> valueFactory.createStatement(pipelineIri,
+        List<Statement> newLabels = this.options.getLabels().stream().map(
+                value -> this.valueFactory.createStatement(pipelineIri,
                         SKOS.PREF_LABEL, value, pipelineIri)
         ).collect(Collectors.toList());
 

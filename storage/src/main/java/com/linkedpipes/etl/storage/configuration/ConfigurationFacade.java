@@ -67,12 +67,12 @@ public class ConfigurationFacade {
      * Select and return private configuration properties.
      */
     public Collection<Statement> selectPrivateStatements(
-            Collection<Statement> configurationRdf,
+            Collection<Statement> rdf,
             Collection<Statement> descriptionRdf) throws BaseException {
         Description description = this.descriptionLoader.load(descriptionRdf);
 
         SelectPrivateStatements worker = new SelectPrivateStatements();
-        return worker.selectPrivate(configurationRdf, description);
+        return worker.selectPrivate(rdf, description);
     }
 
 }
