@@ -229,11 +229,17 @@ define([
      */
     service.createComponent = function (component, template, componentService) {
         if (template === undefined) {
-            console.error('Ignored component without a template: ', template);
+            console.error('Ignored component without a template: ',
+                template);
             return;
         }
-        var ports = createPorts(this.templates.getCoreTemplate(template));
-
+        const templateInstance = this.templates.getCoreTemplate(template);
+        if (templateInstance === undefined) {
+            console.error("Ignored component with missing template: ",
+                template);
+            return;
+        }
+        var ports = createPorts(templateInstance);
         var cell = new ComponenModel({
             'position': {
                 'x': componentService.getX(component),
@@ -510,17 +516,17 @@ define([
         var leftTopX = void 0;
         var leftTopY = void 0;
         var missingTemplates = {};
+        console.log("components", components);
         components.forEach(function (component) {
             var templateIri = comService.getTemplateIri(component);
             var template = this.templates.getTemplate(templateIri);
             if (template === undefined) {
                 // FIXME Missing template !
                 console.error('Missing template.', templateIri, component);
-                console.timeEnd('canvasPipeline.load');
                 if (missingTemplates[templateIri] === undefined) {
                     this.statusService.error({
                         'title': 'Missing template',
-                        'message': templateIri
+                        'message': template.label
                     });
                     missingTemplates[templateIri] = [];
                 }
@@ -530,6 +536,19 @@ define([
             // Create element and store reference.
             var cell = this.createComponent(
                     component, template, comService);
+            if (cell === undefined) {
+                // The component may have template set, but the template
+                // may not be present - ie. parent can be missing ...
+                if (missingTemplates[templateIri] === undefined) {
+                    this.statusService.error({
+                        'title': 'Missing template',
+                        'message': template.label
+                    });
+                    missingTemplates[templateIri] = [];
+                }
+                missingTemplates[templateIri].push(component);
+                return;
+            }
             //
             var id = cell.id;
             this.data.idToResource[id] = component;

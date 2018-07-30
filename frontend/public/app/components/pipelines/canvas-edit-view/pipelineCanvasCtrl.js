@@ -248,6 +248,12 @@ define([
                 data.pipeline.model = pipelineService.fromJsonLd(response.data);
                 data.pipeline.resource = pipelineService.getPipeline(
                     data.pipeline.model);
+            }).catch(function (response) {
+                statusService.httpGetFailed({
+                    'title': "Can't fetch pipeline.",
+                    'response': response
+                });
+            }).then(function() {
                 pipelineCanvas.loadPipeline(data.pipeline.model);
                 updateLabel();
             });
@@ -273,6 +279,11 @@ define([
                     data.execution.update = false;
                     $scope.data.tools.execFinished = true;
                 }
+            }).catch(function (response) {
+                statusService.httpGetFailed({
+                    'title': "Can't load execution.",
+                    'response': response
+                });
             });
         }
 
@@ -291,11 +302,12 @@ define([
                         loadExecution();
                     }
                 });
-            }, function (message) {
-                statusService.httpDeleteFailed({
-                    'title': "Can't load data.",
-                    'response': message
+            }, function (error) {
+                statusService.error({
+                    'title': "Can't load pipeline.",
+                    'message': error.message
                 });
+                console.error(error);
             });
         }
 
