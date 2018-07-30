@@ -141,7 +141,7 @@
             return repository
                 .load($scope.repository)
                 .catch(angular.noop)
-                .then(() => {console.log($scope.repository); $scope.$apply()});
+                .then(() => {$scope.$apply()});
         }
 
         function getTagsMatchingQuery(query) {
