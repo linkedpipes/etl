@@ -115,7 +115,7 @@ class ReferenceFactory {
                 valueFactory.createLiteral(label), iri));
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
-                templateResource, this.configIri));
+                this.configIri, iri));
         return output;
     }
 
@@ -128,7 +128,7 @@ class ReferenceFactory {
                 templateResource, iri));
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
-                templateResource, this.configIri));
+                this.configIri, iri));
         return output;
     }
 
