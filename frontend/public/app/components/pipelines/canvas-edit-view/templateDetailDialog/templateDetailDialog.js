@@ -81,7 +81,7 @@ define([
         }), "configuration.jsonld");
         return $http.post("./resources/components", data, postConfiguration)
         .then((response) => {
-            return templateService.load(true).then(() => {
+            return templateService.forceLoad().then(() => {
                 return response.data[0]["@graph"][0]["@id"];
             });
         });
@@ -215,7 +215,7 @@ define([
                     component, LP.color))
             };
 
-            $scope.infoLink = template._core.infoLink;
+            $scope.infoLink = template._coreReference.infoLink;
 
             // Construct a new temporary template object.
             $scope.component = jQuery.extend({}, template,
