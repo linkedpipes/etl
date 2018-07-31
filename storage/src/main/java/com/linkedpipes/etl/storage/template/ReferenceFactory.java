@@ -53,7 +53,7 @@ class ReferenceFactory {
         parseContent(content);
         this.iri = valueFactory.createIRI(iriAsString);
         this.configIri = valueFactory.createIRI(
-                iriAsString + "/configuration");
+                createConfigurationIri(iriAsString));
         //
         List<Statement> interfaceRdf = createInterface();
         List<Statement> definitionRdf = createDefinition();
@@ -71,6 +71,10 @@ class ReferenceFactory {
         //
         TemplateLoader loader = new TemplateLoader(this.repository);
         return loader.loadReferenceTemplate(RepositoryReference.Reference(id));
+    }
+
+    public static String createConfigurationIri(String templateIri) {
+        return templateIri + "/configuration";
     }
 
     private void clear() {
@@ -109,6 +113,9 @@ class ReferenceFactory {
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(SKOS.PREF_LABEL),
                 valueFactory.createLiteral(label), iri));
+        output.add(valueFactory.createStatement(iri,
+                valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
+                templateResource, this.configIri));
         return output;
     }
 
@@ -119,6 +126,9 @@ class ReferenceFactory {
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_TEMPLATE),
                 templateResource, iri));
+        output.add(valueFactory.createStatement(iri,
+                valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
+                templateResource, this.configIri));
         return output;
     }
 

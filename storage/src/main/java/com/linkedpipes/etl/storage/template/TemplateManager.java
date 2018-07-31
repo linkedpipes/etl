@@ -130,7 +130,11 @@ public class TemplateManager {
             case 2:
                 migrateV2ToV3();
                 reloadTemplates();
-            case 3: // Current version
+            case 3:
+                // There is no need to reload as updated information is
+                // not stored in memory.
+                migrateV3ToV4();
+            case 4: // Current version
             default:
                 break;
         }
@@ -167,6 +171,24 @@ public class TemplateManager {
         for (Template template : templates.values()) {
             try {
                 v2Tov3.migrate(template);
+            } catch (Exception ex) {
+                LOG.error("Migration of component '{}' failed",
+                        template.getIri(), ex);
+                migrationFailed = true;
+            }
+        }
+        if (migrationFailed) {
+            throw new BaseException("Migration failed");
+        }
+    }
+
+    private void migrateV3ToV4() throws BaseException {
+        LOG.info("Migrating to version 4");
+        boolean migrationFailed = false;
+        TemplateV3ToV4 v3ToV4= new TemplateV3ToV4(this.repository);
+        for (Template template : templates.values()) {
+            try {
+                v3ToV4.migrate(template);
             } catch (Exception ex) {
                 LOG.error("Migration of component '{}' failed",
                         template.getIri(), ex);
