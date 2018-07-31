@@ -112,7 +112,7 @@ define([
         // Show dialog with detail.
         this.$mdDialog.show({
             'controller': 'components.component.execution.dialog',
-            'templateUrl': 'app/components/componentExecutionDetail/componentExecutionDetailView.html',
+            'templateUrl': 'app/components/pipelines/canvas-edit-view/execution/detail-dialog/componentExecutionDetailView.html',
             'hasBackdrop': false,
             'clickOutsideToClose': true,
             'fullscreen': false,

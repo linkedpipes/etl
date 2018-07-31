@@ -78,7 +78,7 @@
 
             const portItem = {
                 "label": jsonld.r.getPlainString(port, SKOS.PREF_LABEL),
-                "binding": jsonld.r.getPlainString(port, LP.HAS_BINDING),
+                "binding": jsonld.r.getPlainString(port, LP.HAS_PORT_BINDING),
                 "types": jsonld.r.getTypes(port),
                 "content": undefined
             };
