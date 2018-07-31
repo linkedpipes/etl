@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.pojo.LoaderException;
 
 public abstract class Template implements Loadable {
 
@@ -13,7 +12,7 @@ public abstract class Template implements Loadable {
     protected String configDescriptionGraph;
 
     @Override
-    public void resource(String resource) throws LoaderException {
+    public void resource(String resource) {
         iri = resource;
     }
 
@@ -35,10 +34,6 @@ public abstract class Template implements Loadable {
 
     public String getConfigDescriptionGraph() {
         return configDescriptionGraph;
-    }
-
-    public void setConfigDescriptionGraph(String configDescriptionGraph) {
-        this.configDescriptionGraph = configDescriptionGraph;
     }
 
     public abstract String getConfigGraph();
