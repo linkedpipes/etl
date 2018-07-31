@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.storage.template;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
@@ -293,7 +295,20 @@ public class TemplateFacade implements TemplateSource {
     @Override
     public Collection<Statement> getDefinition(String iri)
             throws BaseException {
-        return getDefinition(getTemplate(iri));
+        Template template = getTemplate(iri);
+        // It requires reference to description which is not presented for
+        // reference templates.
+        Statements output = new Statements(getDefinition(template));
+        output.setDefaultGraph(iri);
+        if (Template.Type.REFERENCE_TEMPLATE.equals(template.getType())) {
+            ValueFactory valueFactory = SimpleValueFactory.getInstance();
+            output.addIri(
+                    valueFactory.createIRI(iri),
+                    LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION,
+                    template.getConfigurationDescription()
+            );
+        }
+        return output;
     }
 
     @Override
