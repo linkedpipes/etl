@@ -220,9 +220,10 @@ public class TemplateManager {
                 "/resources/components/" + id;
         ReferenceFactory factory = new ReferenceFactory(this, this.repository);
         try {
-            Template template = factory.create(
+            ReferenceTemplate template = factory.create(
                     interfaceRdf, configurationRdf,
                     descriptionRdf, id, iri);
+            template.setCoreTemplate(findCoreTemplate(template));
             templates.put(template.getIri(), template);
             return template;
         } catch (BaseException ex) {
