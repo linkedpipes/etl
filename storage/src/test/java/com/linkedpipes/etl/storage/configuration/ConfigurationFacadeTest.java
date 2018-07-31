@@ -1,7 +1,10 @@
 package com.linkedpipes.etl.storage.configuration;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.TestUtils;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -356,8 +359,34 @@ public class ConfigurationFacadeTest {
 
         Collection<Statement> expected = TestUtils.rdfFromResource(
                 "configuration/mergeGlobalControlIIafF.trig");
-        Rdf4jUtils.rdfEqual(actual, expected);
         Assert.assertTrue(Models.isomorphic(actual, expected));
+    }
+
+    @Test
+    public void finalizeAfterMerge() {
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        IRI iri = vf.createIRI("http://localhost/instance");
+
+        Statements statements = Statements.ArrayList();
+        statements.setDefaultGraph("http://localhost/graph");
+        statements.addIri(iri, "http://localhost/first", LP_OBJECTS.INHERIT);
+        statements.addIri(iri, "http://localhost/second",
+                LP_OBJECTS.INHERIT_AND_FORCE);
+        statements.addIri(iri, "http://localhost/third", LP_OBJECTS.NONE);
+        statements.addInt(iri, "http://localhost/value", 10);
+
+        Collection<Statement> actual =
+                facade.finalizeAfterMergeFromBottom(statements);
+
+        Statements expected = Statements.ArrayList();
+        expected.setDefaultGraph("http://localhost/graph");
+        expected.addIri(iri, "http://localhost/second",
+                LP_OBJECTS.INHERIT_AND_FORCE);
+        expected.addIri(iri, "http://localhost/third", LP_OBJECTS.NONE);
+        expected.addInt(iri, "http://localhost/value", 10);
+
+        Rdf4jUtils.rdfEqual(expected, actual);
+        Assert.assertTrue(Models.isomorphic(expected, actual));
     }
 
 }

@@ -1,11 +1,13 @@
 package com.linkedpipes.etl.storage.configuration;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.storage.BaseException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class ConfigurationFacade {
@@ -73,6 +75,21 @@ public class ConfigurationFacade {
 
         SelectPrivateStatements worker = new SelectPrivateStatements();
         return worker.selectPrivate(rdf, description);
+    }
+
+    public Collection<Statement> finalizeAfterMergeFromBottom(
+            Collection<Statement> configurationRdf) {
+        // Solve situation where there is no value in the core component
+        // however the instance choose to INHERIT the value.
+        // There might be also same issue with INHERIT_AND_FORCE
+        // but in that case it make sense to fail, as the given value
+        // should not be used.
+        return configurationRdf.stream()
+                .filter(st -> {
+                    String value = st.getObject().stringValue();
+                    return !LP_OBJECTS.INHERIT.equals(value);
+                })
+                .collect(Collectors.toList());
     }
 
 }

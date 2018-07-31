@@ -88,4 +88,21 @@ class ConfigurationMerger {
         graphs.put(componentConfigurationGraph, configuration);
     }
 
+    /**
+     * Called after last call of mergerAndReplaceConfiguration on a component.
+     */
+    public void finalizeConfiguration(
+            Template template, String componentConfigurationGraph) {
+
+        Collection<Statement> componentTriples =
+                graphs.get(componentConfigurationGraph);
+
+        ConfigurationFacade configurationFacade = new ConfigurationFacade();
+        Collection<Statement> configuration =
+                configurationFacade.finalizeAfterMergeFromBottom(
+                        componentTriples);
+
+        graphs.put(componentConfigurationGraph, configuration);
+    }
+
 }
