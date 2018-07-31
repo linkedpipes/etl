@@ -134,9 +134,17 @@ class ImportTemplates {
 
     private boolean resolveTemplate(TemplateInfo template)
             throws BaseException {
+        Template localTemplate;
+        // First try to just ask for the URL.
+        localTemplate = this.templateFacade.getTemplate(template.getIri());
+        if (localTemplate != null) {
+            return true;
+        }
+        // Try mapping.
         String templateIri = this.mapping.remoteToLocal(template.getIri());
-        Template localTemplate = this.templateFacade.getTemplate(templateIri);
-        if (localTemplate == null) {
+        Template mappedLocalTemplate =
+                this.templateFacade.getTemplate(templateIri);
+        if (mappedLocalTemplate == null) {
             if (this.importMissing) {
                 return importTemplate(template);
             } else {
@@ -147,7 +155,7 @@ class ImportTemplates {
             LOG.debug("Mapping {} to {}", template.getIri(), templateIri);
             if (this.updateExisting) {
                 LOG.info("Updating local template: {}", templateIri);
-                updateLocal(template, localTemplate);
+                updateLocal(template, mappedLocalTemplate);
             }
             return true;
         }

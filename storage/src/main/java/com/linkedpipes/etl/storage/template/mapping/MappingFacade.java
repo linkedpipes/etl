@@ -144,7 +144,7 @@ public class MappingFacade {
     /**
      * Add mapping from given template (local) to original IRI.
      */
-    public void add(Template template, String originalIri) {
+    void add(Template template, String originalIri) {
         if (originalToLocal.containsKey(originalIri)) {
             LOG.error("There is already a local template for given IRI: {}",
                     originalIri);
