@@ -27,6 +27,7 @@ class ReferenceTemplate extends Template
     private String template;
 
     private String configurationDescription;
+    private JarTemplate coreTemplate;
 
     public String getTemplate() {
         return template;

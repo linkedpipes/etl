@@ -81,13 +81,15 @@ public class TemplateFacade implements TemplateSource {
     }
 
     public Template getRootTemplate(Template template) {
-        Template output = template;
-        Template next = this.getParent(output);
-        while (next != null) {
-            output = next;
-            next = this.getParent(output);
+        if (template instanceof JarTemplate) {
+            return template;
+        } else if (template instanceof ReferenceTemplate) {
+            ReferenceTemplate referenceTemplate = (ReferenceTemplate) template;
+            return referenceTemplate.getCoreTemplate();
+
+        } else {
+            throw new RuntimeException("Unknown component type.");
         }
-        return output;
     }
 
     /**

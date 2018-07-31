@@ -75,6 +75,7 @@ public class TemplateManager {
     }
 
     private void importTemplates() {
+        List<ReferenceTemplate> referenceTemplates = new ArrayList<>();
         for (RepositoryReference reference : this.repository.getReferences()) {
             try {
                 Template template = loader.loadTemplate(reference);
@@ -83,9 +84,39 @@ public class TemplateManager {
                             reference.getId());
                     continue;
                 }
+                if (template instanceof ReferenceTemplate) {
+                    referenceTemplates.add((ReferenceTemplate) template);
+                }
                 templates.put(template.getIri(), template);
             } catch (Exception ex) {
                 LOG.error("Can't load template: ", reference.getId(), ex);
+            }
+        }
+        setTemplateCoreReferences(referenceTemplates);
+    }
+
+    private void setTemplateCoreReferences(List<ReferenceTemplate> templates) {
+        for (ReferenceTemplate template : templates) {
+            template.setCoreTemplate(findCoreTemplate(template));
+        }
+    }
+
+    private JarTemplate findCoreTemplate(ReferenceTemplate template) {
+        while(true) {
+            Template newTemplate = this.templates.get(template.getTemplate());
+            switch (newTemplate.getType()) {
+                case JAR_TEMPLATE:
+                    return (JarTemplate)newTemplate;
+                case REFERENCE_TEMPLATE:
+                    template = (ReferenceTemplate)newTemplate;
+                    break;
+                default:
+                    LOG.error("Invalid template type: {}", newTemplate.getIri());
+                    return null;
+            }
+            if (newTemplate == null) {
+                // TODO Invalid template detected.
+                return null;
             }
         }
     }

@@ -53,4 +53,5 @@ class JarTemplate extends Template implements PojoLoader.Loadable {
     public String getConfigurationDescription() {
         return configurationDescription;
     }
+
 }
