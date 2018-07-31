@@ -60,7 +60,7 @@
         jsonld.t.getReferences(graph, resource, LP.HAS_DIALOG).forEach(
             (dialog) => {
                 dialogs.push({
-                    "name": jsonld.r.getPlainStrings(dialog, LP.HAS_NAME)
+                    "name": jsonld.r.getPlainString(dialog, LP.HAS_NAME)
                 });
             });
         return dialogs;
