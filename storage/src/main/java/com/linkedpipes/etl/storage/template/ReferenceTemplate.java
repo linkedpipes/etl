@@ -26,7 +26,6 @@ class ReferenceTemplate extends Template
      */
     private String template;
 
-    private String configurationDescription;
     private JarTemplate coreTemplate;
 
     public String getTemplate() {
@@ -43,9 +42,6 @@ class ReferenceTemplate extends Template
         switch (predicate) {
             case LP_PIPELINE.HAS_TEMPLATE:
                 template = value.stringValue();
-                break;
-            case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
-                configurationDescription = value.stringValue();
                 break;
         }
         return null;
@@ -70,7 +66,17 @@ class ReferenceTemplate extends Template
 
     @Override
     public String getConfigurationDescription() {
-        return configurationDescription;
+        if (this.coreTemplate == null) {
+            throw new RuntimeException("Missing core template reference.");
+        }
+        return coreTemplate.getConfigurationDescription();
     }
 
+    void setCoreTemplate(JarTemplate coreTemplate) {
+        this.coreTemplate = coreTemplate;
+    }
+
+    JarTemplate getCoreTemplate() {
+        return coreTemplate;
+    }
 }
