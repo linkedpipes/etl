@@ -86,7 +86,7 @@
             portItem.types.forEach((item) => {
                 if (item === LP.PORT) {
                     // Port type, ignore.
-                } else if (item === LP.Input) {
+                } else if (item === LP.INPUT) {
                     inputs.push(portItem);
                     inputDataPortsCount++;
                 } else if (item === LP.RUNTIME_CONFIGURATION) {
