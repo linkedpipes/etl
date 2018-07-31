@@ -26,7 +26,7 @@
         "HAS_EVENT_ROOT_CAUSE": LP + "events/rootException",
         "HAS_EXEC_ORDER": LP + "executionOrder",
         "HAS_DU" : ETL_LP + "dataUnit",
-        "HAS_BINDING": ETL_LP + "binding",
+        "HAS_BINDING": LP + "binding",
         "HAS_DEBUG" : ETL_LP + "debug",
         "PROGRESS_TOTAL" : LP + "progress/total",
         "PROGRESS_CURRENT" : LP + "progress/current",
