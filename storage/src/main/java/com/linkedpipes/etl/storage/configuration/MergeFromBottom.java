@@ -82,8 +82,6 @@ class MergeFromBottom {
                 null, RDF.TYPE, this.description.getType()).single();
         if (this.templateEntity == null) {
             this.templateModel = null;
-            LOG.warn("Missing configuration entity for: {}",
-                    this.description.getType());
         }
     }
 
@@ -93,8 +91,6 @@ class MergeFromBottom {
                 null, RDF.TYPE, this.description.getType()).single();
         if (this.instanceEntity == null) {
             this.instanceModel = null;
-            LOG.warn("Missing configuration entity for: {}",
-                    this.description.getType());
         }
     }
 
