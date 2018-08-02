@@ -644,16 +644,11 @@ define([
                     comFacade.getY(component) + y - minY);
             //
             var originalId = component['@id'];
-            // Map template.
-            var templateIri = this.templates.mapToIri(
-                    comFacade.getTemplateIri(component));
-            comFacade.setTemplate(component, templateIri);
-            if (typeof (templateIri) === 'undefined') {
-                // Missing template!
-                console.warn('Missing tempalte ignored');
-                return;
-            }
-            var template = this.templates.getTemplate(templateIri);
+            var template = this.templates.getTemplate(
+                comFacade.getTemplateIri(component));
+            if (template === undefined) {
+                console.error("Missing template for:", component)
+            };
             // Add a copy of rhe resource to current model.
             this.pipelineModel.addResource(this.pipeline, component);
             // Create canvas representation.
@@ -661,7 +656,7 @@ define([
                     component, template, comFacade);
             //
             var id = cell.id;
-            // Update IRI.
+            // Update IRI -> create new IRI for an inserted template.
             comFacade.setIriFromId(this.pipeline, component, id);
             // Store to mapping.
             this.data.idToResource[id] = component;
