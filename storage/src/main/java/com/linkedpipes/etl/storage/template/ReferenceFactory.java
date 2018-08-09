@@ -15,6 +15,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -133,6 +134,9 @@ class ReferenceFactory {
     }
 
     private List<Statement> updateConfig(Collection<Statement> input) {
+        if (input == null || input.isEmpty()) {
+            return Collections.emptyList();
+        }
         return RdfUtils.updateToIriAndGraph(input, this.configIri);
     }
 
