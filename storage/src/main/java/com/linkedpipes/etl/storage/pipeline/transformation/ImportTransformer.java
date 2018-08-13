@@ -44,7 +44,12 @@ class ImportTransformer {
         if (!this.options.isLocal()) {
             pipelineRdf = this.importTemplates(
                     pipelineRdf, pipelineInfo.getVersion());
+        } else {
+            // There might be templates, but as the pipeline is local
+            // we remove them.
+            pipelineRdf = this.removeTemplates(pipelineRdf);
         }
+
         if (pipelineIri != null) {
             String targetIri = pipelineIri.stringValue();
             pipelineRdf = this.updateResources(pipelineRdf, targetIri);
@@ -91,6 +96,11 @@ class ImportTransformer {
             throw new TransformationFailed(
                     "Can't import templates.", ex);
         }
+    }
+
+    private Collection<Statement> removeTemplates(
+            Collection<Statement> pipelineRdf) {
+        return this.importTemplates.removeTemplates(pipelineRdf);
     }
 
     /**

@@ -280,4 +280,37 @@ class ImportTemplates {
         }
     }
 
+    /**
+     * Remove templates and all related information from a pipeline.
+     * TODO Move to another class.
+     */
+    public Collection<Statement> removeTemplates(
+            Collection<Statement> pipelineRdf) {
+        this.initialize();
+        this.loadStatements(pipelineRdf);
+        // Collect pipeline without templates.
+        List<Statement> definition = this.graphs.get(this.pipelineGraph);
+        Set<Resource> configurations = new HashSet<>();
+        List<Statement> toRemove = new ArrayList<>();
+        List<Statement> toAdd = new ArrayList<>();
+        for (Statement statement : definition) {
+            // Check for configuration.
+            String predicate = statement.getPredicate().stringValue();
+            if (predicate.equals(LP_PIPELINE.HAS_CONFIGURATION_GRAPH)) {
+                configurations.add((Resource) statement.getObject());
+                continue;
+            }
+        }
+        // Collect.
+        List<Statement> result = new ArrayList<>(definition.size());
+        result.addAll(definition);
+        result.removeAll(toRemove);
+        result.addAll(toAdd);
+        for (Resource configurationIri : configurations) {
+            result.addAll(this.graphs.getOrDefault(
+                    configurationIri, Collections.emptyList()));
+        }
+        return result;
+    }
+
 }

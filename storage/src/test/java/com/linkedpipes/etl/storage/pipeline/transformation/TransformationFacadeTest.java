@@ -52,5 +52,32 @@ public class TransformationFacadeTest {
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
 
+
+    /**
+     * Import local pipeline with templates, the templates should be ignored.
+     */
+    @Test
+    public void localWithTemplatesExpected() throws Exception {
+        Statements input = new Statements(TestUtils.rdfFromResource(
+                "pipeline/transformation/localWithTemplatesInput.trig"));
+        Statements expected = new Statements(TestUtils.rdfFromResource(
+                "pipeline/transformation/localWithTemplatesExpected.trig"));
+
+        Statements options = Statements.ArrayList();
+        options.addBoolean("http://options",
+                "http://etl.linkedpipes.com/ontology/local",
+                true);
+
+        TransformationFacade transformation =
+                new TransformationFacade(null, null);
+
+        Collection<Statement> actual = transformation.localizeAndMigrate(
+                input, options,
+                this.valueFactory.createIRI("http://localhost/ppl"));
+
+        Rdf4jUtils.rdfEqual(expected, actual);
+        Assert.assertTrue(Models.isomorphic(expected, actual));
+    }
+
 }
 

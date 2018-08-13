@@ -1,0 +1,34 @@
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix se: <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#> .
+
+<http://localhost/pipeline> {
+    <http://localhost/pipeline> a lp:Pipeline ;
+        skos:prefLabel "Visualisation pipeline" ;
+        <http://etl.linkedpipes.com/ontology/version> "2"^^<http://www.w3.org/2001/XMLSchema#int> .
+
+    <http://localhost/pipeline/0> a lp:Component ;
+		lp:configurationGraph <http://localhost/config/0> ;
+		lp:template <http://localhost/resources/components/1> .
+
+}
+
+<http://localhost/config/0> {
+    <http://localhost/pipeline/0/config> a se:Configuration ;
+        se:endpoint "http://es.dbpedia.org/sparql" ;
+        se:query "CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 10" .
+}
+
+<http://localhost/resources/components/1> {
+
+    <http://localhost/pipeline/0> a lp:Template ;
+		lp:configurationGraph <http://localhost/resources/components/1/config> ;
+		lp:template <http://localhost/resources/components/e-sparqlEndpoint> .
+
+}
+
+<http://localhost/resources/components/1/config> {
+    <http://localhost/pipeline/0/config> a se:Configuration ;
+        se:endpoint "http://es.dbpedia.org/sparql" ;
+        se:query "CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 10" .
+}

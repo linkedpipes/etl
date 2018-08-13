@@ -78,6 +78,18 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, this.valueFactory.createLiteral(o));
     }
 
+    public void addBoolean(String s, String p, boolean o) {
+        this.addBoolean(s, this.valueFactory.createIRI(p), o);
+    }
+
+    public void addBoolean(String s, IRI p, boolean o) {
+        this.addBoolean(this.valueFactory.createIRI(s), p, o);
+    }
+
+    public void addBoolean(Resource s, IRI p, boolean o) {
+        this.add(s, p, this.valueFactory.createLiteral(o));
+    }
+
     public void add(Resource s, String p, Value o) {
         this.add(s, this.valueFactory.createIRI(p), o);
     }
