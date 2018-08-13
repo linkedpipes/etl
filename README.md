@@ -21,24 +21,10 @@ So far, you need to compile LP-ETL on your own:
 $ git clone https://github.com/linkedpipes/etl.git
 $ cd etl
 $ mvn install
-$ cp configuration.properties.sample deploy/configuration.properties
-$ vi deploy/configuration.properties
 ```
 ### Windows
 We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux.
 Nevertheless, it is possible to build and use LP-ETL with pure Windows-based versions of tools.
-
-### Configuration
-Now edit the configuration file, mainly adding paths to working, storage, log and library directories. Especially:
-* ```executor.execution.working_directory```
-* ```executor.log.directory```
-* ```executor.osgi.lib.directory```
-* ```executor-monitor.log.directory```
-* ```storage.jars.directory```
-* ```storage.directory```
-* ```storage.log.directory```
-
-For an example see the ```configuration.properties.example``` file.
 
 ## Running LinkedPipes ETL
 To run LP-ETL, you need to run the four components it consists of. For debugging purposes, it is useful to store the console logs.
@@ -53,7 +39,8 @@ $ ./frontend.sh >> frontend.log &
 ```
 
 ### Windows
-We recommend using [Cygwin] and proceeding as with Linux. Otherwise, in the ```deploy``` folder, run
+We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux. 
+Otherwise, in the ```deploy``` folder, run
  * ```executor.bat```
  * ```executor-monitor.bat```
  * ```storage.bat```
@@ -63,17 +50,9 @@ Unless configured otherwise, LinkedPipes ETL should now run on ```http://localho
 ## Plugins - Components
 There are components in the ```jars``` directory. Detailed description of how to create your own coming soon.
 
-## Known issues
- * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
- * If you are using Oracle Java 8, accessing HTTPS based URLs and getting ```SSLHandshakeException : Received fatal alert: handshake_failure``` when the same URL works from, e.g. Chrome, try installing the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html) or for Java 9
- 
-## Update notes
-> Update note 3: When upgrading from develop prior to 2017-02-14, you need to delete ```{deploy}/jars``` and ```{deploy}/osgi```. 
+### Configuration
+The configuration file in the `deploy` directory can be edited, mainly changing paths to working, storage, log and library directories. 
 
-> Update note 2: When upgrading from master prior to 2016-11-04, you need to move your pipelines folder from e.g., ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
-
-> Update note: When upgrading from master prior to 2016-04-07, you need to delete your old execution data (e.g., in /data/lp/etl/working/data)
- 
 ## Update script
 Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse it if you wish. The script sets the path to Java 8, kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```
 ```sh
@@ -103,6 +82,16 @@ echo Running frontend
 echo Disowning
 disown
 ```
+## Known issues
+ * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
+ * If you are using Oracle Java 8, accessing HTTPS based URLs and getting ```SSLHandshakeException : Received fatal alert: handshake_failure``` when the same URL works from, e.g. Chrome, try installing the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html) or for Java 9
+ 
+## Update notes
+> Update note 3: When upgrading from develop prior to 2017-02-14, you need to delete ```{deploy}/jars``` and ```{deploy}/osgi```. 
+
+> Update note 2: When upgrading from master prior to 2016-11-04, you need to move your pipelines folder from e.g., ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
+
+> Update note: When upgrading from master prior to 2016-04-07, you need to delete your old execution data (e.g., in /data/lp/etl/working/data)
 
 [Java]: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
 [Git]: <https://git-scm.com/>
