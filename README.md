@@ -50,7 +50,7 @@ Unless configured otherwise, LinkedPipes ETL should now run on ```http://localho
 ## Plugins - Components
 There are components in the ```jars``` directory. Detailed description of how to create your own coming soon.
 
-### Configuration
+## Configuration
 The configuration file in the `deploy` directory can be edited, mainly changing paths to working, storage, log and library directories. 
 
 ## Update script
