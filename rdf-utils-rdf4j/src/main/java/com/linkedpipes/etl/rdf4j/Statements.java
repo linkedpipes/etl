@@ -45,12 +45,21 @@ public class Statements implements Collection<Statement> {
         this.defaultGraph = defaultGraph;
     }
 
+    public void addIri(String s, String p, String o) {
+        this.addIri(this.valueFactory.createIRI(s), p, o);
+    }
+
+
     public void addIri(Resource s, String p, String o) {
         this.add(s, p, this.valueFactory.createIRI(o));
     }
 
     public void addIri(Resource s, IRI p, String o) {
         this.add(s, p, this.valueFactory.createIRI(o));
+    }
+
+    public void addString(String s, String p, String o) {
+        this.addString(this.valueFactory.createIRI(s), p, o);
     }
 
     public void addString(Resource s, String p, String o) {

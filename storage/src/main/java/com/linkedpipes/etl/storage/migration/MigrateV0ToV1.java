@@ -79,7 +79,8 @@ public class MigrateV0ToV1 {
 
     private String templateName(RdfObjects.Entity template) {
         // The extracted name is /t-tabular and we add / to the end
-        // to prevent t-tabular to match t-tabularUv.
+        // to prevent t-tabular to match t-tabularUv, also every name
+        // is followed by /{version}.
         String iri = template.getResource().stringValue();
         return iri.substring(iri.lastIndexOf("/")) + "/";
     }

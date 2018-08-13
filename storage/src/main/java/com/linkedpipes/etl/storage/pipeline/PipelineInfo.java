@@ -19,7 +19,10 @@ public class PipelineInfo implements PojoLoader.Loadable {
      */
     private String iri;
 
-    private int version = Pipeline.VERSION_NUMBER;
+    /**
+     * Default version is zero, all never pipelines have version stored.
+     */
+    private int version = 0;
 
     /**
      * Labels.

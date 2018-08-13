@@ -1,0 +1,20 @@
+@prefix lp: <http://linkedpipes.com/ontology/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix se: <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#> .
+
+<http://localhost/ppl> {
+    <http://localhost/ppl> a lp:Pipeline ;
+        skos:prefLabel "Visualisation pipeline" ;
+        <http://etl.linkedpipes.com/ontology/version> "2"^^<http://www.w3.org/2001/XMLSchema#int> .
+
+    <http://localhost/ppl/2> a lp:Component ;
+		lp:configurationGraph <http://localhost/ppl/graph/4> ;
+		lp:template <http://etl.linkedpipes.com/resources/components/e-sparqlEndpoint/1.0.0> .
+
+}
+
+<http://localhost/ppl/graph/4> {
+    <http://localhost/ppl/3> a se:Configuration ;
+        se:endpoint "http://es.dbpedia.org/sparql" ;
+        se:query "CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o} LIMIT 10" .
+}
