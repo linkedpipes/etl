@@ -89,7 +89,7 @@ gApiRouter.get('/pipelines', function (request, response) {
         response.status(503).json({
             'exception': {
                 'errorMessage': error,
-                'systemMessage': 'Executor-monitor is offline.',
+                'systemMessage': 'Storage is offline.',
                 'userMessage': 'Backend is offline.',
                 'errorCode': 'CONNECTION_REFUSED'
             }
@@ -248,7 +248,7 @@ gApiRouter.get('/pipelines/:id', function (request, response) {
         response.status(503).json({
             'exception': {
                 'errorMessage': error,
-                'systemMessage': 'Executor-monitor is offline.',
+                'systemMessage': 'Storage is offline.',
                 'userMessage': 'Backend is offline.',
                 'errorCode': 'CONNECTION_REFUSED'
             }

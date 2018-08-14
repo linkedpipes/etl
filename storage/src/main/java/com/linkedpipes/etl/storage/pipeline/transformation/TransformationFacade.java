@@ -26,6 +26,9 @@ public class TransformationFacade {
         this.mappingFacade = mappings;
     }
 
+    /**
+     * Used for loading pipelines.
+     */
     public Collection<Statement> migrateThrowOnWarning(
             Collection<Statement> pipeline)
             throws TransformationFailed {
@@ -34,6 +37,9 @@ public class TransformationFacade {
         return migration.migrate(pipeline);
     }
 
+    /**
+     * Used to import a pipeline.
+     */
     public Collection<Statement> localizeAndMigrate(
             Collection<Statement> pipeline,
             Collection<Statement> options,

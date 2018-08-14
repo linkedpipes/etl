@@ -13,7 +13,9 @@ import java.util.Collection;
 import java.util.Date;
 
 /**
- * Load pipeline and perform migration if needed.
+ * Load pipeline from a file.
+ * If the pipeline version is not actual create backup of the pipeline
+ * file and migrate the current pipeline.
  */
 class PipelineLoader {
 
