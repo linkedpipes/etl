@@ -1,0 +1,15 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "c-1" ;
+    component:firstControl config:InheritAndForce ;
+    component:second "c-2" ;
+    component:secondControl config:InheritAndForce ;
+    component:third "c-3" ;
+    component:thirdControl config:InheritAndForce ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> ;
+    component:fourthControl config:InheritAndForce .
+
+<http://localhost/object/1> <http://localhost/value> "c-o-1" .
+<http://localhost/object/2> <http://localhost/value> "c-o-2" .

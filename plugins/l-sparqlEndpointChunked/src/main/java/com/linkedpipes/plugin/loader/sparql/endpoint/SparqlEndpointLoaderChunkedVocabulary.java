@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.loader.sparql.endpoint;
 final class SparqlEndpointLoaderChunkedVocabulary {
 
     private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#";
+            = "http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 

@@ -25,7 +25,7 @@ define([], function () {
             return {
                 "label": component.label,
                 "search": componentCore.search,
-                "parent": component.core ? "" : componentCore.label,
+                "parent": component.isCore ? "" : componentCore.label,
                 "icon": ICONS[componentCore.type],
                 "component": component,
                 "order": 0,
@@ -56,7 +56,7 @@ define([], function () {
                     const record = {
                         "label": component.label,
                         "search": componentCore.search,
-                        "parent": component.core ? "" : componentCore.label,
+                        "parent": component.isCore ? "" : componentCore.label,
                         "icon": ICONS[componentCore.type],
                         "component": component,
                         "portBinding": port.binding,
@@ -113,6 +113,9 @@ define([], function () {
                 const templatesList = templateService.getTemplatesList();
                 if (filter.source === undefined) {
                     templatesList.forEach(function (item) {
+                        if (item.isInvalid) {
+                            return;
+                        }
                         $scope.templates.push(transform(item));
                     });
                 } else {

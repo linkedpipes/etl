@@ -23,6 +23,12 @@ define([], function () {
         "followRedirect" : {
             "$type" : "bool",
             "$label" : "Follow redirects"
+        },
+        "encodeUrl" : {
+            "$type": "bool",
+            "$property": "encodeUrl",
+            "$control": "encodeUrlControl",
+            "$label": "Encode input URL"
         }
     };
 

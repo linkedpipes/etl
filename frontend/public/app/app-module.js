@@ -1,26 +1,22 @@
 define([
     "app/app-config",
-    "app/components/pipelines/listView/pipeline-list-ctrl",
-    "app/components/pipelines/canvasView/pipelineCanvasCtrl",
-    "app/components/pipelines/uploadView/pipelineUploadCtrl",
-    "app/components/pipelines/exportDialog/pipelineExportDialogCtrl",
-    "app/components/executions/listView/executionListCtrl",
-    "app/components/executions/detailView/executionDetailCtrl",
-    "app/components/componentExecutionDetail/componentExecutionDetailCtrl",
-    "app/components/personalizationView/personalizationCtrl",
-    "app/components/help/view/helpView",
+    "app/components/pipelines/list-view/pipeline-list-ctrl",
+    "app/components/pipelines/canvas-edit-view/pipelineCanvasCtrl",
+    "app/components/pipelines/upload-view/pipeline-upload-ctrl",
+    "app/components/executions/list-view/execution-list-ctrl",
+    "app/components/pipelines/canvas-edit-view/execution/detail-dialog/componentExecutionDetailCtrl",
+    "app/components/personalization/personalization-ctrl",
+    "app/components/help/help-ctrl",
     "app/services/rdfService",
     "app/services/refreshService",
-    "app/services/repositoryService",
     "app/modules/status-service",
     "app/services/jsonldService",
-    "app/modules/instance-info-service",
     "app/services/designService",
-    "app/components/inputs/localizedTextInput/localizedTextInput",
-    "app/components/inputs/iriList/iriList",
+    "app/components/dialogs/ui/localizedTextInput/localizedTextInput",
+    "app/components/dialogs/ui/iriList/iriList",
     "app/components/templates/listView/templateListView",
-    "app/components/templates/detailView/templateDetailView",
-    "app/components/templates/templateService",
+    "app/components/templates/detail-view/template-detail-ctrl",
+    "app/components/templates/template-service",
     "app/components/templates/generalTab/templateGeneralTab",
     "app/components/templates/hierarchyTab/templateHierarchyTab",
     "app/components/layout/layout-page",
@@ -41,18 +37,14 @@ define([
         pipelineListCtrlInit,
         pipelineEditCanvasCtrlInit,
         pipelineUploadCtrlInit,
-        pipelineExportDialogCtrlInit,
         executionListCtrlInit,
-        executionDetailCtrlInit,
         componentExecutionDetailCtrl,
         personalizationCtrl,
         helpCtrl,
         rdfService,
         refreshService,
-        repositoryService,
         statusService,
         jsonldService,
-        infoService,
         designService,
         localizedTextInputInit,
         iriListInit,
@@ -91,10 +83,8 @@ define([
     function initializeServices(app) {
         rdfService(app);
         refreshService(app);
-        repositoryService(app);
         statusService(app);
         jsonldService(app);
-        infoService(app);
         designService(app);
         localizedTextInputInit(app);
         iriListInit(app);
@@ -111,9 +101,7 @@ define([
         pipelineListCtrlInit(app);
         pipelineEditCanvasCtrlInit(app);
         pipelineUploadCtrlInit(app);
-        pipelineExportDialogCtrlInit(app);
         executionListCtrlInit(app);
-        executionDetailCtrlInit(app);
         componentExecutionDetailCtrl(app);
         personalizationCtrl(app);
         helpCtrl(app);

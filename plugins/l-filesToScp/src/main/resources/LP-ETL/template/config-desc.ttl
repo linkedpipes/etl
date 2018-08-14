@@ -9,27 +9,32 @@
         <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/port> ,
         <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/directory> ,
         <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/createDirectory> ,
-        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/clearDirectory> .
+        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/clearDirectory> ,
+        <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/connectionTimeOut> .
 
 <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/userName>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#userName> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#userNameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#userNameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#passwordControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/host>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#host> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#hostControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#hostControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/port>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#port> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#portControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#portControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/directory>
     a config:ConfigurationMember ;
@@ -45,3 +50,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#clearDirectory> ;
     config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#clearDirectoryControl> .
+
+<http://linkedpipes.com/resources/components/l-filesToScp/0.0.0/configuration/desc/connectionTimeOut>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-filesToScp#connectionTimeOut> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-filesToScp#connectionTimeOutControl> .

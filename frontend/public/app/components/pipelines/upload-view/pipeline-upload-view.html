@@ -1,0 +1,41 @@
+<div layout="row" layout-align="space-around">
+    <div class="md-padding" style="max-width: 66em;width: 100%;">
+        <div ng-show="uploading">
+            <p>Uploading ...</p>
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+        <md-content layout="column" class="layout-padding" ng-show="!uploading">
+            <div style="padding-left: 30px;margin-bottom: -2em;">
+                <md-radio-group ng-model="type">
+                    <md-radio-button value="file"> Upload file</md-radio-button>
+                    <md-radio-button value="url"> From URL</md-radio-button>
+                </md-radio-group>
+                <md-switch ng-model="updateTemplates">
+                    Update existing templates
+                </md-switch>
+            </div>
+            <div ng-show="type === 'file'">
+                <div class="md-padding">
+                    Selected file: {{file.name}}
+                </div>
+                <div>
+                    <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised" ng-disable="uploading">
+                        Select File
+                    </md-button>
+                    <md-button ng-click="onUpload()" class="md-raised md-primary" ng-disabled="(type === 'file' && !fileReady) || (type === 'url' && !url)">
+                        Upload
+                    </md-button>
+                </div>
+            </div>
+            <div ng-show="type === 'url'">
+                <md-input-container class="md-block" style="margin-bottom: 0em;" flex>
+                    <label>Pipeline URL</label>
+                    <input ng-model="url" required >
+                </md-input-container>
+                <md-button ng-click="onUpload()" class="md-raised md-primary" ng-disabled="(type === 'file' && !fileReady) || (type === 'url' && !url)">
+                    Upload
+                </md-button>
+            </div>
+        </md-content>
+    </div>
+</div>

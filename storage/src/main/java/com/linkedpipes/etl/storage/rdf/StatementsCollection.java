@@ -1,16 +1,16 @@
 package com.linkedpipes.etl.storage.rdf;
 
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class StatementsCollection {
 
     private final Collection<Statement> statements;
-
-    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     /**
      * Operate on given collection.
@@ -29,25 +29,14 @@ public class StatementsCollection {
         statements.addAll(collection);
     }
 
-    public StatementsCollection filter(Function<Statement, Boolean> filter) {
+    public StatementsCollection filter(Predicate<Statement> filter) {
         final List<Statement> result = new LinkedList<>();
         for (Statement statement : statements) {
-            if (filter.apply(statement)) {
+            if (filter.test(statement)) {
                 result.add(statement);
             }
         }
         return new StatementsCollection(result);
-    }
-
-    public Collection<Resource> subjects(IRI predicate, Value object) {
-        final Set<Resource> result = new HashSet<>();
-        for (Statement s : statements) {
-            if ((predicate == null || s.getPredicate().equals(predicate)) &&
-                    (object == null || s.getObject().equals(object))) {
-                result.add(s.getSubject());
-            }
-        }
-        return result;
     }
 
     public Collection<Value> values(Resource subject, IRI predicate) {
@@ -86,48 +75,6 @@ public class StatementsCollection {
      */
     public void remove(StatementsCollection toRemove) {
         remove(toRemove.statements);
-    }
-
-    /**
-     * Replace one resource with another one.
-     *
-     * @param oldValue
-     * @param newValue
-     */
-    public void replace(Resource oldValue, Resource newValue) {
-        final Collection<Statement> toRemove = new LinkedList<>();
-        final Collection<Statement> toAdd = new LinkedList<>();
-        for (Statement s : statements) {
-            if (s.getSubject().equals(oldValue)) {
-                if (s.getObject().equals(oldValue)) {
-                    toRemove.add(s);
-                    toRemove.add(s);
-                    toAdd.add(valueFactory.createStatement(
-                            newValue, s.getPredicate(),
-                            newValue, s.getContext()
-                    ));
-                } else {
-                    toRemove.add(s);
-                    toRemove.add(s);
-                    toAdd.add(valueFactory.createStatement(
-                            newValue, s.getPredicate(),
-                            s.getObject(), s.getContext()
-                    ));
-                }
-            } else {
-                if (s.getObject().equals(oldValue)) {
-                    toRemove.add(s);
-                    toAdd.add(valueFactory.createStatement(
-                            s.getSubject(), s.getPredicate(),
-                            newValue, s.getContext()
-                    ));
-                } else {
-                    // No match.
-                }
-            }
-        }
-        statements.removeAll(toRemove);
-        statements.addAll(toAdd);
     }
 
     public int size() {

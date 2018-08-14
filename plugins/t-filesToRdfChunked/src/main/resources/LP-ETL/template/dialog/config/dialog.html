@@ -29,4 +29,14 @@
                ng-hide="dialog.softFail.hide">
         Skip file on failure
     </md-switch>
+    <md-switch ng-model="dialog.fileReference.value"
+               ng-disabled="dialog.fileReference.disabled || dialog.fileReference.inherit"
+               ng-hide="dialog.fileReference.hide">
+        Add file reference
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.filePredicate.hide">
+        <label>File name predicate</label>
+        <input ng-model="dialog.filePredicate.value"
+               ng-disabled="dialog.filePredicate.disabled || dialog.filePredicate.inherit || !dialog.fileReference.value">
+    </md-input-container>
 </div>

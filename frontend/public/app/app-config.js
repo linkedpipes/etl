@@ -3,31 +3,24 @@ define([], function () {
         // TODO Export to navigation module.
         $routeProvider
                 .when('/help', {
-                    'templateUrl': 'app/components/help/view/helpView.html',
+                    'templateUrl': 'app/components/help/help-view.html',
                     'controller': 'help',
                     'activeView': 'help',
                     'pageTitle': 'Help - LinkedPipes ETL',
                     'color': '#999999'
                 })
                 .when('/personalization', {
-                    'templateUrl': 'app/components/personalizationView/personalizationView.html',
+                    'templateUrl': 'app/components/personalization/personalization-view.html',
                     'controller': 'personalization',
                     'activeView': 'personalization',
                     'pageTitle': 'Personalization - LinkedPipes ETL',
                     'color': '#999999'
                 })
                 .when('/executions', {
-                    'templateUrl': 'app/components/executions/listView/executionListView.html',
+                    'templateUrl': 'app/components/executions/list-view/execution-list-view.html',
                     'controller': 'components.executions.list',
                     'activeView': 'executions',
                     'pageTitle': 'Executions - LinkedPipes ETL',
-                    'color': '#FF9800'
-                })
-                .when('/executions/detail', {
-                    'templateUrl': 'app/components/executions/detailView/executionDetailView.html',
-                    'controller': 'components.executions.detail',
-                    'activeView': 'executions',
-                    'pageTitle': 'Execution - LinkedPipes ETL',
                     'color': '#FF9800'
                 })
                 .when('/templates', {
@@ -38,28 +31,28 @@ define([], function () {
                     'color': '#2196F3'
                 })
                 .when('/templates/detail', {
-                    'templateUrl': 'app/components/templates/detailView/templateDetailView.html',
-                    'controller': 'template.detail',
+                    'templateUrl': 'app/components/templates/detail-view/template-detail-view.html',
+                    'controller': 'template.detail.view',
                     'activeView': 'templates',
                     'pageTitle': 'Templates - LinkedPipes ETL',
                     'color': '#2196F3'
                 })
                 .when('/pipelines', {
-                    'templateUrl': 'app/components/pipelines/listView/pipeline-list-view.html',
+                    'templateUrl': 'app/components/pipelines/list-view/pipeline-list-view.html',
                     'controller': 'components.pipelines.list',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipelines - LinkedPipes ETL',
                     'color': '#2196F3'
                 })
                 .when('/pipelines/upload', {
-                    'templateUrl': 'app/components/pipelines/uploadView/pipelineUploadView.html',
+                    'templateUrl': 'app/components/pipelines/upload-view/pipeline-upload-view.html',
                     'controller': 'components.pipelines.upload',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipelines - LinkedPipes ETL',
                     'color': '#2196F3'
                 })
                 .when('/pipelines/edit/canvas', {
-                    'templateUrl': 'app/components/pipelines/canvasView/pipelineCanvasView.html',
+                    'templateUrl': 'app/components/pipelines/canvas-edit-view/pipelineCanvasView.html',
                     'controller': 'components.pipeline.canvas.view',
                     'activeView': 'pipelines',
                     'pageTitle': 'Pipeline - LinkedPipes ETL'

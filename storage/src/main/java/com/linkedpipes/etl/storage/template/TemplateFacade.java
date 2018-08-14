@@ -1,245 +1,326 @@
 package com.linkedpipes.etl.storage.template;
 
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
-import com.linkedpipes.etl.storage.mapping.MappingFacade;
+import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
+import com.linkedpipes.etl.storage.template.repository.TemplateRepository;
 import com.linkedpipes.etl.storage.unpacker.TemplateSource;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- * TODO Extract implementation of TemplateSource to external class?
- */
+
 @Service
 public class TemplateFacade implements TemplateSource {
 
-    @Autowired
-    private TemplateManager manager;
+    private static final Logger LOG
+            = LoggerFactory.getLogger(TemplateFacade.class);
+
+    private final TemplateManager manager;
+
+    private final MappingFacade mapping;
+
+    private final TemplateRepository repository;
+
+    private final ConfigurationFacade configurationFacade;
 
     @Autowired
-    private MappingFacade mappingFacade;
+    public TemplateFacade(
+            TemplateManager manager,
+            MappingFacade mapping,
+            ConfigurationFacade configuration) {
+        this.manager = manager;
+        this.mapping = mapping;
+        this.configurationFacade = configuration;
+        this.repository = manager.getRepository();
+    }
+
+    @PostConstruct
+    public void initialize() {
+        this.cleanMapping();
+    }
+
+    /**
+     * Remove mapping for components that are no longer in the system.
+     */
+    private void cleanMapping() {
+        List<String> iriToRemove = this.mapping.getLocalMapping().stream()
+                .filter(iri -> !manager.getTemplates().containsKey(iri))
+                .collect(Collectors.toList());
+        for (String iri : iriToRemove) {
+            LOG.debug("Removing mapping for: {}", iri);
+            this.mapping.remove(iri);
+        }
+        this.mapping.save();
+    }
 
     public Template getTemplate(String iri) {
         return manager.getTemplates().get(iri);
     }
 
     public Collection<Template> getTemplates() {
-        return (Collection) manager.getTemplates().values();
+        return manager.getTemplates().values();
+    }
+
+    public Template getParent(Template template) {
+        if (template instanceof ReferenceTemplate) {
+            ReferenceTemplate ref = (ReferenceTemplate) template;
+            return getTemplate(ref.getTemplate());
+        }
+        return null;
+    }
+
+    public Template getRootTemplate(Template template) {
+        if (template instanceof JarTemplate) {
+            return template;
+        } else if (template instanceof ReferenceTemplate) {
+            ReferenceTemplate referenceTemplate = (ReferenceTemplate) template;
+            return referenceTemplate.getCoreTemplate();
+
+        } else {
+            throw new RuntimeException("Unknown component type.");
+        }
     }
 
     /**
-     * Return all templates that are ancestors to given template.
-     *
-     * The core template is the first one.
-     *
-     * @param templateIri
-     * @param includeFirstLevelTemplates
-     * @return
+     * The path from root (template) to the given template.
      */
-    public Collection<Template> getTemplates(String templateIri,
-            boolean includeFirstLevelTemplates) {
-        Template template = getTemplate(templateIri);
-        if (template == null) {
-            return Collections.EMPTY_LIST;
-        }
-        // Search for new.
-        final List<Template> templates = new LinkedList<>();
-        while (true) {
-            if (template instanceof FullTemplate) {
-                // Terminal template.
-                if (includeFirstLevelTemplates) {
-                    templates.add(template);
-                }
-                break;
-            } else if (template instanceof ReferenceTemplate) {
-                templates.add(template);
-                ReferenceTemplate ref = (ReferenceTemplate) template;
-                template = getTemplate(ref.getTemplate());
-                if (template == null) {
-                    // Missing template.
-                    // TODO Throw an exception ?
-                    break;
-                }
-            }
-        }
+    public List<Template> getAncestors(Template template) {
+        LinkedList<Template> templates = collectAncestors(template);
         Collections.reverse(templates);
         return templates;
     }
 
-    /**
-     * Return all successors of the template.
-     *
-     * @param template
-     * @return
-     */
-    public Collection<Template> getTemplateSuccessors(Template template) {
-        // TODO We do not have to construct this every time.
-        // Create hierarchy of all templates.
-        final Map<Template, List<Template>> successors = new HashMap<>();
-        for (Template item : getTemplates()) {
-            if (!(item instanceof ReferenceTemplate)) {
-                continue;
+    private LinkedList<Template> collectAncestors(Template template) {
+        LinkedList<Template> output = new LinkedList<>();
+        while (true) {
+            output.add(template);
+            if (template.getType() == Template.Type.JAR_TEMPLATE) {
+                break;
+            } else if (template.getType() == Template.Type.REFERENCE_TEMPLATE) {
+                ReferenceTemplate reference = (ReferenceTemplate) template;
+                template = getTemplate(reference.getTemplate());
+                if (template == null) {
+                    LOG.warn("Missing template for: {}", reference.getIri());
+                    break;
+                }
+            } else {
+                throw new RuntimeException("Unknown template type: " +
+                        template.getType().name());
             }
-            final ReferenceTemplate ref = (ReferenceTemplate) item;
-            final Template parent = getTemplate(ref.getTemplate());
-            List<Template> brothers = successors.get(parent);
-            if (brothers == null) {
-                brothers = new LinkedList<>();
-                successors.put(parent, brothers);
-            }
-            brothers.add(ref);
         }
-        // Gather the results.
-        final Set<Template> results = new HashSet<>();
-        final Set<Template> toTest = new HashSet<>();
-        toTest.addAll(
-                successors.getOrDefault(template, Collections.EMPTY_LIST));
+        return output;
+    }
+
+    public List<Template> getAncestorsWithoutJarTemplate(Template template) {
+        LinkedList<Template> templates = collectAncestors(template);
+        templates.remove(templates.removeLast());
+        Collections.reverse(templates);
+        return templates;
+    }
+
+    public Collection<Template> getSuccessors(Template template) {
+        Map<Template, List<Template>> children = buildChildrenIndex();
+        Set<Template> output = new HashSet<>();
+        Set<Template> toTest = new HashSet<>();
+        toTest.addAll(children.getOrDefault(
+                template, Collections.EMPTY_LIST));
         while (!toTest.isEmpty()) {
             final Template item = toTest.iterator().next();
             toTest.remove(item);
-            if (results.contains(item)) {
+            if (output.contains(item)) {
                 continue;
             }
-            //
-            final List<Template> children = successors.getOrDefault(item,
-                    Collections.EMPTY_LIST);
-            results.add(item);
-            results.addAll(children);
-            toTest.addAll(children);
+            List<Template> itemChildren = children.getOrDefault(
+                    item, Collections.EMPTY_LIST);
+            output.add(item);
+            output.addAll(itemChildren);
+            toTest.addAll(itemChildren);
         }
-        return results;
+        return output;
     }
 
-    public Collection<Statement> getInterface(Template template) {
-        return ((BaseTemplate) template).getInterfaceRdf();
-    }
-
-    public Collection<Statement> getInterfaces() {
-        final Collection<Statement> result = new ArrayList<>();
-        for (Template template : manager.getTemplates().values()) {
-            result.addAll(((BaseTemplate) template).getInterfaceRdf());
+    private Map<Template, List<Template>> buildChildrenIndex() {
+        Map<Template, List<Template>> children = new HashMap<>();
+        for (Template item : getTemplates()) {
+            if (item.getType() != Template.Type.REFERENCE_TEMPLATE) {
+                continue;
+            }
+            ReferenceTemplate reference = (ReferenceTemplate) item;
+            Template parent = getTemplate(reference.getTemplate());
+            List<Template> brothers = children.computeIfAbsent(
+                    parent, key -> new LinkedList<>());
+            // Create if does not exists.
+            brothers.add(reference);
         }
-        return result;
+        return children;
     }
 
-    public Collection<Statement> getDefinition(Template template) {
-        return ((BaseTemplate) template).getDefinitionRdf();
-    }
-
-    public Collection<Statement> getEffectiveConfiguration(Template template)
+    public Collection<Statement> getInterface(Template template)
             throws BaseException {
-        final BaseTemplate baseTemplate = (BaseTemplate) template;
-        LinkedList<Collection<Statement>> configurations = new LinkedList<>();
-        getTemplates(template.getIri(), true).forEach((item) -> {
-            configurations.add(getConfigurationTemplate(item));
-        });
-        //
-        if (!baseTemplate.isSupportControl()) {
+        return repository.getInterface(template);
+    }
+
+    public Collection<Statement> getInterfaces()
+            throws BaseException {
+        List<Statement> output = new ArrayList<>();
+        for (Template template : manager.getTemplates().values()) {
+            output.addAll(getInterface(template));
+        }
+        return output;
+    }
+
+    public Collection<Statement> getDefinition(Template template)
+            throws BaseException {
+        return repository.getDefinition(template);
+    }
+
+    /**
+     * @return Template config for execution or as merged parent configuration.
+     * Configuration of all ancestors are applied.
+     */
+    public Collection<Statement> getConfigEffective(Template template)
+            throws BaseException {
+        // TODO Move to extra class and add caching.
+        if (!template.isSupportingControl()) {
             // For template without inheritance control, the current
             // configuration is the effective one.
-            return ((BaseTemplate) template).getConfigRdf();
+            return getConfig(template);
         }
-        //
-        return ConfigurationFacade.merge(configurations,
-                baseTemplate.getConfigDescRdf(),
-                baseTemplate.getIri() + "/effective/",
-                SimpleValueFactory.getInstance().createIRI(
-                        baseTemplate.getIri()));
-    }
-
-    public Collection<Statement> getConfigurationTemplate(Template template) {
-        return ((BaseTemplate) template).getConfigRdf();
-    }
-
-    public Collection<Statement> getConfigurationInstance(Template template) {
-        return ((BaseTemplate) template).getConfigForInstanceRdf();
-    }
-
-    public Collection<Statement> getConfigurationDescription(
-            Template template) {
-        return ((BaseTemplate) template).getConfigDescRdf();
-    }
-
-    public File getDialogResource(Template template, String dialog,
-            String path) {
-        if (template instanceof FullTemplate) {
-            final FullTemplate fullTemplate = (FullTemplate) template;
-            // TODO Check for potential security risk!
-            return new File(fullTemplate.getDirectory(),
-                    "/dialog/" + dialog + "/" + path);
+        List<Collection<Statement>> configurations = new ArrayList<>();
+        for (Template item : getAncestors(template)) {
+            configurations.add(getConfig(item));
         }
-        return null;
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        return configurationFacade.merge(configurations,
+                getConfigDescription(template),
+                template.getIri() + "/effective/",
+                valueFactory.createIRI(template.getIri()));
+    }
+
+    /**
+     * @return Configuration of given template for a dialog.
+     */
+    public Collection<Statement> getConfig(Template template)
+            throws BaseException {
+        return repository.getConfig(template);
+    }
+
+    /**
+     * @return Configuration for instances of given template.
+     */
+    public Collection<Statement> getConfigInstance(Template template)
+            throws BaseException {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        IRI graph = valueFactory.createIRI(template.getIri() + "/new");
+        if (template.getType() == Template.Type.JAR_TEMPLATE) {
+            return configurationFacade.createNewFromJarFile(
+                    this.repository.getConfig(template),
+                    this.getConfigDescription(template),
+                    graph.stringValue(),
+                    graph);
+        } else {
+            return configurationFacade.createNewFromTemplate(
+                    this.repository.getConfig(template),
+                    this.getConfigDescription(template),
+                    graph.stringValue(),
+                    graph);
+        }
+    }
+
+    public Collection<Statement> getConfigDescription(Template template)
+            throws BaseException {
+        Template rootTemplate = this.getRootTemplate(template);
+        return repository.getConfigDescription(rootTemplate);
+    }
+
+    public File getDialogResource(
+            Template template, String dialog, String path) {
+        return repository.getDialogFile(template, dialog, path);
     }
 
     public File getStaticResource(Template template, String path) {
-        if (template instanceof FullTemplate) {
-            final FullTemplate fullTemplate = (FullTemplate) template;
-            // TODO Check for potential security risk!
-            return new File(fullTemplate.getDirectory(), "/static/" + path);
-        }
-        return null;
+        return repository.getStaticFile(template, path);
     }
 
-    /**
-     * Create and return a template.
-     *
-     * @param template Instance to create template from.
-     * @param configuration Configuration to used for template.
-     * @return
-     */
-    public Template createTemplate(Collection<Statement> template,
-            Collection<Statement> configuration) throws BaseException {
-        return manager.createTemplate(template, configuration);
+    public Template createTemplate(
+            Collection<Statement> definition,
+            Collection<Statement> configuration)
+            throws BaseException {
+        return this.createTemplate(definition, configuration, null);
     }
 
-    /**
-     * Update template.
-     *
-     * @param template
-     * @param contentRdf
-     */
-    public void updateTemplate(Template template,
-            Collection<Statement> contentRdf) throws BaseException {
-        manager.updateTemplate(template, contentRdf);
+    public Template createTemplate(
+            Collection<Statement> definition,
+            Collection<Statement> configuration,
+            Collection<Statement> configurationDescription)
+            throws BaseException {
+        Template template = manager.createTemplate(
+                definition, configuration, configurationDescription);
+        return template;
     }
 
-    /**
-     * Update configuration for given component.
-     *
-     * @param template
-     * @param configRdf
-     */
-    public void updateConfig(Template template,
-            Collection<Statement> configRdf) throws BaseException {
-        manager.updateConfig(template, configRdf);
+    public void updateInterface(
+            Template template, Collection<Statement> diff)
+            throws BaseException {
+        manager.updateTemplateInterface(template, diff);
+    }
+
+    public void updateConfig(
+            Template template, Collection<Statement> statements)
+            throws BaseException {
+        manager.updateConfig(template, statements);
     }
 
     public void remove(Template template) throws BaseException {
         manager.remove(template);
-        mappingFacade.remove(template);
+        mapping.remove(template.getIri());
+        mapping.save();
     }
+
+    // Implementation of unpacker.TemplateSource .
 
     @Override
     public Collection<Statement> getDefinition(String iri)
             throws BaseException {
-        return getDefinition(getTemplate(iri));
+        Template template = getTemplate(iri);
+        // It requires reference to description which is not presented for
+        // reference templates.
+        Statements output = new Statements(getDefinition(template));
+        output.setDefaultGraph(iri);
+        if (Template.Type.REFERENCE_TEMPLATE.equals(template.getType())) {
+            ValueFactory valueFactory = SimpleValueFactory.getInstance();
+            output.addIri(
+                    valueFactory.createIRI(iri),
+                    LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION,
+                    template.getConfigurationDescription()
+            );
+        }
+        return output;
     }
 
     @Override
     public Collection<Statement> getConfiguration(String iri)
             throws BaseException {
-        return getConfigurationTemplate(getTemplate(iri));
+        return getConfig(getTemplate(iri));
     }
 
     @Override
     public Collection<Statement> getConfigurationDescription(String iri)
             throws BaseException {
-        return getConfigurationDescription(getTemplate(iri));
+        return getConfigDescription(getTemplate(iri));
     }
 
 }

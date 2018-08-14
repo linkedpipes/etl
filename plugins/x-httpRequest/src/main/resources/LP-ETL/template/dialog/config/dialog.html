@@ -25,5 +25,13 @@
                ng-disabled="dialog.followRedirect.disabled || dialog.followRedirect.inherit">
         Follow redirects
     </md-switch>
+    <md-switch ng-model="dialog.encodeUrl.value"
+               ng-hide="dialog.encodeUrl.hide"
+               ng-disabled="dialog.encodeUrl.disabled">
+        Encode input URL
+        <md-tooltip>If true (percent) encode input URL, can be used when
+            URL contains non-ASCI characters.
+        </md-tooltip>
+    </md-switch>
 </div>
 

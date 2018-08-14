@@ -14,6 +14,12 @@ public class FilesToRdfConfiguration {
     @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_SKIP_ON_FAILURE)
     private boolean skipOnFailure = false;
 
+    @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_FILE_REFERENCE)
+    private boolean fileReference = false;
+
+    @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_FILE_PREDICATE)
+    private String filePredicate;
+
     public FilesToRdfConfiguration() {
     }
 
@@ -41,4 +47,19 @@ public class FilesToRdfConfiguration {
         this.skipOnFailure = skipOnFailure;
     }
 
+    public String getFilePredicate() {
+        return filePredicate;
+    }
+
+    public void setFilePredicate(String filePredicate) {
+        this.filePredicate = filePredicate;
+    }
+
+    public boolean isFileReference() {
+        return fileReference;
+    }
+
+    public void setFileReference(boolean fileReference) {
+        this.fileReference = fileReference;
+    }
 }

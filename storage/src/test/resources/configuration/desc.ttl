@@ -1,0 +1,29 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://localhost/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://localhost/component#Configuration> ;
+    config:member <http://localhost/desc/first> ,
+        <http://localhost/desc/second> ,
+        <http://localhost/desc/third> ,
+        <http://localhost/desc/fourth> ,
+        <http://localhost/desc/fifth> .
+
+<http://localhost/desc/first> a config:ConfigurationMember ;
+    config:property <http://localhost/component#first> ;
+    config:control <http://localhost/component#firstControl> .
+
+<http://localhost/desc/second> a config:ConfigurationMember ;
+    config:property <http://localhost/component#second> ;
+    config:control <http://localhost/component#secondControl> .
+
+<http://localhost/desc/third> a config:ConfigurationMember ;
+    config:property <http://localhost/component#third> ;
+    config:control <http://localhost/component#thirdControl> .
+
+<http://localhost/desc/fourth> a config:ConfigurationMember ;
+    config:property <http://localhost/component#fourth> ;
+    config:control <http://localhost/component#fourthControl> .
+
+<http://localhost/desc/fifth> a config:ConfigurationMember ;
+    config:property <http://localhost/component#fifth> ;
+    config:control <http://localhost/component#fifthControl> .

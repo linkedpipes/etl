@@ -12,22 +12,26 @@
 <http://linkedpipes.com/resources/components/l-ftpFiles/0.0.0/configuration/desc/username>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-ftpFiles#username> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#usernameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#usernameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-ftpFiles/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-ftpFiles#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#passwordControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-ftpFiles/0.0.0/configuration/desc/host>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-ftpFiles#host> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#hostControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#hostControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-ftpFiles/0.0.0/configuration/desc/port>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-ftpFiles#port> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#portControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-ftpFiles#portControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-ftpFiles/0.0.0/configuration/desc/directory>
     a config:ConfigurationMember ;

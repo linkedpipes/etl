@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -27,6 +28,8 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private final TaskContentWriter taskContentWriter;
 
+    private final boolean encodeUrl;
+
     private HeaderReporter headerReporter;
 
     private ProgressReport progressReport;
@@ -38,13 +41,15 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             WritableFilesDataUnit outputFiles,
             Map<String, File> inputFilesMap,
             StatementsConsumer consumer,
-            ProgressReport progressReport) {
+            ProgressReport progressReport,
+            boolean encodeUrl) {
         this.exceptionFactory = exceptionFactory;
         this.outputFiles = outputFiles;
         this.taskContentWriter = new TaskContentWriter(
                 exceptionFactory, inputFilesMap);
         this.headerReporter = new HeaderReporter(consumer);
         this.progressReport = progressReport;
+        this.encodeUrl = encodeUrl;
     }
 
     @Override
@@ -61,8 +66,16 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     }
 
     private URL createUrl(String url) throws LpException {
+        String stringAsUrl = task.getUrl();
+        if (encodeUrl) {
+            try {
+                stringAsUrl = (new URL(stringAsUrl)).toURI().toASCIIString();
+            } catch (IOException | URISyntaxException ex) {
+                throw new LpException("Can't convert to URI:" + stringAsUrl, ex);
+            }
+        }
         try {
-            return new URL(task.getUrl());
+            return new URL(stringAsUrl);
         } catch (IOException ex) {
             throw new LpException("Invalid URL: {}", url);
         }

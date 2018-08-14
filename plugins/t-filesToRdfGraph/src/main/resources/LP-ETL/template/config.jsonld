@@ -1,12 +1,12 @@
 [
     {
-        "@id": "http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration"],
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize" : 50000,
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType": "",
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl" : {
+        "@id": "http://linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#commitSize" : 50000,
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#mimeType": "",
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#mimeTypeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
-        "http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail" : false
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#softFail" : false
     }
 ]

@@ -17,12 +17,14 @@
 <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/username>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#username> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#usernameControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#usernameControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/password>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#password> ;
-    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#passwordControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#passwordControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/useAuthentication>
     a config:ConfigurationMember ;

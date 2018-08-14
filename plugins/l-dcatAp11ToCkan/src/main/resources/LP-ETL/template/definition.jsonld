@@ -18,7 +18,7 @@
                 {"@id": "http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configurationDescription"}
             ],
             "http://linkedpipes.com/ontology/keyword": [
-                        "metadata", "CKAN", "DCAT-AP"
+                "metadata", "CKAN", "DCAT-AP"
             ],
             "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/l-dcatap11tockan"}
         },
@@ -50,15 +50,6 @@
                 "http://linkedpipes.com/ontology/RuntimeConfiguration"
             ],
             "http://linkedpipes.com/ontology/binding": "Configuration"
-        },
-        {
-            "@id": "http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0/configurationDescription",
-            "@type": [
-                "http://linkedpipes.com/ontology/ConfigurationDescription"
-            ],
-            "http://linkedpipes.com/ontology/privateProperties" : [
-                {"@id": "http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKey"}
-            ]
         }
     ]
 }

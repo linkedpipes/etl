@@ -102,7 +102,8 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     protected TaskConsumer<HttpRequestTask> createConsumer() {
         return new TaskExecutor(
                 exceptionFactory, outputFiles, inputFilesMap,
-                new StatementsConsumer(reportRdf), progressReport);
+                new StatementsConsumer(reportRdf), progressReport,
+                configuration.isEncodeUrl());
     }
 
     @Override

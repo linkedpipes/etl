@@ -36,13 +36,17 @@ define([], function () {
                 const templateList = templateService.getTemplatesList();
                 templateList.forEach((template) => {
                     // Filter out core templates.
-                    if (template.core) {
+                    if (template.isCore) {
                         return;
                     }
                     template._templateListView = true;
                     $scope.templates.push(template);
                 });
                 $scope.loaded = true;
+                $scope.error = undefined;
+            }).catch((error) => {
+                $scope.error = error["statusText"];
+                console.log("Can't load tempatels", error);
             });
         })();
 

@@ -35,7 +35,7 @@ define([], function () {
         "password": {
             "$type": "str",
             "$label": "Password"
-        },
+        }
     };
 
     function controller($scope, $service) {

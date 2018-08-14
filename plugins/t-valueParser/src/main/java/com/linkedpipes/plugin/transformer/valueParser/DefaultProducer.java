@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.valueParser;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
@@ -46,12 +45,12 @@ class DefaultProducer extends ValueProducer {
     protected Value createPreserveTypeAndLanguage(String value) {
         if (originalValue instanceof Literal) {
             Literal literal = (Literal)originalValue;
-            if (literal.getDatatype() != null) {
-                return valueFactory.createLiteral(value,
-                        literal.getDatatype());
-            } else if (literal.getLanguage().isPresent()) {
+            if (literal.getLanguage().isPresent()) {
                 return valueFactory.createLiteral(value,
                         literal.getLanguage().get());
+            } else  if (literal.getDatatype() != null) {
+                return valueFactory.createLiteral(value,
+                        literal.getDatatype());
             } else {
                 return createPureStringValue(value);
             }

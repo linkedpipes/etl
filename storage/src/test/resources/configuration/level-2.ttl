@@ -1,0 +1,12 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-2" ;
+    component:firstControl config:None ;
+    component:second "l-2" ;
+    component:secondControl config:None ;
+    component:third "l-2" ;
+    component:thirdControl config:None ;
+    component:fifth "l-2" ;
+    component:fifthControl config:Inherit .

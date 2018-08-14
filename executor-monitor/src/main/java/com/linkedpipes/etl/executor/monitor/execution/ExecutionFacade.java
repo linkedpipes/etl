@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
+import com.linkedpipes.etl.executor.monitor.MemoryMonitor;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -205,7 +206,9 @@ public class ExecutionFacade {
      */
     public void update(Execution execution, InputStream stream)
             throws ExecutionMismatch, OperationFailed {
+        MemoryMonitor.log(LOG, "update.before");
         storage.checkExecution(execution, stream);
+        MemoryMonitor.log(LOG, "update.after");
     }
 
     /**
@@ -215,7 +218,9 @@ public class ExecutionFacade {
      */
     public void updateFromFile(Execution execution)
             throws OperationFailed, ExecutionMismatch {
+        MemoryMonitor.log(LOG, "updateFromFile.before");
         ExecutionChecker.updateFromDirectory(execution);
+        MemoryMonitor.log(LOG, "updateFromFile.after");
     }
 
     /**

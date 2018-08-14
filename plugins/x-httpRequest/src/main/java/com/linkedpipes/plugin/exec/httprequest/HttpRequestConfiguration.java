@@ -18,6 +18,9 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_FOLLOW_REDIRECT)
     private boolean followRedirect = false;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.ENCODE_URL)
+    private boolean encodeUrl = false;
+
     @Override
     public int getThreadsNumber() {
         return threadsNumber;
@@ -50,6 +53,14 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
 
     public void setFollowRedirect(boolean followRedirect) {
         this.followRedirect = followRedirect;
+    }
+
+    public boolean isEncodeUrl() {
+        return encodeUrl;
+    }
+
+    public void setEncodeUrl(boolean encodeUrl) {
+        this.encodeUrl = encodeUrl;
     }
 
 }

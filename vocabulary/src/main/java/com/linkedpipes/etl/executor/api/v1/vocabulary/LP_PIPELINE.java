@@ -182,14 +182,8 @@ public final class LP_PIPELINE {
             "http://linkedpipes.com/ontology/jar";
 
     /**
-     * If true component support configuration control/inheritance.
-     */
-    public static final String HAS_SUPPORT_CONTROLS =
-            PREFIX + "supportControl";
-
-    /**
      * Reference to a graph with a configuration, used to reference
-     * configuration by frontend.
+     * configuration by frontend. Is not set for reference tempaltes.
      */
     public static final String HAS_CONFIGURATION_GRAPH =
             "http://linkedpipes.com/ontology/configurationGraph";
@@ -206,5 +200,13 @@ public final class LP_PIPELINE {
             PREFIX + "configurationDescription";
 
     public static final String HAS_DISABLED = PREFIX + "disabled";
+
+    /**
+     * If true component support configuration control/inheritance.
+     */
+    public static final String HAS_SUPPORT_CONTROL = PREFIX + "supportControl";
+
+    public static final String HAS_TAG =
+            "http://etl.linkedpipes.com/ontology/tag";
 
 }

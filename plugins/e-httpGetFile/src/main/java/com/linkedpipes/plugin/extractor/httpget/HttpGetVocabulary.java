@@ -15,6 +15,8 @@ public final class HttpGetVocabulary {
 
     public static final String HAS_USER_AGENT = PREFIX + "userAgent";
 
+    public static final String ENCODE_URL = PREFIX + "encodeUrl";
+
     private HttpGetVocabulary() {
     }
 

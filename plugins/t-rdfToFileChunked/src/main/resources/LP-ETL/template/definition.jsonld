@@ -18,7 +18,7 @@
         ],
         "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/t-rdfToFileChunked"},
         "http://linkedpipes.com/ontology/configurationDescription": [
-            {"@id": "http://linkedpipes.com/resources/components/t-rdfToFile/0.0.0/configuration/desc"}
+            {"@id": "http://linkedpipes.com/resources/components/t-rdfToFileChunked/0.0.0/configuration/desc"}
         ]
     },
     {

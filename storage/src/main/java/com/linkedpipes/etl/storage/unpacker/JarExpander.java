@@ -99,6 +99,8 @@ class JarExpander {
         ConfigurationMerger merger = createMerger(template);
         merger.mergerAndReplaceConfiguration(
                 template, component.getConfigGraph());
+        merger.finalizeConfiguration(
+                template, component.getConfigGraph());
     }
 
     public void setGraphs(GraphCollection graphs) {

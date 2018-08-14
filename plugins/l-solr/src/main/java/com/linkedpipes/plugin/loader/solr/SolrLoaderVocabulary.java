@@ -13,4 +13,11 @@ public final class SolrLoaderVocabulary {
 
     public static final String HAS_REPLACE = PREFIX + "replace";
 
+    public static final String HAS_USE_AUTHENTICATION =
+            PREFIX + "useAuthentication";
+
+    public static final String HAS_USER_NAME = PREFIX + "userName";
+
+    public static final String HAS_PASSWORD = PREFIX + "password";
+
 }

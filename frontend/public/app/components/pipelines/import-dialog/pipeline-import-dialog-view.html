@@ -1,0 +1,88 @@
+<md-dialog aria-label="Select pipeline"  ng-cloak flex="80">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h4>Insert pipeline</h4>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="onCancel()">
+                    <md-icon md-svg-src="close" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="min-width:400px;">
+            <div class="md-dialog-content">
+
+                <md-tabs md-dynamic-height md-border-bottom md-selected="activeTab" ng-show="!importing">
+                    <md-tab label="From URL">
+                        <md-input-container class="md-block">
+                            <label>HTTP(S) URL</label>
+                            <input ng-model="url">
+                        </md-input-container>
+                        <md-switch ng-model="updateTemplates">
+                            Update existing templates
+                        </md-switch>
+                    </md-tab>
+                    <md-tab label="From File">
+                        <div>
+                            <md-input-container class="md-block">
+                                <label>Selected file</label>
+                                <input ng-model="file.name" ng-readonly="true">
+                            </md-input-container>
+                        </div>
+                        <md-button ngf-select ng-model="file" ngf-multiple="false" class="md-raised" ng-disable="uploading">
+                            Select File
+                        </md-button>
+                        <md-switch ng-model="updateTemplates">
+                            Update existing templates
+                        </md-switch>
+                    </md-tab>
+                    <md-tab label="Local Pipeline" md-on-select="onPipelineTab()" layout="column">
+                        <md-input-container class="md-block">
+                            <label>Filter</label>
+                            <input ng-model="pipelineFilter.labelSearch"/>
+                        </md-input-container>
+                        <div ng-show="!repository.areDataReady && !repository.error" layout="column" layout-align="center center">
+                            <img src="assets/images/loading.gif" class="center-block" title="Loading..." style="padding-top: 5rem"/>
+                        </div>
+                        <div ng-show="!repository.areDataReady && repository.error" layout="column" layout-align="center center">
+                            <div style="margin-top: 2rem;font-size: 2rem">Can't load data</div>
+                            <br/>
+                            <div>{{repository.error}}</div>
+                            <br/>
+                            <div>Please try it later.</div>
+                        </div>
+                        <md-radio-group ng-model="pipeline" ng-show="repository.areDataReady">
+                            <md-radio-button ng-repeat="item in repository.visibleItems track by $index"
+                                             ng-show="item.isVisible"
+                                             ng-value="item.iri"
+                                             style="margin-left: 2rem">
+                                {{item.label}}
+                            </md-radio-button>
+                        </md-radio-group>
+                        <lp-scroll-watch-list-tail
+                                ng-show="repository.areDataReady"
+                                total="repository.filteredItemCount"
+                                limit="repository.visibleItemLimit"/>
+                    </md-tab>
+                </md-tabs>
+
+                <div ng-show="importing">
+                    <div>Importing pipeline ...</div><br/>
+                    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+                </div>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="onCancel()">
+                Don't import anything
+            </md-button>
+            <md-button ng-click="onImport()" ng-disabled="loading" class="md-primary">
+                Import pipeline
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+
+

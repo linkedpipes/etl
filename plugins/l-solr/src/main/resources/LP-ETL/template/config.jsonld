@@ -1,6 +1,10 @@
 [
     {
         "@id": "http://linkedpipes.com/resources/components/l-solr/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/l-solr#Configuration"]
+        "@type" : ["http://plugins.linkedpipes.com/ontology/l-solr#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/l-solr#useAuthentication": false,
+        "http://plugins.linkedpipes.com/ontology/l-solr#useAuthenticationControl" : {
+          "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
     }
 ]

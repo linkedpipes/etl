@@ -25,7 +25,7 @@ public final class LoaderScp implements Component, SequentialExecution {
     @Override
     public void execute() throws LpException {
         checkConfiguration();
-        try (ScpClient scpClient = new ScpClient()) {
+        try (ScpClient scpClient =createClient()) {
             scpClient.connect(
                     configuration.getHost(),
                     configuration.getPort(),
@@ -43,6 +43,10 @@ public final class LoaderScp implements Component, SequentialExecution {
         } catch (Exception ex) {
             throw exceptionFactory.failure("SCP operation failed.", ex);
         }
+    }
+
+    private ScpClient createClient() {
+        return new ScpClient(configuration.getConnectionTimeOut());
     }
 
     private void checkConfiguration() throws LpException {

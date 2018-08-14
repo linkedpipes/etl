@@ -32,6 +32,9 @@ public final class LP_EXEC {
     public static final String EXECUTION =
             "http://etl.linkedpipes.com/ontology/Execution";
 
+    public static final String HAS_SIZE =
+            "http://etl.linkedpipes.com/ontology/execution/size";
+
     /**
      * The working directory is assigned under this predicate.
      */
@@ -110,8 +113,14 @@ public final class LP_EXEC {
      */
     public static final String HAS_EXECUTION_TYPE = PREFIX + "executionType";
 
+    public static final String STATUS_MAPPED =
+            "http://etl.linkedpipes.com/resources/status/mapped";
+
     public static final String STATUS_QUEUED =
             "http://etl.linkedpipes.com/resources/status/queued";
+
+    public static final String STATUS_INITIALIZING =
+            "http://etl.linkedpipes.com/resources/status/initializing";
 
     public static final String STATUS_RUNNING =
             "http://etl.linkedpipes.com/resources/status/running";

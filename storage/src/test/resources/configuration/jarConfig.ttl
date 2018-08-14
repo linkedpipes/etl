@@ -1,0 +1,11 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "p-1" ;
+    component:second "p-2" ;
+    component:third "p-3" ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> .
+
+<http://localhost/object/1> <http://localhost/value> "p-o-1" .
+<http://localhost/object/2> <http://localhost/value> "p-o-2" .

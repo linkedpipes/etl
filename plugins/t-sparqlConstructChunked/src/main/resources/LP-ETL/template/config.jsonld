@@ -1,9 +1,9 @@
 [
     {
-        "@id": "http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration",
-        "@type" : ["http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"],
-        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}",
-        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl" : {
+        "@id": "http://linkedpipes.com/resources/components/t-sparqlConstructChunked/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#query": "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}",
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#queryControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }

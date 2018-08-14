@@ -41,6 +41,9 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_THREADS_PER_GROUP)
     private int threadsPerGroup = 1;
 
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.ENCODE_URL)
+    private boolean encodeUrl = false;
+
     public HttpGetFilesConfiguration() {
     }
 
@@ -104,5 +107,13 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
 
     public void setThreadsPerGroup(int threadsPerGroup) {
         this.threadsPerGroup = threadsPerGroup;
+    }
+
+    public boolean isEncodeUrl() {
+        return encodeUrl;
+    }
+
+    public void setEncodeUrl(boolean encodeUrl) {
+        this.encodeUrl = encodeUrl;
     }
 }

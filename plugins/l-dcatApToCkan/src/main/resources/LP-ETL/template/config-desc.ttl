@@ -22,7 +22,8 @@
 <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/apiKey>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKey> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKeyControl> .
+    config:control <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKeyControl> ;
+    config:private true .
 
 <http://linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0/configuration/desc/loadToCKAN>
     a config:ConfigurationMember ;

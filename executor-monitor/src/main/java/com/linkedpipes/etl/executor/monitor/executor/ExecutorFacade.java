@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.executor;
 
 import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.MemoryMonitor;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.execution.resource.ResourceReader;
@@ -49,7 +50,9 @@ public class ExecutorFacade {
     @Scheduled(fixedDelay = 2000, initialDelay = 500)
     protected void check() {
         for (Executor executor : executors) {
+            MemoryMonitor.log(LOG, "check.before");
             check(executor);
+            MemoryMonitor.log(LOG, "check.after");
         }
         //
         startExecutions();
@@ -65,6 +68,7 @@ public class ExecutorFacade {
             if (queued.isEmpty()) {
                 return;
             }
+            MemoryMonitor.log(LOG, "startExecutions.before");
             final Iterator<Execution> iterator = queued.iterator();
             for (Executor executor : executors) {
                 if (executor.isAlive() && executor.getExecution() == null) {
@@ -79,7 +83,9 @@ public class ExecutorFacade {
                     }
                 }
             }
+            MemoryMonitor.log(LOG, "startExecutions.after");
         }
+
     }
 
     public void cancelExecution(Execution execution, String userRequest) {

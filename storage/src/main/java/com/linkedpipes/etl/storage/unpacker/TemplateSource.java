@@ -5,6 +5,7 @@ import org.eclipse.rdf4j.model.Statement;
 
 import java.util.Collection;
 
+
 public interface TemplateSource {
 
     Collection<Statement> getDefinition(String iri) throws BaseException;

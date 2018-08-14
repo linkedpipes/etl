@@ -43,4 +43,10 @@
                ng-disabled="dialog.clearDirectory.disabled || dialog.clearDirectory.inherit"
                ng-model="dialog.clearDirectory.value">Clear target directory
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.connectionTimeOut.hide" flex>
+        <label>Connection time out</label>
+        <input ng-model="dialog.connectionTimeOut.value"
+               ng-disabled="dialog.connectionTimeOut.disabled || dialog.connectionTimeOut.inherit"
+               type="number" min="0">
+    </md-input-container>
 </div>

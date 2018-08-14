@@ -1,0 +1,5 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://localhost/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://localhost/component#Configuration> ;
+    config:control <http://localhost/component#control> .

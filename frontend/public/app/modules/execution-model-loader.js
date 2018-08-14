@@ -121,7 +121,7 @@
         const iri = resource["@id"];
         model.dataUnits[iri] = {
             "iri": iri,
-            "binding": jsonld.r.getPlainString(resource, LP.HAS_BINDING),
+            "binding": jsonld.r.getPlainString(resource, LP.HAS_DU_BINDING),
             "debug": jsonld.r.getPlainString(resource, LP.HAS_DEBUG)
         };
     }

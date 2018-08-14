@@ -1,24 +1,24 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-mustache#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/class> ,
-        <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/template> ,
-        <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/addFirstFlag> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/class> ,
+        <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/template> ,
+        <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/addFirstFlag> .
 
-<http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/class>
+<http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/class>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-mustache#class> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-mustache#classControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#class> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#classControl> .
 
-<http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/template>
+<http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/template>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-mustache#template> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-mustache#templateControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#template> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#templateControl> .
 
-<http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/addFirstFlag>
+<http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/addFirstFlag>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-mustache#addFirstFlag> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-mustache#addFirstFlagControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#addFirstFlag> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#addFirstFlagControl> .
 

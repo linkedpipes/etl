@@ -1,0 +1,64 @@
+<div class="container">
+    <md-tabs md-dynamic-height md-border-bottom md-selected="activeTab">
+        <md-tab label="Notice">
+            <div class="layout-padding">
+                <p style="color: red">
+                    INVALID TEMPLATE
+                <div>
+                    This template is invalid. This can happen if for example
+                    the parent template is deleted.
+                </div>
+                <div>
+                    You can see the template name, hierarchy and usage.
+                </div>
+                </p>
+            </div>
+        </md-tab>
+
+        <md-tab label="General">
+            <lp-template-general-tab ng-model="templateToEdit">
+            </lp-template-general-tab>
+        </md-tab>
+        <md-tab label="Hierarchy">
+            <lp-template-hierarchy-tab ng-model="template"
+                                       show-children="true"
+                                       enable-template-link="true"/>
+        </md-tab>
+        <md-tab label="Usage">
+            <lp-template-usage-tab ng-model="usage"/>
+        </md-tab>
+        <md-tab ng-repeat="item in dialogs" label="{{item.label}}">
+            <div class="md-padding"
+                 js="item.js" html="item.html"
+                 scope="dialogScope" locals="dialogLocals"
+                 lp-embed></div>
+        </md-tab>
+        <md-tab label="Delete">
+            <div class="layout-padding">
+                <p>
+                    WARNING:
+                <div ng-show="template._children.length !== 0">
+                    This template has some successors. If this
+                    template is deleted those successors will not be visible
+                    in the application any more. They will however stay in
+                    the application. In such case they have to be deleted
+                    manually from the storage directory.
+                </div>
+                <div ng-hide="!isUsed">
+                    This template (or its successor) is used in a pipeline.
+                    If this template is deleted the pipeline become invalid.
+                </div>
+                <div>
+                    There is no additional warning dialog, once the delete
+                    button is clicked there is no way back.
+                </div>
+                </p>
+                <md-button ng-click="onDelete()">
+                    <md-icon md-menu-origin md-svg-icon="delete_forever"
+                             class="lp-icon" style="color:red"></md-icon>
+                    Delete template
+                </md-button>
+            </div>
+        </md-tab>
+    </md-tabs>
+</div>

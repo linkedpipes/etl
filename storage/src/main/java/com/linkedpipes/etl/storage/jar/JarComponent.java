@@ -33,6 +33,10 @@ public class JarComponent implements PojoLoader.Loadable {
         return file;
     }
 
+    public String getName() {
+        return file.getName().replace(".jar", "");
+    }
+
     public String getIri() {
         return iri;
     }

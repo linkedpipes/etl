@@ -26,6 +26,9 @@ public class LoaderScpConfiguration {
     @RdfToPojo.Property(iri = LoaderScpVocabulary.HAS_CLEAR_DIRECTORY)
     private boolean clearDirectory = false;
 
+    @RdfToPojo.Property(iri = LoaderScpVocabulary.HAS_CONNECTION_TIME_OUT)
+    private int connectionTimeOut = 0;
+
     public LoaderScpConfiguration() {
     }
 
@@ -84,4 +87,13 @@ public class LoaderScpConfiguration {
     public void setClearDirectory(boolean clearDirectory) {
         this.clearDirectory = clearDirectory;
     }
+
+    public int getConnectionTimeOut() {
+        return connectionTimeOut;
+    }
+
+    public void setConnectionTimeOut(int connectionTimeOut) {
+        this.connectionTimeOut = connectionTimeOut;
+    }
+
 }

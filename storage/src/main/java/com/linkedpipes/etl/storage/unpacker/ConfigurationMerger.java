@@ -76,13 +76,31 @@ class ConfigurationMerger {
         Collection<Statement> descriptionTriples =
                 graphs.get(template.getConfigDescriptionGraph());
 
-        String baseIri = componentConfigurationGraph + "/";
+        String baseIri = componentConfigurationGraph;
 
+        ConfigurationFacade configurationFacade = new ConfigurationFacade();
         Collection<Statement> configuration =
-                ConfigurationFacade.mergeFromBottom(
+                configurationFacade.mergeFromBottom(
                         templateTriples, componentTriples,
                         descriptionTriples, baseIri,
                         valueFactory.createIRI(componentConfigurationGraph));
+
+        graphs.put(componentConfigurationGraph, configuration);
+    }
+
+    /**
+     * Called after last call of mergerAndReplaceConfiguration on a component.
+     */
+    public void finalizeConfiguration(
+            Template template, String componentConfigurationGraph) {
+
+        Collection<Statement> componentTriples =
+                graphs.get(componentConfigurationGraph);
+
+        ConfigurationFacade configurationFacade = new ConfigurationFacade();
+        Collection<Statement> configuration =
+                configurationFacade.finalizeAfterMergeFromBottom(
+                        componentTriples);
 
         graphs.put(componentConfigurationGraph, configuration);
     }

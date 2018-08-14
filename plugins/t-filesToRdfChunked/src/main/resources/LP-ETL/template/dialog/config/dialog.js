@@ -2,7 +2,7 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#",
         "$type": "Configuration",
         "$options": {
             "$predicate": "auto",
@@ -33,6 +33,14 @@ define([], function () {
         "softFail": {
             "$type": "bool",
             "$label": "Skip file on failure"
+        },
+        "fileReference": {
+            "$type": "bool",
+            "$label" : "Add file reference"
+        },
+        "filePredicate": {
+            "$type": "iri",
+            "$label" : "File name predicate"
         }
     };
 

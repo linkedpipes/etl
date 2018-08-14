@@ -14,9 +14,6 @@
         "http://linkedpipes.com/ontology/keyword": [
             "virtuoso"
         ],
-        "http://linkedpipes.com/ontology/configurationDescription": [
-            {"@id": "http://etl.linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configurationDescription"}
-        ],
         "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/x-virtuosoextractor"},
         "http://linkedpipes.com/ontology/configurationDescription": [
              {"@id": "http://linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configuration/desc"}
@@ -30,16 +27,5 @@
             "http://linkedpipes.com/ontology/RuntimeConfiguration"
         ],
         "http://linkedpipes.com/ontology/binding": "Configuration"
-    },
-    {
-        "@id": "http://etl.linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0/configurationDescription",
-        "@type": [
-            "http://linkedpipes.com/ontology/ConfigurationDescription"
-        ],
-        "http://linkedpipes.com/ontology/privateProperties" : [
-            {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uri"},
-            {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#username"},
-            {"@id": "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#password"}
-        ]
     }
 ]

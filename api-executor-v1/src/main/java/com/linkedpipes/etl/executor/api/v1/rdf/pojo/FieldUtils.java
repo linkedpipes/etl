@@ -51,7 +51,9 @@ final class FieldUtils {
             return new PropertyDescriptor(field.getName(),
                     field.getDeclaringClass());
         } catch (IntrospectionException ex) {
-            throw new RdfException("Can't handle property descriptor.");
+            throw new RdfException(
+                    "Can't create property descriptor for '{}' on class '{}'",
+                    field.getName(), field.getDeclaringClass().getName(), ex);
         }
     }
 

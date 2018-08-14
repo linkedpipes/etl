@@ -1,29 +1,29 @@
 @prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
 
-<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc>
+<http://linkedpipes.com/resources/components/t-sparqlConstructChunked/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    config:type <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> ,
-        <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/threads> ,
-        <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/deduplication> ,
-        <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc/softFail> .
+    config:type <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/query> ,
+        <http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/threads> ,
+        <http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/deduplication> ,
+        <http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/softFail> .
 
-<http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query>
+<http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#query> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#queryControl> .
 
-<http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/threads>
+<http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/threads>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threads> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threadsControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#threadsControl> .
 
-<http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/deduplication>
+<http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/deduplication>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#deduplication> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#deduplicationControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#deduplication> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#deduplicationControl> .
     
-<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc/softFail>
+<http://linkedpipes.com/resources/components/t-sparqlConstructChunked/1.0.0/configuration/desc/softFail>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#softFail> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#softFailControl> .    
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstructChunked#softFailControl> .    

@@ -1,15 +1,8 @@
 /**
  * Define repository that can be used to show list of entries.
  *
- * As there might be duplicities in data (ie. empty item placeholder)
- * it must be used with "track by $index" suffix for ng-repeat.
- *
  * We can also add optimization of digest cycle (component site):
  * https://coderwall.com/p/d_aisq/speeding-up-angularjs-s-digest-loop
- *
- * In order to use updates the template must contains 'id' property
- * unique for each item.
- *
  */
 ((definition) => {
     if (typeof define === "function" && define.amd) {
@@ -20,138 +13,142 @@
 })(() => {
     "use strict";
 
-    const HIDDEN_ELEMENT = {
-        "isVisible": false
-    };
-
     function createRepository(config) {
+        let onNewItem = config.onNewItem;
+        if (onNewItem === undefined) {
+            onNewItem = () => {
+            };
+        }
+
+        let itemDecorator = config.newItemDecorator;
+        if (itemDecorator === undefined) {
+            itemDecorator = (item) => {
+            };
+        }
+
+        let filter = config.filter;
+        if (filter === undefined) {
+            filter = () => true;
+        }
+
+        let incrementalUpdate = config.itemSource.incrementalUpdateSupport;
+        if (incrementalUpdate !== true) {
+            incrementalUpdate = false;
+        }
+
         return {
             // True once any data are loaded.
             "areDataReady": false,
             // True if there are no data in the data source.
             "isEmpty": true,
-            // All the data retrieved from the source.
+            // If set there was error during loading the data,
+            // in such case the error message should be displayed instead of
+            // data.
+            "error": undefined,
+            // All the data retrieved from the source, contains also
+            // filtered out items.
             "data": [],
             // Number of element that pass the filters.
             "filteredItemCount": 0,
-            // Reference to item source. It must implement:
-            // * fetch
-            // * delete
+            // Reference to item source.
             "_itemSource": config.itemSource,
             // Callback called for every new item.
-            "_onNewItem": config.onNewItem,
+            "_onNewItem": onNewItem,
             // Callback called before item is added to the repository.
-            "_itemDecorator": config.newItemDecorator,
+            "_itemDecorator": itemDecorator,
             // True if repository minimal update ie. not by full data query.
-            "_supportMinimalUpdate": false,
+            "_supportIncrementalUpdate": incrementalUpdate,
             // Used to add additional functionality to repository
-            // like infinity scroll.
-            "_onChange": undefined,
+            // called after data ara changed. Ie. after fetch, update,
+            // filter change, ..
+            "_onChange": () => {
+            },
+            // Function that returns ID for the given record.
+            "_id": config.id,
             // Function used to filter items.
-            "_filter": config.filter
+            "_filterFunction": filter,
+            // Used to incremental update, key to used when fetching next data.
+            "_lastUpdateStamp": undefined,
+            "_orderFunction": config.order
         };
     }
 
-    /**
-     * It will also reverse the ordering of elements.
-     */
-    function createRepositoryWithInfiniteScroll(config) {
-        const repository = createRepository(config);
-        addSupportForInfiniteScroll(repository, config);
-        return repository;
-    }
-
-    function addSupportForInfiniteScroll(repository, config) {
-        // List of items that should be visible to the user,
-        // can contains duplicity items.
-        repository["visibleItems"] = [];
-        // Limit size of visibleItem - do NOT change directly!
-        repository["visibleItemLimit"] = config.visibleItemLimit;
-        repository["_onChange"] = updateVisibleItemList;
-    }
-
-    /**
-     * Given repository with data update restricted item list used for
-     * infinite scroll.
-     */
-    function updateVisibleItemList(repository) {
-        const initialVisibleItemsSize = repository.visibleItems.length;
-        const visibleItems = repository.visibleItems;
-        visibleItems.splice(0);
-        for (let index = repository.data.length - 1; index >= 0; --index) {
-            const item = repository.data[index];
-            if (!item.isVisible) {
-                continue;
-            }
-            if (visibleItems.length < repository.visibleItemLimit) {
-                visibleItems.push(item);
-            }
-        }
-        // Fill to the original size of repository.visibleItems
-        // to re-use elements.
-        let indexEnd = Math.min(
-            repository.visibleItemLimit,
-            initialVisibleItemsSize);
-        for (let index = visibleItems.length; index < indexEnd; ++index) {
-            visibleItems.push(HIDDEN_ELEMENT);
-        }
-    }
-
-    function fetchItems(repository) {
+    function initialFetch(repository) {
         if (repository.areDataReady) {
-            return new Promise.resolve();
+            return Promise.resolve();
         }
         onLoadingStarted(repository);
         return repository._itemSource.fetch().then((response) => {
             setRepositoryData(repository, response.data);
+            if (repository._supportIncrementalUpdate) {
+                repository._lastUpdateStamp = response.timeStamp;
+            }
             onLoadingFinished(repository);
-        }).catch((error) => {
-            console.log("Repository loading failed.", error);
-            onLoadingFailed(repository);
-            throw error;
+        }).catch((response) => {
+            onLoadingFailed(repository, response);
+            return Promise.reject(response);
         });
     }
 
     function onLoadingStarted(repository) {
-        repository.areDataReady = true;
+        repository.areDataReady = false;
     }
 
     function setRepositoryData(repository, data) {
-        reportNewItems(repository, data);
-        decorateItems(repository, data);
-        filterItems(repository, data);
+        data.forEach(repository._onNewItem);
+        data.forEach(repository._itemDecorator);
+        filterItems(repository, data, undefined);
         repository.data = data;
         repository.isEmpty = data.length === 0;
+        orderRepositoryItems(repository);
         callOnChange(repository);
     }
 
-    function reportNewItems(repository, data) {
-        if (repository._onNewItem === undefined) {
-            return;
+    function filterItems(repository, items, userData) {
+        repository.filteredItemCount = 0;
+        for (let index = 0; index < items.length; ++index) {
+            const item = items[index];
+            item["isVisible"] = repository._filterFunction(item, userData);
+            repository.filteredItemCount += item["isVisible"];
         }
-        data.forEach(repository._onNewItem);
-    }
-
-    function decorateItems(repository, data) {
-        if (repository._itemDecorator === undefined) {
-            return;
-        }
-        data.forEach(repository._itemDecorator);
+        callOnChange(repository);
     }
 
     function callOnChange(repository) {
-        if (repository._onChange === undefined) {
-            return;
-        }
         repository._onChange(repository);
     }
 
     function onLoadingFinished(repository) {
         repository.areDataReady = true;
+        repository.error = undefined;
     }
 
-    function onLoadingFailed(repository) {
+    function onLoadingFailed(repository, response) {
         repository.areDataReady = false;
+        repository.error = errorMessage(response);
+    }
+
+    function errorMessage(response) {
+        console.warn("repository.errorMessage", response);
+        switch(response.error) {
+            case "server":
+                return serverErrorMessage(response);
+            case "parsing":
+                return "Failed to parse server response.";
+            case "offline":
+                return "Can't connect to the server.";
+            default:
+                return "Unexpected type of error.";
+        }
+    }
+
+    function serverErrorMessage(response){
+        switch (response.status) {
+            case 503:
+                return "Backend service is unavailable.";
+            default:
+                return "Request failed with status: " + response.status + ".";
+        }
     }
 
     /**
@@ -160,83 +157,88 @@
     function onFilterChange(repository, userData) {
         filterItems(repository, repository.data, userData);
         callOnChange(repository);
-        console.log("onFilterChange", repository);
-    }
-
-    function filterItems(repository, items, userData) {
-        repository.filteredItemCount = 0;
-        for (let index = 0; index < items.length; ++index) {
-            const item = items[index];
-            item["isVisible"] = repository._filter(item, userData);
-            repository.filteredItemCount += item["isVisible"];
-        }
-        callOnChange(repository);
     }
 
     function updateItems(repository) {
         if (!repository.areDataReady) {
-            fetchItems(repository);
+            console.log("Calling update before finishing initial fetch, " +
+                "calling initialFetch instead.");
+            return initialFetch(repository);
         }
-        if (repository._supportMinimalUpdate) {
-            // TODO Add support for minimal update using metadata.
+        // If there was an error we request full data refresh.
+        if (repository._supportIncrementalUpdate &&
+            repository._lastUpdateStamp !== undefined &&
+            !repository.error) {
+            return incrementalUpdate(repository);
         } else {
             return fullUpdate(repository);
         }
     }
 
-    function fullUpdate(repository) {
-        return repository._itemSource.fetch().then((response) => {
-            mergeItemsToRepository(repository, response.data);
-            deleteItemsFromRepository(repository, response.tombstones);
-            callOnChange(repository);
-        }).catch((error) => {
-            console.log("Repository updating failed.", error);
-            throw error;
+    function incrementalUpdate(repository) {
+        const changedSince = repository._lastUpdateStamp;
+        return repository._itemSource.fetch(changedSince).then((response) => {
+            console.time("repository.incrementalUpdate");
+            repository._lastUpdateStamp = response.timeStamp;
+            if (updateRepositoryFromFetch(repository, response)) {
+                // TODO Do not refresh all filters.
+                filterItems(repository, repository.data);
+                callOnChange(repository);
+            }
+            console.timeEnd("repository.incrementalUpdate");
+            onUpdateFinished(repository);
+        }).catch((response) => {
+            onUpdateFailed(repository, response);
+            return Promise.reject(response);
         });
     }
 
+    function onUpdateFinished(repository) {
+        repository.areDataReady = true;
+        repository.error = undefined;
+    }
+
+    function onUpdateFailed(repository, error) {
+        repository.areDataReady = false;
+        repository.error = errorMessage(error);
+        return Promise.reject(error);
+    }
+
+    function updateRepositoryFromFetch(repository, response) {
+        if (response.data.length === 0 && response.tombstones.length === 0) {
+            return false;
+        }
+        mergeItemsToRepository(repository, response.data);
+        mergeTombstonesToRepository(repository, response.tombstones);
+        orderRepositoryItems(repository);
+        return true;
+    }
+
     function mergeItemsToRepository(repository, newData) {
-        const newItems = [];
         newData.forEach((item) => {
-            const index = getIndexOfItem(repository, item.id);
+            const index = getIndexOfItem(repository, repository._id(item));
             if (index === undefined) {
-                newItems.push(item);
+                repository._onNewItem(item);
                 repository.data.push(item);
             } else {
                 repository.data[index] = item;
             }
+            repository._itemDecorator(item);
         });
-        const wasItemsNotDeleted = newItems.length === 0 &&
-                repository.data.length === newData.length;
-        if (!wasItemsNotDeleted) {
-            removeMissingItems(repository.data, newData);
-        }
-        reportNewItems(repository, newItems);
-        decorateItems(repository, newData);
-        filterItems(repository, newData);
-    }
-
-    function removeMissingItems(data, referenceData) {
-        const referenceIds = new Set();
-        referenceData.forEach(item => referenceIds.add(item["id"]));
-        for (let index = data.length - 1; index >= 0; --index) {
-            if (referenceIds.has(data[index].id)) {
-                continue;
-            }
-            data.splice(index, 1);
-        }
     }
 
     function getIndexOfItem(repository, id) {
+        // TODO We can optimize this with id-index map.
         for (let index = 0; index < repository.data.length; index++) {
-            if (repository.data[index].id === id) {
+            const indexId = repository._id(repository.data[index]);
+            if (indexId === id) {
                 return index;
             }
         }
         return undefined;
     }
 
-    function deleteItemsFromRepository(repository, tombstones) {
+    function mergeTombstonesToRepository(repository, tombstones) {
         if (tombstones === undefined) {
             return;
         }
@@ -249,49 +251,64 @@
         });
     }
 
-    function deleteItem(repository, id) {
-        return repository._itemSource.delete(id).catch((error) => {
-            console.log("Repository delete request failed.", error);
-            throw error;
-        })
-    }
-
-    function increaseVisibleItemsLimit(repository, increase) {
-        if (repository.visibleItemLimit > repository.data.length) {
+    function orderRepositoryItems(repository) {
+        if (repository._orderFunction === undefined) {
             return;
         }
-        repository.visibleItemLimit = Math.min(
-            repository.visibleItemLimit + increase,
-            repository.filteredItemCount);
-        callOnChange(repository);
+        repository.data.sort(repository._orderFunction);
     }
 
-    function createConfigBuilder() {
-        const c = {};
-        // Defaults;
-        c["filter"] = () => true;
-        c["onNewItem"] = () => {};
-        c["newItemDecorator"] = () => {};
-        //
-        return {
-            "itemSource": (obj) => c["itemSource"] = obj,
-            "onNewItem": (callback) => c["onNewItem"] = callback,
-            "newItemDecorator": (callback) => c["newItemDecorator"] = callback,
-            "visibleItemLimit": (number) => c["visibleItemLimit"] = number,
-            "filter": (callback) => c["filter"] = callback,
-            "build": () => c
+    function fullUpdate(repository) {
+        return repository._itemSource.fetch().then((response) => {
+            console.time("repository.fullUpdate");
+            updateRepositoryFromFetch(repository, response);
+            removeMissingItems(repository, response.data);
+            // TODO OPTIMIZE Do not refresh all filters.
+            filterItems(repository, repository.data);
+            callOnChange(repository);
+            console.timeEnd("repository.fullUpdate");
+            onUpdateFinished(repository);
+        }).catch((response) => {
+            onUpdateFailed(repository, response);
+            return Promise.reject(response);
+        });
+    }
+
+    function removeMissingItems(repository, referenceData) {
+        const data = repository.data;
+        const referenceIds = new Set();
+        referenceData.forEach(item => referenceIds.add(repository._id(item)));
+        for (let index = data.length - 1; index >= 0; --index) {
+            const id = repository._id(data[index]);
+            if (referenceIds.has(id)) {
+                continue;
+            }
+            data.splice(index, 1);
         }
+    }
+
+    function deleteItem(repository, item) {
+        const id = repository._id(item);
+        return repository._itemSource.deleteById(id).catch((error) => {
+            console.warn("Repository delete request failed.", error);
+            throw error;
+        });
     }
 
     return {
         "create": createRepository,
-        "createWithInfiniteScroll": createRepositoryWithInfiniteScroll,
-        "fetch": fetchItems,
+        /**
+         * Use to fetch data for the first time, once the data are loaded
+         * it does not nothing.
+         */
+        "initialFetch": initialFetch,
+        /**
+         * Call when ever filters change to update the visibility of items in
+         * repository.
+         */
         "onFilterChange": onFilterChange,
         "update": updateItems,
-        "delete": deleteItem,
-        "increaseVisibleItemsLimit": increaseVisibleItemsLimit,
-        "createConfigBuilder": createConfigBuilder
+        "deleteItem": deleteItem
     }
 
 });

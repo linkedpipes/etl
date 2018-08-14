@@ -2,7 +2,7 @@ define([], function () {
     "use strict";
 
     const DESC = {
-        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesToRdf#",
+        "$namespace": "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#",
         "$type": "Configuration",
         "$options": {
             "$predicate": "auto",

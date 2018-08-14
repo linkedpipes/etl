@@ -118,7 +118,7 @@ public class ComponentServlet {
             return;
         }
         final Collection<Statement> component = RdfUtils.read(componentRdf);
-        templateFacade.updateTemplate(template, component);
+        templateFacade.updateInterface(template, component);
     }
 
     @RequestMapping(value = "/config",
@@ -135,7 +135,7 @@ public class ComponentServlet {
         }
         //
         RdfUtils.write(request, response,
-                templateFacade.getConfigurationTemplate(template));
+                templateFacade.getConfig(template));
     }
 
     @RequestMapping(value = "/config",
@@ -169,7 +169,7 @@ public class ComponentServlet {
         }
         //
         RdfUtils.write(request, response,
-                templateFacade.getEffectiveConfiguration(template));
+                templateFacade.getConfigEffective(template));
     }
 
     /**
@@ -189,7 +189,7 @@ public class ComponentServlet {
         }
         //
         RdfUtils.write(request, response,
-                templateFacade.getConfigurationInstance(template));
+                templateFacade.getConfigInstance(template));
     }
 
     @RequestMapping(value = "/configDescription", method = RequestMethod.GET)
@@ -205,7 +205,7 @@ public class ComponentServlet {
         }
         //
         RdfUtils.write(request, response,
-                templateFacade.getConfigurationDescription(template));
+                templateFacade.getConfigDescription(template));
     }
 
     @RequestMapping(value = "/dialog",
@@ -299,7 +299,7 @@ public class ComponentServlet {
         }
         // Get components.
         final Collection<Template> templates =
-                templateFacade.getTemplateSuccessors(template);
+                templateFacade.getSuccessors(template);
         templates.add(template);
         // Get pipelines and construct the response.
         final Collection<Statement> responseRdf = new LinkedList<>();

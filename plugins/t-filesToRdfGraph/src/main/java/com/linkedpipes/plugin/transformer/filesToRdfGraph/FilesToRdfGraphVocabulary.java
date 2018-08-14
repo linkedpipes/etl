@@ -6,7 +6,7 @@ package com.linkedpipes.plugin.transformer.filesToRdfGraph;
 public final class FilesToRdfGraphVocabulary {
 
     private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-filesToRdf#";
+            = "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 

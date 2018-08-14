@@ -25,6 +25,9 @@ public class HttpGetConfiguration {
     @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_USER_AGENT)
     private String userAgent = null;
 
+    @RdfToPojo.Property(iri = HttpGetVocabulary.ENCODE_URL)
+    private boolean encodeUrl = false;
+
     public HttpGetConfiguration() {
     }
 
@@ -58,6 +61,14 @@ public class HttpGetConfiguration {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    public boolean isEncodeUrl() {
+        return encodeUrl;
+    }
+
+    public void setEncodeUrl(boolean encodeUrl) {
+        this.encodeUrl = encodeUrl;
     }
 
 }

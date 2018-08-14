@@ -22,6 +22,12 @@ define([], function () {
             "$control": "hardRedirectControl",
             "$label" : "Force to follow redirects"
         },
+        "encodeUrl" : {
+            "$type" : "bool",
+            "$property" : "encodeUrl",
+            "$control": "encodeUrlControl",
+            "$label" : "Encode input URL"
+        },
         "userAgent" : {
             "$type" : "str",
             "$property" : "userAgent",

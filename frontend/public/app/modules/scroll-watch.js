@@ -64,7 +64,7 @@
 
         this.unRegisterCallback = (callback) => {
             const index = callbacks.indexOf(callback);
-            if (index == -1) {
+            if (index === -1) {
                 console.warn("Removing unregistered callback!", new Error());
             }
             callbacks.splice(index, 1);
@@ -84,6 +84,9 @@
     }
 
     function onScroll() {
+        if (scrollWatchChild === undefined) {
+            return;
+        }
         const scrollBottom = scrollWatch.scrollTop + scrollWatch.offsetHeight;
         const documentSize = scrollWatchChild.scrollHeight;
         // Load almost one-page in front.
