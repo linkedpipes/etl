@@ -56,7 +56,7 @@ define([], function () {
                     const record = {
                         "label": component.label,
                         "search": componentCore.search,
-                        "parent": component.core ? "" : componentCore.label,
+                        "parent": component.isCore ? "" : componentCore.label,
                         "icon": ICONS[componentCore.type],
                         "component": component,
                         "portBinding": port.binding,
