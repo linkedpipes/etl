@@ -114,6 +114,7 @@ define([
         };
     }
 
+    // We cannot inject personalization here as they are not yet available.
     function redirectFromHomePage($location, $cookies) {
         if ($location.path() === "") {
             let landingPage = $cookies.get("lp-landing");

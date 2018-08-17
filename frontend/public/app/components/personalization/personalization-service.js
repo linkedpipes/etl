@@ -1,69 +1,37 @@
 ((definition) => {
     if (typeof define === "function" && define.amd) {
-        define([], definition);
+        define([
+            "./personalization"
+        ], definition);
     }
-})(() => {
+})((_personalization) => {
 
-    function factory($cookies, statusService) {
+    function factory($personalization, statusService) {
 
         let $scope;
 
         function initialize(scope) {
             $scope = scope;
-            load();
-        }
-
-        function load() {
-            // TODO Extract default so that can be used in the application.
-
-            $scope.landingPage = $cookies.get("lp-landing");
-            if ($scope.landingPage === undefined) {
-                $scope.landingPage = "/executions";
-            }
-
-            $scope.initialListSize =
-                parseInt($cookies.get("lp-initial-list-size"));
-            if ($scope.initialListSize === undefined) {
-                $scope.initialListSize = 15;
-            }
+            $scope.landingPage = $personalization.getLandingPage();
+            $scope.initialListSize = $personalization.getListSize();
         }
 
         function save() {
-            const expires = getExpiration();
-            const cookiesOptions = {"expires": expires};
-
-            $cookies.put("lp-landing",
-                $scope.landingPage, cookiesOptions);
-
-            const initListSize = parseInt($scope.initialListSize);
-            if (isNaN(initListSize)) {
-                $cookies.remove("lp-initial-list-size");
-            } else {
-                $cookies.put("lp-initial-list-size",
-                    initListSize, cookiesOptions);
-            }
-
+            $personalization.setLandingPage($scope.landingPage);
+            $personalization.setListSize($scope.initialListSize);
             statusService.success({
                 "title": "Changes saved."
             });
         }
 
-        // TODO Move to cookies module.
-        function getExpiration() {
-            const expires = new Date();
-            expires.setYear(expires.getFullYear() + 10);
-            return expires;
-        }
-
         return {
             "initialize": initialize,
-            "load": load,
             "save": save
         };
     }
 
     factory.$inject = [
-        "$cookies",
+        "personalization",
         "services.status"
     ];
 
@@ -73,6 +41,7 @@
             return;
         }
         initialized = true;
+        _personalization(app);
         app.factory("personalization.service", factory);
     }
 });
