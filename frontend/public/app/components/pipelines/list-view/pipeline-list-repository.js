@@ -3,10 +3,13 @@
         define([
             "vocabulary",
             "app/modules/repository-infinite-scroll",
-            "app/modules/jsonld-source"
+            "app/modules/repository-sorted",
+            "app/modules/jsonld-source",
+            "app/components/personalization/personalization"
         ], definition);
     }
-})((vocab, repositoryService, jsonLdSource) => {
+})((vocab, repositoryService, repositorySorted, jsonLdSource,
+    _personalization) => {
     "use strict";
 
     const LP = vocab.LP;
@@ -93,7 +96,7 @@
         repositoryService.increaseVisibleItemsLimit(repository, 10);
     }
 
-    function service($cookies) {
+    function service($personalization) {
 
         function createRepository(filters) {
             const builder = jsonLdSource.createBuilder();
@@ -101,23 +104,26 @@
             builder.itemType(LP.PIPELINE);
             builder.tombstoneType(LP.TOMBSTONE);
             builder.itemTemplate(REPOSITORY_TEMPLATE);
-            return repositoryService.createWithInfiniteScroll({
+            const repository = repositoryService.createWithInfiniteScroll({
                 "itemSource": builder.build(),
                 "onNewItem": (item) => addTagsToTagList(item, filters.tagsAll),
                 "newItemDecorator": decorateItem,
                 "filter": (item, options) => filter(item, filters, options),
-                "visibleItemLimit": getVisibleItemLimit(),
+                "visibleItemLimit": $personalization.getListSize(),
                 "id": (item) => item["iri"]
             });
+            addSorting(repository);
+            return repository;
         }
 
-        // TODO Move to "cookies" module.
-        function getVisibleItemLimit() {
-            const initialLimit = $cookies.get("lp-initial-list-size");
-            if (initialLimit === undefined) {
-                return 15;
+        function addSorting(repository) {
+            const orderBy = $personalization.getPipelineListOrder();
+            if (orderBy === "title asc") {
+                repositorySorted.sortedByStr(repository, "label", -1);
+            } else if (orderBy === "title desc") {
+                repositorySorted.sortedByStr(repository, "label", 1);
             } else {
-                return parseInt(initialLimit);
+                // Leave default.
             }
         }
 
@@ -131,7 +137,7 @@
         };
     }
 
-    service.$inject = ["$cookies"];
+    service.$inject = ["personalization"];
 
     let initialized = false;
     return function init(app) {
@@ -139,6 +145,7 @@
             return;
         }
         initialized = true;
+        _personalization(app);
         app.service("pipeline.list.repository", service);
     }
 
