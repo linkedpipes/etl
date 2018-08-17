@@ -10,12 +10,13 @@
 
     function controller($scope, service) {
 
+        service.initialize($scope);
+
         $scope.onDiscard = service.load;
 
         $scope.onSave = service.save;
 
         function initialize() {
-            service.initialize($scope);
             service.load();
         }
 
