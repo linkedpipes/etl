@@ -73,7 +73,7 @@
     }
 
     function increaseVisibleItemsLimit(repository, increase) {
-        if (repository.visibleItemLimit > repository.data.length) {
+        if (repository.visibleItemLimit >= repository.data.length) {
             return;
         }
         repository.visibleItemLimit = Math.min(
