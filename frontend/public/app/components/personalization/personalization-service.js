@@ -10,8 +10,7 @@
 
         function initialize(scope) {
             $scope = scope;
-            $scope.landingPage = "";
-            $scope.initialListSize = "";
+            load();
         }
 
         function load() {

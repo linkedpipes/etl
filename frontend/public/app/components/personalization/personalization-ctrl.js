@@ -16,11 +16,6 @@
 
         $scope.onSave = service.save;
 
-        function initialize() {
-            service.load();
-        }
-
-        angular.element(initialize);
     }
 
     controller.$inject = ['$scope', 'personalization.service'];
