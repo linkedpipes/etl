@@ -14,11 +14,13 @@
             $scope = scope;
             $scope.landingPage = $personalization.getLandingPage();
             $scope.initialListSize = $personalization.getListSize();
+            $scope.pipelineOrdering = $personalization.getPipelineListOrder();
         }
 
         function save() {
             $personalization.setLandingPage($scope.landingPage);
             $personalization.setListSize($scope.initialListSize);
+            $personalization.setPipelineListOrder($scope.pipelineOrdering);
             statusService.success({
                 "title": "Changes saved."
             });

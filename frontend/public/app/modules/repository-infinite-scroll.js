@@ -38,9 +38,9 @@
 
         // Save old value and call it after us.
         const oldOnChange = repository["_onChange"];
-        const onChange = (repository) => {
+        const onChange = (repository, changed) => {
             updateVisibleItemList(repository);
-            oldOnChange(repository);
+            oldOnChange(repository, changed);
         };
         repository["_onChange"] = onChange;
     }

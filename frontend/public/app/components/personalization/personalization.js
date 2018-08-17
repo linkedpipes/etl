@@ -6,7 +6,8 @@
 
     const defaults = {
         "lp-landing": "/executions",
-        "lp-initial-list-size": "15"
+        "lp-initial-list-size": "15",
+        "lp-pipeline-list-order": "default"
     };
 
     const cookiesOptions = {
@@ -48,6 +49,14 @@
 
         this.setLandingPage = (value) => {
             $cookies.put("lp-landing", value, cookiesOptions);
+        };
+
+        this.getPipelineListOrder = () => {
+            return  getCookiesValue("lp-pipeline-list-order");
+        };
+
+        this.setPipelineListOrder = (value) => {
+            $cookies.put("lp-pipeline-list-order", value, cookiesOptions);
         };
 
     }

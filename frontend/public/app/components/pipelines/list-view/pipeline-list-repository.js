@@ -3,11 +3,13 @@
         define([
             "vocabulary",
             "app/modules/repository-infinite-scroll",
+            "app/modules/repository-sorted",
             "app/modules/jsonld-source",
             "app/components/personalization/personalization"
         ], definition);
     }
-})((vocab, repositoryService, jsonLdSource, _personalization) => {
+})((vocab, repositoryService, repositorySorted, jsonLdSource,
+    _personalization) => {
     "use strict";
 
     const LP = vocab.LP;
@@ -102,7 +104,7 @@
             builder.itemType(LP.PIPELINE);
             builder.tombstoneType(LP.TOMBSTONE);
             builder.itemTemplate(REPOSITORY_TEMPLATE);
-            return repositoryService.createWithInfiniteScroll({
+            const repository = repositoryService.createWithInfiniteScroll({
                 "itemSource": builder.build(),
                 "onNewItem": (item) => addTagsToTagList(item, filters.tagsAll),
                 "newItemDecorator": decorateItem,
@@ -110,6 +112,19 @@
                 "visibleItemLimit": $personalization.getListSize(),
                 "id": (item) => item["iri"]
             });
+            addSorting(repository);
+            return repository;
+        }
+
+        function addSorting(repository) {
+            const orderBy = $personalization.getPipelineListOrder();
+            if (orderBy === "title asc") {
+                repositorySorted.sortedByStr(repository, "label", -1);
+            } else if (orderBy === "title desc") {
+                repositorySorted.sortedByStr(repository, "label", 1);
+            } else {
+                // Leave default.
+            }
         }
 
         return {

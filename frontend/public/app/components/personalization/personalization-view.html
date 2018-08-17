@@ -19,6 +19,15 @@
                 </div>
             </md-input-container>
 
+            <md-input-container class="md-block">
+                <label>Pipeline list ordering</label>
+                <md-select ng-model="pipelineOrdering">
+                    <md-option value="default">Default</md-option>
+                    <md-option value="title asc">Title Asc</md-option>
+                    <md-option value="title desc">Title Desc</md-option>
+                </md-select>
+            </md-input-container>
+
         </form>
         <div layout="row">
             <span flex></span>

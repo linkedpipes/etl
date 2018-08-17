@@ -13,6 +13,14 @@
 })(() => {
     "use strict";
 
+    /**
+     * Enum used in _onChange.
+     */
+    const CHANGE_TYPE = {
+        "data": "data",
+        "filter": "filter"
+    };
+
     function createRepository(config) {
         let onNewItem = config.onNewItem;
         if (onNewItem === undefined) {
@@ -61,7 +69,7 @@
             // Used to add additional functionality to repository
             // called after data ara changed. Ie. after fetch, update,
             // filter change, ..
-            "_onChange": () => {
+            "_onChange": (repository, changed) => {
             },
             // Function that returns ID for the given record.
             "_id": config.id,
@@ -101,7 +109,7 @@
         repository.data = data;
         repository.isEmpty = data.length === 0;
         orderRepositoryItems(repository);
-        callOnChange(repository);
+        callOnChange(repository, CHANGE_TYPE.data);
     }
 
     function filterItems(repository, items, userData) {
@@ -111,11 +119,11 @@
             item["isVisible"] = repository._filterFunction(item, userData);
             repository.filteredItemCount += item["isVisible"];
         }
-        callOnChange(repository);
+        callOnChange(repository, CHANGE_TYPE.filter);
     }
 
-    function callOnChange(repository) {
-        repository._onChange(repository);
+    function callOnChange(repository, changed) {
+        repository._onChange(repository, changed);
     }
 
     function onLoadingFinished(repository) {
@@ -156,7 +164,6 @@
      */
     function onFilterChange(repository, userData) {
         filterItems(repository, repository.data, userData);
-        callOnChange(repository);
     }
 
     function updateItems(repository) {
@@ -183,7 +190,7 @@
             if (updateRepositoryFromFetch(repository, response)) {
                 // TODO Do not refresh all filters.
                 filterItems(repository, repository.data);
-                callOnChange(repository);
+                callOnChange(repository, CHANGE_TYPE.data);
             }
             console.timeEnd("repository.incrementalUpdate");
             onUpdateFinished(repository);
@@ -265,7 +272,7 @@
             removeMissingItems(repository, response.data);
             // TODO OPTIMIZE Do not refresh all filters.
             filterItems(repository, repository.data);
-            callOnChange(repository);
+            callOnChange(repository, CHANGE_TYPE.data);
             console.timeEnd("repository.fullUpdate");
             onUpdateFinished(repository);
         }).catch((response) => {
