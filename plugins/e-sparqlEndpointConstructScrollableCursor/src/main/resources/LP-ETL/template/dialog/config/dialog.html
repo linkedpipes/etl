@@ -42,8 +42,8 @@
     <md-switch ng-model="dialog.useTolerantRepository.value"
                ng-hide="dialog.useTolerantRepository.hide"
                ng-disabled="dialog.useTolerantRepository.disabled || dialog.useTolerantRepository.inherit">
-        Fix invalid types
-        <md-tooltip>Fix rdfs:langString without language tag.
+        Fix missing language tags on rdf:langString literals
+        <md-tooltip>Fix rdf:langString without language tag.
         </md-tooltip>
     </md-switch>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
