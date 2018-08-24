@@ -69,8 +69,7 @@
             // Used to add additional functionality to repository
             // called after data ara changed. Ie. after fetch, update,
             // filter change, ..
-            "_onChange": (repository, changed) => {
-            },
+            "_onChange": onChange,
             // Function that returns ID for the given record.
             "_id": config.id,
             // Function used to filter items.
@@ -79,6 +78,12 @@
             "_lastUpdateStamp": undefined,
             "_orderFunction": config.order
         };
+    }
+
+    function onChange(repository, change) {
+        if (change === CHANGE_TYPE.data) {
+            repository.isEmpty = repository.data.length === 0;
+        }
     }
 
     function initialFetch(repository) {
@@ -107,7 +112,6 @@
         data.forEach(repository._itemDecorator);
         filterItems(repository, data, undefined);
         repository.data = data;
-        repository.isEmpty = data.length === 0;
         orderRepositoryItems(repository);
         callOnChange(repository, CHANGE_TYPE.data);
     }
