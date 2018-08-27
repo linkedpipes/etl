@@ -107,9 +107,11 @@ class ScpClient implements AutoCloseable {
         int status = channel.getExitStatus();
         LOG.info("Status code: {}", status);
         switch (status) {
-            case -1: // Fail with no output )command not done yet?).
+            case -1: // Fail with no output - command is not done yet?
                 throw new LpException("Action failed (-1).");
             case 0: // Ok
+                LOG.info("Stderr: {}", errorStream.toString());
+                LOG.info("Stdout: {}", outputStream.toString());
                 return;
             case 1: // Failure
             case 2: // Critical failure
