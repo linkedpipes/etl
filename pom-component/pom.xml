@@ -14,7 +14,7 @@
             UTF-8
         </project.reporting.outputEncoding>
         <!-- Libraries. -->
-        <rdf4j.version>2.2.1</rdf4j.version>
+        <rdf4j.version>2.3.2</rdf4j.version>
         <lp.version>0.0.0</lp.version>
     </properties>
 

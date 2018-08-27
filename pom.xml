@@ -10,6 +10,7 @@
     <modules>
         <module>pom-parent</module>
         <module>pom-component</module>
+        <module>rdf4j-storage-light</module>
         <module>vocabulary</module>
         <module>api-executor-v1</module>
         <module>dataunit-core</module>
