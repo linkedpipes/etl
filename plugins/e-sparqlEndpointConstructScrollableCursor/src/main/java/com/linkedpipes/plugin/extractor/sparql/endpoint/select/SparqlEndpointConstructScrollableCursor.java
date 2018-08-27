@@ -26,6 +26,7 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,11 +56,9 @@ public final class SparqlEndpointConstructScrollableCursor
     public void execute() throws LpException {
         SPARQLRepository repository;
         if (configuration.isUseTolerantRepository()) {
-            repository = new TolerantSparqlRepository(
-                    configuration.getEndpoint());
+            repository = new TolerantSparqlRepository(getEndpoint());
         } else {
-            repository = new SPARQLRepository(
-                    configuration.getEndpoint());
+            repository = new SPARQLRepository(getEndpoint());
         }
         repository.initialize();
         repository.setHttpClient(getHttpClient());
@@ -87,6 +86,11 @@ public final class SparqlEndpointConstructScrollableCursor
                 LOG.error("Can't close repository.", ex);
             }
         }
+    }
+
+    private String getEndpoint() {
+        String[] tokens = configuration.getEndpoint().split("://", 2);
+        return tokens[0] + "://" + IDN.toASCII(tokens[1]);
     }
 
     private CloseableHttpClient getHttpClient() {
