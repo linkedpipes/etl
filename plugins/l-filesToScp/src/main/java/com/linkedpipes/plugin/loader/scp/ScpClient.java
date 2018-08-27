@@ -133,8 +133,8 @@ class ScpClient implements AutoCloseable {
     }
 
     public void clearDirectory(String directory) throws Exception {
-        String command = "[ $(ls -A " + directory + " ) ] && rm -r " +
-                directory + "/* || :";
+        String command =
+                "`[ -d " + directory + " ] && rm -r " + directory + "/* || :`";
         LOG.info("clearDirectory ... : {}", command);
         withChannelExec((channel) -> {
             channel.setCommand(command);
