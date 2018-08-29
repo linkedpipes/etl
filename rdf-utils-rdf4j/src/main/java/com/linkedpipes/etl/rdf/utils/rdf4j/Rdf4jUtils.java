@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.rdf.utils.rdf4j;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
@@ -11,8 +10,6 @@ import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.eclipse.rdf4j.rio.helpers.ContextStatementCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -20,15 +17,12 @@ import java.util.*;
 
 public class Rdf4jUtils {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(Rdf4jUtils.class);
-
     private Rdf4jUtils() {
 
     }
 
     public static void save(Collection<Statement> statements, File file)
-            throws IOException, RdfUtilsException {
+            throws IOException {
         RDFFormat format = getFormat(file.getName());
         try (OutputStream stream = new FileOutputStream(file)) {
             RDFWriter writer = Rio.createWriter(format, stream);
