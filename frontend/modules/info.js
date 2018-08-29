@@ -1,17 +1,15 @@
 /**
- * Holds system information that are available to the client.
- *
- * This module exports info object.
+ * Exports info object with system information available for the client.
  */
 (function () {
     "use strict";
-    var gFs = require("fs");
-    var info = {};
+    const fs = require("fs");
+    const info = {};
 
     // Information about version.
     try {
-        var path = __dirname + "/../data/git.json";
-        var git = JSON.parse(gFs.readFileSync(path, "utf8"));
+        const path = __dirname + "/../data/git.json";
+        const git = JSON.parse(fs.readFileSync(path, "utf8"));
         if (git !== undefined) {
             info.version = {
                 "commit": git["git.commit.id"]
@@ -23,9 +21,9 @@
     }
 
     // Information from the configuration class.
-    var gConfiguration = require('./../modules/configuration');
+    const config = require("./../modules/configuration");
     info.path = {
-        'ftp': gConfiguration.executor.ftp.uri
+        "ftp": config.executor.ftp.uri
     };
 
     module.exports = info;
