@@ -121,24 +121,36 @@ public class ExecutionServlet {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public void getExecution(@PathVariable String id,
+    public void getExecution(
+            @PathVariable String id,
             HttpServletRequest request, HttpServletResponse response)
             throws ExecutionFacade.OperationFailed,
             ExecutionFacade.UnknownExecution, IOException {
         MemoryMonitor.log(LOG, "getExecution.before");
-        final RDFFormat format = Rio.getParserFormatForMIMEType(
+        Execution execution = executionFacade.getExecution(id);
+        if (execution == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        RDFFormat format = Rio.getParserFormatForMIMEType(
                 request.getHeader("Accept")).orElse(RDFFormat.JSONLD);
         response.setHeader("Content-Type", format.getDefaultMIMEType());
-        executionFacade.writeExecution(executionFacade.getExecution(id), format,
-                response.getOutputStream());
+        executionFacade.writeExecution(
+                execution, format, response.getOutputStream());
         MemoryMonitor.log(LOG, "getExecution.after");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteExecution(@PathVariable String id,
-            HttpServletRequest request, HttpServletResponse response) {
-        final Execution execution = executionFacade.getExecution(id);
+    public void deleteExecution(
+            @PathVariable String id,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        Execution execution = executionFacade.getExecution(id);
+        if (execution == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
         executionFacade.deleteExecution(execution);
         response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -146,10 +158,16 @@ public class ExecutionServlet {
     @RequestMapping(value = "/{id}/cancel", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void cancelExecution(@PathVariable String id,
+    public void cancelExecution(
+            @PathVariable String id,
             @RequestBody String body,
-            HttpServletRequest request, HttpServletResponse response) {
-        final Execution execution = executionFacade.getExecution(id);
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        Execution execution = executionFacade.getExecution(id);
+        if (execution == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
         executorFacade.cancelExecution(execution, body);
         response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -157,9 +175,10 @@ public class ExecutionServlet {
     @RequestMapping(value = "/{id}/logs", method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public FileSystemResource getExecutionLogs(@PathVariable String id,
+    public FileSystemResource getExecutionLogs(
+            @PathVariable String id,
             HttpServletResponse response) {
-        final File file = executionFacade.getExecutionLogFile(
+        File file = executionFacade.getExecutionLogFile(
                 executionFacade.getExecution(id));
         if (file == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -172,14 +191,15 @@ public class ExecutionServlet {
     @RequestMapping(value = "/{id}/logs-tail", method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public void getExecutionLogsTail(@PathVariable String id,
+    public void getExecutionLogsTail(
+            @PathVariable String id,
             @RequestParam(value = "n", defaultValue = "32") int count,
             HttpServletResponse response) throws IOException {
         File file = executionFacade.getExecutionLogFile(
                 executionFacade.getExecution(id));
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return ;
+            return;
         }
         String[] lines = readLogTail(file, count);
         response.setHeader("Content-Type", "text/plain");
@@ -199,7 +219,7 @@ public class ExecutionServlet {
             }
             if (line == null) {
                 break;
-            } else{
+            } else {
                 lines[i] = line;
             }
         }
@@ -225,15 +245,22 @@ public class ExecutionServlet {
 
     @RequestMapping(value = "/{id}/pipeline", method = RequestMethod.GET)
     @ResponseBody
-    public void getPipeline(@PathVariable String id,
-            HttpServletRequest request, HttpServletResponse response)
+    public void getPipeline(
+            @PathVariable String id,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ExecutionFacade.OperationFailed,
             ExecutionFacade.UnknownExecution, IOException {
-        final RDFFormat format = Rio.getParserFormatForMIMEType(
+        Execution execution = executionFacade.getExecution(id);
+        if (execution == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        RDFFormat format = Rio.getParserFormatForMIMEType(
                 request.getHeader("Accept")).orElse(RDFFormat.JSONLD);
         response.setHeader("Content-Type", format.getDefaultMIMEType());
-        executionFacade.writePipeline(executionFacade.getExecution(id), format,
-                response.getOutputStream());
+        executionFacade.writePipeline(
+                execution, format, response.getOutputStream());
     }
 
     @ResponseBody
@@ -243,9 +270,8 @@ public class ExecutionServlet {
             @RequestParam("pipeline") MultipartFile pipeline,
             @RequestParam("input") List<MultipartFile> inputs,
             HttpServletResponse response)
-            throws ExecutionFacade.OperationFailed, IOException {
-        final Execution execution = executionFacade.createExecution(pipeline,
-                inputs);
+            throws ExecutionFacade.OperationFailed {
+        Execution execution = executionFacade.createExecution(pipeline, inputs);
         // TODO Execution in other thread !
         MemoryMonitor.log(LOG, "startExecutions.before");
         executorFacade.startExecutions();
@@ -254,19 +280,21 @@ public class ExecutionServlet {
     }
 
     @RequestMapping(value = "/{id}/overview", method = RequestMethod.GET,
-    produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void getExecutionOverview(@PathVariable String id,
-            HttpServletRequest request, HttpServletResponse response)
+    public void getExecutionOverview(
+            @PathVariable String id,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws IOException {
-        final Execution execution = executionFacade.getExecution(id);
+        Execution execution = executionFacade.getExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         response.setHeader("Content-Type", "application/json");
-        executionFacade.writeOverview(execution,
-                response.getOutputStream());
+        executionFacade.writeOverview(
+                execution, response.getOutputStream());
     }
 
 }
