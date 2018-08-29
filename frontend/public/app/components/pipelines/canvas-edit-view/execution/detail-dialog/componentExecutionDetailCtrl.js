@@ -29,7 +29,7 @@ define([], function () {
             $scope.label = jsonld.getString(component,
                 'http://www.w3.org/2004/02/skos/core#prefLabel');
             if (execution === undefined) {
-                handleMissing();
+                handleMissing($scope);
                 return;
             }
             $scope.execution = execution;
@@ -68,7 +68,7 @@ define([], function () {
         updateFailMessage(scope, execution);
     }
 
-    function handleMissing(scope, execution) {
+    function handleMissing(scope) {
         scope.start = '-';
         scope.end = '-';
         scope.duration = '-';
