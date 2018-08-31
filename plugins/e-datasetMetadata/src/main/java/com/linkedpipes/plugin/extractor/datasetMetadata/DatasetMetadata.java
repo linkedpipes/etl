@@ -134,7 +134,8 @@ public class DatasetMetadata implements Component, SequentialExecution {
             final IRI publisher = valueFactory.createIRI(configuration.getPublisherURI());
             statements.add(valueFactory.createStatement(publisher, RDF.TYPE, FOAF.AGENT));
             if (!isBlank(configuration.getPublisherName())) {
-                statements.add(valueFactory.createStatement(publisher, FOAF.NAME, configuration.getPublisherName()));
+                statements.add(valueFactory.createStatement(publisher, FOAF.NAME, 
+                                  valueFactory.createLiteral(configuration.getPublisherName())));
             }
             statements.add(valueFactory.createStatement(dataset, DCTERMS.PUBLISHER, publisher));
         }
