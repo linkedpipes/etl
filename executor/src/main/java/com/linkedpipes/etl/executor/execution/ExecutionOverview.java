@@ -1,16 +1,16 @@
-package com.linkedpipes.etl.executor.execution.model;
+package com.linkedpipes.etl.executor.execution;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
-import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfFormatter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
 import java.util.Date;
 
-public class ExecutionOverviewModel {
+public class ExecutionOverview {
 
     private final String executionIri;
 
@@ -31,8 +31,8 @@ public class ExecutionOverviewModel {
 
     private String lastChange;
 
-    public ExecutionOverviewModel(String executionIri,
-            ExecutionStatusMonitor statusMonitor) {
+    public ExecutionOverview(
+            String executionIri, ExecutionStatusMonitor statusMonitor) {
         onBeforeUpdate();
         this.executionIri = executionIri;
         this.statusMonitor = statusMonitor;
@@ -47,7 +47,7 @@ public class ExecutionOverviewModel {
         onBeforeUpdate();
         pipelineIri = pipeline.getIri();
         numberOfComponentsToExecute = 0;
-        for (Component component : pipeline.getComponents()) {
+        for (PipelineComponent component : pipeline.getComponents()) {
             if (component.shouldExecute()) {
                 ++numberOfComponentsToExecute;
             }

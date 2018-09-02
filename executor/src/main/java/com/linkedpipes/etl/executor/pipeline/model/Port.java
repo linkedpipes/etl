@@ -17,7 +17,7 @@ public class Port implements Loadable {
 
     private final String iri;
 
-    private final Component owner;
+    private final PipelineComponent owner;
 
     private final List<String> types = new ArrayList<>(3);
 
@@ -27,7 +27,7 @@ public class Port implements Loadable {
 
     private boolean saveDebugData;
 
-    public Port(String iri, Component component) {
+    public Port(String iri, PipelineComponent component) {
         this.iri = iri;
         this.owner = component;
     }

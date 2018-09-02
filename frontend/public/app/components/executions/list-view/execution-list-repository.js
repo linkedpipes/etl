@@ -112,7 +112,11 @@
         item["progress"]["value"] = getProgressValue(item["progress"]);
         updateExecutionStatus(item);
         updateExecutionMetadata(item);
-        item["searchLabel"] = item["label"].toLowerCase();
+        if (item["label"]) {
+            item["searchLabel"] = item["label"].toLowerCase();
+        } else {
+            item["searchLabel"] = item["iri"].toLowerCase();
+        }
         item["filterLabel"] = true;
     }
 
@@ -319,7 +323,7 @@
             const builder = jsonLdSource.createBuilder();
             builder.url("/resources/executions");
             builder.itemType(LP.EXECUTION);
-            builder.tombstoneType(LP.DELETED);
+            builder.tombstoneType(LP.TOMBSTONE);
             builder.itemTemplate(REPOSITORY_TEMPLATE);
             builder.supportIncrementalUpdate();
             return repositoryService.createWithInfiniteScroll({

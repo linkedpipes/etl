@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.execution.model;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 
-enum ExecutionStatus {
+public enum ExecutionStatus {
     QUEUED(LP_EXEC.STATUS_QUEUED),
     RUNNING(LP_EXEC.STATUS_RUNNING),
     FINISHED(LP_EXEC.STATUS_FINISHED),

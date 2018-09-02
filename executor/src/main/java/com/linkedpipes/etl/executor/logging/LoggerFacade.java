@@ -27,15 +27,23 @@ public class LoggerFacade {
 
     private FileAppender debugAppender = null;
 
-    public void prepareAppendersForExecution(File debugLogFile) {
+    private FileAppender infoAppender = null;
+
+    public void prepareAppendersForExecution(
+            File debugLogFile, File infoLogFile) {
         destroyExecutionAppenders();
         debugAppender = createExecutionAppender(debugLogFile, "DEBUG");
+        infoAppender = createExecutionAppender(infoLogFile, "INFO");
     }
 
     public void destroyExecutionAppenders() {
         if (debugAppender != null) {
             destroyAppender(debugAppender);
             debugAppender = null;
+        }
+        if (infoAppender != null) {
+            destroyAppender(infoAppender);
+            infoAppender = null;
         }
     }
 
@@ -135,6 +143,5 @@ public class LoggerFacade {
         // pattern initialized which is done in rollingPolicy.start();
         triggeringPolicy.start();
     }
-
 
 }

@@ -30,6 +30,12 @@
             <version>${lp.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>rdf-utils-rdf4j</artifactId>
+            <version>${lp.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- FTP server -->
         <dependency>
             <groupId>org.apache.ftpserver</groupId>

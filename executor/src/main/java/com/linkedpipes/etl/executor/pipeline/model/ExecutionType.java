@@ -11,7 +11,7 @@ public enum ExecutionType {
      */
     SKIP,
     /**
-     * Component is mapped, so it's not executed
+     * PipelineComponent is mapped, so it's not executed
      * only the data units are loaded.
      */
     MAP

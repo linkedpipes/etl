@@ -7,9 +7,6 @@ import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
  */
 class SkipComponent implements ComponentExecutor {
 
-    public SkipComponent() {
-    }
-
     @Override
     public boolean execute(DataUnitManager dataUnitManager) {
         return true;

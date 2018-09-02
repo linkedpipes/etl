@@ -74,6 +74,13 @@ router.get("/:id/logs-tail", (req, res) => {
     pipeGet(uri, res);
 });
 
+router.get("/:id/messages/component", (req, res) => {
+    const uri =
+        monitorApiUrl + "/" + req.params["id"] +
+        "/messages/component?iri=" +  encodeURIComponent(req.query["iri"]);
+    pipeGet(uri, res);
+});
+
 router.post('', (req, res) => {
     executionFactory.create(req, res);
 });

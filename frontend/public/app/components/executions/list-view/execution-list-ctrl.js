@@ -38,7 +38,7 @@
         function initialize() {
             $lpScrollWatch.updateReference();
             service.load();
-            $refresh.set(service.update);
+            $refresh.add("exec-list", service.update);
         }
 
         angular.element(initialize);

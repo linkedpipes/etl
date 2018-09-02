@@ -1,24 +1,39 @@
-define([], function () {
+((definition) => {
+    if (typeof define === "function" && define.amd) {
+        define(["./component-execution-service"], definition);
+    }
+})((_service) => {
+    "use strict";
 
-    function statusToMessage(status) {
-        switch (status) {
-            case 'http://etl.linkedpipes.com/resources/status/queued':
-                return 'Waiting to be executed';
-            case 'http://etl.linkedpipes.com/resources/status/initializing':
-            case 'http://etl.linkedpipes.com/resources/status/running':
-                return 'Running';
-            case 'http://etl.linkedpipes.com/resources/status/finished':
-                return 'Finished';
-            case 'http://etl.linkedpipes.com/resources/status/mapped':
-                return 'Was executed in other execution';
-            case 'http://etl.linkedpipes.com/resources/status/failed':
-                return 'Failed';
-            default:
-                return 'Unknown';
-        }
+    function controller(
+        $scope, $mdDialog, $service, component, execution, iri) {
+
+        $service.initialize($scope, $mdDialog, component, execution, iri);
+
+        $scope.onCancel = $service.onCancel;
+
     }
 
-    function controller($scope, $mdDialog, jsonLdService, component, execution) {
+    controller.$inject = [
+        "$scope", "$mdDialog", "components.component.execution.service",
+        "component", "execution", "executionIri"];
+
+    let initialized = false;
+    return function init(app) {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
+        _service(app);
+        app.controller("components.component.execution.dialog", controller);
+    }
+});
+
+
+function A() {
+    function controller(
+        $scope, $mdDialog, jsonLdService,
+        component, execution, ) {
         var jsonld = jsonLdService.jsonld();
 
         $scope.onCancel = function () {
@@ -80,50 +95,51 @@ define([], function () {
         scope.start = '-';
         scope.end = '-';
         scope.duration = '-';
-        scope.status = 'Waiting to be executed';
     }
 
     function handleInitializing(scope, execution) {
         scope.start = new Date(execution.start);
         scope.end = '-';
         scope.duration = '-';
-        scope.status = 'Initializing';
     }
 
     function handleRunning(scope, execution) {
         scope.start = new Date(execution.start);
         scope.end = '-';
         scope.duration = '-';
-        scope.status = 'Running';
+
     }
 
     function handleFinished(scope, execution) {
         scope.start = execution.start;
         scope.end = execution.end;
         scope.duration = new Date(scope.end) - new Date(scope.start);
-        scope.status = 'Finished';
     }
 
     function handleMapped(scope, execution) {
         scope.start = '-';
         scope.end = '-';
         scope.duration = '-';
-        scope.status = 'Was executed in other execution';
+
     }
 
     function handleFailed(scope, execution) {
         scope.start = execution.start;
         scope.end = execution.end;
         scope.duration = new Date(scope.end) - new Date(scope.start);
-        scope.status = 'Failed';
+
     }
 
     function handleUnknown(scope) {
         scope.start = '-';
         scope.end = '-';
         scope.duration = '-';
-        scope.status = 'Unknown';
+
     }
+
+
+
+
 
     function updateFailMessage(scope, execution) {
         if (execution.failed !== undefined) {
@@ -140,6 +156,6 @@ define([], function () {
         app.controller('components.component.execution.dialog', controller);
     };
 
-});
+};
 
 

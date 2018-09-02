@@ -303,7 +303,7 @@ define([
             .then(function () {
                 console.timeEnd('pipelineCanvasCtrl.loadData');
                 // Initialize refresh here.
-                refreshService.set(function update() {
+                refreshService.add("ppl-canvas", function update() {
                     if (data.execution.update) {
                         loadExecution();
                     }

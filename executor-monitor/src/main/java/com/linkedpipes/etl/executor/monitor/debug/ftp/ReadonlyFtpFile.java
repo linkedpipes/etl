@@ -43,7 +43,7 @@ class ReadonlyFtpFile extends NativeFtpFile {
     }
 
     @Override
-    public boolean move(FtpFile dest) {
+    public boolean move(FtpFile destination) {
         return false;
     }
 

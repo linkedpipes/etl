@@ -112,13 +112,14 @@ define([
         // Show dialog with detail.
         this.$mdDialog.show({
             'controller': 'components.component.execution.dialog',
-            'templateUrl': 'app/components/pipelines/canvas-edit-view/execution/detail-dialog/componentExecutionDetailView.html',
+            'templateUrl': 'app/components/pipelines/canvas-edit-view/execution/detail-dialog/component-execution-view.html',
             'hasBackdrop': false,
             'clickOutsideToClose': true,
             'fullscreen': false,
             'locals': {
                 'component': component,
-                'execution': componentExec
+                'execution': componentExec,
+                'executionIri' : this.execution.getIri()
             }
         });
     };

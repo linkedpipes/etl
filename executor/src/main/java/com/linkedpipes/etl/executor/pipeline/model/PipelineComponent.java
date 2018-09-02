@@ -12,9 +12,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Component in a pipeline.
+ * PipelineComponent in a pipeline.
  */
-public class Component implements Loadable {
+public class PipelineComponent implements Loadable {
 
     private final String iri;
 
@@ -32,7 +32,9 @@ public class Component implements Loadable {
 
     private ConfigurationDescription configurationDescription;
 
-    public Component(String iri) {
+    private String execution;
+
+    public PipelineComponent(String iri) {
         this.iri = iri;
     }
 
@@ -128,6 +130,9 @@ public class Component implements Loadable {
                 configurationDescription =
                         new ConfigurationDescription(object.asString());
                 return configurationDescription;
+            case LP_EXEC.HAS_EXECUTION:
+                execution = object.asString();
+                return null;
             default:
                 return null;
         }
@@ -166,4 +171,7 @@ public class Component implements Loadable {
         configurationDescription.check();
     }
 
+    public String getExecution() {
+        return execution;
+    }
 }

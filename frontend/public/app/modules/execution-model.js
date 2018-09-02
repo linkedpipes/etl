@@ -113,11 +113,7 @@
     }
 
     function hasExecutionWorkingData() {
-        if (this.data.execution.deleteWorkingData === true) {
-            return false;
-        } else {
-            return true;
-        }
+        return this.data.execution.deleteWorkingData !== true;
     }
 
     function getDataUnit(component, bindingName) {

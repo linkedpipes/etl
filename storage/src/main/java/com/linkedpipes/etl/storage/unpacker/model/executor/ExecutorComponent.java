@@ -35,6 +35,11 @@ public class ExecutorComponent {
 
     private Integer executionOrder = -1;
 
+    /**
+     * Execution that is component is mapped from.
+     */
+    private String execution;
+
     public void write(BackendTripleWriter writer) {
         writeSharedInfo(writer);
         switch (executionType) {
@@ -77,6 +82,7 @@ public class ExecutorComponent {
     }
 
     private void writeMapped(BackendTripleWriter writer) {
+        writer.iri(iri, LP_EXEC.HAS_EXECUTION, execution);
         for (ExecutorPort port : ports) {
             writer.iri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
             port.write(writer);
@@ -142,4 +148,9 @@ public class ExecutorComponent {
     public String getExecutionType() {
         return executionType;
     }
+
+    public void setExecution(String execution) {
+        this.execution = execution;
+    }
+
 }

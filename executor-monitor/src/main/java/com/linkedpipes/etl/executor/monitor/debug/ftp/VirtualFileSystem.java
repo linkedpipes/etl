@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.debug.ftp;
 
+import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
@@ -44,10 +45,10 @@ public class VirtualFileSystem {
 
         private final DebugData execution;
 
-        private final DebugData.DataUnit dataUnit;
+        private final DataUnit dataUnit;
 
         private Path(String ftpPath, boolean synthetic, File path,
-                DebugData execution, DebugData.DataUnit dataUnit) {
+                DebugData execution, DataUnit dataUnit) {
             this.ftpPath = ftpPath;
             this.synthetic = synthetic;
             this.path = path;
@@ -119,7 +120,7 @@ public class VirtualFileSystem {
         @Override
         public List<FtpFile> listFiles() {
             final List<FtpFile> result = new ArrayList<>();
-            for (DebugData.DataUnit dataUnit
+            for (DataUnit dataUnit
                     : execution.getDataUnits().values()) {
                 result.add(new DataUnitDirectory(execution, dataUnit,
                         ftpPath + "/" + dataUnit.getDebugName()));
@@ -136,9 +137,9 @@ public class VirtualFileSystem {
 
     private class DataUnitDirectory extends AbstractFtpDirectory {
 
-        private final DebugData.DataUnit dataUnit;
+        private final DataUnit dataUnit;
 
-        DataUnitDirectory(DebugData debugData, DebugData.DataUnit dataUnit,
+        DataUnitDirectory(DebugData debugData, DataUnit dataUnit,
                 String ftpPath) {
             super(ftpPath);
             this.dataUnit = dataUnit;
@@ -216,7 +217,7 @@ public class VirtualFileSystem {
                     null);
         }
         // Search for data unit.
-        final DebugData.DataUnit dataUnit
+        final DataUnit dataUnit
                 = execution.getDebugData().getDataUnits().get(
                 parsedPath.removeFirst());
         if (dataUnit == null) {

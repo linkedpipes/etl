@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
@@ -39,16 +39,16 @@ public class Configuration {
      * used. Given runtimeSource is not shut down in this method.
      *
      * @param iri Output configuration iri.
-     * @param component Component for which prepare the configuration.
+     * @param component PipelineComponent for which prepare the configuration.
      * @param runtimeSource Source for runtime configuration, can be null.
      * @param runtimeGraph Graph with runtime configuration, can be null.
      * @param writer Writer for the final configuration.
      * @param pipeline Pipeline with definitions.
      */
     public static void prepareConfiguration(String iri,
-            Component component, BackendRdfSource runtimeSource,
-            String runtimeGraph, BackendTripleWriter writer,
-            Pipeline pipeline)
+                                            PipelineComponent component, BackendRdfSource runtimeSource,
+                                            String runtimeGraph, BackendTripleWriter writer,
+                                            Pipeline pipeline)
             throws ExecutorException {
         final List<EntityReference> references = new ArrayList<>(3);
         final ConfigurationDescription description =

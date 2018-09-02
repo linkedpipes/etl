@@ -1,6 +1,8 @@
-package com.linkedpipes.etl.executor.execution.model;
+package com.linkedpipes.etl.executor.execution;
 
-public class ExecutionStatusMonitor {
+import com.linkedpipes.etl.executor.execution.model.ExecutionStatus;
+
+class ExecutionStatusMonitor {
 
     private ExecutionStatus status = ExecutionStatus.QUEUED;
 
@@ -79,6 +81,14 @@ public class ExecutionStatusMonitor {
 
     public void onComponentsExecutionBegin() {
         status = ExecutionStatus.RUNNING;
+    }
+
+    public void onCantSaveComponentMessages() {
+        failed = true;
+    }
+
+    public boolean isExecutionSuccessful() {
+        return !this.failed;
     }
 
 }

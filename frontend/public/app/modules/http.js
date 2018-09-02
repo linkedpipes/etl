@@ -12,50 +12,57 @@
     "use strict";
 
     function getJsonLd(url) {
-        return fetch(url, {
-            "method": "GET",
-            "headers": {
-                "Accept": "application/ld+json"
-            },
-            "credentials": "same-origin"
-        }).catch(failureToResponse).then(json);
+        return get(url, {"headers": {"Accept": "application/ld+json"},})
+            .catch(onFetchFailed)
+            .then(asJson);
     }
 
-    function json(response) {
-        return response.json().catch(() => {
-            return Promise.reject({
-                "error": "parsing"
-            })
-        }).then((data) => {
-            if (response.ok) {
-                return {
-                    "status": response.status,
-                    "json": data
-                }
-            } else {
-                return Promise.reject({
-                    "error": "server",
-                    "status": response.status,
-                    "json": data
-                });
-            }
+    function get(url, options) {
+        if (options === undefined) {
+            options = {};
+        }
+        return fetch(url, {
+            "method": "GET",
+            "credentials": "same-origin",
+            ...options
         });
     }
 
-    function failureToResponse(error) {
+    function onFetchFailed(error) {
         console.log("Fetch request failed:", error);
         return Promise.reject({
             "error": "offline"
         })
     }
 
-    function getJson(url) {
-        return fetch(url, {
-            "method": "GET",
-            "credentials": "same-origin"
-        }).then(json)
-            .catch(failureToResponse);
+    function asJson(response) {
+        return response.json().catch(() => {
+            return Promise.reject({
+                "status": response.status,
+                "error": "parsing"
+            })
+        }).then((data) => {
+            if (response.ok) {
+                return {
+                    "status": response.status,
+                    "payload": data
+                }
+            } else {
+                return Promise.reject({
+                    "error": "server",
+                    "status": response.status,
+                    "payload": data
+                });
+            }
+        });
     }
+
+    function getJson(url) {
+        return get(url)
+            .then(asJson)
+            .catch(onFetchFailed);
+    }
+
 
     function postJson(url, body) {
         return fetch(url, {
@@ -66,8 +73,8 @@
                 "Content-Type": "application/json"
             },
             "credentials": "same-origin"
-        }).then(json)
-            .catch(failureToResponse);
+        }).then(asJson)
+            .catch(onFetchFailed);
     }
 
     function deleteRequest(url) {

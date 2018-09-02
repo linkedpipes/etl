@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
-import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.Connection;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
@@ -31,7 +31,7 @@ public class PipelineTest {
         Assert.assertEquals(2, model.getComponents().size());
         Assert.assertEquals(1, model.getConnections().size());
         //
-        final Component component1 =
+        final PipelineComponent component1 =
                 model.getComponents().get(0);
         Assert.assertEquals("http://pipeline/component/1",
                 component1.getIri());
@@ -44,7 +44,7 @@ public class PipelineTest {
         Assert.assertEquals(2,
                 component1.getPorts().size());
         //
-        final Component component2 =
+        final PipelineComponent component2 =
                 model.getComponents().get(1);
         Assert.assertEquals("http://pipeline/component/2",
                 component2.getIri());

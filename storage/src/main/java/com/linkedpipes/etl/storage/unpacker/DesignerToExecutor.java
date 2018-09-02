@@ -189,6 +189,15 @@ public class DesignerToExecutor {
         ExecutorComponent targetComponent =
                 target.getComponent(mapping.getTarget());
         targetComponent.setExecutionType(LP_EXEC.TYPE_MAPPED);
+
+        if (sourceComponent.getExecution() != null) {
+            // The execution IRI can be from another execution.
+            targetComponent.setExecution(sourceComponent.getExecution());
+        } else {
+            // This component is mapped for the first time.
+            targetComponent.setExecution(executionMapping.getExecution());
+        }
+
         for (ExecutorPort targetPort : targetComponent.getPorts()) {
             mapPort(sourceComponent, targetPort, executionMapping);
         }
