@@ -60,7 +60,7 @@ public class ExecutionFacade {
     }
 
     public File getExecutionLogFile(Execution execution) {
-        return new File(execution.getDirectory(), "log/execution.log");
+        return new File(execution.getDirectory(), "log/execution-debug.log");
     }
 
     public Statements getExecutionStatements(Execution execution)
