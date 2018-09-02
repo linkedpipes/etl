@@ -11,9 +11,9 @@ import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.module.ModuleException;
-import com.linkedpipes.etl.executor.module.ModuleFacade;
-import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
+import com.linkedpipes.etl.executor.module.ModuleService;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class PipelineExecutor {
 
     private final LoggerFacade loggerFacade = new LoggerFacade();
 
-    private final ModuleFacade moduleFacade;
+    private final ModuleService moduleFacade;
 
     private Pipeline pipeline;
 
@@ -58,7 +58,7 @@ public class PipelineExecutor {
      * @param iri ExecutionObserver IRI.
      * @param modules
      */
-    public PipelineExecutor(File directory, String iri, ModuleFacade modules) {
+    public PipelineExecutor(File directory, String iri, ModuleService modules) {
         // We assume that the directory we are executing is in the
         // directory with other executions.
         MDC.put(LoggerFacade.EXECUTION_MDC, null);

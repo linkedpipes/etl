@@ -32,13 +32,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
+public class ModuleService implements ApplicationListener<ApplicationEvent> {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(ModuleFacade.class);
+            LoggerFactory.getLogger(ModuleService.class);
 
     private static final String EXPORT_PACKAGE_LIST = ""
             + "" // javax additional - FIND BUNDLE WITH THIS !
@@ -90,91 +91,115 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
     private AbstractApplicationContext springContext;
 
     @Autowired
-    public ModuleFacade(Configuration configuration,
+    public ModuleService(
+            Configuration configuration,
             AbstractApplicationContext appContext) {
         this.configuration = configuration;
         this.springContext = appContext;
     }
 
-    /**
-     * Collection of all loaded execution listeners.
-     *
-     * @return
-     */
     public Collection<PipelineExecutionObserver> getPipelineListeners()
             throws ModuleException {
         return getServices(PipelineExecutionObserver.class);
     }
 
-    /**
-     * Create and return component that matches given specification.
-     *
-     * @param pipeline
-     * @param component
-     * @return Never null.
-     */
     public ManageableComponent getComponent(Pipeline pipeline, String component)
             throws ModuleException {
-        // If custom ComponentFactory should be used, put here
-        // similar code as for getDataUnit.
-        final String jar;
+        String jar = getComponentJar(pipeline, component);
+        BundleContext componentContext = getBundle(jar).getBundleContext();
+        ManageableComponent manageableComponent;
+        RdfSourceWrap source = wrapPipeline(pipeline);
+        DefaultComponentFactory factory = new DefaultComponentFactory();
         try {
-            jar = RdfUtils.sparqlSelectSingle(pipeline.getSource(),
-                    getJarPathQuery(component, pipeline.getPipelineGraph()),
-                    "jar");
-        } catch (RdfUtilsException ex) {
-            throw new ModuleException("Can't load component jar path.", ex);
-        }
-        // Check if the JAR IRI is not banned.
-        for (final String pattern : configuration.getBannedJarPatterns()) {
-            if (jar.matches(pattern)) {
-                throw new ModuleException(
-                        "The required component file with IRI: {} , " +
-                                "is banned by the configuration (pattern: {}).",
-                        jar, pattern);
-            }
-        }
-        //
-        final BundleContext componentContext =
-                getBundle(jar).getBundleContext();
-        final DefaultComponentFactory factory = new DefaultComponentFactory();
-        final ManageableComponent manageableComponent;
-        try {
-            manageableComponent = factory.create(component,
-                    pipeline.getPipelineGraph(),
-                    new RdfSourceWrap(
-                            pipeline.getSource(), pipeline.getPipelineGraph()),
-                    componentContext);
+            manageableComponent = factory.create(
+                    component, pipeline.getPipelineGraph(),
+                    source, componentContext);
         } catch (LpException ex) {
-            throw new ModuleException("Can't create component from bundle.",
-                    ex);
+            throw new ModuleException(
+                    "Can't create component from a bundle.", ex);
         }
         if (manageableComponent == null) {
             throw new ModuleException("Can't load bundle: {}", jar);
         }
+        checkIfBundleIsAllowed(jar);
         return manageableComponent;
     }
 
-    /**
-     * Create and return manageable data unit that matches given specification.
-     *
-     * @param pipeline
-     * @param subject
-     * @return Does not return null!
-     */
+    private String getComponentJar(Pipeline pipeline, String component)
+            throws ModuleException {
+        String query = getJarPathQuery(component, pipeline.getPipelineGraph());
+        try {
+            return RdfUtils.sparqlSelectSingle(
+                    pipeline.getSource(), query, "jar");
+        } catch (RdfUtilsException ex) {
+            throw new ModuleException("Can't load component jar path.", ex);
+        }
+    }
+
+    private static String getJarPathQuery(String component, String graph) {
+        return "SELECT ?jar WHERE { GRAPH <" + graph + "> { " +
+                " <" + component + "> <" + LP_PIPELINE.HAS_JAR_URL +
+                "> ?jar }}";
+    }
+
+    private Bundle getBundle(String path) throws ModuleException {
+        if (!components.containsKey(path)) {
+            String bundleIri = getBundleIri(path);
+            LOG.info("Loading jar file from: {}", path);
+            Bundle bundle = getComponentBundle(bundleIri);
+            try {
+                bundle.start();
+            } catch (BundleException ex) {
+                throw new ModuleException("Can't start bundle!", ex);
+            }
+            components.put(path, bundle);
+        }
+        return components.get(path);
+    }
+
+    private String getBundleIri(String path) throws ModuleException {
+        try {
+            return configuration.getStorageAddress() +
+                    "/api/v1/jars/file?iri=" + URLEncoder.encode(path, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new ModuleException("Invalid encoding!", ex);
+        }
+    }
+
+    private Bundle getComponentBundle(String iri) throws ModuleException {
+        try {
+            return framework.getBundleContext().installBundle(iri);
+        } catch (BundleException ex) {
+            throw new ModuleException("Can't load bundle!", ex);
+        }
+    }
+
+    private RdfSourceWrap wrapPipeline(Pipeline pipeline) {
+        return new RdfSourceWrap(
+                pipeline.getSource(), pipeline.getPipelineGraph());
+    }
+
+    private void checkIfBundleIsAllowed(String iri) throws ModuleException {
+        for (String pattern : configuration.getBannedJarPatterns()) {
+            if (iri.matches(pattern)) {
+                throw new BannedComponent(iri, pattern);
+            }
+        }
+    }
+
     public ManageableDataUnit getDataUnit(Pipeline pipeline, String subject)
             throws ModuleException {
+        RdfSourceWrap source = wrapPipeline(pipeline);
         for (DataUnitFactory factory : getServices(DataUnitFactory.class)) {
             try {
-                final ManageableDataUnit dataUnit = factory.create(
-                        subject, pipeline.getPipelineGraph(),
-                        new RdfSourceWrap(pipeline.getSource(),
-                                pipeline.getPipelineGraph()));
+                ManageableDataUnit dataUnit = factory.create(
+                        subject, pipeline.getPipelineGraph(), source);
                 if (dataUnit != null) {
                     return dataUnit;
                 }
             } catch (LpException ex) {
-                LOG.error("Can't create data unit.", ex);
+                LOG.error("Can't create data unit '{}' with: {}",
+                        subject, factory.getClass().getName(), ex);
             }
         }
         throw new ModuleException(
@@ -194,32 +219,24 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
         }
     }
 
-    /**
-     * @param <T>
-     * @param clazz
-     * @return Services of given interface.
-     */
-    protected <T> Collection<T> getServices(Class<T> clazz)
+    private <T> Collection<T> getServices(Class<T> clazz)
             throws ModuleException {
-        final BundleContext context = framework.getBundleContext();
+        BundleContext context = framework.getBundleContext();
         try {
-            final Collection<ServiceReference<T>> references
-                    = context.getServiceReferences(clazz, null);
-            final List<T> serviceList = new ArrayList<>(references.size());
-            for (ServiceReference<T> reference : references) {
-                serviceList.add(context.getService(reference));
-            }
-            return serviceList;
+            return context.getServiceReferences(clazz, null)
+                    .stream()
+                    .map(reference -> context.getService(reference))
+                    .collect(Collectors.toList());
         } catch (InvalidSyntaxException ex) {
             throw new ModuleException("Can't get service list!", ex);
         }
     }
 
-    protected void start() {
-        final FrameworkFactory frameworkFactory
+    private void start() {
+        FrameworkFactory frameworkFactory
                 = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 
-        final Map<String, String> config = new HashMap<>();
+        Map<String, String> config = new HashMap<>();
         config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
                 EXPORT_PACKAGE_LIST);
         config.put(Constants.FRAMEWORK_STORAGE,
@@ -234,14 +251,18 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
             springContext.stop();
             throw new RuntimeException("Can't start framework!", ex);
         }
-        final BundleContext context = framework.getBundleContext();
-        // Load libraries.
+
+        loadLibraries();
+    }
+
+    private void loadLibraries() {
+        BundleContext context = framework.getBundleContext();
         scanDirectory(configuration.getOsgiLibDirectory(), (file) -> {
             if (file.getPath().endsWith(".jar")) {
                 LOG.info("Loading: {}", file);
                 try {
-                    libraries.add(context.installBundle(
-                            file.toURI().toString()));
+                    String path = file.toURI().toString();
+                    libraries.add(context.installBundle(path));
                 } catch (BundleException ex) {
                     LOG.error("Can't load bundle: {}", file, ex);
                     springContext.stop();
@@ -249,42 +270,11 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
                 }
             }
         });
-        // Start library bundles.
-        libraries.forEach((bundle) -> {
-            try {
-                bundle.start();
-            } catch (BundleException ex) {
-                LOG.error("Can't start bundle: {}",
-                        bundle.getSymbolicName(), ex);
-                springContext.stop();
-                throw new RuntimeException("Can not start bundle, see logs for more details.");
-            }
-        });
+        // Start bundles.
+        libraries.forEach((bundle) -> startBundle(bundle));
     }
 
-    protected void stop() {
-        LOG.debug("Closing ...");
-        if (framework != null) {
-            try {
-                framework.stop();
-                framework.waitForStop(0);
-            } catch (BundleException ex) {
-                LOG.error("Can't stop OSGI framework.", ex);
-            } catch (InterruptedException ex) {
-                LOG.error("Interrupted when waiting for framework to closeRepository.",
-                        ex);
-            }
-        }
-        LOG.debug("Closing ... done");
-    }
-
-    /**
-     * Recursively list files in given directory and it's subdirectories.
-     *
-     * @param root
-     * @param consumer
-     */
-    protected void scanDirectory(File root, Consumer<File> consumer) {
+    private void scanDirectory(File root, Consumer<File> consumer) {
         if (root.listFiles() == null) {
             return;
         }
@@ -297,42 +287,35 @@ public class ModuleFacade implements ApplicationListener<ApplicationEvent> {
         }
     }
 
-    protected static String getJarPathQuery(String component, String graph) {
-        return "SELECT ?jar WHERE { GRAPH <" + graph + "> { " +
-                " <" + component + "> <" + LP_PIPELINE.HAS_JAR_URL +
-                "> ?jar }}";
+    private void startBundle(Bundle bundle) {
+        try {
+            bundle.start();
+        } catch (BundleException ex) {
+            LOG.error("Can't start bundle: {}", bundle.getSymbolicName(), ex);
+            springContext.stop();
+            throw new RuntimeException(
+                    "Can not start bundle, see logs for more details.");
+        }
     }
 
-    /**
-     * @param path
-     * @return Never null.
-     */
-    protected Bundle getBundle(String path) throws ModuleException {
-        if (!components.containsKey(path)) {
-            // Ask storage component for the component.
-            final String bundleIri;
-            try {
-                bundleIri = configuration.getStorageAddress() +
-                        "/api/v1/jars/file?iri=" +
-                        URLEncoder.encode(path, "UTF-8");
-            } catch (UnsupportedEncodingException ex) {
-                throw new ModuleException("Invalid encoding!", ex);
-            }
-            LOG.info("Loading jar file from: {}", path);
-            final Bundle bundle;
-            try {
-                bundle = framework.getBundleContext().installBundle(bundleIri);
-            } catch (BundleException ex) {
-                throw new ModuleException("Can't load bundle!", ex);
-            }
-            try {
-                bundle.start();
-            } catch (BundleException ex) {
-                throw new ModuleException("Can't start bundle!", ex);
-            }
-            components.put(path, bundle);
+    private void stop() {
+        LOG.debug("Closing ...");
+        if (framework != null) {
+            stopFramework();
         }
-        return components.get(path);
+        LOG.debug("Closing ... done");
     }
+
+    private void stopFramework() {
+        try {
+            framework.stop();
+            framework.waitForStop(0);
+        } catch (BundleException ex) {
+            LOG.error("Can't stop OSGI framework.", ex);
+        } catch (InterruptedException ex) {
+            LOG.error("Interrupted when waiting for framework to stop.", ex);
+        }
+    }
+
 
 }

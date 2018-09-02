@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
-import com.linkedpipes.etl.executor.module.ModuleFacade;
+import com.linkedpipes.etl.executor.module.ModuleService;
 import com.linkedpipes.etl.executor.pipeline.PipelineExecutor;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -25,7 +25,7 @@ import java.io.OutputStream;
 @RequestMapping(value = "/v1/executions")
 class ExecutionServlet {
 
-    private final ModuleFacade modules;
+    private final ModuleService modules;
 
     private final TaskExecutor taskExecutor;
 
@@ -34,7 +34,7 @@ class ExecutionServlet {
     private final Object lock = new Object();
 
     @Autowired
-    public ExecutionServlet(ModuleFacade modules, TaskExecutor taskExecutor) {
+    public ExecutionServlet(ModuleService modules, TaskExecutor taskExecutor) {
         this.modules = modules;
         this.taskExecutor = taskExecutor;
     }

@@ -7,7 +7,7 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
-import com.linkedpipes.etl.executor.module.ModuleFacade;
+import com.linkedpipes.etl.executor.module.ModuleService;
 import org.apache.commons.io.FileUtils;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -67,7 +67,7 @@ public class PipelineExecutorTest {
         Files.copy(file.toPath(),
                 (new File(directory, "definition/definition.trig")).toPath());
         //
-        final ModuleFacade moduleFacade = Mockito.mock(ModuleFacade.class);
+        final ModuleService moduleFacade = Mockito.mock(ModuleService.class);
         Mockito.when(moduleFacade.getComponent(Mockito.any(),
                 Mockito.eq("http://pipeline/component/1")))
                 .thenReturn(new DummyComponent());
