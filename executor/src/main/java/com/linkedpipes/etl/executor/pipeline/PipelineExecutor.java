@@ -10,6 +10,7 @@ import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
+import com.linkedpipes.etl.executor.module.BannedComponent;
 import com.linkedpipes.etl.executor.module.ModuleException;
 import com.linkedpipes.etl.executor.module.ModuleService;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
@@ -208,21 +209,31 @@ public class PipelineExecutor {
     }
 
     private void loadComponents() throws ExecutorException {
+        boolean loadingFailed = false;
         for (PipelineComponent component :
                 pipeline.getModel().getComponents()) {
             if (!shouldLoadInstanceForComponent(component)) {
                 continue;
             }
-            final ManageableComponent instance;
+            String iri = component.getIri();
+            ManageableComponent instance;
             try {
-                instance = moduleFacade.getComponent(pipeline,
-                        component.getIri());
+                instance = moduleFacade.getComponent(pipeline, iri);
+                componentsInstances.put(component.getIri(), instance);
+            } catch (BannedComponent ex) {
+                execution.onCantLoadComponentJar(
+                        component, new LpException(
+                                "This component is banned on this instance."));
+                LOG.error("Banned component.", ex);
+                loadingFailed = true;
             } catch (ModuleException ex) {
-                throw new ExecutorException(
-                        "Can't bindToPipeline component: {}",
-                        component.getLabel(), ex);
+                execution.onCantLoadComponentJar(component, ex);
+                LOG.error("Can't load component.", ex);
+                loadingFailed = true;
             }
-            componentsInstances.put(component.getIri(), instance);
+        }
+        if (loadingFailed) {
+            throw new ExecutorException("Can't load components.");
         }
     }
 

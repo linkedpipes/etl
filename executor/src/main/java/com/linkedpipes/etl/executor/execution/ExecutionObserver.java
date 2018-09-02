@@ -7,6 +7,7 @@ import com.linkedpipes.etl.executor.execution.message.ComponentMessageWriter;
 import com.linkedpipes.etl.executor.execution.message.ExecutionMessageWriter;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.slf4j.Logger;
@@ -107,7 +108,23 @@ public class ExecutionObserver {
         this.writeOverviewToDisk();
     }
 
-    public void onBeforeComponentExecution(ExecutionComponent component) {
+    public void onCantLoadComponentJar(
+            PipelineComponent pplComponent, LpException ex) {
+        // This is special case as the component is not being executed.
+        ExecutionComponent component = execution.getComponent(pplComponent);
+        createComponentWriter(component);
+
+        this.getComponentWriter(component).onComponentFailed(component, ex);
+
+        this.status.onExecuteComponentFailed();
+        this.information.onComponentFailed(component);
+        this.writeInformationToDisk();
+        this.writeComponentMessagesToDisk(component);
+
+        removeComponentWriter(component);
+    }
+
+    private void createComponentWriter(ExecutionComponent component) {
         ComponentMessageWriter writer = new ComponentMessageWriter(
                 this.execution.getIri(),
                 this.messageCounter,
@@ -115,10 +132,18 @@ public class ExecutionObserver {
         this.componentMessages.put(component, writer);
     }
 
+    private void removeComponentWriter(ExecutionComponent component) {
+        this.componentMessages.remove(component);
+    }
+
+    public void onBeforeComponentExecution(ExecutionComponent component) {
+        createComponentWriter(component);
+    }
+
     public void onAfterComponentExecution(
             ExecutionComponent component) throws IOException {
         this.getComponentWriter(component).save();
-        this.componentMessages.remove(component);
+        removeComponentWriter(component);
     }
 
     private ComponentMessageWriter getComponentWriter(
