@@ -1,0 +1,99 @@
+---
+short: x-httprequest
+type: other
+color: pink
+title: HTTP Request
+description: Issues a set of arbitrary HTTP requests according to configuration.
+---
+
+<p class="flow-text">
+Special purpose component, issues a set of arbitrary HTTP requests according to configuration.
+</p>
+<dl class="flow-text">
+    <dt>Number of threads used for execution</dt>
+    <dd>Number of threads used for execution of the individual tasks. Network operations tend to be slow, so it is advantageous to process them in parallel.</dd>
+    <dt>Threads per group</dt>
+    <dd>For cases where there are multiple tasks aimed e.g. at the same host, this sets the number of threads to be used for a single group (e.g. a single host) as specified in the input tasks.</dd>
+    <dt>Skip on error</dt>
+    <dd>When an HTTP or another error is encountered in one of the tasks, this switch controls whether the execution of the whole pipeline should fail, or whether this is expected and therefore the execution should continue.</dd>
+    <dt>Follow redirects</dt>
+    <dd>Controls whether the component should follow HTTP 30x redirects.</dd>
+    <dt>Encode input URL</dt>
+    <dd>Percent encodes input URLs before using them as URIs in HTTP. Useful for cases where the target web server does not handle IRIs well of the input URLs may contain invalid characters.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Configuration - runtime configuration</dd>
+            <dd>Input - possible files to be sent e.g. using HTTP POST</dd>
+            <dd>Tasks - definition of tasks to be executed</dd>
+            <dt>Outputs</dt>
+            <dd>Output - possibly downloaded files</dd>
+            <dd>Report - report of results from individual tasks, including HTTP response headers</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+            <dt>Sample pipeline</dt>
+            <dd><a href="../assets/pipelines/{{page.short}}-1.jsonld">available</a></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component issues a set of HTTP request.
+		This has a wide range of use cases from checking whether a resource exists using HTTP HEAD to accessing a URL with explicitly defined HTTP headers.
+        </p>
+    </div>
+</div>
+<h3 class="orange-text center">Tasks configuration</h3>
+<p class="flow-text">Below you can see sample tasks configuration for the component.
+You can also import a <a href="../assets/pipelines/{{page.short}}-1.jsonld">sample pipeline</a>.
+The sample executes two HTTP HEAD requests and one HTTP POST request, using which it sends a <code>configuration.jsonld</code> file from Input, and uses HTTP Basic Authentication headers.
+</p>
+{% highlight turtle %}
+@prefix req: <http://plugins.linkedpipes.com/ontology/x-httpRequest#> .
+
+<http://creativecommons.org/licenses/by-sa/3.0/cz/> a req:Task ;
+    req:group "creativecommons.org" ;
+    req:header <http://creativecommons.org/licenses/by-sa/3.0/cz//ua-header> ;
+    req:method "HEAD" ;
+    req:outputHeaders true ;
+    req:url <http://creativecommons.org/licenses/by-sa/3.0/cz/> .
+
+<http://creativecommons.org/licenses/by-sa/3.0/cz//ua-header> a req:Header ;
+    req:name "User-Agent" ;
+    req:value "LinkedPipes-ETL/0.0.0" .
+
+<http://creativecommons.org/licenses/by-sa/4.0/deed.cs> a req:Task ;
+    req:group "creativecommons.org" ;
+    req:header <http://creativecommons.org/licenses/by-sa/4.0/deed.cs/ua-header> ;
+    req:method "HEAD" ;
+    req:outputHeaders true ;
+    req:url <http://creativecommons.org/licenses/by-sa/4.0/deed.cs> .
+
+<http://creativecommons.org/licenses/by-sa/4.0/deed.cs/ua-header> a req:Header ;
+    req:name "User-Agent" ;
+    req:value "LinkedPipes-ETL/0.0.0" .
+
+<http://localhost/query3> a req:Task ;
+    req:content <http://localhost/query3/content> ;
+    req:header <http://localhost/query3/auth> ;
+    req:method "POST" ;
+    req:url "https://demo.etl.linkedpipes.com/resources/executions?pipeline=https://demo.etl.linkedpipes.comz/resources/pipelines/created-1527156775493" .
+
+<http://localhost/query3/auth> a req:Header ;
+    req:name "Authorization" ;
+    req:value "Basic bHQmtMSWx2aDYxTX==" .
+
+<http://localhost/query3/content> a req:Content ;
+    req:fileName "configuration.jsonld" ;
+    req:fileReference "configuration.jsonld" ;
+    req:name "configuration" .
+	
+{% endhighlight %}
+</div>
