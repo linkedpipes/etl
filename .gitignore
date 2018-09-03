@@ -35,3 +35,6 @@ configuration.properties
 # Intellij IDEA
 *.iml
 frontend/data/
+
+# Specific files.
+dependency-reduced-pom.xml
