@@ -2,7 +2,7 @@
 "display": "standalone",
 "scope": "/",
 "name": "LinkedPipes ETL documentation",
-"short_name": "LP-ETL docs",
+"short_name": "LP-ETL doc",
 "description": "Documentation of Extract Transform Load tool for Linked Data",
 "start_url": "/",
 "background_color": "#fff",
@@ -50,5 +50,4 @@
    "type": "image/svg+xml"
   }
  ]
-]
 }
