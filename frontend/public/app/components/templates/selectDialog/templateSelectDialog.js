@@ -24,7 +24,7 @@ define([], function () {
             const componentCore = templateService.getCoreTemplate(component);
             return {
                 "label": component.label,
-                "search": componentCore.search,
+                "search": component.search,
                 "parent": component.isCore ? "" : componentCore.label,
                 "icon": ICONS[componentCore.type],
                 "component": component,
@@ -53,18 +53,11 @@ define([], function () {
             const result = [];
             componentCore.inputs.forEach(function (port) {
                 if (areDataUnitsCompatible(sourcePort.content, port.content)) {
-                    const record = {
-                        "label": component.label,
-                        "search": componentCore.search,
-                        "parent": component.isCore ? "" : componentCore.label,
-                        "icon": ICONS[componentCore.type],
-                        "component": component,
-                        "portBinding": port.binding,
-                        "portLabel": port.label,
-                        "order": designService.getTemplatePriority(
-                            source.id, component.id),
-                        "visible": true
-                    };
+                    const record = transform(component);
+                    record["portBinding"] = port.binding;
+                    record["portLabel"] = port.label;
+                    record["order"] = designService.getTemplatePriority(
+                        source.id, component.id);
                     result.push(record);
                 }
             });
@@ -103,8 +96,11 @@ define([], function () {
             }
             var query = new RegExp(
                 newValue.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), "i");
+            console.log("Query:", query);
             $scope.templates.forEach((template) => {
                 template.visible = query.test(template.search);
+                console.log(template.label, "->", template.search, '->', template.visible);
+
             });
         });
 

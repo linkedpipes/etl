@@ -53,6 +53,7 @@
         }
         setChildren(templateList, maxLineageLength);
         setCoreTemplates(data);
+        setComponentsSearch(templateList);
         data.templateList = templateList;
     }
 
@@ -123,6 +124,14 @@
                 instance._children[i]._coreReference = instance;
             }
         }
+    }
+
+    function setComponentsSearch(templates) {
+        templates.forEach((template) => {
+            const label = template.label;
+            const keywords = template._coreReference.keyword;
+            template.search = (label + "," + keywords.join(",")).toLowerCase();
+        });
     }
 
     return {
