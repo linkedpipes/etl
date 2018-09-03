@@ -15,17 +15,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
         implements GraphListDataUnit, WritableGraphListDataUnit {
 
-    private String graphPrefixIri = null;
+    private String graphPrefixIri;
 
     private final List<IRI> graphs = new LinkedList<>();
 
     public DefaultGraphListDataUnit(String binding, String iri,
-            Repository repository,
-            Collection<String> sources, String baseGraph) {
+                                    Repository repository,
+                                    Collection<String> sources, String baseGraph) {
         super(binding, iri, repository, sources);
         this.graphPrefixIri = baseGraph;
     }
@@ -50,13 +51,13 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
                     directories.size(), directory);
         }
         final File dataDirectory = directories.get(0);
-        loadContentFromTrig(dataDirectory);
+        loadContent(dataDirectory);
     }
 
     @Override
     public void save(File directory) throws LpException {
-        final File dataDirectory = new File(directory, "data");
-        saveContentAsTrig(dataDirectory);
+        File dataDirectory = new File(directory, "data");
+        saveContent(dataDirectory);
         saveDataDirectories(directory, Arrays.asList(dataDirectory));
         saveDebugDirectories(directory, Arrays.asList(dataDirectory));
     }
@@ -79,29 +80,38 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
         }
     }
 
-    private void saveContentAsTrig(File dataDirectory) throws LpException {
+    private void saveContent(File dataDirectory) throws LpException {
         dataDirectory.mkdirs();
-        final File file = new File(dataDirectory, "data.trig");
+        File dataFile = new File(dataDirectory, "data.trig");
         execute((connection) -> {
-            try (FileOutputStream stream = new FileOutputStream(file)) {
-                final RDFWriter writer
-                        = Rio.createWriter(RDFFormat.TRIG, stream);
+            try (FileOutputStream stream = new FileOutputStream(dataFile)) {
+                RDFWriter writer = Rio.createWriter(RDFFormat.TRIG, stream);
                 connection.export(writer, graphs.toArray(new IRI[0]));
             } catch (IOException ex) {
                 throw new LpException("Can't write data to file.", ex);
             }
         });
+        File graphFile = new File(dataDirectory, "graph.json");
+        List<String> graphAsStr = graphs.stream()
+                .map(iri -> iri.stringValue())
+                .collect(Collectors.toList());
+        saveCollectionAsJson(graphFile, graphAsStr);
     }
 
-    private void loadContentFromTrig(File dataDirectory) throws LpException {
+    private void loadContent(File dataDirectory) throws LpException {
+        File dataFile = new File(dataDirectory, "data.trig");
         execute((connection) -> {
             try {
-                connection.add(new File(dataDirectory, "data.trig"),
-                        "http://localhost/base/", RDFFormat.TRIG);
+                connection.add(
+                        dataFile, "http://localhost/base/", RDFFormat.TRIG);
             } catch (IOException ex) {
                 throw new LpException("Can't load data file");
             }
         });
+        File graphFile = new File(dataDirectory, "graph.json");
+        graphs.addAll(loadCollectionFromJson(graphFile, String.class).stream()
+                .map(str -> VF.createIRI(str))
+                .collect(Collectors.toList()));
     }
 
 }

@@ -84,7 +84,7 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
         return pathsAsFiles(directoriesAsString, directory);
     }
 
-    private static <T> Collection<T> loadCollectionFromJson(
+    protected static <T> Collection<T> loadCollectionFromJson(
             File file, Class<T> type) throws LpException {
         ObjectMapper mapper = new ObjectMapper();
         TypeFactory typeFactory = mapper.getTypeFactory();
@@ -116,7 +116,7 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
                 directoriesAsString);
     }
 
-    private static void saveCollectionAsJson(
+    protected static void saveCollectionAsJson(
             File file, Collection<String> collection) throws LpException {
         final ObjectMapper mapper = new ObjectMapper();
         file.getParentFile().mkdirs();
