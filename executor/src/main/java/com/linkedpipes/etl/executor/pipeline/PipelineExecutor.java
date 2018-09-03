@@ -304,9 +304,8 @@ public class PipelineExecutor {
         if (dataUnitManager != null) {
             dataUnitManager.close();
         }
-        execution.onExecutionEnd();
-        execution.close();
         pipeline.closeRepository();
+        execution.onExecutionEnd();
         loggerFacade.destroyExecutionAppenders();
         afterExecutionCleanUp();
     }

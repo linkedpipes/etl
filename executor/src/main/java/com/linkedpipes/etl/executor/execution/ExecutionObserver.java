@@ -65,15 +65,6 @@ public class ExecutionObserver {
         return overview;
     }
 
-    public void close() {
-        this.writeOverviewToDisk();
-        this.writePipelineMessagesToDisk();
-        this.writeInformationToDisk();
-        if (!this.componentMessages.isEmpty()) {
-            LOG.error("Some components were not closed.");
-        }
-    }
-
     private void writeOverviewToDisk() {
         ObjectMapper objectMapper = new ObjectMapper();
         File file = resourceManager.getOverviewFile();
@@ -307,7 +298,13 @@ public class ExecutionObserver {
         this.pipelineMessages.onExecutionEnd();
         this.status.onExecutionEnd();
         this.overview.onExecutionEnd(new Date());
+        //
+        this.writePipelineMessagesToDisk();
+        this.writeInformationToDisk();
         this.writeOverviewToDisk();
+        if (!this.componentMessages.isEmpty()) {
+            LOG.error("Some components were not closed.");
+        }
     }
 
     public void onCancelRequest() {
