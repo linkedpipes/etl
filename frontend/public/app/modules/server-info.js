@@ -1,4 +1,3 @@
-// TODO Add support for refresh.
 ((definition) => {
     if (typeof define === "function" && define.amd) {
         define(["./http"], definition);
@@ -24,6 +23,9 @@
             cache.data = response.payload;
             cache.ready = true;
             return cache.data;
+        }).catch((error) => {
+            console.error("Can't fetch info file.");
+            throw error;
         });
     }
 
