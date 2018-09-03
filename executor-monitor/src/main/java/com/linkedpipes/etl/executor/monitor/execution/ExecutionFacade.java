@@ -59,8 +59,12 @@ public class ExecutionFacade {
         return messageLoader.loadComponentMessages(execution, component);
     }
 
-    public File getExecutionLogFile(Execution execution) {
+    public File getExecutionDebugLogFile(Execution execution) {
         return new File(execution.getDirectory(), "log/execution-debug.log");
+    }
+
+    public File getExecutionInfoLogFile(Execution execution) {
+        return new File(execution.getDirectory(), "log/execution-info.log");
     }
 
     public Statements getExecutionStatements(Execution execution)

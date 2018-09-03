@@ -137,8 +137,8 @@ public class ExecutionServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
-        File file = this.executionFacade.getExecutionLogFile(execution);
-        if (file == null) {
+        File file = this.executionFacade.getExecutionDebugLogFile(execution);
+        if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
@@ -159,8 +159,8 @@ public class ExecutionServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        File file = this.executionFacade.getExecutionLogFile(execution);
-        if (file == null) {
+        File file = this.executionFacade.getExecutionDebugLogFile(execution);
+        if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
