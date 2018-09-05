@@ -31,7 +31,6 @@ class GetExecutionsHandler {
 
         for (Execution execution : executions) {
             this.writeStatements(execution.getOverviewStatements(), writer);
-            this.writeStatements(execution.getMonitorStatements(), writer);
             this.writeStatements(execution.getPipelineStatements(), writer);
         }
 

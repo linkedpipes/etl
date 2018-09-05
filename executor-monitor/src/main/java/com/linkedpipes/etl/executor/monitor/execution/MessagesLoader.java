@@ -5,7 +5,7 @@ import com.linkedpipes.etl.rdf4j.Statements;
 import java.io.File;
 import java.io.IOException;
 
-public class MessageLoader {
+class MessagesLoader {
 
     public Statements loadComponentMessages(
             Execution execution, String component) throws IOException {
@@ -13,7 +13,7 @@ public class MessageLoader {
         return this.loadMessagesFromFile(execution, name);
     }
 
-    public Statements loadMessagesFromFile(Execution execution, String name)
+    private Statements loadMessagesFromFile(Execution execution, String name)
             throws IOException {
         String fileName = name + ".trig";
         File file = new File(execution.getDirectory(), "messages/" + fileName);

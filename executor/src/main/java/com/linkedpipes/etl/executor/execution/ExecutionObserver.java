@@ -158,7 +158,7 @@ public class ExecutionObserver {
     public void onMapComponentBegin(ExecutionComponent component) {
         LOG.info("onMapComponentBegin : {}",
                 component.getIri());
-        // TODO Replace with special status?
+        this.overview.onComponentBegin();
         this.information.onComponentBegin(component);
         this.getComponentWriter(component).onComponentBegin(component);
         this.writeInformationToDisk();
@@ -187,6 +187,7 @@ public class ExecutionObserver {
     public void onExecuteComponentInitializing(ExecutionComponent component) {
         LOG.info("onExecuteComponentInitializing : {}",
                 component.getIri());
+        this.overview.onComponentBegin();
         this.information.onComponentBegin(component);
         this.getComponentWriter(component).onComponentBegin(component);
         this.writeInformationToDisk();

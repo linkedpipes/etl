@@ -49,7 +49,7 @@ class PostCreateExecutionHandler {
         Statements pipelineRdf = this.readPipeline(pipeline);
         Execution execution = this.executionFacade.createExecution(
                 pipelineRdf, inputs);
-        this.executorService.asynchStartExecutions();
+        this.executorService.asyncStartExecutions();
         return new Response(execution);
     }
 

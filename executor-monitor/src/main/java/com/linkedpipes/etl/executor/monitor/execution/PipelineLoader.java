@@ -44,7 +44,8 @@ class PipelineLoader {
 
         this.execution.setPipeline(this.pipelineResource);
         if (this.pipelineResource == null) {
-            LOG.error("Missing pipeline resource for: {}", execution.getId());
+            LOG.error("Missing pipeline resource for: {}",
+                    this.execution.getId());
             return;
         }
 
@@ -54,7 +55,7 @@ class PipelineLoader {
         output.addAll(this.processPipeline());
         this.selectUsedLabels(pipeline).forEach(output::integrate);
 
-        execution.setPipelineStatements(output);
+        this.execution.setPipelineStatements(output);
     }
 
     private File getPipelineFile() throws MonitorException {

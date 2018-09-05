@@ -5,6 +5,8 @@ import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.executor.Executor;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collection;
@@ -17,19 +19,15 @@ public class Execution {
 
     private File directory;
 
-    /**
-     * Time of last load (reload, check) of this record.
-     */
-    private Date lastCheck = new Date();
+    private JsonNode overviewJson;
 
     /**
-     * Time of last change as provided by the executor.
+     * Last change as set in overview.
      */
-    private Date lastExecutionChange;
+    private Date overviewLastChange;
 
     /**
-     * Time of last update of this execution record. Used to check
-     * whether an execution changed since a given time.
+     * Time of last change of this execution for external API.
      */
     private Date lastChange = new Date();
 
@@ -39,39 +37,26 @@ public class Execution {
      */
     private Date timeToLive;
 
-    /**
-     * Statements for the execution list extracted from and execution graph.
-     */
     private Collection<Statement> overviewStatements = Collections.emptyList();
 
-    /**
-     * Overview in form of json-ld with custom format.
-     */
-    private JsonNode overview;
-
-    /**
-     * Selected statements about the pipeline, like label, keywords etc ...
-     */
     private Collection<Statement> pipelineStatements = Collections.emptyList();
-
-    private Collection<Statement> monitorStatements = Collections.emptyList();
 
     private ExecutionStatus status;
 
-    /**
-     * Store information about execution debug data.
-     */
     private DebugData debugData;
 
-    /**
-     * Executor that is executing this execution.
-     */
     private Executor executor;
 
-    /**
-     * Pipeline resource.
-     */
     private Resource pipeline;
+
+    /**
+     * When execution is updated from a stream, we update only some information.
+     * Still the pipeline status can be updated to finished by that check.
+     * This can result in a situation where pipeline is finished and not
+     * all the information is loaded, for that reason we use this property
+     * to force one more reload although the pipeline is finished.
+     */
+    private boolean hasFinalData = false;
 
     public String getId() {
         return iri.substring(iri.lastIndexOf("/") + 1);
@@ -93,23 +78,12 @@ public class Execution {
         this.directory = directory;
     }
 
-    Date getLastCheck() {
-        return lastCheck;
+    Date getLastChange() {
+        return lastChange;
     }
 
-    void setLastCheck(Date lastCheck) {
-        this.lastCheck = lastCheck;
-    }
-
-    Date getLastExecutionChange() {
-        return lastExecutionChange;
-    }
-
-    void setLastExecutionChange(Date lastExecutionChange) {
-        this.lastExecutionChange = lastExecutionChange;
-        if (lastChange.before(lastExecutionChange)) {
-            this.lastChange = lastExecutionChange;
-        }
+    void setLastChange(Date lastChange) {
+        this.lastChange = lastChange;
     }
 
     Date getTimeToLive() {
@@ -136,22 +110,21 @@ public class Execution {
         this.overviewStatements = overviewStatements;
     }
 
-    JsonNode getOverview() {
-        return overview;
+    JsonNode getOverviewJson() {
+        return overviewJson;
     }
 
-    void setOverview(JsonNode overview) {
-        this.overview = overview;
+    void setOverviewJson(JsonNode overviewJson) {
+        this.overviewJson = overviewJson;
     }
 
     public ExecutionStatus getStatus() {
         return status;
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(Execution.class);
+
     void setStatus(ExecutionStatus status) {
-        if (this.status != status) {
-            this.lastChange = new Date();
-        }
         this.status = status;
     }
 
@@ -175,20 +148,12 @@ public class Execution {
         return this.executor != null;
     }
 
-    Resource getPipeline() {
+    public Resource getPipeline() {
         return pipeline;
     }
 
     void setPipeline(Resource pipeline) {
         this.pipeline = pipeline;
-    }
-
-    public Collection<Statement> getMonitorStatements() {
-        return monitorStatements;
-    }
-
-    void setMonitorStatements(Collection<Statement> monitorStatements) {
-        this.monitorStatements = monitorStatements;
     }
 
     /**
@@ -201,8 +166,24 @@ public class Execution {
     /**
      * @return Name of graph used to store data in execution list.
      */
-    String getListGraph() {
+    public String getListGraph() {
         return this.iri + "/list";
+    }
+
+    public boolean isHasFinalData() {
+        return hasFinalData;
+    }
+
+    void setHasFinalData(boolean hasFinalData) {
+        this.hasFinalData = hasFinalData;
+    }
+
+    public Date getOverviewLastChange() {
+        return overviewLastChange;
+    }
+
+    void setOverviewLastChange(Date overviewLastChange) {
+        this.overviewLastChange = overviewLastChange;
     }
 
 }

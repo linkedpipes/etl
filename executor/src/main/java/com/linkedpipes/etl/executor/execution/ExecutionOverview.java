@@ -38,6 +38,10 @@ public class ExecutionOverview {
         this.statusMonitor = statusMonitor;
     }
 
+    /**
+     * Upon component begin the information about data units is written into
+     * execution, so we need to change tha last change status.
+     */
     public void onExecutionBegin(Date date) {
         onBeforeUpdate();
         pipelineStarted = RdfFormatter.toXsdDate(date);
@@ -54,6 +58,14 @@ public class ExecutionOverview {
         }
     }
 
+    public void onComponentBegin() {
+        onBeforeUpdate();
+    }
+
+    private void onBeforeUpdate() {
+        this.lastChange = RdfFormatter.toXsdDate(new Date());
+    }
+
     public void onComponentExecutionEnd() {
         onBeforeUpdate();
         ++numberOfFinishedComponents;
@@ -66,10 +78,6 @@ public class ExecutionOverview {
     public void onExecutionEnd(Date date) {
         onBeforeUpdate();
         pipelineFinished = RdfFormatter.toXsdDate(date);
-    }
-
-    private void onBeforeUpdate() {
-        this.lastChange = RdfFormatter.toXsdDate(new Date());
     }
 
     public ObjectNode toJsonLd(ObjectMapper mapper) {

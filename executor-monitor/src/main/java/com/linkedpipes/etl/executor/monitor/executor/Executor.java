@@ -2,8 +2,6 @@ package com.linkedpipes.etl.executor.monitor.executor;
 
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 
-import java.util.Date;
-
 /**
  * Represents an instance of an executor.
  */
@@ -17,12 +15,7 @@ public class Executor {
     /**
      * IRI of execution assigned to the executor.
      */
-    private Execution execution;
-
-    /**
-     * Time of last successful check with executor.
-     */
-    private Date lastCheck;
+    private Execution execution = null;
 
     /**
      * True is executor is alive and responsive.
@@ -33,7 +26,7 @@ public class Executor {
         this.address = address;
     }
 
-    public String getAddress() {
+    String getAddress() {
         return address;
     }
 
@@ -45,20 +38,16 @@ public class Executor {
         this.execution = execution;
     }
 
-    public Date getLastCheck() {
-        return lastCheck;
-    }
-
-    void setLastCheck(Date lastCheck) {
-        this.lastCheck = lastCheck;
-    }
-
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 
     void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    boolean isAvailableForNewExecution() {
+        return alive && execution == null;
     }
 
 }

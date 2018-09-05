@@ -1,13 +1,20 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
+import com.linkedpipes.etl.executor.monitor.debug.DebugData;
+import com.linkedpipes.etl.executor.monitor.execution.overview.DeletedOverviewFactory;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
+import com.linkedpipes.etl.executor.monitor.executor.ExecutionSource;
+import com.linkedpipes.etl.rdf4j.Statements;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,84 +27,88 @@ import java.util.*;
  * Responsible for storing information about existing executions.
  */
 @Service
-class ExecutionStorage {
+class ExecutionStorage implements ExecutionSource {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(ExecutionStorage.class);
 
     private final Configuration configuration;
 
-    /**
-     * Keeps active executions.
-     */
     private final List<Execution> executions = new ArrayList<>(64);
 
-    /**
-     * Store directories that need to be deleted.
-     */
     private final List<File> directoriesToDelete = new ArrayList<>(16);
 
+    @Autowired
     public ExecutionStorage(Configuration configuration) {
         this.configuration = configuration;
     }
 
     @PostConstruct
-    public void onInit() {
-        Date updateTime = new Date();
-        MonitorStatements monitorInformation = new MonitorStatements();
+    public void onInit() throws MonitorException {
         File rootDirectory = this.configuration.getWorkingDirectory();
-        for (File directory : rootDirectory.listFiles()) {
-            if (!directory.isDirectory()) {
-                continue;
-            }
-            Execution execution;
-            try {
-                execution = loadFromDirectory(directory);
-            } catch (Exception ex) {
-                LOG.error("Can't load execution from: {}", directory, ex);
-                continue;
-            }
-            // All running pipelines are considered to be DANGLING as
-            // we do not know if their executors are running or not.
-            if (execution.getStatus() == ExecutionStatus.RUNNING) {
-                execution.setStatus(ExecutionStatus.DANGLING);
-                monitorInformation.update(execution);
-            }
-            execution.setLastCheck(updateTime);
-            this.executions.add(execution);
-
+        if (!rootDirectory.isDirectory()) {
+            throw new MonitorException(
+                    "Execution working directory does not exists");
         }
+        Arrays.stream(rootDirectory.listFiles())
+                .filter(file -> file.isDirectory())
+                .forEach(directory -> loadExecutionForFirstTime(directory));
     }
 
-    /**
-     * Load execution from given directory and return it.
-     *
-     * @param directory
-     * @return Null if the directory does not represent a valid execution.
-     */
-    private Execution loadFromDirectory(File directory)
-            throws MonitorException {
+    private Execution loadExecutionForFirstTime(File directory) {
+        Date updateTime = new Date();
+
         Execution execution = new Execution();
         execution.setIri(getExecutionIri(directory));
         execution.setDirectory(directory);
 
         PipelineLoader pipelineLoader = new PipelineLoader(execution);
-        pipelineLoader.loadPipelineIntoExecution();
-
-        OverviewLoader overviewLoader = new OverviewLoader();
-        overviewLoader.loadFromDirectory(execution);
-
-        // There is no execution file for queued executions.
-        if (!ExecutionStatus.QUEUED.equals(execution.getStatus())) {
-            ExecutionLoader executionLoader = new ExecutionLoader();
-            executionLoader.loadFromDirectory(execution);
+        try {
+            pipelineLoader.loadPipelineIntoExecution();
+        } catch (MonitorException ex) {
+            LOG.error("Can't load pipeline for: {}", directory, ex);
+            return null;
         }
 
+        LoadOverview overviewLoader = new LoadOverview();
+        try {
+            overviewLoader.load(execution);
+        } catch (MonitorException ex) {
+            LOG.error("Can't load overview for: {}", directory, ex);
+            return null;
+        }
+
+        if (!ExecutionStatus.QUEUED.equals(execution.getStatus())) {
+            try {
+                updateDebugData(execution);
+            } catch (MonitorException ex) {
+                LOG.error("Can't load debug data for: {}", directory, ex);
+                return null;
+            }
+        }
+
+        // All running pipelines are considered to be DANGLING as
+        // we do not know if their executors are running or not.
+        if (execution.getStatus() == ExecutionStatus.RUNNING) {
+            StatusSetter.setStatus(execution, ExecutionStatus.DANGLING);
+        }
+
+        if (ExecutionStatus.isFinished(execution.getStatus())) {
+            execution.setHasFinalData(true);
+        }
+
+        execution.setLastChange(updateTime);
+        this.executions.add(execution);
         return execution;
     }
 
     private String getExecutionIri(File directory) {
         return this.configuration.getExecutionPrefix() + directory.getName();
+    }
+
+    private void updateDebugData(Execution execution) throws MonitorException {
+        ExecutionLoader executionLoader = new ExecutionLoader();
+        updateExecution(execution, executionLoader.loadStatements(execution));
     }
 
     public List<Execution> getExecutions() {
@@ -116,66 +127,16 @@ class ExecutionStorage {
         return null;
     }
 
-    /**
-     * Check of the execution status from a directory.
-     *
-     * @param execution
-     */
-    public void checkExecutionFromDirectory(Execution execution)
-            throws MonitorException {
-        switch (execution.getStatus()) {
-            case FINISHED:
-            case FAILED:
-            case DELETED:
-                // Do nothing here.
-                break;
-            default:
-                updateFromDirectory(execution);
-                break;
-        }
-    }
-
-    private void updateFromDirectory(Execution execution)
-            throws MonitorException {
-        OverviewLoader overviewLoader = new OverviewLoader();
-        overviewLoader.loadFromDirectory(execution);
-        if (ExecutionStatus.QUEUED == execution.getStatus()) {
-            // Queued executions do not have execution information ready.
-            return;
-        }
-        ExecutionLoader executionLoader = new ExecutionLoader();
-        executionLoader.loadFromDirectory(execution);
-    }
-
-    public void updateFromOverview(Execution execution, InputStream stream)
-            throws MonitorException {
-        OverviewLoader overviewLoader = new OverviewLoader();
-        overviewLoader.loadFromStream(execution, stream);
-    }
-
-    /**
-     * Discover and return execution instance for execution content in the
-     * given stream.
-     * Use to determine the execution based only on the RDF content.
-     */
-    public Execution discover(InputStream stream) throws MonitorException {
-        Execution discovered = new Execution();
-        OverviewLoader overviewLoader = new OverviewLoader();
+    @Override
+    public Execution getExecution(JsonNode overview) {
+        String iri;
         try {
-            overviewLoader.loadFromStream(discovered, stream);
-        } catch (MonitorException ex) {
-            throw new MonitorException("Can't load execution.", ex);
-        }
-        Execution execution = this.findLocalExecution(discovered.getIri());
-        if (execution == null) {
+            iri = OverviewObject.getIri(overview);
+        } catch (Exception ex) {
+            LOG.error("Invalid overview object.", ex);
             return null;
         }
-        this.updateDiscoveredExecution(discovered, execution);
-        return execution;
-    }
-
-    private Execution findLocalExecution(String iri) {
-        for (Execution execution : this.executions) {
+        for (Execution execution : executions) {
             if (execution.getIri().equals(iri)) {
                 return execution;
             }
@@ -183,22 +144,56 @@ class ExecutionStorage {
         return null;
     }
 
-    private void updateDiscoveredExecution(
-            Execution discovered, Execution local) {
-        local.setOverviewStatements(
-                discovered.getOverviewStatements());
-        local.setLastExecutionChange(discovered.getLastExecutionChange());
-        local.setLastCheck(discovered.getLastCheck());
-        // We can change status from queue to running only.
-        if (discovered.getStatus() == ExecutionStatus.RUNNING &&
-                local.getStatus() == ExecutionStatus.QUEUED) {
-            local.setStatus(ExecutionStatus.RUNNING);
+    /**
+     * Perform full execution update from directory.
+     */
+    public void update(Execution execution) {
+        LOG.info("update ...");
+        LoadOverview overviewLoader = new LoadOverview();
+        try {
+            overviewLoader.load(execution);
+        } catch (MonitorException ex) {
+            LOG.error("Can't update execution overview for: {}",
+                    execution.getId(), ex);
         }
+        if (ExecutionStatus.QUEUED == execution.getStatus()) {
+            // There is nothing more then the overview.
+            return;
+        }
+        try {
+            updateDebugData(execution);
+        } catch (MonitorException ex) {
+            LOG.error("Can't update debug data for: {}",
+                    execution.getId(), ex);
+            return;
+        }
+        if (ExecutionStatus.isFinished(execution.getStatus())) {
+            execution.setHasFinalData(true);
+        }
+        LOG.info("update ... done");
+    }
+
+    /**
+     * Updates only from overview.
+     */
+    public void updateOverview(Execution execution, JsonNode overview) {
+        LoadOverview overviewLoader = new LoadOverview();
+        overviewLoader.load(execution, overview);
+    }
+
+    /**
+     * Updates only from execution data (debug data).
+     */
+    public void updateExecution(Execution execution, Statements statements) {
+        execution.setDebugData(new DebugData(statements, execution));
     }
 
     public Execution createExecution(
             Collection<Statement> pipeline, List<MultipartFile> inputs)
             throws MonitorException {
+
+        // TODO Move into ExecutionFactory.
+
         String uuid = this.createExecutionGuid();
         File directory = new File(configuration.getWorkingDirectory(), uuid);
 
@@ -227,13 +222,7 @@ class ExecutionStorage {
             }
         }
 
-        // Create execution.
-        Execution execution = this.loadFromDirectory(directory);
-        execution.setIri(this.configuration.getExecutionPrefix() + uuid);
-        execution.setDirectory(directory);
-        execution.setStatus(ExecutionStatus.QUEUED);
-        this.executions.add(execution);
-        return execution;
+        return loadExecutionForFirstTime(directory);
     }
 
     private String createExecutionGuid() {
@@ -245,51 +234,22 @@ class ExecutionStorage {
     private void silentDeleteDirectory(File directory) {
         try {
             FileUtils.deleteDirectory(directory);
-        } catch (IOException ioex) {
-            LOG.error("Can't delete directory.", ioex);
+        } catch (IOException ex) {
+            LOG.error("Can't delete directory.", ex);
         }
     }
 
-    /**
-     * Delete given execution.
-     *
-     * @param execution
-     */
     public void delete(Execution execution) {
         if (execution == null) {
             return;
         }
-        execution.setTimeToLive(this.getNowShiftedBySeconds(10 * 60));
-        execution.setStatus(ExecutionStatus.DELETED);
-        MonitorStatements monitorStatements = new MonitorStatements();
-        monitorStatements.update(execution);
-        // Clear statements about the pipeline as a tombstone
-        // does not need them.
+        execution.setTimeToLive(this.getNowShiftedBySeconds(5 * 60));
+        // Clear statements that we do not need any more.
         execution.setPipelineStatements(Collections.emptyList());
-        execution.setOverviewStatements(Collections.emptyList());
+        updateOverview(
+                execution,
+                DeletedOverviewFactory.create(execution, new Date()));
         this.directoriesToDelete.add(execution.getDirectory());
-    }
-
-    @Scheduled(fixedDelay = 15000, initialDelay = 200)
-    public void updateExecutionsFromDirectories() {
-        Date now = new Date();
-        // Update only such execution that were not updated in last
-        // 10 seconds. As the execution could have been updated
-        // from a REST service and we do not want to load it twice.
-        Date requiredLastUpdate = this.getNowShiftedBySeconds(-10);
-        for (Execution execution : executions) {
-            if (!requiredLastUpdate.after(execution.getLastCheck())) {
-                continue;
-            }
-            try {
-                checkExecutionFromDirectory(execution);
-            } catch (MonitorException ex) {
-                LOG.error("Can't execute update from a directory for: {}",
-                        execution.getId(), ex);
-            }
-        }
-        this.deleteTombstones(now);
-        this.deleteDirectories();
     }
 
     private Date getNowShiftedBySeconds(int secondsChange) {
@@ -297,7 +257,25 @@ class ExecutionStorage {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
         calendar.add(Calendar.SECOND, secondsChange);
-        return now;
+        return calendar.getTime();
+    }
+
+    @Scheduled(fixedDelay = 15000, initialDelay = 200)
+    public void updateExecutions() {
+        for (Execution execution : executions) {
+            if (shouldUpdate(execution)) {
+                update(execution);
+            }
+        }
+        this.deleteTombstones(new Date());
+        this.deleteDirectories();
+    }
+
+    private boolean shouldUpdate(Execution execution) {
+        if (execution.getStatus() == ExecutionStatus.DELETED) {
+            return false;
+        }
+        return !execution.isHasFinalData();
     }
 
     private void deleteTombstones(Date time) {

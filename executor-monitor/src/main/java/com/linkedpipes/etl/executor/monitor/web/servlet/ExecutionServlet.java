@@ -7,7 +7,6 @@ import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorService;
 import com.linkedpipes.etl.rdf4j.Statements;
-import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
@@ -28,15 +27,16 @@ import java.util.List;
 @RequestMapping(value = "/executions")
 public class ExecutionServlet {
 
-    private final ExecutionFacade executionFacade;
+    private final ExecutionFacade executions;
 
-    private final ExecutorService executorService;
+    private final ExecutorService executor;
 
     @Autowired
     public ExecutionServlet(
-            ExecutionFacade executionFacade, ExecutorService executorService) {
-        this.executionFacade = executionFacade;
-        this.executorService = executorService;
+            ExecutionFacade executionFacade,
+            ExecutorService executorService) {
+        this.executions = executionFacade;
+        this.executor = executorService;
     }
 
     @ResponseBody
@@ -53,8 +53,8 @@ public class ExecutionServlet {
         try (OutputStream stream = response.getOutputStream()) {
             RDFWriter writer = Rio.createWriter(format, stream);
             writer.startRDF();
-            GetExecutionsHandler handler = new GetExecutionsHandler(
-                    this.executionFacade);
+            GetExecutionsHandler handler =
+                    new GetExecutionsHandler(this.executions);
             handler.handle(changedSince, writer);
             writer.endRDF();
             stream.flush();
@@ -72,7 +72,7 @@ public class ExecutionServlet {
             @PathVariable String id,
             HttpServletRequest request, HttpServletResponse response)
             throws MonitorException, IOException {
-        Execution execution = executionFacade.getLivingExecution(id);
+        Execution execution = executions.getLivingExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -83,11 +83,8 @@ public class ExecutionServlet {
         try (OutputStream stream = response.getOutputStream()) {
             RDFWriter writer = Rio.createWriter(format, stream);
             writer.startRDF();
-            Statements statements =
-                    this.executionFacade.getExecutionStatements(execution);
-            for (Statement statement : statements) {
-                writer.handleStatement(statement);
-            }
+            this.executions.getExecutionStatements(execution).forEach(
+                    st -> writer.handleStatement(st));
             writer.endRDF();
             stream.flush();
         }
@@ -99,12 +96,12 @@ public class ExecutionServlet {
             @PathVariable String id,
             HttpServletRequest request,
             HttpServletResponse response) {
-        Execution execution = this.executionFacade.getLivingExecution(id);
+        Execution execution = this.executions.getLivingExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        this.executionFacade.deleteExecution(execution);
+        this.executions.deleteExecution(execution);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
@@ -117,12 +114,12 @@ public class ExecutionServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws MonitorException {
-        Execution execution = executionFacade.getLivingExecution(id);
+        Execution execution = executions.getLivingExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        executorService.cancelExecution(execution, body);
+        executor.cancelExecution(execution, body);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
@@ -132,12 +129,12 @@ public class ExecutionServlet {
     public FileSystemResource getExecutionLogs(
             @PathVariable String id,
             HttpServletResponse response) {
-        Execution execution = this.executionFacade.getLivingExecution(id);
+        Execution execution = this.executions.getLivingExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
-        File file = this.executionFacade.getExecutionDebugLogFile(execution);
+        File file = this.executions.getExecutionDebugLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
@@ -154,12 +151,12 @@ public class ExecutionServlet {
             @RequestParam(value = "n", defaultValue = "32") int count,
             HttpServletResponse response) throws IOException {
 
-        Execution execution = this.executionFacade.getLivingExecution(id);
+        Execution execution = this.executions.getLivingExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        File file = this.executionFacade.getExecutionDebugLogFile(execution);
+        File file = this.executions.getExecutionDebugLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -177,13 +174,13 @@ public class ExecutionServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException {
-        Execution execution = this.executionFacade.getLivingExecution(id);
+        Execution execution = this.executions.getLivingExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        Statements statements = this.executionFacade.getComponentMessages(
-                execution, component);
+        Statements statements =
+                this.executions.getMessages(execution, component);
         RDFFormat format = this.getFormat(request);
         response.setHeader("Content-Type", format.getDefaultMIMEType());
         //
@@ -205,7 +202,7 @@ public class ExecutionServlet {
             HttpServletResponse response)
             throws MonitorException {
         PostCreateExecutionHandler handler = new PostCreateExecutionHandler(
-                this.executionFacade, this.executorService);
+                this.executions, this.executor);
         return handler.handle(pipeline, inputs);
     }
 
@@ -217,14 +214,14 @@ public class ExecutionServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException {
-        Execution execution = this.executionFacade.getLivingExecution(id);
+        Execution execution = this.executions.getLivingExecution(id);
         if (execution == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         //
         response.setHeader("Content-Type", "application/ld+json");
-        JsonNode overview = this.executionFacade.getOverview(execution);
+        JsonNode overview = this.executions.getOverview(execution);
         ObjectMapper objectMapper = new ObjectMapper();
         try (OutputStream stream = response.getOutputStream()) {
             objectMapper.writeValue(stream, overview);

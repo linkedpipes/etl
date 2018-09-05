@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.monitor.execution;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
+// TODO Consider split into two enums ExecutorStatus, ExecutorMonitorStatus.
 public enum ExecutionStatus {
     /**
      * Queued for an execution.
@@ -34,24 +35,28 @@ public enum ExecutionStatus {
      * Deleted execution, represents a tombstone.
      */
     DELETED("http://etl.linkedpipes.com/resources/status/deleted"),
+    /**
+     * When we do not know.
+     */
     UNKNOWN("http://etl.linkedpipes.com/resources/status/unknown");
 
     private IRI iri;
 
-    private String iriAsStr;
-
     ExecutionStatus(String iriAsStr) {
         this.iri = SimpleValueFactory.getInstance().createIRI(iriAsStr);
-        this.iriAsStr = iriAsStr;
     }
 
-    public IRI getIri() {
-        return iri;
+    public IRI asIri() {
+        return this.iri;
+    }
+
+    public String asStr() {
+        return this.iri.stringValue();
     }
 
     public static ExecutionStatus fromIri(String iriAsStr) {
         for (ExecutionStatus status : ExecutionStatus.values()) {
-            if (status.iriAsStr.equals(iriAsStr)) {
+            if (status.iri.stringValue().equals(iriAsStr)) {
                 return status;
             }
         }
