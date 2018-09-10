@@ -65,7 +65,7 @@ class ExecutionStorage implements ExecutionSource {
         PipelineLoader pipelineLoader = new PipelineLoader(execution);
         try {
             pipelineLoader.loadPipelineIntoExecution();
-        } catch (MonitorException ex) {
+        } catch (Throwable ex) {
             LOG.error("Can't load pipeline for: {}", directory, ex);
             return null;
         }
@@ -73,7 +73,7 @@ class ExecutionStorage implements ExecutionSource {
         LoadOverview overviewLoader = new LoadOverview();
         try {
             overviewLoader.load(execution);
-        } catch (MonitorException ex) {
+        } catch (Throwable ex) {
             LOG.error("Can't load overview for: {}", directory, ex);
             return null;
         }
@@ -81,7 +81,7 @@ class ExecutionStorage implements ExecutionSource {
         if (!ExecutionStatus.QUEUED.equals(execution.getStatus())) {
             try {
                 updateDebugData(execution);
-            } catch (MonitorException ex) {
+            } catch (Throwable ex) {
                 LOG.error("Can't load debug data for: {}", directory, ex);
                 return null;
             }
@@ -272,7 +272,8 @@ class ExecutionStorage implements ExecutionSource {
     }
 
     private boolean shouldUpdate(Execution execution) {
-        if (execution.getStatus() == ExecutionStatus.DELETED) {
+        if (execution.getStatus() == ExecutionStatus.DELETED ||
+                execution.getStatus() == ExecutionStatus.INVALID) {
             return false;
         }
         return !execution.isHasFinalData();
