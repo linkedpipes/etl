@@ -44,9 +44,9 @@ class PipelineLoader {
 
         this.execution.setPipeline(this.pipelineResource);
         if (this.pipelineResource == null) {
-            LOG.error("Missing pipeline resource for: {}",
+            throw new MonitorException(
+                    "Missing pipeline resource for: {}",
                     this.execution.getId());
-            return;
         }
 
         Statements output = Statements.ArrayList();
@@ -131,7 +131,7 @@ class PipelineLoader {
                                     LP_EXEC.HAS_TARGET_COMPONENT,
                                     st.getObject());
                             this.subjectWithLabels.add(
-                                    (Resource)st.getObject());
+                                    (Resource) st.getObject());
                             break;
                         default:
                             statements.integrate(st);
