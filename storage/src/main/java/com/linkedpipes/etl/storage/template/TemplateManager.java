@@ -22,6 +22,11 @@ import java.util.stream.Collectors;
 @Service
 public class TemplateManager {
 
+    @FunctionalInterface
+    private interface CheckedFunction<T> {
+        void apply(T t) throws Exception;
+    }
+
     private static final Logger LOG =
             LoggerFactory.getLogger(TemplateManager.class);
 
@@ -60,7 +65,7 @@ public class TemplateManager {
                 migrate();
             }
             this.repository.updateFinished();
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
             LOG.error("Initialization failed.", ex);
             throw ex;
         }
@@ -142,20 +147,26 @@ public class TemplateManager {
 
     private void migrateV1ToV2() throws BaseException {
         LOG.info("Migrating to version 2");
-        boolean migrationFailed = false;
         TemplateV1ToV2 v1Tov2 = new TemplateV1ToV2(this, this.repository);
+        boolean migrationFailed = migrateTemplates(
+                (template) -> v1Tov2.migrate(template));
+        if (migrationFailed) {
+            throw new BaseException("Migration failed");
+        }
+    }
+
+    private boolean migrateTemplates(CheckedFunction<Template> callback) {
+        boolean migrationFailed = false;
         for (Template template : templates.values()) {
             try {
-                v1Tov2.migrate(template);
-            } catch (Exception ex) {
+                callback.apply(template);
+            } catch (Throwable ex) {
                 LOG.error("Migration of component '{}' failed",
                         template.getIri(), ex);
                 migrationFailed = true;
             }
         }
-        if (migrationFailed) {
-            throw new BaseException("Migration failed");
-        }
+        return migrationFailed;
     }
 
     private void reloadTemplates() {
@@ -166,17 +177,9 @@ public class TemplateManager {
 
     private void migrateV2ToV3() throws BaseException {
         LOG.info("Migrating to version 3");
-        boolean migrationFailed = false;
         TemplateV2ToV3 v2Tov3 = new TemplateV2ToV3(this.repository);
-        for (Template template : templates.values()) {
-            try {
-                v2Tov3.migrate(template);
-            } catch (Exception ex) {
-                LOG.error("Migration of component '{}' failed",
-                        template.getIri(), ex);
-                migrationFailed = true;
-            }
-        }
+        boolean migrationFailed = migrateTemplates(
+                (template) -> v2Tov3.migrate(template));
         if (migrationFailed) {
             throw new BaseException("Migration failed");
         }
@@ -184,17 +187,9 @@ public class TemplateManager {
 
     private void migrateV3ToV4() throws BaseException {
         LOG.info("Migrating to version 4");
-        boolean migrationFailed = false;
         TemplateV3ToV4 v3ToV4= new TemplateV3ToV4(this.repository);
-        for (Template template : templates.values()) {
-            try {
-                v3ToV4.migrate(template);
-            } catch (Exception ex) {
-                LOG.error("Migration of component '{}' failed",
-                        template.getIri(), ex);
-                migrationFailed = true;
-            }
-        }
+        boolean migrationFailed = migrateTemplates(
+                (template) -> v3ToV4.migrate(template));
         if (migrationFailed) {
             throw new BaseException("Migration failed");
         }
