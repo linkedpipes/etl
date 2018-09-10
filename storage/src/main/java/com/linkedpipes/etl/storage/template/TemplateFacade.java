@@ -60,7 +60,9 @@ public class TemplateFacade implements TemplateSource {
                 .filter(iri -> !manager.getTemplates().containsKey(iri))
                 .collect(Collectors.toList());
         for (String iri : iriToRemove) {
-            LOG.debug("Removing mapping for: {}", iri);
+            LOG.debug(
+                    "Removing mapping for '{}' as the component was deleted.",
+                    iri);
             this.mapping.remove(iri);
         }
         this.mapping.save();
