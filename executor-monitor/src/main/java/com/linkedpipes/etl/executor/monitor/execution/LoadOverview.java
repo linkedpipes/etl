@@ -65,8 +65,9 @@ public class LoadOverview {
     }
 
     private void setLastChange(Execution execution, OverviewObject overview) {
-        Date lastChange = execution.getLastChange();
-        if (lastChange.equals(overview.getLastChange())) {
+        Date lastOverviewChange = execution.getOverviewLastChange();
+        if (lastOverviewChange != null &&
+                lastOverviewChange.equals(overview.getLastChange())) {
             return;
         }
         // We know that there was a change, however it could have happen
