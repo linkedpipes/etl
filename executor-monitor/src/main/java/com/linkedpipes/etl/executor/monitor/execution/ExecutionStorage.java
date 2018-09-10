@@ -87,12 +87,6 @@ class ExecutionStorage implements ExecutionSource {
             }
         }
 
-        // All running pipelines are considered to be DANGLING as
-        // we do not know if their executors are running or not.
-        if (execution.getStatus() == ExecutionStatus.RUNNING) {
-            StatusSetter.setStatus(execution, ExecutionStatus.DANGLING);
-        }
-
         if (ExecutionStatus.isFinished(execution.getStatus())) {
             execution.setHasFinalData(true);
         }
@@ -153,7 +147,11 @@ class ExecutionStorage implements ExecutionSource {
      * Perform full execution update from directory.
      */
     public void update(Execution execution) {
-        LOG.info("update ...");
+        if (!(shouldUpdate(execution))){
+            // We do not reload dangling or invalid executions.
+            return;
+        }
+        LOG.debug("update execution: {}", execution.getId());
         LoadOverview overviewLoader = new LoadOverview();
         try {
             overviewLoader.load(execution);
@@ -175,7 +173,7 @@ class ExecutionStorage implements ExecutionSource {
         if (ExecutionStatus.isFinished(execution.getStatus())) {
             execution.setHasFinalData(true);
         }
-        LOG.info("update ... done");
+        LOG.debug("update execution ... done");
     }
 
     /**

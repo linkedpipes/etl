@@ -80,15 +80,18 @@ public class LoadOverview {
     }
 
     private void updateStatus(Execution execution, OverviewObject overview) {
-        ExecutionStatus status = ExecutionStatus.fromIri(overview.getStatus());
+        ExecutionStatus oldStatus = execution.getStatus();
+        ExecutionStatus newStatus =
+                ExecutionStatus.fromIri(overview.getStatus());
         // Postpone failed and finished until the execution time end is set.
-        switch (status) {
+        switch (newStatus) {
             case FAILED:
                 if (isFinished(overview)) {
                     execution.setStatus(ExecutionStatus.FAILED);
                 } else {
                     execution.setStatus(ExecutionStatus.RUNNING);
                 }
+                break;
             case FINISHED:
                 if (isFinished(overview)) {
                     execution.setStatus(ExecutionStatus.FINISHED);
@@ -97,16 +100,29 @@ public class LoadOverview {
                 }
                 break;
             case RUNNING:
-                if (execution.hasExecutor()) {
+                if (execution.getStatus() == null) {
+                    // Initial load.
                     execution.setStatus(ExecutionStatus.DANGLING);
-                } else {
+                    break;
+                }
+                if (execution.hasExecutor()) {
                     execution.setStatus(ExecutionStatus.RUNNING);
+                } else {
+                    if (oldStatus == ExecutionStatus.RUNNING) {
+                        execution.setStatus(ExecutionStatus.UNRESPONSIVE);
+                    } else {
+                        // Keep previous status.
+                    }
                 }
                 break;
             default:
-                execution.setStatus(status);
-                break;
+                // We quit the function here as we use the status from overview.
+                execution.setStatus(newStatus);
+                return;
         }
+        // We need to update the status in the overview.
+        StatusSetter.updateOverview(execution);
+        overview.setStatus(execution.getStatus().asStr());
     }
 
     private boolean isFinished(OverviewObject overview) {
