@@ -22,7 +22,7 @@ class StatusSetter {
         updateOverviewStatements(execution);
     }
 
-    static void updateOverview(Execution execution) {
+    public static void updateOverview(Execution execution) {
         JsonNode root = execution.getOverviewJson();
         ObjectNode status = (ObjectNode)root.get("status");
         status.remove("@id");
