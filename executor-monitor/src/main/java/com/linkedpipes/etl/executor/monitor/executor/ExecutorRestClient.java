@@ -107,7 +107,7 @@ class ExecutorRestClient {
     }
 
     private String getCancelUrl(Executor executor) {
-        return executor.getAddress() + "/api/v1/executions";
+        return executor.getAddress() + "/api/v1/executions/cancel";
     }
 
 }
