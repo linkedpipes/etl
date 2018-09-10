@@ -38,7 +38,11 @@ public enum ExecutionStatus {
     /**
      * When we do not know.
      */
-    UNKNOWN("http://etl.linkedpipes.com/resources/status/unknown");
+    UNKNOWN("http://etl.linkedpipes.com/resources/status/unknown"),
+    /**
+     * Represents invalid/deprecated execution record.
+     */
+    INVALID("http://etl.linkedpipes.com/resources/status/invalid");
 
     private IRI iri;
 

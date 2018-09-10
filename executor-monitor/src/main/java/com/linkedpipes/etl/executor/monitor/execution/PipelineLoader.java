@@ -69,6 +69,11 @@ class PipelineLoader {
         if (definitionFile.exists()) {
             return definitionFile;
         }
+        File definitionFileJsonld = new File(
+                this.execution.getDirectory(), "definition/definition.jsonld");
+        if (definitionFileJsonld.exists()) {
+            return definitionFileJsonld;
+        }
         throw new MonitorException(
                 "Missing pipeline file for execution: {}",
                 this.execution.getIri());

@@ -97,6 +97,11 @@ class ExecutionStorage implements ExecutionSource {
             execution.setHasFinalData(true);
         }
 
+        ExecutionMigration migration = new ExecutionMigration();
+        if (migration.shouldMigrate(execution)) {
+            migration.migrate(execution);
+        }
+
         execution.setLastChange(updateTime);
         this.executions.add(execution);
         return execution;
