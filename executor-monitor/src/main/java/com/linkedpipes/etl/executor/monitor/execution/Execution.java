@@ -5,8 +5,6 @@ import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.executor.Executor;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collection;
@@ -121,8 +119,6 @@ public class Execution {
     public ExecutionStatus getStatus() {
         return status;
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(Execution.class);
 
     void setStatus(ExecutionStatus status) {
         this.status = status;
