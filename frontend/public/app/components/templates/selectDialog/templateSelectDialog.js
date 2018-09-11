@@ -96,10 +96,8 @@ define([], function () {
             }
             var query = new RegExp(
                 newValue.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), "i");
-            console.log("Query:", query);
             $scope.templates.forEach((template) => {
                 template.visible = query.test(template.search);
-                console.log(template.label, "->", template.search, '->', template.visible);
 
             });
         });
