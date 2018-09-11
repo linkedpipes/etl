@@ -90,7 +90,7 @@ router.get("/usage", (req, res) => {
         encodeURIComponent(req.query.iri),
         "headers": req.headers
     };
-    req.get(options)
+    request.get(options)
         .on("error", (error) => handleError(res, error))
         .pipe(res);
 });
