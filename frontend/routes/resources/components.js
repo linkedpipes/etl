@@ -39,7 +39,7 @@ router.get("/definition", (req, res) => {
         .pipe(res);
 });
 
-router.post("/components", (req, res) => {
+router.post("", (req, res) => {
     const url = storageApiUrlPrefix + "/";
     req.pipe(request.post(url, {"form": req.body}), {"end": false})
         .on("error", (error) => handleError(res, error))
