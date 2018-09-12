@@ -85,8 +85,8 @@ public class Model {
          * @param value
          * @param recursive Used only if it's a referece to another object.
          */
-        public void replace(IRI property, Entity entity, Value value,
-                boolean recursive) {
+        public void replace(
+                IRI property, Entity entity, Value value, boolean recursive) {
             if (value instanceof Resource) {
                 Entity refEntity = entity.getModel().entities.get(value);
                 if (refEntity == null) {
@@ -123,7 +123,11 @@ public class Model {
          * @param value
          */
         public void set(IRI property, Value value) {
-            final List<Value> values = new LinkedList<>();
+            if (value == null) {
+                properties.remove(property);
+                return;
+            }
+            List<Value> values = new LinkedList<>();
             values.add(value);
             properties.put(property, values);
         }

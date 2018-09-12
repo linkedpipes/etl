@@ -45,6 +45,7 @@ public class MergeHierarchyTest {
         );
 
         Statements expected = this.data.selectByGraph("http://expected");
+        Rdf4jUtils.rdfEqual(expected, actual);
         Assert.assertTrue(Models.isomorphic(actual, expected));
     }
 
@@ -68,8 +69,7 @@ public class MergeHierarchyTest {
                 valueFactory.createIRI("http://expected")
         );
 
-        // worker.finalize(secondMerge);
-        Statements actual = secondMerge;
+        Statements actual = worker.finalize(secondMerge);
 
         Statements expected = this.data.selectByGraph("http://expected");
         Rdf4jUtils.rdfEqual(actual, expected);

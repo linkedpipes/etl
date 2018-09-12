@@ -144,10 +144,6 @@ class MergeHierarchy {
             childControl = LP_OBJECTS.NONE;
         }
         Value childValue = children.getProperty(member.getProperty());
-        if (childValue == null) {
-            return;
-        }
-        //
         switch (childControl) {
             case LP_OBJECTS.INHERIT:
                 parent.setIri(member.getControl(), LP_OBJECTS.NONE);
@@ -163,6 +159,11 @@ class MergeHierarchy {
             case LP_OBJECTS.FORCED:
                 throw new BaseException("Unexpected FORCED property");
             case LP_OBJECTS.NONE:
+                // If the value is missing then in this case the value
+                // is ignored.
+                if (childValue == null) {
+                    break;
+                }
                 parent.replace(
                         member.getProperty(), children, childValue, true);
                 parent.setIri(member.getControl(), LP_OBJECTS.NONE);

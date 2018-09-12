@@ -33,6 +33,10 @@
     configOntology:property component:fifth ;
     configOntology:control component:fifthControl .
 
+<http://localhost/desc/sixth> a configOntology:ConfigurationMember ;
+    configOntology:property component:sixth ;
+    configOntology:control component:sixthControl .
+
 }
 
 <http://level-0> {
@@ -48,7 +52,6 @@
     component:fourthControl config:None ;
     component:fifth "l-0" ;
     component:fifthControl config:None .
-
 }
 
 <http://level-1> {
@@ -63,7 +66,8 @@
     component:fourth "l-1" ;
     component:fourthControl config:None ;
     component:fifth "l-1" ;
-    component:fifthControl config:None .
+    component:fifthControl config:None ;
+    component:sixthControl config:Force .
 
 }
 
@@ -77,8 +81,9 @@
     component:third "l-2" ;
     component:thirdControl config:None ;
     component:fifth "l-2" ;
-    component:fifthControl config:Inherit .
-
+    component:fifthControl config:Inherit ;
+    component:sixth "l-2" ;
+    component:sixthControl config:None .
 }
 
 <http://expected> {
@@ -93,6 +98,7 @@
     component:fourth "l-1" ;
     component:fourthControl config:None ;
     component:fifth "l-1" ;
-    component:fifthControl config:None .
+    component:fifthControl config:None ;
+    component:sixthControl config:Forced .
 
 }
