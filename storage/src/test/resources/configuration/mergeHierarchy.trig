@@ -5,32 +5,33 @@
 <http://description> {
 
 <http://localhost/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
-    configOntology:type <http://localhost/component#Configuration> ;
+    configOntology:type component:Configuration ;
     configOntology:member <http://localhost/desc/first> ,
         <http://localhost/desc/second> ,
         <http://localhost/desc/third> ,
         <http://localhost/desc/fourth> ,
-        <http://localhost/desc/fifth> .
+        <http://localhost/desc/fifth> ,
+        <http://localhost/desc/sixth> .
 
 <http://localhost/desc/first> a configOntology:ConfigurationMember ;
-    configOntology:property <http://localhost/component#first> ;
-    configOntology:control <http://localhost/component#firstControl> .
+    configOntology:property component:first ;
+    configOntology:control component:firstControl .
 
 <http://localhost/desc/second> a configOntology:ConfigurationMember ;
-    configOntology:property <http://localhost/component#second> ;
-    configOntology:control <http://localhost/component#secondControl> .
+    configOntology:property component:second ;
+    configOntology:control component:secondControl .
 
 <http://localhost/desc/third> a configOntology:ConfigurationMember ;
-    configOntology:property <http://localhost/component#third> ;
-    configOntology:control <http://localhost/component#thirdControl> .
+    configOntology:property component:third ;
+    configOntology:control component:thirdControl .
 
 <http://localhost/desc/fourth> a configOntology:ConfigurationMember ;
-    configOntology:property <http://localhost/component#fourth> ;
-    configOntology:control <http://localhost/component#fourthControl> .
+    configOntology:property component:fourth ;
+    configOntology:control component:fourthControl .
 
 <http://localhost/desc/fifth> a configOntology:ConfigurationMember ;
-    configOntology:property <http://localhost/component#fifth> ;
-    configOntology:control <http://localhost/component#fifthControl> .
+    configOntology:property component:fifth ;
+    configOntology:control component:fifthControl .
 
 }
 
