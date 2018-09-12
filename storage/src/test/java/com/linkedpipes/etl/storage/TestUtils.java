@@ -12,6 +12,10 @@ public class TestUtils {
     private static final ClassLoader loader =
             Thread.currentThread().getContextClassLoader();
 
+    public static File file(String name) {
+        return fileFromResource(name);
+    }
+
     public static File fileFromResource(String fileName) {
         URL url = loader.getResource(fileName);
         if (url == null) {

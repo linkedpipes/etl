@@ -7,7 +7,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import java.util.*;
 
 /**
- * Represent an RDF graph in form of an Java object. Works with triples.
+ * Represent given RDF triples as collection of resources.
  */
 public class RdfObjects {
 
@@ -301,10 +301,6 @@ public class RdfObjects {
 
     }
 
-    private static int counter = 0;
-
-    private int id = ++counter;
-
     /**
      * List of all stored resources.
      */
@@ -352,7 +348,7 @@ public class RdfObjects {
     }
 
     /**
-     * Collection of resources if given types.
+     * Collection of resources of given types.
      *
      * @param types
      * @return Never null.
@@ -370,10 +366,6 @@ public class RdfObjects {
             });
         }
         return result;
-    }
-
-    public Entity getByIri(String iri) {
-        return resources.get(valueFactory.createIRI(iri));
     }
 
     /**
@@ -426,56 +418,6 @@ public class RdfObjects {
             }
         }
         return result;
-    }
-
-    /**
-     * TODO Remove, do not use blacnk noders.
-     *
-     * @param object
-     */
-    public void changeResource(Entity object) {
-        final Resource newResource = valueFactory.createBNode();
-        resources.remove(object.getResource());
-        resources.put(newResource, object);
-        object.resource = newResource;
-    }
-
-    /**
-     * Generate a new resource for givne object.
-     *
-     * @param object
-     */
-    public void changeResource(Entity object, String newValue) {
-        final Resource newResource = valueFactory.createIRI(newValue);
-        resources.remove(object.getResource());
-        resources.put(newResource, object);
-        // TODO Replace with setter!
-        object.resource = newResource;
-    }
-
-    /**
-     * Update blank nodes to full IRI.
-     *
-     * @param baseIri
-     */
-    public void updateBlankNodes(String baseIri) {
-        final Collection<Resource> blankNodes = new LinkedList<>();
-        for (Resource resource : resources.keySet()) {
-            if (resource instanceof IRI) {
-                // OK pass.
-            } else {
-                blankNodes.add(resource);
-            }
-        }
-        Integer counter = 0;
-        for (Resource node : blankNodes) {
-            final Resource newResource
-                    = valueFactory.createIRI(baseIri + ++counter);
-            // TODO Use setter, store object, not call get twice.
-            resources.get(node).resource = newResource;
-            resources.put(newResource, resources.get(node));
-            resources.remove(node);
-        }
     }
 
     public void updateTypedResources(String baseIri) {

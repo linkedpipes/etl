@@ -1,36 +1,32 @@
 package com.linkedpipes.etl.storage.configuration;
 
-import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Statement;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 public class ConfigurationFacade {
 
-    private final DescriptionLoader descriptionLoader = new DescriptionLoader();
-
-    public Collection<Statement> createNewFromJarFile(
-            Collection<Statement> configurationRdf,
-            Collection<Statement> descriptionRdf,
+    public Statements createNewFromJarFile(
+            Statements configurationRdf,
+            Statements descriptionRdf,
             String baseIri, IRI graph)
             throws BaseException {
-        Description description = this.descriptionLoader.load(descriptionRdf);
+        Description description = Description.fromStatements(descriptionRdf);
         CreateNewConfiguration worker = new CreateNewConfiguration();
         return worker.createNewFromJarFile(
                 configurationRdf, description, baseIri, graph);
     }
 
-    public Collection<Statement> createNewFromTemplate(
-            Collection<Statement> configurationRdf,
-            Collection<Statement> descriptionRdf,
+    public Statements createNewFromTemplate(
+            Statements configurationRdf,
+            Statements descriptionRdf,
             String baseIri, IRI graph)
             throws BaseException {
-        Description description = this.descriptionLoader.load(descriptionRdf);
+        Description description = Description.fromStatements(descriptionRdf);
         CreateNewConfiguration worker = new CreateNewConfiguration();
         return worker.createNewFromTemplate(
                 configurationRdf, description, baseIri, graph);
@@ -40,26 +36,25 @@ public class ConfigurationFacade {
      * Compute and return effective configuration for the given list of the
      * configuration, which must be sorted from parent to child.
      */
-    public Collection<Statement> merge(
-            Collection<Collection<Statement>> configurationsRdf,
-            Collection<Statement> descriptionRdf,
+    public Statements merge(
+            Collection<Statements> configurationsRdf,
+            Statements descriptionRdf,
             String baseIri, IRI graph) throws BaseException {
-        Description description = this.descriptionLoader.load(descriptionRdf);
+        Description description = Description.fromStatements(descriptionRdf);
         MergeHierarchy worker = new MergeHierarchy();
         return worker.merge(configurationsRdf, description, baseIri, graph);
     }
-
 
     /**
      * Designed to be used to merge configuration from instance to templates,
      * thus enabling another merge with other ancestor.
      */
-    public Collection<Statement> mergeFromBottom(
-            Collection<Statement> templateRdf,
-            Collection<Statement> instanceRdf,
-            Collection<Statement> descriptionRdf,
+    public Statements mergeFromBottom(
+            Statements templateRdf,
+            Statements instanceRdf,
+            Statements descriptionRdf,
             String baseIri, IRI graph) throws BaseException {
-        Description description = this.descriptionLoader.load(descriptionRdf);
+        Description description = Description.fromStatements(descriptionRdf);
         MergeFromBottom worker = new MergeFromBottom();
         return worker.merge(
                 templateRdf, instanceRdf, description, baseIri, graph);
@@ -68,28 +63,18 @@ public class ConfigurationFacade {
     /**
      * Select and return private configuration properties.
      */
-    public Collection<Statement> selectPrivateStatements(
-            Collection<Statement> rdf,
-            Collection<Statement> descriptionRdf) throws BaseException {
-        Description description = this.descriptionLoader.load(descriptionRdf);
+    public Statements selectPrivateStatements(
+            Statements rdf,
+            Statements descriptionRdf) throws BaseException {
+        Description description = Description.fromStatements(descriptionRdf);
 
         SelectPrivateStatements worker = new SelectPrivateStatements();
-        return worker.selectPrivate(rdf, description);
+        return new Statements(worker.selectPrivate(rdf, description));
     }
 
-    public Collection<Statement> finalizeAfterMergeFromBottom(
-            Collection<Statement> configurationRdf) {
-        // Solve situation where there is no value in the core component
-        // however the instance choose to INHERIT the value.
-        // There might be also same issue with INHERIT_AND_FORCE
-        // but in that case it make sense to fail, as the given value
-        // should not be used.
-        return configurationRdf.stream()
-                .filter(st -> {
-                    String value = st.getObject().stringValue();
-                    return !LP_OBJECTS.INHERIT.equals(value);
-                })
-                .collect(Collectors.toList());
+    public Statements finalizeAfterMergeFromBottom(Statements configurationRdf) {
+        MergeFromBottom worker = new MergeFromBottom();
+        return worker.finalize(configurationRdf);
     }
 
 }

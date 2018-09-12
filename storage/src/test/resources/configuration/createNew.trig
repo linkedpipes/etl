@@ -1,0 +1,100 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+@prefix configOntology: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://description> {
+
+<http://localhost/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    configOntology:type component:Configuration ;
+    configOntology:member <http://localhost/desc/first> ,
+        <http://localhost/desc/second> ,
+        <http://localhost/desc/third> ,
+        <http://localhost/desc/fourth> ,
+        <http://localhost/desc/fifth> ,
+        <http://localhost/desc/sixth> .
+
+<http://localhost/desc/first> a configOntology:ConfigurationMember ;
+    configOntology:property component:first ;
+    configOntology:control component:firstControl .
+
+<http://localhost/desc/second> a configOntology:ConfigurationMember ;
+    configOntology:property component:second ;
+    configOntology:control component:secondControl .
+
+<http://localhost/desc/third> a configOntology:ConfigurationMember ;
+    configOntology:property component:third ;
+    configOntology:control component:thirdControl .
+
+<http://localhost/desc/fourth> a configOntology:ConfigurationMember ;
+    configOntology:property component:fourth ;
+    configOntology:control component:fourthControl .
+
+<http://localhost/desc/fifth> a configOntology:ConfigurationMember ;
+    configOntology:property component:fifth ;
+    configOntology:control component:fifthControl .
+
+<http://localhost/desc/sixth> a configOntology:ConfigurationMember ;
+    configOntology:property component:sixth ;
+    configOntology:control component:sixthControl .
+
+}
+
+<http://input> {
+
+<http://localhost/instance> a component:Configuration ;
+    # Property with value.
+    component:first "p-1" ;
+    # Property with value and control.
+    component:second "p-2" ;
+    component:secondControl config:None ;
+    # Force property.
+    component:third "p-3" ;
+    component:thirdControl config:Force ;
+    # Property with references.
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> .
+    # Missing property.
+
+    # Force property without value.
+    component:sixthControl config:Force .
+
+<http://localhost/object/1> <http://localhost/value> "p-o-1" .
+
+<http://localhost/object/2> <http://localhost/value> "p-o-2" .
+
+}
+
+<http://expected/jar> {
+
+<http://base/1> a component:Configuration ;
+    component:first "p-1" ;
+    component:firstControl config:None ;
+    component:second "p-2" ;
+    component:secondControl config:None ;
+    component:third "p-3" ;
+    component:thirdControl config:None ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> ;
+    component:fourthControl config:None ;
+    component:fifthControl config:None ;
+    component:sixthControl config:None .
+
+# As of now referenced resources are not supported.
+
+}
+
+<http://expected/template> {
+
+<http://base/1> a component:Configuration ;
+    component:first "p-1" ;
+    component:firstControl config:Inherit ;
+    component:second "p-2" ;
+    component:secondControl config:Inherit ;
+    component:third "p-3" ;
+    component:thirdControl config:Inherit ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> ;
+    component:fourthControl config:Inherit ;
+    component:fifthControl config:Inherit ;
+    component:sixthControl config:Inherit .
+
+# As of now referenced resources are not supported.
+
+}

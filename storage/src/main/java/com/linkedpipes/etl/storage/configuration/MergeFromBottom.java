@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.rdf.Model;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -13,13 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class MergeFromBottom {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(MergeFromBottom.class);
-
-    private final DescriptionLoader descriptionLoader = new DescriptionLoader();
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -41,9 +42,9 @@ class MergeFromBottom {
      * Designed to be used to merge configuration from instance to templates,
      * thus enabling another merge with other ancestor.
      */
-    Collection<Statement> merge(
-            Collection<Statement> templateRdf,
-            Collection<Statement> instanceRdf,
+    Statements merge(
+            Statements templateRdf,
+            Statements instanceRdf,
             Description description,
             String baseIri, IRI graph) {
         this.initialize(description, baseIri, graph);
@@ -52,18 +53,18 @@ class MergeFromBottom {
         if (this.templateEntity == null) {
             LOG.warn("Missing template configuration entity: {}",
                     this.description.getType());
-            return this.collectTemplateModel();
+            return new Statements(this.collectTemplateModel());
         }
         this.loadInstanceModel(instanceRdf);
         if (this.instanceEntity == null) {
             LOG.warn("Missing instance configuration entity: {}",
                     this.description.getType());
-            return this.collectTemplateModel();
+            return new Statements(this.collectTemplateModel());
         }
         if (description.getControl() == null) {
-            return this.mergePerPredicate();
+            return new Statements(this.mergePerPredicate());
         } else {
-            return this.mergeGlobal();
+            return new Statements(this.mergeGlobal());
         }
     }
 
@@ -216,6 +217,23 @@ class MergeFromBottom {
         if (instanceControl == null) {
             this.instanceEntity.setIri(member.getControl(), LP_OBJECTS.NONE);
         }
+    }
+
+    public Statements finalize(Statements configurationRdf) {
+        // Solve situation where there is no value in the core component
+        // however the instance choose to INHERIT the value.
+        // There might be also same issue with INHERIT_AND_FORCE
+        // but in that case it make sense to fail, as the given value
+        // should not be used.
+
+        List<Statement> statements = configurationRdf.stream()
+                .filter(st -> {
+                    String value = st.getObject().stringValue();
+                    return !LP_OBJECTS.INHERIT.equals(value);
+                })
+                .collect(Collectors.toList());
+
+        return new Statements(statements);
     }
 
 }

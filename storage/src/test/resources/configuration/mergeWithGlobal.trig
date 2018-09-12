@@ -1,0 +1,74 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+@prefix configOntology: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://description> {
+
+<http://localhost/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    configOntology:type component:Configuration ;
+    configOntology:control component:control .
+
+}
+
+<http://parent> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-n" ;
+    component:second "l-n" ;
+    component:control config:None .
+
+}
+
+<http://inheritAndForce> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-iaf" ;
+    component:second "l-iaf" ;
+    component:control config:InheritAndForce .
+
+}
+
+<http://force> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-f" ;
+    component:second "l-f" ;
+    component:control config:Force .
+
+}
+
+<http://expected/parent_inheritAndForce_force> {
+
+<http://base/1> a component:Configuration ;
+    component:first "l-n" ;
+    component:second "l-n" ;
+    component:control config:Forced .
+
+}
+
+<http://inherit> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-i" ;
+    component:second "l-i" ;
+    component:control config:Inherit .
+
+}
+
+<http://expected/parent_inherit_inheritAndForce_force> {
+
+<http://base/1> a component:Configuration ;
+    component:first "l-n" ;
+    component:second "l-n" ;
+    component:control config:Forced .
+
+}
+
+<http://expected/parent_force_inheritAndForce> {
+
+<http://base/1> a component:Configuration ;
+    component:first "l-f" ;
+    component:second "l-f" ;
+    component:control config:Forced .
+
+}

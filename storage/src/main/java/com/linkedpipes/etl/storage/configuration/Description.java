@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.storage.configuration;
 
+import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Vocabulary;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import org.eclipse.rdf4j.model.IRI;
@@ -43,7 +45,7 @@ class Description implements PojoLoader.Loadable {
                     this.control = (IRI) value;
                     break;
                 case Vocabulary.IS_PRIVATE:
-                    this.isPrivate = ((Literal)value).booleanValue();
+                    this.isPrivate = ((Literal) value).booleanValue();
                     break;
             }
             return null;
@@ -102,6 +104,17 @@ class Description implements PojoLoader.Loadable {
 
     public List<Member> getMembers() {
         return Collections.unmodifiableList(members);
+    }
+
+    public static Description fromStatements(Statements statements)
+            throws BaseException {
+        Description description = new Description();
+        PojoLoader.loadOfType(statements, Description.TYPE, description);
+        if (description.getType() == null) {
+            throw new BaseException(
+                    "Missing configuration type in description.");
+        }
+        return description;
     }
 
 }

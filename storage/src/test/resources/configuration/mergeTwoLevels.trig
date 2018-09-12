@@ -1,0 +1,254 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+@prefix configOntology: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://description> {
+
+<http://localhost/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    configOntology:type component:Configuration ;
+    configOntology:member <http://localhost/desc/first> ,
+        <http://localhost/desc/second> ,
+        <http://localhost/desc/third> ,
+        <http://localhost/desc/fourth> ,
+        <http://localhost/desc/fifth> .
+
+<http://localhost/desc/first> a configOntology:ConfigurationMember ;
+    configOntology:property <http://localhost/component#first> ;
+    configOntology:control <http://localhost/component#firstControl> .
+
+<http://localhost/desc/second> a configOntology:ConfigurationMember ;
+    configOntology:property <http://localhost/component#second> ;
+    configOntology:control <http://localhost/component#secondControl> .
+
+<http://localhost/desc/third> a configOntology:ConfigurationMember ;
+    configOntology:property <http://localhost/component#third> ;
+    configOntology:control <http://localhost/component#thirdControl> .
+
+<http://localhost/desc/fourth> a configOntology:ConfigurationMember ;
+    configOntology:property <http://localhost/component#fourth> ;
+    configOntology:control <http://localhost/component#fourthControl> .
+
+<http://localhost/desc/fifth> a configOntology:ConfigurationMember ;
+    configOntology:property <http://localhost/component#fifth> ;
+    configOntology:control <http://localhost/component#fifthControl> .
+
+}
+
+<http://parent> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "p-1" ;
+    component:second "p-2" ;
+    component:secondControl config:None ;
+    component:third "p-3" ;
+    component:thirdControl config:Force ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> .
+
+<http://localhost/object/1> <http://localhost/value> "p-o-1" .
+<http://localhost/object/2> <http://localhost/value> "p-o-2" .
+
+}
+
+<http://inherit> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "c-1" ;
+    component:firstControl config:Inherit ;
+    component:second "c-2" ;
+    component:secondControl config:Inherit ;
+    component:third "c-3" ;
+    component:thirdControl config:Inherit ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> ;
+    component:fourthControl config:Inherit .
+
+<http://localhost/object/1> <http://localhost/value> "c-o-1" .
+<http://localhost/object/2> <http://localhost/value> "c-o-2" .
+
+}
+
+<http://expected/parent_inherit> {
+
+<http://base/2> a component:Configuration ;
+    component:first "p-1" ;
+    component:firstControl config:None ;
+    component:second "p-2" ;
+    component:secondControl config:None ;
+    component:third "p-3" ;
+    #component:thirdControl config:Forced ;
+    component:thirdControl config:None ;
+    component:fourth <http://base/1>, <http://base/3> ;
+    component:fourthControl config:None .
+
+<http://base/1> <http://localhost/value> "p-o-1" .
+<http://base/3> <http://localhost/value> "p-o-2" .
+
+}
+
+<http://expected/parent_inherit_bottom> {
+
+<http://base/2> a component:Configuration ;
+    component:first "p-1" ;
+    component:firstControl config:None ;
+    component:second "p-2" ;
+    component:secondControl config:None ;
+    component:third "p-3" ;
+    component:thirdControl config:Forced ;
+    component:fourth <http://base/1> ; # , <http://base/3> ;
+    component:fourthControl config:None .
+
+<http://base/1> <http://localhost/value> "c-o-1" .
+# <http://base/3> <http://localhost/value> "c-o-2" .
+
+}
+
+<http://inheritAndForce> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "c-1" ;
+    component:firstControl config:InheritAndForce ;
+    component:second "c-2" ;
+    component:secondControl config:InheritAndForce ;
+    component:third "c-3" ;
+    component:thirdControl config:InheritAndForce ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> ;
+    component:fourthControl config:InheritAndForce .
+
+<http://localhost/object/1> <http://localhost/value> "c-o-1" .
+<http://localhost/object/2> <http://localhost/value> "c-o-2" .
+
+}
+
+<http://expected/parent_inheritAndForce> {
+
+<http://base/2> a component:Configuration ;
+    component:first "p-1" ;
+    component:firstControl config:Forced ;
+    component:second "p-2" ;
+    component:secondControl config:Forced ;
+    component:third "p-3" ;
+    component:thirdControl config:Forced ;
+    component:fourth <http://base/1>, <http://base/3> ;
+    component:fourthControl config:Forced .
+
+<http://base/1> <http://localhost/value> "p-o-1" .
+<http://base/3> <http://localhost/value> "p-o-2" .
+
+}
+
+<http://expected/parent_inheritAndForce_bottom> {
+
+<http://base/2> a component:Configuration ;
+    component:first "c-1" ; # "p-1"
+    component:firstControl config:InheritAndForce ;
+    component:second "c-2" ; # "p-2"
+    component:secondControl config:InheritAndForce ;
+    component:third "p-3" ;
+    component:thirdControl config:Forced ;
+    component:fourth <http://base/1>, <http://base/3> ;
+    component:fourthControl config:InheritAndForce .
+
+<http://base/1> <http://localhost/value> "c-o-1" .
+<http://base/3> <http://localhost/value> "c-o-2" .
+
+}
+
+<http://noControl> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "c-1" ;
+    component:second "c-2" ;
+    component:third "c-3" ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> .
+
+<http://localhost/object/1> <http://localhost/value> "c-o-1" .
+<http://localhost/object/2> <http://localhost/value> "c-o-2" .
+
+}
+
+<http://expected/parent_noControl> {
+
+<http://base/2> a component:Configuration ;
+     component:first "c-1" ;
+     component:firstControl config:None ;
+     component:second "c-2" ;
+     component:secondControl config:None ;
+     component:third "c-3" ;
+     # component:thirdControl config:Forced ;
+     component:thirdControl config:None ;
+     component:fourth <http://base/1> ; # , <http://base/3> ;
+     component:fourthControl config:None .
+
+<http://base/1> <http://localhost/value> "p-o-1" .
+# <http://base/3> <http://localhost/value> "p-o-2" .
+
+}
+
+<http://expected/parent_noControl_bottom> {
+
+<http://base/2> a component:Configuration ;
+    component:first "c-1" ;
+    component:firstControl config:None ;
+    component:second "c-2" ;
+    component:secondControl config:None ;
+    component:third "p-3" ;
+    component:thirdControl config:Forced ;
+    component:fourth <http://base/1> , <http://base/3> ;
+    component:fourthControl config:None .
+
+<http://base/1> <http://localhost/value> "c-o-1" .
+<http://base/3> <http://localhost/value> "c-o-2" .
+
+}
+
+<http://none> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "c-1" ;
+    component:firstControl config:None ;
+    component:second "c-2" ;
+    component:secondControl config:None ;
+    component:third "c-3" ;
+    component:thirdControl config:None ;
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> ;
+    component:fourthControl config:None .
+
+<http://localhost/object/1> <http://localhost/value> "c-o-1" .
+<http://localhost/object/2> <http://localhost/value> "c-o-2" .
+
+}
+
+<http://expected/parent_none> {
+
+<http://base/2> a component:Configuration ;
+    component:first "c-1" ;
+    component:firstControl config:None ;
+    component:second "c-2" ;
+    component:secondControl config:None ;
+    component:third "c-3" ;
+    # component:thirdControl config:Forced ;
+    component:thirdControl config:None ;
+    component:fourth <http://base/1>; #, <http://base/3> ;
+    component:fourthControl config:None .
+
+<http://base/1> <http://localhost/value> "p-o-1" .
+# <http://base/3> <http://localhost/value> "p-o-2" .
+
+}
+
+<http://expected/parent_none_bottom> {
+
+<http://base/2> a component:Configuration ;
+    component:first "c-1" ;
+    component:firstControl config:None ;
+    component:second "c-2" ;
+    component:secondControl config:None ;
+    component:third "p-3" ;
+    component:thirdControl config:Forced ;
+    component:fourth <http://base/1>, <http://base/3> ;
+    component:fourthControl config:None .
+
+<http://base/1> <http://localhost/value> "c-o-1" .
+<http://base/3> <http://localhost/value> "c-o-2" .
+
+}
+

@@ -137,6 +137,18 @@ public class Statements implements Collection<Statement> {
         }
     }
 
+    public Statements selectByGraph(String graph) {
+        return selectByGraph(this.valueFactory.createIRI(graph));
+    }
+
+    public Statements selectByGraph(IRI graph) {
+        Statements result = Statements.ArrayList();
+        this.collection.stream()
+                .filter((st) -> graph.equals(st.getContext()))
+                .forEach((st) -> result.collection.add(st));
+        return result;
+    }
+
     @Override
     public int size() {
         return this.collection.size();
