@@ -43,7 +43,10 @@ public class OverviewObject {
         overview.lastChange = asDate(root.get("lastChange").asText());
 
         if (root.get("pipeline") != null) {
-            overview.pipeline = root.get("pipeline").get("@id").asText();
+            JsonNode id = root.get("pipeline").get("@id");
+            if (id != null) {
+                overview.pipeline = id.asText();
+            }
         }
 
         if (root.get("executionStarted") != null) {
