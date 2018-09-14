@@ -274,12 +274,6 @@
                                         </dependency>
                                         <!-- RDF -->
                                         <dependency>
-                                            <groupId>org.eclipse.rdf4j</groupId>
-                                            <artifactId>rdf4j-client</artifactId>
-                                            <version>${rdf4j.version}</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>rdf4j-storage-light</artifactId>
                                             <version>${rdf4j.version}</version>
