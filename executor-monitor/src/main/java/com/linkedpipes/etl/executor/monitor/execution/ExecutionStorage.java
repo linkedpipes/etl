@@ -225,7 +225,11 @@ class ExecutionStorage implements ExecutionSource {
             }
         }
 
-        return loadExecutionForFirstTime(directory);
+        Execution execution = loadExecutionForFirstTime(directory);
+        if (execution == null) {
+            throw new MonitorException("Can't load new execution");
+        }
+        return execution;
     }
 
     private String createExecutionGuid() {
