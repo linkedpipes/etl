@@ -8,12 +8,6 @@
         let templateList = [];
         const templateMap = {};
         populateWithJarTemplates(data, templateList, templateMap);
-        if (Object.keys(data.refTemplate).length === 0) {
-            // No reference templates.
-            data.templateList = templateList;
-            return;
-        }
-
         let toExpand = {...data.refTemplate};
         let toExpandNext = {};
         let maxLineageLength = 0;
