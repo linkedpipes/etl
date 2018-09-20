@@ -3,10 +3,10 @@ package com.linkedpipes.etl.executor.component;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
-import com.linkedpipes.etl.executor.execution.Execution;
-import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
+import com.linkedpipes.etl.executor.execution.ExecutionObserver;
+import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 
 /**
  * Interface of component executor. The component executor is responsible
@@ -31,13 +31,14 @@ public interface ComponentExecutor {
      * @param pipeline
      * @param execution
      * @param component
-     * @param instance Component instance, can be null.
+     * @param instance PipelineComponent instance, can be null.
      * @return Never return null.
      */
-    static ComponentExecutor create(Pipeline pipeline, Execution execution,
-            Component component, ManageableComponent instance)
+    static ComponentExecutor create(
+            Pipeline pipeline, ExecutionObserver execution,
+            PipelineComponent component, ManageableComponent instance)
             throws ExecutorException {
-        final ExecutionModel.Component execComponent =
+        ExecutionComponent execComponent =
                 execution.getModel().getComponent(component);
         switch (component.getExecutionType()) {
             case EXECUTE:

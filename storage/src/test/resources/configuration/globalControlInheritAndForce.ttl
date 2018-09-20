@@ -1,8 +1,0 @@
-@prefix component: <http://localhost/component#> .
-@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
-
-<http://localhost/instance> a component:Configuration ;
-    component:first "l-iaf" ;
-    component:second "l-iaf" ;
-    component:control config:InheritAndForce .
-

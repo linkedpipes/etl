@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.pipeline;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
@@ -91,7 +91,7 @@ public class Pipeline {
             throw new ExecutorException("Can't load pipeline model.", ex);
         }
         // Load descriptions.
-        for (Component component : model.getComponents()) {
+        for (PipelineComponent component : model.getComponents()) {
             ConfigurationDescription description =
                     component.getConfigurationDescription();
             if (description == null) {
@@ -164,7 +164,7 @@ public class Pipeline {
      * @return Writer for given configuration.
      */
     public BackendTripleWriter setConfiguration(
-            Component component, String graph)
+            PipelineComponent component, String graph)
             throws ExecutorException {
         LOG.info("setConfiguration {} {}", component.getIri(), graph);
         // TODO Save reference to the entity.

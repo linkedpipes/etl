@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,15 +119,18 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private void createRepository() {
         if (configuration.isUseTolerantRepository()) {
-            this.repository = new TolerantSparqlRepository(
-                    this.task.getEndpoint());
+            this.repository = new TolerantSparqlRepository(getEndpoint());
         } else {
-            this.repository = new SPARQLRepository(
-                    this.task.getEndpoint());
+            this.repository = new SPARQLRepository(getEndpoint());
         }
         setRepositoryHeaders(this.repository);
         this.repository.initialize();
         this.repository.setHttpClient(getHttpClient());
+    }
+
+    private String getEndpoint() {
+        String[] tokens = task.getEndpoint().split("://", 2);
+        return tokens[0] + "://" + IDN.toASCII(tokens[1]);
     }
 
     private void setRepositoryHeaders(SPARQLRepository repository) {

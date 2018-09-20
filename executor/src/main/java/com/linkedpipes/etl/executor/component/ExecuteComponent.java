@@ -9,9 +9,9 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.component.configuration.Configuration;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
-import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
+import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.model.Component;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.executor.rdf.TripleWriterWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
@@ -40,9 +40,9 @@ class ExecuteComponent implements ComponentExecutor {
 
     private final Pipeline pipeline;
 
-    private final Component pplComponent;
+    private final PipelineComponent pplComponent;
 
-    private final ExecutionModel.Component execComponent;
+    private final ExecutionComponent execComponent;
 
     private final ManageableComponent instance;
 
@@ -53,8 +53,8 @@ class ExecuteComponent implements ComponentExecutor {
     public ExecuteComponent(
             Pipeline pipeline,
             ExecutionObserver execution,
-            Component component,
-            ExecutionModel.Component execComponent,
+            PipelineComponent component,
+            ExecutionComponent execComponent,
             ManageableComponent instance) {
         this.pipeline = pipeline;
         this.pplComponent = component;
@@ -62,7 +62,7 @@ class ExecuteComponent implements ComponentExecutor {
         this.instance = instance;
         this.execution = execution;
         //
-        context = new ExecutionContext(execution, execComponent);
+        context = new ExecutionContext(execComponent, execution);
     }
 
     @Override

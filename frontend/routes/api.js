@@ -1,150 +1,105 @@
-//
-// Functional routes.
-//
+"use strict";
 
-'use strict';
+const express = require("express");
+const config = require("./../modules/configuration");
+const request = require("request"); // https://github.com/request/request
+const errors = require("./error-codes");
+const info = require("./../modules/info");
 
-var gExpress = require('express');
-var gConfiguration = require('./../modules/configuration');
-var gInfo = require('./../modules/info');
-var gRequest = require('request'); // https://github.com/request/request
+const router = express.Router();
+module.exports = router;
 
-var gApiRouter = gExpress.Router();
-module.exports = gApiRouter;
+const storageApiUrlPrefix = config.storage.url + "/api/v1/components/";
 
-//
-// Components as templates.
-//
-
-gApiRouter.get('/info', function (request, response) {
-    response.status(200).json(gInfo);
-});
-
-// Access to components.
-
-gApiRouter.get('/components/:type', function (request, response) {
-    // Re-post to the storage.
-    var iri = gConfiguration.storage.url + '/api/v1/components/';
-    switch (request.params.type) {
-        case 'interface':
-            iri += 'interface?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
+router.get("/components/:type", (req, res) => {
+    let url = storageApiUrlPrefix;
+    switch (req.params.type) {
+        case "interface":
+            url += "interface?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
             break;
-        case 'definition':
-            iri += 'definition?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
+        case "definition":
+            url += "definition?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
             break;
-        case 'effective':
-            iri += 'configEffective?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
+        case "effective":
+            url += "configEffective?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
             break;
-        case 'config':
-            iri += 'config?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
+        case "config":
+            url += "config?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
             break;
-        case 'configTemplate':
-            iri += 'configTemplate?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
+        case "configTemplate":
+            url += "configTemplate?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
             break;
-        case 'configDescription':
-            iri += 'configDescription?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
+        case "configDescription":
+            url += "configDescription?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
             break;
-        case 'static':
-            iri += 'static?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
-            iri += '&file=' + encodeURIComponent(request.query.file)
+        case "static":
+            url += "static?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
+            url += "&file=" + encodeURIComponent(req.query.file);
             break;
-        case 'dialog':
-            iri += 'dialog?';
-            iri += 'iri=' + encodeURIComponent(request.query.iri)
-            iri += '&file=' + encodeURIComponent(request.query.file)
-            iri += '&name=' + encodeURIComponent(request.query.name)
+        case "dialog":
+            url += "dialog?";
+            url += "iri=" + encodeURIComponent(req.query.iri);
+            url += "&file=" + encodeURIComponent(req.query.file);
+            url += "&name=" + encodeURIComponent(req.query.name);
             break;
         default:
-            response.status(400).json({
-                'exception': {
-                    'errorMessage': '',
-                    'systemMessage': '',
-                    'userMessage': 'Missing resource.',
-                    'errorCode': 'CONNECTION_REFUSED'
-                }
-            });
+            res.status(400).json({"error": {"type": errors.INVALID_REQUEST}});
             return;
     }
-    // Pass header options.
-    var options = {
-        'url': iri,
-        'headers': request.headers
-    }
-    gRequest.get(options).on('error', function (error) {
-        response.status(503).json({
-            'exception': {
-                'errorMessage': error,
-                'systemMessage': 'Executor-monitor is offline.',
-                'userMessage': 'Backend is offline.',
-                'errorCode': 'CONNECTION_REFUSED'
-            }
-        });
-    }).pipe(response);
+    request.get({"url": url, "headers": req.headers})
+        .on("error", (error) => handleError(res, error))
+        .pipe(res);
 });
 
-gApiRouter.get('/jars/file', function (request, response) {
-    var iri = gConfiguration.storage.url + '/api/v1/jars/file?';
-    iri += 'iri=' + encodeURIComponent(request.query.iri);
+
+function handleError(res, error) {
+    console.error("Request failed:\n", error);
+    res.status(503).json({"error": {"type": errors.CONNECTION}});
+}
+
+router.post("/components/config", (req, res) => {
+    const url = storageApiUrlPrefix + "config?iri=" +
+        encodeURIComponent(req.query.iri);
+    req.pipe(request.post(url, {"form": req.body}), {"end": false})
+        .on("error", (error) => handleError(res, error))
+        .pipe(res);
+});
+
+router.post("/components/component", (req, res) => {
+    const url = storageApiUrlPrefix + "component?iri=" +
+        encodeURIComponent(req.query.iri);
+    req.pipe(request.post(url, {"form": req.body}), {"end": false})
+        .on("error", (error) => handleError(res, error))
+        .pipe(res);
+});
+
+router.get("/info", (req, res) => {
+    res.status(200).json(info);
+});
+
+router.get("/usage", (req, res) => {
+    const options = {
+        "url": config.storage.url + "/api/v1/components/usage?iri=" +
+        encodeURIComponent(req.query.iri),
+        "headers": req.headers
+    };
+    request.get(options)
+        .on("error", (error) => handleError(res, error))
+        .pipe(res);
+});
+
+router.get("/jars/file", (req, res) => {
+    let iri = config.storage.url + "/api/v1/jars/file?";
+    iri += "iri=" + encodeURIComponent(req.query.iri);
     //
-    gRequest.get(iri).on('error', function (error) {
-        response.status(503).json({
-            'exception': {
-                'errorMessage': '',
-                'systemMessage': 'Executor-monitor is offline.',
-                'userMessage': 'Backend is offline.',
-                'errorCode': 'CONNECTION_REFUSED'
-            }
-        });
-    }).pipe(response);
-});
-
-// Updates for templates
-
-gApiRouter.post('/components/config', function (request, response) {
-    var url = gConfiguration.storage.url +
-        '/api/v1/components/config?iri=' +
-        encodeURIComponent(request.query.iri);
-    request.pipe(gRequest.post(url, {
-        'form': request.body
-    }), {
-        'end': false
-    }).pipe(response);
-});
-
-gApiRouter.post('/components/component', function (request, response) {
-    var url = gConfiguration.storage.url +
-        '/api/v1/components/component?iri=' +
-        encodeURIComponent(request.query.iri);
-    request.pipe(gRequest.post(url, {
-        'form': request.body
-    }), {
-        'end': false
-    }).pipe(response);
-});
-
-
-gApiRouter.get('/usage', function (request, response) {
-    // Pass header options.
-    var options = {
-        'url': gConfiguration.storage.url + '/api/v1/components/usage?iri=' +
-        encodeURIComponent(request.query.iri),
-        'headers': request.headers
-    }
-    gRequest.get(options).on('error', function (error) {
-        response.status(503).json({
-            'exception': {
-                'errorMessage': error,
-                'systemMessage': 'Executor-monitor is offline.',
-                'userMessage': 'Backend is offline.',
-                'errorCode': 'CONNECTION_REFUSED'
-            }
-        });
-    }).pipe(response);
+    request.get(iri)
+        .on("error", (error) => handleError(res, error))
+        .pipe(res);
 });

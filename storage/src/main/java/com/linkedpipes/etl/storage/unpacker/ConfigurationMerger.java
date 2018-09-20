@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.unpacker;
 
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
@@ -81,8 +82,10 @@ class ConfigurationMerger {
         ConfigurationFacade configurationFacade = new ConfigurationFacade();
         Collection<Statement> configuration =
                 configurationFacade.mergeFromBottom(
-                        templateTriples, componentTriples,
-                        descriptionTriples, baseIri,
+                        new Statements(templateTriples),
+                        new Statements(componentTriples),
+                        new Statements(descriptionTriples),
+                        baseIri,
                         valueFactory.createIRI(componentConfigurationGraph));
 
         graphs.put(componentConfigurationGraph, configuration);
@@ -100,7 +103,7 @@ class ConfigurationMerger {
         ConfigurationFacade configurationFacade = new ConfigurationFacade();
         Collection<Statement> configuration =
                 configurationFacade.finalizeAfterMergeFromBottom(
-                        componentTriples);
+                        new Statements(componentTriples));
 
         graphs.put(componentConfigurationGraph, configuration);
     }

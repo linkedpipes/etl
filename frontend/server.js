@@ -1,60 +1,55 @@
-//
-// Application entry point.
-//
+"use strict";
 
-'use strict';
-
-var gExpress = require('express');
-var gApp = gExpress();
-
-// Load configuration.
-var gConfiguration = require('./modules/configuration');
+const express = require("express");
+const app = express();
+const config = require("./modules/configuration");
 
 // Static content.
-gApp.use('/app', gExpress.static('public/app'));
-gApp.use('/libraries', gExpress.static('public/libraries'));
-gApp.use('/assets', gExpress.static('public/assets'));
+app.use("/app", express.static("public/app"));
+app.use("/libraries", express.static("public/libraries"));
+app.use("/assets", express.static("public/assets"));
 
-// REST API.
-gApp.use('/api/v1/', require('./routes/api'));
-gApp.use('/resources/', require('./routes/resources'));
+// API.
+app.use("/api/v1/", require("./routes/api"));
+app.use("/resources/components", require("./routes/resources/components"));
+app.use("/resources/pipelines", require("./routes/resources/pipelines"));
+app.use("/resources/executions", require("./routes/resources/executions"));
 
 // Main page and rest of angular application.
-gApp.engine('html', require('ejs').renderFile);
-gApp.set('views', __dirname + '/public/');
-gApp.get('/', function (req, res) {
-    res.render('index.html');
+app.engine("html", require("ejs").renderFile);
+app.set("views", __dirname + "/public/");
+app.get("/", (req, res) => {
+    res.render("index.html");
 });
 
 // Start server.
-var server = gApp.listen(gConfiguration.frontend.port, function () {
-    console.log('We have started our server on port ', gConfiguration.frontend.port);
+const server = app.listen(config.frontend.port, () => {
+    console.error("We have started our server on port ", config.frontend.port);
 });
 
 // Add event handlers.
-process.on('SIGTERM', function () {
-    // Finish current requests.
-    server.close(function () {
-        console.log('Closing server on "SIGTERM".');
+process.on("SIGTERM", () => {
+    server.close(() => {
+        console.error("Closing server on 'SIGTERM'.");
         process.exit(0);
     });
 });
 
-process.on('SIGHUP', function (code) {
-    console.log('Closing server on "SIGHUP".');
+process.on("SIGHUP", () => {
+    console.error("Closing server on 'SIGHUP'.");
     process.exit(0);
 });
 
-process.on('SIGINT', function (code) {
-    console.log('Closing server on "SIGINT".');
+process.on("SIGINT", () => {
+    console.error("Closing server on 'SIGINT'.");
     process.exit(0);
 });
 
-process.on('exit', function (code) {
-    console.log('About to exit with code:', code);
+process.on("exit", (code) => {
+    console.error("About to exit with code:", code);
 });
 
-process.on('uncaughtException', function (err) {
-    console.log('Caught exception:', err, err.stack);
+process.on("uncaughtException", (err) => {
+    console.error("Caught exception:", err, err.stack);
 });
 

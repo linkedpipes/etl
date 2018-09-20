@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.template.Template;
@@ -103,7 +104,8 @@ class ExportPipeline {
                             template.getIri());
             Collection<Statement> privateProperties =
                     this.configurationFacade.selectPrivateStatements(
-                            configuration, description);
+                            new Statements(configuration),
+                            new Statements(description));
             rdf.removeAll(privateProperties);
         }
     }

@@ -31,7 +31,6 @@
         const supportControl = getSupportControl(resource);
         const dialogs = getDialogs(resource, graph);
         const basic = parseBasicTemplate(resource);
-        const search = (basic.label + "," + keywords.join(",")).toLowerCase();
         return {
             ...basic,
             ...parsePorts(resource, graph),
@@ -40,8 +39,7 @@
             "dialogs": dialogs,
             "isCore": true,
             "supportControl": supportControl,
-            "infoLink": infoLink,
-            "search": search
+            "infoLink": infoLink
         }
     }
 

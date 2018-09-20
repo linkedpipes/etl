@@ -259,6 +259,7 @@ define([
             });
         }
 
+        let lastExecutionUpdateFailed = false;
         /**
          * Load execution from data.execution.iri.
          */
@@ -279,7 +280,12 @@ define([
                     data.execution.update = false;
                     $scope.data.tools.execFinished = true;
                 }
+                lastExecutionUpdateFailed = false;
             }).catch(function (response) {
+                if (lastExecutionUpdateFailed) {
+                    return;
+                }
+                lastExecutionUpdateFailed = true;
                 statusService.httpGetFailed({
                     'title': "Can't load execution.",
                     'response': response
@@ -297,7 +303,7 @@ define([
             .then(function () {
                 console.timeEnd('pipelineCanvasCtrl.loadData');
                 // Initialize refresh here.
-                refreshService.set(function update() {
+                refreshService.add("ppl-canvas", function update() {
                     if (data.execution.update) {
                         loadExecution();
                     }

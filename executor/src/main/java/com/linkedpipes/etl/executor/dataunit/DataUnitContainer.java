@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.dataunit;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
-import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
+import com.linkedpipes.etl.executor.execution.model.DataUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +31,9 @@ class DataUnitContainer {
     private final ManageableDataUnit instance;
 
     /**
-     * Execution metadata.
+     * ExecutionObserver metadata.
      */
-    private final ExecutionModel.DataUnit metadata;
+    private final DataUnit metadata;
 
     /**
      * Internal status of the container.
@@ -42,7 +42,7 @@ class DataUnitContainer {
 
     public DataUnitContainer(
             ManageableDataUnit instance,
-            ExecutionModel.DataUnit metadata) {
+            DataUnit metadata) {
         this.instance = instance;
         this.metadata = metadata;
         this.status = Status.NEW;
@@ -64,14 +64,14 @@ class DataUnitContainer {
             throws ExecutorException {
         if (this.status != Status.NEW) {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
-                    metadata.getDataUnitIri(), this.status);
+                    metadata.getIri(), this.status);
         }
-        LOG.debug("load from sources: {}", metadata.getDataUnitIri());
+        LOG.debug("load from sources: {}", metadata.getIri());
         try {
             instance.initialize(instances);
         } catch (LpException ex) {
             throw new ExecutorException("Can't bindToPipeline data unit: {}",
-                    metadata.getDataUnitIri(), ex);
+                    metadata.getIri(), ex);
         }
         this.status = Status.INITIALIZED;
     }
@@ -86,14 +86,14 @@ class DataUnitContainer {
             throws ExecutorException {
         if (this.status != Status.NEW) {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
-                    metadata.getDataUnitIri(), this.status);
+                    metadata.getIri(), this.status);
         }
-        LOG.debug("load from file: {}", metadata.getDataUnitIri());
+        LOG.debug("load from file: {}", metadata.getIri());
         try {
             instance.initialize(directory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't bindToPipeline data unit: {}",
-                    metadata.getDataUnitIri(), ex);
+                    metadata.getIri(), ex);
         }
         this.status = Status.INITIALIZED;
     }
@@ -108,7 +108,7 @@ class DataUnitContainer {
         }
         if (this.status == Status.CLOSED) {
             throw new ExecutorException("Can't save closed data unit: {}",
-                    metadata.getDataUnitIri());
+                    metadata.getIri());
         }
         final File saveDirectory = metadata.getSaveDirectory();
         if (saveDirectory == null) {
@@ -119,7 +119,7 @@ class DataUnitContainer {
             instance.save(saveDirectory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't save data unit: {}",
-                    metadata.getDataUnitIri(), ex);
+                    metadata.getIri(), ex);
         }
         this.status = Status.SAVED;
     }
@@ -134,7 +134,7 @@ class DataUnitContainer {
         }
         if (status == Status.CLOSED) {
             LOG.warn("Data unit already closed: {}",
-                    metadata.getDataUnitIri());
+                    metadata.getIri());
             return;
         }
         //
@@ -142,7 +142,7 @@ class DataUnitContainer {
             instance.close();
         } catch (LpException ex) {
             throw new ExecutorException("Can't closeRepository data unit: {}",
-                    metadata.getDataUnitIri(), ex);
+                    metadata.getIri(), ex);
         }
         this.status = Status.CLOSED;
     }
@@ -155,7 +155,7 @@ class DataUnitContainer {
         }
         try {
             LOG.debug("map by reference: {} from {}",
-                    metadata.getDataUnitIri(), source);
+                    metadata.getIri(), source);
             instance.referenceContent(source, saveDirectory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't reference content.", ex);

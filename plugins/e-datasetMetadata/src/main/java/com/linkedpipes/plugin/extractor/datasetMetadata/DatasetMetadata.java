@@ -8,6 +8,7 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.DCAT;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
@@ -132,7 +133,10 @@ public class DatasetMetadata implements Component, SequentialExecution {
         if (!isBlank(configuration.getPublisherURI())) {
             final IRI publisher = valueFactory.createIRI(configuration.getPublisherURI());
             statements.add(valueFactory.createStatement(publisher, RDF.TYPE, FOAF.AGENT));
-            addStringIfNotBlank(FOAF.NAME, configuration.getPublisherName(), null);
+            if (!isBlank(configuration.getPublisherName())) {
+                statements.add(valueFactory.createStatement(publisher, FOAF.NAME, 
+                                  valueFactory.createLiteral(configuration.getPublisherName())));
+            }
             statements.add(valueFactory.createStatement(dataset, DCTERMS.PUBLISHER, publisher));
         }
 
@@ -148,7 +152,7 @@ public class DatasetMetadata implements Component, SequentialExecution {
         configuration.getThemes().forEach((themeUri) -> {
             final IRI theme = valueFactory.createIRI(themeUri);
             statements.add(valueFactory.createStatement(theme, RDF.TYPE, SKOS.CONCEPT));
-            statements.add(valueFactory.createStatement(dataset, DCTERMS.PUBLISHER, theme));
+            statements.add(valueFactory.createStatement(dataset, DCAT.THEME, theme));
         });
 
         // Add all triples.

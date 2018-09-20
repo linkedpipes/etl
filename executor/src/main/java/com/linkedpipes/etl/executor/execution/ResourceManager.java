@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.executor.execution;
 
+import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
+
 import java.io.File;
 
 public class ResourceManager {
@@ -27,10 +29,9 @@ public class ResourceManager {
      * @return Pipeline as given for execution.
      */
     public File getDefinitionFile() {
-        final File directory = (new File(executionRoot, "definition")).getAbsoluteFile();
+        File directory = new File(executionRoot, "definition");
         for (File file : directory.listFiles()) {
-            final String fileName = file.getName();
-            // @TODO Rename to pipeline
+            String fileName = file.getName();
             if (fileName.startsWith("definition")) {
                 return file;
             }
@@ -44,7 +45,7 @@ public class ResourceManager {
      * @return Path to another execution.
      */
     public File resolveExecutionPath(String execution, String path) {
-        final String executionId = execution.substring(
+        String executionId = execution.substring(
                 execution.indexOf("executions/") + 11);
         return new File(root, executionId + "/" + path);
     }
@@ -66,50 +67,63 @@ public class ResourceManager {
      */
     public File getWorkingDirectory(String name) {
         counter += 1;
-        final File working = new File(executionRoot,
-                "working/" + name + "-" + counter);
-        return working;
+        return new File(executionRoot, "working/" + name + "-" + counter);
     }
 
-    public File getExecutionDebugLogFile() {
-        return new File(getExecutionLogDirectory(), "execution.log");
+    public File getDebugLogFile() {
+        return new File(getExecutionLogDirectory(), "execution-debug.log");
     }
 
     public File getExecutionLogDirectory() {
-        final File file = new File(executionRoot, "log");
+        File file = new File(executionRoot, "log");
         file.mkdirs();
         return file;
+    }
+
+    public File getInfoLogFile() {
+        return new File(getExecutionLogDirectory(), "execution-info.log");
     }
 
     /**
      * @return Output file for the pipeline execution.
      */
     public File getPipelineFile() {
-        final File file = new File(executionRoot, "pipeline.trig");
+        File file = new File(executionRoot, "pipeline.trig");
         file.getParentFile().mkdir();
         return file;
     }
+
+    public File getExecutionFile() {
+        File file = new File(executionRoot, "execution.trig");
+        file.getParentFile().mkdir();
+        return file;
+    }
+
 
     /**
      * @return Output file for original execution file.
      */
-    public File getExecutionFileV1() {
-        final File file = new File(executionRoot, "execution.jsonld");
+    public File getComponentMessageFile(ExecutionComponent component) {
+        String iri = component.getIri();
+        String id = iri.substring(iri.lastIndexOf("/"));
+        File file = new File(this.executionRoot, "messages/" + id + ".trig");
         file.getParentFile().mkdir();
         return file;
     }
 
-    public File getExecutionOverviewJsonFile() {
-        final File file = new File(executionRoot, "execution/overview.jsonld");
+    public File getPipelineMessageFile() {
+        File file = new File(executionRoot, "messages/execution.trig");
         file.getParentFile().mkdir();
         return file;
     }
+
+    public File getOverviewFile() {
+        return new File(executionRoot, "execution-overview.jsonld");
+    }
+
 
     /**
      * Return given path as relative to the execution root directory.
-     *
-     * @param path
-     * @return
      */
     public String relative(File path) {
         return executionRoot.toPath().relativize(path.toPath()).toString();

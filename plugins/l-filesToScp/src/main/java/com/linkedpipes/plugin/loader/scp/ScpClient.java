@@ -43,6 +43,8 @@ class ScpClient implements AutoCloseable {
 
     private OutputStream remoteOutput;
 
+    private OutputStream remoteError;
+
     private InputStream remoteInput;
 
     public ScpClient(int timeOut) {
@@ -107,9 +109,11 @@ class ScpClient implements AutoCloseable {
         int status = channel.getExitStatus();
         LOG.info("Status code: {}", status);
         switch (status) {
-            case -1: // Fail with no output )command not done yet?).
+            case -1: // Fail with no output - command is not done yet?
                 throw new LpException("Action failed (-1).");
             case 0: // Ok
+                LOG.info("Stderr: {}", errorStream.toString());
+                LOG.info("Stdout: {}", outputStream.toString());
                 return;
             case 1: // Failure
             case 2: // Critical failure
@@ -133,8 +137,8 @@ class ScpClient implements AutoCloseable {
     }
 
     public void clearDirectory(String directory) throws Exception {
-        String command = "[ $(ls -A " + directory + " ) ] && rm -r " +
-                directory + "/* || :";
+        String command =
+                "`[ -d " + directory + " ] && rm -r " + directory + "/* || :`";
         LOG.info("clearDirectory ... : {}", command);
         withChannelExec((channel) -> {
             channel.setCommand(command);
@@ -150,6 +154,7 @@ class ScpClient implements AutoCloseable {
         withChannelExec((channel) -> {
             ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
             channel.setErrStream(errorStream);
+            this.remoteError = errorStream;
             try (OutputStream remoteOutput = channel.getOutputStream();
                  InputStream remoteInput = channel.getInputStream()) {
                 this.remoteOutput = remoteOutput;
@@ -221,35 +226,37 @@ class ScpClient implements AutoCloseable {
 
     private void checkResponseStream() throws IOException, LpException {
         int response = this.remoteInput.read();
+        LOG.debug("Response: {}", response);
         switch (response) {
             case -1: // No response from server.
                 throw new LpException("No response from server!");
             case 0: // Success.
                 break;
             case 1:
-                throw new LpException("Error: {}", this.readResponse());
             case 2:
-                throw new LpException("Fatal error: {}", this.readResponse());
+                throw new LpException(
+                        "Error:    \n{}    \n{}",
+                        this.readResponse(), this.remoteError.toString());
             default:
                 throw new LpException("Invalid response: {}", response);
         }
     }
 
     private String readResponse() throws IOException {
-        LOG.debug("readResponse ...");
+        LOG.debug("reading response from input stream ...");
         if (this.remoteInput == null) {
-            return "";
+            return "Stream is set to null";
         }
         this.waitForData(this.remoteInput);
         StringBuffer buffer = new StringBuffer();
-        while (true) {
+        while (this.remoteInput.available() > 0) {
             int value = this.remoteInput.read();
             if (value == 0 || value == -1) {
                 break;
             }
             buffer.append((char) value);
         }
-        LOG.debug("readResponse ... done");
+        LOG.debug("reading response from input stream ... done");
         return buffer.toString();
     }
 

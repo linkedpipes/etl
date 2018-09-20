@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.component;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
-import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
+import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 
 /**
  * Represent an execution of a component that is mapped from another
@@ -14,10 +14,10 @@ class MapComponent implements ComponentExecutor {
 
     private final ExecutionObserver execution;
 
-    private final ExecutionModel.Component execComponent;
+    private final ExecutionComponent execComponent;
 
     public MapComponent(ExecutionObserver execution,
-            ExecutionModel.Component execComponent) {
+            ExecutionComponent execComponent) {
         this.execution = execution;
         this.execComponent = execComponent;
     }

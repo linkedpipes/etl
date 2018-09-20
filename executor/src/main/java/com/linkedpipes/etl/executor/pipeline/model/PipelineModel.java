@@ -20,7 +20,7 @@ public class PipelineModel implements Loadable {
 
     private final String graph;
 
-    private final List<Component> components = new LinkedList<>();
+    private final List<PipelineComponent> components = new LinkedList<>();
 
     private final List<Connection> connections = new LinkedList<>();
 
@@ -41,7 +41,7 @@ public class PipelineModel implements Loadable {
         return graph;
     }
 
-    public List<Component> getComponents() {
+    public List<PipelineComponent> getComponents() {
         return Collections.unmodifiableList(components);
     }
 
@@ -49,8 +49,8 @@ public class PipelineModel implements Loadable {
         return Collections.unmodifiableList(connections);
     }
 
-    public Component getComponent(String iri) {
-        for (Component component : components) {
+    public PipelineComponent getComponent(String iri) {
+        for (PipelineComponent component : components) {
             if (component.getIri().equals(iri)) {
                 return component;
             }
@@ -63,7 +63,7 @@ public class PipelineModel implements Loadable {
             throws RdfUtilsException {
         switch (predicate) {
             case LP_PIPELINE.HAS_COMPONENT:
-                final Component component = new Component(object.asString());
+                final PipelineComponent component = new PipelineComponent(object.asString());
                 components.add(component);
                 return component;
             case LP_PIPELINE.HAS_CONNECTION:
@@ -85,7 +85,7 @@ public class PipelineModel implements Loadable {
     }
 
     private void check() throws InvalidPipelineException {
-        for (Component component : components) {
+        for (PipelineComponent component : components) {
             component.afterLoad();
         }
     }

@@ -72,7 +72,8 @@
     function copyPipeline($http, pipeline) {
         const data = createPipelineCopyPostData();
         const config = createPostConfigWithJsonLd();
-        const url = "/resources/pipelines?pipeline=" + pipeline.iri;
+        const url =
+            "/resources/pipelines?fromLocal=true&pipeline=" + pipeline.iri;
         return $http.post(url, data, config);
     }
 

@@ -22,6 +22,7 @@ import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,14 +124,19 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
     private SPARQLRepository createRepository() {
         SPARQLRepository repository;
         if (configuration.isUseTolerantRepository()) {
-            repository = new TolerantSparqlRepository(task.getEndpoint());
+            repository = new TolerantSparqlRepository(getEndpoint());
         } else {
-            repository = new SPARQLRepository(task.getEndpoint());
+            repository = new SPARQLRepository(getEndpoint());
         }
         setHeaders(repository);
         repository.initialize();
         repository.setHttpClient(getHttpClient());
         return repository;
+    }
+
+    private String getEndpoint() {
+        String[] tokens = task.getEndpoint().split("://", 2);
+        return tokens[0] + "://" + IDN.toASCII(tokens[1]);
     }
 
     private void setHeaders(SPARQLRepository repository) {

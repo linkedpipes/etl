@@ -8,12 +8,6 @@
         let templateList = [];
         const templateMap = {};
         populateWithJarTemplates(data, templateList, templateMap);
-        if (Object.keys(data.refTemplate).length === 0) {
-            // No reference templates.
-            data.templateList = templateList;
-            return;
-        }
-
         let toExpand = {...data.refTemplate};
         let toExpandNext = {};
         let maxLineageLength = 0;
@@ -53,6 +47,7 @@
         }
         setChildren(templateList, maxLineageLength);
         setCoreTemplates(data);
+        setComponentsSearch(templateList);
         data.templateList = templateList;
     }
 
@@ -123,6 +118,14 @@
                 instance._children[i]._coreReference = instance;
             }
         }
+    }
+
+    function setComponentsSearch(templates) {
+        templates.forEach((template) => {
+            const label = template.label;
+            const keywords = template._coreReference.keyword;
+            template.search = (label + "," + keywords.join(",")).toLowerCase();
+        });
     }
 
     return {

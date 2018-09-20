@@ -112,7 +112,11 @@
         item["progress"]["value"] = getProgressValue(item["progress"]);
         updateExecutionStatus(item);
         updateExecutionMetadata(item);
-        item["searchLabel"] = item["label"].toLowerCase();
+        if (item["label"]) {
+            item["searchLabel"] = item["label"].toLowerCase();
+        } else {
+            item["searchLabel"] = item["iri"].toLowerCase();
+        }
         item["filterLabel"] = true;
     }
 
@@ -154,7 +158,7 @@
     // TODO Move IRIs to vocabulary.
     function updateExecutionStatus(execution) {
         switch (execution.status) {
-            case 'http://etl.linkedpipes.com/resources/status/cancelled':
+            case LP.EXEC_CANCELLED:
                 execution.canDelete = true;
                 execution.canCancel = false;
                 execution.icon = {
@@ -166,7 +170,7 @@
                 execution.detailType = 'FULL';
                 execution.canDelete = true;
                 break;
-            case 'http://etl.linkedpipes.com/resources/status/queued':
+            case LP.EXEC_QUEUED:
                 execution.canDelete = true;
                 execution.canCancel = false;
                 execution.icon = {
@@ -177,8 +181,8 @@
                 };
                 execution.detailType = 'NONE';
                 break;
-            case 'http://etl.linkedpipes.com/resources/status/initializing':
-            case 'http://etl.linkedpipes.com/resources/status/running':
+            case LP.EXEC_INITIALIZING:
+            case LP.EXEC_RUNNING:
                 execution.canDelete = false;
                 execution.canCancel = true;
                 execution.icon = {
@@ -189,7 +193,7 @@
                 };
                 execution.detailType = 'PROGRESS';
                 break;
-            case 'http://etl.linkedpipes.com/resources/status/finished':
+            case LP.EXEC_FINISHED:
                 execution.canDelete = true;
                 execution.canCancel = false;
                 execution.icon = {
@@ -200,7 +204,7 @@
                 };
                 execution.detailType = 'FULL';
                 break;
-            case 'http://etl.linkedpipes.com/resources/status/failed':
+            case LP.EXEC_FAILED:
                 execution.canDelete = true;
                 execution.canCancel = false;
                 execution.icon = {
@@ -211,7 +215,7 @@
                 };
                 execution.detailType = 'FULL';
                 break;
-            case 'http://etl.linkedpipes.com/resources/status/cancelling':
+            case LP.EXEC_CANCELLING:
                 execution.canDelete = false;
                 execution.canCancel = false;
                 execution.icon = {
@@ -222,13 +226,7 @@
                 };
                 execution.detailType = 'PROGRESS';
                 break;
-            default:
-                execution.detailType = 'NONE';
-                break;
-        }
-        // The status above can be override by the status-monitor.
-        switch (execution['status-monitor']) {
-            case 'http://etl.linkedpipes.com/resources/status/unresponsive':
+            case LP.EXEC_UNRESPONSIVE:
                 execution.canDelete = false;
                 execution.canCancel = false;
                 execution.icon = {
@@ -238,7 +236,8 @@
                     }
                 };
                 break;
-            case 'http://etl.linkedpipes.com/resources/status/dangling':
+            case LP.EXEC_INVALID:
+            case LP.EXEC_DANGLING:
                 execution.canDelete = true;
                 execution.canCancel = false;
                 execution.icon = {
@@ -249,6 +248,7 @@
                 };
                 break;
             default:
+                execution.detailType = 'NONE';
                 break;
         }
     }
@@ -319,7 +319,7 @@
             const builder = jsonLdSource.createBuilder();
             builder.url("/resources/executions");
             builder.itemType(LP.EXECUTION);
-            builder.tombstoneType(LP.DELETED);
+            builder.tombstoneType(LP.TOMBSTONE);
             builder.itemTemplate(REPOSITORY_TEMPLATE);
             builder.supportIncrementalUpdate();
             return repositoryService.createWithInfiniteScroll({

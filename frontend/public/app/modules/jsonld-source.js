@@ -57,7 +57,7 @@
 
     function fetchItems(url, itemType, tombstoneType, itemTemplate) {
         return http.getJsonLd(url).then((response) => {
-            const payload = response.json;
+            const payload = response.payload;
             return {
                 "data": jsonLdToJson(payload, itemType, itemTemplate),
                 "tombstones": getTombstonesIds(payload, tombstoneType),
@@ -75,7 +75,6 @@
             return metadata[0].timestamp;
         }
     }
-
     function getTombstonesIds(payload, type) {
         const tombstones = jsonLdToJson(payload, type, TOMBSTONE_TEMPLATE);
         return tombstones.map(item => item.id);

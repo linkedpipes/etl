@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.IDN;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,8 +72,7 @@ public final class SparqlEndpointSelect implements Component,
                     SparqlEndpointSelectVocabulary.HAS_QUERY);
         }
         //
-        final SPARQLRepository repository
-                = new SPARQLRepository(configuration.getEndpoint());
+        final SPARQLRepository repository = new SPARQLRepository(getEndpoint());
         // Customize repository.
         final Map<String, String> headers = new HashMap<>();
         headers.putAll(repository.getAdditionalHttpHeaders());
@@ -101,6 +101,11 @@ public final class SparqlEndpointSelect implements Component,
                 LOG.error("Can't close repository.", ex);
             }
         }
+    }
+
+    private String getEndpoint() {
+        String[] tokens = configuration.getEndpoint().split("://", 2);
+        return tokens[0] + "://" + IDN.toASCII(tokens[1]);
     }
 
     public void queryRemote(SPARQLRepository repository, File outputFile,

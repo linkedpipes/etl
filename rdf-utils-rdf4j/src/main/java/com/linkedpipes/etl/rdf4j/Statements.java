@@ -29,6 +29,12 @@ public class Statements implements Collection<Statement> {
         return new Statements(new ArrayList<>());
     }
 
+    public static Statements ArrayList(File file) throws IOException {
+        Statements result = new Statements(new ArrayList<>());
+        result.addAll(file);
+        return result;
+    }
+
     public static Statements ArrayList(int size) {
         return new Statements(new ArrayList<>(size));
     }
@@ -48,7 +54,6 @@ public class Statements implements Collection<Statement> {
     public void addIri(String s, String p, String o) {
         this.addIri(this.valueFactory.createIRI(s), p, o);
     }
-
 
     public void addIri(Resource s, String p, String o) {
         this.add(s, p, this.valueFactory.createIRI(o));
@@ -90,6 +95,14 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, this.valueFactory.createLiteral(o));
     }
 
+    public void addDate(Resource s, String p, Date o) {
+        this.addDate(s, this.valueFactory.createIRI(p), o);
+    }
+
+    public void addDate(Resource s, IRI p, Date o) {
+        this.add(s, p, this.valueFactory.createLiteral(o));
+    }
+
     public void add(Resource s, String p, Value o) {
         this.add(s, this.valueFactory.createIRI(p), o);
     }
@@ -122,6 +135,18 @@ public class Statements implements Collection<Statement> {
         } catch (RuntimeException ex) {
             throw new IOException(ex);
         }
+    }
+
+    public Statements selectByGraph(String graph) {
+        return selectByGraph(this.valueFactory.createIRI(graph));
+    }
+
+    public Statements selectByGraph(IRI graph) {
+        Statements result = Statements.ArrayList();
+        this.collection.stream()
+                .filter((st) -> graph.equals(st.getContext()))
+                .forEach((st) -> result.collection.add(st));
+        return result;
     }
 
     @Override

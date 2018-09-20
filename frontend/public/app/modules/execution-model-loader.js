@@ -15,7 +15,6 @@
     "use strict";
 
     const LP = _vocabulary.LP;
-    const SKOS = _vocabulary.SKOS;
 
     function getComponent(model, iri) {
         if (model.components[iri] === undefined) {
@@ -26,15 +25,7 @@
 
     function createComponent(iri) {
         return {
-            "iri": iri,
-            "messages": [],
-            "iris-of-loaded-messages": [],
-            "mapping": {
-                // True if mapping is on for this component.
-                "enabled": true,
-                // True if there is possibility to map this component.
-                "available": false
-            }
+            "iri": iri
         };
     }
 
@@ -57,43 +48,6 @@
             default:
                 return true;
         }
-
-    }
-
-    function onExecutionBegin(model, resource) {
-        model.execution.start = getCreated(resource);
-    }
-
-    function getCreated(resource) {
-        return jsonld.r.getDate(resource, LP.HAS_EVENT_CREATED);
-    }
-
-    function onExecutionEnd(model, resource) {
-        model.execution.end = getCreated(resource);
-    }
-
-    function onComponentBegin(model, resource) {
-        const component = getReferencedComponent(model, resource);
-        component.start = getCreated(resource);
-    }
-
-    function getReferencedComponent(model, resource) {
-        const iri = jsonld.r.getIRI(resource, LP.HAS_COMPONENT);
-        return getComponent(model, iri);
-    }
-
-    function onComponentEnd(model, resource) {
-        const component = getReferencedComponent(model, resource);
-        component.end = getCreated(resource);
-    }
-
-    function onComponentFailed(model, resource) {
-        const component = getReferencedComponent(model, resource);
-        component.end = getCreated(resource);
-        component.failed = {
-            "cause": jsonld.r.getPlainString(resource, LP.HAS_EVENT_REASON),
-            "rootCause": jsonld.r.getPlainString(resource, LP.HAS_EVENT_ROOT_CAUSE)
-        };
     }
 
     function onComponent(model, resource) {
@@ -103,6 +57,10 @@
         component.order = jsonld.r.getInteger(resource, LP.HAS_EXEC_ORDER);
         component.dataUnits = jsonld.r.getIRIs(resource, LP.HAS_DU);
         component.mapping = convertMapping(component.status);
+        const execution = jsonld.r.getIRI(resource, LP.HAS_EXECUTION);
+        if (execution) {
+            component.execution = execution;
+        }
     }
 
     function convertMapping(status) {
@@ -125,51 +83,6 @@
             "debug": jsonld.r.getPlainString(resource, LP.HAS_DEBUG)
         };
     }
-
-    function onProgressReport(model, resource) {
-        const component = getReferencedComponent(model, resource);
-        if (component.progress === undefined) {
-            component.progress = createProgress(resource);
-        }
-        // Do not add already added messages.
-        const iri = resource["@id"];
-        if (component["iris-of-loaded-messages"].indexOf(iri) > -1) {
-            return;
-        } else {
-            component["iris-of-loaded-messages"].push(iri);
-        }
-        //
-        updateComponentProgress(component, resource);
-        addMessageToComponent(component, resource);
-    }
-
-    function createProgress(resource) {
-        return {
-            "total": jsonld.r.getInteger(resource, LP.PROGRESS_TOTAL),
-            "current": 0,
-            "value": 0
-        };
-    }
-
-    function updateComponentProgress(component, resource) {
-        const progress = component.progress;
-        const current = jsonld.r.getInteger(resource, LP.PROGRESS_CURRENT);
-        // Update component progress (ie. max progress).
-        if (current <= progress.current) {
-            progress.current = current;
-            progress.value = 100 * (progress.current / progress.total);
-        }
-    }
-
-    function addMessageToComponent(component, resource) {
-        component.messages.push({
-            "label": jsonld.r.getPlainString(resource, SKOS.PREF_LABEL),
-            "created": getCreated(resource, jsonld),
-            "order": jsonld.r.getInteger(resource, LP.HAS_ORDER)
-        });
-    }
-
-
 
     function loadModelFromJsonLd(model, data, graphIri) {
         console.time("execution-model.loadModel");
@@ -195,14 +108,8 @@
 
     (function initialize() {
         loadActions[LP.EXECUTION] = onExecution;
-        loadActions[LP.EXECUTION_BEGIN] = onExecutionBegin;
-        loadActions[LP.EXECUTION_END] = onExecutionEnd;
-        loadActions[LP.CMP_BEGIN] = onComponentBegin;
-        loadActions[LP.CMP_END] = onComponentEnd;
-        loadActions[LP.CMP_FAILED] = onComponentFailed;
         loadActions[LP.COMPONENT] = onComponent;
         loadActions[LP.DATA_UNIT] = onDataUnit;
-        loadActions[LP.PROGRESS_REPORT] = onProgressReport;
     })();
 
     return {

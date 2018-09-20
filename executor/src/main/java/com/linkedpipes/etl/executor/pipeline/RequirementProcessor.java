@@ -44,8 +44,9 @@ class RequirementProcessor {
         try {
             final RdfBuilder builder = RdfBuilder.create(definition, graph);
             for (Map<String, String> entry : working) {
-                final String iri = entry.get("s");
-                final File file = resourceManager.getWorkingDirectory("temp");
+                String iri = entry.get("s");
+                String id = iri.substring(iri.lastIndexOf("/") + 1).toLowerCase();
+                File file = resourceManager.getWorkingDirectory("working-"+ id);
                 builder.entity(iri).iri(LP_EXEC.HAS_WORKING_DIRECTORY,
                         file.toURI().toString());
             }

@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.rdf.Model;
 import org.eclipse.rdf4j.model.IRI;
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Collections;
 
 class MergeHierarchy {
 
@@ -23,14 +23,13 @@ class MergeHierarchy {
     private Model templateModel;
 
     private Model.Entity templateEntity;
-
-    Collection<Statement> merge(
-            Collection<Collection<Statement>> configurationsRdf,
+    Statements merge(
+            Collection<Statements> configurationsRdf,
             Description description,
             String baseIri, IRI graph) throws BaseException {
         this.initialize(description);
         //
-        for (Collection<Statement> configurationRdf : configurationsRdf) {
+        for (Statements configurationRdf : configurationsRdf) {
             if (this.templateModel == null) {
                 this.loadModel(configurationRdf);
                 continue;
@@ -55,10 +54,11 @@ class MergeHierarchy {
         }
         if (this.templateModel == null) {
             LOG.warn("No configuration found.");
-            return Collections.emptyList();
+            return Statements.ArrayList();
         }
         this.templateModel.updateResources(baseIri + "/");
-        return this.templateModel.asStatements(this.templateEntity, graph);
+        return new Statements(
+                this.templateModel.asStatements(this.templateEntity, graph));
     }
 
     private void initialize(Description description) {
@@ -144,10 +144,6 @@ class MergeHierarchy {
             childControl = LP_OBJECTS.NONE;
         }
         Value childValue = children.getProperty(member.getProperty());
-        if (childValue == null) {
-            return;
-        }
-        //
         switch (childControl) {
             case LP_OBJECTS.INHERIT:
                 parent.setIri(member.getControl(), LP_OBJECTS.NONE);
@@ -163,6 +159,11 @@ class MergeHierarchy {
             case LP_OBJECTS.FORCED:
                 throw new BaseException("Unexpected FORCED property");
             case LP_OBJECTS.NONE:
+                // If the value is missing then in this case the value
+                // is ignored.
+                if (childValue == null) {
+                    break;
+                }
                 parent.replace(
                         member.getProperty(), children, childValue, true);
                 parent.setIri(member.getControl(), LP_OBJECTS.NONE);

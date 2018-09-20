@@ -5,6 +5,8 @@ public class LP_OVERVIEW {
     private static final String PREFIX =
             "http://etl.linkedpipes.com/ontology/";
 
+    public static final String OVERVIEW = PREFIX + "ExecutionOverview";
+
     public static final String HAS_PIPELINE = PREFIX + "pipeline";
 
     public static final String HAS_EXECUTION = PREFIX + "execution";

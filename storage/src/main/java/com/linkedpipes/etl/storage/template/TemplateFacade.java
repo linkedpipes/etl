@@ -60,7 +60,9 @@ public class TemplateFacade implements TemplateSource {
                 .filter(iri -> !manager.getTemplates().containsKey(iri))
                 .collect(Collectors.toList());
         for (String iri : iriToRemove) {
-            LOG.debug("Removing mapping for: {}", iri);
+            LOG.debug(
+                    "Removing mapping for '{}' as the component was deleted.",
+                    iri);
             this.mapping.remove(iri);
         }
         this.mapping.save();
@@ -199,13 +201,14 @@ public class TemplateFacade implements TemplateSource {
             // configuration is the effective one.
             return getConfig(template);
         }
-        List<Collection<Statement>> configurations = new ArrayList<>();
+        List<Statements> configurations = new ArrayList<>();
         for (Template item : getAncestors(template)) {
-            configurations.add(getConfig(item));
+            configurations.add(new Statements(getConfig(item)));
         }
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        return configurationFacade.merge(configurations,
-                getConfigDescription(template),
+        return configurationFacade.merge(
+                configurations,
+                new Statements(getConfigDescription(template)),
                 template.getIri() + "/effective/",
                 valueFactory.createIRI(template.getIri()));
     }
@@ -227,14 +230,14 @@ public class TemplateFacade implements TemplateSource {
         IRI graph = valueFactory.createIRI(template.getIri() + "/new");
         if (template.getType() == Template.Type.JAR_TEMPLATE) {
             return configurationFacade.createNewFromJarFile(
-                    this.repository.getConfig(template),
-                    this.getConfigDescription(template),
+                    new Statements(this.repository.getConfig(template)),
+                    new Statements(this.getConfigDescription(template)),
                     graph.stringValue(),
                     graph);
         } else {
             return configurationFacade.createNewFromTemplate(
-                    this.repository.getConfig(template),
-                    this.getConfigDescription(template),
+                    new Statements(this.repository.getConfig(template)),
+                    new Statements(this.getConfigDescription(template)),
                     graph.stringValue(),
                     graph);
         }

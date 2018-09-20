@@ -9,22 +9,31 @@
 
     const ETL_LP = "http://etl.linkedpipes.com/ontology/";
     const LP = "http://linkedpipes.com/ontology/";
+    const ELT_LP_RES = "http://etl.linkedpipes.com/resources/";
 
     const LP_VOCAB = {
         "DU_SESAME_CHUNKED": LP + "dataUnit/sesame/1.0/rdf/Chunked",
         "DU_SESAME_SINGLE_GRAPH": LP + "dataUnit/sesame/1.0/rdf/SingleGraph",
         "HAS_PIPELINE": ETL_LP + "pipeline",
+        "HAS_EXECUTION": LP + "execution",
         "HAS_STATUS": ETL_LP + "status",
         "HAS_DELETE_WORKING_DATA": LP + "deleteWorkingData",
         "EXEC_FINISHED": "http://etl.linkedpipes.com/resources/status/finished",
+        "EXEC_INITIALIZING": "http://etl.linkedpipes.com/resources/status/initializing",
         "EXEC_FAILED" : "http://etl.linkedpipes.com/resources/status/failed",
         "EXEC_CANCELLED": "http://etl.linkedpipes.com/resources/status/cancelled",
+        "EXEC_CANCELLING": "http://etl.linkedpipes.com/resources/status/cancelling",
         "EXEC_MAPPED": "http://etl.linkedpipes.com/resources/status/mapped",
+        "EXEC_INVALID": "http://etl.linkedpipes.com/resources/status/invalid",
+        "EXEC_DANGLING": "http://etl.linkedpipes.com/resources/status/dangling",
+        "EXEC_QUEUED": "http://etl.linkedpipes.com/resources/status/queued",
+        "EXEC_RUNNING": "http://etl.linkedpipes.com/resources/status/running",
+        "EXEC_UNRESPONSIVE": "http://etl.linkedpipes.com/resources/status/unresponsive",
         "HAS_EVENT_CREATED": LP + "events/created",
         "HAS_COMPONENT" : LP + "component",
         "HAS_EVENT_REASON" : LP + "events/reason",
         "HAS_EVENT_ROOT_CAUSE": LP + "events/rootException",
-        "HAS_EXEC_ORDER": LP + "executionOrder",
+        "HAS_EXEC_ORDER": LP + "order",
         "HAS_DU" : ETL_LP + "dataUnit",
         "HAS_PORT_BINDING": LP + "binding",
         "HAS_DU_BINDING": ETL_LP + "binding",
@@ -48,9 +57,7 @@
         "DELETE_WORKING": LP + "deleteWorkingData",
         "HAS_TAG": ETL_LP + "tag",
         "PIPELINE": LP + "Pipeline",
-        // TODO Merge TOMBSTONE and DELETED
         "TOMBSTONE" : LP + "Tombstone",
-        "DELETED": ETL_LP + "Deleted",
         "HAS_REPO_POLICY": LP + "rdfRepositoryPolicy",
         "HAS_REPO_TYPE": LP + "rdfRepositoryType",
         "UPDATE_OPTIONS" : LP + "UpdateOptions",
@@ -72,7 +79,13 @@
         "RUNTIME_CONFIGURATION": LP + "RuntimeConfiguration",
         "PORT": LP + "Port",
         "OUTPUT": LP + "Output",
-        "INPUT": LP + "Input"
+        "INPUT": LP + "Input",
+        "COMPONENT_QUEUED": ELT_LP_RES + "status/queued",
+        "COMPONENT_INITIALIZING": ELT_LP_RES + "status/initializing",
+        "COMPONENT_RUNNING": ELT_LP_RES + "status/running",
+        "COMPONENT_FINISHED": ELT_LP_RES + "status/finished",
+        "COMPONENT_MAPPED": ELT_LP_RES + "status/mapped",
+        "COMPONENT_FAILED": ELT_LP_RES + "status/failed",
     };
 
     const SKOS_VOCAB = {

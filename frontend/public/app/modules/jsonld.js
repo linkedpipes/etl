@@ -365,6 +365,9 @@
         }
         const resourceValue = [];
         value.forEach((item) => {
+            if (item === null || item === undefined) {
+                return;
+            }
             let valueAsString = item.getFullYear() + '-';
             if (item.getMonth() + 1 < 10) {
                 valueAsString += '0';

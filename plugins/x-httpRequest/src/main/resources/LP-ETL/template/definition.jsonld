@@ -18,7 +18,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "HTTP", "post", "delete", "update", "request", "head"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/x-httpRequest"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/x-httprequest"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
            "@id": "http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc"
         }

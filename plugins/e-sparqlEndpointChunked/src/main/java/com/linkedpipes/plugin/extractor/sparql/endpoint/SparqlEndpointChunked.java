@@ -28,6 +28,7 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,11 +97,9 @@ public final class SparqlEndpointChunked implements Component,
     protected Repository createRepository() {
         final SPARQLRepository repository;
         if (configuration.isUseTolerantRepository()) {
-            repository = new TolerantSparqlRepository(
-                    configuration.getEndpoint());
+            repository = new TolerantSparqlRepository(getEndpoint());
         } else {
-            repository = new SPARQLRepository(
-                    configuration.getEndpoint());
+            repository = new SPARQLRepository(getEndpoint());
         }
         // Customize repository.
         final Map<String, String> headers = new HashMap<>();
@@ -111,6 +110,11 @@ public final class SparqlEndpointChunked implements Component,
         repository.setAdditionalHttpHeaders(headers);
         repository.setHttpClient(getHttpClient());
         return repository;
+    }
+
+    private String getEndpoint() {
+        String[] tokens = configuration.getEndpoint().split("://", 2);
+        return tokens[0] + "://" + IDN.toASCII(tokens[1]);
     }
 
     private CloseableHttpClient getHttpClient() {

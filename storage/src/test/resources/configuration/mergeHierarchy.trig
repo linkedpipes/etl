@@ -1,0 +1,104 @@
+@prefix component: <http://localhost/component#> .
+@prefix config: <http://plugins.linkedpipes.com/resource/configuration/> .
+@prefix configOntology: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://description> {
+
+<http://localhost/desc> a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    configOntology:type component:Configuration ;
+    configOntology:member <http://localhost/desc/first> ,
+        <http://localhost/desc/second> ,
+        <http://localhost/desc/third> ,
+        <http://localhost/desc/fourth> ,
+        <http://localhost/desc/fifth> ,
+        <http://localhost/desc/sixth> .
+
+<http://localhost/desc/first> a configOntology:ConfigurationMember ;
+    configOntology:property component:first ;
+    configOntology:control component:firstControl .
+
+<http://localhost/desc/second> a configOntology:ConfigurationMember ;
+    configOntology:property component:second ;
+    configOntology:control component:secondControl .
+
+<http://localhost/desc/third> a configOntology:ConfigurationMember ;
+    configOntology:property component:third ;
+    configOntology:control component:thirdControl .
+
+<http://localhost/desc/fourth> a configOntology:ConfigurationMember ;
+    configOntology:property component:fourth ;
+    configOntology:control component:fourthControl .
+
+<http://localhost/desc/fifth> a configOntology:ConfigurationMember ;
+    configOntology:property component:fifth ;
+    configOntology:control component:fifthControl .
+
+<http://localhost/desc/sixth> a configOntology:ConfigurationMember ;
+    configOntology:property component:sixth ;
+    configOntology:control component:sixthControl .
+
+}
+
+<http://level-0> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-0" ;
+    component:firstControl config:None ;
+    component:second "l-0" ;
+    component:secondControl config:None ;
+    component:third "l-0" ;
+    component:thirdControl config:None ;
+    component:fourth "l-0" ;
+    component:fourthControl config:None ;
+    component:fifth "l-0" ;
+    component:fifthControl config:None .
+}
+
+<http://level-1> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-1" ;
+    component:firstControl config:None ;
+    component:second "l-1" ;
+    component:secondControl config:Force ;
+    component:third "l-1" ;
+    component:thirdControl config:InheritAndForce ;
+    component:fourth "l-1" ;
+    component:fourthControl config:None ;
+    component:fifth "l-1" ;
+    component:fifthControl config:None ;
+    component:sixthControl config:Force .
+
+}
+
+<http://level-2> {
+
+<http://localhost/instance> a component:Configuration ;
+    component:first "l-2" ;
+    component:firstControl config:None ;
+    component:second "l-2" ;
+    component:secondControl config:None ;
+    component:third "l-2" ;
+    component:thirdControl config:None ;
+    component:fifth "l-2" ;
+    component:fifthControl config:Inherit ;
+    component:sixth "l-2" ;
+    component:sixthControl config:None .
+}
+
+<http://expected> {
+
+<http://base/1> a component:Configuration ;
+    component:first "l-2" ;
+    component:firstControl config:None ;
+    component:second "l-1" ;
+    component:secondControl config:Forced ;
+    component:third "l-0" ;
+    component:thirdControl config:Forced ;
+    component:fourth "l-1" ;
+    component:fourthControl config:None ;
+    component:fifth "l-1" ;
+    component:fifthControl config:None ;
+    component:sixthControl config:Forced .
+
+}

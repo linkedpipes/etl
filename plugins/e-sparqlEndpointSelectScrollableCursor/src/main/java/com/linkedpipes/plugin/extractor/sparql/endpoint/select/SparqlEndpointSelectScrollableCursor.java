@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.IDN;
 import java.util.List;
 
 /**
@@ -109,8 +110,7 @@ public final class SparqlEndpointSelectScrollableCursor
 
     @Override
     public void execute() throws LpException {
-        SPARQLRepository repository = new SPARQLRepository(
-                configuration.getEndpoint());
+        SPARQLRepository repository = new SPARQLRepository(getEndpoint());
         repository.initialize();
         repository.setHttpClient(getHttpClient());
         //
@@ -142,6 +142,11 @@ public final class SparqlEndpointSelectScrollableCursor
                 LOG.error("Can't close repository.", ex);
             }
         }
+    }
+
+    private String getEndpoint() {
+        String[] tokens = configuration.getEndpoint().split("://", 2);
+        return tokens[0] + "://" + IDN.toASCII(tokens[1]);
     }
 
     protected static ResultHandlerWrap createWriter(OutputStream stream) {
