@@ -20,4 +20,6 @@ public final class FtpFilesLoaderVocabulary {
 
     public static final String HAS_DIRECTORY = PREFIX + "directory";
 
+    public static final String HAS_RETRY_COUNT = PREFIX + "retryCount";
+
 }

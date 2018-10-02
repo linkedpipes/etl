@@ -35,4 +35,10 @@
                ng-disabled="dialog.directory.disabled || dialog.directory.inherit"
                placeholder="/data/upload" required>
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.retryCount.hide" flex>
+        <label>Retry count</label>
+        <input ng-model="dialog.retryCount.value"
+               ng-disabled="dialog.retryCount.disabled || dialog.retryCount.inherit"
+               type="number" min="0">
+    </md-input-container>
 </div>
