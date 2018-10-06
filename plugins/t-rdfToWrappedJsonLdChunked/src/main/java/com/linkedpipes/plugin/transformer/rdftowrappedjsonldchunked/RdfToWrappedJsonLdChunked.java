@@ -70,7 +70,8 @@ public class RdfToWrappedJsonLdChunked
         String id = getId(statements);
         templateWriter.setId(id);
         templateWriter.setStatements(statements);
-        try (OutputStreamWriter writer = new FileWriter(target)) {
+        try (OutputStream stream = new FileOutputStream(target);
+             Writer writer = new OutputStreamWriter(stream, "UTF-8")) {
             templateWriter.writeToWriter(writer);
         } catch (IOException ex) {
             throw exceptionFactory.failure("Failed to create file: {}",
