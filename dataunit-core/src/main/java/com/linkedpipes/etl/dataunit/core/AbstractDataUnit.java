@@ -18,23 +18,20 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractDataUnit implements ManageableDataUnit {
 
-    private final String binding;
+    protected final DataUnitConfiguration configuration;
 
-    private final String iri;
-
-    private final Collection<String> sources;
+    protected final Collection<String> sources;
 
     public AbstractDataUnit(
-            String binding, String iri, Collection<String> sources) {
-        this.binding = binding;
-        this.iri = iri;
+            DataUnitConfiguration configuration,
+            Collection<String> sources) {
+        this.configuration = configuration;
         this.sources = sources;
     }
 
-    @Override
-    public void initialize(
+    protected void initializeFromSource(
             Map<String, ManageableDataUnit> dataUnits) throws LpException {
-        for (String iri : sources) {
+        for (String iri : this.sources) {
             if (!dataUnits.containsKey(iri)) {
                 throw new LpException("Missing input: {}", iri);
             }
@@ -52,12 +49,12 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
 
     @Override
     public String getBinding() {
-        return binding;
+        return this.configuration.getBinding();
     }
 
     @Override
     public String getIri() {
-        return iri;
+        return this.configuration.getResource();
     }
 
     @Override
@@ -79,12 +76,12 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
 
     protected List<File> loadRelativePaths(
             File directory, String fileName) throws LpException {
-        Collection<String> directoriesAsString = loadCollectionFromJson(
+        List<String> directoriesAsString = loadCollectionFromJson(
                 new File(directory, fileName), String.class);
         return pathsAsFiles(directoriesAsString, directory);
     }
 
-    protected static <T> Collection<T> loadCollectionFromJson(
+    protected <T> List<T> loadCollectionFromJson(
             File file, Class<T> type) throws LpException {
         ObjectMapper mapper = new ObjectMapper();
         TypeFactory typeFactory = mapper.getTypeFactory();
@@ -97,9 +94,9 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
     }
 
     private List<File> pathsAsFiles(Collection<String> paths, File root) {
-        return paths.stream().map(
-                relativePath -> new File(root, relativePath)
-        ).collect(Collectors.toList());
+        return paths.stream()
+                .map(path -> new File(root, path))
+                .collect(Collectors.toList());
     }
 
     protected void saveDataDirectories(
@@ -110,15 +107,15 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
     protected void saveRelativePaths(
             File directory, String fileName, List<File> directories)
             throws LpException {
-        Collection<String> directoriesAsString =
+        List<String> directoriesAsString =
                 relativeAsString(directories, directory);
         saveCollectionAsJson(new File(directory, fileName),
                 directoriesAsString);
     }
 
-    protected static void saveCollectionAsJson(
+    protected void saveCollectionAsJson(
             File file, Collection<String> collection) throws LpException {
-        final ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         file.getParentFile().mkdirs();
         try {
             mapper.writeValue(file, collection);
@@ -131,11 +128,11 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
             Collection<File> paths, File root) {
         Path rootPath = root.getAbsoluteFile().toPath();
         return paths.stream().map(
-                (file) -> relativizeFile(rootPath, file).toString()
+                (file) -> asRelativePath(rootPath, file).toString()
         ).collect(Collectors.toList());
     }
 
-    private Path relativizeFile(Path base, File file) {
+    private Path asRelativePath(Path base, File file) {
         return base.relativize(file.getAbsoluteFile().toPath());
     }
 

@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.files;
 
+import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.apache.commons.io.FileUtils;
@@ -13,52 +14,53 @@ import java.util.*;
 
 public class FilesDataUnitTest {
 
-    final static List<File> directories = new LinkedList<>();
+    private static List<File> DIRECTORIES = new LinkedList<>();
 
     @AfterClass
     public static void cleanup() {
-        for (File directory : directories) {
+        for (File directory : DIRECTORIES) {
             FileUtils.deleteQuietly(directory);
         }
     }
 
     @Test
     public void addAndRead() throws Exception {
-        final DefaultFilesDataUnit files = new DefaultFilesDataUnit(
-                null, null, getTempDirectory(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit files = new DefaultFilesDataUnit(
+                createConfiguration(),
+                Collections.EMPTY_LIST);
         //
         Assert.assertEquals(0, files.size());
         // This does not create the file.
-        final File a = files.createFile("directory-a/a");
+        File a = files.createFile("directory-a/a");
         Assert.assertEquals(0, files.size());
         // This does create.
         FileUtils.writeStringToFile(a, "");
         Assert.assertEquals(1, files.size());
-        final File b = files.createFile("directory-b/b");
+        File b = files.createFile("directory-b/b");
         FileUtils.writeStringToFile(b, "");
         Assert.assertEquals(2, files.size());
         //
-        final List<String> paths = new ArrayList<>(2);
-        files.forEach((entry) -> {
-            paths.add(entry.getFileName());
-        });
+        List<String> paths = new ArrayList<>(2);
+        files.forEach((entry) -> paths.add(entry.getFileName()));
         //
         Assert.assertTrue(paths.contains("directory-a" + File.separator + "a"));
         Assert.assertTrue(paths.contains("directory-b" + File.separator + "b"));
     }
 
+    private DataUnitConfiguration createConfiguration() throws IOException {
+        return new DataUnitConfiguration(
+                null, null, null, getTempDirectory().toURI().toString());
+    }
+
     @Test
     public void merge() throws Exception {
         //
-        final DefaultFilesDataUnit a = new DefaultFilesDataUnit(
-                null, null,
-                getTempDirectory(), Collections.EMPTY_LIST);
-        final DefaultFilesDataUnit b = new DefaultFilesDataUnit(
-                null, null,
-                getTempDirectory(), Collections.EMPTY_LIST);
-        final DefaultFilesDataUnit c = new DefaultFilesDataUnit(
-                null, null,
-                getTempDirectory(),
+        DefaultFilesDataUnit a = new DefaultFilesDataUnit(
+                createConfiguration(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit b = new DefaultFilesDataUnit(
+                createConfiguration(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit c = new DefaultFilesDataUnit(
+                createConfiguration(),
                 Arrays.asList("http://dataunit/a", "http://dataunit/b"));
         //
         FileUtils.writeStringToFile(a.createFile("dir/a"), "");
@@ -68,7 +70,7 @@ public class FilesDataUnitTest {
         FileUtils.writeStringToFile(b.createFile("1"), "");
         Assert.assertEquals(2, a.size());
         //
-        final Map<String, ManageableDataUnit> dataUnits = new HashMap<>();
+        Map<String, ManageableDataUnit> dataUnits = new HashMap<>();
         dataUnits.put("http://dataunit/a", a);
         dataUnits.put("http://dataunit/b", b);
         dataUnits.put("http://dataunit/c", c);
@@ -83,17 +85,17 @@ public class FilesDataUnitTest {
 
     @Test
     public void saveAndLoad() throws Exception {
-        final DefaultFilesDataUnit a = new DefaultFilesDataUnit(
-                null, null, getTempDirectory(), Collections.EMPTY_LIST);
-        final File file = a.createFile("dir/a");
+        DefaultFilesDataUnit a = new DefaultFilesDataUnit(
+                createConfiguration(), Collections.EMPTY_LIST);
+        File file = a.createFile("dir/a");
         FileUtils.writeStringToFile(file, "");
         Assert.assertEquals(1, a.size());
         //
-        final File saveDirectory = getTempDirectory();
+        File saveDirectory = getTempDirectory();
         saveDirectory.mkdirs();
         a.save(saveDirectory);
-        final DefaultFilesDataUnit b = new DefaultFilesDataUnit(
-                null, null, getTempDirectory(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit b = new DefaultFilesDataUnit(
+                createConfiguration(), Collections.EMPTY_LIST);
         Assert.assertEquals(0, b.size());
         b.initialize(saveDirectory);
         Assert.assertEquals(1, b.size());
@@ -105,8 +107,8 @@ public class FilesDataUnitTest {
 
     @Test
     public void createExisting() throws Exception {
-        final DefaultFilesDataUnit a = new DefaultFilesDataUnit(
-                null, null, getTempDirectory(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit a = new DefaultFilesDataUnit(
+                createConfiguration(), Collections.EMPTY_LIST);
         FileUtils.writeStringToFile(a.createFile("dir/a"), "");
         try {
             a.createFile("dir/a");
@@ -117,9 +119,9 @@ public class FilesDataUnitTest {
     }
 
     protected File getTempDirectory() throws IOException {
-        final File file = File.createTempFile("lp-test", "");
+        File file = File.createTempFile("lp-test-du-files", "");
         file.delete();
-        directories.add(file);
+        this.DIRECTORIES.add(file);
         return file;
     }
 

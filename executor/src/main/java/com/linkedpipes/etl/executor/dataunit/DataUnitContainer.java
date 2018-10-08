@@ -18,8 +18,11 @@ class DataUnitContainer {
     public enum Status {
         NEW,
         INITIALIZED,
+        // Respective component was already executed.
+        AFTER_EXECUTION,
         SAVED,
-        CLOSED
+        CLOSED,
+        MAPPED
     }
 
     private static final Logger LOG =
@@ -52,7 +55,7 @@ class DataUnitContainer {
      * @return Wrapped instance.
      */
     public ManageableDataUnit getInstance() {
-        return instance;
+        return this.instance;
     }
 
     /**
@@ -64,14 +67,14 @@ class DataUnitContainer {
             throws ExecutorException {
         if (this.status != Status.NEW) {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
-                    metadata.getIri(), this.status);
+                    this.metadata.getIri(), this.status);
         }
         LOG.debug("load from sources: {}", metadata.getIri());
         try {
-            instance.initialize(instances);
+            this.instance.initialize(instances);
         } catch (LpException ex) {
             throw new ExecutorException("Can't bindToPipeline data unit: {}",
-                    metadata.getIri(), ex);
+                    this.metadata.getIri(), ex);
         }
         this.status = Status.INITIALIZED;
     }
@@ -86,40 +89,48 @@ class DataUnitContainer {
             throws ExecutorException {
         if (this.status != Status.NEW) {
             throw new ExecutorException("Invalid stat of data unit ({}) : {}",
-                    metadata.getIri(), this.status);
+                    this.metadata.getIri(), this.status);
         }
-        LOG.debug("load from file: {}", metadata.getIri());
+        LOG.debug("load from file: {}", this.metadata.getIri());
         try {
-            instance.initialize(directory);
+            this.instance.initialize(directory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't bindToPipeline data unit: {}",
-                    metadata.getIri(), ex);
+                    this.metadata.getIri(), ex);
         }
         this.status = Status.INITIALIZED;
+    }
+
+    public void onComponentDidExecute() throws ExecutorException {
+        if (this.status != Status.INITIALIZED) {
+            throw new ExecutorException("Invalid status change from: {} to {}",
+                    this.status, Status.AFTER_EXECUTION);
+        }
+        this.status = Status.AFTER_EXECUTION;
     }
 
     /**
      * Save content of the data unit instance.
      */
     public void save() throws ExecutorException {
-        if (status == Status.NEW) {
-            // This may happen for unused data units (if pipeline fail).
+        if (this.status == Status.NEW) {
+            // This can happen for unused data units (if pipeline fail).
             return;
         }
         if (this.status == Status.CLOSED) {
             throw new ExecutorException("Can't save closed data unit: {}",
-                    metadata.getIri());
+                    this.metadata.getIri());
         }
-        final File saveDirectory = metadata.getSaveDirectory();
+        File saveDirectory = this.metadata.getSaveDirectory();
         if (saveDirectory == null) {
             return;
         }
         saveDirectory.mkdirs();
         try {
-            instance.save(saveDirectory);
+            this.instance.save(saveDirectory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't save data unit: {}",
-                    metadata.getIri(), ex);
+                    this.metadata.getIri(), ex);
         }
         this.status = Status.SAVED;
     }
@@ -127,39 +138,53 @@ class DataUnitContainer {
     /**
      * Close wrapped instance.
      */
-    public void close() throws ExecutorException {
-        if (status == Status.NEW) {
+    public void close() {
+        if (this.status == Status.NEW) {
             // Can happen if pipeline fail.
             return;
         }
-        if (status == Status.CLOSED) {
+        if (this.status == Status.CLOSED) {
             LOG.warn("Data unit already closed: {}",
-                    metadata.getIri());
+                    this.metadata.getIri());
             return;
         }
         //
         try {
-            instance.close();
+            this.instance.close();
         } catch (LpException ex) {
-            throw new ExecutorException("Can't closeRepository data unit: {}",
-                    metadata.getIri(), ex);
+            LOG.info("Can't close data unit: {}", this.metadata.getIri(), ex);
         }
         this.status = Status.CLOSED;
     }
 
+    /**
+     * Do not load the content, just load reference. This make it possible
+     * to save the debug data.
+     */
     public void mapByReference(File source)
             throws ExecutorException {
-        final File saveDirectory = metadata.getSaveDirectory();
+        File saveDirectory = this.metadata.getSaveDirectory();
         if (saveDirectory == null) {
             return;
         }
         try {
             LOG.debug("map by reference: {} from {}",
-                    metadata.getIri(), source);
-            instance.referenceContent(source, saveDirectory);
+                    this.metadata.getIri(), source);
+            this.instance.referenceContent(source, saveDirectory);
         } catch (LpException ex) {
             throw new ExecutorException("Can't reference content.", ex);
         }
+        this.status = Status.MAPPED;
     }
 
+    public boolean openWithData() {
+        return this.status == Status.AFTER_EXECUTION ||
+                this.status == Status.SAVED ||
+                this.status == Status.MAPPED;
+    }
+
+    // TODO REMOVE
+    public Status getStatus() {
+        return this.status;
+    }
 }

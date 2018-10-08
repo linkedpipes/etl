@@ -12,7 +12,8 @@ class ActionExecutor {
     private ActionExecutor() {
     }
 
-    public static void execute(Repository repository,
+    public static void execute(
+            Repository repository,
             Rdf4jDataUnit.RepositoryProcedure procedure) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             procedure.accept(connection);
@@ -24,7 +25,8 @@ class ActionExecutor {
         }
     }
 
-    public static <T> T execute(Repository repository,
+    public static <T> T execute(
+            Repository repository,
             Rdf4jDataUnit.RepositoryFunction<T> function) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             return function.accept(connection);

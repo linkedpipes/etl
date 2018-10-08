@@ -13,36 +13,32 @@ public class ChunkIterator implements Iterator<ChunkedTriples.Chunk> {
 
     private ChunkedTriples.Chunk nextChunk;
 
-    private DefaultChunkedTriples dataUnit;
-
-    public ChunkIterator(Iterator<File> directoryIterator,
-            DefaultChunkedTriples dataUnit) {
+    public ChunkIterator(Iterator<File> directoryIterator) {
         this.directoryIterator = directoryIterator;
-        this.dataUnit = dataUnit;
         prepareNext();
     }
 
     @Override
     public boolean hasNext() {
-        return nextChunk != null;
+        return this.nextChunk != null;
     }
 
     @Override
     public ChunkedTriples.Chunk next() {
-        ChunkedTriples.Chunk chunk = nextChunk;
+        ChunkedTriples.Chunk chunk = this.nextChunk;
         prepareNext();
         return chunk;
     }
 
     private void prepareNext() {
-        if (fileIterator != null && fileIterator.hasNext()) {
-            nextChunk = new DefaultChunk(fileIterator.next());
-        } else if (directoryIterator.hasNext()) {
-            fileIterator = FileUtils.iterateFiles(
-                    directoryIterator.next(), null, true);
+        if (this.fileIterator != null && this.fileIterator.hasNext()) {
+            this.nextChunk = new DefaultChunk(this.fileIterator.next());
+        } else if (this.directoryIterator.hasNext()) {
+            this.fileIterator = FileUtils.iterateFiles(
+                    this.directoryIterator.next(), null, true);
             prepareNext();
         } else {
-            nextChunk = null;
+            this.nextChunk = null;
         }
     }
 
