@@ -249,11 +249,11 @@ define([
                 data.pipeline.resource = pipelineService.getPipeline(
                     data.pipeline.model);
             }).catch(function (response) {
-                statusService.httpGetFailed({
-                    'title': "Can't fetch pipeline.",
-                    'response': response
-                });
+                statusService.httpError("Can't fetch pipeline.", response);
             }).then(function() {
+                if (!data.pipeline.model) {
+                    return;
+                }
                 pipelineCanvas.loadPipeline(data.pipeline.model);
                 updateLabel();
             });
@@ -286,10 +286,7 @@ define([
                     return;
                 }
                 lastExecutionUpdateFailed = true;
-                statusService.httpGetFailed({
-                    'title': "Can't load execution.",
-                    'response': response
-                });
+                statusService.httpError("Can't load execution.", response);
             });
         }
 
@@ -309,11 +306,7 @@ define([
                     }
                 });
             }, function (error) {
-                statusService.error({
-                    'title': "Can't load pipeline.",
-                    'message': error.message
-                });
-                console.error(error);
+                statusService.error("Can't load pipeline.", error);
             });
         }
 
@@ -405,10 +398,8 @@ define([
             templateService.load().then(function () {
                 loadData();
             }, function (response) {
-                statusService.httpDeleteFailed({
-                    'title': "Can't load templates pipeline.",
-                    'response': response
-                });
+                statusService.httpError(
+                    "Can't load templates pipeline.", response);
             });
         }
 
@@ -441,17 +432,12 @@ define([
                 'headers': {'Content-Type': 'application/json'},
                 'data': jsonld
             }).then(function () {
-                statusService.success({
-                    'title': "Pipeline saved."
-                });
+                statusService.success("Pipeline saved.");
                 if (onSucess) {
                     onSucess();
                 }
             }, function (response) {
-                statusService.httpPutFailed({
-                    'title': "Can't save the pipeline.",
-                    'response': response
-                });
+                statusService.httpError("Can't save the pipeline.", response);
             });
         };
 
@@ -535,10 +521,7 @@ define([
                     onSucess();
                 }
             }, function (response) {
-                statusService.httpPostFailed({
-                    'title': "Can't start the execution.",
-                    'response': response
-                });
+                statusService.httpError("Can't start the execution.", response);
             });
         };
 
@@ -623,24 +606,17 @@ define([
             };
             $http.post('./resources/pipelines', data, config)
             .then(function (data) {
-                statusService.success({
-                    'title': 'Pipeline has been successfully copied.'
-                });
+                statusService.success('Pipeline has been successfully copied.');
                 // The response is a reference.
                 // TODO Use JSONLD service to get the value !!
                 const jsonld = data.data;
                 var newPipelineUri = jsonld[0]['@graph'][0]['@id'];
                 //
-                statusService.success({
-                    'title': 'Pipeline has been successfully copied.'
-                });
+                statusService.success('Pipeline has been successfully copied.');
                 $location.path('/pipelines/edit/canvas').search(
                     {'pipeline': newPipelineUri});
             }, function (data) {
-                statusService.httpPostFailed({
-                    'title': "Can't create new pipeline.",
-                    'response': data
-                });
+                statusService.httpError("Can't create new pipeline.", data);
             });
         };
 
@@ -659,10 +635,8 @@ define([
                 }).then(function () {
                     $location.path('/pipelines').search({});
                 }, function (response) {
-                    statusService.httpDeleteFailed({
-                        'title': "Can't delete the pipeline.",
-                        'response': response
-                    });
+                    statusService.httpError(
+                        "Can't delete the pipeline.", response);
                 });
             });
         };

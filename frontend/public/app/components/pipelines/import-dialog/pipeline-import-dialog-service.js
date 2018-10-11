@@ -52,10 +52,7 @@
                 $mdDialog.hide({"pipeline": pipeline});
             }).catch((error) => {
                 $mdDialog.cancel();
-                $status.httpGetFailed({
-                    "title": "Can't import the pipeline.",
-                    "response": error
-                });
+                $status.httpError("Can't import the pipeline.", error);
             });
         }
 
@@ -89,9 +86,7 @@
             // Import from IRI on local machine.
             if ($scope.pipeline === undefined || $scope.pipeline === "") {
                 // Do nothing as no pipeline is selected.
-                $status.httpGetFailed({
-                    "title": "No pipeline selected for import."
-                });
+                $status.error("No pipeline selected for import.");
             } else {
                 return pipelineApi.loadLocal($http, $scope.pipeline);
             }

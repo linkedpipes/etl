@@ -21,16 +21,19 @@ router.get("", (req, res) => {
 
 function pipeGet(uri, res) {
     request.get(uri)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 }
 
-function handleError(res, error) {
+function handleConnectionError(res, error) {
     console.error("Request failed:\n", error);
-    console.trace();
-    res.status(503).json({"error": {"type": errors.CONNECTION}});
+    res.status(503).json({
+        "error": {
+            "type": errors.CONNECTION,
+            "source": "FRONTEND"
+        }
+    });
 }
-
 
 router.get("/:id", (req, res) => {
     const uri = monitorApiUrl + "/" + req.params["id"];
@@ -40,14 +43,14 @@ router.get("/:id", (req, res) => {
 router.post("/:id/cancel", (req, res) => {
     const url = monitorApiUrl + "/" + req.params["id"] + "/cancel";
     req.pipe(request.post(url))
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
 router.delete("/:id", (req, res) => {
     const uri = monitorApiUrl + "/" + req.params["id"];
     request.del(uri)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 

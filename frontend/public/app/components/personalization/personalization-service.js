@@ -6,7 +6,7 @@
     }
 })((_personalization) => {
 
-    function factory($personalization, statusService) {
+    function factory($personalization, $status) {
 
         let $scope;
 
@@ -21,9 +21,7 @@
             $personalization.setLandingPage($scope.landingPage);
             $personalization.setListSize($scope.initialListSize);
             $personalization.setPipelineListOrder($scope.pipelineOrdering);
-            statusService.success({
-                "title": "Changes saved."
-            });
+            $status.success("Changes saved.");
         }
 
         return {

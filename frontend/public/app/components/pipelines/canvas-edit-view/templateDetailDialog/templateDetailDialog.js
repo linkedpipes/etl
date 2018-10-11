@@ -88,7 +88,7 @@ define([
     }
 
     function controller($scope, $http, $mdDialog, templateService,
-                        statusService, component, template, pipeline) {
+                        $status, component, template, pipeline) {
 
         $scope.api = {};
 
@@ -98,8 +98,6 @@ define([
         $scope.onSave = () => {
             // Update shared data.
             $scope.api.save();
-
-            console.log('COMPONENT SAVED');
 
             createTemplate($http, $scope.templateToEdit, template,
                 $scope.configuration, templateService).then((iri) => {
@@ -144,15 +142,11 @@ define([
                         }
                     });
                     //
-                    statusService.success({
-                        'title': 'Template created.'
-                    });
+                    $status.success("Template created.");
                     $mdDialog.hide();
                 });
-            }, () => {
-                statusService.httpPostFailed({
-                    'title': "Can't create template."
-                });
+            }, (error) => {
+                $status.error("Can't create template.", error);
             });
 
         };

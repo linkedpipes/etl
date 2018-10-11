@@ -41,10 +41,7 @@
         }
 
         function handleExecutionPostFailure(response) {
-            $status.httpPostFailed({
-                "title": "Can't start the execution.",
-                "response": response
-            });
+            $status.httpError("Can't start the execution.", response);
         }
 
         function executeWithoutDebugData(pipeline) {
@@ -69,10 +66,7 @@
         }
 
         function handleCreatePipelineFailure(response) {
-            $status.httpPostFailed({
-                "title": "Can't create the pipeline.",
-                "response": response
-            });
+            $status.httpError("Can't create the pipeline.", response);
         }
 
         // TODO Move to "navigation" module.
@@ -93,17 +87,12 @@
         }
 
         function handleCopyPipelineSuccess() {
-            $status.success({
-                "title": "Pipeline has been successfully copied."
-            });
+            $status.success("Pipeline has been successfully copied.");
             return repository.update($scope.repository);
         }
 
         function reportCopyPipelineFailure(response) {
-            $status.httpPostFailed({
-                "title": "Can't create the pipeline.",
-                "response": response
-            });
+            $status.httpError("Can't create the pipeline.", response);
         }
 
         function deletePipeline(pipeline, event) {

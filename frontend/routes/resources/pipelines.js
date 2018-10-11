@@ -19,14 +19,18 @@ router.get("", (req, res) => {
         }
     };
     request.get(options)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
-function handleError(res, error) {
+function handleConnectionError(res, error) {
     console.error("Request failed:\n", error);
-    console.trace();
-    res.status(503).json({"error": {"type": errors.CONNECTION}});
+    res.status(503).json({
+        "error": {
+            "type": errors.CONNECTION,
+            "source": "FRONTEND"
+        }
+    });
 }
 
 router.delete("/:id", (req, res) => {
@@ -44,7 +48,7 @@ router.get("/info", (req, res) => {
         }
     };
     request.get(options)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
@@ -70,7 +74,7 @@ router.get("/:id", function (req, res) {
     };
 
     request.get(options)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
@@ -108,7 +112,7 @@ function updatePipeline(res, urlSuffix, body) {
         }
     };
     request.put(options)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 }
 
@@ -120,7 +124,7 @@ router.post("", (req, res) => {
     } else {
         // Pipeline is provided, we can just pipe the content to the storage.
         req.pipe(request.post(url))
-            .on("error", (error) => handleError(res, error))
+            .on("error", (error) => handleConnectionError(res, error))
             .pipe(res);
     }
 });
@@ -163,7 +167,7 @@ function addPipelineAndPipe(req, res, url) {
         // Get pipeline.
         resolvePipeline(req, (error, http, pipeline) => {
             if (error) {
-                handleError(res, error);
+                handleConnectionError(res, error);
                 return
             }
             postPipelineWithOptions(res, importOptions, pipeline, url);
@@ -172,7 +176,11 @@ function addPipelineAndPipe(req, res, url) {
     form.on("error", (error) => {
         console.error("Error when in form processing:\n", error);
         console.trace();
-        res.status(500).json({"error": {"type": errors.INVALID_REQUEST}});
+        res.status(500).json({"error": {
+            "type": errors.INVALID_REQUEST,
+            "source": "FRONTEND",
+            "message": error
+        }});
     });
     form.parse(req);
 }
@@ -237,6 +245,6 @@ function postPipelineWithOptions(res, importOptions, pipeline, url) {
         }
     };
     request.post(options)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 }
