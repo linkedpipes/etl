@@ -22,8 +22,7 @@ public enum ExecutionStatus {
      */
     FAILED("http://etl.linkedpipes.com/resources/status/failed"),
     /**
-     * Running but with no known executor. Or the executor was known
-     * but changed the executing pipeline.
+     * Running but respective executor as no longer executing this pipeline.
      */
     DANGLING("http://etl.linkedpipes.com/resources/status/dangling"),
     /**

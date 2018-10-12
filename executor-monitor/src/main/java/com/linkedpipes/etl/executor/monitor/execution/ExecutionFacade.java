@@ -83,7 +83,7 @@ public class ExecutionFacade {
         // We use the date obtained to update, in this way we can be sure,
         // that we have the latest data.
         if (!statements.isEmpty() && !execution.isHasFinalData()) {
-            this.storage.updateExecution(execution, statements);
+            this.storage.updateFromExecution(execution, statements);
         }
         return statements;
     }

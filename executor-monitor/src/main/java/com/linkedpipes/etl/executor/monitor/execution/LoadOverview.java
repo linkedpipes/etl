@@ -58,76 +58,10 @@ public class LoadOverview {
     private void updateExecutionFromOverview(Execution execution) {
         OverviewObject overview =
                 OverviewObject.fromJson(execution.getOverviewJson());
-
-        setLastChange(execution, overview);
-        updateStatus(execution, overview);
+        UpdateExecutionStatus updater = new UpdateExecutionStatus();
+        boolean statusChanged = updater.update(execution, overview);
         updateStatements(execution, overview);
-    }
-
-    private void setLastChange(Execution execution, OverviewObject overview) {
-        Date lastOverviewChange = execution.getOverviewLastChange();
-        if (lastOverviewChange != null &&
-                lastOverviewChange.equals(overview.getLastChange())) {
-            return;
-        }
-        // We know that there was a change, however it could have happen
-        // deep in the past. Using that time client asking for changes since
-        // given time would not get it.
-        // To prevent this we use local time value instead.
-        execution.setLastChange(new Date());
-
-        // Set time from the overview.
-        execution.setOverviewLastChange(overview.getLastChange());
-    }
-
-    private void updateStatus(Execution execution, OverviewObject overview) {
-        ExecutionStatus oldStatus = execution.getStatus();
-        ExecutionStatus newStatus =
-                ExecutionStatus.fromIri(overview.getStatus());
-        // Postpone failed and finished until the execution time end is set.
-        switch (newStatus) {
-            case FAILED:
-                if (isFinished(overview)) {
-                    execution.setStatus(ExecutionStatus.FAILED);
-                } else {
-                    execution.setStatus(ExecutionStatus.RUNNING);
-                }
-                break;
-            case FINISHED:
-                if (isFinished(overview)) {
-                    execution.setStatus(ExecutionStatus.FINISHED);
-                } else {
-                    execution.setStatus(ExecutionStatus.RUNNING);
-                }
-                break;
-            case RUNNING:
-                if (execution.getStatus() == null) {
-                    // Initial load.
-                    execution.setStatus(ExecutionStatus.DANGLING);
-                    break;
-                }
-                if (execution.hasExecutor()) {
-                    execution.setStatus(ExecutionStatus.RUNNING);
-                } else {
-                    if (oldStatus == ExecutionStatus.RUNNING) {
-                        execution.setStatus(ExecutionStatus.UNRESPONSIVE);
-                    } else {
-                        // Keep previous status.
-                    }
-                }
-                break;
-            default:
-                // We quit the function here as we use the status from overview.
-                execution.setStatus(newStatus);
-                return;
-        }
-        // We need to update the status in the overview.
-        StatusSetter.updateOverview(execution);
-        overview.setStatus(execution.getStatus().asStr());
-    }
-
-    private boolean isFinished(OverviewObject overview) {
-        return overview.getFinish() != null;
+        setLastChange(execution, overview, statusChanged);
     }
 
     private void updateStatements(Execution execution, OverviewObject overview) {
@@ -136,5 +70,27 @@ public class LoadOverview {
                 overviewToStatements.asStatements(execution, overview));
     }
 
+    private void setLastChange(
+            Execution execution,
+            OverviewObject overview,
+            boolean statusChanged) {
+        if (!statusChanged && !hasOverviewChanged(execution, overview)) {
+            return;
+        }
+        // We know that there was a change, however it could have happen
+        // deep in the past. Using that time client asking for changes since
+        // given time would not get it.
+        // To prevent this we use local time value instead.
+        execution.setLastChange(new Date());
+
+        // Update overview change time.
+        execution.setLastOverviewChange(overview.getLastChange());
+    }
+
+    private boolean hasOverviewChanged(
+            Execution execution, OverviewObject overview) {
+        Date change = execution.getLastOverviewChange();
+        return change == null || !change.equals(overview.getLastChange());
+    }
 
 }

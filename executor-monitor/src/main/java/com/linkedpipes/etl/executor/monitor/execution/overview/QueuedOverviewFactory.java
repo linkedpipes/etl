@@ -52,10 +52,10 @@ public class QueuedOverviewFactory {
 
         // Use time of last change.
         Date lastChange;
-        if (execution.getOverviewLastChange() == null) {
+        if (execution.getLastOverviewChange() == null) {
             lastChange = new Date();
         } else {
-            lastChange = execution.getOverviewLastChange();
+            lastChange = execution.getLastOverviewChange();
         }
         rootNode.put("lastChange", this.dateFormat.format(lastChange));
 

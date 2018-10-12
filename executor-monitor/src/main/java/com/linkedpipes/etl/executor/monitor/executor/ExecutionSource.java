@@ -12,4 +12,6 @@ public interface ExecutionSource {
 
     Execution getExecution(JsonNode overview) throws MonitorException;
 
+    Execution getExecution(Executor executor);
+
 }

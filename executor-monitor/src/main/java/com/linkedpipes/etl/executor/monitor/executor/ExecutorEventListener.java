@@ -5,19 +5,26 @@ import com.linkedpipes.etl.executor.monitor.execution.Execution;
 
 public interface ExecutorEventListener {
 
-    void onAttachExecutor(Execution execution, Executor executor);
+    /**
+     * When execution was found for given executor.
+     *
+     * @param execution Can be null.
+     */
+    void onExecutorHasExecution(Execution execution, Executor executor);
 
     /**
-     * Called when it is clear that the execution no longer is executing
-     * the execution.
+     * When no execution was found for the executor.
      */
-    void onDetachExecutor(Execution execution);
+    void onExecutorWithoutExecution(Executor executor);
 
     /**
-     * Called when it is not possible to establish connection with executor.
+     * When executor becomes unavailable/unresponsive.
      */
-    void onUnresponsiveExecutor(Execution execution);
+    void onExecutorUnavailable(Executor executor);
 
+    /**
+     * When an overview is available.
+     */
     void onOverview(Execution execution, JsonNode overview);
 
 }
