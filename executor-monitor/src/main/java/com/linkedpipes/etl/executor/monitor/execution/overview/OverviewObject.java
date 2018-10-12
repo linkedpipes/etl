@@ -36,6 +36,8 @@ public class OverviewObject {
 
     private Date lastChange;
 
+    private Long directorySize;
+
     public static OverviewObject fromJson(JsonNode root) {
         OverviewObject overview = new OverviewObject();
 
@@ -61,6 +63,12 @@ public class OverviewObject {
         if (root.get("pipelineProgress") != null) {
             overview.progressCurrent = progress.get("current").asInt();
             overview.progressTotal = progress.get("total").asInt();
+        }
+
+        if (root.get("directorySize") != null) {
+            overview.directorySize = root.get("directorySize").asLong();
+        } else {
+            overview.directorySize = null;
         }
 
         return overview;
@@ -113,6 +121,10 @@ public class OverviewObject {
 
     public Date getLastChange() {
         return lastChange;
+    }
+
+    public Long getDirectorySize() {
+        return directorySize;
     }
 
 }

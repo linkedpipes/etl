@@ -39,6 +39,10 @@ public class ResourceManager {
         return null;
     }
 
+    public File getExecutionRoot() {
+        return executionRoot;
+    }
+
     /**
      * @param execution
      * @param path

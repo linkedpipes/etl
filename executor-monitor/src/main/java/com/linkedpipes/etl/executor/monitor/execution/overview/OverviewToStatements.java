@@ -7,9 +7,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
 import com.linkedpipes.etl.rdf4j.Statements;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -34,7 +32,11 @@ public class OverviewToStatements {
 
         statements.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
         statements.addIri(iri, LP_OVERVIEW.HAS_STATUS, overview.getStatus());
-        statements.add(iri, LP_EXEC.HAS_SIZE, this.getDirSizeValue(execution));
+
+        if (overview.getDirectorySize() != null) {
+            statements.add(iri, LP_EXEC.HAS_SIZE,
+                    valueFactory.createLiteral(overview.getDirectorySize()));
+        }
 
         if (overview.getPipeline() != null) {
             statements.addIri(
@@ -63,11 +65,6 @@ public class OverviewToStatements {
         }
 
         return statements;
-    }
-
-    private Value getDirSizeValue(Execution execution) {
-        return this.valueFactory.createLiteral(
-                FileUtils.sizeOfDirectory(execution.getDirectory()));
     }
 
     private Statements deletedAsStatements(Execution execution) {

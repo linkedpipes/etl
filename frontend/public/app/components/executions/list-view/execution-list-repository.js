@@ -118,6 +118,12 @@
             item["searchLabel"] = item["iri"].toLowerCase();
         }
         item["filterLabel"] = true;
+        if (item["size"] === undefined) {
+            item["size"] = "?";
+        } else {
+            // Use * 100 / 100 to round to two places.
+            item["size"] = Math.ceil((item["size"]/ 1048576 * 100 )) / 100;
+        }
     }
 
     function getExecutionLabel(execution) {

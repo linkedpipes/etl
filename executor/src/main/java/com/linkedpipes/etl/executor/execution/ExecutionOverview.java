@@ -7,7 +7,9 @@ import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfFormatter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.util.Date;
 
 public class ExecutionOverview {
@@ -15,6 +17,8 @@ public class ExecutionOverview {
     private final String executionIri;
 
     private String pipelineIri;
+
+    private final File directory;
 
     private int numberOfComponentsToExecute;
 
@@ -24,6 +28,8 @@ public class ExecutionOverview {
 
     private String pipelineFinished;
 
+    private Long directorySize = null;
+
     /**
      * Used only to read the status.
      */
@@ -32,8 +38,11 @@ public class ExecutionOverview {
     private String lastChange;
 
     public ExecutionOverview(
-            String executionIri, ExecutionStatusMonitor statusMonitor) {
+            File directory,
+            String executionIri,
+            ExecutionStatusMonitor statusMonitor) {
         onBeforeUpdate();
+        this.directory = directory;
         this.executionIri = executionIri;
         this.statusMonitor = statusMonitor;
     }
@@ -78,6 +87,11 @@ public class ExecutionOverview {
     public void onExecutionEnd(Date date) {
         onBeforeUpdate();
         pipelineFinished = RdfFormatter.toXsdDate(date);
+        computeDirectorySize();
+    }
+
+    private void computeDirectorySize() {
+        this.directorySize = FileUtils.sizeOfDirectory(directory);
     }
 
     public ObjectNode toJsonLd(ObjectMapper mapper) {
@@ -138,6 +152,11 @@ public class ExecutionOverview {
         executionProgressNode.put("current", numberOfFinishedComponents);
 
         responseNode.set("pipelineProgress", executionProgressNode);
+
+        if (this.directorySize != null) {
+            responseNode.put("directorySize", directorySize);
+            contextNode.put("directorySize", LP_OVERVIEW.HAS_DIRECTORY_SIZE);
+        }
 
         return responseNode;
     }

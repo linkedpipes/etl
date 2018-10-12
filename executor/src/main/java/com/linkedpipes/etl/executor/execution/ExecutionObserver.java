@@ -48,7 +48,8 @@ public class ExecutionObserver {
         this.resourceManager = resourceManager;
         this.execution = new ExecutionModel(resourceManager, iri);
         this.status = new ExecutionStatusMonitor();
-        this.overview = new ExecutionOverview(iri, status);
+        this.overview = new ExecutionOverview(
+                resourceManager.getExecutionRoot(), iri, status);
         this.pipelineMessages = new ExecutionMessageWriter(
                 iri, this.messageCounter,
                 resourceManager.getPipelineMessageFile());

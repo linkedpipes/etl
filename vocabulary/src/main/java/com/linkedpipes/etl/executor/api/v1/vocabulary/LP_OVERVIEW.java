@@ -28,4 +28,6 @@ public class LP_OVERVIEW {
     public static final String HAS_PROGRESS_CURRENT = PREFIX +
             "execution/componentFinished";
 
+    public static final String HAS_DIRECTORY_SIZE = PREFIX + "directorySize";
+
 }
