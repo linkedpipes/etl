@@ -38,7 +38,7 @@ class DataUnitCloser {
 
     public void onComponentExecuted(ExecutionComponent component) {
         LOG.info("onComponentExecuted",component.getIri().substring(
-                component.getIri().indexOf("components/") + 10));
+                component.getIri().indexOf("/component") + 9));
         this.executedComponents.add(component.getIri());
     }
 
@@ -57,13 +57,13 @@ class DataUnitCloser {
                 LOG.info("  CLOSE {} {} : {}",
                         entry.getValue().getStatus(),
                         dataUnit.getIri().substring(
-                                dataUnit.getIri().indexOf("components/") + 10),
+                                dataUnit.getIri().indexOf("/component") + 9),
                         dataUnit.getPort().getBinding());
             } else {
                 LOG.info("        {} {} : {}",
                         entry.getValue().getStatus(),
                         dataUnit.getIri().substring(
-                                dataUnit.getIri().indexOf("components/") + 10),
+                                dataUnit.getIri().indexOf("/component") + 9),
                         dataUnit.getPort().getBinding());
             }
         }
