@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
+import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.dataunit.core.pipeline.PipelineModel;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
@@ -9,25 +10,13 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import org.eclipse.rdf4j.repository.Repository;
 import org.osgi.service.component.annotations.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.net.URI;
-
-/**
- * The factory is also used to store and hold shared repository.
- */
 @Component(
         immediate = true,
         service = {DataUnitFactory.class, PipelineExecutionObserver.class})
 public class RdfDataUnitFactory
         implements DataUnitFactory, PipelineExecutionObserver {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RdfDataUnitFactory.class);
 
     private FactoryConfiguration factoryConfiguration;
 
@@ -42,35 +31,26 @@ public class RdfDataUnitFactory
         if (factoryConfiguration == null) {
             return null;
         }
-        // Load factoryConfiguration.
-        Configuration configuration = loadDataUnitConfiguration(
-                dataUnit, graph, definition);
-        // Search for known types.
+        DataUnitConfiguration configuration =
+                loadDataUnitConfiguration(dataUnit, definition);
+
         for (String type : configuration.getTypes()) {
             switch (type) {
                 case LP_PIPELINE.SINGLE_GRAPH_DATA_UNIT:
                     return new DefaultSingleGraphDataUnit(
-                            configuration.getBinding(),
-                            dataUnit,
-                            getRepository(configuration),
-                            pipelineModel.getSourcesFor(dataUnit),
-                            dataUnit
+                            configuration,
+                            this.repositoryManager,
+                            this.pipelineModel.getSourcesFor(dataUnit)
                     );
                 case LP_PIPELINE.GRAPH_LIST_DATA_UNIT:
                     return new DefaultGraphListDataUnit(
-                            configuration.getBinding(),
-                            dataUnit,
-                            getRepository(configuration),
-                            pipelineModel.getSourcesFor(dataUnit),
-                            dataUnit
-                    );
+                            configuration,
+                            this.repositoryManager,
+                            this.pipelineModel.getSourcesFor(dataUnit));
                 case LP_PIPELINE.CHUNKED_TRIPLES_DATA_UNIT:
                     return new DefaultChunkedTriples(
-                            configuration.getBinding(),
-                            dataUnit,
-                            new File(URI.create(
-                                    configuration.getWorkingDirectory())),
-                            pipelineModel.getSourcesFor(dataUnit));
+                            configuration,
+                            this.pipelineModel.getSourcesFor(dataUnit));
                 default:
                     break;
             }
@@ -78,25 +58,20 @@ public class RdfDataUnitFactory
         return null;
     }
 
-    private Configuration loadDataUnitConfiguration(
-            String dataUnit, String graph, RdfSource definition)
+    private DataUnitConfiguration loadDataUnitConfiguration(
+            String dataUnit, RdfSource definition)
             throws LpException {
-        Configuration configuration = new Configuration(dataUnit, graph);
+        DataUnitConfiguration configuration =
+                new DataUnitConfiguration(dataUnit);
         RdfToPojoLoader.load(definition, dataUnit, configuration);
         return configuration;
     }
 
-    private Repository getRepository(Configuration configuration)
-            throws LpException {
-        return repositoryManager.getRepository(configuration);
-    }
-
     @Override
     public void onPipelineBegin(String pipeline,
-            RdfSource definition) throws LpException {
-        pipelineModel.load(pipeline, definition);
-        if (pipelineModel.getRdfRepository() == null) {
-            LOG.info("RDF repository not detected.");
+                                RdfSource definition) throws LpException {
+        this.pipelineModel.load(pipeline, definition);
+        if (this.pipelineModel.getRdfRepository() == null) {
             return;
         }
         loadFactoryConfiguration(definition);
@@ -105,27 +80,28 @@ public class RdfDataUnitFactory
 
     private void loadFactoryConfiguration(RdfSource definition)
             throws RdfException {
-        factoryConfiguration = new FactoryConfiguration();
+        this.factoryConfiguration = new FactoryConfiguration();
         RdfToPojoLoader.load(
-                definition, pipelineModel.getRdfRepository(),
-                factoryConfiguration);
+                definition,
+                this.pipelineModel.getRdfRepository(),
+                this.factoryConfiguration);
     }
 
-    private void initializeRepositoryManager() throws LpException {
-        repositoryManager = new RepositoryManager(
-                pipelineModel.getRdfRepositoryPolicy(),
-                pipelineModel.getRdfRepositoryType(),
-                factoryConfiguration.getDirectory());
+    private void initializeRepositoryManager() {
+        this.repositoryManager = new RepositoryManager(
+                this.pipelineModel.getRdfRepositoryPolicy(),
+                this.pipelineModel.getRdfRepositoryType(),
+                this.factoryConfiguration.getDirectory());
     }
 
     @Override
     public void onPipelineEnd() {
-        pipelineModel.clear();
-        if (repositoryManager == null) {
+        this.pipelineModel.clear();
+        if (this.repositoryManager == null) {
             return;
         }
-        repositoryManager.close();
-        repositoryManager = null;
+        this.repositoryManager.closeAll();
+        this.repositoryManager = null;
     }
 
 }

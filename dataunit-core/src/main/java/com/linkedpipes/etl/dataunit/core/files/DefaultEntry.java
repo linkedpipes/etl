@@ -15,12 +15,12 @@ class DefaultEntry implements FilesDataUnit.Entry {
 
     @Override
     public File toFile() {
-        return file;
+        return this.file;
     }
 
     @Override
     public String getFileName() {
-        return root.toPath().relativize(file.toPath()).toString();
+        return this.root.toPath().relativize(this.file.toPath()).toString();
     }
 
 }

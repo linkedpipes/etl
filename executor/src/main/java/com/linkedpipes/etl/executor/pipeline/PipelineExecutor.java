@@ -5,6 +5,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
+import com.linkedpipes.etl.executor.dataunit.DataUnitInstanceSource;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
@@ -200,7 +201,7 @@ public class PipelineExecutor {
 
     private void initializeDataUnits() throws ExecutorException {
         dataUnitManager = new DataUnitManager(pipeline.getModel());
-        final DataUnitManager.DataUnitInstanceSource dataUnitInstanceSource =
+        final DataUnitInstanceSource dataUnitInstanceSource =
                 (iri) -> {
                     return moduleFacade.getDataUnit(pipeline, iri);
                 };

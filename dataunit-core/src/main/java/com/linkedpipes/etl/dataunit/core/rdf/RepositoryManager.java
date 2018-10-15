@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
+import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import org.apache.commons.io.FileUtils;
@@ -15,51 +16,99 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * For data units in the same group provide the same repository and make sure
+ * that the repository is open as long as at least one data unit is using it.
+ */
 class RepositoryManager {
+
+    private static class RepositoryContainer {
+
+        private final String group;
+
+        private final Repository repository;
+
+        private int useCounter = 0;
+
+        public RepositoryContainer(String group, Repository repository) {
+            this.group = group;
+            this.repository = repository;
+        }
+
+    }
+
+    private static class ManagerConfiguration {
+
+        private final String repositoryPolicy;
+
+        private final String repositoryType;
+
+        private final File workingDirectory;
+
+        public ManagerConfiguration(
+                String repositoryPolicy,
+                String repositoryType,
+                File workingDirectory) {
+            this.repositoryPolicy = repositoryPolicy;
+            this.repositoryType = repositoryType;
+            this.workingDirectory = workingDirectory;
+        }
+
+        private boolean isSingleRepository() {
+            return LP_PIPELINE.SINGLE_REPOSITORY.equals(repositoryPolicy);
+        }
+
+        private boolean isInMemory() {
+            return LP_PIPELINE.MEMORY_STORE.equals(this.repositoryType);
+        }
+
+    }
 
     private static final Logger LOG =
             LoggerFactory.getLogger(RepositoryManager.class);
 
-    // TODO Replace with a single configuration object.
-    private final String repositoryPolicy;
+    private final ManagerConfiguration configuration;
 
-    private final String repositoryType;
+    private final Map<String, RepositoryContainer> repositories = new HashMap<>();
 
-    private final File workingDirectory;
-
-    private final Map<String, Repository> groupsRepository = new HashMap<>();
-
-    public RepositoryManager(String repositoryPolicy, String repositoryType,
-            File directory) {
-        this.repositoryPolicy = repositoryPolicy;
-        this.repositoryType = repositoryType;
+    public RepositoryManager(
+            String repositoryPolicy, String repositoryType, File directory) {
         LOG.info("Repository policy: {}", repositoryPolicy);
         LOG.info("Repository type: {}", repositoryType);
-        this.workingDirectory = directory;
+        LOG.info("Directory: {}", directory);
+        this.configuration = new ManagerConfiguration(
+                repositoryPolicy, repositoryType, directory);
     }
 
-    public Repository getRepository(Configuration configuration)
+    public Repository getRepository(DataUnitConfiguration configuration)
             throws LpException {
         String group = configuration.getGroup();
-        if (repositoryPolicy.equals(LP_PIPELINE.SINGLE_REPOSITORY)) {
+        if (this.configuration.isSingleRepository()) {
             group = "single";
         }
-        return getOrCreateRepository(group);
+        RepositoryContainer container  = getOrCreateRepository(group);
+        ++container.useCounter;
+        LOG.info("Using repository group: {} ({}) for: {}",
+                group, container.useCounter, configuration.getResource());
+        return container.repository;
     }
 
-    private Repository getOrCreateRepository(String group) throws LpException {
-        if (groupsRepository.containsKey(group)) {
-            return groupsRepository.get(group);
+    private RepositoryContainer getOrCreateRepository(String group)
+            throws LpException {
+        if (this.repositories.containsKey(group)) {
+            return this.repositories.get(group);
         } else {
-            Repository newRepository = createRepository(group);
-            groupsRepository.put(group, newRepository);
-            return newRepository;
+            Repository newRepository = getRepository(group);
+            RepositoryContainer container =
+                    new RepositoryContainer(group, newRepository);
+            this.repositories.put(group, container);
+            return container;
         }
     }
 
-    private Repository createRepository(String group) throws LpException {
+    private Repository getRepository(String group) throws LpException {
         Repository repository;
-        if (LP_PIPELINE.MEMORY_STORE.equals(repositoryType)) {
+        if (configuration.isInMemory()) {
             repository = createInMemory();
         } else {
             repository = createNativeRepository(group);
@@ -73,44 +122,64 @@ class RepositoryManager {
     }
 
     private Repository createNativeRepository(String group) {
-        File repositoryDirectory = new File(workingDirectory,
+        File directory = new File(
+                configuration.workingDirectory,
                 "dataunit-sesame-" + group);
-        return new SailRepository(new NativeStore(repositoryDirectory));
+        return new SailRepository(new NativeStore(directory));
     }
 
     private Repository createInMemory() {
-        // TODO Use dataFile ?
         return new SailRepository(new MemoryStore());
 
     }
 
-    public void close() {
-        for (Repository repository : groupsRepository.values()) {
-            closeRepository(repository);
+    public void closeAll() {
+        LOG.info("Closing all remaining repositories.");
+        for (RepositoryContainer container : repositories.values()) {
+            closeRepositoryContainer(container);
         }
         deleteDirectory();
     }
 
-    private void closeRepository(Repository repository) {
+    private void closeRepositoryContainer(RepositoryContainer container) {
         try {
-            LOG.info("Closing repository ... ");
-            repository.shutDown();
+            LOG.info("Closing repository group: {} ({}) ... ",
+                    container.group, container.useCounter);
+            container.repository.shutDown();
             LOG.info("Closing repository ... done");
         } catch (RepositoryException ex) {
-            LOG.error("Can't close repository.", ex);
+            LOG.error("Can't closeAll repository.", ex);
         }
     }
 
+    public void closeRepository(Repository repository) {
+        for (RepositoryContainer container : repositories.values()) {
+            if (container.repository != repository) {
+                continue;
+            }
+            LOG.info("Request to close repository group: {} ({})",
+                    container.group, container.useCounter);
+            --container.useCounter;
+            if (container.useCounter == 0) {
+                closeRepositoryContainer(container);
+                repositories.remove(container.group);
+                return;
+            }
+        }
+        LOG.error("Manager was asked to close unmanaged repository.");
+    }
+
     private void deleteDirectory() {
+        File directory = this.configuration.workingDirectory;
         LOG.info("Deleting content ...");
-        FileUtils.deleteQuietly(workingDirectory);
+        FileUtils.deleteQuietly(directory);
         // It may take some time before the file is released.
-        while (workingDirectory.exists()) {
+        while (directory.exists()) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
             }
-            FileUtils.deleteQuietly(workingDirectory);
+            FileUtils.deleteQuietly(directory);
         }
         LOG.info("Deleting content ... done");
     }

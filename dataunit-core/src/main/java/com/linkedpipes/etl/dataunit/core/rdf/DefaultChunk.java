@@ -23,10 +23,10 @@ class DefaultChunk implements ChunkedTriples.Chunk {
 
     @Override
     public Collection<Statement> toCollection() throws LpException {
-        final List<Statement> statements = new LinkedList<>();
-        try (InputStream stream = new FileInputStream(file);
+        List<Statement> statements = new LinkedList<>();
+        try (InputStream stream = new FileInputStream(this.file);
              Reader reader = new InputStreamReader(stream, "UTF-8")) {
-            final RDFParser parser = Rio.createParser(RDFFormat.TURTLE);
+            RDFParser parser = Rio.createParser(RDFFormat.TURTLE);
             parser.setRDFHandler(new AbstractRDFHandler() {
                 @Override
                 public void handleStatement(Statement st)
@@ -36,7 +36,8 @@ class DefaultChunk implements ChunkedTriples.Chunk {
             });
             parser.parse(reader, "http://localhost/base/");
         } catch (Exception ex) {
-            throw new LpException("Can't load chunk: {}", file.getName(), ex);
+            throw new LpException(
+                    "Can't load chunk: {}", this.file.getName(), ex);
         }
         return statements;
     }
