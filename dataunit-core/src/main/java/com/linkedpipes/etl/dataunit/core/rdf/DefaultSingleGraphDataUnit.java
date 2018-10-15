@@ -82,6 +82,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
             ManageableDataUnit source = dataUnits.get(sourceIri);
             consumeInput(source);
         } else {
+            this.graph = VF.createIRI(this.configuration.getResource());
             initializeFromSource(dataUnits);
         }
     }
