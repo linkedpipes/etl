@@ -1,0 +1,15 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.referencePredicate.hide">
+        <label>Predicate for reference data</label>
+        <input ng-model="dialog.referencePredicate.value"
+               ng-disabled="dialog.referencePredicate.disabled || dialog.referencePredicate.inherit"
+               required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.chunkPredicate.hide">
+        <label>Predicate for chunks</label>
+        <input ng-model="dialog.chunkPredicate.value"
+               ng-disabled="dialog.chunkPredicate.disabled || dialog.chunkPredicate.inherit"
+               required>
+    </md-input-container>
+</div>

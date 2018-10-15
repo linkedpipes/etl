@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-propertyLinkerChunked/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#chunkPredicate": "",
+        "http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#chunkPredicateControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#referencePredicate": "",
+            "http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#referencePredicateControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

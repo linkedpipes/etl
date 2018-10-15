@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-propertyLinkerChunked/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-propertyLinkerChunked/1.0.0/configuration/desc/chunkPredicate> ,
+        <http://linkedpipes.com/resources/components/t-propertyLinkerChunked/1.0.0/configuration/desc/referencePredicate> .
+
+<http://linkedpipes.com/resources/components/t-propertyLinkerChunked/1.0.0/configuration/desc/chunkPredicate>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#chunkPredicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#chunkPredicateControl> .
+
+<http://linkedpipes.com/resources/components/t-propertyLinkerChunked/1.0.0/configuration/desc/referencePredicate>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#referencePredicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-propertyLinkerChunked#referencePredicateControl> .
