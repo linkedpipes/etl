@@ -26,7 +26,7 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
             RepositoryManager manager,
             Collection<String> sources) {
         super(configuration, sources, manager);
-        this.graphPrefix = configuration.getGroup();
+        this.graphPrefix = configuration.getResource();
     }
 
     @Override
