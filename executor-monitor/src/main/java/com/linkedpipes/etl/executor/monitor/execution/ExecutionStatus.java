@@ -49,10 +49,6 @@ public enum ExecutionStatus {
         this.iri = SimpleValueFactory.getInstance().createIRI(iriAsStr);
     }
 
-    public IRI asIri() {
-        return this.iri;
-    }
-
     public String asStr() {
         return this.iri.stringValue();
     }

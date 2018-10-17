@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
-import com.linkedpipes.etl.executor.monitor.execution.overview.DeletedOverviewFactory;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutionSource;
 import com.linkedpipes.etl.executor.monitor.executor.Executor;
@@ -242,7 +242,7 @@ class ExecutionStorage
         execution.setPipelineStatements(Collections.emptyList());
         updateFromOverview(
                 execution,
-                DeletedOverviewFactory.create(execution, new Date()));
+                OverviewFactory.createDeleted(execution, new Date()));
         this.directoriesToDelete.add(execution.getDirectory());
     }
 

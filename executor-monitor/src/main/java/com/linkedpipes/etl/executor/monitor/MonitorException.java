@@ -2,9 +2,6 @@ package com.linkedpipes.etl.executor.monitor;
 
 import org.slf4j.helpers.MessageFormatter;
 
-/**
- * Base exception used by executor-monitor.
- */
 public class MonitorException extends Exception {
 
     protected final String message;

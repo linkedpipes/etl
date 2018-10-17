@@ -2,11 +2,12 @@ package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_MONITOR;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
-import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewEnricher;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
-import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToStatements;
-import com.linkedpipes.etl.executor.monitor.execution.overview.QueuedOverviewFactory;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToListStatements;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,10 +22,7 @@ public class LoadOverview {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private final QueuedOverviewFactory queuedFactory =
-            new QueuedOverviewFactory();
-
-    private final OverviewEnricher enricher = new OverviewEnricher();
+    private final OverviewFactory overviewFactory = new OverviewFactory();
 
     public void load(Execution execution) throws MonitorException {
         File file = this.getOverviewFile(execution);
@@ -32,7 +30,7 @@ public class LoadOverview {
         if (file.exists()) {
             overview = loadJson(file);
         } else {
-            overview = this.queuedFactory.create(execution);
+            overview = this.overviewFactory.createQueued(execution);
         }
         load(execution, overview);
     }
@@ -50,9 +48,16 @@ public class LoadOverview {
     }
 
     public void load(Execution execution, JsonNode overview) {
-        this.enricher.addMonitorInformation(execution, overview);
+        addMonitorInformation(execution, overview);
         execution.setOverviewJson(overview);
         this.updateExecutionFromOverview(execution);
+    }
+
+    public void addMonitorInformation(Execution execution, JsonNode node) {
+        ObjectNode root = (ObjectNode)node;
+        ObjectNode context = (ObjectNode)root.get("@context");
+        context.put("finalData", LP_MONITOR.HAS_FINAL_DATA);
+        root.put("finalData", execution.isHasFinalData());
     }
 
     private void updateExecutionFromOverview(Execution execution) {
@@ -65,7 +70,7 @@ public class LoadOverview {
     }
 
     private void updateStatements(Execution execution, OverviewObject overview) {
-        OverviewToStatements overviewToStatements = new OverviewToStatements();
+        OverviewToListStatements overviewToStatements = new OverviewToListStatements();
         execution.setOverviewStatements(
                 overviewToStatements.asStatements(execution, overview));
     }

@@ -59,6 +59,10 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, this.valueFactory.createIRI(o));
     }
 
+    public void addIri(String s, IRI p, String o) {
+        this.addIri(this.valueFactory.createIRI(s), p, o);
+    }
+
     public void addIri(Resource s, IRI p, String o) {
         this.add(s, p, this.valueFactory.createIRI(o));
     }
@@ -74,6 +78,14 @@ public class Statements implements Collection<Statement> {
     public void addString(Resource s, IRI p, String o) {
         this.add(s, p, this.valueFactory.createLiteral(o));
     }
+
+    public void addInt(String s, String p, int o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                this.valueFactory.createIRI(p),
+                this.valueFactory.createLiteral(o));
+    }
+
 
     public void addInt(Resource s, String p, int o) {
         this.add(s, p, this.valueFactory.createLiteral(o));
@@ -95,12 +107,26 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, this.valueFactory.createLiteral(o));
     }
 
+    public void addDate(String s, String p, Date o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                this.valueFactory.createIRI(p),
+                this.valueFactory.createLiteral(o));
+    }
+
     public void addDate(Resource s, String p, Date o) {
         this.addDate(s, this.valueFactory.createIRI(p), o);
     }
 
     public void addDate(Resource s, IRI p, Date o) {
         this.add(s, p, this.valueFactory.createLiteral(o));
+    }
+
+    public void addLong(String s, String p, Long o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                this.valueFactory.createIRI(p),
+                this.valueFactory.createLiteral(o));
     }
 
     public void add(Resource s, String p, Value o) {
@@ -224,6 +250,11 @@ public class Statements implements Collection<Statement> {
     @Override
     public void clear() {
         this.collection.clear();
+    }
+
+    public boolean contains(Statements statements) {
+        Set<Statement> thisAsSet = new HashSet<>(this.collection);
+        return thisAsSet.containsAll(statements.collection);
     }
 
 }

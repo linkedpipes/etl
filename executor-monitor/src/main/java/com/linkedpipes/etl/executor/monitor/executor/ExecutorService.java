@@ -58,7 +58,7 @@ public class ExecutorService {
 
     private void addExecutor(String address) {
         Executor executor = new Executor(address);
-        this.checkExecutor(executor);
+        checkExecutor(executor);
         this.executors.add(executor);
     }
 

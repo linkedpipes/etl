@@ -12,7 +12,10 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-public class OverviewToStatements {
+/**
+ * Should be used to represent an execution in execution list.
+ */
+public class OverviewToListStatements {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 

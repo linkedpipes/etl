@@ -71,6 +71,12 @@ public final class LP_EXEC {
      */
     public static final String HAS_EXECUTION = PREFIX + "execution";
 
+    public static final String HAS_EXECUTION_ETL =
+            "http://etl.linkedpipes.com/ontology/execution";
+
+    public static final String HAS_DEBUG =
+            "http://etl.linkedpipes.com/ontology/debug";
+
     /**
      * Relative path to the data used by port.
      */
@@ -146,6 +152,9 @@ public final class LP_EXEC {
 
     public static final String HAS_DATA_UNIT =
             "http://etl.linkedpipes.com/ontology/dataUnit";
+
+    public static final String DATA_UNIT =
+            "http://etl.linkedpipes.com/ontology/DataUnit";
 
     /**
      * Define groups of data units of same type that must share the same
