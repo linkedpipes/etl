@@ -38,6 +38,8 @@ public enum ExecutionStatus {
      * When we do not know.
      */
     UNKNOWN("http://etl.linkedpipes.com/resources/status/unknown"),
+    CANCELLING("http://etl.linkedpipes.com/resources/status/cancelling"),
+    CANCELLED("http://etl.linkedpipes.com/resources/status/cancelled"),
     /**
      * Represents invalid/deprecated execution record.
      */

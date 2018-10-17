@@ -41,8 +41,10 @@ public class DebugData {
             }
             addStatement(statement, dataUnit);
         }
-        //
+        // Some may not be loaded, so there is just a reference with no
+        // additional info.
         return newDataUnits.entrySet().stream()
+                .filter((entry) -> entry.getValue().getName() != null)
                 .collect(Collectors.toMap(
                         (entry) -> entry.getValue().getName(),
                         (entry) -> entry.getValue()));

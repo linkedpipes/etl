@@ -38,8 +38,15 @@ class UpdateExecutionStatus {
                 } else {
                     return ExecutionStatus.RUNNING;
                 }
+            case CANCELLED:
+                if (isFinished(overview)) {
+                    return ExecutionStatus.CANCELLED;
+                } else {
+                    return ExecutionStatus.CANCELLING;
+                }
+            case CANCELLING:
             case RUNNING:
-                return newStatusRunning(execution);
+                return newStatusRunning(execution, status);
             default:
                 return status;
         }
@@ -49,7 +56,8 @@ class UpdateExecutionStatus {
         return overview.getFinish() != null;
     }
 
-    private ExecutionStatus newStatusRunning(Execution execution) {
+    private ExecutionStatus newStatusRunning(
+            Execution execution, ExecutionStatus status) {
         // No executor.
         if (!execution.isExecutor()) {
             return ExecutionStatus.DANGLING;
@@ -58,8 +66,7 @@ class UpdateExecutionStatus {
         if (!execution.isExecutorResponsive()) {
             return ExecutionStatus.UNRESPONSIVE;
         }
-        // Running all is fine.
-        return ExecutionStatus.RUNNING;
+        return status;
     }
 
 }
