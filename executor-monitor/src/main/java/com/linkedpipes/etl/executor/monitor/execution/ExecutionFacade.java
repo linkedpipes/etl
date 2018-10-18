@@ -59,7 +59,7 @@ public class ExecutionFacade {
         return new File(execution.getDirectory(), "log/execution-debug.log");
     }
 
-    public File getExecutionInfoLogFile(Execution execution) {
+    public File getExecutionWarnLogFile(Execution execution) {
         return new File(execution.getDirectory(), "log/execution-warn.log");
     }
 
