@@ -252,9 +252,9 @@ public class Statements implements Collection<Statement> {
         this.collection.clear();
     }
 
-    public boolean contains(Statements statements) {
+    public boolean contains(Collection<Statement> statements) {
         Set<Statement> thisAsSet = new HashSet<>(this.collection);
-        return thisAsSet.containsAll(statements.collection);
+        return thisAsSet.containsAll(statements);
     }
 
 }
