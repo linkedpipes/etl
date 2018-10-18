@@ -46,6 +46,9 @@ public class QueryTask implements GroupTask {
             iri = SparqlEndpointChunkedListVocabulary.HAS_PASSWORD)
     private String password;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointChunkedListVocabulary.HAS_AS_LITERALS)
+    private List<String> asLiterals = new ArrayList<>();
 
     @Override
     public String getIri() {
@@ -132,4 +135,13 @@ public class QueryTask implements GroupTask {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<String> getAsLiterals() {
+        return asLiterals;
+    }
+
+    public void setAsLiterals(List<String> asLiterals) {
+        this.asLiterals = asLiterals;
+    }
+
 }
