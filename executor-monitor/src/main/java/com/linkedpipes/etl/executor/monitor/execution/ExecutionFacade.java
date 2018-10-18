@@ -60,7 +60,7 @@ public class ExecutionFacade {
     }
 
     public File getExecutionInfoLogFile(Execution execution) {
-        return new File(execution.getDirectory(), "log/execution-info.log");
+        return new File(execution.getDirectory(), "log/execution-warn.log");
     }
 
     public JsonNode getOverview(Execution execution) {

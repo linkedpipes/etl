@@ -84,8 +84,8 @@ public class ResourceManager {
         return file;
     }
 
-    public File getInfoLogFile() {
-        return new File(getExecutionLogDirectory(), "execution-info.log");
+    public File getWarnLogFile() {
+        return new File(getExecutionLogDirectory(), "execution-warn.log");
     }
 
     /**

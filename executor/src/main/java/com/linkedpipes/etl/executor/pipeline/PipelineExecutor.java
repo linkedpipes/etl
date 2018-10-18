@@ -68,7 +68,7 @@ public class PipelineExecutor {
                 directory.getParentFile(), directory);
         this.loggerFacade.prepareAppendersForExecution(
                 resources.getDebugLogFile(),
-                resources.getInfoLogFile());
+                resources.getWarnLogFile());
         this.moduleFacade = modules;
         this.execution = new ExecutionObserver(resources, iri);
         this.execution.onExecutionBegin();
