@@ -52,7 +52,12 @@ define([], function () {
         "useTolerantRepository": {
             "$type": "bool",
             "$label": "Fix invalid types"
-        }
+        },
+        "literals" : {
+            "$type": "str",
+            "$array": true,
+            "$label": "Columns as literals"
+        },
     };
 
     const MIME_TYPES = [

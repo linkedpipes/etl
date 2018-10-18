@@ -78,6 +78,7 @@ public final class SparqlEndpointChunked implements Component,
             for (FilesDataUnit.Entry entry : inputFiles) {
                 final ValuesSource valuesSource = new ValuesSource(
                         entry.toFile(), exceptionFactory,
+                        configuration.getAsLiterals(),
                         configuration.getChunkSize());
                 valuesSource.readSource((valuesClause) -> {
                     buffer.clear();

@@ -30,6 +30,8 @@ final class SparqlEndpointChunkedVocabulary {
     public static final String HAS_USE_TOLERANT_REPOSITORY =
             PREFIX + "useTolerantRepository";
 
+    public static final String HAS_AS_LITERALS = PREFIX + "literals";
+
     private SparqlEndpointChunkedVocabulary() {
     }
 

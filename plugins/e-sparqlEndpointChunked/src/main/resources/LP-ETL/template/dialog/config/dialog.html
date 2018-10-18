@@ -67,6 +67,11 @@
         <md-tooltip>Fix rdf:langString without language tag.
         </md-tooltip>
     </md-switch>
+    <md-chips ng-model="dialog.literals.value"
+              ng-disabled="dialog.literals.disabled || dialog.literals.inherit"
+              ng-hide="dialog.literals.hide"
+              placeholder="Columns as literals">
+    </md-chips>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
                  lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"

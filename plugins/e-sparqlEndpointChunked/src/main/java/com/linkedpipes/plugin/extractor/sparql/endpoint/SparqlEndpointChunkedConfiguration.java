@@ -51,6 +51,9 @@ public class SparqlEndpointChunkedConfiguration {
             iri = SparqlEndpointChunkedVocabulary.HAS_USE_TOLERANT_REPOSITORY)
     private boolean useTolerantRepository = false;
 
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_AS_LITERALS)
+    private List<String> asLiterals = new ArrayList<>();
+
     public SparqlEndpointChunkedConfiguration() {
     }
 
@@ -140,6 +143,14 @@ public class SparqlEndpointChunkedConfiguration {
 
     public void setUseTolerantRepository(boolean useTolerantRepository) {
         this.useTolerantRepository = useTolerantRepository;
+    }
+
+    public List<String> getAsLiterals() {
+        return asLiterals;
+    }
+
+    public void setAsLiterals(List<String> asLiterals) {
+        this.asLiterals = asLiterals;
     }
 
 }
