@@ -83,6 +83,10 @@ define([], function () {
             $mdDialog.cancel();
         };
 
+        $scope.$on("$routeChangeStart", function($event, next, current) {
+            $mdDialog.cancel();
+        });
+
         $scope.$watch("searchLabel", (newValue, oldValue) => {
             if (newValue === oldValue) {
                 return;

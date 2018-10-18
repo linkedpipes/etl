@@ -155,6 +155,10 @@ define([
             $mdDialog.cancel();
         };
 
+        $scope.$on("$routeChangeStart", function($event, next, current) {
+            $mdDialog.cancel();
+        });
+
         /**
          * Return component configuration or undefined if it's missing.
          *

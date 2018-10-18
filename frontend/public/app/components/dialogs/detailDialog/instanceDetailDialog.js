@@ -83,6 +83,10 @@ define([
             $mdDialog.cancel();
         };
 
+        $scope.$on("$routeChangeStart", function($event, next, current) {
+            $mdDialog.cancel();
+        });
+
         function initDirective() {
 
             if (template.supportControl) {
