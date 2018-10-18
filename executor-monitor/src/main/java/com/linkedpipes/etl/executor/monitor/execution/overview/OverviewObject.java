@@ -69,11 +69,13 @@ public class OverviewObject {
         if (root.get("pipelineProgress") != null) {
             overview.progressCurrent = progress.get("current").asInt();
             overview.progressTotal = progress.get("total").asInt();
-            overview.progressTotalMap = progress.get("total_map").asInt();
+
+            overview.progressTotalMap =
+                    getIntOptional(progress, "total_map");
             overview.progressCurrentMapped =
-                    progress.get("current_mapped").asInt();
+                    getIntOptional(progress, "current_mapped");
             overview.progressCurrentExecuted =
-                    progress.get("current_executed").asInt();
+                    getIntOptional(progress, "current_executed");
         }
 
         if (root.get("directorySize") != null) {
@@ -95,6 +97,14 @@ public class OverviewObject {
         } catch(ParseException ex) {
             LOG.info("Can not parse date from overview: ", str);
             return null;
+        }
+    }
+
+    private static Integer getIntOptional(JsonNode node, String name) {
+        if (node.get(name) == null) {
+            return null;
+        } else {
+            return node.get(name).asInt();
         }
     }
 
