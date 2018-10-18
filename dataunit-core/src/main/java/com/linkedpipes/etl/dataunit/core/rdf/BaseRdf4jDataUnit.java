@@ -8,7 +8,9 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Base class for RDF4J data units based on RDF4J library.
@@ -43,6 +45,17 @@ abstract class BaseRdf4jDataUnit extends AbstractDataUnit
     @Override
     public void execute(Procedure action) throws LpException {
         ActionExecutor.execute(action);
+    }
+
+    @Override
+    public void initialize(File directory) throws LpException {
+        setRepositoryFromManager();
+    }
+
+    @Override
+    public void initialize(Map<String, ManageableDataUnit> dataUnits)
+            throws LpException {
+        setRepositoryFromManager();
     }
 
     @Override

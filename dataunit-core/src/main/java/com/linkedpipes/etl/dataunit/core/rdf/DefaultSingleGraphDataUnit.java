@@ -64,19 +64,21 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
 
     @Override
     public void initialize(File directory) throws LpException {
+        super.initialize(directory);
         List<File> directories = loadDataDirectories(directory);
         if (directories.size() != 1) {
             throw new LpException("Invalid number of directories {} in {}",
                     directories.size(), directory);
         }
         File dataDirectory = directories.get(0);
+        this.graph = VF.createIRI(this.configuration.getResource());
         loadContentFromTurtle(dataDirectory);
     }
 
     @Override
     public void initialize(
             Map<String, ManageableDataUnit> dataUnits) throws LpException {
-        this.setRepositoryFromManager();
+        super.initialize(dataUnits);
         if (this.sources.size() == 1) {
             String sourceIri = this.sources.iterator().next();
             ManageableDataUnit source = dataUnits.get(sourceIri);

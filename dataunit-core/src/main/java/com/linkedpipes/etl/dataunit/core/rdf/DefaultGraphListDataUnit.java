@@ -43,6 +43,7 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
 
     @Override
     public void initialize(File directory) throws LpException {
+        super.initialize(directory);
         List<File> directories = loadDataDirectories(directory);
         if (directories.size() != 1) {
             throw new LpException("Invalid number of directories {} in {}",
@@ -55,6 +56,7 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
     @Override
     public void initialize(Map<String, ManageableDataUnit> dataUnits)
             throws LpException {
+        super.initialize(dataUnits);
         initializeFromSource(dataUnits);
     }
 
