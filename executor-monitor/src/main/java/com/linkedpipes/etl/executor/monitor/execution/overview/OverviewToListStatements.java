@@ -67,6 +67,24 @@ public class OverviewToListStatements {
                     overview.getProgressTotal());
         }
 
+        if (overview.getProgressTotalMap() != null) {
+            statements.addInt(
+                    iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL_MAP,
+                    overview.getProgressTotalMap());
+        }
+
+        if (overview.getProgressCurrentExecuted() != null) {
+            statements.addInt(
+                    iri, LP_OVERVIEW.HAS_PROGRESS_EXECUTED,
+                    overview.getProgressCurrentExecuted());
+        }
+
+        if (overview.getProgressCurrentMapped() != null) {
+            statements.addInt(
+                    iri, LP_OVERVIEW.HAS_PROGRESS_MAPPED,
+                    overview.getProgressCurrentMapped());
+        }
+
         return statements;
     }
 

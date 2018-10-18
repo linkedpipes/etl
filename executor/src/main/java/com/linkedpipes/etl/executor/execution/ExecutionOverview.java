@@ -20,9 +20,13 @@ public class ExecutionOverview {
 
     private final File directory;
 
-    private int numberOfComponentsToExecute;
+    private int componentsToExecute;
 
-    private int numberOfFinishedComponents;
+    private int componentsToMap;
+
+    private int executedComponents;
+
+    private int mappedComponents;
 
     private String pipelineStarted;
 
@@ -41,7 +45,7 @@ public class ExecutionOverview {
             File directory,
             String executionIri,
             ExecutionStatusMonitor statusMonitor) {
-        onBeforeUpdate();
+        onAfterUpdate();
         this.directory = directory;
         this.executionIri = executionIri;
         this.statusMonitor = statusMonitor;
@@ -52,42 +56,50 @@ public class ExecutionOverview {
      * execution, so we need to change tha last change status.
      */
     public void onExecutionBegin(Date date) {
-        onBeforeUpdate();
         pipelineStarted = RdfFormatter.toXsdDate(date);
+        onAfterUpdate();
     }
 
     public void onPipelineLoaded(PipelineModel pipeline) {
-        onBeforeUpdate();
         pipelineIri = pipeline.getIri();
-        numberOfComponentsToExecute = 0;
+        componentsToExecute = 0;
+        componentsToMap = 0;
         for (PipelineComponent component : pipeline.getComponents()) {
-            if (component.shouldExecute()) {
-                ++numberOfComponentsToExecute;
+            if (component.isPlannedForExecution()) {
+                ++componentsToExecute;
+            } else if (component.isPlannedForMapping()) {
+                ++componentsToMap;
             }
         }
+        onAfterUpdate();
     }
 
     public void onComponentBegin() {
-        onBeforeUpdate();
+        onAfterUpdate();
     }
 
-    private void onBeforeUpdate() {
+    private void onAfterUpdate() {
         this.lastChange = RdfFormatter.toXsdDate(new Date());
     }
 
-    public void onComponentExecutionEnd() {
-        onBeforeUpdate();
-        ++numberOfFinishedComponents;
+    public void onComponentMapped() {
+        ++mappedComponents;
+        onAfterUpdate();
+    }
+
+    public void onComponentExecuted() {
+        ++executedComponents;
+        onAfterUpdate();
     }
 
     public void onExecutionCancelling() {
-        onBeforeUpdate();
+        onAfterUpdate();
     }
 
     public void onExecutionEnd(Date date) {
-        onBeforeUpdate();
         pipelineFinished = RdfFormatter.toXsdDate(date);
         computeDirectorySize();
+        onAfterUpdate();
     }
 
     private void computeDirectorySize() {
@@ -95,40 +107,16 @@ public class ExecutionOverview {
     }
 
     public ObjectNode toJsonLd(ObjectMapper mapper) {
-        final ObjectNode contextNode = mapper.createObjectNode();
-        contextNode.put("pipeline", LP_OVERVIEW.HAS_PIPELINE);
-        contextNode.put("execution", LP_OVERVIEW.HAS_EXECUTION);
-
-        final ObjectNode startNode = mapper.createObjectNode();
-        startNode.put("@id", LP_OVERVIEW.HAS_START);
-        startNode.put("@type", XSD.DATETIME);
-        contextNode.set("executionStarted", startNode);
-
-        final ObjectNode finishedNode = mapper.createObjectNode();
-        finishedNode.put("@id", LP_OVERVIEW.HAS_END);
-        finishedNode.put("@type", XSD.DATETIME);
-        contextNode.set("executionFinished", finishedNode);
-
-        contextNode.put("status", LP_OVERVIEW.HAS_STATUS);
-
-        final ObjectNode lastChangNode = mapper.createObjectNode();
-        lastChangNode.put("@id", LP_OVERVIEW.HAS_LAST_CHANGE);
-        lastChangNode.put("@type", XSD.DATETIME);
-        contextNode.set("lastChange", lastChangNode);
-
-        contextNode.put("pipelineProgress", LP_OVERVIEW.HAS_PIPELINE_PROGRESS);
-        contextNode.put("total", LP_OVERVIEW.HAS_PROGRESS_TOTAL);
-        contextNode.put("current", LP_OVERVIEW.HAS_PROGRESS_CURRENT);
-
-        final ObjectNode responseNode = mapper.createObjectNode();
-        responseNode.set("@context", contextNode);
+        ObjectNode responseNode = mapper.createObjectNode();
+        responseNode.set("@context", createContext(mapper));
         responseNode.put("@id", executionIri + "/overview");
+        responseNode.put("@type", LP_OVERVIEW.OVERVIEW);
 
-        final ObjectNode pipelineNode = mapper.createObjectNode();
+        ObjectNode pipelineNode = mapper.createObjectNode();
         pipelineNode.put("@id", pipelineIri);
         responseNode.set("pipeline", pipelineNode);
 
-        final ObjectNode executionNode = mapper.createObjectNode();
+        ObjectNode executionNode = mapper.createObjectNode();
         executionNode.put("@id", executionIri);
         responseNode.set("execution", executionNode);
 
@@ -139,26 +127,63 @@ public class ExecutionOverview {
             responseNode.put("executionFinished", pipelineFinished);
         }
 
-        final ObjectNode statusNode = mapper.createObjectNode();
+        ObjectNode statusNode = mapper.createObjectNode();
         statusNode.put("@id", statusMonitor.getStatus().getIri());
         responseNode.set("status", statusNode);
 
         responseNode.put("lastChange", lastChange);
 
-        final ObjectNode executionProgressNode = mapper.createObjectNode();
+        ObjectNode executionProgressNode = mapper.createObjectNode();
         executionProgressNode.put("@id",
                 executionIri + "/overview/executionProgress");
-        executionProgressNode.put("total", numberOfComponentsToExecute);
-        executionProgressNode.put("current", numberOfFinishedComponents);
+        executionProgressNode.put("total", componentsToExecute);
+        executionProgressNode.put("current",
+                executedComponents + mappedComponents);
+
+        executionProgressNode.put("total_map", componentsToMap);
+        executionProgressNode.put("current_mapped", mappedComponents);
+        executionProgressNode.put("current_executed", executedComponents);
 
         responseNode.set("pipelineProgress", executionProgressNode);
 
         if (this.directorySize != null) {
             responseNode.put("directorySize", directorySize);
-            contextNode.put("directorySize", LP_OVERVIEW.HAS_DIRECTORY_SIZE);
         }
 
         return responseNode;
+    }
+
+    private ObjectNode createContext(ObjectMapper mapper) {
+        ObjectNode contextNode = mapper.createObjectNode();
+        contextNode.put("pipeline", LP_OVERVIEW.HAS_PIPELINE);
+        contextNode.put("execution", LP_OVERVIEW.HAS_EXECUTION);
+
+        ObjectNode startNode = mapper.createObjectNode();
+        startNode.put("@id", LP_OVERVIEW.HAS_START);
+        startNode.put("@type", XSD.DATETIME);
+        contextNode.set("executionStarted", startNode);
+
+        ObjectNode finishedNode = mapper.createObjectNode();
+        finishedNode.put("@id", LP_OVERVIEW.HAS_END);
+        finishedNode.put("@type", XSD.DATETIME);
+        contextNode.set("executionFinished", finishedNode);
+
+        ObjectNode lastChangNode = mapper.createObjectNode();
+        lastChangNode.put("@id", LP_OVERVIEW.HAS_LAST_CHANGE);
+        lastChangNode.put("@type", XSD.DATETIME);
+        contextNode.set("lastChange", lastChangNode);
+
+        contextNode.put("status", LP_OVERVIEW.HAS_STATUS);
+        contextNode.put("pipelineProgress", LP_OVERVIEW.HAS_PIPELINE_PROGRESS);
+        contextNode.put("total", LP_OVERVIEW.HAS_PROGRESS_TOTAL);
+        contextNode.put("current", LP_OVERVIEW.HAS_PROGRESS_CURRENT);
+        contextNode.put("total_map", LP_OVERVIEW.HAS_PROGRESS_TOTAL_MAP);
+        contextNode.put("current_mapped", LP_OVERVIEW.HAS_PROGRESS_MAPPED);
+        contextNode.put("current_executed", LP_OVERVIEW.HAS_PROGRESS_EXECUTED);
+
+        contextNode.put("directorySize", LP_OVERVIEW.HAS_DIRECTORY_SIZE);
+
+        return contextNode;
     }
 
 }

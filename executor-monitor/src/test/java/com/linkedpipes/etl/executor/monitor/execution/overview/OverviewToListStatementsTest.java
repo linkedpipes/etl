@@ -60,7 +60,10 @@ public class OverviewToListStatementsTest {
         root.put("directorySize", 1204);
         root.set("pipelineProgress", mapper.createObjectNode()
                 .put("current", 3)
-                .put("total", 10));
+                .put("total", 10)
+                .put("total_map", 5)
+                .put("current_mapped", 2)
+                .put("current_executed", 1));
         Date lastChange = new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
         root.put("lastChange", DATE_FORMAT.format(lastChange));
 
@@ -80,6 +83,10 @@ public class OverviewToListStatementsTest {
         expected.addDate(iri, LP_OVERVIEW.HAS_END, finished);
         expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT, 3);
         expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL, 10);
+        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL_MAP, 5);
+        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_MAPPED, 2);
+        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_EXECUTED, 1);
+
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Assert.assertTrue(actual.contains(expected));

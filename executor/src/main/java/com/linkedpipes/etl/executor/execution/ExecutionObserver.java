@@ -180,7 +180,7 @@ public class ExecutionObserver {
     public void onMapComponentSuccessful(ExecutionComponent component) {
         LOG.info("onMapComponentSuccessful : {}",
                 component.getIri());
-        this.overview.onComponentExecutionEnd();
+        this.overview.onComponentMapped();
         this.information.onMapComponentSuccessful(component);
         this.writeInformationToDisk();
     }
@@ -211,7 +211,7 @@ public class ExecutionObserver {
         LOG.info("onExecuteComponentSuccessful : {}",
                 component.getIri());
         this.getComponentWriter(component).onComponentEnd(component);
-        this.overview.onComponentExecutionEnd();
+        this.overview.onComponentExecuted();
         this.information.onComponentEnd(component);
         this.writeOverviewToDisk();
         this.writeInformationToDisk();

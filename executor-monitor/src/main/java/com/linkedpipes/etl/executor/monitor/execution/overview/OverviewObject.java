@@ -28,6 +28,12 @@ public class OverviewObject {
 
     private Integer progressTotal;
 
+    private Integer progressTotalMap;
+
+    private Integer progressCurrentMapped;
+
+    private Integer progressCurrentExecuted;
+
     private Date start;
 
     private Date finish;
@@ -63,6 +69,11 @@ public class OverviewObject {
         if (root.get("pipelineProgress") != null) {
             overview.progressCurrent = progress.get("current").asInt();
             overview.progressTotal = progress.get("total").asInt();
+            overview.progressTotalMap = progress.get("total_map").asInt();
+            overview.progressCurrentMapped =
+                    progress.get("current_mapped").asInt();
+            overview.progressCurrentExecuted =
+                    progress.get("current_executed").asInt();
         }
 
         if (root.get("directorySize") != null) {
@@ -101,6 +112,18 @@ public class OverviewObject {
 
     public Integer getProgressTotal() {
         return progressTotal;
+    }
+
+    public Integer getProgressTotalMap() {
+        return progressTotalMap;
+    }
+
+    public Integer getProgressCurrentMapped() {
+        return progressCurrentMapped;
+    }
+
+    public Integer getProgressCurrentExecuted() {
+        return progressCurrentExecuted;
     }
 
     public Date getStart() {
