@@ -69,6 +69,7 @@ public class ExecutionOverview {
                 ++componentsToExecute;
             } else if (component.isPlannedForMapping()) {
                 ++componentsToMap;
+                ++componentsToExecute;
             }
         }
         onAfterUpdate();
