@@ -41,7 +41,7 @@ public class OverviewToListStatementsTest {
         Statements expected = Statements.ArrayList();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
-        Assert.assertTrue(actual.contains(expected));
+        Assert.assertTrue(actual.containsAllLogMissing(expected));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class OverviewToListStatementsTest {
 
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
-        Assert.assertTrue(actual.contains(expected));
+        Assert.assertTrue(actual.containsAllLogMissing(expected));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class OverviewToListStatementsTest {
 
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
-        Assert.assertTrue(actual.contains(expected));
+        Assert.assertTrue(actual.containsAllLogMissing(expected));
     }
 
 }

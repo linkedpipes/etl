@@ -35,7 +35,8 @@ public class ExecutorServiceTest {
         Mockito.when(execution.getStatus()).thenReturn(ExecutionStatus.QUEUED);
         Mockito.when(executions.getExecutions())
                 .thenReturn(Arrays.asList(execution));
-        ExecutorEventListener eventListener = null;
+        ExecutorEventListener eventListener = Mockito
+                .mock(ExecutorEventListener.class);
         Configuration configuration = Mockito.mock(Configuration.class);
         Mockito.when(configuration.getExecutorUri()).thenReturn("iri");
         ExecutorRestClient restClient = Mockito.mock(ExecutorRestClient.class);
@@ -51,6 +52,8 @@ public class ExecutorServiceTest {
         //
         Mockito.verify(restClient, Mockito.times(1))
                 .start(Mockito.any(), Mockito.eq(execution));
+        Mockito.verify(eventListener, Mockito.times(1))
+                .onExecutorHasExecution(Mockito.eq(execution), Mockito.any());
     }
 
     @Test

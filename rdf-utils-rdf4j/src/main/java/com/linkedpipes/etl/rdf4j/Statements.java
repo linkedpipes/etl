@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +16,8 @@ import java.io.InputStream;
 import java.util.*;
 
 public class Statements implements Collection<Statement> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Statements.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -73,6 +77,14 @@ public class Statements implements Collection<Statement> {
 
     public void addString(Resource s, String p, String o) {
         this.add(s, p, this.valueFactory.createLiteral(o));
+    }
+
+
+    public void addString(String s, IRI p, String o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                p,
+                this.valueFactory.createLiteral(o));
     }
 
     public void addString(Resource s, IRI p, String o) {
@@ -229,7 +241,7 @@ public class Statements implements Collection<Statement> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return false;
+        return this.collection.containsAll(c);
     }
 
     @Override
@@ -252,9 +264,17 @@ public class Statements implements Collection<Statement> {
         this.collection.clear();
     }
 
-    public boolean contains(Collection<Statement> statements) {
+    public boolean containsAllLogMissing(Collection<Statement> statements) {
         Set<Statement> thisAsSet = new HashSet<>(this.collection);
-        return thisAsSet.containsAll(statements);
+        boolean containsAll = true;
+        for (Statement statement : statements) {
+            if (thisAsSet.contains(statement)) {
+                continue;
+            }
+            containsAll = false;
+            LOG.info("{}", statement);
+        }
+        return containsAll;
     }
 
 }

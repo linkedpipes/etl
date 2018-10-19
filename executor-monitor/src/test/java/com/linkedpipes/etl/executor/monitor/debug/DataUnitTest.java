@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.monitor.debug;
 
-
 import com.linkedpipes.etl.executor.monitor.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
