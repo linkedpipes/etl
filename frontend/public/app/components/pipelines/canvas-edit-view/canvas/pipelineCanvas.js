@@ -522,10 +522,8 @@ define([
             if (template === undefined) {
                 // FIXME Missing template !
                 if (missingTemplates[templateIri] === undefined) {
-                    this.statusService.error({
-                        'title': 'Missing template',
-                        'message': templateIri
-                    });
+                    this.statusService.error('Missing template',
+                        {'message': "Template: " + templateIri});
                     missingTemplates[templateIri] = [];
                 }
                 missingTemplates[templateIri].push(component);
@@ -538,10 +536,8 @@ define([
                 // The component may have template set, but the template
                 // may not be present - ie. parent can be missing ...
                 if (missingTemplates[templateIri] === undefined) {
-                    this.statusService.error({
-                        'title': 'Missing template definition.',
-                        'message': template.label
-                    });
+                    this.statusService.error('Missing template definition.',
+                        {'message': "Template: " + template.label});
                     missingTemplates[templateIri] = [];
                 }
                 missingTemplates[templateIri].push(component);
@@ -1004,11 +1000,11 @@ define([
 
     };
 
-    function factory(templates, pipelineModel, statusService) {
+    function factory(templates, pipelineModel, $status) {
         return jQuery.extend(service, {
             'templates': templates,
             'pipelineModel': pipelineModel,
-            'statusService': statusService
+            'statusService': $status
         });
     }
 

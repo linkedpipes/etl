@@ -8,8 +8,6 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +16,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 class PipelineLoader {
-
-    private static final Logger LOG
-            = LoggerFactory.getLogger(PipelineLoader.class);
 
     private Resource pipelineResource = null;
 

@@ -71,15 +71,12 @@ public class PipelineComponent implements Loadable {
         return jarPath;
     }
 
-    public boolean shouldExecute() {
-        switch (executionType) {
-            case EXECUTE:
-                return true;
-            case SKIP:
-            case MAP:
-            default:
-                return false;
-        }
+    public boolean isPlannedForExecution() {
+        return ExecutionType.EXECUTE.equals(executionType);
+    }
+
+    public boolean isPlannedForMapping() {
+        return ExecutionType.MAP.equals(executionType);
     }
 
     public ConfigurationDescription getConfigurationDescription() {

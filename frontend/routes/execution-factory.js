@@ -30,7 +30,8 @@ function createFromNonMultipartRequest(req, res) {
         res.status(400).json({
             "error": {
                 "type": errors.INVALID_REQUEST,
-                "message": "Missing pipeline"
+                "message": "Pipeline not specified pipeline.",
+                "source": "FRONTEND"
             }
         });
         return;
@@ -47,7 +48,13 @@ function createFromNonMultipartRequest(req, res) {
             if (error) {
                 console.error(
                     "Can't unpack pipeline from url:", pipeline.iri, error);
-                res.status(500).json({"error": {"type": errors.ERROR}});
+                res.status(500).json({
+                    "error": {
+                        "type": errors.ERROR,
+                        "source": "FRONTEND",
+                        "message": error.message
+                    }
+                });
                 return;
             }
             // Post execution.
@@ -81,7 +88,12 @@ function createFromNonMultipartRequest(req, res) {
 function handleConnectionError(res, error) {
     console.error("Request failed:\n", error);
     console.trace();
-    res.status(503).json({"error": {"type": errors.CONNECTION}});
+    res.status(503).json({
+        "error": {
+            "type": errors.CONNECTION,
+            "source": "FRONTEND"
+        }
+    });
 }
 
 function unpackPipeline(pipeline, optionsAsString, callback) {
@@ -119,9 +131,20 @@ function unpackPipeline(pipeline, optionsAsString, callback) {
         (error, httpResponse, body) => {
             console.timeEnd("[POST] /unpack");
             if (httpResponse.statusCode === 404) {
-                callback({"userError": {"type": errors.MISSING}}, body);
+                callback({
+                    "errorResponse": {
+                        "type": errors.MISSING,
+                        "source": "FRONTEND",
+                        "message": "Missing pipeline."
+                    }
+                }, body);
             } else if (httpResponse.statusCode !== 200) {
-                callback({"userError": {"type": errors.ERROR}}, body);
+                callback({
+                    "errorResponse": {
+                        "type": errors.ERROR,
+                        "source": "FRONTEND"
+                    }
+                }, body);
             } else {
                 callback(error, body);
             }
@@ -202,10 +225,14 @@ function createFromMultipartRequest(req, res) {
         unpackPipeline(pipeline, configurationAsString, (error, result) => {
             if (error) {
                 console.error("Can't unpack pipeline.", error, result);
-                if (error.userError) {
-                    res.status(500).json({"error": error.userError});
+                if (error.errorResponse) {
+                    res.status(500).json(error.errorResponse);
                 } else {
-                    res.status(500).json({"error": {"type": errors.ERROR}});
+                    res.status(500).json({"error": {
+                        "type": errors.ERROR,
+                        "source": "FRONTEND",
+                        "message": error.message
+                    }});
                 }
                 pipePostRequestResponse = false;
                 postStream.end();
@@ -226,7 +253,12 @@ function createFromMultipartRequest(req, res) {
 
     form.on("error", (error) => {
         console.error("Can't create pipeline from multipart request.", error);
-        res.status(500).json({"error": {"type": errors.ERROR}});
+        res.status(500).json({"error": {
+            "type": errors.ERROR,
+            "source": "FRONTEND",
+            "message": "Can't create pipeline from multipart request.",
+            "cause": error.message
+        }});
         pipePostRequestResponse = false;
         postStream.end();
     });

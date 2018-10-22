@@ -158,7 +158,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private void executeTask() throws LpException {
         CsvValuesReader valuesReader = new CsvValuesReader(
-                exceptionFactory, task.getChunkSize());
+                exceptionFactory, task.getChunkSize(), task.getAsLiterals());
         valuesReader.setHandler((values) -> {
             String query = prepareQuery(values);
             executeQuery(query);

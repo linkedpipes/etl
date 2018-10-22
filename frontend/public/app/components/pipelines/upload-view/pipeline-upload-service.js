@@ -83,17 +83,11 @@
                 reloadTemplates().then(() => {
                     redirectToPipeline(response);
                 }).catch(() => {
-                    $status.httpGetFailed({
-                        "title": "Can't update templates.",
-                        "response": response
-                    });
+                    $status.httpError("Can't update templates.", response);
                     redirectToPipeline(response);
                 });
             }, (error) => {
-                $status.httpPostFailed({
-                    "title": "Can't copy pipeline.",
-                    "response": error
-                });
+                $status.httpError("Can't copy pipeline.", error);
             });
         }
 

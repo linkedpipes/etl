@@ -35,6 +35,10 @@
             $lpScrollWatch.unRegisterCallback(callbackReference);
         });
 
+        $scope.$on("$routeChangeStart", function($event, next, current) {
+            $mdDialog.cancel();
+        });
+
         function initialize() {
             $lpScrollWatch.updateReference();
         }

@@ -35,15 +35,10 @@ define([
 
             $scope.onDelete = () => {
                 $templates.delete($scope.template.id).then(() => {
-                    $status.success({
-                        'title': "Template deleted.",
-                    });
+                    $status.success("Template deleted.");
                     $location.path("/templates").search({});
                 }, (response) => {
-                    $status.httpDeleteFailed({
-                        'title': "Can't delete the template.",
-                        'response': response
-                    });
+                    $status.httpError("Can't delete the template.", response);
                 });
             };
 

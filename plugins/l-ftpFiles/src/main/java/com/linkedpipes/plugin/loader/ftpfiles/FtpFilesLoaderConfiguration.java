@@ -20,6 +20,9 @@ public class FtpFilesLoaderConfiguration {
     @RdfToPojo.Property(iri = FtpFilesLoaderVocabulary.HAS_DIRECTORY)
     private String directory;
 
+    @RdfToPojo.Property(iri = FtpFilesLoaderVocabulary.HAS_RETRY_COUNT)
+    private int retryCount = 0;
+
     public String getUser() {
         return user;
     }
@@ -59,4 +62,13 @@ public class FtpFilesLoaderConfiguration {
     public void setDirectory(String directory) {
         this.directory = directory;
     }
+
+    public int getRetryCount() {
+        return retryCount;
+    }
+
+    public void setRetryCount(int retryCount) {
+        this.retryCount = retryCount;
+    }
+
 }

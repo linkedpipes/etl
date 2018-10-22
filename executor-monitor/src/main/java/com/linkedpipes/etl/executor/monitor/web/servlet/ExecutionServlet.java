@@ -49,7 +49,6 @@ public class ExecutionServlet {
             throws IOException {
         RDFFormat format = this.getFormat(request);
         response.setHeader("Content-Type", format.getDefaultMIMEType());
-        //
         try (OutputStream stream = response.getOutputStream()) {
             RDFWriter writer = Rio.createWriter(format, stream);
             writer.startRDF();
@@ -72,11 +71,7 @@ public class ExecutionServlet {
             @PathVariable String id,
             HttpServletRequest request, HttpServletResponse response)
             throws MonitorException, IOException {
-        Execution execution = executions.getLivingExecution(id);
-        if (execution == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+        Execution execution = getLivingExecution(id);
         //
         RDFFormat format = this.getFormat(request);
         response.setHeader("Content-Type", format.getDefaultMIMEType());
@@ -90,17 +85,20 @@ public class ExecutionServlet {
         }
     }
 
+    private Execution getLivingExecution(String id) throws MissingResource {
+        Execution execution = executions.getLivingExecution(id);
+        if (execution == null) {
+            throw new MissingResource("Missing execution: {}", id);
+        }
+        return execution;
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteExecution(
             @PathVariable String id,
-            HttpServletRequest request,
-            HttpServletResponse response) {
-        Execution execution = this.executions.getLivingExecution(id);
-        if (execution == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+            HttpServletResponse response) throws MissingResource {
+        Execution execution = getLivingExecution(id);
         this.executions.deleteExecution(execution);
         response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -111,14 +109,9 @@ public class ExecutionServlet {
     public void cancelExecution(
             @PathVariable String id,
             @RequestBody String body,
-            HttpServletRequest request,
             HttpServletResponse response)
             throws MonitorException {
         Execution execution = executions.getLivingExecution(id);
-        if (execution == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
         executor.cancelExecution(execution, body);
         response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -128,12 +121,8 @@ public class ExecutionServlet {
     @ResponseBody
     public FileSystemResource getExecutionLogs(
             @PathVariable String id,
-            HttpServletResponse response) {
-        Execution execution = this.executions.getLivingExecution(id);
-        if (execution == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return null;
-        }
+            HttpServletResponse response) throws MissingResource {
+        Execution execution = getLivingExecution(id);
         File file = this.executions.getExecutionDebugLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -149,13 +138,8 @@ public class ExecutionServlet {
     public void getExecutionLogsTail(
             @PathVariable String id,
             @RequestParam(value = "n", defaultValue = "32") int count,
-            HttpServletResponse response) throws IOException {
-
-        Execution execution = this.executions.getLivingExecution(id);
-        if (execution == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+            HttpServletResponse response) throws IOException, MissingResource {
+        Execution execution = getLivingExecution(id);
         File file = this.executions.getExecutionDebugLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -173,12 +157,8 @@ public class ExecutionServlet {
             @RequestParam(value = "iri") String component,
             HttpServletRequest request,
             HttpServletResponse response)
-            throws IOException {
-        Execution execution = this.executions.getLivingExecution(id);
-        if (execution == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+            throws IOException, MissingResource {
+        Execution execution = getLivingExecution(id);
         Statements statements =
                 this.executions.getMessages(execution, component);
         RDFFormat format = this.getFormat(request);
@@ -198,8 +178,7 @@ public class ExecutionServlet {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PostCreateExecutionHandler.Response createExecution(
             @RequestParam("pipeline") MultipartFile pipeline,
-            @RequestParam("input") List<MultipartFile> inputs,
-            HttpServletResponse response)
+            @RequestParam("input") List<MultipartFile> inputs)
             throws MonitorException {
         PostCreateExecutionHandler handler = new PostCreateExecutionHandler(
                 this.executions, this.executor);
@@ -211,14 +190,9 @@ public class ExecutionServlet {
     @ResponseBody
     public void getExecutionOverview(
             @PathVariable String id,
-            HttpServletRequest request,
             HttpServletResponse response)
-            throws IOException {
-        Execution execution = this.executions.getLivingExecution(id);
-        if (execution == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+            throws IOException, MissingResource {
+        Execution execution = getLivingExecution(id);
         //
         response.setHeader("Content-Type", "application/ld+json");
         JsonNode overview = this.executions.getOverview(execution);

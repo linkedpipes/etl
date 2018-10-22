@@ -39,6 +39,10 @@ public class ResourceManager {
         return null;
     }
 
+    public File getExecutionRoot() {
+        return executionRoot;
+    }
+
     /**
      * @param execution
      * @param path
@@ -80,8 +84,8 @@ public class ResourceManager {
         return file;
     }
 
-    public File getInfoLogFile() {
-        return new File(getExecutionLogDirectory(), "execution-info.log");
+    public File getWarnLogFile() {
+        return new File(getExecutionLogDirectory(), "execution-warn.log");
     }
 
     /**

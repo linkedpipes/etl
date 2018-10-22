@@ -41,8 +41,7 @@ class ExecutionServlet {
 
     @ResponseBody
     @RequestMapping(
-            value = "",
-            method = RequestMethod.POST,
+            value = "", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public void execute(
             @RequestBody AcceptRequest task,
@@ -54,7 +53,7 @@ class ExecutionServlet {
         }
     }
 
-    public boolean execute(File executionDirectory, String iri) {
+    private boolean execute(File executionDirectory, String iri) {
         synchronized (lock) {
             if (executor != null) {
                 // Already executing.
@@ -66,7 +65,7 @@ class ExecutionServlet {
             taskExecutor.execute(() -> {
                 executor.execute();
                 // Detach execution object once execution is finished.
-                 executor = null;
+                executor = null;
             });
         }
         return true;
@@ -78,22 +77,24 @@ class ExecutionServlet {
             value = "/cancel",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void cancel(HttpServletResponse response) {
-        PipelineExecutor executorSnp = executor;
+    public void cancel(HttpServletResponse response) throws MissingResource {
+        PipelineExecutor executorSnp = getExecutor();
         synchronized (lock) {
-            if (executorSnp == null) {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
             executorSnp.cancelExecution();
             response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
+    private PipelineExecutor getExecutor() throws MissingResource {
+        PipelineExecutor executorSnp = executor;
+        if (executorSnp == null) {
+            throw new MissingResource("No execution found.");
+        }
+        return executorSnp;
+    }
+
     @ResponseBody
-    @RequestMapping(
-            value = "",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public void getExecution(
             HttpServletRequest request,
             HttpServletResponse response)
@@ -125,19 +126,11 @@ class ExecutionServlet {
     }
 
     @ResponseBody
-    @RequestMapping(
-            value = "/overview",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/overview", method = RequestMethod.GET)
     public void getOverview(
-            HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ExecutorException {
-        PipelineExecutor executorSnp = executor;
-        if (executorSnp == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+        PipelineExecutor executorSnp = getExecutor();
         response.setHeader("Content-Type", "application/ld+json");
         writeStatusOverview(response.getOutputStream(), executorSnp);
     }
@@ -155,23 +148,17 @@ class ExecutionServlet {
         objectMapper.writeValue(stream, jsonRoot);
     }
 
-
     @ResponseBody
-    @RequestMapping(
-            value = "/messages",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/messages", method = RequestMethod.GET)
     public void getPipelineMessages(
             HttpServletRequest request,
             HttpServletResponse response)
-            throws IOException {
-        PipelineExecutor executorSnp = executor;
-        if (executorSnp == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+            throws IOException, MissingResource {
+        PipelineExecutor executorSnp = getExecutor();
         Statements statements = new Statements(
-                executorSnp.getExecution().getPipelineMessages().getStatements());
+                executorSnp.getExecution()
+                        .getPipelineMessages()
+                        .getStatements());
         writeRdfResponse(request, response, statements);
     }
 
@@ -183,19 +170,13 @@ class ExecutionServlet {
             @RequestParam(value = "iri") String iri,
             HttpServletRequest request,
             HttpServletResponse response)
-            throws IOException {
-        PipelineExecutor executorSnp = executor;
-        if (executorSnp == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+            throws IOException, MissingResource {
+        PipelineExecutor executorSnp = getExecutor();
         ExecutionModel model = executorSnp.getExecution().getModel();
         ExecutionComponent component = model.getComponent(iri);
         Statements statements =
                 executorSnp.getExecution().getComponentMessages(component);
         writeRdfResponse(request, response, statements);
     }
-
 
 }

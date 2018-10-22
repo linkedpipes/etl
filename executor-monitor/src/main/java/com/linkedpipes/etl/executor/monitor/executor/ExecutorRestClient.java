@@ -48,10 +48,8 @@ class ExecutorRestClient {
         return executor.getAddress() + "/api/v1/executions/overview";
     }
 
-    public void start(Executor executor, Execution execution) {
-        LOG.info("Starting execution: '{}' on '{}'",
-                execution.getIri(), executor.getAddress());
-
+    public void start(Executor executor, Execution execution)
+            throws MonitorException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
 
@@ -62,9 +60,15 @@ class ExecutorRestClient {
                 getExecutionsUrl(executor), HttpMethod.POST,
                 request, String.class);
 
-        executor.setExecution(execution);
-        LOG.info("Executor '{}' response: {}",
-                executor.getAddress(), response.getStatusCode());
+        LOG.info("Starting execution: '{}' on '{}' -> {}",
+                execution.getIri(),
+                executor.getAddress(),
+                response.getStatusCode());
+
+        if (response.getStatusCode().value() != 201) {
+            throw new MonitorException("Can't start execution, response: {}",
+                    response.getStatusCode());
+        }
     }
 
     private String getExecutionsUrl(Executor executor) {
@@ -102,8 +106,8 @@ class ExecutorRestClient {
                 getCancelUrl(executor), HttpMethod.POST,
                 request, String.class);
 
-        LOG.info("Cancelling '{}' response: {}", executor.getAddress(),
-                response.getStatusCode());
+        LOG.info("Cancelling '{}' -> {}",
+                executor.getAddress(), response.getStatusCode());
     }
 
     private String getCancelUrl(Executor executor) {

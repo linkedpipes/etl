@@ -7,6 +7,8 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.apache.commons.net.ProtocolCommandEvent;
+import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
 public class FtpFilesLoader implements Component, SequentialExecution {
 
@@ -54,25 +57,67 @@ public class FtpFilesLoader implements Component, SequentialExecution {
 
     private void initializeClient() throws IOException {
         ftpClient = new FTPClient();
+
+        ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
+            @Override
+            public void protocolCommandSent(ProtocolCommandEvent event) {
+                LOG.debug("command sent:\n\t{}\n\t{}\n\t{}",
+                        event.getCommand(), event.getMessage(),
+                        event.getReplyCode());
+            }
+
+            @Override
+            public void protocolReplyReceived(ProtocolCommandEvent event) {
+                LOG.debug("command received:\n\t{}\n\t{}\n\t{}",
+                        event.getCommand(), event.getMessage(),
+                        event.getReplyCode());
+            }
+        });
+
         ftpClient.connect(configuration.getServer(), configuration.getPort());
         ftpClient.login(configuration.getUser(), configuration.getPassword());
-        ftpClient.enterLocalPassiveMode();
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        ftpClient.enterLocalPassiveMode();
     }
 
-    private void uploadFiles() throws IOException, LpException {
+    private void uploadFiles() throws LpException {
+        if (input.size() == 0) {
+            return;
+        }
         progressReport.start(input.size());
-        for (FilesDataUnit.Entry entry : input) {
+        Iterator<FilesDataUnit.Entry> iterator = input.iterator();
+        FilesDataUnit.Entry entry = iterator.next();
+        int failCounter = 0;
+        while (true) {
             LOG.info("Uploading : {}", entry.getFileName());
-            uploadFile(entry.toFile(), entry.getFileName());
-            progressReport.entryProcessed();
+            try {
+                uploadFile(entry.toFile(), entry.getFileName());
+                progressReport.entryProcessed();
+                failCounter = 0;
+            } catch (Exception ex) {
+                failCounter++;
+                LOG.warn("Upload failed.", ex);
+                if (failCounter >= configuration.getRetryCount()) {
+                    throw new LpException("Download failed.");
+                }
+                // Reset connection and try to download the same entry again.
+                LOG.debug("Trying again ...");
+                restartFtpClient();
+                continue;
+            }
+            // We have downloaded the file, move to next entry.
+            if (iterator.hasNext()) {
+                entry = iterator.next();
+            } else {
+                break;
+            }
         }
         progressReport.done();
     }
 
     private void uploadFile(File file, String remoteName)
             throws IOException, LpException {
-        final String remoteFullName = getRemoteFullPath(remoteName);
+        String remoteFullName = getRemoteFullPath(remoteName);
         checkAndCreateDirectory(remoteFullName);
         try (InputStream inputStream = new FileInputStream(file)) {
             if (!ftpClient.storeFile(remoteFullName, inputStream)) {
@@ -114,6 +159,15 @@ public class FtpFilesLoader implements Component, SequentialExecution {
         if (!ftpClient.makeDirectory(path)) {
             throw exceptionFactory.failure(
                     "Can't create directory: {}", path);
+        }
+    }
+
+    private void restartFtpClient() throws LpException {
+        closeClient();
+        try {
+            initializeClient();
+        } catch (IOException ex) {
+            throw new LpException("Can't reconnect to server.", ex);
         }
     }
 

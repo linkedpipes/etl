@@ -22,8 +22,7 @@ public enum ExecutionStatus {
      */
     FAILED("http://etl.linkedpipes.com/resources/status/failed"),
     /**
-     * Running but with no known executor. Or the executor was known
-     * but changed the executing pipeline.
+     * Running but respective executor as no longer executing this pipeline.
      */
     DANGLING("http://etl.linkedpipes.com/resources/status/dangling"),
     /**
@@ -39,6 +38,8 @@ public enum ExecutionStatus {
      * When we do not know.
      */
     UNKNOWN("http://etl.linkedpipes.com/resources/status/unknown"),
+    CANCELLING("http://etl.linkedpipes.com/resources/status/cancelling"),
+    CANCELLED("http://etl.linkedpipes.com/resources/status/cancelled"),
     /**
      * Represents invalid/deprecated execution record.
      */
@@ -48,10 +49,6 @@ public enum ExecutionStatus {
 
     ExecutionStatus(String iriAsStr) {
         this.iri = SimpleValueFactory.getInstance().createIRI(iriAsStr);
-    }
-
-    public IRI asIri() {
-        return this.iri;
     }
 
     public String asStr() {

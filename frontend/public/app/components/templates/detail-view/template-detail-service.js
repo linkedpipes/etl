@@ -35,13 +35,9 @@
         $scope.api.save();
         $templates.saveTemplate($scope.templateToEdit,
             $scope.configuration).then(() => {
-            $status.success({
-                "title": "Template saved."
-            });
-        }, () => {
-            $status.error({
-                "title": "Can't save template."
-            });
+            $status.success("Template saved.");
+        }, (response) => {
+            $status.httpError("Can't save template.", response);
         });
     }
 

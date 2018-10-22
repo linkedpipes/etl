@@ -123,7 +123,7 @@ public class VirtualFileSystem {
             for (DataUnit dataUnit
                     : execution.getDataUnits().values()) {
                 result.add(new DataUnitDirectory(execution, dataUnit,
-                        ftpPath + "/" + dataUnit.getDebugName()));
+                        ftpPath + "/" + dataUnit.getName()));
             }
             return result;
         }
@@ -149,7 +149,7 @@ public class VirtualFileSystem {
             if (dataUnit.getExecutionId() == null || debugData.getExecution()
                     .equals(dataUnit.getExecutionId())) {
                 // We use data from this execution.
-                dataUnit.loadDebugDirectories(debugData.getDirectory());
+                dataUnit.updateDebugDirectories(debugData.getExecutionDirectory());
             } else {
                 final Execution execution = executions.getExecution(
                         dataUnit.getExecutionId());
@@ -158,7 +158,7 @@ public class VirtualFileSystem {
                             dataUnit.getExecutionId());
                 } else {
                     // Load directories.
-                    dataUnit.loadDebugDirectories(execution.getDirectory());
+                    dataUnit.updateDebugDirectories(execution.getDirectory());
                 }
 
             }
@@ -236,7 +236,7 @@ public class VirtualFileSystem {
             }
         }
         // Make sure the content of the data unit is loaded.
-        dataUnit.loadDebugDirectories(execution.getDirectory());
+        dataUnit.updateDebugDirectories(execution.getDirectory());
         // Search for a directory in the data unit. The file
         // can be in any of the debugging directories.
         for (File directory : dataUnit.getDebugDirectories()) {

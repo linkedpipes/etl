@@ -35,7 +35,7 @@ public class ExecutorService {
 
     private final ExecutorRestClient restClient;
 
-    private final ExecutorUpdater checker;
+    private final CheckExecutor checker;
 
     @Autowired
     public ExecutorService(
@@ -43,7 +43,7 @@ public class ExecutorService {
             ExecutorEventListener eventListener,
             Configuration configuration,
             ExecutorRestClient restClient,
-            ExecutorUpdater checker) {
+            CheckExecutor checker) {
         this.executions = executions;
         this.eventListener = eventListener;
         this.configuration = configuration;
@@ -58,12 +58,12 @@ public class ExecutorService {
 
     private void addExecutor(String address) {
         Executor executor = new Executor(address);
-        this.checkExecutor(executor);
+        checkExecutor(executor);
         this.executors.add(executor);
     }
 
     private void checkExecutor(Executor executor) {
-        this.checker.update(executor);
+        this.checker.check(executor);
     }
 
     @Scheduled(fixedDelay = 2000, initialDelay = 500)
@@ -75,7 +75,7 @@ public class ExecutorService {
     }
 
     /**
-     * Can be used by an external caller otherwise the annotation is not used.
+     * Must be called from outside else the annotation is not used.
      */
     @Async
     public void asyncStartExecutions() {
@@ -90,12 +90,8 @@ public class ExecutorService {
             }
             Iterator<Execution> iterator = queued.iterator();
             for (Executor executor : executors) {
-                if (executor.isAvailableForNewExecution()) {
-                    try {
-                        startExecution(iterator.next(), executor);
-                    } catch (Exception ex) {
-                        LOG.error("Can't start execution.", ex);
-                    }
+                if (isAvailableForNewExecution(executor)) {
+                    startExecution(iterator.next(), executor);
                 }
                 if (!iterator.hasNext()) {
                     return;
@@ -111,19 +107,37 @@ public class ExecutorService {
                 .collect(Collectors.toList());
     }
 
+    private boolean isAvailableForNewExecution(Executor executor) {
+        return executor.isAlive() && executions.getExecution(executor) == null;
+    }
+
     private void startExecution(Execution execution, Executor executor) {
-        this.restClient.start(executor, execution);
-        this.eventListener.onAttachExecutor(execution, executor);
+        try {
+            this.restClient.start(executor, execution);
+            this.eventListener.onExecutorHasExecution(execution, executor);
+        } catch (Exception ex) {
+            LOG.error("Can't start execution.", ex);
+        }
     }
 
     public void cancelExecution(Execution execution, String userRequest)
             throws MonitorException {
-        Executor executor = execution.getExecutor();
+        Executor executor = getExecutor(execution);
         if (executor == null) {
             throw new MonitorException(
-                    "Can't find execution for: {}", execution.getIri());
+                    "Can't find executor for: {}", execution.getIri());
         }
         this.restClient.cancel(executor, userRequest);
+    }
+
+    private Executor getExecutor(Execution execution) {
+        for (Executor executor : executors) {
+            Execution executorsExecution = executions.getExecution(executor);
+            if (execution == executorsExecution) {
+                return executor;
+            }
+        }
+        return null;
     }
 
 }

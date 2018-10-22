@@ -12,7 +12,7 @@ define([
 
     const PARENT_PATH = "app/components/templates/detailDirective/";
 
-    function directive($rootScope, $location, statusService,
+    function directive($rootScope, $location, $status,
                        templateService, templateDialogService) {
 
         function controller($scope) {
@@ -73,15 +73,10 @@ define([
 
             $scope.onDelete = () => {
                 templateService.delete($scope.template.id).then(() => {
-                    statusService.success({
-                        'title': "Template deleted.",
-                    });
+                    $status.success("Template deleted.");
                     $location.path("/templates").search({});
                 }, (response) => {
-                    statusService.httpDeleteFailed({
-                        'title': "Can't delete the template.",
-                        'response': response
-                    });
+                    $status.httpError("Can't delete the template.", response);
                 });
             };
 

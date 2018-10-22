@@ -28,6 +28,12 @@ public class OverviewObject {
 
     private Integer progressTotal;
 
+    private Integer progressTotalMap;
+
+    private Integer progressCurrentMapped;
+
+    private Integer progressCurrentExecuted;
+
     private Date start;
 
     private Date finish;
@@ -35,6 +41,8 @@ public class OverviewObject {
     private String status;
 
     private Date lastChange;
+
+    private Long directorySize;
 
     public static OverviewObject fromJson(JsonNode root) {
         OverviewObject overview = new OverviewObject();
@@ -61,6 +69,19 @@ public class OverviewObject {
         if (root.get("pipelineProgress") != null) {
             overview.progressCurrent = progress.get("current").asInt();
             overview.progressTotal = progress.get("total").asInt();
+
+            overview.progressTotalMap =
+                    getIntOptional(progress, "total_map");
+            overview.progressCurrentMapped =
+                    getIntOptional(progress, "current_mapped");
+            overview.progressCurrentExecuted =
+                    getIntOptional(progress, "current_executed");
+        }
+
+        if (root.get("directorySize") != null) {
+            overview.directorySize = root.get("directorySize").asLong();
+        } else {
+            overview.directorySize = null;
         }
 
         return overview;
@@ -79,6 +100,14 @@ public class OverviewObject {
         }
     }
 
+    private static Integer getIntOptional(JsonNode node, String name) {
+        if (node.get(name) == null) {
+            return null;
+        } else {
+            return node.get(name).asInt();
+        }
+    }
+
     public static String getIri(JsonNode root) {
         return root.get("execution").get("@id").asText();
     }
@@ -93,6 +122,18 @@ public class OverviewObject {
 
     public Integer getProgressTotal() {
         return progressTotal;
+    }
+
+    public Integer getProgressTotalMap() {
+        return progressTotalMap;
+    }
+
+    public Integer getProgressCurrentMapped() {
+        return progressCurrentMapped;
+    }
+
+    public Integer getProgressCurrentExecuted() {
+        return progressCurrentExecuted;
     }
 
     public Date getStart() {
@@ -113,6 +154,10 @@ public class OverviewObject {
 
     public Date getLastChange() {
         return lastChange;
+    }
+
+    public Long getDirectorySize() {
+        return directorySize;
     }
 
 }

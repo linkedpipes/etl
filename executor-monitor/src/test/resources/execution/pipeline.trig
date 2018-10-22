@@ -1,0 +1,15 @@
+PREFIX lp:<http://linkedpipes.com/ontology/>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+
+<http://pipeline> {
+
+<http://pipeline> a lp:Pipeline ;
+    skos:prefLabel "Pipeline" .
+
+<http://pipeline/metadata> a lp:ExecutionMetadata ;
+    <http://linkedpipes.com/ontology/execution/targetComponent> <http://component> .
+
+<http://component>
+    skos:prefLabel "Component" .
+
+}

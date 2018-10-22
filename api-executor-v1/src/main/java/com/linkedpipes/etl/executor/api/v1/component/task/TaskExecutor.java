@@ -47,11 +47,15 @@ class TaskExecutor<T extends Task> implements Runnable {
 
     private void execute() {
         while (true) {
+            LOG.debug("Getting task ...");
             T task = taskSource.getTask();
             if (task == null) {
+                LOG.debug("There is no task to execute");
                 return;
             } else {
+                LOG.debug("Executing task ...");
                 executeTask(task);
+                LOG.debug("Executing task ... done");
             }
         }
     }

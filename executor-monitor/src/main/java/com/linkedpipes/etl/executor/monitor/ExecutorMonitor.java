@@ -99,9 +99,9 @@ public class ExecutorMonitor {
                 configuration.getLogCoreFilter()));
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         initLogger();
-        final AbstractApplicationContext context
+        AbstractApplicationContext context
                 = new ClassPathXmlApplicationContext(
                 "spring/context-executor-monitor.xml");
         context.registerShutdownHook();

@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.dataunit.core.files;
 
 import com.linkedpipes.etl.dataunit.core.AbstractDataUnit;
+import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.slf4j.Logger;
@@ -23,20 +24,22 @@ class DefaultFilesDataUnit
 
     private final List<File> dataDirectories = new LinkedList<>();
 
-    public DefaultFilesDataUnit(String binding, String iri,
-            File writeDirectory, Collection<String> sources) {
-        super(binding, iri, sources);
-        this.writeDirectory = writeDirectory;
+    public DefaultFilesDataUnit(
+            DataUnitConfiguration configuration,
+            Collection<String> sources) {
+        super(configuration, sources);
         //
+        this.writeDirectory = configuration.getWorkingDirectory();
         if (this.writeDirectory != null) {
-            writeDirectory.mkdirs();
-            this.dataDirectories.add(writeDirectory);
+            this.writeDirectory.mkdirs();
+            this.dataDirectories.add(this.writeDirectory);
         }
     }
 
+
     @Override
     public File createFile(String fileName) throws LpException {
-        File output = new File(writeDirectory, fileName);
+        File output = new File(this.writeDirectory, fileName);
         if (output.exists()) {
             throw new LpException(
                     "File already exists: {} ({})", fileName, output);
@@ -47,29 +50,35 @@ class DefaultFilesDataUnit
 
     @Override
     public File getWriteDirectory() {
-        return writeDirectory;
+        return this.writeDirectory;
     }
 
     @Override
     public void initialize(File directory) throws LpException {
-        dataDirectories.clear();
-        dataDirectories.addAll(loadDataDirectories(directory));
+        this.dataDirectories.clear();
+        this.dataDirectories.addAll(loadDataDirectories(directory));
+    }
+
+    @Override
+    public void initialize(Map<String, ManageableDataUnit> dataUnits)
+            throws LpException {
+        initializeFromSource(dataUnits);
     }
 
     @Override
     public void save(File directory) throws LpException {
-        saveDataDirectories(directory, dataDirectories);
-        saveDebugDirectories(directory, dataDirectories);
+        saveDataDirectories(directory, this.dataDirectories);
+        saveDebugDirectories(directory, this.dataDirectories);
     }
 
     @Override
-    public void close() throws LpException {
+    public void close() {
         // No operation here.
     }
 
     @Override
     public Collection<File> getReadDirectories() {
-        return Collections.unmodifiableCollection(dataDirectories);
+        return Collections.unmodifiableCollection(this.dataDirectories);
     }
 
     @Override
@@ -86,7 +95,7 @@ class DefaultFilesDataUnit
 
     @Override
     public Iterator<FilesDataUnit.Entry> iterator() {
-        final Iterator<File> directoryIterator = dataDirectories.iterator();
+        Iterator<File> directoryIterator = this.dataDirectories.iterator();
         if (!directoryIterator.hasNext()) {
             return Collections.EMPTY_LIST.iterator();
         }
@@ -111,14 +120,14 @@ class DefaultFilesDataUnit
     }
 
     @Override
-    protected void merge(ManageableDataUnit dataunit) throws LpException {
-        if (dataunit instanceof DefaultFilesDataUnit) {
-            DefaultFilesDataUnit source = (DefaultFilesDataUnit) dataunit;
-            dataDirectories.addAll(source.dataDirectories);
+    protected void merge(ManageableDataUnit dataUnit) throws LpException {
+        if (dataUnit instanceof DefaultFilesDataUnit) {
+            DefaultFilesDataUnit source = (DefaultFilesDataUnit) dataUnit;
+            this.dataDirectories.addAll(source.dataDirectories);
         } else {
             throw new LpException(
                     "Can't merge with source data unit: {} of type {}",
-                    getIri(), dataunit.getClass().getSimpleName());
+                    getIri(), dataUnit.getClass().getSimpleName());
         }
     }
 

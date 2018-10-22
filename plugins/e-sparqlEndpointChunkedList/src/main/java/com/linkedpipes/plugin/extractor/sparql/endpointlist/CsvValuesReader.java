@@ -10,7 +10,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class CsvValuesReader {
 
@@ -32,9 +34,14 @@ class CsvValuesReader {
 
     private List<String> header;
 
-    public CsvValuesReader(ExceptionFactory exceptionFactory, int chunkSize) {
+    private Set<String> literals;
+
+    public CsvValuesReader(
+            ExceptionFactory exceptionFactory, int chunkSize,
+            List<String> literals) {
         this.exceptionFactory = exceptionFactory;
         this.chunkSize = chunkSize;
+        this.literals = new HashSet<>(literals);
     }
 
     public void setHandler(ValueConsumer handler) {
@@ -87,15 +94,22 @@ class CsvValuesReader {
         builder.append(" ) \n {");
         for (List<String> row : rows) {
             builder.append("  (");
-            for (String s : row) {
-                builder.append(" <");
-                builder.append(s);
-                builder.append(">");
+            for (int i = 0; i < row.size(); ++i) {
+                String value = row.get(i);
+                builder.append(addQuotes(value, header.get(i)));
             }
             builder.append(" ) \n");
         }
         builder.append(" } \n");
         return builder.toString();
+    }
+
+    private String addQuotes(String value, String name) {
+        if (this.literals.contains(name)) {
+            return " \"" + value + "\"";
+        } else {
+            return " <" + value + ">";
+        }
     }
 
 }

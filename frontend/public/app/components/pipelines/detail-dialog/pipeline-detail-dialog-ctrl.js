@@ -13,6 +13,10 @@
         $scope.onCancel = () => service.cancel($mdDialog);
         $scope.onSave = () => service.save($mdDialog);
 
+        $scope.$on("$routeChangeStart", function($event, next, current) {
+            $mdDialog.cancel();
+        });
+
         service.initialize($scope, pipeline);
     }
 

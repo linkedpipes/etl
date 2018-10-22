@@ -6,6 +6,8 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,40 +25,58 @@ public class DataUnitConfiguration implements Loadable {
 
     private String group;
 
-    protected DataUnitConfiguration(String resource) {
+    private String workingDirectory;
+
+    public DataUnitConfiguration(String resource) {
         this.resource = resource;
+    }
+
+    public DataUnitConfiguration(
+            String resource, String binding, String group,
+            String workingDirectory) {
+        this.resource = resource;
+        this.binding = binding;
+        this.group = group;
+        this.workingDirectory = workingDirectory;
     }
 
     @Override
     public Loadable load(String predicate, RdfValue object) {
         switch (predicate) {
             case RDF.TYPE:
-                types.add(object.asString());
+                this.types.add(object.asString());
                 break;
             case LP_PIPELINE.HAS_BINDING:
-                binding = object.asString();
+                this.binding = object.asString();
                 break;
             case LP_EXEC.HAS_DATA_UNIT_GROUP:
-                group = object.asString();
+                this.group = object.asString();
+                break;
+            case LP_EXEC.HAS_WORKING_DIRECTORY:
+                this.workingDirectory = object.asString();
                 break;
         }
         return null;
     }
 
     public String getResource() {
-        return resource;
+        return this.resource;
     }
 
     public String getBinding() {
-        return binding;
+        return this.binding;
     }
 
     public List<String> getTypes() {
-        return Collections.unmodifiableList(types);
+        return Collections.unmodifiableList(this.types);
     }
 
     public String getGroup() {
-        return group;
+        return this.group;
+    }
+
+    public File getWorkingDirectory() {
+        return new File(URI.create(this.workingDirectory));
     }
 
 }

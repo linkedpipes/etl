@@ -2,11 +2,12 @@ package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_MONITOR;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
-import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewEnricher;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
-import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToStatements;
-import com.linkedpipes.etl.executor.monitor.execution.overview.QueuedOverviewFactory;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToListStatements;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,10 +22,7 @@ public class LoadOverview {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private final QueuedOverviewFactory queuedFactory =
-            new QueuedOverviewFactory();
-
-    private final OverviewEnricher enricher = new OverviewEnricher();
+    private final OverviewFactory overviewFactory = new OverviewFactory();
 
     public void load(Execution execution) throws MonitorException {
         File file = this.getOverviewFile(execution);
@@ -32,7 +30,7 @@ public class LoadOverview {
         if (file.exists()) {
             overview = loadJson(file);
         } else {
-            overview = this.queuedFactory.create(execution);
+            overview = this.overviewFactory.createQueued(execution);
         }
         load(execution, overview);
     }
@@ -50,24 +48,38 @@ public class LoadOverview {
     }
 
     public void load(Execution execution, JsonNode overview) {
-        this.enricher.addMonitorInformation(execution, overview);
+        addMonitorInformation(execution, overview);
         execution.setOverviewJson(overview);
         this.updateExecutionFromOverview(execution);
+    }
+
+    public void addMonitorInformation(Execution execution, JsonNode node) {
+        ObjectNode root = (ObjectNode)node;
+        ObjectNode context = (ObjectNode)root.get("@context");
+        context.put("finalData", LP_MONITOR.HAS_FINAL_DATA);
+        root.put("finalData", execution.isHasFinalData());
     }
 
     private void updateExecutionFromOverview(Execution execution) {
         OverviewObject overview =
                 OverviewObject.fromJson(execution.getOverviewJson());
-
-        setLastChange(execution, overview);
-        updateStatus(execution, overview);
+        UpdateExecutionStatus updater = new UpdateExecutionStatus();
+        boolean statusChanged = updater.update(execution, overview);
         updateStatements(execution, overview);
+        setLastChange(execution, overview, statusChanged);
     }
 
-    private void setLastChange(Execution execution, OverviewObject overview) {
-        Date lastOverviewChange = execution.getOverviewLastChange();
-        if (lastOverviewChange != null &&
-                lastOverviewChange.equals(overview.getLastChange())) {
+    private void updateStatements(Execution execution, OverviewObject overview) {
+        OverviewToListStatements overviewToStatements = new OverviewToListStatements();
+        execution.setOverviewStatements(
+                overviewToStatements.asStatements(execution, overview));
+    }
+
+    private void setLastChange(
+            Execution execution,
+            OverviewObject overview,
+            boolean statusChanged) {
+        if (!statusChanged && !hasOverviewChanged(execution, overview)) {
             return;
         }
         // We know that there was a change, however it could have happen
@@ -76,65 +88,14 @@ public class LoadOverview {
         // To prevent this we use local time value instead.
         execution.setLastChange(new Date());
 
-        // Set time from the overview.
-        execution.setOverviewLastChange(overview.getLastChange());
+        // Update overview change time.
+        execution.setLastOverviewChange(overview.getLastChange());
     }
 
-    private void updateStatus(Execution execution, OverviewObject overview) {
-        ExecutionStatus oldStatus = execution.getStatus();
-        ExecutionStatus newStatus =
-                ExecutionStatus.fromIri(overview.getStatus());
-        // Postpone failed and finished until the execution time end is set.
-        switch (newStatus) {
-            case FAILED:
-                if (isFinished(overview)) {
-                    execution.setStatus(ExecutionStatus.FAILED);
-                } else {
-                    execution.setStatus(ExecutionStatus.RUNNING);
-                }
-                break;
-            case FINISHED:
-                if (isFinished(overview)) {
-                    execution.setStatus(ExecutionStatus.FINISHED);
-                } else {
-                    execution.setStatus(ExecutionStatus.RUNNING);
-                }
-                break;
-            case RUNNING:
-                if (execution.getStatus() == null) {
-                    // Initial load.
-                    execution.setStatus(ExecutionStatus.DANGLING);
-                    break;
-                }
-                if (execution.hasExecutor()) {
-                    execution.setStatus(ExecutionStatus.RUNNING);
-                } else {
-                    if (oldStatus == ExecutionStatus.RUNNING) {
-                        execution.setStatus(ExecutionStatus.UNRESPONSIVE);
-                    } else {
-                        // Keep previous status.
-                    }
-                }
-                break;
-            default:
-                // We quit the function here as we use the status from overview.
-                execution.setStatus(newStatus);
-                return;
-        }
-        // We need to update the status in the overview.
-        StatusSetter.updateOverview(execution);
-        overview.setStatus(execution.getStatus().asStr());
+    private boolean hasOverviewChanged(
+            Execution execution, OverviewObject overview) {
+        Date change = execution.getLastOverviewChange();
+        return change == null || !change.equals(overview.getLastChange());
     }
-
-    private boolean isFinished(OverviewObject overview) {
-        return overview.getFinish() != null;
-    }
-
-    private void updateStatements(Execution execution, OverviewObject overview) {
-        OverviewToStatements overviewToStatements = new OverviewToStatements();
-        execution.setOverviewStatements(
-                overviewToStatements.asStatements(execution, overview));
-    }
-
 
 }

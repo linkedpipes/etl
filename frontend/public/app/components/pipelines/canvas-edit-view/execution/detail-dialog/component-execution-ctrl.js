@@ -12,6 +12,9 @@
 
         $scope.onCancel = $service.onCancel;
 
+        $scope.$on("$routeChangeStart", function($event, next, current) {
+            $mdDialog.cancel();
+        });
     }
 
     controller.$inject = [

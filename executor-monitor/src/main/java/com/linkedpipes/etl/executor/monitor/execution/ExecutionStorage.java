@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
-import com.linkedpipes.etl.executor.monitor.execution.overview.DeletedOverviewFactory;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutionSource;
+import com.linkedpipes.etl.executor.monitor.executor.Executor;
+import com.linkedpipes.etl.executor.monitor.executor.ExecutorEventListener;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
  * Responsible for storing information about existing executions.
  */
 @Service
-class ExecutionStorage implements ExecutionSource {
+class ExecutionStorage
+        implements ExecutionSource, ExecutorEventListener {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(ExecutionStorage.class);
@@ -38,6 +40,8 @@ class ExecutionStorage implements ExecutionSource {
 
     private final List<File> directoriesToDelete = new ArrayList<>(16);
 
+    private final Map<Executor, Execution> executors = new HashMap<>();
+
     @Autowired
     public ExecutionStorage(Configuration configuration) {
         this.configuration = configuration;
@@ -45,14 +49,19 @@ class ExecutionStorage implements ExecutionSource {
 
     @PostConstruct
     public void onInit() throws MonitorException {
-        File rootDirectory = this.configuration.getWorkingDirectory();
-        if (!rootDirectory.isDirectory()) {
+        File executionsDirectory = getExecutionsDirectory();
+        Arrays.stream(executionsDirectory.listFiles())
+                .filter(file -> file.isDirectory())
+                .forEach(directory -> loadExecutionForFirstTime(directory));
+    }
+
+    private File getExecutionsDirectory() throws MonitorException {
+        File directory = this.configuration.getWorkingDirectory();
+        if (!directory.isDirectory()) {
             throw new MonitorException(
                     "Execution working directory does not exists");
         }
-        Arrays.stream(rootDirectory.listFiles())
-                .filter(file -> file.isDirectory())
-                .forEach(directory -> loadExecutionForFirstTime(directory));
+        return directory;
     }
 
     private Execution loadExecutionForFirstTime(File directory) {
@@ -107,7 +116,7 @@ class ExecutionStorage implements ExecutionSource {
 
     private void updateDebugData(Execution execution) throws MonitorException {
         ExecutionLoader executionLoader = new ExecutionLoader();
-        updateExecution(execution, executionLoader.loadStatements(execution));
+        updateFromExecution(execution, executionLoader.loadStatements(execution));
     }
 
     public List<Execution> getExecutions() {
@@ -143,6 +152,11 @@ class ExecutionStorage implements ExecutionSource {
         return null;
     }
 
+    @Override
+    public Execution getExecution(Executor executor) {
+        return this.executors.get(executor);
+    }
+
     /**
      * Perform full execution update from directory.
      */
@@ -151,7 +165,6 @@ class ExecutionStorage implements ExecutionSource {
             // We do not reload dangling or invalid executions.
             return;
         }
-        LOG.debug("update execution: {}", execution.getId());
         LoadOverview overviewLoader = new LoadOverview();
         try {
             overviewLoader.load(execution);
@@ -173,13 +186,9 @@ class ExecutionStorage implements ExecutionSource {
         if (ExecutionStatus.isFinished(execution.getStatus())) {
             execution.setHasFinalData(true);
         }
-        LOG.debug("update execution ... done");
     }
 
-    /**
-     * Updates only from overview.
-     */
-    public void updateOverview(Execution execution, JsonNode overview) {
+    private void updateFromOverview(Execution execution, JsonNode overview) {
         LoadOverview overviewLoader = new LoadOverview();
         overviewLoader.load(execution, overview);
     }
@@ -187,44 +196,22 @@ class ExecutionStorage implements ExecutionSource {
     /**
      * Updates only from execution data (debug data).
      */
-    public void updateExecution(Execution execution, Statements statements) {
+    public void updateFromExecution(
+            Execution execution, Statements statements) {
         execution.setDebugData(new DebugData(statements, execution));
     }
 
     public Execution createExecution(
             Collection<Statement> pipeline, List<MultipartFile> inputs)
             throws MonitorException {
-
-        // TODO Move into ExecutionFactory.
-
         String uuid = this.createExecutionGuid();
         File directory = new File(configuration.getWorkingDirectory(), uuid);
-
-        // Save pipeline definition.
-        File definitionFile = new File(
-                directory, "definition" + File.separator + "definition.trig");
-        definitionFile.getParentFile().mkdirs();
-        try (OutputStream stream = new FileOutputStream(definitionFile)) {
-            Rio.write(pipeline, stream, RDFFormat.TRIG);
-        } catch (IOException | IllegalStateException ex) {
-            this.silentDeleteDirectory(directory);
-            throw new MonitorException("Can't save pipeline definition.", ex);
+        try {
+            ExecutionFactory.prepareExecutionInDirectory(directory, pipeline, inputs);
+        } catch (MonitorException ex) {
+            this.deleteDirectory(directory);
+            throw ex;
         }
-
-        // Save resources.
-        File inputDirectory = new File(directory, "input");
-        for (MultipartFile input : inputs) {
-            File inputFile = new File(
-                    inputDirectory, input.getOriginalFilename());
-            inputFile.getParentFile().mkdirs();
-            try {
-                input.transferTo(inputFile);
-            } catch (IOException | IllegalStateException ex) {
-                this.silentDeleteDirectory(directory);
-                throw new MonitorException("Can't prepare inputs.", ex);
-            }
-        }
-
         Execution execution = loadExecutionForFirstTime(directory);
         if (execution == null) {
             throw new MonitorException("Can't load new execution");
@@ -238,7 +225,7 @@ class ExecutionStorage implements ExecutionSource {
                 UUID.randomUUID().toString();
     }
 
-    private void silentDeleteDirectory(File directory) {
+    private void deleteDirectory(File directory) {
         try {
             FileUtils.deleteDirectory(directory);
         } catch (IOException ex) {
@@ -253,9 +240,9 @@ class ExecutionStorage implements ExecutionSource {
         execution.setTimeToLive(this.getNowShiftedBySeconds(5 * 60));
         // Clear statements that we do not need any more.
         execution.setPipelineStatements(Collections.emptyList());
-        updateOverview(
+        updateFromOverview(
                 execution,
-                DeletedOverviewFactory.create(execution, new Date()));
+                OverviewFactory.createDeleted(execution, new Date()));
         this.directoriesToDelete.add(execution.getDirectory());
     }
 
@@ -310,6 +297,60 @@ class ExecutionStorage implements ExecutionSource {
             }
         }
         this.directoriesToDelete.removeAll(toRemove);
+    }
+
+    @Override
+    public void onExecutorHasExecution(Execution execution, Executor executor) {
+        LOG.info("onExecutorHasExecution: {}", execution.getId());
+        Execution oldExecution = this.executors.get(executor);
+        if (oldExecution == null) {
+            this.executors.put(executor, execution);
+            execution.setExecutor(true);
+            execution.setExecutorResponsive(true);
+            return;
+        }
+        if (execution == oldExecution) {
+            return;
+        }
+        // Executor stop execution of one execution and start with another.
+        oldExecution.setExecutor(false);
+        oldExecution.setExecutorResponsive(false);
+        if (execution == null) {
+            this.executors.remove(executor);
+        } else {
+            this.executors.put(executor, execution);
+            execution.setExecutor(true);
+            execution.setExecutorResponsive(true);
+        }
+    }
+
+    @Override
+    public void onExecutorWithoutExecution(Executor executor) {
+        // We have execution assigned to this executor, but now it is not
+        // executing anything. We need to update from disk as the
+        // execution might have been finished in a meantime.
+        Execution execution = this.executors.get(executor);
+        if (execution == null) {
+            return;
+        }
+        execution.setExecutor(false);
+        execution.setExecutorResponsive(false);
+        this.executors.remove(executor);
+        update(execution);
+    }
+
+    @Override
+    public void onExecutorUnavailable(Executor executor) {
+        Execution execution = this.executors.get(executor);
+        if (execution == null) {
+            return;
+        }
+        execution.setExecutorResponsive(false);
+    }
+
+    @Override
+    public void onOverview(Execution execution, JsonNode overview) {
+        updateFromOverview(execution, overview);
     }
 
 }

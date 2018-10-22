@@ -93,6 +93,7 @@
         <module>t-xmlToChunks</module>
         <module>c-rdfSingleGraph</module>
         <module>c-rdfChunkedTriples</module>
+        <module>t-propertyLinkerChunked</module>
     </modules>
 
 </project>

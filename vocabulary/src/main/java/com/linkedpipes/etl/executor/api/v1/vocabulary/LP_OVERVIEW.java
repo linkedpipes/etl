@@ -28,4 +28,15 @@ public class LP_OVERVIEW {
     public static final String HAS_PROGRESS_CURRENT = PREFIX +
             "execution/componentFinished";
 
+    public static final String HAS_PROGRESS_TOTAL_MAP = PREFIX +
+            "execution/componentToMap";
+
+    public static final String HAS_PROGRESS_MAPPED = PREFIX +
+            "execution/componentMapped";
+
+    public static final String HAS_PROGRESS_EXECUTED = PREFIX +
+            "execution/componentExecuted";
+
+    public static final String HAS_DIRECTORY_SIZE = PREFIX + "directorySize";
+
 }

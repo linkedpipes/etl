@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToStatements;
+import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToListStatements;
 
 import java.util.Date;
 
@@ -30,7 +30,7 @@ class StatusSetter {
     }
 
     private static void updateOverviewStatements(Execution execution) {
-        OverviewToStatements overviewToStatements = new OverviewToStatements();
+        OverviewToListStatements overviewToStatements = new OverviewToListStatements();
         execution.setOverviewStatements(overviewToStatements.asStatements(
                 execution, execution.getOverviewJson()));
     }

@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
 import com.linkedpipes.etl.dataunit.core.AbstractDataUnit;
+import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import org.eclipse.rdf4j.model.Statement;
@@ -26,37 +27,44 @@ class DefaultChunkedTriples
 
     private int fileCounter = 0;
 
-    public DefaultChunkedTriples(String binding, String iri, File directory,
+    public DefaultChunkedTriples(
+            DataUnitConfiguration configuration,
             Collection<String> sources) {
-        super(binding, iri, sources);
-        this.writeDirectory = directory;
-        if (writeDirectory != null) {
-            this.dataDirectories.add(writeDirectory);
-            writeDirectory.mkdirs();
+        super(configuration, sources);
+        this.writeDirectory = configuration.getWorkingDirectory();
+        if (this.writeDirectory != null) {
+            this.dataDirectories.add(this.writeDirectory);
+            this.writeDirectory.mkdirs();
         }
     }
 
     @Override
     public void initialize(File directory) throws LpException {
-        dataDirectories.clear();
-        dataDirectories.addAll(loadDataDirectories(directory));
+        this.dataDirectories.clear();
+        this.dataDirectories.addAll(loadDataDirectories(directory));
+    }
+
+    @Override
+    public void initialize(
+            Map<String, ManageableDataUnit> dataUnits) throws LpException {
+        initializeFromSource(dataUnits);
     }
 
     @Override
     public void save(File directory) throws LpException {
-        saveDataDirectories(directory, dataDirectories);
-        saveDebugDirectories(directory, dataDirectories);
+        saveDataDirectories(directory, this.dataDirectories);
+        saveDebugDirectories(directory, this.dataDirectories);
     }
 
     @Override
-    public void close() throws LpException {
+    public void close() {
         // No operation here.
     }
 
     @Override
     public void submit(Collection<Statement> statements) throws LpException {
-        final File outputFile =
-                new File(writeDirectory, ++fileCounter + ".ttl");
+        File outputFile =
+                new File(this.writeDirectory, ++this.fileCounter + ".ttl");
         try (OutputStream stream = new FileOutputStream(outputFile);
              Writer writer = new OutputStreamWriter(stream, "UTF-8")) {
             Rio.write(statements, writer, RDFFormat.TURTLE);
@@ -78,26 +86,24 @@ class DefaultChunkedTriples
 
     @Override
     public Iterator<ChunkedTriples.Chunk> iterator() {
-        return new ChunkIterator(dataDirectories.iterator(), this);
+        return new ChunkIterator(this.dataDirectories.iterator());
     }
 
     @Override
     public Collection<File> getSourceDirectories() {
-        return Collections.unmodifiableCollection(dataDirectories);
+        return Collections.unmodifiableCollection(this.dataDirectories);
     }
 
     @Override
-    protected void merge(ManageableDataUnit dataunit) throws LpException {
-        if (dataunit instanceof DefaultChunkedTriples) {
-            final DefaultChunkedTriples source =
-                    (DefaultChunkedTriples) dataunit;
-            dataDirectories.addAll(source.dataDirectories);
+    protected void merge(ManageableDataUnit dataUnit) throws LpException {
+        if (dataUnit instanceof DefaultChunkedTriples) {
+            DefaultChunkedTriples source = (DefaultChunkedTriples) dataUnit;
+            this.dataDirectories.addAll(source.dataDirectories);
         } else {
             throw new LpException(
                     "Can't merge with source data unit: {} of type {}",
-                    getIri(), dataunit.getClass().getSimpleName());
+                    getIri(), dataUnit.getClass().getSimpleName());
         }
     }
-
 
 }

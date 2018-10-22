@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * We ignore he user provided graph option.
+ * We use graph provided in the constructor.
  */
 class Rdf4jRdfSource implements RdfSource {
 
@@ -45,7 +45,8 @@ class Rdf4jRdfSource implements RdfSource {
         }
     }
 
-    private void handleResult(RepositoryResult<Statement> result,
+    private void handleResult(
+            RepositoryResult<Statement> result,
             StatementHandler handler) throws RdfException {
         while (result.hasNext()) {
             Statement statement = result.next();
@@ -58,14 +59,13 @@ class Rdf4jRdfSource implements RdfSource {
     @Override
     public List<RdfValue> getPropertyValues(String subject, String predicate)
             throws RdfException {
-        IRI subjectIri = valueFactory.createIRI(subject);
-        IRI predicateIri = valueFactory.createIRI(predicate);
+        IRI s = this.valueFactory.createIRI(subject);
+        IRI p = this.valueFactory.createIRI(predicate);
         List<RdfValue> result = new ArrayList<>();
         try {
-            dataUnit.execute((connection -> {
+            this.dataUnit.execute((connection -> {
                 RepositoryResult<Statement> statements =
-                        connection.getStatements(
-                                subjectIri, predicateIri, null, this.graph);
+                        connection.getStatements(s, p, null, this.graph);
                 while (statements.hasNext()) {
                     result.add(
                             new Rdf4jValueWrap(statements.next().getObject()));
@@ -79,10 +79,10 @@ class Rdf4jRdfSource implements RdfSource {
 
     @Override
     public List<String> getByType(String type) throws RdfException {
-        IRI typeIri = valueFactory.createIRI(type);
+        IRI typeIri = this.valueFactory.createIRI(type);
         List<String> result = new ArrayList<>();
         try {
-            dataUnit.execute((connection -> {
+            this.dataUnit.execute((connection -> {
                 RepositoryResult<Statement> statements =
                         connection.getStatements(
                                 null, RDF.TYPE, typeIri, this.graph);

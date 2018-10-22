@@ -1,4 +1,12 @@
 /*
+Wrap content of a notifications.
+*/
+
+.ui-notification>.message {
+    word-break: break-word;
+}
+
+/*
 Custom style for icons, used mainly in application lists. Designed to make it look more responsive.
 */
 

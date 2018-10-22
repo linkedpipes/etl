@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,19 +19,24 @@ public class JarServlet {
 
     @RequestMapping(value = "/file", method = RequestMethod.GET)
     @ResponseBody
-    public void getJarFile(@RequestParam(name = "iri") String iri,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        // Get component.
-        final JarComponent component = jars.getJarComponent(iri);
-        if (component == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        // Stream the JAR file.
+    public void getJarFile(
+            @RequestParam(name = "iri") String iri,
+            HttpServletResponse response)
+            throws IOException, MissingResource {
+        JarComponent component = getComponent(iri);
+        response.setStatus(200);
+        response.setHeader("Content-Type", "application/octet-stream");
         try (OutputStream stream = response.getOutputStream()) {
             FileUtils.copyFile(jars.getJarFile(component), stream);
         }
+    }
+
+    private JarComponent getComponent(String iri) throws MissingResource {
+        JarComponent component = jars.getJarComponent(iri);
+        if (component == null) {
+            throw new MissingResource("Missing jar file: {}", iri);
+        }
+        return component;
     }
 
 }

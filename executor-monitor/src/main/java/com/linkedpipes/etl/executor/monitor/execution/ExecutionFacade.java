@@ -59,8 +59,8 @@ public class ExecutionFacade {
         return new File(execution.getDirectory(), "log/execution-debug.log");
     }
 
-    public File getExecutionInfoLogFile(Execution execution) {
-        return new File(execution.getDirectory(), "log/execution-info.log");
+    public File getExecutionWarnLogFile(Execution execution) {
+        return new File(execution.getDirectory(), "log/execution-warn.log");
     }
 
     public JsonNode getOverview(Execution execution) {
@@ -83,7 +83,7 @@ public class ExecutionFacade {
         // We use the date obtained to update, in this way we can be sure,
         // that we have the latest data.
         if (!statements.isEmpty() && !execution.isHasFinalData()) {
-            this.storage.updateExecution(execution, statements);
+            this.storage.updateFromExecution(execution, statements);
         }
         return statements;
     }

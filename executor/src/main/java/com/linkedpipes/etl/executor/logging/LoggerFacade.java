@@ -30,10 +30,10 @@ public class LoggerFacade {
     private FileAppender infoAppender = null;
 
     public void prepareAppendersForExecution(
-            File debugLogFile, File infoLogFile) {
+            File debugLogFile, File warnLogFile) {
         destroyExecutionAppenders();
         debugAppender = createExecutionAppender(debugLogFile, "DEBUG");
-        infoAppender = createExecutionAppender(infoLogFile, "INFO");
+        infoAppender = createExecutionAppender(warnLogFile, "EARN");
     }
 
     public void destroyExecutionAppenders() {

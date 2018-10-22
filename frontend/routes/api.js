@@ -50,25 +50,35 @@ router.get("/components/:type", (req, res) => {
             url += "&name=" + encodeURIComponent(req.query.name);
             break;
         default:
-            res.status(400).json({"error": {"type": errors.INVALID_REQUEST}});
+            res.status(400).json({
+                "error": {
+                    "type": errors.INVALID_REQUEST,
+                    "source": "FRONTEND",
+                    "message": "Unexpected type: " + req.params.type
+                }
+            });
             return;
     }
     request.get({"url": url, "headers": req.headers})
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
-
-function handleError(res, error) {
+function handleConnectionError(res, error) {
     console.error("Request failed:\n", error);
-    res.status(503).json({"error": {"type": errors.CONNECTION}});
+    res.status(503).json({
+        "error": {
+            "type": errors.CONNECTION,
+            "source": "FRONTEND"
+        }
+    });
 }
 
 router.post("/components/config", (req, res) => {
     const url = storageApiUrlPrefix + "config?iri=" +
         encodeURIComponent(req.query.iri);
     req.pipe(request.post(url, {"form": req.body}), {"end": false})
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
@@ -76,7 +86,7 @@ router.post("/components/component", (req, res) => {
     const url = storageApiUrlPrefix + "component?iri=" +
         encodeURIComponent(req.query.iri);
     req.pipe(request.post(url, {"form": req.body}), {"end": false})
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
@@ -91,7 +101,7 @@ router.get("/usage", (req, res) => {
         "headers": req.headers
     };
     request.get(options)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
 
@@ -100,6 +110,6 @@ router.get("/jars/file", (req, res) => {
     iri += "iri=" + encodeURIComponent(req.query.iri);
     //
     request.get(iri)
-        .on("error", (error) => handleError(res, error))
+        .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });

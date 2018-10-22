@@ -18,7 +18,7 @@
     </properties>
 
     <dependencies>
-        <!-- Java EE API. -->
+        <!-- Java EE API used by RDF4J to hash blank nodes. -->
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
@@ -164,7 +164,16 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-    </dependencies>
+        <!-- Test. -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
+	</dependencies>
 
     <build>
         <finalName>executor-monitor</finalName>

@@ -2,7 +2,6 @@ package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
-import com.linkedpipes.etl.executor.monitor.executor.Executor;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 
@@ -22,7 +21,7 @@ public class Execution {
     /**
      * Last change as set in overview.
      */
-    private Date overviewLastChange;
+    private Date lastOverviewChange;
 
     /**
      * Time of last change of this execution for external API.
@@ -43,7 +42,15 @@ public class Execution {
 
     private DebugData debugData;
 
-    private Executor executor;
+    /**
+     * Has assigned executor.
+     */
+    private boolean executor;
+
+    /**
+     * The executor is responsive.
+     */
+    private boolean executorResponsive;
 
     private Resource pipeline;
 
@@ -132,16 +139,20 @@ public class Execution {
         this.debugData = debugData;
     }
 
-    public Executor getExecutor() {
+    boolean isExecutor() {
         return executor;
     }
 
-    void setExecutor(Executor executor) {
+    void setExecutor(boolean executor) {
         this.executor = executor;
     }
 
-    boolean hasExecutor() {
-        return this.executor != null;
+    boolean isExecutorResponsive() {
+        return executorResponsive;
+    }
+
+    void setExecutorResponsive(boolean executorResponsive) {
+        this.executorResponsive = executorResponsive;
     }
 
     public Resource getPipeline() {
@@ -174,12 +185,12 @@ public class Execution {
         this.hasFinalData = hasFinalData;
     }
 
-    public Date getOverviewLastChange() {
-        return overviewLastChange;
+    public Date getLastOverviewChange() {
+        return lastOverviewChange;
     }
 
-    void setOverviewLastChange(Date overviewLastChange) {
-        this.overviewLastChange = overviewLastChange;
+    void setLastOverviewChange(Date lastOverviewChange) {
+        this.lastOverviewChange = lastOverviewChange;
     }
 
 }

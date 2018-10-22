@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +16,8 @@ import java.io.InputStream;
 import java.util.*;
 
 public class Statements implements Collection<Statement> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Statements.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -59,6 +63,10 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, this.valueFactory.createIRI(o));
     }
 
+    public void addIri(String s, IRI p, String o) {
+        this.addIri(this.valueFactory.createIRI(s), p, o);
+    }
+
     public void addIri(Resource s, IRI p, String o) {
         this.add(s, p, this.valueFactory.createIRI(o));
     }
@@ -71,9 +79,25 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, this.valueFactory.createLiteral(o));
     }
 
+
+    public void addString(String s, IRI p, String o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                p,
+                this.valueFactory.createLiteral(o));
+    }
+
     public void addString(Resource s, IRI p, String o) {
         this.add(s, p, this.valueFactory.createLiteral(o));
     }
+
+    public void addInt(String s, String p, int o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                this.valueFactory.createIRI(p),
+                this.valueFactory.createLiteral(o));
+    }
+
 
     public void addInt(Resource s, String p, int o) {
         this.add(s, p, this.valueFactory.createLiteral(o));
@@ -95,12 +119,26 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, this.valueFactory.createLiteral(o));
     }
 
+    public void addDate(String s, String p, Date o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                this.valueFactory.createIRI(p),
+                this.valueFactory.createLiteral(o));
+    }
+
     public void addDate(Resource s, String p, Date o) {
         this.addDate(s, this.valueFactory.createIRI(p), o);
     }
 
     public void addDate(Resource s, IRI p, Date o) {
         this.add(s, p, this.valueFactory.createLiteral(o));
+    }
+
+    public void addLong(String s, String p, Long o) {
+        this.add(
+                this.valueFactory.createIRI(s),
+                this.valueFactory.createIRI(p),
+                this.valueFactory.createLiteral(o));
     }
 
     public void add(Resource s, String p, Value o) {
@@ -203,7 +241,7 @@ public class Statements implements Collection<Statement> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return false;
+        return this.collection.containsAll(c);
     }
 
     @Override
@@ -224,6 +262,19 @@ public class Statements implements Collection<Statement> {
     @Override
     public void clear() {
         this.collection.clear();
+    }
+
+    public boolean containsAllLogMissing(Collection<Statement> statements) {
+        Set<Statement> thisAsSet = new HashSet<>(this.collection);
+        boolean containsAll = true;
+        for (Statement statement : statements) {
+            if (thisAsSet.contains(statement)) {
+                continue;
+            }
+            containsAll = false;
+            LOG.info("{}", statement);
+        }
+        return containsAll;
     }
 
 }

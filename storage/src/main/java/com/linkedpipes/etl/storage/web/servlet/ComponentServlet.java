@@ -28,9 +28,6 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 
-/**
- * A servlet responsible for handling request regards components.
- */
 @RestController
 @RequestMapping(value = "/components")
 public class ComponentServlet {
@@ -44,166 +41,109 @@ public class ComponentServlet {
     @Autowired
     private PipelineFacade pipelineFacade;
 
-    /**
-     * Return list of interfaces of all components.
-     *
-     * @param request
-     * @param response
-     */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public void getAll(HttpServletRequest request,
+    public void getAll(
+            HttpServletRequest request,
             HttpServletResponse response)
-            throws IOException, BaseException {
+            throws BaseException {
         RdfUtils.write(request, response, templateFacade.getInterfaces());
     }
 
-    /**
-     * Return interface for given component.
-     *
-     * @param iri
-     * @param request
-     * @param response
-     */
     @RequestMapping(value = "/interface", method = RequestMethod.GET)
     @ResponseBody
-    public void getComponentInterface(@RequestParam(name = "iri") String iri,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
-        RdfUtils.write(request, response,
+    public void getComponentInterface(
+            @RequestParam(name = "iri") String iri,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws BaseException {
+        Template template = getTemplate(iri);
+        RdfUtils.write(
+                request, response,
                 templateFacade.getInterface(template));
     }
 
-    /**
-     * Return definition of given component.
-     *
-     * @param iri
-     * @param request
-     * @param response
-     */
+    private Template getTemplate(String iri) throws MissingResource {
+        Template template = templateFacade.getTemplate(iri);
+        if (template == null) {
+            throw new MissingResource("Missing template: {}", iri);
+        }
+        return template;
+    }
+
     @RequestMapping(value = "/definition", method = RequestMethod.GET)
     @ResponseBody
-    public void getDefinition(@RequestParam(name = "iri") String iri,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
-        RdfUtils.write(request, response,
+    public void getDefinition(
+            @RequestParam(name = "iri") String iri,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws BaseException {
+        Template template = getTemplate(iri);
+        RdfUtils.write(
+                request, response,
                 templateFacade.getDefinition(template));
     }
 
-    @RequestMapping(value = "/component",
-            method = RequestMethod.POST)
+    @RequestMapping(value = "/component", method = RequestMethod.POST)
     @ResponseBody
-    public void updateComponent(@RequestParam(name = "iri") String iri,
-            @RequestParam(name = "component") MultipartFile componentRdf,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        final Collection<Statement> component = RdfUtils.read(componentRdf);
-        templateFacade.updateInterface(template, component);
+    public void updateComponent(
+            @RequestParam(name = "iri") String iri,
+            @RequestParam(name = "component") MultipartFile componentRdf)
+            throws BaseException {
+        Template template = getTemplate(iri);
+        templateFacade.updateInterface(template, RdfUtils.read(componentRdf));
     }
 
-    @RequestMapping(value = "/config",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/config", method = RequestMethod.GET)
     @ResponseBody
-    public void getConfig(@RequestParam(name = "iri") String iri,
+    public void getConfig(
+            @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+            throws BaseException {
+        Template template = getTemplate(iri);
         RdfUtils.write(request, response,
                 templateFacade.getConfig(template));
     }
 
-    @RequestMapping(value = "/config",
-            method = RequestMethod.POST)
+    @RequestMapping(value = "/config", method = RequestMethod.POST)
     @ResponseBody
-    public void updateConfig(@RequestParam(name = "iri") String iri,
-            @RequestParam(name = "configuration") MultipartFile configRdf,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        final Collection<Statement> config = RdfUtils.read(configRdf);
-        templateFacade.updateConfig(template, config);
+    public void updateConfig(
+            @RequestParam(name = "iri") String iri,
+            @RequestParam(name = "configuration") MultipartFile configRdf)
+            throws BaseException {
+        Template template = getTemplate(iri);
+        templateFacade.updateConfig(template, RdfUtils.read(configRdf));
     }
 
-    @RequestMapping(value = "/configEffective",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/configEffective", method = RequestMethod.GET)
     @ResponseBody
-    public void getEffectiveConfig(@RequestParam(name = "iri") String iri,
+    public void getEffectiveConfig(
+            @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+            throws BaseException {
+        Template template = getTemplate(iri);
         RdfUtils.write(request, response,
                 templateFacade.getConfigEffective(template));
     }
 
-    /**
-     * Return configuration for instance based on given template.
-     */
-    @RequestMapping(value = "/configTemplate",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/configTemplate", method = RequestMethod.GET)
     @ResponseBody
-    public void getConfigTemplate(@RequestParam(name = "iri") String iri,
+    public void getConfigTemplate(
+            @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+            throws BaseException {
+        Template template = getTemplate(iri);
         RdfUtils.write(request, response,
                 templateFacade.getConfigInstance(template));
     }
 
     @RequestMapping(value = "/configDescription", method = RequestMethod.GET)
     @ResponseBody
-    public void getConfigDescription(@RequestParam(name = "iri") String iri,
+    public void getConfigDescription(
+            @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+            throws BaseException {
+        Template template = getTemplate(iri);
         RdfUtils.write(request, response,
                 templateFacade.getConfigDescription(template));
     }
@@ -211,25 +151,19 @@ public class ComponentServlet {
     @RequestMapping(value = "/dialog",
             method = RequestMethod.GET)
     @ResponseBody
-    public void getDialogResource(@RequestParam(name = "iri") String iri,
+    public void getDialogResource(
+            @RequestParam(name = "iri") String iri,
             @RequestParam(name = "name") String dialogName,
             @RequestParam(name = "file") String filePath,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
-        final File file = templateFacade.getDialogResource(template,
-                dialogName, filePath);
+            HttpServletResponse response)
+            throws IOException, MissingResource {
+        Template template = getTemplate(iri);
+        File file = templateFacade.getDialogResource(
+                template, dialogName, filePath);
         if (file == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
+            throw new MissingResource(
+                    "Missing dialog file: {}/{}", dialogName, filePath);
         }
-        // Set headers.
         if (filePath.toLowerCase().endsWith(".js")) {
             response.setHeader("Content-Type", "application/javascript");
         } else if (filePath.toLowerCase().endsWith(".html")) {
@@ -243,21 +177,16 @@ public class ComponentServlet {
     @RequestMapping(value = "/static",
             method = RequestMethod.GET)
     @ResponseBody
-    public void getStaticResource(@RequestParam(name = "iri") String iri,
+    public void getStaticResource(
+            @RequestParam(name = "iri") String iri,
             @RequestParam(name = "file") String filePath,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
-        final File file = templateFacade.getStaticResource(template, filePath);
+            HttpServletResponse response)
+            throws IOException, MissingResource {
+        Template template = getTemplate(iri);
+        File file = templateFacade.getStaticResource(template, filePath);
         if (file == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
+            throw new MissingResource(
+                    "Missing dialog resource: {}", filePath);
         }
         try (OutputStream stream = response.getOutputStream()) {
             FileUtils.copyFile(file, stream);
@@ -272,49 +201,41 @@ public class ComponentServlet {
             @RequestParam(name = "configuration") MultipartFile configuration,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException, IOException {
-        final Collection<Statement> componentRdf
-                = RdfUtils.read(component);
-        final Collection<Statement> configurationRdf
-                = RdfUtils.read(configuration);
+        Collection<Statement> componentRdf = RdfUtils.read(component);
+        Collection<Statement> configurationRdf = RdfUtils.read(configuration);
         // Create template and stream interface as a response.
-        final Template template = templateFacade.createTemplate(componentRdf,
-                configurationRdf);
+        Template template = templateFacade.createTemplate(
+                componentRdf, configurationRdf);
         try (OutputStream stream = response.getOutputStream()) {
             RdfUtils.write(stream, getFormat(request),
                     templateFacade.getInterface(template));
         }
     }
 
-    @RequestMapping(value = "/usage",
-            method = RequestMethod.GET)
-    public void getUsage(@RequestParam(name = "iri") String iri,
+    @RequestMapping(value = "/usage", method = RequestMethod.GET)
+    public void getUsage(
+            @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException, IOException {
         // TODO Move to pipeline/dpu facade (hide pipeline.info to pipeline).
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+        Template template = getTemplate(iri);
         // Get components.
-        final Collection<Template> templates =
-                templateFacade.getSuccessors(template);
+        Collection<Template> templates = templateFacade.getSuccessors(template);
         templates.add(template);
         // Get pipelines and construct the response.
-        final Collection<Statement> responseRdf = new LinkedList<>();
-        final ValueFactory vf = SimpleValueFactory.getInstance();
+        Collection<Statement> responseRdf = new LinkedList<>();
+        ValueFactory vf = SimpleValueFactory.getInstance();
         // TODO Add component interface
-        final IRI root = vf.createIRI(iri);
+        IRI root = vf.createIRI(iri);
         for (Template item : templates) {
-            final IRI templateIri = vf.createIRI(item.getIri());
+            IRI templateIri = vf.createIRI(item.getIri());
             responseRdf.add(vf.createStatement(root, vf.createIRI(
                     "http://etl.linkedpipes.com/ontology/hasInstance"),
                     templateIri));
             responseRdf.add(vf.createStatement(templateIri, RDF.TYPE,
                     vf.createIRI(
                             "http://etl.linkedpipes.com/ontology/Template")));
-            final Collection<String> usage = infoFacade.getUsage(item.getIri());
+            Collection<String> usage = infoFacade.getUsage(item.getIri());
             for (String pipelineIri : usage) {
                 final Pipeline pipeline =
                         pipelineFacade.getPipeline(pipelineIri);
@@ -335,24 +256,15 @@ public class ComponentServlet {
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     @ResponseBody
-    public void remove(@RequestParam(name = "iri") String iri,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException, BaseException {
-        // Get component.
-        final Template template = templateFacade.getTemplate(iri);
-        if (template == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        //
+    public void remove(
+            @RequestParam(name = "iri") String iri,
+            HttpServletResponse response)
+            throws BaseException {
+        Template template = getTemplate(iri);
         templateFacade.remove(template);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    /**
-     * @param request
-     * @return Format based on the request headers.
-     */
     private static RDFFormat getFormat(HttpServletRequest request) {
         return Rio.getParserFormatForMIMEType(
                 request.getHeader("Accept")).orElse(RDFFormat.TRIG);

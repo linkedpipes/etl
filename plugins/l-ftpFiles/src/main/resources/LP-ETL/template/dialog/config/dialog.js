@@ -27,6 +27,10 @@ define([], function () {
         "password": {
             "$type": "str",
             "$label": "Password"
+        },
+        "retryCount": {
+            "$type": "int",
+            "$label": "Retry count"
         }
     };
 

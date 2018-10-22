@@ -35,10 +35,7 @@
         }
 
         function handleExecutionStartFailure(response) {
-            $status.httpPostFailed({
-                "title": "Can't start the execution.",
-                "response": response
-            });
+            $status.httpError("Can't start the execution.", response);
         }
 
         function cancelExecution(execution) {
@@ -49,10 +46,7 @@
         }
 
         function handleExecutionCancelFailure(response) {
-            $status.httpPostFailed({
-                "title": "Can't cancel the execution.",
-                "response": response
-            });
+            $status.httpError("Can't cancel the execution.", response);
         }
 
         function openLogTail(execution) {
