@@ -10,10 +10,10 @@
 		<relativePath>../../pom-component/pom.xml</relativePath>
 	</parent>
 	<groupId>com.linkedpipes</groupId>
-	<artifactId>t-jsonldToRdf</artifactId>
+	<artifactId>t-jsonLdToRdf</artifactId>
 	<version>0.0.0</version>
 	<packaging>bundle</packaging>
-	<name>plugin t-jsonldToRdf</name>
+	<name>plugin t-jsonLdToRdf</name>
 
 	<dependencies>
 		<dependency>
