@@ -94,6 +94,7 @@
         <module>c-rdfSingleGraph</module>
         <module>c-rdfChunkedTriples</module>
         <module>t-propertyLinkerChunked</module>
+        <module>t-jsonLdToRdf</module>
     </modules>
 
 </project>
