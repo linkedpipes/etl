@@ -1,0 +1,11 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-jsonLdToRdf/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-jsonLdToRdf#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdToRdf#commitSize" : 50000,
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdToRdf#commitSizeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdToRdf#softFail" : false
+    }
+]
