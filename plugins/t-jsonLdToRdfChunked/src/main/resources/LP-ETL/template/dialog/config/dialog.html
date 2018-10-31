@@ -1,0 +1,8 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-switch ng-model="dialog.softFail.value"
+               ng-disabled="dialog.softFail.disabled || dialog.softFail.inherit"
+               ng-hide="dialog.softFail.hide">
+        Skip file on failure
+    </md-switch>
+</div>

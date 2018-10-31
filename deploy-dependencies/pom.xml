@@ -796,6 +796,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-jsonLdToRdf/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-jsonLdToRdfChunked</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-jsonLdToRdfChunked/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>
