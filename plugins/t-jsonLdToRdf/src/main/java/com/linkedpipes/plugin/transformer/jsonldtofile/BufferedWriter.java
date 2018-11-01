@@ -1,6 +1,6 @@
 package com.linkedpipes.plugin.transformer.jsonldtofile;
 
-import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -14,14 +14,14 @@ class BufferedWriter implements RDFHandler {
 
     private final int commitSize;
 
-    private final WritableGraphListDataUnit dataUnit;
+    private final WritableSingleGraphDataUnit dataUnit;
 
     private final List<Statement> statements;
 
     private IRI targetGraph;
 
-    public BufferedWriter(int commitSize,
-                          WritableGraphListDataUnit dataUnit) {
+    public BufferedWriter(
+            int commitSize, WritableSingleGraphDataUnit dataUnit) {
         this.commitSize = commitSize;
         this.dataUnit = dataUnit;
         this.statements = new ArrayList<>(commitSize);

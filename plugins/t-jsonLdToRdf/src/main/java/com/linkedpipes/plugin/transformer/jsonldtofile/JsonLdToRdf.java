@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.jsonldtofile;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -27,7 +27,7 @@ public final class JsonLdToRdf implements Component, SequentialExecution {
     public FilesDataUnit inputFiles;
 
     @Component.OutputPort(iri = "OutputRdf")
-    public WritableGraphListDataUnit outputRdf;
+    public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
     public JsonLdToRdfConfiguration configuration;
@@ -53,7 +53,7 @@ public final class JsonLdToRdf implements Component, SequentialExecution {
     private void loadFiles() throws LpException {
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
-            writer.setTargetGraph(outputRdf.createGraph());
+            writer.setTargetGraph(outputRdf.getWriteGraph());
             try {
                 loadEntry(entry);
             } catch (LpException ex) {
