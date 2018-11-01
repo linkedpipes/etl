@@ -36,7 +36,7 @@
         "@id": "http://etl.linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/output",
         "http://www.w3.org/2004/02/skos/core#prefLabel": "Output",
         "@type": [
-            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/Chunked",,
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/Chunked",
             "http://linkedpipes.com/ontology/Port",
             "http://linkedpipes.com/ontology/Output"
         ],
