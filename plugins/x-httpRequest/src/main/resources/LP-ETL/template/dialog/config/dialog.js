@@ -29,6 +29,10 @@ define([], function () {
             "$property": "encodeUrl",
             "$control": "encodeUrlControl",
             "$label": "Encode input URL"
+        },
+        "timeout" : {
+            "$type" : "int",
+            "$label" : "Timeout"
         }
     };
 

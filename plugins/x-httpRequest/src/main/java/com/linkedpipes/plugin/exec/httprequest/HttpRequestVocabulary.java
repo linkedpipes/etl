@@ -50,4 +50,6 @@ public final class HttpRequestVocabulary {
 
     public static final String ENCODE_URL = PREFIX + "encodeUrl";
 
+    public static final String HAS_TIME_OUT = PREFIX + "timeout";
+
 }

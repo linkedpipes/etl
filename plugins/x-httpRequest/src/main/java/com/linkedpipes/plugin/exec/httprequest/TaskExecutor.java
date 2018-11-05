@@ -117,6 +117,10 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(task.getMethod());
+        if (task.getTimeOut() != null) {
+            connection.setConnectTimeout(task.getTimeOut());
+            connection.setReadTimeout(task.getTimeOut());
+        }
         for (HttpRequestTask.Header header : task.getHeaders()) {
             connection.setRequestProperty(header.getName(), header.getValue());
         }

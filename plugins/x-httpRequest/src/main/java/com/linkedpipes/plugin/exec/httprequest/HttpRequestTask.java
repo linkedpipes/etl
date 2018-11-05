@@ -111,6 +111,9 @@ public class HttpRequestTask implements GroupTask {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_FOLLOW_REDIRECT)
     private Boolean followRedirect = null;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_TIME_OUT)
+    private Integer timeOut = null;
+
     @Override
     public String getIri() {
         return iri;
@@ -184,6 +187,14 @@ public class HttpRequestTask implements GroupTask {
 
     public void setFollowRedirect(Boolean followRedirect) {
         this.followRedirect = followRedirect;
+    }
+
+    public Integer getTimeOut() {
+        return timeOut;
+    }
+
+    public void setTimeOut(Integer timeOut) {
+        this.timeOut = timeOut;
     }
 
 }
