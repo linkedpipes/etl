@@ -70,7 +70,7 @@ public final class JsonLdToRdf implements Component, SequentialExecution {
 
     private void loadEntry(FilesDataUnit.Entry entry) throws LpException {
         StreamProcessor streamProcessor = new StreamProcessor(
-                JsonLdParser.connect(RDF4JSink.connect(writer)));
+                JsonLdParser.connect(FileAwareRdf4jSink.connect(writer)));
         try  {
             streamProcessor.process(entry.toFile());
         } catch (Exception ex) {

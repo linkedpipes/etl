@@ -60,7 +60,7 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
 
     private void loadEntry(FilesDataUnit.Entry entry) throws LpException {
         StreamProcessor streamProcessor = new StreamProcessor(
-                JsonLdParser.connect(RDF4JSink.connect(collector)));
+                JsonLdParser.connect(FileAwareRdf4jSink.connect(collector)));
         try  {
             streamProcessor.process(entry.toFile());
         } catch (Exception ex) {
