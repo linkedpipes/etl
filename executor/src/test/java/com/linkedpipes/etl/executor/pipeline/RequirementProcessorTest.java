@@ -18,12 +18,12 @@ public class RequirementProcessorTest {
 
     @Test
     public void workingAndInputDirectory() throws Exception {
-        final ClosableRdfSource source = Rdf4jSource.createInMemory();
-        final RdfBuilder builder = RdfBuilder.create(
+        ClosableRdfSource source = Rdf4jSource.createInMemory();
+        RdfBuilder builder = RdfBuilder.create(
                 source, "http://graph");
-        final ResourceManager manager = Mockito.mock(ResourceManager.class);
-        final File workingFile = File.createTempFile("lp-test", "");
-        final File inputFile = File.createTempFile("lp-test", "");
+        ResourceManager manager = Mockito.mock(ResourceManager.class);
+        File workingFile = File.createTempFile("lp-test", "");
+        File inputFile = File.createTempFile("lp-test", "");
         //
         Mockito.when(manager.getInputDirectory()).thenReturn(inputFile);
         Mockito.when(manager.getWorkingDirectory(Mockito.anyString()))
@@ -37,16 +37,16 @@ public class RequirementProcessorTest {
         //
         RequirementProcessor.handle(source, "http://graph", manager);
         //
-        final String working = RdfUtils.sparqlSelectSingle(source,
-                "SELECT ?v WHERE { GRAPH <http://graph> { " +
-                        " ?s <" + LP_EXEC.HAS_WORKING_DIRECTORY + "> ?v " +
-                        " }}", "v");
+        String working = RdfUtils.sparqlSelectSingle(source,
+                "SELECT ?v WHERE { GRAPH <http://graph> { "
+                        + " ?s <" + LP_EXEC.HAS_WORKING_DIRECTORY + "> ?v "
+                        + " }}", "v");
         Assert.assertEquals(workingFile, new File(URI.create(working)));
         //
-        final String input = RdfUtils.sparqlSelectSingle(source,
-                "SELECT ?v WHERE { GRAPH <http://graph> { " +
-                        " ?s <" + LP_EXEC.HAS_INPUT_DIRECTORY + "> ?v " +
-                        " }}", "v");
+        String input = RdfUtils.sparqlSelectSingle(source,
+                "SELECT ?v WHERE { GRAPH <http://graph> { "
+                        + " ?s <" + LP_EXEC.HAS_INPUT_DIRECTORY + "> ?v "
+                        + " }}", "v");
         Assert.assertEquals(inputFile, new File(URI.create(input)));
         //
         source.close();

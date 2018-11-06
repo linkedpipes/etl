@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 
 final class Descriptor {
 
-    final private Class<?> describedType;
+    private final Class<?> describedType;
 
     public Descriptor(Class<?> clazz) {
         this.describedType = clazz;

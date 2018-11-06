@@ -12,9 +12,6 @@ public interface ManageableComponent {
     /**
      * Provide component with access to data units, so it can initialize
      * its binding.
-     *
-     * @param dataUnits
-     * @param context
      */
     void initialize(Map<String, DataUnit> dataUnits, Component.Context context)
             throws LpException;
@@ -27,7 +24,7 @@ public interface ManageableComponent {
     void loadConfiguration(RdfSource definition) throws LpException;
 
     /**
-     * @return If null then there is no runtime configuration.
+     * Return null if there is no runtime configuration.
      */
     RuntimeConfiguration getRuntimeConfiguration() throws LpException;
 

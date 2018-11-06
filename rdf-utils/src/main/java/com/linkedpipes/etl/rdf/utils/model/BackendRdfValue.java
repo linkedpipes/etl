@@ -14,12 +14,12 @@ public interface BackendRdfValue {
     boolean asBoolean() throws RdfUtilsException;
 
     /**
-     * @return Can be null.
+     * Can be null.
      */
     String getType();
 
     /**
-     * @return Can be null.
+     * Can be null.
      */
     String getLanguage();
 

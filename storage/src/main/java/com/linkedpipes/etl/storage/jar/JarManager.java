@@ -33,17 +33,17 @@ class JarManager {
 
     @PostConstruct
     public void initialize() {
-        final JarLoader loader = new JarLoader();
+        JarLoader loader = new JarLoader();
         LOG.info("Loading JAR components ...");
         // Make sure the component directory exists.
-        final File componentDirectory = config.getJarDirectory();
+        File componentDirectory = config.getJarDirectory();
         if (!componentDirectory.exists()) {
             componentDirectory.mkdirs();
         }
         FileUtils.listFiles(componentDirectory, new String[]{"jar"}, true
         ).forEach((file) -> {
             if (!file.isDirectory() && file.getName().endsWith(".jar")) {
-                final JarComponent component = loader.load(file);
+                JarComponent component = loader.load(file);
                 if (component != null) {
                     components.put(component.getIri(), component);
                 }

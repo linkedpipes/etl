@@ -11,11 +11,11 @@ public class MapComponentTest {
 
     @Test
     public void execute() throws ExecutorException {
-        final ExecutionObserver execution = Mockito.mock(ExecutionObserver.class);
-        final ExecutionComponent execComponent =
+        ExecutionObserver execution = Mockito.mock(ExecutionObserver.class);
+        ExecutionComponent execComponent =
                 Mockito.mock(ExecutionComponent.class);
-        final MapComponent executor = new MapComponent(execution, execComponent);
-        final DataUnitManager dataUnits = Mockito.mock(DataUnitManager.class);
+        MapComponent executor = new MapComponent(execution, execComponent);
+        DataUnitManager dataUnits = Mockito.mock(DataUnitManager.class);
         executor.execute(dataUnits);
         //
         Mockito.verify(dataUnits, Mockito.times(1))

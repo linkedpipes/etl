@@ -27,6 +27,8 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebServer.class);
 
+    private static final int MAX_THREADS = 4;
+
     @Autowired
     private Configuration configuration;
 
@@ -72,17 +74,16 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     private void buildServer() throws IOException {
         LOG.info("Starting server on port: {}", configuration.getStoragePort());
         //
-        final ServletContextHandler handler;
+        ServletContextHandler handler;
         handler = new ServletContextHandler();
         handler.setErrorHandler(null);
         handler.setContextPath("/");
         // Servlet.
-        final XmlWebApplicationContext webContext
-                = new XmlWebApplicationContext();
+        XmlWebApplicationContext webContext = new XmlWebApplicationContext();
         webContext.setParent(appContext);
         webContext.setConfigLocation("spring/context-web.xml");
-        final DispatcherServlet dispatcher = new DispatcherServlet(webContext);
-        final ServletHolder servlet = new ServletHolder(dispatcher);
+        DispatcherServlet dispatcher = new DispatcherServlet(webContext);
+        ServletHolder servlet = new ServletHolder(dispatcher);
         handler.addEventListener(new ContextLoaderListener(webContext));
         handler.addServlet(servlet, "/api/v1/*");
         handler.setResourceBase(
@@ -90,7 +91,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
         //
         server = new Server(createThreadPool());
         // Connector.
-        final ServerConnector http = new ServerConnector(server, 1, 1);
+        ServerConnector http = new ServerConnector(server, 1, 1);
         http.setPort(configuration.getStoragePort());
         //
         server.addConnector(http);
@@ -99,7 +100,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     }
 
     private static QueuedThreadPool createThreadPool() {
-        final QueuedThreadPool threadPool = new QueuedThreadPool(4, 1);
+        QueuedThreadPool threadPool = new QueuedThreadPool(MAX_THREADS, 1);
         threadPool.setName("web-server");
         return threadPool;
     }

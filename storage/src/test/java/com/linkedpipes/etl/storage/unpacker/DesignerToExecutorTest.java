@@ -6,7 +6,6 @@ import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
 import com.linkedpipes.etl.rdf.utils.rdf4j.StatementsCollector;
-import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
@@ -26,8 +25,8 @@ public class DesignerToExecutorTest {
 
         @Override
         public Collection<Statement> getDefinition(String iri) {
-            String resource = "unpacker/template/definition/" +
-                    getFileName(iri) + ".trig";
+            String resource = "unpacker/template/definition/"
+                    + getFileName(iri) + ".trig";
             try {
                 return Rdf4jUtils.loadAsStatements(resource);
             } catch (IOException ex) {
@@ -37,8 +36,8 @@ public class DesignerToExecutorTest {
 
         @Override
         public Collection<Statement> getConfiguration(String iri) {
-            String resource = "unpacker/template/config/" +
-                    getFileName(iri) + ".trig";
+            String resource = "unpacker/template/config/"
+                    + getFileName(iri) + ".trig";
             try {
                 return Rdf4jUtils.loadAsStatements(resource);
             } catch (IOException ex) {
@@ -48,8 +47,8 @@ public class DesignerToExecutorTest {
 
         @Override
         public Collection<Statement> getConfigurationDescription(String iri) {
-            String resource = "unpacker/template/config-description/" +
-                    getFileName(iri) + ".trig";
+            String resource = "unpacker/template/config-description/"
+                    + getFileName(iri) + ".trig";
             try {
                 return Rdf4jUtils.loadAsStatements(resource);
             } catch (IOException ex) {
@@ -67,10 +66,9 @@ public class DesignerToExecutorTest {
     static class MockedExecutionSource implements ExecutionSource {
 
         @Override
-        public Collection<Statement> getExecution(String iri)
-                throws BaseException {
-            String resource = "unpacker/executions/" +
-                    getFileName(iri) + ".trig";
+        public Collection<Statement> getExecution(String iri) {
+            String resource = "unpacker/executions/"
+                    + getFileName(iri) + ".trig";
             try {
                 return Rdf4jUtils.loadAsStatements(resource);
             } catch (IOException ex) {
@@ -158,7 +156,8 @@ public class DesignerToExecutorTest {
     }
 
     @Test
-    public void runComponentAndTemplateWithoutConfiguration() throws Exception {
+    public void runComponentAndTemplateWithoutConfiguration()
+            throws Exception {
         testUnpacking("unpacker/designer/06.trig",
                 "unpacker/options/run.trig",
                 "unpacker/executor/06-run.trig");
@@ -178,7 +177,8 @@ public class DesignerToExecutorTest {
                 "unpacker/executor/08-run.trig");
     }
 
-    private void testUnpacking(String pipelineResource, String optionResource,
+    private void testUnpacking(
+            String pipelineResource, String optionResource,
             String unpackedResource) throws Exception {
 
         ClosableRdf4jSource source = Rdf4jUtils.loadAsSource(pipelineResource);

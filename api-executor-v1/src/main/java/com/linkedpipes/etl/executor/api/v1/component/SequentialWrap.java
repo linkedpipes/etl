@@ -23,7 +23,8 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     private final ServiceFactory serviceFactory;
 
-    public SequentialWrap(SequentialExecution component, String componentIri,
+    public SequentialWrap(
+            SequentialExecution component, String componentIri,
             RdfSource definition, ServiceFactory serviceFactory) {
         this.component = component;
         this.componentIri = componentIri;
@@ -41,8 +42,9 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
     }
 
     @Override
-    public void initialize(Map<String, DataUnit> dataUnits,
-            Component.Context context) throws LpException {
+    public void initialize(
+            Map<String, DataUnit> dataUnits, Component.Context context)
+            throws LpException {
         // Bind ports.
         bingPorts(dataUnits);
         // Inject services.
@@ -75,11 +77,8 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     /**
      * Load configuration for given field.
-     *
-     * @param field
-     * @param definition
      */
-    private void loadConfigurationForField(Field field,  RdfSource definition)
+    private void loadConfigurationForField(Field field, RdfSource definition)
             throws LpException {
         final Object instance;
         try {
@@ -98,19 +97,17 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
     }
 
     /**
-     * Bind all dataunit fields.
-     *
-     * @param dataUnits
+     * Bind all ports (dataunits) fields.
      */
     private void bingPorts(Map<String, DataUnit> dataUnits) throws LpException {
         for (Field field : component.getClass().getFields()) {
-            final Component.InputPort input =
+            Component.InputPort input =
                     field.getAnnotation(Component.InputPort.class);
             if (input != null) {
                 bindPort(dataUnits, field, input.iri());
             }
-            final Component.OutputPort output
-                    = field.getAnnotation(Component.OutputPort.class);
+            Component.OutputPort output =
+                    field.getAnnotation(Component.OutputPort.class);
             if (output != null) {
                 bindPort(dataUnits, field, output.iri());
             }
@@ -119,13 +116,10 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     /**
      * Bind data unit for to given field.
-     *
-     * @param dataUnits
-     * @param field
-     * @param id
      */
-    private void bindPort(Map<String, DataUnit> dataUnits, Field field,
-            String id) throws LpException {
+    private void bindPort(
+            Map<String, DataUnit> dataUnits, Field field, String id)
+            throws LpException {
         DataUnit dataUnit = null;
         for (DataUnit item : dataUnits.values()) {
             if (id.equals(item.getBinding())) {
@@ -141,7 +135,6 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
                     id, dataUnit.getClass().getSimpleName(),
                     field.getType().getSimpleName());
         }
-        //
         try {
             field.set(component, dataUnit);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
@@ -151,15 +144,13 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     /**
      * Construct and inject services.
-     *
-     * @param context
      */
     private void injectServices(Component.Context context) throws LpException {
         for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Inject.class) == null) {
                 continue;
             }
-            final Object instance;
+            Object instance;
             try {
                 instance = serviceFactory.create(
                         field.getType(), componentIri, definition, context);
@@ -179,7 +170,7 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     private Object getConfigurationObject() throws LpException {
         for (Field field : component.getClass().getFields()) {
-            final Component.ContainsConfiguration annotation =
+            Component.ContainsConfiguration annotation =
                     field.getAnnotation(Component.ContainsConfiguration.class);
             if (annotation == null) {
                 continue;

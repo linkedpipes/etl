@@ -20,12 +20,14 @@ class FactoryConfiguration implements Loadable {
             case LP_EXEC.HAS_WORKING_DIRECTORY:
                 directory = object.asString();
                 break;
+            default:
+                break;
         }
         return null;
     }
 
     /**
-     * @return Path to the repository directory.
+     * Return path to the repository directory.
      */
     public File getDirectory() {
         if (directory == null) {

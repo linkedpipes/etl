@@ -25,7 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExecutionObserver {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExecutionObserver.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ExecutionObserver.class);
 
     private final AtomicInteger messageCounter = new AtomicInteger();
 
@@ -360,7 +361,7 @@ public class ExecutionObserver {
         if (!file.exists()) {
             return new Statements(Collections.emptyList());
         }
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         statements.addAll(file);
         return statements;
     }

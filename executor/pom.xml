@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-backend</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>executor</artifactId>
-    <name>lp-executor</name>
+    <name>LinkedPipes Executor</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -163,7 +163,8 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.linkedpipes.etl.executor.Executor
+                            <mainClass>
+                                com.linkedpipes.etl.executor.Executor
                             </mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
@@ -196,11 +197,6 @@
     <profiles>
         <profile>
             <id>deploy</id>
-            <activation>
-                <property>
-                    <name>!noDeploy</name>
-                </property>
-            </activation>
             <build>
                 <plugins>
                     <plugin>

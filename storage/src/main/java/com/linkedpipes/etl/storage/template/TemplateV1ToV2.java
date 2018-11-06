@@ -43,14 +43,14 @@ class TemplateV1ToV2 {
             // Update configuration.
             updateConfiguration(jarTemplate);
             // Copy description from template - we update it later.
-            this.repository.setConfigDescription(template,
-                    this.repository.getConfigDescription(jarTemplate));
+            repository.setConfigDescription(
+                    template, repository.getConfigDescription(jarTemplate));
         }
         updateConfigDescriptionReference();
     }
 
     private JarTemplate getJarTemplate() throws BaseException {
-        ReferenceTemplate reference = this.template;
+        ReferenceTemplate reference = template;
         while (true) {
             Template parent = manager.getTemplates().get(
                     reference.getTemplate());
@@ -69,7 +69,7 @@ class TemplateV1ToV2 {
     private void updateConfiguration(JarTemplate jarTemplate)
             throws RdfUtils.RdfException {
         Collection<Statement> configuration =
-                this.repository.getConfig(this.template);
+                this.repository.getConfig(template);
         Collection<Statement> updatedConfiguration =
                 MigrateV1ToV2.updateConfiguration(
                         configuration, jarTemplate.getIri());
@@ -95,30 +95,30 @@ class TemplateV1ToV2 {
 
     private void updateDefinition(IRI configDescription)
             throws RdfUtils.RdfException {
-        IRI templateIri = this.valueFactory.createIRI(this.template.getIri());
-        IRI hasConfigDescription = this.valueFactory.createIRI(
+        IRI templateIri = valueFactory.createIRI(template.getIri());
+        IRI hasConfigDescription = valueFactory.createIRI(
                 LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION);
         // Get definition and remove reference to description.
-        List<Statement> definition = this.repository.getDefinition(this.template)
+        List<Statement> definition = repository.getDefinition(template)
                 .stream()
                 .filter((s) -> !s.getPredicate().equals(hasConfigDescription))
                 .collect(Collectors.toList());
         // Add reference to new description.
-        definition.add(this.valueFactory.createStatement(
+        definition.add(valueFactory.createStatement(
                 templateIri,
                 hasConfigDescription,
                 configDescription,
                 templateIri));
-        this.repository.setDefinition(this.template, definition);
+        repository.setDefinition(template, definition);
     }
 
     private void updateConfigDescription(IRI configDescription)
             throws RdfUtils.RdfException {
         Collection<Statement> statements =
-                this.repository.getConfigDescription(this.template);
+                repository.getConfigDescription(template);
         List<Statement> updated = RdfUtils.updateToIriAndGraph(
                 statements, configDescription);
-        this.repository.setConfigDescription(this.template, updated);
+        repository.setConfigDescription(template, updated);
     }
 
 }

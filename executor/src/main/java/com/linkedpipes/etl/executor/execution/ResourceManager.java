@@ -30,7 +30,11 @@ public class ResourceManager {
      */
     public File getDefinitionFile() {
         File directory = new File(executionRoot, "definition");
-        for (File file : directory.listFiles()) {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return null;
+        }
+        for (File file : files) {
             String fileName = file.getName();
             if (fileName.startsWith("definition")) {
                 return file;
@@ -44,18 +48,16 @@ public class ResourceManager {
     }
 
     /**
-     * @param execution
-     * @param path
-     * @return Path to another execution.
+     * Resolve relative path in given execution..
      */
     public File resolveExecutionPath(String execution, String path) {
         String executionId = execution.substring(
-                execution.indexOf("executions/") + 11);
+                execution.indexOf("executions/") + "executions/".length());
         return new File(root, executionId + "/" + path);
     }
 
     /**
-     * @return Path to input directory, the directory may not exist.
+     * Return path to input directory, the directory may not exist.
      */
     public File getInputDirectory() {
         return new File(executionRoot, "input");
@@ -66,8 +68,7 @@ public class ResourceManager {
     }
 
     /**
-     * @param name
-     * @return Path to working directory, does not create the directory.
+     * Return path to working directory, does not create the directory.
      */
     public File getWorkingDirectory(String name) {
         counter += 1;
@@ -89,7 +90,7 @@ public class ResourceManager {
     }
 
     /**
-     * @return Output file for the pipeline execution.
+     * Return output file for the pipeline execution.
      */
     public File getPipelineFile() {
         File file = new File(executionRoot, "pipeline.trig");
@@ -103,9 +104,8 @@ public class ResourceManager {
         return file;
     }
 
-
     /**
-     * @return Output file for original execution file.
+     * Return output file for original execution file.
      */
     public File getComponentMessageFile(ExecutionComponent component) {
         String iri = component.getIri();
@@ -124,7 +124,6 @@ public class ResourceManager {
     public File getOverviewFile() {
         return new File(executionRoot, "execution-overview.jsonld");
     }
-
 
     /**
      * Return given path as relative to the execution root directory.

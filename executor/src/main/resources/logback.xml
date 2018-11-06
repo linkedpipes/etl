@@ -4,7 +4,7 @@
             <level>INFO</level>
         </filter>
         <encoder>
-            <pattern>[%thread] %-5level %logger{25} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{25} - %msg%n</pattern>
         </encoder>
     </appender>
     <root level="ALL">

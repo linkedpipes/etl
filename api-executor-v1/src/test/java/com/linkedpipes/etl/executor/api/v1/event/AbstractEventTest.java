@@ -17,7 +17,7 @@ public class AbstractEventTest {
     }
 
     @Test
-    public void createNoLanguage() throws Exception {
+    public void createNoLanguage() {
         Event event = new DefaultEvent("http://type");
         event.setIri("http://event");
         TripleWriter writer = Mockito.mock(TripleWriter.class);

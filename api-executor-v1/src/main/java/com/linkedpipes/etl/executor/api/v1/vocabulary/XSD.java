@@ -1,10 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
-public class XSD {
-
-    private XSD() {
-
-    }
+public final class XSD {
 
     public static final String DATETIME =
             "http://www.w3.org/2001/XMLSchema#dateTime";

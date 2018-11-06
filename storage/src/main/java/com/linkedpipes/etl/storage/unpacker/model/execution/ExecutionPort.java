@@ -1,17 +1,13 @@
 package com.linkedpipes.etl.storage.unpacker.model.execution;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.pojo.LoaderException;
 
 /**
- * TODO Rename to DataUnit to align with the vocabulary?
+ * TODO Rename to DataUnit to align with the vocabulary.
  */
 public class ExecutionPort implements Loadable {
-
-    private String iri;
 
     private String binding;
 
@@ -22,13 +18,7 @@ public class ExecutionPort implements Loadable {
     private String loadPath;
 
     @Override
-    public void resource(String resource) throws LoaderException {
-        iri = resource;
-    }
-
-    @Override
-    public Loadable load(String predicate, BackendRdfValue value)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, BackendRdfValue value) {
         switch (predicate) {
             // TODO Align with case LP_PIPELINE.HAS_BINDING
             case "http://etl.linkedpipes.com/ontology/binding":

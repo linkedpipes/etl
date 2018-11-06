@@ -9,15 +9,13 @@ import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 
 import java.util.Date;
 
-/**
- * @author Petr Škoda
- */
 public class TripleWriterWrap implements TripleWriter {
 
     private final BackendTripleWriter writer;
 
-    public TripleWriterWrap(
-            BackendTripleWriter writer) {
+    private final RdfFormatter format = new RdfFormatter();
+
+    public TripleWriterWrap(BackendTripleWriter writer) {
         this.writer = writer;
     }
 
@@ -32,20 +30,20 @@ public class TripleWriterWrap implements TripleWriter {
     }
 
     @Override
-    public void string(String subject, String predicate, String object,
-            String lang) {
+    public void string(
+            String subject, String predicate, String object, String lang) {
         writer.string(subject, predicate, object, lang);
     }
 
     @Override
     public void date(String subject, String predicate, Date object) {
-        String value = RdfFormatter.toXsdDate(object);
+        String value = format.toXsdDate(object);
         typed(subject, predicate, value, XSD.DATETIME);
     }
 
     @Override
-    public void typed(String subject, String predicate, String object,
-            String type) {
+    public void typed(
+            String subject, String predicate, String object, String type) {
         writer.typed(subject, predicate, object, type);
     }
 

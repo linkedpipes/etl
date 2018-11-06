@@ -12,26 +12,25 @@ import java.nio.file.Files;
 
 public class PipelineTest {
 
-//    @Test
     public void loadPipelineModel() throws Exception {
-        final File directory =
+        File directory =
                 Files.createTempDirectory("lp-test").toFile();
-        final File file = new File(Thread.currentThread()
+        File file = new File(Thread.currentThread()
                 .getContextClassLoader()
                 .getResource("pipeline/twoConnectedComponents.trig")
                 .getPath());
         //
-        final Pipeline pipeline = new Pipeline();
+        Pipeline pipeline = new Pipeline();
         pipeline.load(file, directory);
         //
         Assert.assertEquals("http://pipeline", pipeline.getPipelineIri());
         Assert.assertEquals("http://pipeline/graph",
                 pipeline.getPipelineGraph());
-        final PipelineModel model = pipeline.getModel();
+        PipelineModel model = pipeline.getModel();
         Assert.assertEquals(2, model.getComponents().size());
         Assert.assertEquals(1, model.getConnections().size());
         //
-        final PipelineComponent component1 =
+        PipelineComponent component1 =
                 model.getComponents().get(0);
         Assert.assertEquals("http://pipeline/component/1",
                 component1.getIri());
@@ -44,7 +43,7 @@ public class PipelineTest {
         Assert.assertEquals(2,
                 component1.getPorts().size());
         //
-        final PipelineComponent component2 =
+        PipelineComponent component2 =
                 model.getComponents().get(1);
         Assert.assertEquals("http://pipeline/component/2",
                 component2.getIri());
@@ -57,7 +56,7 @@ public class PipelineTest {
         Assert.assertEquals(1,
                 component2.getPorts().size());
         //
-        final Connection connection =
+        Connection connection =
                 model.getConnections().get(0);
         Assert.assertEquals(
                 "http://linkedpipes.com/ontology/components/1/dataunit/2",

@@ -21,7 +21,7 @@ public interface Component {
         void sendMessage(Event message);
 
         /**
-         * @return True if the component has been cancelled.
+         * Return true if component execution was cancelled.
          */
         boolean isCancelled();
 

@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.debug.ftp;
 
 import org.apache.ftpserver.ftplet.FileSystemView;
-import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.FtpFile;
 
 /**
@@ -20,12 +19,12 @@ public class VirtualFileSystemView implements FileSystemView {
     }
 
     @Override
-    public FtpFile getHomeDirectory() throws FtpException {
+    public FtpFile getHomeDirectory() {
         return vfs.getFile(VirtualFileSystem.ROOT_PATH);
     }
 
     @Override
-    public FtpFile getWorkingDirectory() throws FtpException {
+    public FtpFile getWorkingDirectory() {
         final VirtualFileSystem.Path path = vfs.resolvePath(currentDirectory);
         if (path == null) {
             return getHomeDirectory();
@@ -35,7 +34,7 @@ public class VirtualFileSystemView implements FileSystemView {
     }
 
     @Override
-    public boolean changeWorkingDirectory(String ftpPath) throws FtpException {
+    public boolean changeWorkingDirectory(String ftpPath) {
         final VirtualFileSystem.Path path = vfs.resolvePath(currentDirectory,
                 ftpPath);
         if (path == null) {
@@ -57,7 +56,7 @@ public class VirtualFileSystemView implements FileSystemView {
     }
 
     @Override
-    public FtpFile getFile(String ftpPath) throws FtpException {
+    public FtpFile getFile(String ftpPath) {
         final VirtualFileSystem.Path path = vfs.resolvePath(currentDirectory,
                 ftpPath);
         if (path == null) {
@@ -68,7 +67,7 @@ public class VirtualFileSystemView implements FileSystemView {
     }
 
     @Override
-    public boolean isRandomAccessible() throws FtpException {
+    public boolean isRandomAccessible() {
         return true;
     }
 

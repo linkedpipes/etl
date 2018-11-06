@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Manage configurations for components.
  *
- * For each component the effective configuration is computed
+ * <p>For each component the effective configuration is computed
  * before the component execution.
  */
 public class Configuration {
@@ -35,32 +35,33 @@ public class Configuration {
      * Prepare configuration for given component and put it into given
      * definitionGraph.
      *
-     * If runtimeSource or runtimeGraph is null no runtime configuration is
+     * <p>If runtimeSource or runtimeGraph is null no runtime configuration is
      * used. Given runtimeSource is not shut down in this method.
      *
-     * @param iri Output configuration iri.
-     * @param component PipelineComponent for which prepare the configuration.
+     * @param iri           Output configuration iri.
+     * @param component     Component for which prepare the configuration.
      * @param runtimeSource Source for runtime configuration, can be null.
-     * @param runtimeGraph Graph with runtime configuration, can be null.
-     * @param writer Writer for the final configuration.
-     * @param pipeline Pipeline with definitions.
+     * @param runtimeGraph  Graph with runtime configuration, can be null.
+     * @param writer        Writer for the final configuration.
+     * @param pipeline      Pipeline with definitions.
      */
-    public static void prepareConfiguration(String iri,
-                                            PipelineComponent component, BackendRdfSource runtimeSource,
-                                            String runtimeGraph, BackendTripleWriter writer,
-                                            Pipeline pipeline)
+    public static void prepareConfiguration(
+            String iri, PipelineComponent component,
+            BackendRdfSource runtimeSource,
+            String runtimeGraph, BackendTripleWriter writer,
+            Pipeline pipeline)
             throws ExecutorException {
-        final List<EntityReference> references = new ArrayList<>(3);
-        final ConfigurationDescription description =
+        List<EntityReference> references = new ArrayList<>();
+        ConfigurationDescription description =
                 component.getConfigurationDescription();
-        final BackendRdfSource pplSource = pipeline.getSource();
-        final String configurationType = description.getDescribedType();
+        BackendRdfSource pplSource = pipeline.getSource();
+        String configurationType = description.getDescribedType();
         // Get definitionGraph and resource for each configuration.
         {
-            final String graph = component.getConfigurationGraph();
-            final String query = getQueryForConfiguration(
+            String graph = component.getConfigurationGraph();
+            String query = getQueryForConfiguration(
                     configurationType, graph);
-            final String resource;
+            String resource;
             try {
                 resource = RdfUtils.sparqlSelectSingle(pplSource,
                         query, "resource");
@@ -75,9 +76,9 @@ public class Configuration {
         // Get definitionGraph and resource for runtime configuration if
         // provided.
         if (runtimeSource != null && runtimeGraph != null) {
-            final String query = getQueryForConfiguration(
+            String query = getQueryForConfiguration(
                     configurationType, runtimeGraph);
-            final String resource;
+            String resource;
             try {
                 resource = RdfUtils.sparqlSelectSingle(runtimeSource,
                         query, "resource");
@@ -88,10 +89,9 @@ public class Configuration {
             }
         }
         // Merge.
-        final DefaultControlFactory controlFactory =
-                new DefaultControlFactory(pplSource,
-                        pipeline.getPipelineGraph());
-        final EntityMerger merger = new EntityMerger(controlFactory);
+        DefaultControlFactory controlFactory = new DefaultControlFactory(
+                pplSource, pipeline.getPipelineGraph());
+        EntityMerger merger = new EntityMerger(controlFactory);
         try {
             merger.merge(references, iri, writer);
         } catch (RdfUtilsException ex) {
@@ -100,9 +100,9 @@ public class Configuration {
     }
 
     private static String getQueryForConfiguration(String type, String graph) {
-        return "SELECT ?resource WHERE { GRAPH <" + graph + "> {\n" +
-                "   ?resource a <" + type + ">\n" +
-                "} }";
+        return "SELECT ?resource WHERE { GRAPH <" + graph + "> {\n"
+                + "   ?resource a <" + type + ">\n"
+                + "} }";
     }
 
 }

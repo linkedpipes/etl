@@ -55,8 +55,8 @@ public class RdfSourceWrap implements RdfSource {
         List<String> result = new ArrayList<>();
         try {
             source.triples(null, graph, (triple) -> {
-                if (triple.getPredicate().equals(RDF.TYPE) &&
-                        triple.getObject().asString().equals(type)) {
+                if (triple.getPredicate().equals(RDF.TYPE)
+                        && triple.getObject().asString().equals(type)) {
                     result.add(triple.getSubject());
                 }
             });

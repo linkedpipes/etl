@@ -43,25 +43,18 @@ class DataUnitContainer {
      */
     private Status status;
 
-    public DataUnitContainer(
-            ManageableDataUnit instance,
-            DataUnit metadata) {
+    public DataUnitContainer(ManageableDataUnit instance, DataUnit metadata) {
         this.instance = instance;
         this.metadata = metadata;
         this.status = Status.NEW;
     }
 
-    /**
-     * @return Wrapped instance.
-     */
     public ManageableDataUnit getInstance() {
         return this.instance;
     }
 
     /**
      * Initialize data unit from given data units.
-     *
-     * @param instances
      */
     public void initialize(Map<String, ManageableDataUnit> instances)
             throws ExecutorException {
@@ -82,8 +75,6 @@ class DataUnitContainer {
     /**
      * Initialize data unit from given directory. The given directory
      * must contains previously saved data by the data unit.
-     *
-     * @param directory
      */
     public void initialize(File directory)
             throws ExecutorException {
@@ -178,13 +169,14 @@ class DataUnitContainer {
     }
 
     public boolean openWithData() {
-        return this.status == Status.AFTER_EXECUTION ||
-                this.status == Status.SAVED ||
-                this.status == Status.MAPPED;
+        return this.status == Status.AFTER_EXECUTION
+                || this.status == Status.SAVED
+                || this.status == Status.MAPPED;
     }
 
     // TODO REMOVE
     public Status getStatus() {
         return this.status;
     }
+
 }

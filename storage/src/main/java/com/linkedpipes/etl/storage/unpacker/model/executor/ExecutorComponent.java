@@ -31,8 +31,6 @@ public class ExecutorComponent {
 
     private String executionType;
 
-    private boolean disabled = false;
-
     private Integer executionOrder = -1;
 
     /**
@@ -51,6 +49,8 @@ public class ExecutorComponent {
                 break;
             case LP_EXEC.TYPE_SKIP:
                 // There are no additional information required.
+                break;
+            default:
                 break;
         }
     }

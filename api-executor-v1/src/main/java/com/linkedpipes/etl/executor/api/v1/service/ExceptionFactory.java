@@ -10,10 +10,6 @@ public interface ExceptionFactory {
     /**
      * Used for general exceptions. Use "{}" in the message to refer to
      * arguments.
-     *
-     * @param message
-     * @param args
-     * @return
      */
     LpException failure(String message, Object... args);
 

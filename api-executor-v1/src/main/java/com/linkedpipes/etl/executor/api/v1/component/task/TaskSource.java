@@ -5,12 +5,12 @@ import java.util.Collection;
 public interface TaskSource<T extends Task> {
 
     /**
-     * @param endOnError True in on failure no other task should be returned.
+     * Should component ignore task failures.
      */
     void setSkipOnError(boolean endOnError);
 
     /**
-     * @return Null if there is no Task to execute.
+     * Null if there is no Task to execute.
      */
     T getTask();
 

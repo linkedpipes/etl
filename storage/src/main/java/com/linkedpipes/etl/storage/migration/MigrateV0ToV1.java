@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Change core templates from local host to etl.linkedpipes.com.
  *
- * Example of conversion:
+ * <p>Example of conversion:
  * http://localhost:8080/resources/components/t-tabular
  * http://etl.linkedpipes.com/resources/components/t-tabular/0.0.0
  */
@@ -54,7 +54,7 @@ public class MigrateV0ToV1 {
         String name = templateName(template);
         IRI newTemplateIri = searchMatchingTemplateByName(name);
         if (newTemplateIri == null) {
-            if (this.throwOnMissing) {
+            if (throwOnMissing) {
                 throw new TransformationFailed(
                         "Can not convert '{}' for '{}'",
                         name, component.getResource());

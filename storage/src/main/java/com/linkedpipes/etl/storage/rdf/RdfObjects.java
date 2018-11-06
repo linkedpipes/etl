@@ -1,10 +1,21 @@
 package com.linkedpipes.etl.storage.rdf;
 
-import org.eclipse.rdf4j.model.*;
+import com.linkedpipes.etl.storage.SuppressFBWarnings;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Represent given RDF triples as collection of resources.
@@ -36,8 +47,7 @@ public class RdfObjects {
         }
 
         /**
-         * @param property
-         * @return All references under given IRI.
+         * Return all references under given IRI.
          */
         public List<Entity> getReferences(IRI property) {
             List<Entity> objects = references.get(property);
@@ -51,36 +61,29 @@ public class RdfObjects {
         /**
          * Return a single reference, if the references is missing
          * or throw an exception.
-         *
-         * @param property
-         * @return
          */
         public Entity getReference(IRI property) {
-            final List<Entity> objects = references.get(property);
+            List<Entity> objects = references.get(property);
             if (objects == null) {
-                throw new RuntimeException("No references returned " +
-                        "for property: " + property.stringValue());
+                throw new RuntimeException("No references returned "
+                        + "for property: " + property.stringValue());
             }
             if (objects.size() == 1) {
                 return objects.get(0);
             } else {
-                throw new RuntimeException("Invalid number of references: " +
-                        objects.size() + " property: " +
-                        property.stringValue());
+                throw new RuntimeException("Invalid number of references: "
+                        + objects.size() + " property: "
+                        + property.stringValue());
             }
         }
 
         /**
          * Return a single property, if it is missing ot here is more then one
          * then throw an exception.
-         *
          * TODO Add method that return one or none !
-         *
-         * @param property
-         * @return
          */
         public Value getProperty(IRI property) {
-            final List<Value> objects = properties.getOrDefault(property,
+            List<Value> objects = properties.getOrDefault(property,
                     Collections.EMPTY_LIST);
             if (objects.size() == 1) {
                 return objects.get(0);
@@ -95,8 +98,6 @@ public class RdfObjects {
         /**
          * Delete all references to this object from this object. Preserve
          * the object.
-         *
-         * @param property
          */
         public void deleteReferences(IRI property) {
             references.remove(property);
@@ -147,12 +148,9 @@ public class RdfObjects {
 
         /**
          * Here we could be merging with entity from another object.
-         *
-         * @param object
-         * @param preserve
-         * @param overwrite
          */
-        public void add(Entity object, Collection<IRI> preserve,
+        public void add(
+                Entity object, Collection<IRI> preserve,
                 Collection<IRI> overwrite) {
             // Merge properties - this is simple, there are no references.
             for (Map.Entry<IRI, List<Value>> entry
@@ -204,15 +202,12 @@ public class RdfObjects {
          * Add an object as a reference. If the object of same resource
          * already exists the data from given object are merged to existing
          * one. For this reason do not use the given object any further
-         *
-         * @param property
-         * @param object
          */
         public void add(IRI property, Entity object) {
             // Check if the object is new.
             if (owner.resources.containsKey(object.getResource())) {
                 // Check if the resources are the same by reference.
-                final Entity currentObject =
+                Entity currentObject =
                         owner.resources.get(object.getResource());
                 if (currentObject == object) {
                     // The are the same we can continue.
@@ -236,6 +231,7 @@ public class RdfObjects {
         }
 
         @Override
+        @SuppressFBWarnings(value = "EQ_COMPARETO_USE_OBJECT_EQUALS")
         public int compareTo(java.lang.Object value) {
             if (value instanceof Entity) {
                 Entity obj = (Entity) value;
@@ -349,9 +345,6 @@ public class RdfObjects {
 
     /**
      * Collection of resources of given types.
-     *
-     * @param types
-     * @return Never null.
      */
     public Collection<Entity> getTyped(Resource... types) {
         final Collection<Entity> result = new LinkedList<>();
@@ -371,9 +364,6 @@ public class RdfObjects {
     /**
      * Return first entity with given type.
      * TODO Check all entities
-     *
-     * @param requiredType
-     * @return Single entity with given type.
      */
     public Entity getTypeSingle(Resource requiredType) {
         for (Entity object : resources.values()) {
@@ -389,8 +379,8 @@ public class RdfObjects {
     }
 
     public Collection<Statement> asStatements(Resource graph) {
-        final Collection<Statement> result = new LinkedList<>();
-        final ValueFactory vf = SimpleValueFactory.getInstance();
+        Collection<Statement> result = new LinkedList<>();
+        ValueFactory vf = SimpleValueFactory.getInstance();
         for (Entity object : resources.values()) {
             // Properties.
             for (Map.Entry<IRI, List<Value>> entry :
@@ -439,8 +429,6 @@ public class RdfObjects {
 
     /**
      * Remove object and all references to it.
-     *
-     * @param object
      */
     public void remove(Entity object) {
         // TODO Search for object in all objects.

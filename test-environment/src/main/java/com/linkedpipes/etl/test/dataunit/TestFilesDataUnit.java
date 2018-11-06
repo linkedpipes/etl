@@ -79,7 +79,7 @@ public class TestFilesDataUnit
         final List<File> files = new LinkedList<>();
         try {
             Files.walkFileTree(directory.toPath(),
-                    new SimpleFileVisitor<Path>() {
+                    new SimpleFileVisitor<>() {
                         @Override
                         public FileVisitResult visitFile(Path file,
                                 BasicFileAttributes attrs)

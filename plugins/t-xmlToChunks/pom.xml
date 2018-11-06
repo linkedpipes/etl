@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-component</artifactId>
+        <artifactId>pom-plugin</artifactId>
         <version>0.0.0</version>
-        <relativePath>../../pom-component/pom.xml</relativePath>
+        <relativePath>../../pom-plugin/pom.xml</relativePath>
     </parent>
     <artifactId>t-xmlToChunks</artifactId>
     <groupId>com.linkedpipes</groupId>

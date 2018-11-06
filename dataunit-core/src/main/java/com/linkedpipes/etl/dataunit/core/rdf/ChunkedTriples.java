@@ -12,7 +12,7 @@ import java.util.stream.StreamSupport;
  * Represent a collection of chunked statements. The collections
  * are read only.
  *
- * The statements must represent triples, ie no information about
+ * <p>The statements must represent triples, ie no information about
  * graphs (context) must not be included.
  */
 public interface ChunkedTriples extends Iterable<ChunkedTriples.Chunk> {
@@ -21,16 +21,11 @@ public interface ChunkedTriples extends Iterable<ChunkedTriples.Chunk> {
 
         /**
          * Load and return content of the chunk.
-         *
-         * @return
          */
         Collection<Statement> toCollection() throws LpException;
 
     }
 
-    /**
-     * @return
-     */
     default Stream<Chunk> stream() {
         return StreamSupport.stream(spliterator(), false);
     }
@@ -39,8 +34,7 @@ public interface ChunkedTriples extends Iterable<ChunkedTriples.Chunk> {
 
     /**
      * TODO Move to special interface
-     *
-     * @return Directories with content of the chunked data unit.
+     * Return directories with content of the chunked data unit.
      */
     Collection<File> getSourceDirectories();
 

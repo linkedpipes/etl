@@ -54,8 +54,7 @@ class ImportOptions implements PojoLoader.Loadable {
     }
 
     @Override
-    public PojoLoader.Loadable load(String predicate, Value value)
-            throws PojoLoader.CantLoadException {
+    public PojoLoader.Loadable load(String predicate, Value value) {
         switch (predicate) {
             case "http://etl.linkedpipes.com/ontology/local":
                 if (value instanceof Literal) {
@@ -76,6 +75,8 @@ class ImportOptions implements PojoLoader.Loadable {
                 if (value instanceof Literal) {
                     updateTemplates = ((Literal) value).booleanValue();
                 }
+                break;
+            default:
                 break;
         }
         return null;

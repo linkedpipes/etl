@@ -27,14 +27,14 @@ public class DataUnitTest {
         Assert.assertEquals(2, dataUnit.getDebugDirectories().size());
         List<File> directories = dataUnit.getDebugDirectories();
         Assert.assertEquals(
-                new File(directory, "valid-info" +
-                        File.separator + ".." +
-                        File.separator + "data"),
+                new File(directory, "valid-info"
+                        + File.separator + ".."
+                        + File.separator + "data"),
                 directories.get(0));
         Assert.assertEquals(
-                new File(directory, "valid-info" +
-                        File.separator + "." +
-                        File.separator + "path"),
+                new File(directory, "valid-info"
+                        + File.separator + "."
+                        + File.separator + "path"),
                 directories.get(1));
 
     }

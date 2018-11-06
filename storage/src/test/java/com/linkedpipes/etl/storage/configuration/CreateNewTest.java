@@ -15,7 +15,7 @@ public class CreateNewTest {
 
     private CreateNewConfiguration worker = new CreateNewConfiguration();
 
-    private Statements data = Statements.ArrayList();
+    private Statements data = Statements.arrayList();
 
     private Description description;
 
@@ -28,27 +28,26 @@ public class CreateNewTest {
 
     @Test
     public void createNewFromJarFile() {
-        Statements actual = this.worker.createNewFromJarFile(
-                this.data.selectByGraph("http://input"),
-                this.description,
+        Statements actual = worker.createNewFromJarFile(
+                data.selectByGraph("http://input"),
+                description,
                 "http://base",
-                this.valueFactory.createIRI("http://expected/jar")
+                valueFactory.createIRI("http://expected/jar")
         );
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/jar");
         Assert.assertTrue(Models.isomorphic(actual, expected));
     }
 
     @Test
     public void createNewFromTemplate() {
-        Statements actual = this.worker.createNewFromTemplate(
-                this.data.selectByGraph("http://input"),
-                this.description,
+        Statements actual = worker.createNewFromTemplate(
+                data.selectByGraph("http://input"),
+                description,
                 "http://base",
-                this.valueFactory.createIRI(
-                        "http://expected/template")
+                valueFactory.createIRI("http://expected/template")
         );
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/template");
         Assert.assertTrue(Models.isomorphic(actual, expected));
     }

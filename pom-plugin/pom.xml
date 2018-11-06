@@ -2,19 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.linkedpipes</groupId>
-    <artifactId>pom-component</artifactId>
+    <artifactId>pom-plugin</artifactId>
     <version>0.0.0</version>
     <packaging>pom</packaging>
-    <name>lp-pom-component</name>
-    <description>Base POM for LinkedPipes ETL components.</description>
+    <name>lp-pom-plugin</name>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>
+            UTF-8
+        </project.build.sourceEncoding>
         <project.reporting.outputEncoding>
             UTF-8
         </project.reporting.outputEncoding>
+        <checkstyle.config.location>
+            checkstyle.xml
+        </checkstyle.config.location>
         <!-- Libraries. -->
         <rdf4j.version>2.3.2</rdf4j.version>
+        <commons-io.version>2.5</commons-io.version>
+        <commons-net.version>3.6</commons-net.version>
+        <httpclient-osgi.version>4.5.2</httpclient-osgi.version>
+        <junit.version>4.12</junit.version>
         <lp.version>0.0.0</lp.version>
     </properties>
 
@@ -63,30 +71,30 @@
                 <version>${rdf4j.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- Provided libraries. -->
+            <!-- Libraries provided by the environment. -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.5</version>
+                <version>${commons-io.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>commons-net</groupId>
                 <artifactId>commons-net</artifactId>
-                <version>3.6</version>
+                <version>${commons-net.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient-osgi</artifactId>
-                <version>4.5.2</version>
+                <version>${httpclient-osgi.version}</version>
                 <scope>provided</scope>
             </dependency>
             <!-- Test libraries. -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -99,6 +107,47 @@
     </dependencyManagement>
 
     <profiles>
+        <profile>
+            <id>check-code-quality</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>3.0.5</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <includeTestSourceDirectory>
+                                true
+                            </includeTestSourceDirectory>
+                            <consoleOutput>true</consoleOutput>
+                            <failOnViolation>true</failOnViolation>
+                            <violationSeverity>warning</violationSeverity>
+                            <linkXRef>false</linkXRef>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.puppycrawl.tools</groupId>
+                                <artifactId>checkstyle</artifactId>
+                                <version>8.13</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Java profiles. -->
         <profile>
             <id>java-8</id>
             <activation>
@@ -147,7 +196,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>4.0.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -167,11 +216,11 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        <!-- Newer versions fail with the "bundle" build target. -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <!-- Newer versions fail with the "bundle" build target. -->
                 <version>2.18.1</version>
             </plugin>
         </plugins>

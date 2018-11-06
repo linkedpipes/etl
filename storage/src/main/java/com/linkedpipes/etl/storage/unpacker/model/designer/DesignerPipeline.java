@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.pojo.LoaderException;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
 import java.util.LinkedList;
@@ -32,7 +31,7 @@ public class DesignerPipeline implements Loadable {
     }
 
     @Override
-    public void resource(String resource) throws LoaderException {
+    public void resource(String resource) {
         iri = resource;
     }
 
@@ -46,7 +45,7 @@ public class DesignerPipeline implements Loadable {
                 label = value.asString();
                 return null;
             case LP_PIPELINE.HAS_VERSION:
-                version = (int)value.asLong();
+                version = (int) value.asLong();
                 return null;
             default:
                 return null;

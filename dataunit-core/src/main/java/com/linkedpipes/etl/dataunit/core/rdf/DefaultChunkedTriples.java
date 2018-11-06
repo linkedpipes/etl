@@ -10,8 +10,19 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 
 class DefaultChunkedTriples
         extends AbstractDataUnit
@@ -66,7 +77,7 @@ class DefaultChunkedTriples
         File outputFile =
                 new File(this.writeDirectory, ++this.fileCounter + ".ttl");
         try (OutputStream stream = new FileOutputStream(outputFile);
-             Writer writer = new OutputStreamWriter(stream, "UTF-8")) {
+                Writer writer = new OutputStreamWriter(stream, "UTF-8")) {
             Rio.write(statements, writer, RDFFormat.TURTLE);
         } catch (IOException ex) {
             throw new LpException("Can't save chunk.", ex);
@@ -85,7 +96,7 @@ class DefaultChunkedTriples
     }
 
     @Override
-    public Iterator<ChunkedTriples.Chunk> iterator() {
+    public Iterator<Chunk> iterator() {
         return new ChunkIterator(this.dataDirectories.iterator());
     }
 

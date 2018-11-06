@@ -6,11 +6,15 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FieldLoaderTest {
 
-    public static enum TestEnum {
+    public enum TestEnum {
         VALUE_A,
         VALUE_B
     }
@@ -89,7 +93,7 @@ public class FieldLoaderTest {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("intValue");
         BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
-        Mockito.when(value.asLong()).thenReturn(12l);
+        Mockito.when(value.asLong()).thenReturn(12L);
 
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
@@ -224,10 +228,10 @@ public class FieldLoaderTest {
         BackendRdfValue value = Mockito.mock(BackendRdfValue.class);
         FieldLoader loader = new FieldLoader();
 
-        Mockito.when(value.asLong()).thenReturn(11l);
+        Mockito.when(value.asLong()).thenReturn(11L);
         loader.set(instance, field, value, true);
 
-        Mockito.when(value.asLong()).thenReturn(12l);
+        Mockito.when(value.asLong()).thenReturn(12L);
         loader.set(instance, field, value, true);
 
         Assert.assertEquals(2, instance.intList.size());

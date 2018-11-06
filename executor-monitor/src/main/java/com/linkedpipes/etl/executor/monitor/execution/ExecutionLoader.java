@@ -10,12 +10,12 @@ class ExecutionLoader {
 
     public Statements loadStatements(Execution execution)
             throws MonitorException {
-        File file = this.getExecutionFile(execution);
+        File file = getExecutionFile(execution);
         if (!file.exists()) {
-            return Statements.EmptyReadOnly();
+            return Statements.emptyReadOnly();
         }
         try {
-            return Statements.ArrayList(file);
+            return Statements.arrayList(file);
         } catch (IOException ex) {
             throw new MonitorException("Can't load execution statements.", ex);
         }

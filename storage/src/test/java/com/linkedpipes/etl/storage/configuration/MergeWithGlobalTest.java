@@ -18,7 +18,7 @@ public class MergeWithGlobalTest {
 
     private MergeHierarchy worker = new MergeHierarchy();
 
-    private Statements data = Statements.ArrayList();
+    private Statements data = Statements.arrayList();
 
     private Description description;
 

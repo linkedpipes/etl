@@ -26,12 +26,12 @@ public class TransformationFacadeTest {
                 "pipeline/transformation/visualisationPipelineInput.trig"));
         Statements expected = new Statements(TestUtils.rdfFromResource(
                 "pipeline/transformation/visualisationPipelineExpected.trig"));
-        Statements options = Statements.ArrayList();
+        Statements options = Statements.arrayList();
 
         Template sparqlEndpoint = Mockito.mock(Template.class);
         Mockito.when(sparqlEndpoint.getIri()).thenReturn(
-                "http://etl.linkedpipes.com/resources/components/" +
-                        "e-sparqlEndpoint/1.0.0");
+                "http://etl.linkedpipes.com/resources/components/"
+                        + "e-sparqlEndpoint/1.0.0");
 
         TemplateFacade templateFacade = Mockito.mock(TemplateFacade.class);
         Mockito.when(templateFacade.getTemplates()).thenReturn(
@@ -63,7 +63,7 @@ public class TransformationFacadeTest {
         Statements expected = new Statements(TestUtils.rdfFromResource(
                 "pipeline/transformation/localWithTemplatesExpected.trig"));
 
-        Statements options = Statements.ArrayList();
+        Statements options = Statements.arrayList();
         options.addBoolean("http://options",
                 "http://etl.linkedpipes.com/ontology/local",
                 true);

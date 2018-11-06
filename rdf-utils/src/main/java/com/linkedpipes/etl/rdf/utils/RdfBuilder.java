@@ -20,39 +20,34 @@ public class RdfBuilder {
             this.resource = resource;
         }
 
-        public EntityBuilder entity(String predicate, String resource)
-                throws RdfUtilsException {
+        public EntityBuilder entity(String predicate, String resource) {
             writer.iri(this.resource, predicate, resource);
             return new EntityBuilder(this, resource);
         }
 
-        public EntityBuilder iri(String predicate, String value)
-                throws RdfUtilsException {
+        public EntityBuilder iri(String predicate, String value) {
             writer.iri(resource, predicate, value);
             return this;
         }
 
-        public EntityBuilder string(String predicate, String value)
-                throws RdfUtilsException {
+        public EntityBuilder string(String predicate, String value) {
             writer.string(resource, predicate, value, null);
             return this;
         }
 
-        public EntityBuilder string(String predicate, String value,
-                String language) throws RdfUtilsException {
+        public EntityBuilder string(
+                String predicate, String value, String language) {
             writer.string(resource, predicate, value, language);
             return this;
         }
 
-        public EntityBuilder integer(String predicate, int value)
-                throws RdfUtilsException {
+        public EntityBuilder integer(String predicate, int value) {
             writer.typed(resource, predicate,
                     Integer.toString(value), XSD.INTEGER);
             return this;
         }
 
-        public EntityBuilder bool(String predicate, boolean value)
-                throws RdfUtilsException {
+        public EntityBuilder bool(String predicate, boolean value) {
             writer.typed(resource, predicate,
                     Boolean.toString(value), XSD.BOOLEAN);
             return this;
@@ -87,8 +82,7 @@ public class RdfBuilder {
         writer.flush();
     }
 
-    public static RdfBuilder create(BackendRdfSource source, String graph)
-            throws RdfUtilsException {
+    public static RdfBuilder create(BackendRdfSource source, String graph) {
         BackendTripleWriter writer = source.getTripleWriter(graph);
         return new RdfBuilder(writer);
     }

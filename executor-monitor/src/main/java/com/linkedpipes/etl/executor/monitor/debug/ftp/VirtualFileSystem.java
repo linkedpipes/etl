@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Virtual file system with following structure:
- * {execution}/debug/{data unit}
+ * Virtual file system.
+ * Follow structure: {execution}/debug/{data unit}
  */
 @Service
 public class VirtualFileSystem {
@@ -48,7 +48,7 @@ public class VirtualFileSystem {
         private final DataUnit dataUnit;
 
         private Path(String ftpPath, boolean synthetic, File path,
-                DebugData execution, DataUnit dataUnit) {
+                     DebugData execution, DataUnit dataUnit) {
             this.ftpPath = ftpPath;
             this.synthetic = synthetic;
             this.path = path;
@@ -57,14 +57,14 @@ public class VirtualFileSystem {
         }
 
         /**
-         * @return True if represents a synthetic path.
+         * True if represents a synthetic path.
          */
         boolean isSynthetic() {
             return synthetic;
         }
 
         /**
-         * @return FTP representation of the path.
+         * Return FTP representation of the path.
          */
         String getFtpPath() {
             return ftpPath;
@@ -119,7 +119,7 @@ public class VirtualFileSystem {
 
         @Override
         public List<FtpFile> listFiles() {
-            final List<FtpFile> result = new ArrayList<>();
+            List<FtpFile> result = new ArrayList<>();
             for (DataUnit dataUnit
                     : execution.getDataUnits().values()) {
                 result.add(new DataUnitDirectory(execution, dataUnit,
@@ -140,7 +140,7 @@ public class VirtualFileSystem {
         private final DataUnit dataUnit;
 
         DataUnitDirectory(DebugData debugData, DataUnit dataUnit,
-                String ftpPath) {
+                          String ftpPath) {
             super(ftpPath);
             this.dataUnit = dataUnit;
             // We need the execution directory, but if we use data
@@ -149,7 +149,8 @@ public class VirtualFileSystem {
             if (dataUnit.getExecutionId() == null || debugData.getExecution()
                     .equals(dataUnit.getExecutionId())) {
                 // We use data from this execution.
-                dataUnit.updateDebugDirectories(debugData.getExecutionDirectory());
+                dataUnit.updateDebugDirectories(
+                        debugData.getExecutionDirectory());
             } else {
                 final Execution execution = executions.getExecution(
                         dataUnit.getExecutionId());
@@ -167,9 +168,13 @@ public class VirtualFileSystem {
         @Override
         public List<FtpFile> listFiles() {
             // List content of debug directories, without the debug directories.
-            final List<FtpFile> result = new ArrayList<>();
+            List<FtpFile> result = new ArrayList<>();
             for (File directory : dataUnit.getDebugDirectories()) {
-                for (File file : directory.listFiles()) {
+                File[] files = directory.listFiles();
+                if (files == null) {
+                    continue;
+                }
+                for (File file : files) {
                     result.add(new ReadonlyFtpFile(
                             ftpPath + "/" + file.getName(), file));
                 }
@@ -188,7 +193,7 @@ public class VirtualFileSystem {
     }
 
     /**
-     * @return View of the virtual FTP file system.
+     * Return ciew of the virtual FTP file system.
      */
     public FileSystemView getView() {
         return new VirtualFileSystemView(this);
@@ -198,12 +203,11 @@ public class VirtualFileSystem {
     private ExecutionFacade executions;
 
     /**
-     * @param path
-     * @return Null in case of an invalid path.
+     * Return Null in case of an invalid path.
      */
     Path resolvePath(String path) {
-        final LinkedList<String> parsedPath = parsePath(path);
-        final String ftpPath = joinPath(parsedPath);
+        LinkedList<String> parsedPath = parsePath(path);
+        String ftpPath = joinPath(parsedPath);
         if (parsedPath.isEmpty()) {
             return ROOT_PATH;
         }
@@ -217,8 +221,7 @@ public class VirtualFileSystem {
                     null);
         }
         // Search for data unit.
-        final DataUnit dataUnit
-                = execution.getDebugData().getDataUnits().get(
+        DataUnit dataUnit = execution.getDebugData().getDataUnits().get(
                 parsedPath.removeFirst());
         if (dataUnit == null) {
             return null;
@@ -240,7 +243,7 @@ public class VirtualFileSystem {
         // Search for a directory in the data unit. The file
         // can be in any of the debugging directories.
         for (File directory : dataUnit.getDebugDirectories()) {
-            final File file = new File(directory, joinPath(parsedPath));
+            File file = new File(directory, joinPath(parsedPath));
             if (file.exists()) {
                 return new Path(ftpPath, false, file, null, null);
             }
@@ -249,9 +252,7 @@ public class VirtualFileSystem {
     }
 
     /**
-     * @param base
-     * @param path
-     * @return Null in case of an invalid path.
+     * Return Null in case of an invalid path.
      */
     Path resolvePath(String base, String path) {
         if (path.startsWith("/")) {
@@ -279,17 +280,14 @@ public class VirtualFileSystem {
 
     /**
      * Parse FTP path into parsed path.
-     *
-     * @param path
-     * @return
      */
     private static LinkedList<String> parsePath(String path) {
-        final String fullPath = path.replace("\\", "/");
+        String fullPath = path.replace("\\", "/");
         // Replace ., ~ and ..
-        final StringTokenizer tokenizer = new StringTokenizer(fullPath, "/");
-        final LinkedList<String> result = new LinkedList<>();
+        StringTokenizer tokenizer = new StringTokenizer(fullPath, "/");
+        LinkedList<String> result = new LinkedList<>();
         while (tokenizer.hasMoreTokens()) {
-            final String token = tokenizer.nextToken();
+            String token = tokenizer.nextToken();
             if (".".equals(token)) {
                 continue;
             }
@@ -305,16 +303,13 @@ public class VirtualFileSystem {
 
     /**
      * From parsed path construct FTP path.
-     *
-     * @param parserPath
-     * @return
      */
     private static String joinPath(List<String> parserPath) {
         if (parserPath.isEmpty()) {
             return ROOT_PATH.getFtpPath();
         }
         // Construct path.
-        final StringBuilder path = new StringBuilder();
+        StringBuilder path = new StringBuilder();
         parserPath.forEach((item) -> {
             path.append("/");
             path.append(item);

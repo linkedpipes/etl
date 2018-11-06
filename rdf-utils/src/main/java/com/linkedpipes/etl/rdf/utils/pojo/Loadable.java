@@ -9,6 +9,7 @@ public interface Loadable {
         // No operation here.
     }
 
-    Loadable load(String predicate, BackendRdfValue value) throws RdfUtilsException;
+    Loadable load(String predicate, BackendRdfValue value)
+            throws RdfUtilsException;
 
 }

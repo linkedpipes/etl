@@ -25,16 +25,15 @@ class TemplateV3ToV4 {
         if (!Template.Type.REFERENCE_TEMPLATE.equals(template.getType())) {
             return;
         }
-        this.updateDefinition(template);
-        this.updateInterface(template);
+        updateDefinition(template);
+        updateInterface(template);
     }
 
     private void updateDefinition(Template template)
             throws RdfUtils.RdfException {
-        Collection<Statement> statements =
-                this.repository.getDefinition(template);
-        this.repository.setDefinition(template,
-                this.addConfigurationIri(statements, template.getIri()));
+        Collection<Statement> statements = repository.getDefinition(template);
+        repository.setDefinition(
+                template, addConfigurationIri(statements, template.getIri()));
     }
 
     private Collection<Statement> addConfigurationIri(
@@ -52,11 +51,9 @@ class TemplateV3ToV4 {
 
     private void updateInterface(Template template)
             throws RdfUtils.RdfException {
-        Collection<Statement> statements =
-                this.repository.getInterface(template);
-        this.repository.setInterface(template,
-                this.addConfigurationIri(statements, template.getIri()));
+        Collection<Statement> statements = repository.getInterface(template);
+        repository.setInterface(template,
+                addConfigurationIri(statements, template.getIri()));
     }
-
 
 }

@@ -17,7 +17,15 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 class ImportTemplates {
 
@@ -42,8 +50,8 @@ class ImportTemplates {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    public ImportTemplates(TemplateFacade templateFacade,
-                           MappingFacade mappingFacade) {
+    public ImportTemplates(
+            TemplateFacade templateFacade, MappingFacade mappingFacade) {
         this.templateFacade = templateFacade;
         this.mappingFacade = mappingFacade;
     }
@@ -64,7 +72,7 @@ class ImportTemplates {
      * Align templates in the pipeline with local templates. Missing
      * templates are imported.
      */
-    public Collection<Statement> importTemplates(
+    public Collection<Statement> importTemplatesFromPipeline(
             Collection<Statement> pipelineRdf) throws BaseException {
         LOG.debug("Import options:");
         LOG.debug("  Import templates: {}", this.importMissing);
@@ -72,15 +80,15 @@ class ImportTemplates {
         LOG.debug("  Pipeline version: {}", this.pipelineVersion);
         initialize();
         loadStatements(pipelineRdf);
-        if (this.pipelineGraph == null) {
+        if (pipelineGraph == null) {
             // There is no pipeline.
             LOG.warn("No pipeline graph found!");
             return pipelineRdf;
         }
-        this.loadMapping(pipelineRdf);
-        this.importTemplates();
-        this.saveMappingsToHdd();
-        return this.collectPipeline();
+        loadMapping(pipelineRdf);
+        importTemplates();
+        saveMappingsToHdd();
+        return collectPipeline();
     }
 
     private void initialize() {
@@ -91,26 +99,25 @@ class ImportTemplates {
 
     private void loadStatements(Collection<Statement> pipelineRdf) {
         for (Statement statement : pipelineRdf) {
-            List<Statement> graph = this.graphs.get(statement.getContext());
+            List<Statement> graph = graphs.get(statement.getContext());
             if (graph == null) {
                 graph = new LinkedList<>();
-                this.graphs.put((IRI) statement.getContext(), graph);
+                graphs.put((IRI) statement.getContext(), graph);
             }
-            if (statement.getPredicate().equals(RDF.TYPE) &&
-                    statement.getObject().equals(Pipeline.TYPE)) {
-                this.pipelineGraph = statement.getContext();
+            if (statement.getPredicate().equals(RDF.TYPE)
+                    && statement.getObject().equals(Pipeline.TYPE)) {
+                pipelineGraph = statement.getContext();
             }
             graph.add(statement);
         }
     }
 
     private void loadMapping(Collection<Statement> pipelineRdf) {
-        this.mapping = this.mappingFacade.createMappingFromStatements(
-                pipelineRdf);
+        this.mapping = mappingFacade.createMappingFromStatements(pipelineRdf);
     }
 
     private void importTemplates() throws BaseException {
-        List<TemplateInfo> templates = TemplateInfo.create(this.graphs);
+        List<TemplateInfo> templates = TemplateInfo.create(graphs);
         List<TemplateInfo> resolvedTemplates = new ArrayList<>();
         // We try to import templates. As there might be hierarchy we should
         // import at least one template in each cycle.
@@ -136,16 +143,16 @@ class ImportTemplates {
             throws BaseException {
         Template localTemplate;
         // First try to just ask for the URL.
-        localTemplate = this.templateFacade.getTemplate(template.getIri());
+        localTemplate = templateFacade.getTemplate(template.getIri());
         if (localTemplate != null) {
             return true;
         }
         // Try mapping.
-        String templateIri = this.mapping.remoteToLocal(template.getIri());
+        String templateIri = mapping.remoteToLocal(template.getIri());
         Template mappedLocalTemplate =
-                this.templateFacade.getTemplate(templateIri);
+                templateFacade.getTemplate(templateIri);
         if (mappedLocalTemplate == null) {
-            if (this.importMissing) {
+            if (importMissing) {
                 return importTemplate(template);
             } else {
                 LOG.info("Skip: {}", templateIri);
@@ -153,7 +160,7 @@ class ImportTemplates {
             }
         } else {
             LOG.debug("Mapping {} to {}", template.getIri(), templateIri);
-            if (this.updateExisting) {
+            if (updateExisting) {
                 LOG.info("Updating local template: {}", templateIri);
                 updateLocal(template, mappedLocalTemplate);
             }
@@ -163,17 +170,17 @@ class ImportTemplates {
 
     private void updateLocal(TemplateInfo remote, Template local)
             throws BaseException {
-        this.templateFacade.updateInterface(local, remote.getDefinition());
-        Template parent = this.templateFacade.getParent(local);
+        templateFacade.updateInterface(local, remote.getDefinition());
+        Template parent = templateFacade.getParent(local);
         prepareTemplateForImport(remote, parent);
         Collection<Statement> config = remote.getConfiguration();
-        this.templateFacade.updateConfig(local, config);
+        templateFacade.updateConfig(local, config);
     }
 
     private void prepareTemplateForImport(
             TemplateInfo remote, Template localParent) {
-        if (this.pipelineVersion < 2) {
-            Template root = this.templateFacade.getRootTemplate(localParent);
+        if (pipelineVersion < 2) {
+            Template root = templateFacade.getRootTemplate(localParent);
             if (MigrateV1ToV2.shouldUpdate(root.getIri())) {
                 remote.setConfiguration(MigrateV1ToV2.updateConfiguration(
                         remote.getConfiguration(),
@@ -190,13 +197,13 @@ class ImportTemplates {
         LOG.info("Importing: {} with remote parent: {}",
                 remoteTemplate.getIri(), remoteTemplate.getTemplate());
         LOG.info("   local parent: {}", parent.getIri());
-        remoteTemplate.setTemplate(this.valueFactory.createIRI(parent.getIri()));
+        remoteTemplate.setTemplate(valueFactory.createIRI(parent.getIri()));
         prepareTemplateForImport(remoteTemplate, parent);
         try {
-            Template template = this.templateFacade.createTemplate(
+            Template template = templateFacade.createTemplate(
                     remoteTemplate.getDefinition(),
                     remoteTemplate.getConfiguration(),
-                    this.getConfigDescription(remoteTemplate, parent));
+                    getConfigDescription(remoteTemplate, parent));
             LOG.info("   imported as : {}", template.getIri());
             this.mapping.onImport(template, remoteTemplate.getIri());
         } catch (BaseException ex) {
@@ -209,7 +216,7 @@ class ImportTemplates {
 
     private Template getLocalParent(TemplateInfo remoteTemplate) {
         String parentIri = remoteTemplate.getTemplate().stringValue();
-        Template localTemplate = this.templateFacade.getTemplate(parentIri);
+        Template localTemplate = templateFacade.getTemplate(parentIri);
         if (localTemplate == null) {
             String localParentIri = mapping.remoteToLocal(parentIri);
             return templateFacade.getTemplate(localParentIri);
@@ -232,7 +239,7 @@ class ImportTemplates {
     }
 
     private List<Statement> collectPipeline() {
-        List<Statement> definition = this.graphs.get(this.pipelineGraph);
+        List<Statement> definition = graphs.get(pipelineGraph);
         Set<Resource> configurations = new HashSet<>();
         List<Statement> toRemove = new ArrayList<>();
         List<Statement> toAdd = new ArrayList<>();
@@ -250,10 +257,10 @@ class ImportTemplates {
                 String templateIri = statement.getObject().stringValue();
                 String localTemplateIri = getIriForTemplate(templateIri);
                 toRemove.add(statement);
-                toAdd.add(this.valueFactory.createStatement(
+                toAdd.add(valueFactory.createStatement(
                         statement.getSubject(),
                         statement.getPredicate(),
-                        this.valueFactory.createIRI(localTemplateIri),
+                        valueFactory.createIRI(localTemplateIri),
                         statement.getContext()));
             }
         }
@@ -263,14 +270,14 @@ class ImportTemplates {
         result.removeAll(toRemove);
         result.addAll(toAdd);
         for (Resource configurationIri : configurations) {
-            result.addAll(this.graphs.getOrDefault(
+            result.addAll(graphs.getOrDefault(
                     configurationIri, Collections.emptyList()));
         }
         return result;
     }
 
     private String getIriForTemplate(String iri) {
-        String result = this.mapping.remoteToLocal(iri);
+        String result = mapping.remoteToLocal(iri);
         if (result == null) {
             // Not mapped, could be a core template, or we just failed
             // to import something.
@@ -286,13 +293,11 @@ class ImportTemplates {
      */
     public Collection<Statement> removeTemplates(
             Collection<Statement> pipelineRdf) {
-        this.initialize();
-        this.loadStatements(pipelineRdf);
+        initialize();
+        loadStatements(pipelineRdf);
         // Collect pipeline without templates.
-        List<Statement> definition = this.graphs.get(this.pipelineGraph);
+        List<Statement> definition = graphs.get(pipelineGraph);
         Set<Resource> configurations = new HashSet<>();
-        List<Statement> toRemove = new ArrayList<>();
-        List<Statement> toAdd = new ArrayList<>();
         for (Statement statement : definition) {
             // Check for configuration.
             String predicate = statement.getPredicate().stringValue();
@@ -304,10 +309,12 @@ class ImportTemplates {
         // Collect.
         List<Statement> result = new ArrayList<>(definition.size());
         result.addAll(definition);
+        List<Statement> toRemove = new ArrayList<>();
         result.removeAll(toRemove);
+        List<Statement> toAdd = new ArrayList<>();
         result.addAll(toAdd);
         for (Resource configurationIri : configurations) {
-            result.addAll(this.graphs.getOrDefault(
+            result.addAll(graphs.getOrDefault(
                     configurationIri, Collections.emptyList()));
         }
         return result;

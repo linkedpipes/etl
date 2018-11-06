@@ -11,9 +11,19 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.eclipse.rdf4j.rio.helpers.ContextStatementCollector;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class Rdf4jUtils {
 
@@ -77,18 +87,45 @@ public class Rdf4jUtils {
         return format;
     }
 
-    public static boolean rdfEqual(String expectedResourceFile,
-            Collection<Statement> actual) {
+    public static boolean rdfEqual(
+            String expectedResourceFile, Collection<Statement> actual) {
         File expectedFile = resourceToFile(expectedResourceFile);
         List<Statement> expected = loadRdfFile(expectedFile);
         return rdfEqual(expected, actual);
     }
 
-    public static boolean rdfContains(String expectedResourceFile,
-            Collection<Statement> subset) {
+    // TODO: Replace wih Models.isomorphic.
+    public static boolean rdfEqual(
+            Collection<Statement> expected, Collection<Statement> actual) {
+        boolean areEqual = diff(actual, expected, "-");
+        areEqual &= diff(expected, actual, "+");
+        return areEqual;
+    }
+
+    public static boolean rdfContains(
+            String expectedResourceFile, Collection<Statement> subset) {
         File expectedFile = resourceToFile(expectedResourceFile);
         List<Statement> expected = loadRdfFile(expectedFile);
         return rdfContains(expected, subset);
+    }
+
+    // TODO: Replace wih Models.isSubset.
+    public static boolean rdfContains(
+            Collection<Statement> expected, Collection<Statement> subset) {
+        Set<Statement> expectedSet = new HashSet();
+        expectedSet.addAll(expected);
+        boolean result = true;
+        for (Statement statement : subset) {
+            if (!expectedSet.contains(statement)) {
+                System.out.println("- <"
+                        + statement.getSubject() + "> <"
+                        + statement.getPredicate() + "> "
+                        + statement.getObject().stringValue() + " : <"
+                        + statement.getContext() + ">");
+                result = false;
+            }
+        }
+        return result;
     }
 
     private static File resourceToFile(String resourceFile) {
@@ -118,49 +155,24 @@ public class Rdf4jUtils {
         return result;
     }
 
-    // TODO: Replace wih Models.isomorphic
-    public static boolean rdfEqual(Collection<Statement> expected,
-            Collection<Statement> actual) {
-        boolean areEqual = diff(actual, expected, "-");
-        areEqual &= diff(expected, actual, "+");
-        return areEqual;
-    }
-
-    private static boolean diff(Collection<Statement> expected,
-            Collection<Statement> subset, String prefix) {
+    private static boolean diff(
+            Collection<Statement> expected, Collection<Statement> subset,
+            String prefix) {
         Set<Statement> expectedSet = new HashSet();
         expectedSet.addAll(expected);
         boolean result = true;
         for (Statement statement : subset) {
             if (!expectedSet.contains(statement)) {
-                System.out.println(prefix + " <" +
-                        statement.getSubject() + "> <" +
-                        statement.getPredicate() + "> " +
-                        statement.getObject().stringValue() + " : <" +
-                        statement.getContext() + ">");
+                System.out.println(prefix + " <"
+                        + statement.getSubject() + "> <"
+                        + statement.getPredicate() + "> "
+                        + statement.getObject().stringValue() + " : <"
+                        + statement.getContext() + ">");
                 result = false;
             }
         }
         return result;
     }
 
-    // TODO: Replace wih Models.isSubset
-    public static boolean rdfContains(Collection<Statement> expected,
-            Collection<Statement> subset) {
-        Set<Statement> expectedSet = new HashSet();
-        expectedSet.addAll(expected);
-        boolean result = true;
-        for (Statement statement : subset) {
-            if (!expectedSet.contains(statement)) {
-                System.out.println("- <" +
-                        statement.getSubject() + "> <" +
-                        statement.getPredicate() + "> " +
-                        statement.getObject().stringValue() + " : <" +
-                        statement.getContext() + ">");
-                result = false;
-            }
-        }
-        return result;
-    }
 
 }

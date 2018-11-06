@@ -18,31 +18,31 @@ public class MergeTwoLevelsTest {
 
     private MergeHierarchy worker = new MergeHierarchy();
 
-    private Statements data = Statements.ArrayList();
+    private Statements data = Statements.arrayList();
 
     private Description description;
 
     @Before
     public void initialize() throws Exception {
         data.addAll(TestUtils.file("configuration/mergeTwoLevels.trig"));
-        this.description = Description.fromStatements(
+        description = Description.fromStatements(
                 data.selectByGraph("http://description"));
     }
 
     @Test
     public void mergeTwoLevelInherit() throws Exception {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://inherit")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://inherit")
         );
 
-        Statements actual = this.worker.merge(
+        Statements actual = worker.merge(
                 configurations,
-                this.description,
+                description,
                 "http://base",
-                this.valueFactory.createIRI("http://expected/parent_inherit")
+                valueFactory.createIRI("http://expected/parent_inherit")
         );
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_inherit");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
@@ -50,14 +50,14 @@ public class MergeTwoLevelsTest {
     @Test
     public void mergeTwoLevelInheritFromBottom() {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://inherit")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://inherit")
         );
 
         Statements actual = merge(configurations,
                 "http://expected/parent_inherit_bottom");
 
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_inherit_bottom");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
@@ -70,9 +70,9 @@ public class MergeTwoLevelsTest {
             actual = worker.merge(
                     parent,
                     actual,
-                    this.description,
+                    description,
                     "http://base",
-                    this.valueFactory.createIRI(graph)
+                    valueFactory.createIRI(graph)
             );
         }
         return worker.finalize(actual);
@@ -81,18 +81,18 @@ public class MergeTwoLevelsTest {
     @Test
     public void mergeTwoLevelInheritAndForce() throws Exception {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://inheritAndForce")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://inheritAndForce")
         );
 
-        Statements actual = this.worker.merge(
+        Statements actual = worker.merge(
                 configurations,
-                this.description,
+                description,
                 "http://base",
-                this.valueFactory.createIRI(
+                valueFactory.createIRI(
                         "http://expected/parent_inheritAndForce")
         );
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_inheritAndForce");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
@@ -100,15 +100,15 @@ public class MergeTwoLevelsTest {
     @Test
     public void mergeTwoLevelInheritAndForceFromBottom() {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://inheritAndForce")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://inheritAndForce")
         );
 
         Statements actual = merge(
                 configurations,
                 "http://expected/parent_inheritAndForce_bottom");
 
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_inheritAndForce_bottom");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
@@ -116,18 +116,17 @@ public class MergeTwoLevelsTest {
     @Test
     public void mergeTwoLevelNoControl() throws Exception {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://noControl")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://noControl")
         );
 
         Statements actual = this.worker.merge(
                 configurations,
-                this.description,
+                description,
                 "http://base",
-                this.valueFactory.createIRI(
-                        "http://expected/parent_noControl")
+                valueFactory.createIRI("http://expected/parent_noControl")
         );
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_noControl");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
@@ -135,14 +134,14 @@ public class MergeTwoLevelsTest {
     @Test
     public void mergeTwoLevelNoControlFromBottom() {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://noControl")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://noControl")
         );
 
         Statements actual = merge(
                 configurations, "http://expected/parent_noControl_bottom");
 
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_noControl_bottom");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
@@ -150,18 +149,17 @@ public class MergeTwoLevelsTest {
     @Test
     public void mergeTwoLevelNone() throws Exception {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://none")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://none")
         );
 
-        Statements actual = this.worker.merge(
+        Statements actual = worker.merge(
                 configurations,
-                this.description,
+                description,
                 "http://base",
-                this.valueFactory.createIRI(
-                        "http://expected/parent_none")
+                valueFactory.createIRI("http://expected/parent_none")
         );
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_none");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
@@ -169,15 +167,16 @@ public class MergeTwoLevelsTest {
     @Test
     public void mergeFromBottomNoneFromBottom() {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://parent"),
-                this.data.selectByGraph("http://none")
+                data.selectByGraph("http://parent"),
+                data.selectByGraph("http://none")
         );
 
         Statements actual = merge(configurations,
                 "http://expected/parent_none_bottom");
 
-        Statements expected = this.data.selectByGraph(
+        Statements expected = data.selectByGraph(
                 "http://expected/parent_none_bottom");
         Assert.assertTrue(Models.isomorphic(expected, actual));
     }
+
 }

@@ -7,7 +7,11 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Holds information about a single template. Is used for pipeline
@@ -65,10 +69,10 @@ class TemplateInfo {
     }
 
     /**
-     * @return Complete definition with created reference to the parent.
+     * Return complete definition with created reference to the parent.
      */
     public Collection<Statement> getDefinition() {
-        final List<Statement> result = new ArrayList<>(definition.size() + 1);
+        List<Statement> result = new ArrayList<>(definition.size() + 1);
         result.addAll(definition);
         result.add(VF.createStatement(
                 iri, VF.createIRI("http://linkedpipes.com/ontology/template"),
@@ -90,12 +94,9 @@ class TemplateInfo {
 
     /**
      * Extract information from given graphs about templates and return it.
-     *
-     * @param graphs
-     * @return
      */
     public static List<TemplateInfo> create(Map<IRI, List<Statement>> graphs) {
-        final List<TemplateInfo> result = new LinkedList<>();
+        List<TemplateInfo> result = new LinkedList<>();
         //
         for (Map.Entry<IRI, List<Statement>> entry : graphs.entrySet()) {
             TemplateInfo templateInfo = null;
@@ -104,7 +105,7 @@ class TemplateInfo {
             IRI configurationDescriptionGraph = null;
             // We may want to remove some statements and replace them
             // later.
-            final Collection<Statement> toRemove = new LinkedList<>();
+            Collection<Statement> toRemove = new LinkedList<>();
             //
             for (Statement statement : entry.getValue()) {
                 if (statement.getPredicate().equals(RDF.TYPE)) {
@@ -130,7 +131,7 @@ class TemplateInfo {
                 if (configurationGraph != null) {
                     templateInfo.configuration = graphs.get(configurationGraph);
                 }
-                if (configurationDescriptionGraph!= null) {
+                if (configurationDescriptionGraph != null) {
                     templateInfo.configurationDescription =
                             graphs.get(configurationDescriptionGraph);
                 }

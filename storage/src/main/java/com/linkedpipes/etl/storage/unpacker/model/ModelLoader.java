@@ -41,8 +41,9 @@ public class ModelLoader {
         return pipelineModel;
     }
 
-    public static GraphCollection loadConfigurationGraphs(Rdf4jSource source,
-            DesignerPipeline pipeline) throws RdfUtilsException {
+    public static GraphCollection loadConfigurationGraphs(
+            Rdf4jSource source, DesignerPipeline pipeline)
+            throws RdfUtilsException {
         GraphCollection collection = new GraphCollection();
         for (DesignerComponent component : pipeline.getComponents()) {
             String graph = component.getConfigurationGraph();
@@ -58,9 +59,9 @@ public class ModelLoader {
         return execution;
     }
 
-    private static Collection<Statement> extractGraph(Rdf4jSource source,
-            String graph) throws RdfUtilsException {
-        List<Statement> statements = new ArrayList<>(16);
+    private static Collection<Statement> extractGraph(
+            Rdf4jSource source, String graph) throws RdfUtilsException {
+        List<Statement> statements = new ArrayList<>();
         source.statements(graph, statement -> statements.add(statement));
         return statements;
     }

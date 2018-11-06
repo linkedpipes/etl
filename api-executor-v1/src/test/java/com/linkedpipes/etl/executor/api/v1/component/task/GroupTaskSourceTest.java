@@ -44,10 +44,7 @@ public class GroupTaskSourceTest {
     @Test
     public void testLimitForAGroup() {
         TaskSource<MockedTask> source = new GroupTaskSource<>(Arrays.asList(
-                new MockedTask(1),
-                new MockedTask(1),
-                new MockedTask(1)),
-                2);
+                new MockedTask(1), new MockedTask(1), new MockedTask(1)), 2);
 
         MockedTask first = source.getTask();
         Assert.assertNotNull(first);
@@ -71,10 +68,7 @@ public class GroupTaskSourceTest {
     @Test
     public void failTaskSkipOnError() {
         TaskSource<MockedTask> source = new GroupTaskSource<>(Arrays.asList(
-                new MockedTask(1),
-                new MockedTask(1),
-                new MockedTask(2)),
-                1);
+                new MockedTask(1), new MockedTask(1), new MockedTask(2)), 1);
         source.setSkipOnError(true);
 
         MockedTask first = source.getTask();
@@ -93,10 +87,7 @@ public class GroupTaskSourceTest {
     @Test
     public void failTaskNoSkipOnError() {
         TaskSource<MockedTask> source = new GroupTaskSource<>(Arrays.asList(
-                new MockedTask(1),
-                new MockedTask(1),
-                new MockedTask(2)),
-                1);
+                new MockedTask(1), new MockedTask(1), new MockedTask(2)), 1);
         source.setSkipOnError(false);
 
         MockedTask first = source.getTask();
@@ -111,6 +102,5 @@ public class GroupTaskSourceTest {
         Assert.assertNull(source.getTask());
         Assert.assertTrue(source.doesTaskFailed());
     }
-
 
 }

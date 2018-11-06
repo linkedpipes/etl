@@ -43,6 +43,8 @@ class ReferenceTemplate extends Template
             case LP_PIPELINE.HAS_TEMPLATE:
                 template = value.stringValue();
                 break;
+            default:
+                break;
         }
         return null;
     }
@@ -66,7 +68,7 @@ class ReferenceTemplate extends Template
 
     @Override
     public String getConfigurationDescription() {
-        if (this.coreTemplate == null) {
+        if (coreTemplate == null) {
             throw new RuntimeException("Missing core template reference.");
         }
         return coreTemplate.getConfigurationDescription();
@@ -79,4 +81,5 @@ class ReferenceTemplate extends Template
     JarTemplate getCoreTemplate() {
         return coreTemplate;
     }
+
 }

@@ -13,8 +13,9 @@ public class RdfFormatterTest {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.set(2010, 2, 30, 19, 30, 14);
         calendar.set(Calendar.MILLISECOND, 856);
+        RdfFormatter format = new RdfFormatter();
         Assert.assertEquals("2010-03-30T19:30:14.856",
-                RdfFormatter.toXsdDate(calendar.getTime()));
+                format.toXsdDate(calendar.getTime()));
     }
 
 }

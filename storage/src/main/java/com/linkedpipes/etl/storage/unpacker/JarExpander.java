@@ -22,7 +22,8 @@ class JarExpander {
         this.templateSource = templateSource;
     }
 
-    public ExecutorComponent expand(String iri, String configuration,
+    public ExecutorComponent expand(
+            String iri, String configuration,
             JarTemplate template) throws BaseException {
 
         component = new ExecutorComponent();
@@ -65,9 +66,8 @@ class JarExpander {
         return newPort;
     }
 
-    private void mergeConfigurations(JarTemplate template,
-            String configuration) throws BaseException {
-
+    private void mergeConfigurations(
+            JarTemplate template, String configuration) throws BaseException {
         if (configuration == null) {
             if (template.getConfigGraph() != null) {
                 copyConfigurationFromTemplate(template);

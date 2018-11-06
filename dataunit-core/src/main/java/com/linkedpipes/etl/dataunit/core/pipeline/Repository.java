@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.dataunit.core.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
@@ -15,16 +14,18 @@ class Repository implements Loadable {
     private List<String> types = new ArrayList<>(2);
 
     @Override
-    public void resource(String resource) throws RdfException {
+    public void resource(String resource) {
         this.resource = resource;
     }
 
     @Override
-    public Loadable load(String predicate, RdfValue value) throws RdfException {
+    public Loadable load(String predicate, RdfValue value) {
         switch (predicate) {
             case RDF.TYPE:
                 types.add(value.asString());
                 return null;
+            default:
+                break;
         }
         return null;
     }

@@ -6,12 +6,21 @@ import com.linkedpipes.etl.storage.pipeline.PipelineInfo;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -31,10 +40,8 @@ class ImportTransformer {
     }
 
     public Collection<Statement> localizePipeline(
-            Collection<Statement> pipelineRdf,
-            Collection<Statement> optionsRdf,
-            PipelineInfo pipelineInfo,
-            IRI pipelineIri)
+            Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf,
+            PipelineInfo pipelineInfo, IRI pipelineIri)
             throws TransformationFailed {
         if (pipelineRdf.isEmpty()) {
             return Collections.emptyList();
@@ -91,7 +98,8 @@ class ImportTransformer {
             this.importTemplates.setUpdateExisting(
                     this.options.isUpdateTemplates());
             this.importTemplates.setPipelineVersion(pipelineVersion);
-            return this.importTemplates.importTemplates(pipelineRdf);
+            return this.importTemplates.importTemplatesFromPipeline(
+                    pipelineRdf);
         } catch (BaseException ex) {
             throw new TransformationFailed(
                     "Can't import templates.", ex);
@@ -105,10 +113,6 @@ class ImportTransformer {
 
     /**
      * Update resource/graph IRIs.
-     *
-     * @param pipelineRdf
-     * @param baseIri
-     * @return
      */
     private Collection<Statement> updateResources(
             Collection<Statement> pipelineRdf, String baseIri) {
@@ -150,13 +154,13 @@ class ImportTransformer {
             Map<Resource, Resource> mapping) {
         List<Statement> result = new ArrayList<>(pipelineRdf.size());
         for (Statement s : pipelineRdf) {
-            final Resource subject = mapping.getOrDefault(
+            Resource subject = mapping.getOrDefault(
                     s.getSubject(), s.getSubject());
             Value object = mapping.get(s.getObject());
             if (object == null) {
                 object = s.getObject();
             }
-            final Resource context = mapping.getOrDefault(
+            Resource context = mapping.getOrDefault(
                     s.getContext(), s.getContext());
             //
             result.add(this.valueFactory.createStatement(
@@ -172,14 +176,14 @@ class ImportTransformer {
     private Collection<Statement> replacePipelineLabel(
             Collection<Statement> pipelineRdf, IRI pipelineIri) {
 
-        if (this.options.getLabels() != null ||
-                this.options.getLabels().isEmpty()) {
+        if (this.options.getLabels() != null
+                || this.options.getLabels().isEmpty()) {
             return pipelineRdf;
         }
 
         Predicate<Statement> filterOutPipelineLabel = st ->
-                !(st.getSubject().equals(pipelineIri) &&
-                        SKOS.PREF_LABEL.equals(st.getPredicate()));
+                !(st.getSubject().equals(pipelineIri)
+                        && SKOS.PREF_LABEL.equals(st.getPredicate()));
 
         List<Statement> result = pipelineRdf.stream()
                 .filter(filterOutPipelineLabel)

@@ -12,7 +12,11 @@ import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import org.osgi.framework.*;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.slf4j.Logger;
@@ -30,7 +34,12 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -40,6 +49,9 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(ModuleService.class);
+
+    private static final String LP_PACKAGE =
+            "com.linkedpipes.etl.executor.api.v1";
 
     private static final String EXPORT_PACKAGE_LIST = ""
             + "" // javax additional - FIND BUNDLE WITH THIS !
@@ -67,17 +79,17 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
             + "org.apache.log4j.api;version=\"1.7.18\","
             + "org.apache.log4j.xml;version=\"1.7.18\","
             + "" // core API
-            + "com.linkedpipes.etl.executor.api.v1;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.component;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.component.task;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.dataunit;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.event;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.rdf;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.rdf.model;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.rdf.pojo;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.service;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.report;version=\"0.0.0\","
-            + "com.linkedpipes.etl.executor.api.v1.vocabulary;version=\"0.0.0\","
+            + LP_PACKAGE + ";version=\"0.0.0\","
+            + LP_PACKAGE + ".component;version=\"0.0.0\","
+            + LP_PACKAGE + ".component.task;version=\"0.0.0\","
+            + LP_PACKAGE + ".dataunit;version=\"0.0.0\","
+            + LP_PACKAGE + ".event;version=\"0.0.0\","
+            + LP_PACKAGE + ".rdf;version=\"0.0.0\","
+            + LP_PACKAGE + ".rdf.model;version=\"0.0.0\","
+            + LP_PACKAGE + ".rdf.pojo;version=\"0.0.0\","
+            + LP_PACKAGE + ".service;version=\"0.0.0\","
+            + LP_PACKAGE + ".report;version=\"0.0.0\","
+            + LP_PACKAGE + ".vocabulary;version=\"0.0.0\","
             + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\"";
 
     private Framework framework;
@@ -137,9 +149,9 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
     }
 
     private static String getJarPathQuery(String component, String graph) {
-        return "SELECT ?jar WHERE { GRAPH <" + graph + "> { " +
-                " <" + component + "> <" + LP_PIPELINE.HAS_JAR_URL +
-                "> ?jar }}";
+        return "SELECT ?jar WHERE { GRAPH <" + graph + "> { "
+                + " <" + component + "> <" + LP_PIPELINE.HAS_JAR_URL
+                + "> ?jar }}";
     }
 
     private Bundle getBundle(String path) throws ModuleException {
@@ -159,8 +171,9 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
 
     private String getBundleIri(String path) throws ModuleException {
         try {
-            return configuration.getStorageAddress() +
-                    "/api/v1/jars/file?iri=" + URLEncoder.encode(path, "UTF-8");
+            return configuration.getStorageAddress()
+                    + "/api/v1/jars/file?iri="
+                    + URLEncoder.encode(path, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             throw new ModuleException("Invalid encoding!", ex);
         }
@@ -233,9 +246,6 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
     }
 
     private void start() {
-        FrameworkFactory frameworkFactory
-                = ServiceLoader.load(FrameworkFactory.class).iterator().next();
-
         Map<String, String> config = new HashMap<>();
         config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
                 EXPORT_PACKAGE_LIST);
@@ -244,6 +254,8 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
         config.put(Constants.FRAMEWORK_STORAGE_CLEAN,
                 Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
 
+        FrameworkFactory frameworkFactory
+                = ServiceLoader.load(FrameworkFactory.class).iterator().next();
         framework = frameworkFactory.newFramework(config);
         try {
             framework.start();
@@ -275,10 +287,11 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
     }
 
     private void scanDirectory(File root, Consumer<File> consumer) {
-        if (root.listFiles() == null) {
+        File[] files = root.listFiles();
+        if (files == null) {
             return;
         }
-        for (File file : root.listFiles()) {
+        for (File file : files) {
             if (file.isFile()) {
                 consumer.accept(file);
             } else if (file.isDirectory()) {

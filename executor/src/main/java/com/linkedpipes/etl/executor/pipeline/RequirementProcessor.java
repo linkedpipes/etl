@@ -23,15 +23,13 @@ class RequirementProcessor {
 
     /**
      * Handle requirements on the pipeline definition.
-     *
-     * @param definition
-     * @param graph
-     * @param resourceManager
      */
-    public static void handle(BackendRdfSource definition, String graph,
-            ResourceManager resourceManager) throws LpException {
-        final List<Map<String, String>> working;
-        final List<Map<String, String>> input;
+    public static void handle(
+            BackendRdfSource definition, String graph,
+            ResourceManager resourceManager)
+            throws LpException {
+        List<Map<String, String>> working;
+        List<Map<String, String>> input;
         try {
             working = RdfUtils.sparqlSelect(definition,
                     getWorkingDirectoryQuery(graph));
@@ -42,15 +40,17 @@ class RequirementProcessor {
         }
         //
         try {
-            final RdfBuilder builder = RdfBuilder.create(definition, graph);
+            RdfBuilder builder = RdfBuilder.create(definition, graph);
             for (Map<String, String> entry : working) {
                 String iri = entry.get("s");
-                String id = iri.substring(iri.lastIndexOf("/") + 1).toLowerCase();
-                File file = resourceManager.getWorkingDirectory("working-"+ id);
+                String id = iri.substring(iri.lastIndexOf("/") + 1)
+                        .toLowerCase();
+                File file =
+                        resourceManager.getWorkingDirectory("working-" + id);
                 builder.entity(iri).iri(LP_EXEC.HAS_WORKING_DIRECTORY,
                         file.toURI().toString());
             }
-            final File inputDirectory = resourceManager.getInputDirectory();
+            File inputDirectory = resourceManager.getInputDirectory();
             for (Map<String, String> entry : input) {
                 final String iri = entry.get("s");
                 builder.entity(iri).iri(LP_EXEC.HAS_INPUT_DIRECTORY,
@@ -63,17 +63,17 @@ class RequirementProcessor {
     }
 
     private static String getWorkingDirectoryQuery(String graph) {
-        return "SELECT ?s WHERE { GRAPH <" + graph + "> {\n" +
-                " ?s <" + LP_PIPELINE.HAS_REQUIREMENT + "> " +
-                "<" + LP_PIPELINE.WORKING_DIRECTORY + "> \n" +
-                "}}";
+        return "SELECT ?s WHERE { GRAPH <" + graph + "> {\n"
+                + " ?s <" + LP_PIPELINE.HAS_REQUIREMENT + "> "
+                + "<" + LP_PIPELINE.WORKING_DIRECTORY + "> \n"
+                + "}}";
     }
 
     private static String getInputDirectoryQuery(String graph) {
-        return "SELECT ?s WHERE { GRAPH <" + graph + "> {\n" +
-                " ?s <" + LP_PIPELINE.HAS_REQUIREMENT + "> " +
-                "<" + LP_PIPELINE.INPUT_DIRECTORY + "> \n" +
-                "}}";
+        return "SELECT ?s WHERE { GRAPH <" + graph + "> {\n"
+                + " ?s <" + LP_PIPELINE.HAS_REQUIREMENT + "> "
+                + "<" + LP_PIPELINE.INPUT_DIRECTORY + "> \n"
+                + "}}";
     }
 
 }

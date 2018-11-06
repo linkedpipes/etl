@@ -19,7 +19,7 @@ import java.util.Date;
  */
 class PipelineLoader {
 
-    private static final SimpleDateFormat DATE_FORMAT
+    private final SimpleDateFormat dateFormat
             = new SimpleDateFormat("yyyy-MM-dd");
 
     private File file;
@@ -37,37 +37,36 @@ class PipelineLoader {
     public Pipeline load(File file) throws OperationFailed {
         this.file = file;
         //
-        this.loadFromFile();
+        loadFromFile();
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
-            this.migratePipeline();
+            migratePipeline();
         }
-        return new Pipeline(this.file, this.info);
+        return new Pipeline(file, info);
     }
 
     private void loadFromFile() throws OperationFailed {
         try {
-            this.pipelineRdf = RdfUtils.read(this.file);
-            this.loadPipelineInfo();
+            pipelineRdf = RdfUtils.read(file);
+            loadPipelineInfo();
         } catch (PojoLoader.CantLoadException | RdfUtils.RdfException ex) {
-            throw new OperationFailed("Can't load pipeline: {}", this.file, ex);
+            throw new OperationFailed("Can't load pipeline: {}", file, ex);
         }
     }
 
     private void loadPipelineInfo() throws PojoLoader.CantLoadException {
-        this.info = new PipelineInfo();
-        PojoLoader.loadOfType(this.pipelineRdf, Pipeline.TYPE, this.info);
+        info = new PipelineInfo();
+        PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
     }
 
     private void migratePipeline() throws OperationFailed {
-        this.backupPipeline();
+        backupPipeline();
         try {
-            this.pipelineRdf = this.transformation.migrateThrowOnWarning(
-                            this.pipelineRdf);
-            this.loadPipelineInfo();
-            this.updatePipelineFile();
+            pipelineRdf = transformation.migrateThrowOnWarning(pipelineRdf);
+            loadPipelineInfo();
+            updatePipelineFile();
         } catch (TransformationFailed | PojoLoader.CantLoadException ex) {
             throw new OperationFailed(
-                    "Can't update pipeline: {}", this.file, ex);
+                    "Can't update pipeline: {}", file, ex);
         }
     }
 
@@ -82,17 +81,16 @@ class PipelineLoader {
     }
 
     private File getBackupFile() {
-        String fileName = this.file.getName();
+        String fileName = file.getName();
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
-        fileName += "_" + DATE_FORMAT.format(new Date());
+        fileName += "_" + dateFormat.format(new Date());
         fileName += ".trig.backup";
-        return new File(this.file.getParent(), fileName);
+        return new File(file.getParent(), fileName);
     }
 
-    private void updatePipelineFile()
-            throws OperationFailed {
+    private void updatePipelineFile() throws OperationFailed {
         try {
-            RdfUtils.write(this.file, RDFFormat.TRIG, this.pipelineRdf);
+            RdfUtils.write(file, RDFFormat.TRIG, pipelineRdf);
         } catch (RdfUtils.RdfException ex) {
             throw new OperationFailed(
                     "Can't save updated pipeline to file: {}", file, ex);

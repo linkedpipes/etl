@@ -2,10 +2,6 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
 public final class LP_EXEC {
 
-    private LP_EXEC() {
-
-    }
-
     private static final String PREFIX = "http://linkedpipes.com/ontology/";
 
     public static final String TYPE_EXECUTE =
@@ -58,7 +54,6 @@ public final class LP_EXEC {
             PREFIX + "inputDirectory";
 
     public static final String HAS_DEBUG_PATH = PREFIX + "debugPath";
-    ;
 
     /**
      * Relative path to the execution root, from which
@@ -99,8 +94,8 @@ public final class LP_EXEC {
     /**
      * Delete working data after pipeline execution.
      */
-    public static final String HAS_DELETE_WORKING_DATA = PREFIX +
-            "deleteWorkingData";
+    public static final String HAS_DELETE_WORKING_DATA =
+            PREFIX + "deleteWorkingData";
 
     /**
      * Represent ordering of elements.
@@ -109,7 +104,7 @@ public final class LP_EXEC {
             "http://linkedpipes.com/ontology/configuration/order";
 
     /**
-     * TODO Merge with HAS_ORDER
+     * TODO Merge with HAS_ORDER.
      */
     public static final String HAS_ORDER_EXEC =
             "http://linkedpipes.com/ontology/executionOrder";

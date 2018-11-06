@@ -11,18 +11,22 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * Can be used to load values into a properties of an object.
  *
- * Known limitations:
+ * <p>Known limitations:
  * - Does not support arrays.
  * - Does not support generics with more then one argument.
  * - Does not support nested collections.
  * - Does not support language tags.
  *
- * This class can be extended to provide additional functionality.
+ * <p>This class can be extended to provide additional functionality.
  */
 class FieldLoader {
 
@@ -30,8 +34,6 @@ class FieldLoader {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(FieldLoader.class);
-
-    private static final DateFormat XSD_DATE_FORMAT;
 
     static {
         WRAP_TYPES = new HashSet<>();
@@ -46,35 +48,26 @@ class FieldLoader {
         WRAP_TYPES.add(Void.class);
         WRAP_TYPES.add(String.class);
         WRAP_TYPES.add(Date.class);
-        // We use GMT time zone as default, to have the same
-        // settings on different systems.
-        XSD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-        XSD_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     /**
      * If the field represent a primitive type, then the value is converted
      * to given type and stored in the field.
      *
-     * If the field represent a complex object or a collection,
+     * <p>If the field represent a complex object or a collection,
      * then the behaviour depends on extendExisting.
      *
-     * If the extendExisting is true, then new object is added to collection,
+     * <p>If the extendExisting is true, then new object is added to collection,
      * and new object is set as a complex type.
      *
-     * If the extendExisting is false, the collection is cleared before adding
-     * any object and new complex objects are created.
-     *
-     * @param target
-     * @param field
-     * @param value
-     * @param extendExisting
-     * @return
+     * <p>If the extendExisting is false, the collection is cleared before
+     * adding any object and new complex objects are created.
      */
-    public Object set(Object target, Field field, BackendRdfValue value,
+    public Object set(
+            Object target, Field field, BackendRdfValue value,
             boolean extendExisting)
             throws LoaderException {
-        final Class<?> fieldType = field.getType();
+        Class<?> fieldType = field.getType();
         if (Collection.class.isAssignableFrom(fieldType)) {
             return setCollection(target, field, value, extendExisting);
         } else if (isPrimitive(fieldType)) {
@@ -98,17 +91,17 @@ class FieldLoader {
                 }
             }
             // Create and set new object.
-            final Object newObject = createInstance(fieldType);
+            Object newObject = createInstance(fieldType);
             FieldUtils.setValue(target, field, newObject);
             return newObject;
         }
         return null;
     }
 
-    private static Object setCollection(Object target, Field field,
-            BackendRdfValue value, boolean extendExisting) throws LoaderException {
-        final Class<?> genericType =
-                getCollectionType(field.getGenericType());
+    private static Object setCollection(
+            Object target, Field field, BackendRdfValue value,
+            boolean extendExisting) throws LoaderException {
+        Class<?> genericType = getCollectionType(field.getGenericType());
         if (Collection.class.isAssignableFrom(genericType)) {
             throw new LoaderException(
                     "Nested collection are not supported.");
@@ -135,16 +128,16 @@ class FieldLoader {
         return null;
     }
 
-    private static void addToCollection(Object object, Field field,
-            Object value, boolean extend) throws LoaderException {
+    private static void addToCollection(
+            Object object, Field field, Object value, boolean extend)
+            throws LoaderException {
         Collection collection = (Collection) FieldUtils.getValue(object, field);
         if (collection == null) {
             throw new LoaderException(
                     "Collection must be initialized prior to loading."
                             + " Collection: '" + field.getName()
-                            + "' on class: '" +
-                            object.getClass().getCanonicalName()
-                            + "'");
+                            + "' on class: '"
+                            + object.getClass().getCanonicalName() + "'");
         }
         if (!extend) {
             collection.clear();
@@ -164,8 +157,8 @@ class FieldLoader {
         return Enum.valueOf((Class<Enum>) type, value.asString());
     }
 
-    private static Object valueToStringLang(Class<?> fieldType, BackendRdfValue value)
-            throws LoaderException {
+    private static Object valueToStringLang(
+            Class<?> fieldType, BackendRdfValue value) throws LoaderException {
         LangString langString = (LangString) createInstance(fieldType);
         String language = value.getLanguage();
         langString.setValue(value.asString(), language);
@@ -177,19 +170,22 @@ class FieldLoader {
         try {
             if (type == String.class) {
                 return value.asString();
-            } else if (type == boolean.class ||
-                    type == Boolean.class) {
+            } else if (type == boolean.class || type == Boolean.class) {
                 return value.asBoolean();
             } else if (type == byte.class || type == Byte.class) {
-                return (byte)value.asLong();
+                return (byte) value.asLong();
             } else if (type == short.class || type == Short.class) {
-                return (short)value.asLong();
+                return (short) value.asLong();
             } else if (type == int.class || type == Integer.class) {
-                return (int)value.asLong();
+                return (int) value.asLong();
             } else if (type == long.class || type == Long.class) {
                 return value.asLong();
             } else if (type == Date.class) {
-                return XSD_DATE_FORMAT.parse(value.asString());
+                // We use GMT time zone as default, to have the same
+                // settings on different systems.
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                format.setTimeZone(TimeZone.getTimeZone("GMT"));
+                return format.parse(value.asString());
             } else {
                 throw new LoaderException("Unknown type: {}", type.getName());
             }

@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.web.servlet;
 
-
 import com.linkedpipes.etl.executor.ExecutorException;
 
 public class MissingResource extends ExecutorException {

@@ -1,7 +1,5 @@
 package com.linkedpipes.etl.rdf.utils.model;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-
 public class SimpleValue implements BackendRdfValue {
 
     private String value;
@@ -19,12 +17,12 @@ public class SimpleValue implements BackendRdfValue {
     }
 
     @Override
-    public long asLong() throws RdfUtilsException {
+    public long asLong() {
         return 0;
     }
 
     @Override
-    public boolean asBoolean() throws RdfUtilsException {
+    public boolean asBoolean() {
         return false;
     }
 
@@ -42,4 +40,5 @@ public class SimpleValue implements BackendRdfValue {
     public boolean isIri() {
         return isIri;
     }
+
 }

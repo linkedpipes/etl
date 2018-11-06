@@ -8,7 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * TODO Do not require working directory for input data unit.
@@ -55,8 +61,8 @@ class DefaultFilesDataUnit
 
     @Override
     public void initialize(File directory) throws LpException {
-        this.dataDirectories.clear();
-        this.dataDirectories.addAll(loadDataDirectories(directory));
+        dataDirectories.clear();
+        dataDirectories.addAll(loadDataDirectories(directory));
     }
 
     @Override
@@ -67,8 +73,8 @@ class DefaultFilesDataUnit
 
     @Override
     public void save(File directory) throws LpException {
-        saveDataDirectories(directory, this.dataDirectories);
-        saveDebugDirectories(directory, this.dataDirectories);
+        saveDataDirectories(directory, dataDirectories);
+        saveDebugDirectories(directory, dataDirectories);
     }
 
     @Override
@@ -78,7 +84,7 @@ class DefaultFilesDataUnit
 
     @Override
     public Collection<File> getReadDirectories() {
-        return Collections.unmodifiableCollection(this.dataDirectories);
+        return Collections.unmodifiableCollection(dataDirectories);
     }
 
     @Override
@@ -94,8 +100,8 @@ class DefaultFilesDataUnit
     }
 
     @Override
-    public Iterator<FilesDataUnit.Entry> iterator() {
-        Iterator<File> directoryIterator = this.dataDirectories.iterator();
+    public Iterator<Entry> iterator() {
+        Iterator<File> directoryIterator = dataDirectories.iterator();
         if (!directoryIterator.hasNext()) {
             return Collections.EMPTY_LIST.iterator();
         }
@@ -123,7 +129,7 @@ class DefaultFilesDataUnit
     protected void merge(ManageableDataUnit dataUnit) throws LpException {
         if (dataUnit instanceof DefaultFilesDataUnit) {
             DefaultFilesDataUnit source = (DefaultFilesDataUnit) dataUnit;
-            this.dataDirectories.addAll(source.dataDirectories);
+            dataDirectories.addAll(source.dataDirectories);
         } else {
             throw new LpException(
                     "Can't merge with source data unit: {} of type {}",

@@ -4,44 +4,47 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
 
-    private class Group<T> {
+    private class Group<G> {
 
-        private volatile int numberOfRunning;
+        private volatile AtomicInteger numberOfRunning = new AtomicInteger();
 
-        protected ConcurrentLinkedDeque<T> tasks = new ConcurrentLinkedDeque<>();
+        protected ConcurrentLinkedDeque<G> tasks =
+                new ConcurrentLinkedDeque<>();
 
-        public void addTask(T task) {
+        public void addTask(G task) {
             this.tasks.add(task);
         }
 
         public void onTaskExecutionFinished() {
-            --numberOfRunning;
+            numberOfRunning.decrementAndGet();
         }
 
-        public T getTask(int runningLimit) {
-            if (numberOfRunning >= runningLimit ) {
+        public G getTask(int runningLimit) {
+            if (numberOfRunning.get() >= runningLimit) {
                 return null;
             }
-            T task = tasks.poll();
+            G task = tasks.poll();
             if (task == null) {
                 return null;
             } else {
-                ++numberOfRunning;
+                numberOfRunning.incrementAndGet();
                 return task;
             }
         }
 
     }
 
-    private class NullGroup<T> extends Group {
+    private class NullGroup<G> extends Group {
 
         @Override
         public Object getTask(int runningLimit) {
             return tasks.poll();
         }
+
     }
 
     private final Map<Object, Group> groups = new HashMap<>();
@@ -70,8 +73,8 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
     }
 
     @Override
-    public void setSkipOnError(boolean endOnError) {
-        this.skipOnError = endOnError;
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
     }
 
     @Override
@@ -119,6 +122,5 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
     public boolean doesTaskFailed() {
         return this.taskFailed;
     }
-
 
 }

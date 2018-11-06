@@ -2,10 +2,6 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
 public final class LP_PIPELINE {
 
-    private LP_PIPELINE() {
-
-    }
-
     private static final String PREFIX = "http://linkedpipes.com/ontology/";
 
     public static final String PIPELINE = PREFIX + "Pipeline";
@@ -29,7 +25,7 @@ public final class LP_PIPELINE {
     public static final String EXECUTION_METADATA =
             PREFIX + "ExecutionMetadata";
 
-    // TODO Move to execution ?
+    // TODO Move to execution?
     public static final String HAS_EXECUTION_METADATA =
             PREFIX + "executionMetadata";
 
@@ -38,34 +34,40 @@ public final class LP_PIPELINE {
     public static final String HAS_DELETE_WORKING =
             PREFIX + "deleteWorkingData";
 
+    public static final String RDF_REPOSITORY =
+            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository";
+
+    public static final String HAS_REQ_WORKING =
+            "http://linkedpipes.com/resources/requirement/workingDirectory";
+
     /**
      * Pipeline has execution profile.
      */
     public static final String PROFILE = PREFIX + "ExecutionProfile";
 
-    public static final String HAS_RDF_REPOSITORY_POLICY = PREFIX +
-            "rdfRepositoryPolicy";
+    public static final String HAS_RDF_REPOSITORY_POLICY =
+            PREFIX + "rdfRepositoryPolicy";
 
-    public static final String HAS_RDF_REPOSITORY_TYPE = PREFIX +
-            "rdfRepositoryType";
+    public static final String HAS_RDF_REPOSITORY_TYPE =
+            PREFIX + "rdfRepositoryType";
 
     /**
      * Use single RDF repository per execution.
      */
-    public static final String SINGLE_REPOSITORY = PREFIX +
-            "repository/SingleRepository";
+    public static final String SINGLE_REPOSITORY =
+            PREFIX + "repository/SingleRepository";
 
     /**
      * Use RDF repository per input.
      */
-    public static final String PER_INPUT_REPOSITORY = PREFIX +
-            "repository/PerInputRepository";
+    public static final String PER_INPUT_REPOSITORY =
+            PREFIX + "repository/PerInputRepository";
 
-    public static final String NATIVE_STORE = PREFIX +
-            "repository/NativeStore";
+    public static final String NATIVE_STORE =
+            PREFIX + "repository/NativeStore";
 
-    public static final String MEMORY_STORE = PREFIX +
-            "repository/MemoryStore";
+    public static final String MEMORY_STORE =
+            PREFIX + "repository/MemoryStore";
 
     public static final String HAS_LOG_POLICY =
             PREFIX + "logPolicy";
@@ -77,28 +79,25 @@ public final class LP_PIPELINE {
             PREFIX + "log/DeleteOnSuccess";
 
     /**
-     * TODO Update to ../dataUnit/files/DirectoryMirror
+     * TODO Update to ../dataUnit/files/DirectoryMirror.
      */
     public static final String FILE_DATA_UNIT =
             PREFIX + "dataUnit/system/1.0/files/DirectoryMirror";
 
     /**
-     * TODO Update to rdf4j
+     * TODO Update to rdf4j.
      */
     public static final String SINGLE_GRAPH_DATA_UNIT =
             PREFIX + "dataUnit/sesame/1.0/rdf/SingleGraph";
 
     /**
-     * TODO Update to rdf4j
+     * TODO Update to rdf4j.
      */
     public static final String GRAPH_LIST_DATA_UNIT =
             PREFIX + "dataUnit/sesame/1.0/rdf/GraphList";
 
     public static final String CHUNKED_TRIPLES_DATA_UNIT =
             PREFIX + "dataUnit/sesame/1.0/rdf/Chunked";
-
-    public static final String RDF_REPOSITORY =
-            "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository";
 
     /**
      * Define requirement for working directory.
@@ -170,9 +169,6 @@ public final class LP_PIPELINE {
      */
     public static final String HAS_REPOSITORY = PREFIX + "repository";
 
-    /**
-     *
-     */
     public static final String HAS_REQUIREMENT = PREFIX + "requirement";
 
     /**

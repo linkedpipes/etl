@@ -28,8 +28,7 @@ final class FieldUtils {
             return field.get(object);
         } catch (IllegalAccessException ex) {
             throw new RdfException(
-                    "Can't get value (by field): {}",
-                    field.getName(), ex);
+                    "Can't get value (by field): {}", field.getName(), ex);
         }
     }
 
@@ -40,8 +39,7 @@ final class FieldUtils {
             return descriptor.getReadMethod().invoke(object);
         } catch (Throwable ex) {
             throw new RdfException(
-                    "Can't get value (by getter): {}",
-                    field.getName(), ex);
+                    "Can't get value (by getter): {}", field.getName(), ex);
         }
     }
 
@@ -72,8 +70,7 @@ final class FieldUtils {
             field.set(object, value);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             throw new RdfException(
-                    "Can't set value (by field): {}",
-                    field.getName(), ex);
+                    "Can't set value (by field): {}", field.getName(), ex);
         }
     }
 
@@ -84,8 +81,7 @@ final class FieldUtils {
             return descriptor.getWriteMethod().invoke(object, value);
         } catch (Throwable ex) {
             throw new RdfException(
-                    "Can't set value (by getter): {}",
-                    field.getName(), ex);
+                    "Can't set value (by getter): {}", field.getName(), ex);
         }
     }
 
