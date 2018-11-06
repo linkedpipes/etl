@@ -11,6 +11,18 @@ define([], function () {
         "softFail": {
             "$type": "bool",
             "$label": "Skip file on failure"
+        },
+        "commitSize": {
+            "$type": "int",
+            "$label": "Files per chunk"
+        },
+        "fileReference": {
+            "$type": "bool",
+            "$label" : "Add file reference"
+        },
+        "filePredicate": {
+            "$type": "iri",
+            "$label" : "File name predicate"
         }
     };
 

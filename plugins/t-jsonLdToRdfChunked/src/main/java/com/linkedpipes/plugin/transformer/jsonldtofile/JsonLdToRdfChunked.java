@@ -8,8 +8,9 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.semarglproject.jsonld.JsonLdParser;
-import org.semarglproject.rdf4j.core.sink.RDF4JSink;
 import org.semarglproject.source.StreamProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
     @Override
     public void execute() throws LpException {
         progressReport.start(inputFiles.size());
+        int filesCounter = 0;
         for (FilesDataUnit.Entry entry : inputFiles) {
             try {
                 loadEntry(entry);
@@ -52,6 +54,11 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
                 } else {
                     throw  ex;
                 }
+            }
+            ++filesCounter;
+            if (filesCounter >= configuration.getFilesPerChunk()) {
+                flushBuffer();
+                filesCounter = 0;
             }
             progressReport.entryProcessed();
         }
@@ -66,7 +73,14 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
         } catch (Exception ex) {
             handleLoadingException(entry.getFileName(), ex);
         }
-        outputRdf.submit(collector.getStatements());
+        if (configuration.isFileReference()) {
+            ValueFactory valueFactory = SimpleValueFactory.getInstance();
+            collector.add(valueFactory.createStatement(
+                    valueFactory.createBNode(),
+                    valueFactory.createIRI(configuration.getFilePredicate()),
+                    valueFactory.createLiteral(entry.getFileName())
+            ));
+        }
     }
 
     private void handleLoadingException(String fileName, Exception ex)
@@ -74,5 +88,14 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
         throw exceptionFactory.failure(
                 "Can't parse file: {}", fileName, ex);
     }
+
+    private void flushBuffer() throws LpException {
+        if (collector.getStatements().isEmpty()) {
+            return;
+        }
+        outputRdf.submit(collector.getStatements());
+        collector.clear();
+    }
+
 
 }

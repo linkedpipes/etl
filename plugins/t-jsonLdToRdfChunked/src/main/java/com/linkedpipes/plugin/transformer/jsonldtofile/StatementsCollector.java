@@ -27,4 +27,12 @@ public class StatementsCollector extends AbstractRDFHandler {
         return statements;
     }
 
+    public void clear() {
+        statements.clear();
+    }
+
+    public void add(Statement statement) {
+        statements.add(statement);
+    }
+
 }
