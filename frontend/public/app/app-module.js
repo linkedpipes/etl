@@ -1,10 +1,10 @@
 define([
     "app/app-config",
     "app/components/pipelines/list-view/pipeline-list-ctrl",
-    "app/components/pipelines/canvas-edit-view/pipelineCanvasCtrl",
+    "app/components/pipelines/edit-view/pipeline-edit-ctrl",
     "app/components/pipelines/upload-view/pipeline-upload-ctrl",
     "app/components/executions/list-view/execution-list-ctrl",
-    "app/components/pipelines/canvas-edit-view/execution/detail-dialog/component-execution-ctrl",
+    "app/components/pipelines/edit-view/execution-mode/detail-dialog/component-execution-ctrl",
     "app/components/personalization/personalization-ctrl",
     "app/components/help/help-ctrl",
     "app/services/rdfService",
@@ -115,7 +115,8 @@ define([
     }
 
     // We cannot inject personalization here as they are not yet available.
-    function redirectFromHomePage($location, $cookies) {
+    function redirectFromHomePage($rootScope, $route, $location, $cookies) {
+        // Update path.
         if ($location.path() === "") {
             let landingPage = $cookies.get("lp-landing");
             if (landingPage === undefined || landingPage === "") {
@@ -123,6 +124,22 @@ define([
             }
             $location.path(landingPage);
         }
+        //
+        preventReloadOnPathChange($rootScope, $route, $location);
+    }
+
+    function preventReloadOnPathChange($rootScope, $route, $location) {
+        const originalPath = $location.path;
+        $location.path = (path, reload) => {
+            if (reload === false) {
+                const lastRoute = $route.current;
+                const un = $rootScope.$on("$locationChangeSuccess", () => {
+                    $route.current = lastRoute;
+                    un();
+                });
+            }
+            return originalPath.apply($location, [path]);
+        };
     }
 
     const application = createApplication();

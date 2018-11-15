@@ -140,10 +140,6 @@ function A() {
 
     }
 
-
-
-
-
     function updateFailMessage(scope, execution) {
         if (execution.failed !== undefined) {
             scope.failed = true;

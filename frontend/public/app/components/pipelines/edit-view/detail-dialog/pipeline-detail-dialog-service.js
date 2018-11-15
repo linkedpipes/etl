@@ -1,3 +1,6 @@
+/**
+ * TODO Fix use of TAGs.
+ */
 ((definition) => {
     if (typeof define === "function" && define.amd) {
         define([
@@ -20,26 +23,13 @@
             model = _model;
 
             $scope.tags = {
-                "searchText" : "",
-                "all" : [],
+                "searchText": "",
+                "all": [],
                 "querySearch": tagQuerySearch
             };
 
-            $scope.detail = {
-                "uri":
-                    model.definition["@id"],
-                "label":
-                    jsonld.r.getPlainString(model.definition, SKOS.PREF_LABEL),
-                "tags":
-                    jsonld.r.getPlainStrings(model.definition, LP.HAS_TAG)
-            };
-
-            $scope.profile = {
-                "rdfRepositoryPolicy":
-                    jsonld.r.getIRI(model.profile, LP.HAS_REPO_POLICY),
-                "rdfRepositoryType":
-                    jsonld.r.getIRI(model.profile, LP.HAS_REPO_TYPE)
-            };
+            $scope.detail = createScopeDetail(model);
+            $scope.profile = createScopeProfile(model);
 
             // TODO Made clear that this returns all tags in the instance.
             $scope.tags.all = pipelineService.getTags();
@@ -53,7 +43,7 @@
         }
 
         function cancel($mdDialog) {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         }
 
         function save($mdDialog) {
@@ -82,6 +72,23 @@
     factory.$inject = [
         "service.pipelineDesign"
     ];
+
+    function createScopeDetail(model) {
+        return {
+            "uri": model.definition["@id"],
+            "label": jsonld.r.getPlainString(model.definition, SKOS.PREF_LABEL),
+            "tags": jsonld.r.getPlainStrings(model.definition, LP.HAS_TAG)
+        }
+    }
+
+    function createScopeProfile(model) {
+        return {
+            "rdfRepositoryPolicy":
+                jsonld.r.getIRI(model.profile, LP.HAS_REPO_POLICY),
+            "rdfRepositoryType":
+                jsonld.r.getIRI(model.profile, LP.HAS_REPO_TYPE)
+        };
+    }
 
     let initialized = false;
     return function init(app) {

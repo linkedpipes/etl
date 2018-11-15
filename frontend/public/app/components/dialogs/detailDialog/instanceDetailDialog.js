@@ -39,48 +39,54 @@ define([
         }
     };
 
-    function controller($scope, $mdDialog, component, template, pipeline,
-                        templateService) {
+    function controller($scope, $mdDialog, templateService,
+                        component, template, configuration) {
 
         $scope.api = {};
 
         $scope.onSave = () => {
-            // Update shared data.
+            const newComponent = jQuery.extend(true, {}, component);
+
+            // Update shared data with dialogs.
+            // TODO Rename to indicate that we are saving values from dialogs.
             $scope.api.save();
+
             // Save changes in instance.
-            jsonld.r.setStrings(component, SKOS.prefLabel,
+            jsonld.r.setStrings(newComponent, SKOS.prefLabel,
                 $scope.componentToEdit.label);
             if ($scope.componentToEdit.description === undefined ||
                 $scope.componentToEdit.description === "") {
-                jsonld.r.setStrings(component, DCTERMS.description,
+                jsonld.r.setStrings(newComponent, DCTERMS.description,
                     undefined);
             } else {
-                jsonld.r.setStrings(component, DCTERMS.description,
+                jsonld.r.setStrings(newComponent, DCTERMS.description,
                     $scope.componentToEdit.description);
             }
             if ($scope.componentToEdit.color === undefined) {
-                delete component[LP.color];
+                delete newComponent[LP.color];
             } else {
-                component[LP.color] = $scope.componentToEdit.color;
+                newComponent[LP.color] = $scope.componentToEdit.color;
             }
             // Save configuration.
-            var configGraph = jsonld.r.getIRI(component,
-                'http://linkedpipes.com/ontology/configurationGraph');
-            if (configGraph === undefined) {
-                configGraph = jsonld.r.getId(component) + '/configuration';
-                jsonld.r.setIRIs(component, LP.configurationGraph, configGraph);
-            }
+            // var configGraph = jsonld.r.getIRI(component,
+            //     'http://linkedpipes.com/ontology/configurationGraph');
+            // if (configGraph === undefined) {
+            //     configGraph = jsonld.r.getId(component) + '/configuration';
+            //     jsonld.r.setIRIs(component, LP.configurationGraph, configGraph);
+            // }
             if (!template.supportControl) {
                 // Update configuration.
-
             }
-            pipeline.model.graphs[configGraph] = $scope.configuration;
             //
-            $mdDialog.hide();
+            $mdDialog.hide({
+                "saved": true,
+                "component": newComponent,
+                "configuration": $scope.configuration
+            });
         };
 
         $scope.onCancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({"saved": false});
         };
 
         $scope.$on("$routeChangeStart", function($event, next, current) {
@@ -122,16 +128,16 @@ define([
 
             $scope.infoLink = template._coreReference.infoLink;
 
-            var configIRI = jsonld.r.getIRI(component,
+            const configIRI = jsonld.r.getIRI(component,
                 'http://linkedpipes.com/ontology/configurationGraph');
             if (configIRI === undefined) {
+                // TODO Should this be happening here?
                 templateService.fetchNewConfig(template.id).then((config) => {
                     $scope.configuration = jQuery.extend(true, [], config);
                     initDirective();
                 });
             } else {
-                $scope.configuration = jQuery.extend(true, [],
-                    pipeline.model.graphs[configIRI]);
+                $scope.configuration = jQuery.extend(true, [], configuration);
                 initDirective();
             }
         }
@@ -140,7 +146,7 @@ define([
 
     }
 
-    var _initialized = false;
+    let _initialized = false;
     return function init(app) {
         if (_initialized) {
             return;
@@ -150,8 +156,9 @@ define([
         instanceDirective(app);
         templateService(app);
         //
-        app.controller("instance.detail.dialog", ["$scope",
-            "$mdDialog", "component", "template", "data", "template.service",
+        app.controller("instance.detail.dialog", [
+            "$scope", "$mdDialog", "template.service",
+            "component", "template", "configuration",
             controller]);
     };
 

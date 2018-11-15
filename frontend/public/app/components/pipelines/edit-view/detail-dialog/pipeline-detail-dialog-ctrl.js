@@ -2,10 +2,11 @@
     if (typeof define === "function" && define.amd) {
         define([
             "angular",
-            "./pipeline-detail-dialog-service"
+            "./pipeline-detail-dialog-service",
+            "app/services/designService"
         ], definition);
     }
-})((angular, _service) => {
+})((angular, _service, _designService) => {
     "use strict";
 
     function controller($scope, $mdDialog, service, pipeline) {
@@ -31,6 +32,7 @@
         }
         initialized = true;
         _service(app);
+        _designService(app);
         app.controller("components.pipelines.detail.dialog", controller);
     }
 

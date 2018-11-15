@@ -98,7 +98,7 @@
     }
 
     function loadFromJsonLd(model, data, graphIri) {
-        console.time("message-loader");
+        console.time("Load messages");
         const graph = jsonld.q.getGraph(data, graphIri);
         jsonld.t.iterateResources(graph, (resource) => {
             const types = jsonld.r.getTypes(resource);
@@ -110,7 +110,7 @@
                 }
             }
         });
-        console.timeEnd("message-loader");
+        console.timeEnd("Load messages");
     }
 
     //

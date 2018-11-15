@@ -14,7 +14,8 @@
          */
         "FINISHED_MAPPED": 0,
         /**
-         * Finished component with disabled mapping, can be enabled.
+         * Finished component with disabled mapping. Mapping
+         * can be enabled.
          */
         "FINISHED": 1,
         /**

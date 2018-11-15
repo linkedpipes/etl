@@ -3,13 +3,8 @@
         define([
             "vocabulary",
             "jsonld",
-            "app/modules/execution-mapping"
+            "./execution-mapping"
         ], definition);
-    } else if (typeof module !== "undefined" && require) {
-        const vocabulary = require("./vocabulary");
-        const jsonld = require("./jsonld");
-        const executionMapping = require("./execution-mapping");
-        module.exports = definition(vocabulary, jsonld, executionMapping);
     }
 })((_vocabulary, jsonld, MAPPING_STATUS) => {
     "use strict";
@@ -85,7 +80,7 @@
     }
 
     function loadModelFromJsonLd(model, data, graphIri) {
-        console.time("execution-model.loadModel");
+        console.time("Loading pipeline execution");
         const graph = jsonld.q.getGraph(data, graphIri);
         jsonld.t.iterateResources(graph, (resource) => {
             const types = jsonld.r.getTypes(resource);
@@ -97,7 +92,7 @@
                 }
             }
         });
-        console.timeEnd("execution-model.loadModel");
+        console.timeEnd("Loading pipeline execution");
     }
 
     //

@@ -14,7 +14,7 @@
 
         $scope.getTagsMatchingQuery = service.getTagsMatchingQuery;
 
-        $scope.onExecute = service.execute;
+        $scope.onExecute = service.executePipeline;
 
         $scope.onExecuteWithoutDebugData = service.executeWithoutDebugData;
 
