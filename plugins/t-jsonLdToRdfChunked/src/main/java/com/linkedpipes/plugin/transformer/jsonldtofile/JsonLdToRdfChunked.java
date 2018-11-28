@@ -62,6 +62,7 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
             }
             progressReport.entryProcessed();
         }
+        flushBuffer();
         progressReport.done();
     }
 
