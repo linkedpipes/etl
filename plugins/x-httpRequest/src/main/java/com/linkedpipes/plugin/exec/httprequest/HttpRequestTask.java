@@ -9,8 +9,6 @@ import java.util.List;
 @RdfToPojo.Type(iri = HttpRequestVocabulary.TASK)
 public class HttpRequestTask implements GroupTask {
 
-    public static final String POST_WITH_BODY = "POST-BODY";
-
     @RdfToPojo.Type(iri = HttpRequestVocabulary.HEADER)
     public static class Header {
 
@@ -95,6 +93,9 @@ public class HttpRequestTask implements GroupTask {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_METHOD)
     private String method;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_POST_CONTENT_AS_BODY)
+    private boolean postContentAsBody = false;
+
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_HEADER)
     private List<Header> headers = new LinkedList<>();
 
@@ -139,6 +140,14 @@ public class HttpRequestTask implements GroupTask {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public boolean isPostContentAsBody() {
+        return postContentAsBody;
+    }
+
+    public void setPostContentAsBody(boolean postContentAsBody) {
+        this.postContentAsBody = postContentAsBody;
     }
 
     public List<Header> getHeaders() {

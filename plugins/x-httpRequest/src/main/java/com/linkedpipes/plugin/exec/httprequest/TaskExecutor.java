@@ -109,7 +109,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         if (task.getContent().isEmpty()) {
             return wrapConnection(connection);
         }
-        if (HttpRequestTask.POST_WITH_BODY.equals(task.getMethod())) {
+        if (task.isPostContentAsBody()) {
             if (task.getContent().size() == 1) {
                 return wrapPostBody(connection, task.getContent().get(0));
             } else {
@@ -126,7 +126,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     private HttpURLConnection createHttpConnection(URL url)
             throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(getMethod());
+        connection.setRequestMethod(task.getMethod());
         if (task.getTimeOut() != null) {
             connection.setConnectTimeout(task.getTimeOut());
             connection.setReadTimeout(task.getTimeOut());
@@ -137,14 +137,6 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return connection;
     }
 
-    private String getMethod() {
-        String method = task.getMethod();
-        if (method.contains("-")) {
-            return method.substring(0, method.indexOf("-"));
-        } else {
-            return method;
-        }
-    }
 
     private Connection wrapConnection(HttpURLConnection connection) {
         return new Connection(connection);
