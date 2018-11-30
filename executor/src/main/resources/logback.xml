@@ -1,4 +1,5 @@
 <configuration>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
@@ -7,7 +8,11 @@
             <pattern>[%thread] %-5level %logger{25} - %msg%n</pattern>
         </encoder>
     </appender>
+
     <root level="ALL">
         <appender-ref ref="STDOUT"/>
     </root>
+
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="ERROR"/>
+
 </configuration>
