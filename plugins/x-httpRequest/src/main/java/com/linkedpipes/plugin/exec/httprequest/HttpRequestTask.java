@@ -9,6 +9,8 @@ import java.util.List;
 @RdfToPojo.Type(iri = HttpRequestVocabulary.TASK)
 public class HttpRequestTask implements GroupTask {
 
+    public static final String POST_WITH_BODY = "POST-BODY";
+
     @RdfToPojo.Type(iri = HttpRequestVocabulary.HEADER)
     public static class Header {
 

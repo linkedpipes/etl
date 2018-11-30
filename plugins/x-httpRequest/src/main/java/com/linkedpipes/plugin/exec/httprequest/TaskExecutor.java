@@ -108,15 +108,25 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         HttpURLConnection connection = createHttpConnection(url);
         if (task.getContent().isEmpty()) {
             return wrapConnection(connection);
-        } else {
-            return wrapMultipart(connection, task);
         }
+        if (HttpRequestTask.POST_WITH_BODY.equals(task.getMethod())) {
+            if (task.getContent().size() == 1) {
+                return wrapPostBody(connection, task.getContent().get(0));
+            } else {
+                throw new LpException("POST with body "
+                        + "can be used only with a single content file. "
+                        + "Task: {}",
+                        task.getIri());
+            }
+        }
+        return wrapMultipart(connection, task);
+
     }
 
     private HttpURLConnection createHttpConnection(URL url)
             throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(task.getMethod());
+        connection.setRequestMethod(getMethod());
         if (task.getTimeOut() != null) {
             connection.setConnectTimeout(task.getTimeOut());
             connection.setReadTimeout(task.getTimeOut());
@@ -127,7 +137,25 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return connection;
     }
 
+    private String getMethod() {
+        String method = task.getMethod();
+        if (method.contains("-")) {
+            return method.substring(0, method.indexOf("-"));
+        } else {
+            return method;
+        }
+    }
+
     private Connection wrapConnection(HttpURLConnection connection) {
+        return new Connection(connection);
+    }
+
+    private Connection wrapPostBody(
+            HttpURLConnection connection, HttpRequestTask.Content content)
+            throws IOException {
+        connection.setDoOutput(true);
+        connection.addRequestProperty("Content-Type", "application/" + "POST");
+        taskContentWriter.writeContentToConnection(connection, content);
         return new Connection(connection);
     }
 
