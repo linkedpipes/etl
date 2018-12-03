@@ -14,7 +14,6 @@ public class StatementsCollector extends AbstractRDFHandler {
     @Override
     public void startRDF() throws RDFHandlerException {
         super.startRDF();
-        statements.clear();
     }
 
     @Override
