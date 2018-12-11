@@ -82,13 +82,18 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     }
 
     private void performRequest(URL url) throws LpException {
+        LOG.debug("Creating connection {} ...", url);
         try (Connection connection = createConnection(url)) {
+            LOG.debug("Requesting response {} ...", url);
             connection.finishRequest();
             if (shouldFollowRedirect(connection)) {
+                LOG.debug("Following redirect {} ...", url);
                 handleRedirect(connection);
             } else {
+                LOG.debug("Handling response {} ...", url);
                 handleResponse(connection);
             }
+            LOG.debug("Done {} ...", url);
         } catch (Exception ex) {
             throw exceptionFactory.failure("Request failed for: {}", url, ex);
         }
@@ -110,6 +115,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             return wrapConnection(connection);
         }
         if (task.isPostContentAsBody()) {
+            LOG.debug("Adding body ...");
             if (task.getContent().size() == 1) {
                 return wrapPostBody(connection, task.getContent().get(0));
             } else {
@@ -119,6 +125,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
                         task.getIri());
             }
         }
+        LOG.debug("Wrapping as a multipart ...");
         return wrapMultipart(connection, task);
 
     }
@@ -130,6 +137,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         if (task.getTimeOut() != null) {
             connection.setConnectTimeout(task.getTimeOut());
             connection.setReadTimeout(task.getTimeOut());
+            LOG.debug("Setting timetout to: {}", task.getTimeOut());
         }
         for (HttpRequestTask.Header header : task.getHeaders()) {
             connection.setRequestProperty(header.getName(), header.getValue());
