@@ -71,7 +71,7 @@
 
         function importFile() {
             return pipelineApi.asLocalFromFile(
-                $http, $scope.url, $scope.updateTemplates)
+                $http, $scope.file, $scope.updateTemplates)
                 .then((pipeline) => {
                     // Update templates.
                     return new Promise((resolve, reject) => {

@@ -95,7 +95,7 @@
     function asLocalFromIri($http, pipelineIri, updateTemplates) {
         const formData = new FormData();
         addTransformOptions(formData, true, updateTemplates);
-        const iri = '/resources/localize?pipeline=' + pipelineIri;
+        const iri = '/resources/pipelines/localize?pipeline=' + pipelineIri;
         return $http.post(iri, formData, noTransformConfiguration())
             .then((data) => data["data"]);
     }
@@ -104,7 +104,7 @@
         const formData = new FormData();
         formData.append("pipeline", fileWithPipeline);
         addTransformOptions(formData, true, updateTemplates);
-        const iri = '/resources/localize';
+        const iri = '/resources/pipelines/localize';
         return $http.post(iri, formData, noTransformConfiguration())
             .then((data) => data["data"]);
     }
