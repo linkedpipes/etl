@@ -82,13 +82,18 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     }
 
     private void performRequest(URL url) throws LpException {
+        LOG.debug("Creating connection {} ...", url);
         try (Connection connection = createConnection(url)) {
+            LOG.debug("Requesting response {} ...", url);
             connection.finishRequest();
             if (shouldFollowRedirect(connection)) {
+                LOG.debug("Following redirect {} ...", url);
                 handleRedirect(connection);
             } else {
+                LOG.debug("Handling response {} ...", url);
                 handleResponse(connection);
             }
+            LOG.debug("Done {} ...", url);
         } catch (Exception ex) {
             throw exceptionFactory.failure("Request failed for: {}", url, ex);
         }
@@ -108,22 +113,49 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         HttpURLConnection connection = createHttpConnection(url);
         if (task.getContent().isEmpty()) {
             return wrapConnection(connection);
-        } else {
-            return wrapMultipart(connection, task);
         }
+        if (task.isPostContentAsBody()) {
+            LOG.debug("Adding body ...");
+            if (task.getContent().size() == 1) {
+                return wrapPostBody(connection, task.getContent().get(0));
+            } else {
+                throw new LpException("POST with body "
+                        + "can be used only with a single content file. "
+                        + "Task: {}",
+                        task.getIri());
+            }
+        }
+        LOG.debug("Wrapping as a multipart ...");
+        return wrapMultipart(connection, task);
+
     }
 
     private HttpURLConnection createHttpConnection(URL url)
             throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(task.getMethod());
+        if (task.getTimeOut() != null) {
+            connection.setConnectTimeout(task.getTimeOut());
+            connection.setReadTimeout(task.getTimeOut());
+            LOG.debug("Setting timetout to: {}", task.getTimeOut());
+        }
         for (HttpRequestTask.Header header : task.getHeaders()) {
             connection.setRequestProperty(header.getName(), header.getValue());
         }
         return connection;
     }
 
+
     private Connection wrapConnection(HttpURLConnection connection) {
+        return new Connection(connection);
+    }
+
+    private Connection wrapPostBody(
+            HttpURLConnection connection, HttpRequestTask.Content content)
+            throws IOException {
+        connection.setDoOutput(true);
+        connection.addRequestProperty("Content-Type", "application/" + "POST");
+        taskContentWriter.writeContentToConnection(connection, content);
         return new Connection(connection);
     }
 

@@ -1,18 +1,16 @@
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
         <encoder>
-            <!--<pattern>[%d] [%thread] %-5level %logger{25} - %msg%n</pattern>-->
-            <pattern>%d{"HH:mm:ss,SSS"} %-5level %logger{25} - %msg%n</pattern>
+            <pattern>%d{"HH:mm:ss,SSS"} %-5level %logger{50} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- We need to leave this at the ALL level so we do not filter for other appenders. -->
-    <root level="ALL">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
+
+    <logger name="com.linkedpipes" level="DEBUG"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="ERROR"/>
 
 </configuration>

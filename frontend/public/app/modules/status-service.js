@@ -31,15 +31,19 @@
     function httpError(actionLabel, response) {
         console.log("HTTP error: ", actionLabel, response);
         //
-        const error = response["data"]["error"];
         let message;
-        switch (error["source"]) {
-            case "FRONTEND":
-                message = prepareFromFrontendErrorMessage(error);
-                break;
-            default:
-                message = prepareFromErrorMessage(error);
-                break;
+        const error = response["data"]["error"];
+        if (error) {
+            switch (error["source"]) {
+                case "FRONTEND":
+                    message = prepareFromFrontendErrorMessage(error);
+                    break;
+                default:
+                    message = prepareFromErrorMessage(error);
+                    break;
+            }
+        } else {
+            message = response.statusText;
         }
         $notification.error({
             "title": actionLabel,

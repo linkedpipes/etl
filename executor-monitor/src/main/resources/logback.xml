@@ -9,9 +9,10 @@
         </encoder>
     </appender>
 
-    <!-- We need to leave this at the ALL level so we do not filter for other appenders. -->
     <root level="ALL">
         <appender-ref ref="STDOUT"/>
     </root>
+
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="ERROR"/>
 
 </configuration>

@@ -304,7 +304,8 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode >= 400) {
                 throw exceptionFactory.failure(
-                        "Can't upload data, reason: {}",
+                        "Can't upload data, status: {} \n Server response: {}",
+                        statusCode,
                         response.getStatusLine().getReasonPhrase());
             }
         } catch (IOException | ParseException ex) {

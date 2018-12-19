@@ -1,0 +1,30 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <div>
+        <b>Note</b>: This component uses the <a href="https://github.com/semarglproject/semargl">semargl library</a>,
+        which has a <a href="https://github.com/semarglproject/semargl/issues/52">bug</a> with `"@container : @list"`
+        in context. If you use that, use "Files to RDF"/"Files to RDF Chunked" instead.
+    </div>
+    <br/>
+    <md-input-container class="md-block" ng-hide="dialog.commitSize.hide">
+        <label>Files per chunk</label>
+        <input type="number" ng-model="dialog.commitSize.value"
+               min="1"
+               ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit">
+    </md-input-container>
+    <md-switch ng-model="dialog.softFail.value"
+               ng-disabled="dialog.softFail.disabled || dialog.softFail.inherit"
+               ng-hide="dialog.softFail.hide">
+        Skip file on failure
+    </md-switch>
+    <md-switch ng-model="dialog.fileReference.value"
+               ng-disabled="dialog.fileReference.disabled || dialog.fileReference.inherit"
+               ng-hide="dialog.fileReference.hide">
+        Add file reference
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.filePredicate.hide">
+        <label>File name predicate</label>
+        <input ng-model="dialog.filePredicate.value"
+               ng-disabled="dialog.filePredicate.disabled || dialog.filePredicate.inherit || !dialog.fileReference.value">
+    </md-input-container>
+</div>

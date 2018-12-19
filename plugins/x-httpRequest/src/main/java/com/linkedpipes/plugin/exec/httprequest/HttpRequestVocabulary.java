@@ -17,6 +17,9 @@ public final class HttpRequestVocabulary {
 
     public static final String HAS_METHOD = PREFIX + "method";
 
+    public static final String HAS_POST_CONTENT_AS_BODY =
+            PREFIX + "postContentAsBody";
+
     public static final String HAS_HEADER = PREFIX + "header";
 
     public static final String HEADER = PREFIX + "Header";
@@ -49,5 +52,7 @@ public final class HttpRequestVocabulary {
     public static final String HAS_FOLLOW_REDIRECT = PREFIX + "followRedirect";
 
     public static final String ENCODE_URL = PREFIX + "encodeUrl";
+
+    public static final String HAS_TIME_OUT = PREFIX + "timeout";
 
 }

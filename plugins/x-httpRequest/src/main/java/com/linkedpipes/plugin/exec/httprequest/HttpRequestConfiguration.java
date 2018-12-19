@@ -21,6 +21,9 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.ENCODE_URL)
     private boolean encodeUrl = false;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_TIME_OUT)
+    private Integer timeOut = null;
+
     @Override
     public int getThreadsNumber() {
         return threadsNumber;
@@ -61,6 +64,14 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
 
     public void setEncodeUrl(boolean encodeUrl) {
         this.encodeUrl = encodeUrl;
+    }
+
+    public Integer getTimeOut() {
+        return timeOut;
+    }
+
+    public void setTimeOut(Integer timeOut) {
+        this.timeOut = timeOut;
     }
 
 }

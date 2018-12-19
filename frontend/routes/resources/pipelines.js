@@ -205,7 +205,7 @@ function resolvePipeline(req, callback) {
     } else {
         url = req.query["pipeline"];
     }
-    console.log("url", url);
+    console.log("Resolve pipeline:", url);
     request.get({
         "url": url,
         "headers": {

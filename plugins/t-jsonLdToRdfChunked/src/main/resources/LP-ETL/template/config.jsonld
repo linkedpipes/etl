@@ -1,0 +1,7 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#softFail" : false
+    }
+]

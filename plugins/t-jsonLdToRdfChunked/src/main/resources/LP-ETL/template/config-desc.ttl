@@ -1,0 +1,29 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/1.0.0/configuration/desc/commitSize> ,
+        <http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration/desc/softFail> ,
+        <http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration/desc/fileReference> ,
+        <http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration/desc/filePredicate> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/1.0.0/configuration/desc/commitSize>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#commitSize> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#commitSizeControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration/desc/softFail>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#softFailControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration/desc/fileReference>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#fileReference> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#fileReferenceControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdToRdfChunked/0.0.0/configuration/desc/filePredicate>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#filePredicate> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfChunked#filePredicateControl> .
