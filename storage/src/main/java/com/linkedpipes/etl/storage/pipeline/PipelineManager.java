@@ -13,7 +13,12 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 class PipelineManager {
@@ -54,23 +59,23 @@ class PipelineManager {
 
     @PostConstruct
     public void initialize() {
-        this.storage.loadPipelines((pipeline, rdf) -> {
-            this.infoFacade.onPipelineCreate(pipeline, rdf);
-            this.reserved.add(pipeline.getIri());
+        storage.loadPipelines((pipeline, rdf) -> {
+            infoFacade.onPipelineCreate(pipeline, rdf);
+            reserved.add(pipeline.getIri());
         });
     }
 
     public Map<String, Pipeline> getPipelines() {
-        return this.storage.getPipelines();
+        return storage.getPipelines();
     }
 
     public IRI reservePipelineIri() {
         String iri;
         synchronized (lock) {
             do {
-                iri = configuration.getDomainName() +
-                        "/resources/pipelines/" +
-                        (new Date()).getTime();
+                iri = configuration.getDomainName()
+                        + "/resources/pipelines/"
+                        + (new Date()).getTime();
             } while (reserved.contains(iri));
             reserved.add(iri);
         }
@@ -84,13 +89,13 @@ class PipelineManager {
     public Pipeline createPipeline(
             Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
             throws OperationFailed {
-        IRI iri = this.reservePipelineIri();
+        IRI iri = reservePipelineIri();
         if (pipelineRdf.isEmpty()) {
             pipelineRdf = EmptyPipelineFactory.create(iri);
         } else {
             pipelineRdf = localizePipeline(pipelineRdf, optionsRdf, iri);
         }
-        Pipeline pipeline = this.storage.createPipeline(iri, pipelineRdf);
+        Pipeline pipeline = storage.createPipeline(iri, pipelineRdf);
         infoFacade.onPipelineCreate(pipeline, pipelineRdf);
         return pipeline;
     }
@@ -98,23 +103,18 @@ class PipelineManager {
     public void updatePipeline(
             Pipeline pipeline, Collection<Statement> rdf)
             throws OperationFailed {
-        this.infoFacade.onPipelineUpdate(pipeline, rdf);
-        this.storage.update(pipeline, rdf);
+        infoFacade.onPipelineUpdate(pipeline, rdf);
+        storage.update(pipeline, rdf);
     }
 
     public void deletePipeline(Pipeline pipeline) {
-        this.infoFacade.onPipelineDelete(pipeline);
-        this.storage.delete(pipeline);
+        infoFacade.onPipelineDelete(pipeline);
+        storage.delete(pipeline);
     }
 
     /**
      * Return RDF definition of the pipeline with optional additional
      * information.
-     *
-     * @param pipeline
-     * @param includeTemplate
-     * @param includeMapping
-     * @return
      */
     public Collection<Statement> getPipelineRdf(
             Pipeline pipeline,
@@ -122,19 +122,19 @@ class PipelineManager {
             boolean includeMapping,
             boolean removePrivateConfig)
             throws BaseException {
-        Collection<Statement> rdf = this.storage.getPipelineRdf(pipeline);
+        Collection<Statement> rdf = storage.getPipelineRdf(pipeline);
         if (!includeTemplate && !includeMapping && !removePrivateConfig) {
             return rdf;
         }
         Collection<Statement> additionalRdf = new LinkedList<>();
         Set<Template> templates = null;
         if (includeTemplate) {
-            templates = this.exportPipeline.getTemplates(pipeline, rdf);
+            templates = exportPipeline.getTemplates(pipeline, rdf);
             additionalRdf.addAll(exportPipeline.getTemplateRdf(templates));
         }
         if (includeMapping) {
             if (templates == null) {
-                templates = this.exportPipeline.getTemplates(pipeline, rdf);
+                templates = exportPipeline.getTemplates(pipeline, rdf);
             }
             additionalRdf.addAll(exportPipeline.getMappingRdf(templates));
         }
@@ -146,8 +146,7 @@ class PipelineManager {
     }
 
     private Collection<Statement> localizePipeline(
-            Collection<Statement> pipeline,
-            Collection<Statement> options,
+            Collection<Statement> pipeline, Collection<Statement> options,
             IRI pipelineIri)
             throws OperationFailed {
         try {
@@ -161,8 +160,7 @@ class PipelineManager {
     }
 
     public Collection<Statement> localizePipeline(
-            Collection<Statement> pipeline,
-            Collection<Statement> options)
+            Collection<Statement> pipeline, Collection<Statement> options)
             throws OperationFailed {
         try {
             pipeline = transformationFacade.localizeAndMigrate(

@@ -45,38 +45,8 @@ public class StatementsCollector implements BackendTripleWriter {
     }
 
     @Override
-    public void iri(String subject, String predicate, String object) {
-        add(subject, predicate, valueFactory.createIRI(object));
-    }
-
-    @Override
-    public void bool(String subject, String predicate, boolean object) {
-        add(subject, predicate, valueFactory.createLiteral(object));
-    }
-
-    @Override
-    public void string(String subject, String predicate, String object,
-            String language) {
-        Value objectValue;
-        if (language == null) {
-            objectValue = valueFactory.createLiteral(object);
-        } else {
-            objectValue = valueFactory.createLiteral(object, language);
-        }
-        add(subject, predicate, objectValue);
-    }
-
-    @Override
-    public void typed(String subject, String predicate, String object,
-            String type) {
-        Value value = valueFactory.createLiteral(
-                object, valueFactory.createIRI(type));
-        add(subject, predicate, value);
-    }
-
-    @Override
     public void add(String subject, String predicate, BackendRdfValue value) {
-        if(value.getType() == null) {
+        if (value.getType() == null) {
             iri(subject, predicate, value.asString());
         } else if (value.getType().equals(XSD.LANG_STRING)) {
             string(subject, predicate, value.asString(), value.getLanguage());
@@ -88,6 +58,36 @@ public class StatementsCollector implements BackendTripleWriter {
     @Override
     public void add(RdfTriple triple) {
         add(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    }
+
+    @Override
+    public void iri(String subject, String predicate, String object) {
+        add(subject, predicate, valueFactory.createIRI(object));
+    }
+
+    @Override
+    public void bool(String subject, String predicate, boolean object) {
+        add(subject, predicate, valueFactory.createLiteral(object));
+    }
+
+    @Override
+    public void string(
+            String subject, String predicate, String object, String language) {
+        Value objectValue;
+        if (language == null) {
+            objectValue = valueFactory.createLiteral(object);
+        } else {
+            objectValue = valueFactory.createLiteral(object, language);
+        }
+        add(subject, predicate, objectValue);
+    }
+
+    @Override
+    public void typed(
+            String subject, String predicate, String object, String type) {
+        Value value = valueFactory.createLiteral(
+                object, valueFactory.createIRI(type));
+        add(subject, predicate, value);
     }
 
     @Override

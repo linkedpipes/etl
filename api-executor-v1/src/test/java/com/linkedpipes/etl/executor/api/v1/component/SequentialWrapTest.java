@@ -41,20 +41,17 @@ public class SequentialWrapTest {
         boolean executed = false;
 
         @Override
-        public void execute() throws LpException {
+        public void execute() {
             executed = true;
         }
 
     }
 
     @Test
-    public void injectAndExecute() throws LpException, IOException{
-        TestComponent component = new TestComponent();
+    public void injectAndExecute() throws LpException, IOException {
         RdfSource rdfSource = Mockito.mock(RdfSource.class);
-        SequentialWrap wrap = new SequentialWrap(
-                component, "http://component", rdfSource,
-                new DefaultServiceFactory());
-        File path = File.createTempFile("lp-test-", "");
+        File path = new File(File.createTempFile("lp-test-", ""), "working");
+
 
         RdfValue pathValue = Mockito.mock(RdfValue.class);
         Mockito.when(pathValue.asString()).thenReturn(path.toURI().toString());
@@ -69,6 +66,10 @@ public class SequentialWrapTest {
         DataUnit output = Mockito.mock(DataUnit.class);
         Mockito.when(output.getBinding()).thenReturn("http://dataUnit/output");
         dataUnits.put("http://dataUnit/output", output);
+        TestComponent component = new TestComponent();
+        SequentialWrap wrap = new SequentialWrap(
+                component, "http://component", rdfSource,
+                new DefaultServiceFactory());
         //
         wrap.initialize(dataUnits, null);
         Assert.assertNotNull(component.input);

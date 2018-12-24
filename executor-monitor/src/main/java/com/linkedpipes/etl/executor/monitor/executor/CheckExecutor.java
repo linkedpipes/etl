@@ -38,7 +38,7 @@ class CheckExecutor {
     public void check(Executor executor) {
         String response;
         try {
-            response = this.restClient.check(executor);
+            response = restClient.check(executor);
             if (!executor.isAlive()) {
                 onExecutorIsAlive(executor);
             }
@@ -86,11 +86,11 @@ class CheckExecutor {
         LOG.error("Can't connect to: {}",
                 executor.getAddress(), ex.getLocalizedMessage());
         executor.setAlive(false);
-        this.listener.onExecutorUnavailable(executor);
+        listener.onExecutorUnavailable(executor);
     }
 
     private void onExecutorWithoutExecution(Executor executor) {
-        this.listener.onExecutorWithoutExecution(executor);
+        listener.onExecutorWithoutExecution(executor);
     }
 
     private JsonNode toJson(String body) throws MonitorException {
@@ -103,21 +103,21 @@ class CheckExecutor {
 
     private Execution getExecution(Executor executor, JsonNode overview)
             throws MonitorException {
-        Execution execution = this.executions.getExecution(executor);
+        Execution execution = executions.getExecution(executor);
         if (execution == null) {
-            return this.executions.getExecution(overview);
+            return executions.getExecution(overview);
         }
         return execution;
     }
 
     private void reportExecutorHasExecution(
             Executor executor, Execution execution) {
-        this.listener.onExecutorHasExecution(execution, executor);
+        listener.onExecutorHasExecution(execution, executor);
     }
 
     private void updateFromOverview(
             Execution execution, JsonNode overview) {
-        this.listener.onOverview(execution, overview);
+        listener.onOverview(execution, overview);
     }
 
 }

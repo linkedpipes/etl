@@ -23,21 +23,22 @@ class MergeHierarchy {
     private Model templateModel;
 
     private Model.Entity templateEntity;
+
     Statements merge(
             Collection<Statements> configurationsRdf,
             Description description,
             String baseIri, IRI graph) throws BaseException {
-        this.initialize(description);
+        initialize(description);
         //
         for (Statements configurationRdf : configurationsRdf) {
-            if (this.templateModel == null) {
+            if (templateModel == null) {
                 this.loadModel(configurationRdf);
                 continue;
             }
             // Create instance of current configuration.
             Model childModel = Model.create(configurationRdf);
             Model.Entity childEntity = childModel.select(
-                    null, RDF.TYPE, this.description.getType()).single();
+                    null, RDF.TYPE, description.getType()).single();
             if (childEntity == null) {
                 LOG.warn("Missing configuration entity.");
                 continue;
@@ -46,19 +47,19 @@ class MergeHierarchy {
                 mergePerPredicate(childModel, childEntity);
             } else {
                 boolean continueEvaluation =
-                        mergerGlobalControl(childModel,childEntity);
+                        mergerGlobalControl(childModel, childEntity);
                 if (!continueEvaluation) {
                     break;
                 }
             }
         }
-        if (this.templateModel == null) {
+        if (templateModel == null) {
             LOG.warn("No configuration found.");
-            return Statements.ArrayList();
+            return Statements.arrayList();
         }
-        this.templateModel.updateResources(baseIri + "/");
+        templateModel.updateResources(baseIri + "/");
         return new Statements(
-                this.templateModel.asStatements(this.templateEntity, graph));
+                templateModel.asStatements(templateEntity, graph));
     }
 
     private void initialize(Description description) {
@@ -68,29 +69,29 @@ class MergeHierarchy {
     }
 
     private void loadModel(Collection<Statement> statements) {
-        this.templateModel = Model.create(statements);
-        this.templateEntity = this.templateModel.select(
-                null, RDF.TYPE, this.description.getType()).single();
-        if (this.templateEntity == null) {
-            this.templateModel = null;
+        templateModel = Model.create(statements);
+        templateEntity = templateModel.select(
+                null, RDF.TYPE, description.getType()).single();
+        if (templateEntity == null) {
+            templateModel = null;
             LOG.warn("Missing configuration entity for: {}",
-                    this.description.getType());
+                    description.getType());
         }
     }
 
     private void mergePerPredicate(Model childModel, Model.Entity childEntity)
             throws BaseException {
         // Merge from children to templateModel.
-        if (this.description.getMembers().isEmpty()) {
+        if (description.getMembers().isEmpty()) {
             // We should load all properties from children, ald overwrite
             // those in parent -> this can be done by simply swapping
             //                    the configurations.
-            this.templateModel = childModel;
-            this.templateEntity = childEntity;
+            templateModel = childModel;
+            templateEntity = childEntity;
         } else {
             // Use from definition.
-            for (Description.Member member : this.description.getMembers()) {
-                mergeEntities(member, this.templateEntity, childEntity);
+            for (Description.Member member : description.getMembers()) {
+                mergeEntities(member, templateEntity, childEntity);
             }
         }
     }
@@ -98,25 +99,25 @@ class MergeHierarchy {
     private boolean mergerGlobalControl(
             Model childModel, Model.Entity childConfiguration) {
         String control = childConfiguration.getPropertyAsStr(
-                this.description.getControl());
+                description.getControl());
         if (LP_OBJECTS.INHERIT.equals(control)) {
             // Skip loading this object.
             return true;
         }
         if (LP_OBJECTS.INHERIT_AND_FORCE.equals(control)) {
             // Do not load anything from this instance, not any further.
-            this.templateEntity.setIri(
-                    this.description.getControl(), LP_OBJECTS.FORCED);
+            templateEntity.setIri(
+                    description.getControl(), LP_OBJECTS.FORCED);
             return false;
         }
         // Merge child to model.
-        this.templateModel = childModel;
-        this.templateEntity = childConfiguration;
+        templateModel = childModel;
+        templateEntity = childConfiguration;
         //
         if (LP_OBJECTS.FORCE.equals(control)) {
             // Do not load anything in any further instance.
-            this.templateEntity.setIri(
-                    this.description.getControl(), LP_OBJECTS.FORCED);
+            templateEntity.setIri(
+                    description.getControl(), LP_OBJECTS.FORCED);
             return false;
         }
         return true;
@@ -126,10 +127,6 @@ class MergeHierarchy {
     /**
      * Based on the configuration merge a single property value from
      * childrenEntity to the parentEntity.
-     *
-     * @param member
-     * @param parent
-     * @param children
      */
     private void mergeEntities(
             Description.Member member,

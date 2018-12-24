@@ -19,9 +19,7 @@ public class SimpleTaskSourceTest {
     public void getAllTasks() {
         SimpleTaskSource<MockedTask> source = new SimpleTaskSource<>(
                 Arrays.asList(
-                        new MockedTask(),
-                        new MockedTask(),
-                        new MockedTask()));
+                        new MockedTask(), new MockedTask(), new MockedTask()));
         Assert.assertNotNull(source.getTask());
         Assert.assertNotNull(source.getTask());
         Assert.assertNotNull(source.getTask());
@@ -33,10 +31,7 @@ public class SimpleTaskSourceTest {
     public void getTasks() {
         SimpleTaskSource<MockedTask> source = new SimpleTaskSource<>(
                 Arrays.asList(
-                        new MockedTask(),
-                        new MockedTask(),
-                        new MockedTask()));
-
+                        new MockedTask(), new MockedTask(), new MockedTask()));
         MockedTask firstTask = source.getTask();
         Assert.assertNotNull(firstTask);
         source.onTaskFinished(firstTask);
@@ -55,9 +50,7 @@ public class SimpleTaskSourceTest {
     @Test
     public void taskFailed() {
         SimpleTaskSource<MockedTask> source = new SimpleTaskSource<>(
-                Arrays.asList(
-                        new MockedTask(),
-                        new MockedTask()));
+                Arrays.asList(new MockedTask(), new MockedTask()));
         MockedTask firstTask = source.getTask();
         Assert.assertNotNull(firstTask);
         source.onTaskFailed(firstTask);
@@ -71,9 +64,7 @@ public class SimpleTaskSourceTest {
     @Test
     public void taskFailedSkipOnError() {
         SimpleTaskSource<MockedTask> source = new SimpleTaskSource<>(
-                Arrays.asList(
-                        new MockedTask(),
-                        new MockedTask()));
+                Arrays.asList(new MockedTask(), new MockedTask()));
         source.setSkipOnError(true);
         MockedTask firstTask = source.getTask();
         Assert.assertNotNull(firstTask);

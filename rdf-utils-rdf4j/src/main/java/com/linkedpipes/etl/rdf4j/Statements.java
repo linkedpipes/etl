@@ -1,6 +1,10 @@
 package com.linkedpipes.etl.rdf4j;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
@@ -13,7 +17,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Set;
 
 public class Statements implements Collection<Statement> {
 
@@ -29,26 +40,26 @@ public class Statements implements Collection<Statement> {
         this.collection = collection;
     }
 
-    public static Statements ArrayList() {
+    public static Statements arrayList() {
         return new Statements(new ArrayList<>());
     }
 
-    public static Statements ArrayList(File file) throws IOException {
+    public static Statements arrayList(File file) throws IOException {
         Statements result = new Statements(new ArrayList<>());
         result.addAll(file);
         return result;
     }
 
-    public static Statements ArrayList(int size) {
+    public static Statements arrayList(int size) {
         return new Statements(new ArrayList<>(size));
     }
 
-    public static Statements EmptyReadOnly() {
+    public static Statements emptyReadOnly() {
         return new Statements(Collections.emptyList());
     }
 
     public void setDefaultGraph(String defaultGraph) {
-        this.setDefaultGraph(this.valueFactory.createIRI(defaultGraph));
+        this.setDefaultGraph(valueFactory.createIRI(defaultGraph));
     }
 
     public void setDefaultGraph(IRI defaultGraph) {
@@ -56,99 +67,105 @@ public class Statements implements Collection<Statement> {
     }
 
     public void addIri(String s, String p, String o) {
-        this.addIri(this.valueFactory.createIRI(s), p, o);
+        this.addIri(valueFactory.createIRI(s), p, o);
     }
 
     public void addIri(Resource s, String p, String o) {
-        this.add(s, p, this.valueFactory.createIRI(o));
+        this.add(s, p, valueFactory.createIRI(o));
     }
 
     public void addIri(String s, IRI p, String o) {
-        this.addIri(this.valueFactory.createIRI(s), p, o);
+        this.addIri(valueFactory.createIRI(s), p, o);
     }
 
     public void addIri(Resource s, IRI p, String o) {
-        this.add(s, p, this.valueFactory.createIRI(o));
+        this.add(s, p, valueFactory.createIRI(o));
     }
 
     public void addString(String s, String p, String o) {
-        this.addString(this.valueFactory.createIRI(s), p, o);
+        this.addString(valueFactory.createIRI(s), p, o);
     }
 
     public void addString(Resource s, String p, String o) {
-        this.add(s, p, this.valueFactory.createLiteral(o));
+        this.add(s, p, valueFactory.createLiteral(o));
     }
 
 
     public void addString(String s, IRI p, String o) {
         this.add(
-                this.valueFactory.createIRI(s),
+                valueFactory.createIRI(s),
                 p,
-                this.valueFactory.createLiteral(o));
+                valueFactory.createLiteral(o));
     }
 
     public void addString(Resource s, IRI p, String o) {
-        this.add(s, p, this.valueFactory.createLiteral(o));
+        this.add(s, p, valueFactory.createLiteral(o));
     }
 
     public void addInt(String s, String p, int o) {
         this.add(
-                this.valueFactory.createIRI(s),
-                this.valueFactory.createIRI(p),
-                this.valueFactory.createLiteral(o));
+                valueFactory.createIRI(s),
+                valueFactory.createIRI(p),
+                valueFactory.createLiteral(o));
     }
 
 
     public void addInt(Resource s, String p, int o) {
-        this.add(s, p, this.valueFactory.createLiteral(o));
+        this.add(s, p, valueFactory.createLiteral(o));
     }
 
     public void addInt(Resource s, IRI p, int o) {
-        this.add(s, p, this.valueFactory.createLiteral(o));
+        this.add(s, p, valueFactory.createLiteral(o));
     }
 
     public void addBoolean(String s, String p, boolean o) {
-        this.addBoolean(s, this.valueFactory.createIRI(p), o);
+        this.addBoolean(s, valueFactory.createIRI(p), o);
     }
 
     public void addBoolean(String s, IRI p, boolean o) {
-        this.addBoolean(this.valueFactory.createIRI(s), p, o);
+        this.addBoolean(valueFactory.createIRI(s), p, o);
     }
 
     public void addBoolean(Resource s, IRI p, boolean o) {
-        this.add(s, p, this.valueFactory.createLiteral(o));
+        this.add(s, p, valueFactory.createLiteral(o));
     }
 
     public void addDate(String s, String p, Date o) {
         this.add(
-                this.valueFactory.createIRI(s),
-                this.valueFactory.createIRI(p),
-                this.valueFactory.createLiteral(o));
+                valueFactory.createIRI(s),
+                valueFactory.createIRI(p),
+                valueFactory.createLiteral(o));
     }
 
     public void addDate(Resource s, String p, Date o) {
-        this.addDate(s, this.valueFactory.createIRI(p), o);
+        this.addDate(s, valueFactory.createIRI(p), o);
     }
 
     public void addDate(Resource s, IRI p, Date o) {
-        this.add(s, p, this.valueFactory.createLiteral(o));
+        this.add(s, p, valueFactory.createLiteral(o));
     }
 
     public void addLong(String s, String p, Long o) {
         this.add(
-                this.valueFactory.createIRI(s),
-                this.valueFactory.createIRI(p),
-                this.valueFactory.createLiteral(o));
+                valueFactory.createIRI(s),
+                valueFactory.createIRI(p),
+                valueFactory.createLiteral(o));
     }
 
     public void add(Resource s, String p, Value o) {
-        this.add(s, this.valueFactory.createIRI(p), o);
+        this.add(s, valueFactory.createIRI(p), o);
     }
 
     public void add(Resource s, IRI p, Value o) {
-        this.collection.add(this.valueFactory.createStatement(
+        this.collection.add(valueFactory.createStatement(
                 s, p, o, this.defaultGraph));
     }
+
+    @Override
+    public boolean add(Statement statement) {
+        return this.collection.add(statement);
+    }
+
 
     public void addAll(File file) throws IOException {
         Optional<RDFFormat> format =
@@ -159,13 +176,19 @@ public class Statements implements Collection<Statement> {
         this.addAll(file, format.get());
     }
 
+    @Override
+    public boolean addAll(Collection<? extends Statement> collection) {
+        return this.collection.addAll(collection);
+    }
+
     public void addAll(File file, RDFFormat format) throws IOException {
         try (InputStream stream = new FileInputStream(file)) {
             this.addAll(stream, format);
         }
     }
 
-    public void addAll(InputStream stream, RDFFormat format) throws IOException {
+    public void addAll(InputStream stream, RDFFormat format)
+            throws IOException {
         try {
             RDFParser parser = Rio.createParser(format);
             parser.setRDFHandler(new StatementCollector(this.collection));
@@ -176,11 +199,11 @@ public class Statements implements Collection<Statement> {
     }
 
     public Statements selectByGraph(String graph) {
-        return selectByGraph(this.valueFactory.createIRI(graph));
+        return selectByGraph(valueFactory.createIRI(graph));
     }
 
     public Statements selectByGraph(IRI graph) {
-        Statements result = Statements.ArrayList();
+        Statements result = Statements.arrayList();
         this.collection.stream()
                 .filter((st) -> graph.equals(st.getContext()))
                 .forEach((st) -> result.collection.add(st));
@@ -217,16 +240,11 @@ public class Statements implements Collection<Statement> {
         return this.collection.toArray(a);
     }
 
-    @Override
-    public boolean add(Statement statement) {
-        return this.collection.add(statement);
-    }
-
     /**
      * Add statement and update the graph.
      */
     public boolean integrate(Statement statement) {
-        Statement integratedStatement = this.valueFactory.createStatement(
+        Statement integratedStatement = valueFactory.createStatement(
                 statement.getSubject(),
                 statement.getPredicate(),
                 statement.getObject(),
@@ -242,11 +260,6 @@ public class Statements implements Collection<Statement> {
     @Override
     public boolean containsAll(Collection<?> c) {
         return this.collection.containsAll(c);
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends Statement> collection) {
-        return this.collection.addAll(collection);
     }
 
     @Override

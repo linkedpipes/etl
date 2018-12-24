@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
-public class LP_LIST {
+public final class LP_LIST {
 
     private static final String LP =
             "http://linkedpipes.com/ontology/";

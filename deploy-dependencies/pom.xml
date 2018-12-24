@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-plugin</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-plugin/pom.xml</relativePath>
     </parent>
     <artifactId>dependencies</artifactId>
     <packaging>pom</packaging>
-    <name>lp-deploy-dependencies</name>
+    <name>LinkedPipes Deploy Plugins</name>
 
     <properties>
         <deploy.directory>../deploy</deploy.directory>

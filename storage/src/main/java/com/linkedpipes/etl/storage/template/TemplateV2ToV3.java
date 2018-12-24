@@ -26,21 +26,21 @@ class TemplateV2ToV3 {
         if (!Template.Type.REFERENCE_TEMPLATE.equals(template.getType())) {
             return;
         }
-        this.deleteConfigDescription(template);
-        this.updateDefinition(template);
-        this.updateInterface(template);
+        deleteConfigDescription(template);
+        updateDefinition(template);
+        updateInterface(template);
     }
 
     private void deleteConfigDescription(Template template)
             throws BaseException {
         File path = new File(
-                this.repository.getDirectory(template),
+                repository.getDirectory(template),
                 "configuration-description.trig");
         if (path.exists()) {
             if (!path.delete()) {
                 throw new BaseException(
-                        "Can't delete deprecated template " +
-                                "configuration description: {}",
+                        "Can't delete deprecated template "
+                                + "configuration description: {}",
                         path);
             }
         }
@@ -48,10 +48,9 @@ class TemplateV2ToV3 {
 
     private void updateDefinition(Template template)
             throws RdfUtils.RdfException {
-        Collection<Statement> statements =
-                this.repository.getDefinition(template);
-        this.repository.setDefinition(template,
-                this.removeConfigDescriptionReference(statements));
+        Collection<Statement> statements = repository.getDefinition(template);
+        repository.setDefinition(
+                template, removeConfigDescriptionReference(statements));
     }
 
     private List<Statement> removeConfigDescriptionReference(
@@ -67,10 +66,9 @@ class TemplateV2ToV3 {
 
     private void updateInterface(Template template)
             throws RdfUtils.RdfException {
-        Collection<Statement> statements =
-                this.repository.getInterface(template);
-        this.repository.setInterface(template,
-                this.removeConfigDescriptionReference(statements));
+        Collection<Statement> statements = repository.getInterface(template);
+        repository.setInterface(
+                template, removeConfigDescriptionReference(statements));
     }
 
 

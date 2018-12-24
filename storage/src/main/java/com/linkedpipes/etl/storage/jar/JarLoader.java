@@ -33,18 +33,19 @@ final class JarLoader {
     }
 
     public JarComponent load(File jarFile) {
-        final JarFile jar;
+        JarFile jar;
         try {
             jar = new JarFile(jarFile);
         } catch (IOException ex) {
-            LOG.warn("Can not createMappingFromStatements JAR file: {}", jarFile, ex);
+            LOG.warn("Can not createMappingFromStatements JAR file: {}",
+                    jarFile, ex);
             return null;
         }
         // We need to load jar/info.* file.
         for (Enumeration<JarEntry> enums = jar.entries();
                 enums.hasMoreElements(); ) {
-            final JarEntry entry = enums.nextElement();
-            final String name = entry.getName();
+            JarEntry entry = enums.nextElement();
+            String name = entry.getName();
             if (name.startsWith("LP-ETL/jar/definition")) {
                 return loadFromDefinition(jarFile, jar, entry);
             }
@@ -53,10 +54,10 @@ final class JarLoader {
         return null;
     }
 
-    private JarComponent loadFromDefinition(File jarFile, JarFile jar,
-            JarEntry entry) {
+    private JarComponent loadFromDefinition(
+            File jarFile, JarFile jar, JarEntry entry) {
         // Determine the used RDF format.
-        final Optional<RDFFormat> format
+        Optional<RDFFormat> format
                 = Rio.getWriterFormatForFileName(entry.getName());
         if (!format.isPresent()) {
             LOG.info("Can't determine format of info file in JAR file: {}",
@@ -64,19 +65,19 @@ final class JarLoader {
             return null;
         }
         // Read the definition file.
-        final RDFParser reader = Rio.createParser(format.get(),
+        RDFParser reader = Rio.createParser(format.get(),
                 SimpleValueFactory.getInstance());
-        final List<Statement> statements = new ArrayList<>(16);
-        final StatementCollector collector = new StatementCollector(statements);
+        List<Statement> statements = new ArrayList<>();
+        StatementCollector collector = new StatementCollector(statements);
         reader.setRDFHandler(collector);
         try (InputStream stream = jar.getInputStream(entry)) {
             reader.parse(stream, "http://localhost/base");
         } catch (IOException ex) {
-            LOG.info("Can't createMappingFromStatements info file in JAR file: {}", jarFile, ex);
+            LOG.info("Can't create info file in JAR file: {}", jarFile, ex);
             return null;
         }
         // Load definition into the JarComponent.
-        final JarComponent component = new JarComponent(jarFile);
+        JarComponent component = new JarComponent(jarFile);
         try {
             PojoLoader.loadOfType(statements, JarComponent.TYPE, component);
         } catch (PojoLoader.CantLoadException ex) {

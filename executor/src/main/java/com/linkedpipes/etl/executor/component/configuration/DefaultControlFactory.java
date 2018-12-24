@@ -17,10 +17,6 @@ class DefaultControlFactory implements MergeControlFactory {
      */
     private final String definitionGraph;
 
-    /**
-     * @param source Does not manage the given definitionSource.
-     * @param graph
-     */
     public DefaultControlFactory(BackendRdfSource source, String graph) {
         this.definitionSource = source;
         this.definitionGraph = graph;

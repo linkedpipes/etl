@@ -23,14 +23,15 @@ class ReferenceExpander {
 
     private final TemplateExpander expander;
 
-    public ReferenceExpander(TemplateSource templateSource,
-            TemplateExpander expander) {
+    public ReferenceExpander(
+            TemplateSource templateSource, TemplateExpander expander) {
         this.templateSource = templateSource;
         this.expander = expander;
     }
 
-    public ExecutorComponent expand(DesignerComponent srcComponent,
-            ReferenceTemplate template) throws BaseException {
+    public ExecutorComponent expand(
+            DesignerComponent srcComponent, ReferenceTemplate template)
+            throws BaseException {
         // The reference template add only a configuration.
         mergeWithTemplate(template, srcComponent);
         DesignerComponent component = new DesignerComponent(srcComponent);
@@ -40,8 +41,9 @@ class ReferenceExpander {
         return expander.expand(component);
     }
 
-    private void mergeWithTemplate(Template template,
-            DesignerComponent srcComponent) throws BaseException {
+    private void mergeWithTemplate(
+            Template template, DesignerComponent srcComponent)
+            throws BaseException {
         String configGraph = srcComponent.getConfigurationGraph();
         if (configGraph == null) {
             copyConfigurationFromTemplate(template, srcComponent);
@@ -52,8 +54,9 @@ class ReferenceExpander {
     }
 
     // TODO Move to a configuration facade ?
-    private void copyConfigurationFromTemplate(Template template,
-            DesignerComponent srcComponent) throws BaseException {
+    private void copyConfigurationFromTemplate(
+            Template template, DesignerComponent srcComponent)
+            throws BaseException {
         String configGraph = srcComponent.getIri() + "/configuration";
         List<Statement> statements = new ArrayList<>();
         ValueFactory valueFactory = SimpleValueFactory.getInstance();

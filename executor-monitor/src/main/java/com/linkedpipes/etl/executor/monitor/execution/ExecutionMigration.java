@@ -10,9 +10,9 @@ class ExecutionMigration {
         File overviewFile = new File(
                 execution.getDirectory(), "execution-overview.jsonld");
 
-        return execution.getStatus() == ExecutionStatus.QUEUED &&
-                executionFile.exists() &&
-                !overviewFile.exists();
+        return execution.getStatus() == ExecutionStatus.QUEUED
+                && executionFile.exists()
+                && !overviewFile.exists();
     }
 
     public void migrate(Execution execution) {

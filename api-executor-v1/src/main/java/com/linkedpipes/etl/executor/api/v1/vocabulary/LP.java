@@ -2,10 +2,6 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
 public final class LP {
 
-    private LP() {
-
-    }
-
     private static final String REPORT_PREFIX =
             "https://vocabulary.etl.linkedpipes.com/report/";
 
@@ -54,6 +50,5 @@ public final class LP {
 
     public static final String HAS_WORKING_DIRECTORY =
             PREFIX + "workingDirectory";
-
 
 }

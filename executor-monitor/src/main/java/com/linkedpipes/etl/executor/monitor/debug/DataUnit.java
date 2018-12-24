@@ -43,11 +43,12 @@ public class DataUnit {
     }
 
     public String getExecutionId() {
-        if (this.mappedFromExecution == null) {
+        if (mappedFromExecution == null) {
             return null;
         }
-        String iri = this.mappedFromExecution;
-        return iri.substring(iri.indexOf("executions/") + 11);
+        String iri = mappedFromExecution;
+        return iri.substring(
+                iri.indexOf("executions/") + "executions/".length());
     }
 
     void setMappedFromExecution(String execution) {
@@ -62,7 +63,7 @@ public class DataUnit {
      * Given path must belong to {@link #mappedFromExecution}.
      */
     public void updateDebugDirectories(File executionDirectory) {
-        if (this.loaded) {
+        if (loaded) {
             return;
         }
         File debugInfoFile = getDebugInfoFile(executionDirectory);
@@ -74,14 +75,22 @@ public class DataUnit {
             LOG.error("Can't read data unit debug file: {}", debugInfoFile, ex);
             return;
         }
-        this.loaded = true;
+        loaded = true;
         updateDebugDirectories(executionDirectory, relativePaths);
+    }
+
+    private void updateDebugDirectories(File root, List<String> relativePaths) {
+        File dataUnitRoot = new File(root, relativeDataPath);
+        this.debugDirectories =
+                relativePaths.stream()
+                        .map((path) -> new File(dataUnitRoot, path))
+                        .collect(Collectors.toList());
     }
 
     private File getDebugInfoFile(File directory) {
         return new File(
                 directory,
-                this.relativeDataPath + File.separator + DEBUG_FILE_NAME);
+                relativeDataPath + File.separator + DEBUG_FILE_NAME);
     }
 
     private List<String> loadJsonList(File path) throws IOException {
@@ -89,14 +98,6 @@ public class DataUnit {
         JavaType type = mapper.getTypeFactory()
                 .constructCollectionType(List.class, String.class);
         return mapper.readValue(path, type);
-    }
-
-    private void updateDebugDirectories(File root, List<String> relativePaths) {
-        File dataUnitRoot = new File(root, this.relativeDataPath);
-        this.debugDirectories =
-                relativePaths.stream()
-                .map((path) -> new File(dataUnitRoot, path))
-                .collect(Collectors.toList());
     }
 
 }

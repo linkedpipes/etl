@@ -53,25 +53,25 @@ public class ExecutorService {
 
     @PostConstruct
     public void onInit() {
-        this.addExecutor(this.configuration.getExecutorUri());
+        addExecutor(configuration.getExecutorUri());
     }
 
     private void addExecutor(String address) {
         Executor executor = new Executor(address);
         checkExecutor(executor);
-        this.executors.add(executor);
+        executors.add(executor);
     }
 
     private void checkExecutor(Executor executor) {
-        this.checker.check(executor);
+        checker.check(executor);
     }
 
     @Scheduled(fixedDelay = 2000, initialDelay = 500)
     public void checkExecutors() {
-        for (Executor executor : this.executors) {
-            this.checkExecutor(executor);
+        for (Executor executor : executors) {
+            checkExecutor(executor);
         }
-        this.startExecutions();
+        startExecutions();
     }
 
     /**
@@ -79,12 +79,12 @@ public class ExecutorService {
      */
     @Async
     public void asyncStartExecutions() {
-        this.startExecutions();
+        startExecutions();
     }
 
     private void startExecutions() {
-        synchronized (this.startLock) {
-            List<Execution> queued = this.getExecutionQueued();
+        synchronized (startLock) {
+            List<Execution> queued = getExecutionQueued();
             if (queued.isEmpty()) {
                 return;
             }
@@ -101,7 +101,7 @@ public class ExecutorService {
     }
 
     private List<Execution> getExecutionQueued() {
-        return this.executions.getExecutions().stream()
+        return executions.getExecutions().stream()
                 .filter(ex -> ExecutionStatus.QUEUED.equals(ex.getStatus()))
                 .sorted((l, r) -> l.getIri().compareTo(r.getIri()))
                 .collect(Collectors.toList());

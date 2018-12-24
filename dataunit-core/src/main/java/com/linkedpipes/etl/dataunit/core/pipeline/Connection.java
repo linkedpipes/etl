@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.dataunit.core.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
@@ -16,7 +15,7 @@ class Connection implements Loadable {
     private String targetBinding;
 
     @Override
-    public Loadable load(String predicate, RdfValue value) throws RdfException {
+    public Loadable load(String predicate, RdfValue value) {
         switch (predicate) {
             case LP_PIPELINE.HAS_SOURCE_COMPONENT:
                 sourceComponent = value.asString();
@@ -30,6 +29,8 @@ class Connection implements Loadable {
             case LP_PIPELINE.HAS_TARGET_BINDING:
                 targetBinding = value.asString();
                 return null;
+            default:
+                break;
         }
         return null;
     }

@@ -1,8 +1,11 @@
 package com.linkedpipes.etl.rdf.utils;
 
-import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.*;
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
+import com.linkedpipes.etl.rdf.utils.pojo.Descriptor;
+import com.linkedpipes.etl.rdf.utils.pojo.DescriptorFactory;
+import com.linkedpipes.etl.rdf.utils.pojo.LangString;
+import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.junit.Assert;
@@ -39,7 +42,7 @@ public class RdfUtilsTest {
         public String value;
 
         @Override
-        public void resource(String resource) throws LoaderException {
+        public void resource(String resource) {
             // No action.
         }
 
@@ -63,7 +66,7 @@ public class RdfUtilsTest {
         public SubTestEntity ref;
 
         @Override
-        public void resource(String resource) throws LoaderException {
+        public void resource(String resource) {
             // No action.
         }
 
@@ -82,6 +85,8 @@ public class RdfUtilsTest {
                 case "http://ref":
                     ref = new SubTestEntity();
                     return ref;
+                default:
+                    break;
             }
             return null;
         }

@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-backend</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>dataunit-core</artifactId>
-    <name>lp-dataunit-core</name>
+    <name>LinkedPipes Dataunit</name>
     <packaging>bundle</packaging>
 
     <dependencies>

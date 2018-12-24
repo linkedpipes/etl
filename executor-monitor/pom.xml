@@ -3,15 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-backend</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>executor-monitor</artifactId>
     <version>0.0.0</version>
     <packaging>jar</packaging>
-    <name>lp-executor-monitor</name>
-    <description>Provides overview for local executors.</description>
+    <name>LinkedPipes Executor Monitor</name>
 
     <properties>
         <deploy.directory>../deploy/executor-monitor/</deploy.directory>

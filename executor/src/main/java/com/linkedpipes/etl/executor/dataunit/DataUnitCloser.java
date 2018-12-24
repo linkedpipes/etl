@@ -6,11 +6,18 @@ import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 class DataUnitCloser {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataUnitCloser.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(DataUnitCloser.class);
 
     private final Map<DataUnit, DataUnitContainer> dataUnits;
 
@@ -37,9 +44,13 @@ class DataUnitCloser {
     }
 
     public void onComponentExecuted(ExecutionComponent component) {
-        LOG.info("onComponentExecuted",component.getIri().substring(
-                component.getIri().indexOf("/component") + 9));
+        LOG.info("onComponentExecuted", getComponentId(component.getIri()));
         this.executedComponents.add(component.getIri());
+    }
+
+    private String getComponentId(String iri) {
+        int startIndex = iri.indexOf("/component") + "component".length();
+        return iri.substring(startIndex);
     }
 
     public void closeUnusedDataUnits() throws ExecutorException {
@@ -56,14 +67,12 @@ class DataUnitCloser {
                 toClose.add(dataUnit);
                 LOG.info("  CLOSE {} {} : {}",
                         entry.getValue().getStatus(),
-                        dataUnit.getIri().substring(
-                                dataUnit.getIri().indexOf("/component") + 9),
+                        getComponentId(dataUnit.getIri()),
                         dataUnit.getPort().getBinding());
             } else {
                 LOG.info("        {} {} : {}",
                         entry.getValue().getStatus(),
-                        dataUnit.getIri().substring(
-                                dataUnit.getIri().indexOf("/component") + 9),
+                        getComponentId(dataUnit.getIri()),
                         dataUnit.getPort().getBinding());
             }
         }

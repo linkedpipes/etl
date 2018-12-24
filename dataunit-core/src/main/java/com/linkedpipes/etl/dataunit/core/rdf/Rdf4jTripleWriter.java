@@ -30,51 +30,51 @@ class Rdf4jTripleWriter implements TripleWriter {
 
     @Override
     public void iri(String subject, String predicate, String object) {
-        add(subject, predicate, this.valueFactory.createIRI(object));
+        add(subject, predicate, valueFactory.createIRI(object));
     }
 
     private void add(String subject, String predicate, Value value) {
-        statements.add(this.valueFactory.createStatement(
-                this.valueFactory.createIRI(subject),
-                this.valueFactory.createIRI(predicate),
+        statements.add(valueFactory.createStatement(
+                valueFactory.createIRI(subject),
+                valueFactory.createIRI(predicate),
                 value
         ));
     }
 
     @Override
     public void string(String subject, String predicate, String object) {
-        add(subject, predicate, this.valueFactory.createLiteral(object));
+        add(subject, predicate, valueFactory.createLiteral(object));
     }
 
     @Override
-    public void string(String subject, String predicate, String object,
-                       String lang) {
-        add(subject, predicate, this.valueFactory.createLiteral(object, lang));
+    public void string(
+            String subject, String predicate, String object, String lang) {
+        add(subject, predicate, valueFactory.createLiteral(object, lang));
     }
 
     @Override
     public void date(String subject, String predicate, Date object) {
-        add(subject, predicate, this.valueFactory.createLiteral(object));
+        add(subject, predicate, valueFactory.createLiteral(object));
     }
 
     @Override
-    public void typed(String subject, String predicate, String object,
-                      String type) {
-        Value value = this.valueFactory.createLiteral(
-                object, this.valueFactory.createIRI(type));
+    public void typed(
+            String subject, String predicate, String object, String type) {
+        Value value = valueFactory.createLiteral(
+                object, valueFactory.createIRI(type));
         add(subject, predicate, value);
     }
 
     @Override
     public synchronized void flush() throws RdfException {
         try {
-            this.dataUnit.execute(connection -> {
-                connection.add(this.statements, this.graph);
+            dataUnit.execute(connection -> {
+                connection.add(statements, graph);
             });
         } catch (LpException ex) {
             throw new RdfException("Can't store data.", ex);
         }
-        this.statements.clear();
+        statements.clear();
     }
 
 }

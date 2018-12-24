@@ -26,14 +26,15 @@ class UnpackOptions implements Loadable {
         private String target;
 
         @Override
-        public Loadable load(String predicate, BackendRdfValue value)
-                throws RdfUtilsException {
+        public Loadable load(String predicate, BackendRdfValue value) {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/mappingSource":
                     source = value.asString();
                     break;
                 case "http://etl.linkedpipes.com/ontology/mappingTarget":
                     target = value.asString();
+                    break;
+                default:
                     break;
             }
             return null;
@@ -56,8 +57,7 @@ class UnpackOptions implements Loadable {
         private final List<ComponentMapping> components = new LinkedList<>();
 
         @Override
-        public Loadable load(String predicate, BackendRdfValue value)
-                throws RdfUtilsException {
+        public Loadable load(String predicate, BackendRdfValue value) {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/execution":
                     execution = value.asString();

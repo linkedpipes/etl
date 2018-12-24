@@ -10,7 +10,7 @@ import java.util.Date;
  * Update execution status (outside overview load) and reflect changes
  * where needed.
  *
- * Can be used for example to reflect status change by losing executor.
+ * <p>Can be used for example to reflect status change by losing executor.
  */
 class StatusSetter {
 
@@ -30,7 +30,8 @@ class StatusSetter {
     }
 
     private static void updateOverviewStatements(Execution execution) {
-        OverviewToListStatements overviewToStatements = new OverviewToListStatements();
+        OverviewToListStatements overviewToStatements =
+                new OverviewToListStatements();
         execution.setOverviewStatements(overviewToStatements.asStatements(
                 execution, execution.getOverviewJson()));
     }

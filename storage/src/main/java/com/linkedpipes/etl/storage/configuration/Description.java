@@ -47,6 +47,8 @@ class Description implements PojoLoader.Loadable {
                 case Vocabulary.IS_PRIVATE:
                     this.isPrivate = ((Literal) value).booleanValue();
                     break;
+                default:
+                    break;
             }
             return null;
         }
@@ -89,6 +91,8 @@ class Description implements PojoLoader.Loadable {
                 return newMember;
             case Vocabulary.CONFIG_DESC_CONTROL:
                 this.control = (IRI) value;
+                break;
+            default:
                 break;
         }
         return null;

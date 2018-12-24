@@ -23,8 +23,7 @@ class TaskExecutor<T extends Task> implements Runnable {
             MDC.getCopyOfContextMap();
 
     public TaskExecutor(
-            TaskConsumer<T> taskConsumer,
-            TaskSource<T> taskSource,
+            TaskConsumer<T> taskConsumer, TaskSource<T> taskSource,
             ReportWriter reportWriter) {
         this.taskConsumer = taskConsumer;
         this.taskSource = taskSource;

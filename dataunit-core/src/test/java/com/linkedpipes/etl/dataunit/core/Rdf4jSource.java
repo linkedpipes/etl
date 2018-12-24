@@ -44,12 +44,12 @@ public class Rdf4jSource implements RdfSource {
         }
 
         @Override
-        public Boolean asBoolean() throws RdfException {
+        public Boolean asBoolean() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public Long asLong() throws RdfException {
+        public Long asLong() {
             throw new UnsupportedOperationException();
         }
 
@@ -79,7 +79,7 @@ public class Rdf4jSource implements RdfSource {
     }
 
     @Override
-    public List<String> getByType(String type) throws RdfException {
+    public List<String> getByType(String type) {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         return model.filter(null, RDF.TYPE, valueFactory.createIRI(type))
                 .stream()
@@ -88,8 +88,7 @@ public class Rdf4jSource implements RdfSource {
     }
 
     @Override
-    public List<RdfValue> getPropertyValues(String subject, String predicate)
-            throws RdfException {
+    public List<RdfValue> getPropertyValues(String subject, String predicate) {
         throw new UnsupportedOperationException();
     }
 

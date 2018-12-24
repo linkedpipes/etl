@@ -18,7 +18,15 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -49,23 +57,23 @@ public class TemplateFacade implements TemplateSource {
 
     @PostConstruct
     public void initialize() {
-        this.cleanMapping();
+        cleanMapping();
     }
 
     /**
      * Remove mapping for components that are no longer in the system.
      */
     private void cleanMapping() {
-        List<String> iriToRemove = this.mapping.getLocalMapping().stream()
+        List<String> iriToRemove = mapping.getLocalMapping().stream()
                 .filter(iri -> !manager.getTemplates().containsKey(iri))
                 .collect(Collectors.toList());
         for (String iri : iriToRemove) {
             LOG.debug(
                     "Removing mapping for '{}' as the component was deleted.",
                     iri);
-            this.mapping.remove(iri);
+            mapping.remove(iri);
         }
-        this.mapping.save();
+        mapping.save();
     }
 
     public Template getTemplate(String iri) {
@@ -119,8 +127,8 @@ public class TemplateFacade implements TemplateSource {
                     break;
                 }
             } else {
-                throw new RuntimeException("Unknown template type: " +
-                        template.getType().name());
+                throw new RuntimeException("Unknown template type: "
+                        + template.getType().name());
             }
         }
         return output;
@@ -140,7 +148,7 @@ public class TemplateFacade implements TemplateSource {
         toTest.addAll(children.getOrDefault(
                 template, Collections.EMPTY_LIST));
         while (!toTest.isEmpty()) {
-            final Template item = toTest.iterator().next();
+            Template item = toTest.iterator().next();
             toTest.remove(item);
             if (output.contains(item)) {
                 continue;
@@ -175,8 +183,7 @@ public class TemplateFacade implements TemplateSource {
         return repository.getInterface(template);
     }
 
-    public Collection<Statement> getInterfaces()
-            throws BaseException {
+    public Collection<Statement> getInterfaces() throws BaseException {
         List<Statement> output = new ArrayList<>();
         for (Template template : manager.getTemplates().values()) {
             output.addAll(getInterface(template));
@@ -184,13 +191,8 @@ public class TemplateFacade implements TemplateSource {
         return output;
     }
 
-    public Collection<Statement> getDefinition(Template template)
-            throws BaseException {
-        return repository.getDefinition(template);
-    }
-
     /**
-     * @return Template config for execution or as merged parent configuration.
+     * Return template config for execution or as merged parent configuration.
      * Configuration of all ancestors are applied.
      */
     public Collection<Statement> getConfigEffective(Template template)
@@ -214,7 +216,7 @@ public class TemplateFacade implements TemplateSource {
     }
 
     /**
-     * @return Configuration of given template for a dialog.
+     * Return configuration of given template for a dialog.
      */
     public Collection<Statement> getConfig(Template template)
             throws BaseException {
@@ -222,7 +224,7 @@ public class TemplateFacade implements TemplateSource {
     }
 
     /**
-     * @return Configuration for instances of given template.
+     * Return configuration for instances of given template.
      */
     public Collection<Statement> getConfigInstance(Template template)
             throws BaseException {
@@ -230,14 +232,14 @@ public class TemplateFacade implements TemplateSource {
         IRI graph = valueFactory.createIRI(template.getIri() + "/new");
         if (template.getType() == Template.Type.JAR_TEMPLATE) {
             return configurationFacade.createNewFromJarFile(
-                    new Statements(this.repository.getConfig(template)),
-                    new Statements(this.getConfigDescription(template)),
+                    new Statements(repository.getConfig(template)),
+                    new Statements(getConfigDescription(template)),
                     graph.stringValue(),
                     graph);
         } else {
             return configurationFacade.createNewFromTemplate(
-                    new Statements(this.repository.getConfig(template)),
-                    new Statements(this.getConfigDescription(template)),
+                    new Statements(repository.getConfig(template)),
+                    new Statements(getConfigDescription(template)),
                     graph.stringValue(),
                     graph);
         }
@@ -245,7 +247,7 @@ public class TemplateFacade implements TemplateSource {
 
     public Collection<Statement> getConfigDescription(Template template)
             throws BaseException {
-        Template rootTemplate = this.getRootTemplate(template);
+        Template rootTemplate = getRootTemplate(template);
         return repository.getConfigDescription(rootTemplate);
     }
 
@@ -262,7 +264,7 @@ public class TemplateFacade implements TemplateSource {
             Collection<Statement> definition,
             Collection<Statement> configuration)
             throws BaseException {
-        return this.createTemplate(definition, configuration, null);
+        return createTemplate(definition, configuration, null);
     }
 
     public Template createTemplate(
@@ -293,7 +295,10 @@ public class TemplateFacade implements TemplateSource {
         mapping.save();
     }
 
-    // Implementation of unpacker.TemplateSource .
+    public Collection<Statement> getDefinition(Template template)
+            throws BaseException {
+        return repository.getDefinition(template);
+    }
 
     @Override
     public Collection<Statement> getDefinition(String iri)

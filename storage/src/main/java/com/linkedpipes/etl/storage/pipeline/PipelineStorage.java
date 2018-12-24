@@ -20,9 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.*;
-
-import static com.linkedpipes.etl.storage.rdf.RdfUtils.write;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 class PipelineStorage {
@@ -57,8 +60,13 @@ class PipelineStorage {
         if (!pipelineDirectory.exists()) {
             pipelineDirectory.mkdirs();
         }
-        for (File file : pipelineDirectory.listFiles()) {
-            if (!file.isFile() || this.isBackupFile(file)) {
+        File[] files = pipelineDirectory.listFiles();
+        if (files == null) {
+            LOG.warn("Pipeline directory does not exist.");
+            return;
+        }
+        for (File file : files) {
+            if (!file.isFile() || isBackupFile(file)) {
                 continue;
             }
             try {
@@ -78,24 +86,24 @@ class PipelineStorage {
      * Check version and if necessary perform migration.
      */
     private void loadPipeline(File file, OnLoad onLoad) throws OperationFailed {
-        PipelineLoader loader = new PipelineLoader(this.transformation);
+        PipelineLoader loader = new PipelineLoader(transformation);
         Pipeline pipeline = loader.load(file);
         onLoad.action(pipeline, loader.getPipelineRdf());
-        this.createPipelineReference(pipeline);
-        this.pipelines.put(pipeline.getIri(), pipeline);
+        createPipelineReference(pipeline);
+        pipelines.put(pipeline.getIri(), pipeline);
     }
 
     /**
      * Create pipeline reference object and set it to pipeline.
      */
     private void createPipelineReference(Pipeline pipeline) {
-        List<Statement> referenceRdf = new ArrayList<>(4);
+        List<Statement> referenceRdf = new ArrayList<>();
         IRI pipelineIri = valueFactory.createIRI(pipeline.getIri());
         referenceRdf.add(valueFactory.createStatement(
-                pipelineIri,RDF.TYPE, Pipeline.TYPE, pipelineIri));
+                pipelineIri, RDF.TYPE, Pipeline.TYPE, pipelineIri));
         for (Value label : pipeline.getInfo().getLabels()) {
             referenceRdf.add(valueFactory.createStatement(
-                    pipelineIri, SKOS.PREF_LABEL,label, pipelineIri));
+                    pipelineIri, SKOS.PREF_LABEL, label, pipelineIri));
         }
         IRI tagIri = valueFactory.createIRI(LP_PIPELINE.HAS_TAG);
         for (Value tag : pipeline.getInfo().getTags()) {
@@ -111,9 +119,9 @@ class PipelineStorage {
 
     public void update(Pipeline pipeline, Collection<Statement> rdf)
             throws OperationFailed {
-        this.updatePipelineInfo(pipeline, rdf);
-        this.createPipelineReference(pipeline);
-        this.writePipelineToDisk(pipeline, rdf);
+        updatePipelineInfo(pipeline, rdf);
+        createPipelineReference(pipeline);
+        writePipelineToDisk(pipeline, rdf);
     }
 
     private void updatePipelineInfo(
@@ -132,7 +140,7 @@ class PipelineStorage {
             Pipeline pipeline, Collection<Statement> rdf)
             throws OperationFailed {
         try {
-            write(pipeline.getFile(), RDFFormat.TRIG, rdf);
+            RdfUtils.write(pipeline.getFile(), RDFFormat.TRIG, rdf);
         } catch (RdfUtils.RdfException ex) {
             throw new OperationFailed(
                     "Can't save pipeline: {}", pipeline.getFile(), ex);
@@ -141,7 +149,7 @@ class PipelineStorage {
 
     public void delete(Pipeline pipeline) {
         pipeline.getFile().delete();
-        this.pipelines.remove(pipeline.getIri());
+        pipelines.remove(pipeline.getIri());
     }
 
     public Collection<Statement> getPipelineRdf(Pipeline pipeline)
@@ -155,10 +163,10 @@ class PipelineStorage {
 
     public Pipeline createPipeline(IRI iri, Collection<Statement> rdf)
             throws OperationFailed {
-        File file = this.getPipelineFile(iri);
+        File file = getPipelineFile(iri);
         Pipeline pipeline = new Pipeline(file, null);
-        this.update(pipeline, rdf);
-        this.pipelines.put(iri.stringValue(), pipeline);
+        update(pipeline, rdf);
+        pipelines.put(iri.stringValue(), pipeline);
         return pipeline;
     }
 

@@ -14,14 +14,11 @@ public interface ComponentFactory {
     /**
      * Throw an exception if instantiation of a component failed.
      *
-     * @param component
-     * @param graph
-     * @param definition
-     * @param bundleContext
      * @return Null if the bundle does not contains instantiable component.
      */
-    ManageableComponent create(String component, String graph,
-            RdfSource definition, BundleContext bundleContext) throws
-            LpException;
+    ManageableComponent create(
+            String component, String graph,
+            RdfSource definition, BundleContext bundleContext)
+            throws LpException;
 
 }

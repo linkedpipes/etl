@@ -44,16 +44,18 @@ public class DataUnitConfiguration implements Loadable {
     public Loadable load(String predicate, RdfValue object) {
         switch (predicate) {
             case RDF.TYPE:
-                this.types.add(object.asString());
+                types.add(object.asString());
                 break;
             case LP_PIPELINE.HAS_BINDING:
-                this.binding = object.asString();
+                binding = object.asString();
                 break;
             case LP_EXEC.HAS_DATA_UNIT_GROUP:
-                this.group = object.asString();
+                group = object.asString();
                 break;
             case LP_EXEC.HAS_WORKING_DIRECTORY:
-                this.workingDirectory = object.asString();
+                workingDirectory = object.asString();
+                break;
+            default:
                 break;
         }
         return null;
@@ -68,15 +70,15 @@ public class DataUnitConfiguration implements Loadable {
     }
 
     public List<String> getTypes() {
-        return Collections.unmodifiableList(this.types);
+        return Collections.unmodifiableList(types);
     }
 
     public String getGroup() {
-        return this.group;
+        return group;
     }
 
     public File getWorkingDirectory() {
-        return new File(URI.create(this.workingDirectory));
+        return new File(URI.create(workingDirectory));
     }
 
 }

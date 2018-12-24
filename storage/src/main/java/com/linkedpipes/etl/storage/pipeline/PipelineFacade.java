@@ -59,13 +59,11 @@ public class PipelineFacade {
     /**
      * Create a new pipeline. The pipeline could be created from given RDF
      * or if none is given empty pipeline is created.
-     * <p>
-     * If pipeline is given in form of the RDF the migration, import and update
-     * are performed on given pipeline.
      *
-     * @param pipelineRdf If empty an "empty pipeline" is used instead.
-     * @param optionsRdf
-     * @return Created pipeline.
+     * <p>If pipeline is given in form of the RDF the migration, import and
+     * update are performed on given pipeline.
+     *
+     * <p>If pipelineRdf is empty an "empty pipeline" is used instead.
      */
     public Pipeline createPipeline(
             Collection<Statement> pipelineRdf,
@@ -88,10 +86,6 @@ public class PipelineFacade {
      * Perform pipeline modifications (migration, update) based on given
      * options and return modified pipeline. Operations are the similar as for
      * the {@link #createPipeline(Collection, Collection)} function.
-     *
-     * @param pipelineRdf
-     * @param optionsRdf
-     * @return
      */
     public Collection<Statement> localizePipeline(
             Collection<Statement> pipelineRdf,

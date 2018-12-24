@@ -13,14 +13,14 @@ import java.io.File;
 public class Executor {
 
     private static void initLogger() {
-        final Configuration configuration = new Configuration();
+        Configuration configuration = new Configuration();
         configuration.init();
-        final File logDirectory = configuration.getLogDirectory();
-        final LoggerContext loggerContext
+        File logDirectory = configuration.getLogDirectory();
+        LoggerContext loggerContext
                 = (LoggerContext) LoggerFactory.getILoggerFactory();
-        final ch.qos.logback.classic.Logger logbackLogger
+        ch.qos.logback.classic.Logger logbackLogger
                 = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-        final String logLevel = configuration.getLogCoreFilter();
+        String logLevel = configuration.getLogCoreFilter();
         //
         Appender appender = LoggerFacade.createRollingFileAppender(
                 new File(logDirectory, "executor"), "executor",
@@ -30,7 +30,7 @@ public class Executor {
 
     private static void startExecutorService() {
         initLogger();
-        final ConfigurableApplicationContext context
+        ConfigurableApplicationContext context
                 = new ClassPathXmlApplicationContext(
                 "spring/context-service.xml");
         context.registerShutdownHook();

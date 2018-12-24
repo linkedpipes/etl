@@ -19,6 +19,8 @@ class DefaultComponentTripleWriter implements TripleWriter {
 
     private final IRI graph;
 
+    private final RdfFormatter format = new RdfFormatter();
+
     public DefaultComponentTripleWriter(
             Collection<Statement> statements, IRI graph) {
         this.statements = statements;
@@ -44,16 +46,6 @@ class DefaultComponentTripleWriter implements TripleWriter {
     }
 
     @Override
-    public void typed(String s, String p, String o, String type) {
-        this.statements.add(this.valueFactory.createStatement(
-                this.valueFactory.createIRI(s),
-                this.valueFactory.createIRI(p),
-                this.valueFactory.createLiteral(
-                        o, this.valueFactory.createIRI(type)),
-                this.graph));
-    }
-
-    @Override
     public void string(String s, String p, String o, String language) {
         if (language == null) {
             this.string(s, p, o);
@@ -67,8 +59,18 @@ class DefaultComponentTripleWriter implements TripleWriter {
     }
 
     @Override
+    public void typed(String s, String p, String o, String type) {
+        this.statements.add(this.valueFactory.createStatement(
+                this.valueFactory.createIRI(s),
+                this.valueFactory.createIRI(p),
+                this.valueFactory.createLiteral(
+                        o, this.valueFactory.createIRI(type)),
+                this.graph));
+    }
+
+    @Override
     public void date(String subject, String predicate, Date object) {
-        String value = RdfFormatter.toXsdDate(object);
+        String value = format.toXsdDate(object);
         typed(subject, predicate, value, XSD.DATETIME);
     }
 

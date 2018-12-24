@@ -30,7 +30,7 @@ public abstract class Template implements RepositoryReference {
     }
 
     /**
-     * @return True if component support configuration control/inheritance.
+     * Return true if component support configuration control/inheritance.
      */
     public abstract boolean isSupportingControl();
 

@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
+import com.linkedpipes.etl.dataunit.core.SuppressFBWarnings;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -34,6 +35,7 @@ class Rdf4jValueWrap implements RdfValue {
     }
 
     @Override
+    @SuppressFBWarnings(value = "NP_BOOLEAN_RETURN_NULL")
     public Boolean asBoolean() {
         if (this.value instanceof Literal) {
             return ((Literal) this.value).booleanValue();

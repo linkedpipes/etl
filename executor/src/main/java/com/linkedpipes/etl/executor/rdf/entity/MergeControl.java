@@ -7,15 +7,13 @@ import java.util.List;
 /**
  * Control instance for entity of given type.
  *
- * The control should be loaded before use (by the factory method)
+ * <p>The control should be loaded before use (by the factory method)
  * and thus should have prior knowledge which field should be loaded.
  */
 public interface MergeControl {
 
     /**
      * Load entities into the control.
-     *
-     * @param references
      */
     void init(List<EntityReference> references) throws RdfUtilsException;
 
@@ -23,13 +21,15 @@ public interface MergeControl {
      * Called at start of every reference.
      *
      * @param resource This values have been given
-     * @param graph
+     * @param graph    Graph.
      */
     void onReference(String resource, String graph)
             throws RdfUtilsException;
 
     /**
-     * @param property
+     * Called to decide what to do with a property.
+     *
+     * @param property Name of a property.
      * @return Decision what to do with the property.
      */
     MergeType onProperty(String property) throws RdfUtilsException;

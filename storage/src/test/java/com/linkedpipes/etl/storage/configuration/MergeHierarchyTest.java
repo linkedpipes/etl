@@ -17,34 +17,34 @@ public class MergeHierarchyTest {
 
     private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    private Statements data = Statements.ArrayList();
+    private Statements data = Statements.arrayList();
 
     private Description description;
 
     @Before
     public void initialize() throws Exception {
         data.addAll(TestUtils.file("configuration/mergeHierarchy.trig"));
-        this.description = Description.fromStatements(
+        description = Description.fromStatements(
                 data.selectByGraph("http://description"));
     }
 
     @Test
     public void merge() throws Exception {
         List<Statements> configurations = Arrays.asList(
-                this.data.selectByGraph("http://level-0"),
-                this.data.selectByGraph("http://level-1"),
-                this.data.selectByGraph("http://level-2")
+                data.selectByGraph("http://level-0"),
+                data.selectByGraph("http://level-1"),
+                data.selectByGraph("http://level-2")
         );
 
         MergeHierarchy worker = new MergeHierarchy();
         Statements actual = worker.merge(
                 configurations,
-                this.description,
+                description,
                 "http://base",
-                this.valueFactory.createIRI("http://expected")
+                valueFactory.createIRI("http://expected")
         );
 
-        Statements expected = this.data.selectByGraph("http://expected");
+        Statements expected = data.selectByGraph("http://expected");
         Rdf4jUtils.rdfEqual(expected, actual);
         Assert.assertTrue(Models.isomorphic(actual, expected));
     }
@@ -54,24 +54,24 @@ public class MergeHierarchyTest {
         MergeFromBottom worker = new MergeFromBottom();
 
         Statements firstMerge = worker.merge(
-                this.data.selectByGraph("http://level-1"),
-                this.data.selectByGraph("http://level-2"),
-                this.description,
+                data.selectByGraph("http://level-1"),
+                data.selectByGraph("http://level-2"),
+                description,
                 "http://base",
                 valueFactory.createIRI("http://expected")
         );
 
         Statements secondMerge = worker.merge(
-                this.data.selectByGraph("http://level-0"),
+                data.selectByGraph("http://level-0"),
                 firstMerge,
-                this.description,
+                description,
                 "http://base",
                 valueFactory.createIRI("http://expected")
         );
 
         Statements actual = worker.finalize(secondMerge);
 
-        Statements expected = this.data.selectByGraph("http://expected");
+        Statements expected = data.selectByGraph("http://expected");
         Rdf4jUtils.rdfEqual(actual, expected);
         Assert.assertTrue(Models.isomorphic(actual, expected));
     }

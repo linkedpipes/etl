@@ -5,16 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-backend</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>rdf-utils</artifactId>
     <packaging>bundle</packaging>
-    <description>Contains utilities for working with RDF data.</description>
+    <name>LinkedPipes RDF Utils</name>
 
     <dependencies>
-        <!-- Test. -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -8,7 +8,14 @@ import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorComponent;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorConnection;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPipeline;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +31,8 @@ class ExecutionFlow {
 
     private final List<DesignerRunAfter> runAfter;
 
-    public ExecutionFlow(DesignerPipeline source, ExecutorPipeline target,
+    public ExecutionFlow(
+            DesignerPipeline source, ExecutorPipeline target,
             List<DesignerRunAfter> runAfter, UnpackOptions options) {
         this.source = source;
         this.target = target;
@@ -108,8 +116,9 @@ class ExecutionFlow {
         return filtered;
     }
 
-    private void setComponentExecutionType(UnpackOptions options,
-            Map<String, Set<String>> dependencies) throws BaseException {
+    private void setComponentExecutionType(
+            UnpackOptions options,
+            Map<String, Set<String>> dependencies) {
         Set<String> componentsToExecute =
                 getComponentsToExecute(options, dependencies);
         //
@@ -124,10 +133,10 @@ class ExecutionFlow {
         }
     }
 
-    private Set<String> getComponentsToExecute(UnpackOptions options,
-            Map<String, Set<String>> dependencies) {
-        if (options.getRunToComponent() == null ||
-                options.getRunToComponent().isEmpty()) {
+    private Set<String> getComponentsToExecute(
+            UnpackOptions options, Map<String, Set<String>> dependencies) {
+        if (options.getRunToComponent() == null
+                || options.getRunToComponent().isEmpty()) {
             return dependencies.keySet();
         } else {
             // Use all dependencies.

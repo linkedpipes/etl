@@ -2,7 +2,6 @@ package com.linkedpipes.etl.executor.pipeline.model;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 
@@ -59,11 +58,11 @@ public class PipelineModel implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, BackendRdfValue object) {
         switch (predicate) {
             case LP_PIPELINE.HAS_COMPONENT:
-                final PipelineComponent component = new PipelineComponent(object.asString());
+                final PipelineComponent component =
+                        new PipelineComponent(object.asString());
                 components.add(component);
                 return component;
             case LP_PIPELINE.HAS_CONNECTION:

@@ -17,10 +17,10 @@ public class OverviewFactory {
     private static final String DATETIME_TYPE =
             "http://www.w3.org/2001/XMLSchema#dateTime";
 
-    private static final DateFormat DATE_FORMAT = new
+    private final DateFormat dateFormat = new
             SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-    public static JsonNode createDeleted(Execution execution, Date date) {
+    public JsonNode createDeleted(Execution execution, Date date) {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode rootNode = mapper.createObjectNode();
@@ -35,13 +35,13 @@ public class OverviewFactory {
         statusNode.put("@id", ExecutionStatus.DELETED.asStr());
         rootNode.set("status", statusNode);
 
-        String lastChange = DATE_FORMAT.format(date);
+        String lastChange =  dateFormat.format(date);
         rootNode.put("lastChange", lastChange);
 
         return rootNode;
     }
 
-    private static ObjectNode createContextForDeleted(ObjectMapper mapper) {
+    private ObjectNode createContextForDeleted(ObjectMapper mapper) {
         ObjectNode contextNode = mapper.createObjectNode();
         contextNode.put("execution", LP_OVERVIEW.HAS_EXECUTION);
         contextNode.put("status", LP_OVERVIEW.HAS_STATUS);
@@ -54,7 +54,7 @@ public class OverviewFactory {
         return contextNode;
     }
 
-    public static JsonNode createQueued(Execution execution) {
+    public JsonNode createQueued(Execution execution) {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode rootNode = mapper.createObjectNode();
@@ -82,12 +82,12 @@ public class OverviewFactory {
         } else {
             lastChange = execution.getLastOverviewChange();
         }
-        rootNode.put("lastChange", DATE_FORMAT.format(lastChange));
+        rootNode.put("lastChange", dateFormat.format(lastChange));
 
         return rootNode;
     }
 
-    private static ObjectNode createContextForQueued(ObjectMapper mapper) {
+    private ObjectNode createContextForQueued(ObjectMapper mapper) {
         ObjectNode contextNode = mapper.createObjectNode();
         contextNode.put("execution", LP_OVERVIEW.HAS_EXECUTION);
         contextNode.put("status", LP_OVERVIEW.HAS_STATUS);

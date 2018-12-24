@@ -1,12 +1,20 @@
 package com.linkedpipes.etl.executor.rdf.entity;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.*;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
+import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Can be used to merge RDF entities based on the configuration.
@@ -33,10 +41,9 @@ public class EntityMerger {
     }
 
     public void merge(
-            List<EntityReference> references,
-            String outputIri,
-            BackendTripleWriter writer
-    ) throws RdfUtilsException {
+            List<EntityReference> references, String outputIri,
+            BackendTripleWriter writer)
+            throws RdfUtilsException {
         if (references.isEmpty()) {
             throw new RdfUtilsException("Nothing to merge!");
         }
@@ -93,9 +100,7 @@ public class EntityMerger {
         reference.getSource().triples(
                 reference.getResource(),
                 reference.getGraph(),
-                triple -> {
-                    handleStatement(triple);
-                });
+                triple -> handleStatement(triple));
     }
 
     private void handleStatement(RdfTriple triple)
@@ -116,7 +121,7 @@ public class EntityMerger {
     private void loadStatement(RdfTriple triple) {
         String predicate = triple.getPredicate();
         if (!values.containsKey(predicate)) {
-            values.put(predicate, new ArrayList<>(4));
+            values.put(predicate, new ArrayList<>());
         }
         values.get(predicate).add(triple.getObject());
         if (triple.getObject().isIri()) {
@@ -127,7 +132,7 @@ public class EntityMerger {
     private void addEntityToCopy(RdfTriple triple) {
         String predicate = triple.getPredicate();
         if (!entitiesToCopy.containsKey(predicate)) {
-            entitiesToCopy.put(predicate, new ArrayList<>(4));
+            entitiesToCopy.put(predicate, new ArrayList<>());
         }
         entitiesToCopy.get(predicate).add(new EntityReference(
                 triple.getObject().asString(),
@@ -150,7 +155,7 @@ public class EntityMerger {
     private void addEntityToMerge(RdfTriple triple) {
         String predicate = triple.getPredicate();
         if (!entitiesToMerge.containsKey(predicate)) {
-            entitiesToMerge.put(predicate, new ArrayList<>(4));
+            entitiesToMerge.put(predicate, new ArrayList<>());
         }
         entitiesToMerge.get(predicate).add(new EntityReference(
                 triple.getObject().asString(),
@@ -160,7 +165,8 @@ public class EntityMerger {
 
     private void writeResult(String outputIri, BackendTripleWriter writer)
             throws RdfUtilsException {
-        for (Map.Entry<String, List<BackendRdfValue>> entry : values.entrySet()) {
+        for (Map.Entry<String, List<BackendRdfValue>> entry :
+                values.entrySet()) {
             for (BackendRdfValue value : entry.getValue()) {
                 writer.add(outputIri, entry.getKey(), value);
             }
@@ -181,8 +187,10 @@ public class EntityMerger {
         writer.flush();
     }
 
-    private static void copyEntityRecursive(BackendRdfSource source, String resource,
-            String graph, BackendTripleWriter writer) throws RdfUtilsException {
+    private static void copyEntityRecursive(
+            BackendRdfSource source, String resource,
+            String graph, BackendTripleWriter writer)
+            throws RdfUtilsException {
         source.triples(resource, graph, (triple) -> {
             writer.add(triple);
             if (triple.getObject().isIri()) {

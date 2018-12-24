@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.dataunit.core.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
@@ -20,7 +19,7 @@ class Pipeline implements Loadable {
     private ExecutionProfile executionProfile = null;
 
     @Override
-    public Loadable load(String predicate, RdfValue value) throws RdfException {
+    public Loadable load(String predicate, RdfValue value) {
         switch (predicate) {
             case LP_PIPELINE.HAS_COMPONENT:
                 Component newComponent = new Component();
@@ -36,6 +35,8 @@ class Pipeline implements Loadable {
             case LP_EXEC.HAS_EXECUTION_PROFILE:
                 executionProfile = new ExecutionProfile();
                 return executionProfile;
+            default:
+                break;
         }
         return null;
     }

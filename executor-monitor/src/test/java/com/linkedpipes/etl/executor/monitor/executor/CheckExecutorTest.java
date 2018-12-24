@@ -53,8 +53,6 @@ public class CheckExecutorTest {
 
     @Test
     public void discoveryExecution() throws MonitorException {
-        ExecutorEventListener listener =
-                Mockito.mock(ExecutorEventListener.class);
         ExecutorRestClient client = Mockito.mock(ExecutorRestClient.class);
         ExecutionSource executions = Mockito.mock(ExecutionSource.class);
         Executor executor = new Executor(null);
@@ -63,6 +61,8 @@ public class CheckExecutorTest {
         Execution execution = new Execution();
         Mockito.when(executions.getExecution(Mockito.any(JsonNode.class)))
                 .thenReturn(execution);
+        ExecutorEventListener listener =
+                Mockito.mock(ExecutorEventListener.class);
         (new CheckExecutor(listener, client, executions)).check(executor);
         //
         Mockito.verify(listener, Mockito.times(1))
@@ -73,8 +73,6 @@ public class CheckExecutorTest {
 
     @Test
     public void updateFromOverview() {
-        ExecutorEventListener listener =
-                Mockito.mock(ExecutorEventListener.class);
         ExecutorRestClient client = Mockito.mock(ExecutorRestClient.class);
         ExecutionSource executions = Mockito.mock(ExecutionSource.class);
         Executor executor = new Executor(null);
@@ -82,6 +80,8 @@ public class CheckExecutorTest {
         Mockito.when(client.check(executor)).thenReturn("{}");
         Execution execution = new Execution();
         Mockito.when(executions.getExecution(executor)).thenReturn(execution);
+        ExecutorEventListener listener =
+                Mockito.mock(ExecutorEventListener.class);
         (new CheckExecutor(listener, client, executions)).check(executor);
         //
         Mockito.verify(listener, Mockito.times(1))

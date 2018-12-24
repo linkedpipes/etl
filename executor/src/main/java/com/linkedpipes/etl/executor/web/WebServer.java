@@ -34,13 +34,19 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebServer.class);
 
-    @Autowired
     private Configuration configuration;
 
-    @Autowired
     private AbstractApplicationContext appContext;
 
     private Server server = null;
+
+    @Autowired
+    public WebServer(
+            Configuration configuration,
+            AbstractApplicationContext appContext) {
+        this.configuration = configuration;
+        this.appContext = appContext;
+    }
 
     private void start() {
         try {
@@ -118,7 +124,8 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
         final HandlerWrapper handlerWrap = new HandlerWrapper() {
 
             @Override
-            public void handle(String target, Request baseRequest,
+            public void handle(
+                    String target, Request baseRequest,
                     HttpServletRequest request, HttpServletResponse response)
                     throws IOException, ServletException {
                 MDC.put(LoggerFacade.WEB_MDC, null);

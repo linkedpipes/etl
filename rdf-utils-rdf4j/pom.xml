@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-backend</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>rdf-utils-rdf4j</artifactId>
     <packaging>bundle</packaging>
+    <name>LinkedPipes RDF Utils Rdf4j</name>
     <description>
-        Implementation of rdf-utils with RDF4j.
         We need to extract this from rdf-utils as the RDF4j is used in the
         component space as well as in the core space, while the rdf-utils
         is shared.

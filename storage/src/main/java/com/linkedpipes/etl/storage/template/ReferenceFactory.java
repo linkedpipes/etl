@@ -38,8 +38,7 @@ class ReferenceFactory {
     private IRI configIri;
 
     public ReferenceFactory(
-            TemplateManager manager,
-            WritableTemplateRepository repository) {
+            TemplateManager manager, WritableTemplateRepository repository) {
         this.manager = manager;
         this.repository = repository;
     }
@@ -52,26 +51,27 @@ class ReferenceFactory {
             throws BaseException {
         clear();
         parseContent(content);
-        this.iri = valueFactory.createIRI(iriAsString);
-        this.configIri = valueFactory.createIRI(
+        iri = valueFactory.createIRI(iriAsString);
+        configIri = valueFactory.createIRI(
                 createConfigurationIri(iriAsString));
         //
         List<Statement> interfaceRdf = createInterface();
         List<Statement> definitionRdf = createDefinition();
         List<Statement> configRdf = updateConfig(config);
         //
-        RepositoryReference ref = RepositoryReference.Reference(id);
-        this.repository.setInterface(ref, interfaceRdf);
-        this.repository.setDefinition(ref, definitionRdf);
-        this.repository.setConfig(ref, configRdf);
+        RepositoryReference ref = RepositoryReference.createReference(id);
+        repository.setInterface(ref, interfaceRdf);
+        repository.setDefinition(ref, definitionRdf);
+        repository.setConfig(ref, configRdf);
         if (description == null) {
             // Create without description, ReferenceTemplates.
         } else {
-            this.repository.setConfigDescription(ref, description);
+            repository.setConfigDescription(ref, description);
         }
         //
-        TemplateLoader loader = new TemplateLoader(this.repository);
-        return loader.loadReferenceTemplate(RepositoryReference.Reference(id));
+        TemplateLoader loader = new TemplateLoader(repository);
+        return loader.loadReferenceTemplate(
+                RepositoryReference.createReference(id));
     }
 
     public static String createConfigurationIri(String templateIri) {
@@ -79,8 +79,8 @@ class ReferenceFactory {
     }
 
     private void clear() {
-        this.templateResource = null;
-        this.label = null;
+        templateResource = null;
+        label = null;
     }
 
     private void parseContent(Collection<Statement> statements)
@@ -97,6 +97,8 @@ class ReferenceFactory {
                 case SKOS.PREF_LABEL:
                     label = statement.getObject().stringValue();
                     break;
+                default:
+                    break;
             }
         }
         if (templateResource == null) {
@@ -105,7 +107,7 @@ class ReferenceFactory {
     }
 
     private List<Statement> createInterface() {
-        List<Statement> output = new ArrayList<>(4);
+        List<Statement> output = new ArrayList<>();
         output.add(valueFactory.createStatement(iri,
                 RDF.TYPE, ReferenceTemplate.TYPE, iri));
         output.add(valueFactory.createStatement(iri,
@@ -116,12 +118,12 @@ class ReferenceFactory {
                 valueFactory.createLiteral(label), iri));
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
-                this.configIri, iri));
+                configIri, iri));
         return output;
     }
 
     private List<Statement> createDefinition() {
-        List<Statement> output = new ArrayList<>(4);
+        List<Statement> output = new ArrayList<>();
         output.add(valueFactory.createStatement(iri,
                 RDF.TYPE, ReferenceTemplate.TYPE, iri));
         output.add(valueFactory.createStatement(iri,
@@ -129,7 +131,7 @@ class ReferenceFactory {
                 templateResource, iri));
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
-                this.configIri, iri));
+                configIri, iri));
         return output;
     }
 
@@ -137,8 +139,7 @@ class ReferenceFactory {
         if (input == null || input.isEmpty()) {
             return Collections.emptyList();
         }
-        return RdfUtils.updateToIriAndGraph(input, this.configIri);
+        return RdfUtils.updateToIriAndGraph(input, configIri);
     }
-
 
 }

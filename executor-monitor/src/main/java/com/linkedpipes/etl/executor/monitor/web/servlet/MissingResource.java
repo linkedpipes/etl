@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.monitor.web.servlet;
 
-
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 
 public class MissingResource extends MonitorException {

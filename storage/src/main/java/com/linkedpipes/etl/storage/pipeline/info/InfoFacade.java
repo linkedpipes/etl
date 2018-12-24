@@ -2,13 +2,24 @@ package com.linkedpipes.etl.storage.pipeline.info;
 
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Provide existing pipeline based knowledge to improve used experience
@@ -23,8 +34,6 @@ public class InfoFacade {
 
         /**
          * Merge information from given info to this instance.
-         *
-         * @param info
          */
         private void merge(TemplateInfo info) {
             for (Map.Entry<Resource, Integer> entry :
@@ -58,8 +67,6 @@ public class InfoFacade {
 
         /**
          * Merge information from given info to this instance.
-         *
-         * @param info
          */
         private void merge(PipelineInfo info) {
             tags.addAll(info.tags);
@@ -91,9 +98,9 @@ public class InfoFacade {
         private Resource target;
 
         private void add(Map<Resource, Resource> instanceToTemplate,
-                PipelineInfo info) {
-            final Resource sourceTemplate = instanceToTemplate.get(source);
-            final Resource targetTemplate = instanceToTemplate.get(target);
+                         PipelineInfo info) {
+            Resource sourceTemplate = instanceToTemplate.get(source);
+            Resource targetTemplate = instanceToTemplate.get(target);
             if (sourceTemplate == null || targetTemplate == null) {
                 return;
             }
@@ -109,7 +116,7 @@ public class InfoFacade {
 
     }
 
-    private final static IRI TYPE;
+    private static final IRI TYPE;
 
     static {
         TYPE = SimpleValueFactory.getInstance().createIRI(
@@ -131,16 +138,14 @@ public class InfoFacade {
     }
 
     /**
-     * @param templateIriAsString
-     * @return Names of pipeline where given pipeline is used.
+     * Return names of pipeline where given pipeline is used.
      */
     public Collection<String> getUsage(String templateIriAsString) {
-        final Resource templateIri = SimpleValueFactory.getInstance().createIRI(
+        Resource templateIri = SimpleValueFactory.getInstance().createIRI(
                 templateIriAsString);
-        final List<String> usage = new LinkedList<>();
-        for (Map.Entry<String, PipelineInfo> entry :
-                pipelineInfo.entrySet()) {
-            final PipelineInfo info = entry.getValue();
+        List<String> usage = new LinkedList<>();
+        for (Map.Entry<String, PipelineInfo> entry : pipelineInfo.entrySet()) {
+            PipelineInfo info = entry.getValue();
             if (info.templates.contains(templateIri)) {
                 usage.add(entry.getKey());
             }
@@ -148,16 +153,16 @@ public class InfoFacade {
         return usage;
     }
 
-    public void onPipelineCreate(Pipeline pipeline,
-            Collection<Statement> pipelineRdf) {
-        final PipelineInfo info = createInfo(pipeline, pipelineRdf);
+    public void onPipelineCreate(
+            Pipeline pipeline, Collection<Statement> pipelineRdf) {
+        PipelineInfo info = createInfo(pipeline, pipelineRdf);
         pipelineInfo.put(pipeline.getIri(), info);
         regenerate();
     }
 
-    public void onPipelineUpdate(Pipeline pipeline,
-            Collection<Statement> pipelineRdf) {
-        final PipelineInfo info = createInfo(pipeline, pipelineRdf);
+    public void onPipelineUpdate(
+            Pipeline pipeline, Collection<Statement> pipelineRdf) {
+        PipelineInfo info = createInfo(pipeline, pipelineRdf);
         pipelineInfo.put(pipeline.getIri(), info);
         regenerate();
     }
@@ -172,14 +177,14 @@ public class InfoFacade {
      */
     private void regenerate() {
         // Prepare data.
-        final PipelineInfo globalInfo = new PipelineInfo();
+        PipelineInfo globalInfo = new PipelineInfo();
         pipelineInfo.values().forEach((item) -> globalInfo.merge(item));
         // Write data.
-        final ValueFactory vf = SimpleValueFactory.getInstance();
-        final List<Statement> statements = new LinkedList<>();
-        final IRI graphIri = vf.createIRI(
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        List<Statement> statements = new LinkedList<>();
+        IRI graphIri = vf.createIRI(
                 configuration.getDomainName() + "/pipelines/info");
-        final IRI rootResource = vf.createIRI(
+        IRI rootResource = vf.createIRI(
                 configuration.getDomainName() + "/resources/pipelines/info");
         statements.add(vf.createStatement(
                 rootResource, RDF.TYPE, TYPE, graphIri
@@ -194,15 +199,14 @@ public class InfoFacade {
                 globalInfo.followups.entrySet()) {
             for (Map.Entry<Resource, Integer> followup
                     : template.getValue().followup.entrySet()) {
-                final Resource followupResource = vf.createIRI(
-                        configuration.getDomainName() +
-                                "/resources/pipelines/info/followup/" +
-                                (++counter));
+                Resource followupResource = vf.createIRI(
+                        configuration.getDomainName()
+                                + "/resources/pipelines/info/followup/"
+                                + (++counter));
                 //
-                statements
-                        .add(vf.createStatement(rootResource, vf.createIRI(
-                                "http://etl.linkedpipes.com/ontology/followup"),
-                                followupResource, graphIri));
+                statements.add(vf.createStatement(rootResource, vf.createIRI(
+                        "http://etl.linkedpipes.com/ontology/followup"),
+                        followupResource, graphIri));
                 statements.add(vf.createStatement(followupResource,
                         vf.createIRI(
                                 "http://etl.linkedpipes.com/ontology/source"),
@@ -222,12 +226,12 @@ public class InfoFacade {
         information = statements;
     }
 
-    private static PipelineInfo createInfo(Pipeline pipeline,
-            Collection<Statement> pipelineRdf) {
-        final PipelineInfo info = new PipelineInfo();
+    private static PipelineInfo createInfo(
+            Pipeline pipeline, Collection<Statement> pipelineRdf) {
+        PipelineInfo info = new PipelineInfo();
         //
-        final Map<Resource, Resource> componentTypes = new HashMap<>();
-        final Map<Resource, Connection> connections = new HashMap<>();
+        Map<Resource, Resource> componentTypes = new HashMap<>();
+        Map<Resource, Connection> connections = new HashMap<>();
         for (Statement statement : pipelineRdf) {
             if (!statement.getContext().stringValue().equals(
                     pipeline.getIri())) {
@@ -261,17 +265,19 @@ public class InfoFacade {
                     getConnection(connections, statement.getSubject()).target =
                             (Resource) statement.getObject();
                     break;
+                default:
+                    break;
             }
         }
         // Update connections with componentTypes and add them
         // to pipeline info.
         for (Map.Entry<Resource, Connection> entry
                 : connections.entrySet()) {
-            final Connection connection = entry.getValue();
+            Connection connection = entry.getValue();
             connection.source = componentTypes.get(connection.source);
             connection.target = componentTypes.get(connection.target);
-            if (!connection.isValid || connection.source == null ||
-                    connection.target == null) {
+            if (!connection.isValid || connection.source == null
+                    || connection.target == null) {
                 continue;
             }
             //
@@ -281,17 +287,15 @@ public class InfoFacade {
                 info.followups.put(connection.source, templateInfo);
             }
             templateInfo.followup.put(connection.target,
-                    templateInfo.followup.getOrDefault(connection.target, 0)
-                            + 1);
+                    templateInfo.followup.getOrDefault(
+                            connection.target, 0) + 1);
         }
         info.templates.addAll(componentTypes.values());
         return info;
     }
 
     /**
-     * @param connections
-     * @param resource
-     * @return Connection for given resource.
+     * Return connection for given resource.
      */
     private static Connection getConnection(
             Map<Resource, Connection> connections, Resource resource) {

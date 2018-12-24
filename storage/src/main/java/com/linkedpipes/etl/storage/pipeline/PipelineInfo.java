@@ -56,8 +56,7 @@ public class PipelineInfo implements PojoLoader.Loadable {
     }
 
     @Override
-    public PojoLoader.Loadable load(String predicate, Value value)
-            throws PojoLoader.CantLoadException {
+    public PojoLoader.Loadable load(String predicate, Value value) {
         switch (predicate) {
             case "http://etl.linkedpipes.com/ontology/version":
                 version = ((Literal) value).intValue();

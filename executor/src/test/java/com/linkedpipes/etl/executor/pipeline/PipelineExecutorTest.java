@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.pipeline;
 
-import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
@@ -26,26 +25,24 @@ public class PipelineExecutorTest {
             SequentialExecution {
 
         @Override
-        public void initialize(Map<String, DataUnit> dataUnits,
-                Component.Context context) throws LpException {
+        public void initialize(
+                Map<String, DataUnit> dataUnits, Component.Context context) {
             LOG.info("bindToPipeline");
         }
 
         @Override
-        public void loadConfiguration(RdfSource definition)
-                throws LpException {
+        public void loadConfiguration(RdfSource definition) {
             LOG.info("loadConfiguration {}");
         }
 
         @Override
-        public RuntimeConfiguration getRuntimeConfiguration()
-                throws LpException {
+        public RuntimeConfiguration getRuntimeConfiguration() {
             // No runtime configuration.
             return null;
         }
 
         @Override
-        public void execute() throws LpException {
+        public void execute() {
             LOG.info("execute");
         }
 
@@ -54,27 +51,26 @@ public class PipelineExecutorTest {
     private static final Logger LOG =
             LoggerFactory.getLogger(PipelineExecutorTest.class);
 
-//    @Test
     public void executeTwoConnectedComponents() throws Exception {
         // Prepare working directory.
-        final File file = new File(Thread.currentThread()
+        File file = new File(Thread.currentThread()
                 .getContextClassLoader()
                 .getResource("pipeline/twoConnectedComponents.trig")
                 .getPath());
-        final File directory =
+        File directory =
                 Files.createTempDirectory("lp-test-executor-exec-").toFile();
         (new File(directory, "definition")).mkdirs();
         Files.copy(file.toPath(),
                 (new File(directory, "definition/definition.trig")).toPath());
         //
-        final ModuleService moduleFacade = Mockito.mock(ModuleService.class);
+        ModuleService moduleFacade = Mockito.mock(ModuleService.class);
         Mockito.when(moduleFacade.getComponent(Mockito.any(),
                 Mockito.eq("http://pipeline/component/1")))
                 .thenReturn(new DummyComponent());
         Mockito.when(moduleFacade.getComponent(Mockito.any(),
                 Mockito.eq("http://pipeline/component/2")))
                 .thenReturn(new DummyComponent());
-        final PipelineExecutor executor =
+        PipelineExecutor executor =
                 new PipelineExecutor(directory, "http://execution",
                         moduleFacade);
         executor.execute();

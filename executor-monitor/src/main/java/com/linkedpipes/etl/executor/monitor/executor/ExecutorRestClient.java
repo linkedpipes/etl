@@ -2,6 +2,7 @@ package com.linkedpipes.etl.executor.monitor.executor;
 
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -22,7 +23,7 @@ class ExecutorRestClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * @return Can return null as an empty body.
+     * Can return null as an empty body.
      */
     public String check(Executor executor) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -30,11 +31,11 @@ class ExecutorRestClient {
         headers.add("Accept", "application/json");
         ResponseEntity<String> response;
         try {
-            response = this.restTemplate.exchange(
+            response = restTemplate.exchange(
                     getOverviewUrl(executor), HttpMethod.GET,
                     entity, String.class);
         } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode().value() == 404) {
+            if (ex.getStatusCode().value() == HttpStatus.SC_NOT_FOUND) {
                 // There is no execution running, that is fine.
                 return null;
             } else {
@@ -53,10 +54,10 @@ class ExecutorRestClient {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
 
-        String body = this.createStartExecutionBody(execution);
+        String body = createStartExecutionBody(execution);
         HttpEntity request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<String> response = this.restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 getExecutionsUrl(executor), HttpMethod.POST,
                 request, String.class);
 
@@ -65,7 +66,7 @@ class ExecutorRestClient {
                 executor.getAddress(),
                 response.getStatusCode());
 
-        if (response.getStatusCode().value() != 201) {
+        if (response.getStatusCode().value() != HttpStatus.SC_CREATED) {
             throw new MonitorException("Can't start execution, response: {}",
                     response.getStatusCode());
         }

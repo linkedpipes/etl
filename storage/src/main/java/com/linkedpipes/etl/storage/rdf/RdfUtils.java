@@ -1,7 +1,11 @@
 package com.linkedpipes.etl.storage.rdf;
 
 import com.linkedpipes.etl.storage.BaseException;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -13,8 +17,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,17 +52,11 @@ public final class RdfUtils {
 
     }
 
-    //
-    //
-    //
-
     /**
-     * @param statements
-     * @param type
-     * @return Null if there is no resource of given type.
+     * Return Null if there is no resource of given type.
      */
-    public static Resource find(Collection<Statement> statements,
-            IRI type) {
+    public static Resource find(
+            Collection<Statement> statements, IRI type) {
         for (Statement statement : statements) {
             if (RDF.TYPE.equals(statement.getPredicate())) {
                 if (type.equals(statement.getObject())) {
@@ -60,21 +69,17 @@ public final class RdfUtils {
 
     public static Collection<Statement> forceContext(
             Collection<Statement> statements, String context) {
-        final ValueFactory vf = SimpleValueFactory.getInstance();
+        ValueFactory vf = SimpleValueFactory.getInstance();
         return forceContext(statements, vf.createIRI(context));
     }
 
     /**
      * Return a importJarComponent of given statements with enforced context.
-     *
-     * @param statements
-     * @param context
-     * @return
      */
     public static Collection<Statement> forceContext(
             Collection<Statement> statements, Resource context) {
-        final ValueFactory vf = SimpleValueFactory.getInstance();
-        final Collection<Statement> result = new ArrayList<>(statements.size());
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        Collection<Statement> result = new ArrayList<>(statements.size());
         for (Statement statement : statements) {
             result.add(vf.createStatement(
                     statement.getSubject(),
@@ -86,19 +91,12 @@ public final class RdfUtils {
         return result;
     }
 
-    //
-    // Manipulation with the RDF statements collections.
-    //
-
     /**
-     * Ignore graphs.
-     *
-     * @param statements
-     * @return List of resources with type.
+     * Select resources of given types, ignore graphs.
      */
     private static Collection<Resource> selectTyped(
             Collection<Statement> statements) {
-        final HashSet<Resource> result = new HashSet<>();
+        HashSet<Resource> result = new HashSet<>();
         for (Statement statement : statements) {
             if (statement.getPredicate().equals(RDF.TYPE)) {
                 result.add(statement.getSubject());
@@ -109,11 +107,7 @@ public final class RdfUtils {
 
     /**
      * Change names of all typed resource so the use given prefix.
-     *
-     * @param statements
-     * @param baseIri Must not end with '/'.
-     * @param context Context used for new statements.
-     * @return
+     * BaseIRI must not end with '/'.
      */
     public static Collection<Statement> renameResources(
             Collection<Statement> statements, String baseIri,
@@ -122,20 +116,20 @@ public final class RdfUtils {
             // There is nothing to update.
             return Collections.EMPTY_LIST;
         }
-        final ValueFactory vf = SimpleValueFactory.getInstance();
+        ValueFactory vf = SimpleValueFactory.getInstance();
         // Create mapping of resources.
-        final Map<Resource, Resource> replaceMap = new HashMap<>();
+        Map<Resource, Resource> replaceMap = new HashMap<>();
         for (Resource resource : selectTyped(statements)) {
-            replaceMap.put(resource,
-                    vf.createIRI(baseIri + "/" + replaceMap.size()));
+            replaceMap.put(
+                    resource, vf.createIRI(baseIri + "/" + replaceMap.size()));
         }
         // Replace.
-        final Collection<Statement> result = new ArrayList<>(statements.size());
+        Collection<Statement> result = new ArrayList<>(statements.size());
         for (Statement statement : statements) {
             // Check for change in resource and object.
-            final Resource resource = replaceMap.getOrDefault(
+            Resource resource = replaceMap.getOrDefault(
                     statement.getSubject(), statement.getSubject());
-            final Value object;
+            Value object;
             if (statement.getObject() instanceof Resource) {
                 object = replaceMap.getOrDefault(statement.getObject(),
                         (Resource) statement.getObject());
@@ -155,13 +149,9 @@ public final class RdfUtils {
 
     /**
      * Return RDF format required by the client to use in response.
-     *
-     * @param request
-     * @param defaultValue
-     * @return
      */
-    public static RDFFormat getFormat(HttpServletRequest request,
-            RDFFormat defaultValue) {
+    public static RDFFormat getFormat(
+            HttpServletRequest request, RDFFormat defaultValue) {
         // TODO There can ba multiple Accept values
         return Rio.getParserFormatForMIMEType(request.getHeader("Accept"))
                 .orElse(defaultValue);
@@ -171,9 +161,6 @@ public final class RdfUtils {
      * Return RDF type for given MimeType. The JSON MimeType is considered
      * to represent the JSONLD to support backward compatibility, with
      * other LinkedPipes versions.
-     *
-     * @param mimeType
-     * @return
      */
     public static RDFFormat getFormat(String mimeType)
             throws RdfException {
@@ -189,9 +176,6 @@ public final class RdfUtils {
 
     /**
      * Return type of RDF format for given type.
-     *
-     * @param file
-     * @return
      */
     public static RDFFormat getFormat(File file) throws RdfException {
         // BACKWARD COMPATIBILITY
@@ -206,9 +190,6 @@ public final class RdfUtils {
 
     /**
      * Read and return RDF from given {@link MultipartFile}.
-     *
-     * @param file
-     * @return
      */
     public static Collection<Statement> read(MultipartFile file)
             throws RdfException {
@@ -234,9 +215,6 @@ public final class RdfUtils {
     /**
      * Read and return RDF from given {@link File}. The format is determined
      * from file extension.
-     *
-     * @param file
-     * @return
      */
     public static Collection<Statement> read(File file) throws RdfException {
         return read(file, getFormat(file));
@@ -244,10 +222,6 @@ public final class RdfUtils {
 
     /**
      * Read and from RDF from {@link File}.
-     *
-     * @param file
-     * @param format
-     * @return
      */
     public static Collection<Statement> read(File file, RDFFormat format)
             throws RdfException {
@@ -260,18 +234,14 @@ public final class RdfUtils {
 
     /**
      * Read RDF from stream.
-     *
-     * @param inputStream Stream is closed after usage.
-     * @param format
-     * @return
      */
-    public static Collection<Statement> read(InputStream inputStream,
-            RDFFormat format) throws RdfException {
-        final List<Statement> statements = new ArrayList<>(32);
+    public static Collection<Statement> read(
+            InputStream inputStream, RDFFormat format) throws RdfException {
+        List<Statement> statements = new ArrayList<>();
         try {
-            final RDFParser reader = Rio.createParser(format,
+            RDFParser reader = Rio.createParser(format,
                     SimpleValueFactory.getInstance());
-            final StatementCollector collector
+            StatementCollector collector
                     = new StatementCollector(statements);
             reader.setRDFHandler(collector);
             reader.parse(inputStream, "http://localhost/base");
@@ -289,13 +259,10 @@ public final class RdfUtils {
 
     /**
      * Write given RDF statements ro file.
-     *
-     * @param file
-     * @param format
-     * @param statements
      */
-    public static void write(File file, RDFFormat format,
-            Collection<Statement> statements) throws RdfException {
+    public static void write(
+            File file, RDFFormat format, Collection<Statement> statements)
+            throws RdfException {
         try {
             write(new FileOutputStream(file), format, statements);
         } catch (IOException ex) {
@@ -305,15 +272,12 @@ public final class RdfUtils {
 
     /**
      * Write given RDF statements to given stream.
-     *
-     * @param outputStream Stream is closed after usage.
-     * @param format
-     * @param statements
      */
-    public static void write(OutputStream outputStream, RDFFormat format,
+    public static void write(
+            OutputStream outputStream, RDFFormat format,
             Collection<Statement> statements) throws RdfException {
         try {
-            final RDFWriter writer = Rio.createWriter(format, outputStream);
+            RDFWriter writer = Rio.createWriter(format, outputStream);
             writer.startRDF();
             for (Statement s : statements) {
                 writer.handleStatement(s);
@@ -329,16 +293,13 @@ public final class RdfUtils {
     }
 
     /**
-     * TODO Move to package with servlets
-     *
-     * @param request
-     * @param response
-     * @param data
+     * TODO Move to package with servlets.
      */
-    public static void write(HttpServletRequest request,
+    public static void write(
+            HttpServletRequest request,
             HttpServletResponse response, Collection<Statement> data)
             throws BaseException {
-        final RDFFormat format =
+        RDFFormat format =
                 RdfUtils.getFormat(request, RDFFormat.TRIG);
         response.setHeader("content-type", format.getDefaultMIMEType());
         try (OutputStream stream = response.getOutputStream()) {
@@ -370,7 +331,8 @@ public final class RdfUtils {
                 continue;
             }
             String iriAsStr = baseIri + "/" + mapping.size();
-            mapping.put(statement.getSubject(), valueFactory.createIRI(iriAsStr));
+            mapping.put(
+                    statement.getSubject(), valueFactory.createIRI(iriAsStr));
         }
         return mapping;
     }

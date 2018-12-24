@@ -36,14 +36,15 @@ public class UnpackerFacade {
     @Autowired
     private ExecutionFacade executions;
 
-    public Collection<Statement> unpack(Pipeline pipeline,
-            Collection<Statement> configurationRdf) throws BaseException {
+    public Collection<Statement> unpack(
+            Pipeline pipeline, Collection<Statement> configurationRdf)
+            throws BaseException {
         return unpack(pipelines.getPipelineRdf(pipeline), configurationRdf);
     }
 
-    public Collection<Statement> unpack(Collection<Statement> pipelineRdf,
+    public Collection<Statement> unpack(
+            Collection<Statement> pipelineRdf,
             Collection<Statement> configurationRdf) throws BaseException {
-
         UnpackOptions options = new UnpackOptions();
         ClosableRdf4jSource optionsSource = Rdf4jSource.wrapInMemory(
                 configurationRdf);
@@ -53,7 +54,7 @@ public class UnpackerFacade {
         } catch (InvalidNumberOfResults ex) {
             // Ignore as the option is optional.
         } catch (RdfUtilsException ex) {
-            throw new BaseException("Can't createMappingFromStatements execution options.", ex);
+            throw new BaseException("Can't load execution options.", ex);
         } finally {
             optionsSource.close();
         }
@@ -70,8 +71,8 @@ public class UnpackerFacade {
             source.close();
         }
 
-        DesignerToExecutor designerToExecutor = new DesignerToExecutor(
-                templates, executions);
+        DesignerToExecutor designerToExecutor =
+                new DesignerToExecutor(templates, executions);
         designerToExecutor.transform(pipeline, graphs, options);
 
         ExecutorPipeline executorPipeline = designerToExecutor.getTarget();
@@ -84,10 +85,7 @@ public class UnpackerFacade {
                 collector.add(statement);
             }));
         }
-
         return collector.getStatements();
-
     }
-
 
 }

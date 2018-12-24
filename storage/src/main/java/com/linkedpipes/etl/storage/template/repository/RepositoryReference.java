@@ -8,7 +8,7 @@ public interface RepositoryReference {
 
     public Template.Type getType();
 
-    public static RepositoryReference Jar(String id) {
+    public static RepositoryReference createJar(String id) {
         return new RepositoryReference() {
             @Override
             public String getId() {
@@ -22,7 +22,7 @@ public interface RepositoryReference {
         };
     }
 
-    public static RepositoryReference Reference(String id) {
+    public static RepositoryReference createReference(String id) {
         return new RepositoryReference() {
             @Override
             public String getId() {

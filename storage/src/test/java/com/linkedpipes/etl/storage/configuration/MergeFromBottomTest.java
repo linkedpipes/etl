@@ -20,7 +20,7 @@ public class MergeFromBottomTest {
         ValueFactory vf = SimpleValueFactory.getInstance();
         IRI iri = vf.createIRI("http://localhost/instance");
 
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         statements.setDefaultGraph("http://localhost/graph");
         statements.addIri(iri, "http://localhost/first", LP_OBJECTS.INHERIT);
         statements.addIri(iri, "http://localhost/second",
@@ -31,7 +31,7 @@ public class MergeFromBottomTest {
         MergeFromBottom worker = new MergeFromBottom();
         Collection<Statement> actual = worker.finalize(statements);
 
-        Statements expected = Statements.ArrayList();
+        Statements expected = Statements.arrayList();
         expected.setDefaultGraph("http://localhost/graph");
         expected.addIri(iri, "http://localhost/second",
                 LP_OBJECTS.INHERIT_AND_FORCE);

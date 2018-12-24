@@ -39,8 +39,8 @@ public class PipelineModel {
         String componentResource = component.getResource();
         String binding = dataUnit.getBinding();
         for (Connection conn : pipeline.getConnections().values()) {
-            if (conn.getTargetComponent().equals(componentResource) &&
-                    conn.getTargetBinding().equals(binding)) {
+            if (conn.getTargetComponent().equals(componentResource)
+                    && conn.getTargetBinding().equals(binding)) {
                 Component sourceComponent = pipeline.getComponents()
                         .get(conn.getSourceComponent());
                 String sourceBinding = conn.getSourceBinding();

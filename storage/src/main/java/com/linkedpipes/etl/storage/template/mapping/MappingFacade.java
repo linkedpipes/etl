@@ -18,23 +18,26 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A single component can have multiple IRIs, those
  * IRIs may appear as the template is imported from one instance to
  * another.
  *
- * This facade should provide functionality for supporting tracking and
+ * <p>This facade should provide functionality for supporting tracking and
  * resolving of these IRIs. Each template can be either original - created
  * from JarTemplate of Template on some instance or it could be imported.
  *
- * For imported templates we keep track of the original template using
+ * <p>For imported templates we keep track of the original template using
  * owl:sameAs predicate.
  *
- * The mapping facade use fixed graph to store RDF data. The triples are of
+ * <p>The mapping facade use fixed graph to store RDF data. The triples are of
  * shape ORIGINAL_IRI predicate LOCAL_IRI.
- *
  * TODO Move mapping file into templates directory.
  */
 @Service
@@ -92,7 +95,7 @@ public class MappingFacade {
     }
 
     private void loadMappingFromFile(File mappingFile) throws IOException {
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         statements.addAll(mappingFile);
         statements.stream()
                 .filter((s) -> s.getContext().equals(GRAPH))
@@ -158,7 +161,8 @@ public class MappingFacade {
      */
     public void remove(String iri) {
         String keyToRemove = null;
-        for (Map.Entry<String, String> entry : this.originalToLocal.entrySet()) {
+        for (Map.Entry<String, String> entry :
+                this.originalToLocal.entrySet()) {
             if (iri.equals(entry.getValue())) {
                 keyToRemove = entry.getKey();
                 break;
@@ -188,7 +192,7 @@ public class MappingFacade {
     }
 
     private Collection<Statement> collectAsStatements() {
-        Statements output = Statements.ArrayList(originalToLocal.size());
+        Statements output = Statements.arrayList(originalToLocal.size());
         output.setDefaultGraph(GRAPH);
         for (Map.Entry<String, String> entry : originalToLocal.entrySet()) {
             output.addIri(valueFactory.createIRI(entry.getKey()),

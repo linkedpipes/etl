@@ -10,7 +10,13 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class FilesDataUnitTest {
 
@@ -40,7 +46,7 @@ public class FilesDataUnitTest {
         FileUtils.writeStringToFile(b, "");
         Assert.assertEquals(2, files.size());
         //
-        List<String> paths = new ArrayList<>(2);
+        List<String> paths = new ArrayList<>();
         files.forEach((entry) -> paths.add(entry.getFileName()));
         //
         Assert.assertTrue(paths.contains("directory-a" + File.separator + "a"));
@@ -124,6 +130,5 @@ public class FilesDataUnitTest {
         this.DIRECTORIES.add(file);
         return file;
     }
-
 
 }

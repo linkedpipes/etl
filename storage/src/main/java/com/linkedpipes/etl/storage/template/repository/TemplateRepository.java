@@ -39,20 +39,18 @@ public class TemplateRepository {
     // TODO Move to a global version management.
     protected void loadRepositoryInfo() {
         if (!repositoryInfoFile().exists()) {
-            this.info = new RepositoryInfo();
+            info = new RepositoryInfo();
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.info = mapper.readValue(
-                    repositoryInfoFile(), RepositoryInfo.class);
+            info = mapper.readValue(repositoryInfoFile(), RepositoryInfo.class);
         } catch (IOException ex) {
             LOG.warn("Can not read repository info file.", ex);
-            this.info = new RepositoryInfo();
+            info = new RepositoryInfo();
         }
-        this.initialVersion = this.info.version;
+        initialVersion = info.version;
     }
-
 
     protected File repositoryInfoFile() {
         return new File(repositoryRoot, "repository-info.json");
@@ -100,8 +98,8 @@ public class TemplateRepository {
             return null;
         }
         // TODO Check that we are still in the directory!
-        String relativePath = "dialog" + File.separator +
-                dialog + File.separator + path;
+        String relativePath = "dialog" + File.separator
+                + dialog + File.separator + path;
         return new File(getDirectory(ref), relativePath);
     }
 
@@ -116,18 +114,21 @@ public class TemplateRepository {
 
     public List<RepositoryReference> getReferences() {
         List<RepositoryReference> output = new ArrayList<>();
-        for (File file : this.repositoryRoot.listFiles()) {
+        File[] files = repositoryRoot.listFiles();
+        if (files == null) {
+            return output;
+        }
+        for (File file : files) {
             if (!file.isDirectory()) {
                 continue;
             }
             if (file.getName().startsWith("jar-")) {
-                output.add(RepositoryReference.Jar(file.getName()));
+                output.add(RepositoryReference.createJar(file.getName()));
             } else {
-                output.add(RepositoryReference.Reference(file.getName()));
+                output.add(RepositoryReference.createReference(file.getName()));
             }
         }
         return output;
     }
-
 
 }

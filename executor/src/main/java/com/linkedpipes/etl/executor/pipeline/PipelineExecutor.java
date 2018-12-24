@@ -56,9 +56,11 @@ public class PipelineExecutor {
             componentsInstances = new HashMap<>();
 
     /**
-     * @param directory
-     * @param iri ExecutionObserver IRI.
-     * @param modules
+     * Create the pipeline executor.
+     *
+     * @param directory Execution directory.
+     * @param iri       ExecutionObserver IRI.
+     * @param modules   Module service.
      */
     public PipelineExecutor(File directory, String iri, ModuleService modules) {
         // We assume that the directory we are executing is in the
@@ -97,21 +99,23 @@ public class PipelineExecutor {
         LOG.info("PipelineExecutor.execute ... done ");
     }
 
-    public synchronized void cancelExecution() {
-        if (cancelExecution) {
-            return;
+    public void cancelExecution() {
+        synchronized (this) {
+            if (cancelExecution) {
+                return;
+            }
+            MDC.put(LoggerFacade.EXECUTION_MDC, null);
+            LOG.info("ExecutionObserver cancelled!");
+            cancelExecution = true;
+            // Notify the executor if it's not null.
+            final ComponentExecutor currentExecutor = executor;
+            if (currentExecutor != null) {
+                LOG.info("Cancelling component!");
+                currentExecutor.cancel();
+            }
+            execution.onCancelRequest();
+            MDC.remove(LoggerFacade.EXECUTION_MDC);
         }
-        MDC.put(LoggerFacade.EXECUTION_MDC, null);
-        LOG.info("ExecutionObserver cancelled!");
-        cancelExecution = true;
-        // Notify the executor if it's not null.
-        final ComponentExecutor currentExecutor = executor;
-        if (currentExecutor != null) {
-            LOG.info("Cancelling component!");
-            currentExecutor.cancel();
-        }
-        execution.onCancelRequest();
-        MDC.remove(LoggerFacade.EXECUTION_MDC);
     }
 
     public ExecutionObserver getExecution() {
@@ -157,16 +161,16 @@ public class PipelineExecutor {
     }
 
     private void loadPipeline() throws ExecutorException {
-        final File definitionFile = locatePipelineDefinitionFile();
-        this.pipeline = new Pipeline();
-        final File workingDirectory =
+        File definitionFile = locatePipelineDefinitionFile();
+        pipeline = new Pipeline();
+        File workingDirectory =
                 resources.getWorkingDirectory("pipeline_repository");
-        this.pipeline.load(definitionFile, workingDirectory);
+        pipeline.load(definitionFile, workingDirectory);
         execution.onPipelineLoaded(pipeline.getModel());
     }
 
     private File locatePipelineDefinitionFile() throws ExecutorException {
-        final File definitionFile = resources.getDefinitionFile();
+        File definitionFile = resources.getDefinitionFile();
         if (definitionFile == null) {
             throw new ExecutorException("Missing definition file!");
         }
@@ -201,10 +205,8 @@ public class PipelineExecutor {
 
     private void initializeDataUnits() throws ExecutorException {
         dataUnitManager = new DataUnitManager(pipeline.getModel());
-        final DataUnitInstanceSource dataUnitInstanceSource =
-                (iri) -> {
-                    return moduleFacade.getDataUnit(pipeline, iri);
-                };
+        DataUnitInstanceSource dataUnitInstanceSource =
+                (iri) -> moduleFacade.getDataUnit(pipeline, iri);
         dataUnitManager.initialize(dataUnitInstanceSource,
                 execution.getModel().getDataUnitsForInitialization());
     }
@@ -238,7 +240,8 @@ public class PipelineExecutor {
         }
     }
 
-    private boolean shouldLoadInstanceForComponent(PipelineComponent component) {
+    private boolean shouldLoadInstanceForComponent(
+            PipelineComponent component) {
         return component.getExecutionType() == ExecutionType.EXECUTE;
     }
 
@@ -248,15 +251,16 @@ public class PipelineExecutor {
             if (!executeComponent(pplComponent)) {
                 break;
             }
-            if (cancelExecution) {
-                break;
+            synchronized (this) {
+                if (cancelExecution) {
+                    break;
+                }
             }
         }
     }
 
     /**
-     * @param pplComponent
-     * @return False if execution failed.
+     * Return false if execution failed.
      */
     private boolean executeComponent(PipelineComponent pplComponent) {
         ExecutionComponent execComponent =
@@ -330,8 +334,8 @@ public class PipelineExecutor {
                 LOG.error("Can't delete working directory.", ex);
             }
         }
-        if (pipeline.getModel().isDeleteLogDataOnSuccess() &&
-                execution.isExecutionSuccessful()) {
+        if (pipeline.getModel().isDeleteLogDataOnSuccess()
+                && execution.isExecutionSuccessful()) {
             try {
                 FileUtils.deleteDirectory(resources.getExecutionLogDirectory());
             } catch (IOException ex) {

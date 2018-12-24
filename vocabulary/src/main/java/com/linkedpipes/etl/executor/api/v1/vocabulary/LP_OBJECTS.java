@@ -2,10 +2,6 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
 public final class LP_OBJECTS {
 
-    private LP_OBJECTS() {
-
-    }
-
     private static final String PREFIX =
             "http://plugins.linkedpipes.com/ontology/configuration/";
 

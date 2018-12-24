@@ -6,6 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -37,7 +38,7 @@ class Rdf4jRdfSource implements RdfSource {
         try {
             dataUnit.execute((connection -> {
                 RepositoryResult<Statement> result = connection.getStatements(
-                        iri, null, null, this.graph);
+                        iri, null, null, graph);
                 handleResult(result, handler);
             }));
         } catch (LpException ex) {
@@ -59,16 +60,16 @@ class Rdf4jRdfSource implements RdfSource {
     @Override
     public List<RdfValue> getPropertyValues(String subject, String predicate)
             throws RdfException {
-        IRI s = this.valueFactory.createIRI(subject);
-        IRI p = this.valueFactory.createIRI(predicate);
+        IRI s = valueFactory.createIRI(subject);
+        IRI p = valueFactory.createIRI(predicate);
         List<RdfValue> result = new ArrayList<>();
         try {
-            this.dataUnit.execute((connection -> {
+            dataUnit.execute((connection -> {
                 RepositoryResult<Statement> statements =
-                        connection.getStatements(s, p, null, this.graph);
+                        connection.getStatements(s, p, null, graph);
                 while (statements.hasNext()) {
-                    result.add(
-                            new Rdf4jValueWrap(statements.next().getObject()));
+                    Value value = statements.next().getObject();
+                    result.add(new Rdf4jValueWrap(value));
                 }
             }));
         } catch (LpException ex) {
@@ -79,13 +80,13 @@ class Rdf4jRdfSource implements RdfSource {
 
     @Override
     public List<String> getByType(String type) throws RdfException {
-        IRI typeIri = this.valueFactory.createIRI(type);
+        IRI typeIri = valueFactory.createIRI(type);
         List<String> result = new ArrayList<>();
         try {
             this.dataUnit.execute((connection -> {
                 RepositoryResult<Statement> statements =
                         connection.getStatements(
-                                null, RDF.TYPE, typeIri, this.graph);
+                                null, RDF.TYPE, typeIri, graph);
                 while (statements.hasNext()) {
                     result.add(statements.next().getSubject().stringValue());
                 }

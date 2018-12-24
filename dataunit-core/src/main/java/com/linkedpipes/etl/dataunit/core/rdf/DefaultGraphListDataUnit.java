@@ -11,7 +11,11 @@ import org.eclipse.rdf4j.rio.Rio;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 class DefaultGraphListDataUnit extends BaseRdf4jDataUnit

@@ -2,13 +2,18 @@ package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.SuppressFBWarnings;
 import com.linkedpipes.etl.storage.jar.JarComponent;
 import com.linkedpipes.etl.storage.jar.JarFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.repository.RepositoryReference;
 import com.linkedpipes.etl.storage.template.repository.TemplateRepository;
 import com.linkedpipes.etl.storage.template.repository.WritableTemplateRepository;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,11 +72,11 @@ public class TemplateManager {
         try {
             importJarFiles();
             importTemplates();
-            if (this.repository.getInitialVersion() !=
-                    TemplateRepository.LATEST_VERSION) {
+            if (repository.getInitialVersion()
+                    != TemplateRepository.LATEST_VERSION) {
                 migrate();
             }
-            this.repository.updateFinished();
+            repository.updateFinished();
         } catch (Exception ex) {
             LOG.error("Initialization failed.", ex);
             throw ex;
@@ -73,7 +85,7 @@ public class TemplateManager {
 
     private void importJarFiles() {
         ImportFromJarFile copyJarTemplates =
-                new ImportFromJarFile(this.repository);
+                new ImportFromJarFile(repository);
         for (JarComponent item : jarFacade.getJarComponents()) {
             copyJarTemplates.importJarComponent(item);
         }
@@ -81,7 +93,7 @@ public class TemplateManager {
 
     private void importTemplates() {
         List<ReferenceTemplate> referenceTemplates = new ArrayList<>();
-        for (RepositoryReference reference : this.repository.getReferences()) {
+        for (RepositoryReference reference : repository.getReferences()) {
             try {
                 Template template = loader.loadTemplate(reference);
                 if (template.getIri() == null) {
@@ -107,26 +119,29 @@ public class TemplateManager {
     }
 
     private JarTemplate findCoreTemplate(ReferenceTemplate template) {
-        while(true) {
-            Template newTemplate = this.templates.get(template.getTemplate());
-            switch (newTemplate.getType()) {
+        while (true) {
+            Template parent = templates.get(template.getTemplate());
+            if (parent == null) {
+                LOG.error("Missing parent for: {}", template.getIri());
+                return null;
+            }
+            switch (parent.getType()) {
                 case JAR_TEMPLATE:
-                    return (JarTemplate)newTemplate;
+                    return (JarTemplate) parent;
                 case REFERENCE_TEMPLATE:
-                    template = (ReferenceTemplate)newTemplate;
+                    template = (ReferenceTemplate) parent;
                     break;
                 default:
-                    LOG.error("Invalid template type: {}", newTemplate.getIri());
+                    LOG.error("Invalid template type: {}",
+                            parent.getIri());
                     return null;
-            }
-            if (newTemplate == null) {
-                // TODO Invalid template detected.
-                return null;
             }
         }
     }
 
+    @SuppressFBWarnings(value = "SF_SWITCH_FALLTHROUGH")
     private void migrate() throws BaseException {
+        // CHECKSTYLE.OFF: MagicNumber
         switch (this.repository.getInitialVersion()) {
             case 0:
             case 1:
@@ -140,14 +155,16 @@ public class TemplateManager {
                 // not stored in memory.
                 migrateV3ToV4();
             case 4: // Current version
+                break;
             default:
                 break;
         }
+        // CHECKSTYLE.ON: MagicNumber
     }
 
     private void migrateV1ToV2() throws BaseException {
         LOG.info("Migrating to version 2");
-        TemplateV1ToV2 v1Tov2 = new TemplateV1ToV2(this, this.repository);
+        TemplateV1ToV2 v1Tov2 = new TemplateV1ToV2(this, repository);
         boolean migrationFailed = migrateTemplates(
                 (template) -> v1Tov2.migrate(template));
         if (migrationFailed) {
@@ -177,7 +194,7 @@ public class TemplateManager {
 
     private void migrateV2ToV3() throws BaseException {
         LOG.info("Migrating to version 3");
-        TemplateV2ToV3 v2Tov3 = new TemplateV2ToV3(this.repository);
+        TemplateV2ToV3 v2Tov3 = new TemplateV2ToV3(repository);
         boolean migrationFailed = migrateTemplates(
                 (template) -> v2Tov3.migrate(template));
         if (migrationFailed) {
@@ -187,7 +204,7 @@ public class TemplateManager {
 
     private void migrateV3ToV4() throws BaseException {
         LOG.info("Migrating to version 4");
-        TemplateV3ToV4 v3ToV4= new TemplateV3ToV4(this.repository);
+        TemplateV3ToV4 v3ToV4 = new TemplateV3ToV4(repository);
         boolean migrationFailed = migrateTemplates(
                 (template) -> v3ToV4.migrate(template));
         if (migrationFailed) {
@@ -195,25 +212,19 @@ public class TemplateManager {
         }
     }
 
-    /**
-     * @return Unmodifiable map.
-     */
     public Map<String, Template> getTemplates() {
         return Collections.unmodifiableMap(templates);
     }
 
-    /**
-     * @param descriptionRdf If null
-     */
     public Template createTemplate(
             Collection<Statement> interfaceRdf,
             Collection<Statement> configurationRdf,
             Collection<Statement> descriptionRdf)
             throws BaseException {
-        String id = this.repository.reserveReferenceId();
-        String iri = this.configuration.getDomainName() +
-                "/resources/components/" + id;
-        ReferenceFactory factory = new ReferenceFactory(this, this.repository);
+        String id = repository.reserveReferenceId();
+        String iri = configuration.getDomainName()
+                + "/resources/components/" + id;
+        ReferenceFactory factory = new ReferenceFactory(this, repository);
         try {
             ReferenceTemplate template = factory.create(
                     interfaceRdf, configurationRdf,
@@ -222,7 +233,7 @@ public class TemplateManager {
             templates.put(template.getIri(), template);
             return template;
         } catch (BaseException ex) {
-            repository.remove(RepositoryReference.Reference(id));
+            repository.remove(RepositoryReference.createReference(id));
             throw ex;
         }
     }
@@ -235,8 +246,8 @@ public class TemplateManager {
         }
         diff = RdfUtils.forceContext(diff, template.getIri());
         Collection<Statement> newInterface =
-                update(this.repository.getInterface(template), diff);
-        this.repository.setInterface(template, newInterface);
+                update(repository.getInterface(template), diff);
+        repository.setInterface(template, newInterface);
     }
 
     private List<Statement> update(
@@ -274,21 +285,19 @@ public class TemplateManager {
             Template template, Collection<Statement> statements)
             throws BaseException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        IRI graph = valueFactory.createIRI(template.getIri() + "/configuration");
+        IRI graph = valueFactory.createIRI(
+                template.getIri() + "/configuration");
         statements = RdfUtils.forceContext(statements, graph);
-        this.repository.setConfig(template, statements);
+        repository.setConfig(template, statements);
     }
 
-    /**
-     * Does not delete
-     */
     public void remove(Template template) throws BaseException {
         if (template.getType() != Template.Type.REFERENCE_TEMPLATE) {
             throw new BaseException("Can't delete non-reference template: {}",
                     template.getIri());
         }
-        this.templates.remove(template.getIri());
-        this.repository.remove(template);
+        templates.remove(template.getIri());
+        repository.remove(template);
     }
 
 }

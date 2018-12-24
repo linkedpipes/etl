@@ -15,10 +15,14 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class WritableTemplateRepository extends TemplateRepository {
+
+    private static final int REFERENCE_CREATE_ATTEMPT = 32;
 
     private static final Logger LOG
             = LoggerFactory.getLogger(TemplateRepository.class);
@@ -34,9 +38,9 @@ public class WritableTemplateRepository extends TemplateRepository {
     }
 
     public String reserveReferenceId() throws BaseException {
-        for (int i = 0; i < 32; ++i) {
+        for (int i = 0; i < REFERENCE_CREATE_ATTEMPT; ++i) {
             String id = createId();
-            File path = getDirectory(RepositoryReference.Reference(id));
+            File path = getDirectory(RepositoryReference.createReference(id));
             if (path.mkdir()) {
                 return id;
             }
@@ -90,7 +94,7 @@ public class WritableTemplateRepository extends TemplateRepository {
      */
     public void updateFinished() {
         // TODO Export version to some shared single space.
-        this.info.version = TemplateRepository.LATEST_VERSION;
+        info.version = TemplateRepository.LATEST_VERSION;
         try {
             saveRepositoryInfo();
         } catch (IOException ex) {
@@ -100,7 +104,7 @@ public class WritableTemplateRepository extends TemplateRepository {
 
     private void saveRepositoryInfo() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(repositoryInfoFile(), this.info);
+        mapper.writeValue(repositoryInfoFile(), info);
     }
 
 }

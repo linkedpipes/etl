@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +26,7 @@ public class DescriptionTest {
     }
 
     @Test
-    public void simpleScan() throws RdfException {
+    public void simpleScan()  {
         Descriptor desc = new Descriptor(TestObject.class);
 
         Assert.assertEquals("http://type", desc.getObjectType());
@@ -36,7 +35,7 @@ public class DescriptionTest {
     }
 
     @Test
-    public void inheritanceScan() throws RdfException {
+    public void inheritanceScan() {
         Descriptor desc = new Descriptor(TestInheritance.class);
 
         Assert.assertEquals("http://inheritance", desc.getObjectType());

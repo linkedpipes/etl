@@ -18,9 +18,8 @@ public class DefaultControlTest {
 
     @Test
     public void initFromTwoSources() throws RdfUtilsException {
-        final ClosableRdfSource source = Rdf4jSource.createInMemory();
-        final ClosableRdfSource otherSource = Rdf4jSource.createInMemory();
-        final RdfBuilder builder = RdfBuilder.create(source, "http://graph");
+        ClosableRdfSource source = Rdf4jSource.createInMemory();
+        RdfBuilder builder = RdfBuilder.create(source, "http://graph");
         builder.entity("http://des").iri(RDF.TYPE, LP_OBJECTS.DESCRIPTION)
                 .iri(LP_OBJECTS.HAS_DESCRIBE, "http://type")
                 .entity(LP_OBJECTS.HAS_MEMBER, "http://des/1")
@@ -32,7 +31,7 @@ public class DefaultControlTest {
                 .iri(LP_OBJECTS.HAS_CONTROL, "http://control/2")
                 .close();
         builder.commit();
-        final RdfBuilder cnf1 = RdfBuilder.create(source, "http://config/1");
+        RdfBuilder cnf1 = RdfBuilder.create(source, "http://config/1");
         cnf1.entity("http://config")
                 .iri(RDF.TYPE, "http://type")
                 .string("http://value/1", "1_1")
@@ -40,7 +39,8 @@ public class DefaultControlTest {
                 .string("http://value/2", "1_2")
                 .string("http://control/2", LP_OBJECTS.FORCE);
         cnf1.commit();
-        final RdfBuilder cnf2 = RdfBuilder.create(otherSource, "http://config/2");
+        ClosableRdfSource otherSource = Rdf4jSource.createInMemory();
+        RdfBuilder cnf2 = RdfBuilder.create(otherSource, "http://config/2");
         cnf2.entity("http://config")
                 .iri(RDF.TYPE, "http://type")
                 .string("http://value/1", "2_1")
@@ -48,10 +48,10 @@ public class DefaultControlTest {
                 .string("http://value/2", "2_1")
                 .string("http://control/2", LP_OBJECTS.FORCE);
         cnf2.commit();
-        final DefaultControl control = new DefaultControl();
+        DefaultControl control = new DefaultControl();
         control.loadDefinition(source, "http://type");
 
-        final List<EntityReference> refs = new LinkedList<>();
+        List<EntityReference> refs = new LinkedList<>();
         refs.add(new EntityReference("http://config",
                 "http://config/1", source));
         refs.add(new EntityReference("http://config",

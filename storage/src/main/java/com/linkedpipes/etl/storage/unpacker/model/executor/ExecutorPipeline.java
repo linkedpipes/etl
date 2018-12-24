@@ -6,7 +6,12 @@ import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+
 
 public class ExecutorPipeline {
 
@@ -18,9 +23,9 @@ public class ExecutorPipeline {
 
     private final List<ExecutorConnection> connections = new LinkedList<>();
 
-    private ExecutorMetadata executorMetadata = null;
+    private ExecutorMetadata executorMetadata;
 
-    private ExecutorProfile executorProfile = null;
+    private ExecutorProfile executorProfile;
 
     public ExecutorPipeline(String iri) {
         this.iri = iri;
@@ -33,7 +38,8 @@ public class ExecutorPipeline {
         writer.string(iri, SKOS.PREF_LABEL, label, null);
         writer.iri(iri, LP_EXEC.HAS_METADATA, executorMetadata.getIri());
         executorMetadata.write(writer);
-        writer.iri(iri, LP_EXEC.HAS_EXECUTION_PROFILE, executorProfile.getIri());
+        writer.iri(
+                iri, LP_EXEC.HAS_EXECUTION_PROFILE, executorProfile.getIri());
         executorProfile.write(writer);
         for (ExecutorComponent component : components) {
             writer.iri(iri, LP_PIPELINE.HAS_COMPONENT, component.getIri());
@@ -50,11 +56,10 @@ public class ExecutorPipeline {
         String sesameIri = "http://localhost/repository/sesame";
         writer.iri(iri, "http://linkedpipes.com/ontology/repository",
                 sesameIri);
-        // TODO Move to vocabulary
-        writer.iri(sesameIri, RDF.TYPE,
-                "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository");
-        writer.iri(sesameIri, "http://linkedpipes.com/ontology/requirement",
-                "http://linkedpipes.com/resources/requirement/workingDirectory");
+        writer.iri(sesameIri, RDF.TYPE, LP_PIPELINE.RDF_REPOSITORY);
+        writer.iri(
+                sesameIri, LP_PIPELINE.HAS_REQUIREMENT,
+                LP_PIPELINE.HAS_REQ_WORKING);
     }
 
     /**

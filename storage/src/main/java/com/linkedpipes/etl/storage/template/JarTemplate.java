@@ -35,6 +35,8 @@ class JarTemplate extends Template implements PojoLoader.Loadable {
             case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
                 configurationDescription = value.stringValue();
                 break;
+            default:
+                break;
         }
         return null;
     }

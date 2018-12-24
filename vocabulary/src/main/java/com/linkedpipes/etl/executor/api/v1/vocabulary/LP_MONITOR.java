@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
-public class LP_MONITOR {
+public final class LP_MONITOR {
 
     public static final String HAS_MONITOR_STATUS =
             "http://etl.linkedpipes.com/ontology/statusMonitor";

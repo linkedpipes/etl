@@ -33,14 +33,14 @@ public class DebugDataTest {
         List<File> directories = valid.getDebugDirectories();
         Assert.assertEquals(2, valid.getDebugDirectories().size());
         Assert.assertEquals(
-                new File(directory, "valid-info" +
-                        File.separator + ".." +
-                        File.separator + "data"),
+                new File(directory, "valid-info"
+                        + File.separator + ".."
+                        + File.separator + "data"),
                 directories.get(0));
         Assert.assertEquals(
-                new File(directory, "valid-info" +
-                        File.separator + "." +
-                        File.separator + "path"),
+                new File(directory, "valid-info"
+                        + File.separator + "."
+                        + File.separator + "path"),
                 directories.get(1));
         DataUnit invalid = debugData.getDataUnits().get("invalid");
         invalid.updateDebugDirectories(directory);
@@ -50,7 +50,7 @@ public class DebugDataTest {
     }
 
     private Statements twoDataUnitsWithValidAndInvalidDebugFiles() {
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         statements.addIri(
                 "http://valid", RDF.TYPE.stringValue(), LP_EXEC.DATA_UNIT);
         statements.addString(
@@ -69,7 +69,5 @@ public class DebugDataTest {
                 "http://executions/123");
         return statements;
     }
-
-
 
 }

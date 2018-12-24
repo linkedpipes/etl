@@ -42,34 +42,34 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
     private org.apache.ftpserver.FtpServer server = null;
 
     protected void start() {
-        final DataConnectionConfigurationFactory dataFactory
+        DataConnectionConfigurationFactory dataFactory
                 = new DataConnectionConfigurationFactory();
 
         dataFactory.setActiveEnabled(false);
         dataFactory.setPassivePorts(getPassivePorts());
 
-        final ListenerFactory listenerFactory = new ListenerFactory();
+        ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(configuration.getFtpCommandPort());
         listenerFactory.setDataConnectionConfiguration(
                 dataFactory.createDataConnectionConfiguration());
 
-        final ConnectionConfigFactory connectionConfigFactory
+        ConnectionConfigFactory connectionConfigFactory
                 = new ConnectionConfigFactory();
         connectionConfigFactory.setAnonymousLoginEnabled(true);
 
-        int loginLimit = (configuration.getFtpDataPortsEnd() -
-                configuration.getFtpDataPortsStart()) + 1;
+        int loginLimit = (configuration.getFtpDataPortsEnd()
+                - configuration.getFtpDataPortsStart()) + 1;
         connectionConfigFactory.setMaxLogins(loginLimit);
         connectionConfigFactory.setMaxAnonymousLogins(loginLimit);
 
-        final BaseUser anonymous = new BaseUser();
+        BaseUser anonymous = new BaseUser();
         anonymous.setName("anonymous");
         anonymous.setPassword("");
         anonymous.setHomeDirectory("");
 
-        final UserManagerFactory userManagerFactory
+        UserManagerFactory userManagerFactory
                 = new PropertiesUserManagerFactory();
-        final UserManager userManager = userManagerFactory.createUserManager();
+        UserManager userManager = userManagerFactory.createUserManager();
         try {
             userManager.save(anonymous);
         } catch (FtpException ex) {
@@ -78,7 +78,7 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
             return;
         }
 
-        final FtpServerFactory serverFactory = new FtpServerFactory();
+        FtpServerFactory serverFactory = new FtpServerFactory();
         serverFactory.addListener("default", listenerFactory.createListener());
         serverFactory.setConnectionConfig(
                 connectionConfigFactory.createConnectionConfig());
@@ -88,9 +88,9 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
             return virtualFileSystem.getView();
         });
 
-        this.server = serverFactory.createServer();
+        server = serverFactory.createServer();
         try {
-            this.server.start();
+            server.start();
         } catch (FtpException ex) {
             LOG.error("Can't start FTP server.", ex);
             appContext.stop();
@@ -98,8 +98,8 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
     }
 
     protected String getPassivePorts() {
-        return configuration.getFtpDataPortsStart() + "-" +
-                (configuration.getFtpDataPortsEnd());
+        return configuration.getFtpDataPortsStart() + "-"
+                + (configuration.getFtpDataPortsEnd());
     }
 
     protected void stop() {

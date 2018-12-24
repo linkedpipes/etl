@@ -20,15 +20,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class BaseMessageWriter {
 
-    private final static DateFormat DATE_FORMAT
-            = new SimpleDateFormat("YYYY-MM-dd");
+    private static final int DATE_STRING_LEN = 25;
 
-    private final static DateFormat TIME_FORMAT
-            = new SimpleDateFormat("HH:mm:ss.SSS");
+    private final DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+
+    private final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
     protected final IRI executionIri;
 
-    protected final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+    protected final ValueFactory valueFactory =
+            SimpleValueFactory.getInstance();
 
     protected final Statements statements = new Statements(new ArrayList<>());
 
@@ -49,8 +50,8 @@ class BaseMessageWriter {
     }
 
     protected IRI createEventIri(int index) {
-        String iriAsString = executionIri.stringValue() + "/messages/" +
-                Integer.toString(index);
+        String iriAsString = executionIri.stringValue() + "/messages/"
+                + Integer.toString(index);
         return this.valueFactory.createIRI(iriAsString);
     }
 
@@ -64,10 +65,10 @@ class BaseMessageWriter {
 
     private Value getNowDate() {
         Date now = new Date();
-        StringBuilder createdAsString = new StringBuilder(25);
-        createdAsString.append(DATE_FORMAT.format(now));
+        StringBuilder createdAsString = new StringBuilder(DATE_STRING_LEN);
+        createdAsString.append(dateFormat.format(now));
         createdAsString.append("T");
-        createdAsString.append(TIME_FORMAT.format(now));
+        createdAsString.append(timeFormat.format(now));
         return this.valueFactory.createLiteral(
                 createdAsString.toString(),
                 this.valueFactory.createIRI(XSD.DATETIME));

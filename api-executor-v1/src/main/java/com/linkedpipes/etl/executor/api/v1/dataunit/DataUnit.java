@@ -6,12 +6,12 @@ package com.linkedpipes.etl.executor.api.v1.dataunit;
 public interface DataUnit {
 
     /**
-     * @return Name of binding.
+     * Name of binding.
      */
     String getBinding();
 
     /**
-     * @return IRI of the data unit.
+     * IRI of the data unit in the pipeline model/configuration.
      */
     String getIri();
 

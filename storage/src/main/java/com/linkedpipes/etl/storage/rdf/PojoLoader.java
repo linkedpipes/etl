@@ -15,7 +15,7 @@ import java.util.Collection;
 public class PojoLoader {
 
     /**
-     * TODO Replace with IllegalArgumentException
+     * TODO Replace with IllegalArgumentException.
      */
     public static class CantLoadException extends BaseException {
 
@@ -36,21 +36,17 @@ public class PojoLoader {
         /**
          * Set the resource IRI. Is called before any call of the load
          * functions.
-         *
-         * @param iri
          */
         default void loadIri(String iri) {
             // No-operation here.
         }
 
-        default Loadable load(String predicate, Value value)
-                throws CantLoadException {
+        default Loadable load(String predicate, Value value) {
             // No-operation here.
             return null;
         }
 
-        default Loadable load(String predicate, Value value, Resource graph)
-                throws CantLoadException {
+        default Loadable load(String predicate, Value value, Resource graph) {
             // Default implementation call the variant that ignores the graphs.
             return load(predicate, value);
         }
@@ -62,13 +58,9 @@ public class PojoLoader {
 
     /**
      * Load given resource into given object.
-     *
-     * @param statements
-     * @param resource
-     * @param graph
-     * @param instance
      */
-    public static void loadFromResource(Collection<Statement> statements,
+    public static void loadFromResource(
+            Collection<Statement> statements,
             Resource resource, Resource graph, Loadable instance)
             throws CantLoadException {
         instance.loadIri(resource.stringValue());
@@ -88,17 +80,14 @@ public class PojoLoader {
 
     /**
      * Load first instance of given type to given object.
-     *
-     * @param statements
-     * @param type
-     * @param instance
      */
-    public static void loadOfType(Collection<Statement> statements, IRI type,
-            Loadable instance) throws CantLoadException {
+    public static void loadOfType(
+            Collection<Statement> statements, IRI type, Loadable instance)
+            throws CantLoadException {
         for (Statement s : statements) {
             // Check the statement identify object of given type.
-            if (RDF.TYPE.equals(s.getPredicate()) &&
-                    type.equals(s.getObject())) {
+            if (RDF.TYPE.equals(s.getPredicate())
+                    && type.equals(s.getObject())) {
                 loadFromResource(statements, s.getSubject(), s.getContext(),
                         instance);
                 return;

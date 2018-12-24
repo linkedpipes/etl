@@ -31,7 +31,7 @@ class ConfigurationMerger {
             throws BaseException {
         loadConfigTemplate(template.getIri(),
                 template.getConfigGraph());
-        LoadConfigDescription(template.getIri(),
+        loadConfigDescription(template.getIri(),
                 template.getConfigDescriptionGraph());
     }
 
@@ -44,7 +44,7 @@ class ConfigurationMerger {
         graphs.put(graph, statements);
     }
 
-    private void LoadConfigDescription(String iri, String graph)
+    private void loadConfigDescription(String iri, String graph)
             throws BaseException {
         if (graphs.containsKey(graph)) {
             return;

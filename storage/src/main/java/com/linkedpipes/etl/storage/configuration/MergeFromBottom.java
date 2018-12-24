@@ -47,28 +47,29 @@ class MergeFromBottom {
             Statements instanceRdf,
             Description description,
             String baseIri, IRI graph) {
-        this.initialize(description, baseIri, graph);
+        initialize(description, baseIri, graph);
         //
-        this.loadTemplateModel(templateRdf);
-        if (this.templateEntity == null) {
+        loadTemplateModel(templateRdf);
+        if (templateEntity == null) {
             LOG.warn("Missing template configuration entity: {}",
-                    this.description.getType());
-            return new Statements(this.collectTemplateModel());
+                    description.getType());
+            return new Statements(collectTemplateModel());
         }
-        this.loadInstanceModel(instanceRdf);
-        if (this.instanceEntity == null) {
+        loadInstanceModel(instanceRdf);
+        if (instanceEntity == null) {
             LOG.warn("Missing instance configuration entity: {}",
-                    this.description.getType());
-            return new Statements(this.collectTemplateModel());
+                    description.getType());
+            return new Statements(collectTemplateModel());
         }
         if (description.getControl() == null) {
-            return new Statements(this.mergePerPredicate());
+            return new Statements(mergePerPredicate());
         } else {
-            return new Statements(this.mergeGlobal());
+            return new Statements(mergeGlobal());
         }
     }
 
-    private void initialize(Description description, String baseIri, IRI graph) {
+    private void initialize(
+            Description description, String baseIri, IRI graph) {
         this.description = description;
         this.templateModel = null;
         this.templateEntity = null;
@@ -78,144 +79,144 @@ class MergeFromBottom {
     }
 
     private void loadTemplateModel(Collection<Statement> statements) {
-        this.templateModel = Model.create(statements);
-        this.templateEntity = this.templateModel.select(
-                null, RDF.TYPE, this.description.getType()).single();
-        if (this.templateEntity == null) {
-            this.templateModel = null;
+        templateModel = Model.create(statements);
+        templateEntity = templateModel.select(
+                null, RDF.TYPE, description.getType()).single();
+        if (templateEntity == null) {
+            templateModel = null;
         }
     }
 
     private void loadInstanceModel(Collection<Statement> statements) {
-        this.instanceModel = Model.create(statements);
-        this.instanceEntity = this.instanceModel.select(
-                null, RDF.TYPE, this.description.getType()).single();
-        if (this.instanceEntity == null) {
-            this.instanceModel = null;
+        instanceModel = Model.create(statements);
+        instanceEntity = instanceModel.select(
+                null, RDF.TYPE, description.getType()).single();
+        if (instanceEntity == null) {
+            instanceModel = null;
         }
     }
 
     private Collection<Statement> mergePerPredicate() {
-        if (this.description.getMembers().isEmpty()) {
-            return this.collectInstanceModel();
+        if (description.getMembers().isEmpty()) {
+            return collectInstanceModel();
         }
-        for (Description.Member member : this.description.getMembers()) {
-            merge(member);
+        for (Description.Member member : description.getMembers()) {
+            mergeDescriptionMember(member);
         }
-        return this.collectInstanceModel();
+        return collectInstanceModel();
     }
 
     private Collection<Statement> mergeGlobal() {
-        String templateControl = this.templateEntity.getPropertyAsStr(
-                this.description.getControl());
+        String templateControl = templateEntity.getPropertyAsStr(
+                description.getControl());
         if (LP_OBJECTS.INHERIT.equals(templateControl)) {
             // The configuration of the templateModel is inherited from
             // another level of templateModel. So we skip merging
-            // with this level of templateModel.
-            return this.collectInstanceModel();
+            // with this level of template.
+            return collectInstanceModel();
         }
         if (LP_OBJECTS.INHERIT_AND_FORCE.equals(templateControl)) {
-            // We need to load configuration from another level of templateModel.
+            // We need to load configuration from another level of template.
             return Arrays.asList(
-                    this.valueFactory.createStatement(
-                            this.instanceEntity.getResource(),
+                    valueFactory.createStatement(
+                            instanceEntity.getResource(),
                             RDF.TYPE,
-                            this.description.getType()),
-                    this.valueFactory.createStatement(
-                            this.instanceEntity.getResource(),
-                            this.description.getControl(),
-                            this.valueFactory.createIRI(
+                            description.getType()),
+                    valueFactory.createStatement(
+                            instanceEntity.getResource(),
+                            description.getControl(),
+                            valueFactory.createIRI(
                                     LP_OBJECTS.INHERIT_AND_FORCE)));
         }
         if (LP_OBJECTS.FORCE.equals(templateControl)) {
-            return this.collectTemplateModel(LP_OBJECTS.FORCED);
+            return collectTemplateModel(LP_OBJECTS.FORCED);
         }
         String instanceControl = null;
-        if (this.description.getControl() != null) {
-            instanceControl = this.instanceEntity.getPropertyAsStr(
-                    this.description.getControl());
+        if (description.getControl() != null) {
+            instanceControl = instanceEntity.getPropertyAsStr(
+                    description.getControl());
         }
         if (LP_OBJECTS.INHERIT.equals(instanceControl)) {
-            return this.collectTemplateModel();
+            return collectTemplateModel();
         }
         if (LP_OBJECTS.INHERIT_AND_FORCE.equals(instanceControl)) {
-            return this.collectTemplateModel(LP_OBJECTS.FORCED);
+            return collectTemplateModel(LP_OBJECTS.FORCED);
         }
         // We use the child's configuration.
-        return this.collectInstanceModel();
+        return collectInstanceModel();
     }
 
     private Collection<Statement> collectTemplateModel() {
-        this.templateModel.updateResources(this.baseIri + "/");
-        return this.templateModel.asStatements(this.templateEntity, this.graph);
+        templateModel.updateResources(baseIri + "/");
+        return templateModel.asStatements(templateEntity, graph);
     }
 
     private Collection<Statement> collectTemplateModel(String control) {
-        this.templateModel.updateResources(this.baseIri + "/");
-        this.templateEntity.set(
-                this.description.getControl(),
-                this.valueFactory.createIRI(control));
-        return this.templateModel.asStatements(this.templateEntity, this.graph);
+        templateModel.updateResources(baseIri + "/");
+        templateEntity.set(
+                description.getControl(),
+                valueFactory.createIRI(control));
+        return templateModel.asStatements(templateEntity, graph);
     }
 
     private Collection<Statement> collectInstanceModel() {
-        this.instanceModel.updateResources(this.baseIri + "/");
-        return this.instanceModel.asStatements(this.instanceEntity, this.graph);
+        instanceModel.updateResources(baseIri + "/");
+        return instanceModel.asStatements(instanceEntity, graph);
     }
 
-    private void merge(Description.Member member) {
+    private void mergeDescriptionMember(Description.Member member) {
         // First check if templateModel does not force values to instance.
         String templateControl =
-                this.templateEntity.getPropertyAsStr(member.getControl());
+                templateEntity.getPropertyAsStr(member.getControl());
         Value templateValue =
-                this.templateEntity.getProperty(member.getProperty());
+                templateEntity.getProperty(member.getProperty());
 
         if (LP_OBJECTS.FORCE.equals(templateControl)) {
-            this.instanceEntity.replace(
+            instanceEntity.replace(
                     member.getProperty(),
-                    this.instanceEntity,
+                    instanceEntity,
                     templateValue,
                     true);
-            this.instanceEntity.setIri(member.getControl(), LP_OBJECTS.FORCED);
+            instanceEntity.setIri(member.getControl(), LP_OBJECTS.FORCED);
             return;
         }
         if (LP_OBJECTS.INHERIT_AND_FORCE.equals(templateControl)) {
             // Remove value - the value will be load from next templateModel.
-            this.instanceEntity.replace(
+            instanceEntity.replace(
                     member.getProperty(),
-                    this.instanceEntity,
+                    instanceEntity,
                     null,
                     false);
-            this.instanceEntity.setIri(member.getControl(), LP_OBJECTS.FORCED);
+            instanceEntity.setIri(member.getControl(), LP_OBJECTS.FORCED);
             return;
         }
         // If the value is missing we need to load if from a templateModel.
         // This can happen if the instance has INHERIT_AND_FORCE control.
         Value instanceValue =
-                this.instanceEntity.getProperty(member.getProperty());
+                instanceEntity.getProperty(member.getProperty());
         if (instanceValue == null) {
-            this.instanceEntity.replace(
+            instanceEntity.replace(
                     member.getProperty(),
-                    this.instanceEntity,
+                    instanceEntity,
                     templateValue,
                     true);
             return;
         }
         // Instance can also inherit on demand.
         String instanceControl =
-                this.instanceEntity.getPropertyAsStr(member.getControl());
+                instanceEntity.getPropertyAsStr(member.getControl());
         if (LP_OBJECTS.INHERIT.equals(instanceControl)) {
-            this.instanceEntity.replace(
+            instanceEntity.replace(
                     member.getProperty(),
-                    this.instanceEntity,
+                    instanceEntity,
                     templateValue,
                     true);
-            this.instanceEntity.setIri(member.getControl(), LP_OBJECTS.NONE);
+            instanceEntity.setIri(member.getControl(), LP_OBJECTS.NONE);
         }
         // In every other case we keep value from the instance, so just check
         // the control.
         if (instanceControl == null) {
-            this.instanceEntity.setIri(member.getControl(), LP_OBJECTS.NONE);
+            instanceEntity.setIri(member.getControl(), LP_OBJECTS.NONE);
         }
     }
 
