@@ -63,7 +63,7 @@ class UnpackOptions implements Loadable {
                     execution = value.asString();
                     return null;
                 case "http://etl.linkedpipes.com/ontology/mapping":
-                    final ComponentMapping mapping = new ComponentMapping();
+                    ComponentMapping mapping = new ComponentMapping();
                     components.add(mapping);
                     return mapping;
                 default:

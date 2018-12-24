@@ -19,10 +19,15 @@
     }
 
     function error(actionLabel, error) {
+        // Check if it's not a HTTP error.
+        if (error["data"] && error["data"]["error"] && error["status"]) {
+            httpError(actionLabel, error);
+            return;
+        }
         console.log("Error: ", actionLabel, error);
         $notification.error({
             "title": actionLabel,
-            "message": error.message,
+            "message": error ? error.message : "",
             "delay": 8000,
             "closeOnClick": false
         });
@@ -75,31 +80,28 @@
     }
 
     function prepareFromErrorMessage(error) {
-        let message = "Message: " + error["message"] + "<br/>";
-        message += "Source: " + error["source"].toLowerCase() + "<br/>";
+        let errorMessage = error["message"] ? error["message"] : "";
+        //
+        let output = "Message: " + errorMessage + "<br/>";
+        output += "Source: " + error["source"].toLowerCase() + "<br/>";
         if (error["status"]) {
-            message += "Status: " + error["status"].toLowerCase() + "<br/>";
+            output += "Status: " + error["status"].toLowerCase() + "<br/>";
         }
         if (error["cause"]) {
-            message += "Cause: " + error["cause"];
+            output += "Cause: " + error["cause"];
         }
-        return message;
+        return output;
     }
 
     let $notification;
-    let $scope;
 
     function factory(notification) {
         $notification = notification;
         return {
             "success": success,
             "error": error,
-            "httpError": httpError,
-
-            "httpPostFailed": null,
-            "httpPutFailed": null,
-            "httpGetFailed": null,
-            "httpDeleteFailed": null
+            // TODO Remove and use only one report function and check for props.
+            "httpError": httpError
         }
     }
 

@@ -112,11 +112,7 @@
         item["progress"]["value"] = getProgressValue(item["progress"]);
         updateExecutionStatus(item);
         updateExecutionMetadata(item);
-        if (item["label"]) {
-            item["searchLabel"] = item["label"].toLowerCase();
-        } else {
-            item["searchLabel"] = item["iri"].toLowerCase();
-        }
+        item["searchLabel"] = item["label"].toLowerCase();
         item["filterLabel"] = true;
         if (item["size"] === undefined) {
             item["size"] = "?";
@@ -157,7 +153,7 @@
             parseInt(total) === 0) {
             return 0;
         } else {
-            return 100 * (current / total);
+            return 100.0 * (current / total);
         }
     }
 

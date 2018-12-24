@@ -25,7 +25,7 @@
 
         function execute(execution) {
             const iri = execution["pipeline"]["iri"];
-            pipelineApi.execute($http, iri)
+            pipelineApi.executePipeline($http, iri)
                 .then(updateRepository)
                 .catch(handleExecutionStartFailure);
         }
@@ -87,7 +87,7 @@
 
         return {
             "initialize": initialize,
-            "execute": execute,
+            "executePipeline": execute,
             "cancel": cancelExecution,
             "openLogTail": openLogTail,
             "delete": deleteExecution,

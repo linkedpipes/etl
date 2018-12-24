@@ -6,29 +6,52 @@
 
     const LP = vocabulary.LP;
 
-    function executePipeline($http, iri) {
-        const config = createExecutionConfiguration(true, false);
+    function executePipeline($http, iri, options) {
+        const config = createExecutionConfiguration(options);
         return postPipelineExecution($http, iri, config);
     }
 
-    function createExecutionConfiguration(saveDebug, deleteWorking) {
+    function createExecutionConfiguration(options) {
+        const {keepDebugData, debugTo, execution, mapping} = options;
         const configuration = {
             "@id": "",
             "@type": LP.EXEC_OPTIONS,
         };
-        configuration[LP.SAVE_DEBUG] = saveDebug;
-        configuration[LP.DELETE_WORKING] = deleteWorking;
+
+        if (debugTo) {
+            configuration[LP.RUN_TO] = {"@id": debugTo};
+        }
+
+        if (keepDebugData) {
+            configuration[LP.SAVE_DEBUG] = true;
+            configuration[LP.DELETE_WORKING] = false;
+        } else {
+            configuration[LP.SAVE_DEBUG] = false;
+            configuration[LP.DELETE_WORKING] = true;
+        }
+
+        if (execution) {
+            const executionMapping = {};
+            executionMapping[LP.HAS_EXECUTION_ETL] = {"@id": execution};
+            if (mapping) {
+                executionMapping[LP.MAPPING] = createComponentMapping(mapping);
+            }
+            configuration[LP.EXECUTION_MAPPING] = executionMapping;
+        }
+
         return configuration;
+    }
+
+    function createComponentMapping(mapping) {
+        return mapping.map((item) => ({
+            [LP.MAPPING_SOURCE]: {"@id": item["source"]},
+            [LP.MAPPING_TARGET]: {"@id": item["target"]}
+        }));
     }
 
     function postPipelineExecution($http, iri, config) {
         const url = "/resources/executions?pipeline=" + iri;
         return $http.post(url, config);
-    }
-
-    function executeWithoutDebugData($http, pipeline) {
-        const config = createExecutionConfiguration(false, true);
-        postPipelineExecution($http, pipeline, config)
     }
 
     function createPipeline($http) {
@@ -135,17 +158,69 @@
     }
 
     function loadLocal($http, iri) {
-        return $http.get(iri).then(response => response.data);
+        const serviceUrl =
+            iri + "&templates=false&mappings=false&removePrivateConfig=false";
+        return $http.get(serviceUrl).then(response => response.data);
+    }
+
+    function deletePipeline($http, iri) {
+        return $http({
+            "method": "DELETE",
+            "url": iri
+        });
+    }
+
+    function savePipeline($http, iri, jsonld, unchecked) {
+        return $http({
+            "method": "PUT",
+            "url": iri,
+            "params": {"unchecked": unchecked},
+            "headers": {"Content-Type": "application/json"},
+            "data": jsonld
+        });
+    }
+
+    function createPipelineFromData($http, pipeline) {
+        const form = new FormData();
+        form.append("pipeline",
+            new Blob([JSON.stringify(pipeline)], {
+                "type": "application/ld+json"
+            }), "pipeline.jsonld");
+        const options = {
+            "@id": "http://localhost/options",
+            "@type": "http://linkedpipes.com/ontology/UpdateOptions",
+            "http://etl.linkedpipes.com/ontology/local": true
+        };
+        form.append("options",
+            new Blob([JSON.stringify(options)], {
+                "type": "application/ld+json"
+            }), "options.jsonld");
+        const config = {
+            "transformRequest": angular.identity,
+            "headers": {
+                // By this angular add Content-Type itself.
+                "Content-Type": undefined,
+                "accept": "application/ld+json"
+
+            }
+        };
+        return $http.post("./resources/pipelines", data, config)
+            .then((response) => {
+                const jsonld = response.data;
+                return jsonld[0]["@graph"][0]["@id"];
+            });
     }
 
     return {
-        "execute": executePipeline,
-        "executeWithoutDebugData": executeWithoutDebugData,
+        "executePipeline": executePipeline,
         "create": createPipeline,
         "copy": copyPipeline,
         "asLocalFromIri": asLocalFromIri,
         "asLocalFromFile": asLocalFromFile,
-        "loadLocal": loadLocal
+        "loadLocal": loadLocal,
+        "deletePipeline": deletePipeline,
+        "savePipeline": savePipeline,
+        "createPipelineFromData": createPipelineFromData
     }
 
 });
