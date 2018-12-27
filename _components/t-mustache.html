@@ -12,6 +12,8 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
 <dl class="flow-text">
     <dt>Entity class IRI</dt>
     <dd>IRI of the RDF class of the objects, to which the {% raw %} <a href="https://mustache.github.io/">{{ mustache }}</a> {% endraw %} template is applied.</dd>
+    <dt>Add the <code>mustache:first</code> predicate to first items of input lists</dt>
+    <dd>First items in input lists will have the <code>mustache:first</code> predicate added. This is useful for instance for generating JSON arrays, where we do not want to generate a comma after the last item of the array. This predicate can be used for this (we do not generate the comma before the first item).</dd>
     <dt>Mustache template</dt>
     <dd>The {% raw %} <a href="https://mustache.github.io/">{{ mustache }}</a> {% endraw %} template</dd>
 </dl>
@@ -26,7 +28,8 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
             <dt>Type</dt>
             <dd>{{ page.type }}</dd>
             <dt>Inputs</dt>
-            <dd>RDF data</dd>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>RDF single graph - Data</dd>
             <dt>Outputs</dt>
             <dd>Files</dd>
             <dt>Look in pipeline</dt>
@@ -40,6 +43,7 @@ Transformer, generates text files using the {% raw %} <a href="https://mustache.
         First, we recommend the potential user of this component to get to know the library itself and <a href="https://mustache.github.io/#demo" title="{% raw %} {{ mustache }} demo {% endraw %}">its demo</a>.
         There, a template and a sample JSON file with data are shown and the resulting text can be generated.
         In LinkedPipes ETL, we work with RDF, therefore, the template placeholders will be IRIs and the data will be stored as RDF.
+		There is also a <a href="./t-mustachechunked">chunked version of Mustache</a> available.
     </div>
 </div>
 

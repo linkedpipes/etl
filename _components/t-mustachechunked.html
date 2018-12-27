@@ -1,0 +1,39 @@
+---
+short: t-mustachechunked
+type: transformer
+color: indigo
+title: Chunked Mustache
+description: Generates text files using the {{ mustache }} template. Works with chunked RDF data.
+---
+
+<p class="flow-text">
+Transformer, generates text files using the {% raw %} <a href="https://mustache.github.io/">{{ mustache }}</a> {% endraw %} template and works with chunked RDF data.
+</p>
+<!--more-->
+
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>RDF chunked - Data</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        First, we recommend the potential user of this component to get to know the library itself and <a href="https://mustache.github.io/#demo" title="{% raw %} {{ mustache }} demo {% endraw %}">its demo</a>.
+        There, a template and a sample JSON file with data are shown and the resulting text can be generated.
+        In LinkedPipes ETL, we work with RDF, therefore, the template placeholders will be IRIs and the data will be stored as RDF.
+		This version works with RDF chunks.
+		There is a <a href="./t-mustache">non-chunked version of Mustache</a> available, which contains detailed documentation, which is the same for both versions.
+    </div>
+</div>
