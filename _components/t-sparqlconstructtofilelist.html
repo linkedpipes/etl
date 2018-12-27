@@ -1,0 +1,144 @@
+---
+short: t-sparqlconstructtofilelist
+type: transformer
+color: indigo
+title: SPARQL construct to file list
+description: Creates multiple RDF files, possibly containing multiple named graphs, using a set of SPARQL queries.
+---
+
+<p class="flow-text">
+Transformer, allows the user to create multiple RDF files including multiple RDF named graphs using a set of SPARQL 
+<a href="https://www.w3.org/TR/sparql11-query/#construct">CONSTRUCT</a> queries.
+</p>
+<dl class="flow-text">
+    <dt>Use deduplication</dt>
+    <dd>
+        Individual SPARQL query results may contain duplicate triples or quads.
+        This is a result of the way the SPARQL queries are evaluated.
+        For smaller files this causes no issues as the duplicates are correctly resolved when the resulting file is further processed.
+        For larger files, it is possible to turn on deduplication, which processes the results when they are serialized.
+        This causes a slight performance penalty.
+    </dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>RDF single graph - Data</dd>
+            <dd>RDF single graph - Tasks</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component queries the Data input using a set of <a href="https://www.w3.org/TR/sparql11-query/#construct">SPARQL CONSTRUCT</a> queries, saving the results as files in the output.
+        The queries and resulting files and named graphs are specified in the Tasks input.
+        Multiple tasks can write to the same file, creating for instance a quad file with multiple named graphs.
+    </div>
+</div>
+<div class="row" id="runtimeconfig">
+<h3 class="orange-text center">Runtime configuration</h3>
+<p class="flow-text">Below you can see sample runtime configuration for the component.
+Note that <a href="https://www.w3.org/TR/rdf11-concepts/#section-blank-nodes" title="Blank nodes">RDF blank nodes</a> are not allowed in runtime configurations.
+</p>
+{% highlight turtle %}
+@prefix sc: <http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#> .
+
+<http://localhost/config> a sc:Configuration ;
+    sc:deduplication false .
+{% endhighlight %}
+</div>
+
+<div class="row" id="taskinput">
+<h3 class="orange-text center">Task specification</h3>
+<p class="flow-text">Below you can see sample task specification for the component.
+This task generates a single TriG file with two named graphs in it, containing metadata records of two DCAT datasets.
+{% highlight turtle %}
+@prefix sc: <http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#> .
+
+<http://localhost/nkod-task> a sc:Task;
+  sc:fileFormat "application/trig";
+  sc:fileName "nkod.trig";
+  sc:hasTaskQuery <urn:uuid:0208f1ec-1a25-440b-a3fb-e2442de3df08>, <urn:uuid:0777e0a0-b553-4903-8f49-a7fa47546ed4> .
+
+<urn:uuid:0208f1ec-1a25-440b-a3fb-e2442de3df08> a sc:TaskQuery;
+  sc:outputGraph
+    <https://data.gov.cz/zdroj/datové-sady/http---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_km-ku-dgn_645915>;
+  sc:query """
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX schema: <http://schema.org/>
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX adms: <http://www.w3.org/ns/adms#>
+PREFIX spdx: <http://spdx.org/rdf/terms#>
+PREFIX org: <http://www.w3.org/ns/org#>
+
+CONSTRUCT WHERE {
+<https://data.gov.cz/zdroj/datové-sady/http---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_km-ku-dgn_645915> a dcat:Dataset ;
+    dcterms:title ?title ;
+    dcterms:description ?description ;
+    dcterms:issued ?issued ;
+    dcat:distribution ?distribution ;
+    dcterms:modified ?modified ;
+    dcterms:spatial ?spatial ;
+    dcterms:temporal ?temporal ;
+    dcterms:language ?language ;
+    dcterms:publisher ?publisher ;
+    dcat:keyword ?keyword ;
+    dcat:landingPage ?landingPage ;
+    dcterms:accrualPeriodicity ?accrualPeriodicity .
+}
+""" .
+
+<urn:uuid:0777e0a0-b553-4903-8f49-a7fa47546ed4> a sc:TaskQuery;
+  sc:outputGraph
+    <https://data.gov.cz/zdroj/datové-sady/http---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_km-ku-dgn_745286>;
+  sc:query """
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX schema: <http://schema.org/>
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX adms: <http://www.w3.org/ns/adms#>
+PREFIX spdx: <http://spdx.org/rdf/terms#>
+PREFIX org: <http://www.w3.org/ns/org#>
+
+CONSTRUCT WHERE {
+<https://data.gov.cz/zdroj/datové-sady/http---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_km-ku-dgn_745286> a dcat:Dataset ;
+    dcterms:title ?title ;
+    dcterms:description ?description ;
+    dcterms:issued ?issued ;
+    dcat:distribution ?distribution ;
+    dcterms:modified ?modified ;
+    dcterms:spatial ?spatial ;
+    dcterms:temporal ?temporal ;
+    dcterms:language ?language ;
+    dcterms:publisher ?publisher ;
+    dcat:keyword ?keyword ;
+    dcat:landingPage ?landingPage ;
+    dcterms:accrualPeriodicity ?accrualPeriodicity .
+}
+""" .
+{% endhighlight %}
+</div>
