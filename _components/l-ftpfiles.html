@@ -1,0 +1,47 @@
+---
+short: l-ftpfiles
+type: loader
+color: green
+title: Load to FTP
+description: Loads files via the FTP protocol.
+---
+
+<p class="flow-text">
+Loader, allows the user to transfer a file to a server via the <a href="https://tools.ietf.org/html/rfc959">FTP protocol</a>.
+</p>
+<dl class="flow-text">
+    <dt>Host address</dt>
+    <dd>Address of the target server for the file upload. E.g. <code>myftp.com</code></dd>
+    <dt>Port number</dt>
+    <dd>FTP port to use. Typically <code>21</code>.</dd>
+    <dt>User name</dt>
+    <dd>User name for the server</dd>
+    <dt>Password</dt>
+    <dd>Password for the server. Note that this is plain text and not secure in any way.</dd>
+    <dt>Target directory</dt>
+    <dd>Directory on the server where the file should be uploaded. E.g.<code>~/upload/</code></dd>
+    <dt>Retry count</dt>
+    <dd>Number of retries in cases of connection failures.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes input files and uploads them to the specified directory on the specified server using the <a href="https://tools.ietf.org/html/rfc959">FTP protocol</a>.
+        Useful for uploading dumps of the data resulting from a pipeline.
+    </div>
+</div>
