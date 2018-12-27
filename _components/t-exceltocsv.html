@@ -13,7 +13,7 @@ Transformer, allows the user to transform <a href="https://products.office.com/e
     <dt>Output file name template</dt>
     <dd>File name template under which the output CSV file will be visible in the pipeline, including extension. You can use {% raw %}<code>{FILE}</code> and <code>{SHEET}</code>{% endraw %} placeholders to generate multiple CSV files from one input file</dd>
     <dt>Sheet filter</dt>
-    <dd>Excel sheet name to process. If empty, all sheets are processed</dd>
+    <dd>Java regular expression matching Excel sheet names to process. If empty, all sheets are processed</dd>
     <dt>Row start</dt>
     <dd>Number of the first row to be transformed</dd>
     <dt>Row end</dt>
