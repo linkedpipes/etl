@@ -1,0 +1,48 @@
+---
+short: t-rdftofilechunked
+type: transformer
+color: indigo
+title: Chunked RDF to File
+description: Converts chunked RDF data to an RDF file.
+---
+
+<p class="flow-text">
+Transformer, allows the user to convert chunked RDF data to an RDF file.
+</p>
+<dl class="flow-text">
+    <dt>Output file name</dt>
+    <dd>File name under which the file will be visible in the pipeline, including extension.</dd>
+    <dt>Output format</dt>
+    <dd><a href="https://www.w3.org/TR/rdf11-new/#section-serializations">RDF serialization</a> of the output file.</dd>
+    <dt>IRI of the output graph</dt>
+    <dd>IRI of the only named graph that will be created from the input triples. Valid only for the RDF Quad formats.</dd>
+    <dt>Used prefixes as Turtle</dt>
+    <dd>Allows the user to insert prefixes declaration in Turtle format to be used in Turtle file output.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>RDF chunked</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the chunked RDF data on the input and serializes it into a file in the chosen <a href="https://www.w3.org/TR/rdf11-new/#section-serializations">RDF serialization</a>.
+        The component also supports RDF quad serializations.
+        However, so far, LP-ETL only supports RDF triples.
+        Therefore, to produce a quad file, the IRI of the output graph has to be specified and all the input triples will be put into this graph.
+        </p>
+    </div>
+</div>
