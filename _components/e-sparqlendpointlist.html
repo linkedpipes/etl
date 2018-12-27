@@ -1,0 +1,81 @@
+---
+short: e-sparqlendpointlist
+type: extractor
+color: red
+title: SPARQL Endpoint list to single graph
+description: Extracts RDF triples from SPARQL endpoints based on a list of endpoints and queries to execute.
+---
+
+<p class="flow-text">
+Extractor, allows the user to extract RDF triples from a SPARQL endpoint using a series of <a href="https://www.w3.org/TR/sparql11-query/#construct">CONSTRUCT queries</a>.
+It is especially suitable for querying multiple SPARQL endpoints.
+</p>
+<dl class="flow-text">
+    <dt>Number of threads to use</dt>
+    <dd>Number of threads to be used for querying in total.</dd>
+    <dt>Query time limit in seconds (-1 for no limit)</dt>
+    <dd>Some SPARQL endpoints may hang on a query for a long time. Sometimes it is therefore desirable to limit the time waiting for an answer so that the whole pipeline execution is not stuck.</dd>
+    <dt>Encode invalid IRIs</dt>
+    <dd>Some SPARQL endpoints such as DBpedia contain invalid IRIs which are sent in results of SPARQL queries. Some libraries like RDF4J then can crash on those IRIs. If this is the case, choose this option to encode such invalid IRIs.</dd>
+    <dt>Fix missing language tags on <code>rdf:langString</code> literals</dt>
+    <dd>Some SPARQL endpoints such as DBpedia contain <code>rdf:langString</code> literals without language tags, which is invalid RDF 1.1. Some libraries like RDF4J then can crash on those literals. If this is the case, choose this option to fix this problem by replacing <code>rdf:langString</code> with <code>xsd:string</code> datatype on such literals.</dd>
+    <dt>Limit number of tasks running in parallel in a group (0 for no limit)</dt>
+    <dd>To avoid overloading a single SPARQL endpoint, set a maximum number of tasks running in parallel for a group. Then, place all tasks targeting a single endpoint to a single group. Tasks in different groups will still run in parallel in the number of threads specified.</dd>
+    <dt>Query commit size (0 to commit all triples at once)</dt>
+    <dd>This is used to control the number of triples committed to a repository at once. Limiting the number may be necessary for large query results.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>RDF single graph - Tasks</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph - Report</dd>
+            <dd>RDF single graph - Output</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component queries a list of remote SPARQL endpoints using <a href="https://www.w3.org/TR/sparql11-query/#construct">SPARQL CONSTRUCT</a> queries.
+        The typical scenarios include discovery tasks such as determining which classes are used in which endpoints, etc.
+        On the input, the component expects a list of tasks specifying endpoints and queries.
+		The Output contains the collected results in a single RDF graph.
+		The Report output contains potential error messages encountered when querying the SPARQL endpoints.
+    </div>
+</div>
+<div class="row" id="tasks">
+<h3 class="orange-text center">Tasks specification</h3>
+<p class="flow-text">Below you can see sample task specification for the component.
+This task queries for a list of classes and number of their instances used in the endpoint.
+</p>
+{% highlight turtle %}
+@prefix sel: <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#> .
+
+<https://nkod.opendata.cz/sparql> a sel:Task;
+  sel:endpoint "https://nkod.opendata.cz/sparql";
+  sel:group "https://nkod.opendata.cz/sparql";
+  sel:query """PREFIX adhoc: <http://linked.opendata.cz/ontology/adhoc/>
+CONSTRUCT {
+  [] adhoc:class ?Class ;
+     adhoc:endpointUri \"https://nkod.opendata.cz/sparql\";
+    adhoc:numberOfInstances ?numberOfInstances .
+} WHERE {
+  {
+    SELECT ?Class (COUNT(?resource) AS ?numberOfInstances)
+    WHERE {
+      ?resource a ?Class.
+    }
+    GROUP BY ?Class
+  }
+}""" .
+{% endhighlight %}
+</div>
