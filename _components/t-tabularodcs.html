@@ -1,0 +1,33 @@
+---
+short: t-tabularodcs
+type: transformer
+color: indigo
+title: Tabular ODCS
+description: Transforms CSV files to RDF triples (deprecated).
+---
+
+<p class="flow-text">
+Transformer.
+Used to transform CSV files to RDF data.
+It is present only to allow smoother transition from <a href="https://unifiedviews.eu/" target="_blank">UnifiedViews</a> using the <a href="https://github.com/linkedpipes/uv2etl">uv2etl</a> tool.
+In all other cases, the CSV on the Web compatible <a href="./t-tabular" title="Tabular">Tabular</a> component should be used instead.
+</p>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+</div>
