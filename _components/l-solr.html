@@ -1,0 +1,47 @@
+---
+short: l-solr
+type: loader
+color: green
+title: Solr loader
+description: Allows the user to load documents into Apache Solr
+---
+
+<p class="flow-text">
+Loader, allows the user to to load documents into <a href="http://lucene.apache.org/solr/">Apache Solr</a>.
+</p>
+<dl class="flow-text">
+    <dt>URL of Solr instance</dt>
+    <dd>URL of the Solr server, e.g. <code>http://localhost:8983/solr</code></dd>
+    <dt>Name of Solr Core</dt>
+    <dd>Name of the Solr Core to write to</dd>
+    <dt>Clear target core</dt>
+    <dd>Determines whether the Solr core is cleared before loading</dd>
+    <dt>Use authentication</dt>
+    <dd>Use for Solr requiring user authentication</dd>
+    <dt>User name</dt>
+    <dd>User name for Solr</dd>
+    <dt>Password</dt>
+    <dd>Password for Solr</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>Files - Input</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the input JSON documents and loads them to an <a href="http://lucene.apache.org/solr/">Apache Solr</a> instance.
+        </p>
+    </div>
+</div>
