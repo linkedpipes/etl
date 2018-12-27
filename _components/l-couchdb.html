@@ -1,0 +1,49 @@
+---
+short: l-couchdb
+type: loader
+color: green
+title: CouchDB loader
+description: Allows the user to load documents into Apache CouchDB
+---
+
+<p class="flow-text">
+Loader, allows the user to to load documents into <a href="http://couchdb.apache.org/">Apache CouchDB</a>.
+</p>
+<dl class="flow-text">
+    <dt>CouchDB server URL</dt>
+    <dd>URL of the CouchDB server, e.g. <code>http://127.0.0.1:5984</code></dd>
+    <dt>Database name</dt>
+    <dd>Name of the CouchDB database to write to</dd>
+    <dt>Clear database (delete and create)</dt>
+    <dd>Determines whether the CouchDB database is first deleted an recreated before loading</dd>
+    <dt>Maximum batch size in MB</dt>
+    <dd>The loader can split the load into batches of the specified size</dd>
+    <dt>Use authentication</dt>
+    <dd>Use for CouchDB requiring user authentication</dd>
+    <dt>User name</dt>
+    <dd>User name for CouchDB</dd>
+    <dt>Password</dt>
+    <dd>Password for CouchDB</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>Files - Input</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the input JSON documents and loads them to an <a href="http://couchdb.apache.org/">Apache CouchDB</a> instance.
+        </p>
+    </div>
+</div>
