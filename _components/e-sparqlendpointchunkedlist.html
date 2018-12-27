@@ -55,7 +55,7 @@ It is also suitable for bigger data, as it queries the endpoints for description
         On the Files input, the component expects CSV files containing columns with headers.
         The column headers are the names of variables, which will be used in the SPARQL queries.
         The rows then contain the list of values assigned to the variables.
-        The list is split into pieces determined by the Chunk size parameter of the runtime configuratino and each piece is inserted into the query using a VALUES clause in place of the <code>${VALUES}</code> placeholder, forming one RDF data chunk on the output.
+        The list is split into pieces determined by the Chunk size parameter of the task specification and each piece is inserted into the query using a VALUES clause in place of the <code>${VALUES}</code> placeholder, forming one RDF data chunk on the output.
         The input list of values can be created either manually, or using the <a href="./e-sparqlendpointselect" title="SPARQL endpoint select">SPARQL endpoint select</a>, <a href="./t-sparqlselectmultiple" title="SPARQL select multiple">SPARQL select multiple</a> or <a href="./e-sparqlendpointselectscrollablecursor" title="SPARQL endpoint select scrollable cursor">SPARQL endpoint select scrollable cursor</a> components.
 		</p>
 		<p class="flow-text">
@@ -94,5 +94,28 @@ CONSTRUCT {
 BIND(UUID() as ?subj)
 }
 """ .
+{% endhighlight %}
+<p class="flow-text">
+    The provided CSV file looks like this (only the Class column/variable is used in the query):
+</p>
+{% highlight csv %}
+Class,instances
+http://xmlns.com/foaf/0.1/Document,1759
+http://reegle.info/schema#ProjectOutput,284
+http://www.geonames.org/ontology#Feature,250
+http://reegle.info/schema#Project,198
+http://reegle.info/schema#CountryProfile,191
+http://www.w3.org/2002/07/owl#DatatypeProperty,62
+http://www.w3.org/1999/02/22-rdf-syntax-ns#Property,57
+http://reegle.info/schema#Specialisation,37
+http://reegle.info/schema#Sector,36
+http://reegle.info/schema#Technology,26
+http://www.w3.org/2004/02/skos/core#Concept,15
+http://www.w3.org/2002/07/owl#Class,12
+http://www.w3.org/2002/07/owl#ObjectProperty,10
+http://www.w3.org/2000/01/rdf-schema#Class,9
+http://www.w3.org/2002/07/owl#AnnotationProperty,2
+http://www.w3.org/2002/07/owl#Ontology,2
+http://www.w3.org/2002/07/owl#Thing,2
 {% endhighlight %}
 </div>
