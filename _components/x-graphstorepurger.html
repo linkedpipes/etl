@@ -1,0 +1,58 @@
+---
+short: x-graphstorepurger
+type: other
+color: pink
+title: Graph store purger
+description: Uses the SPARQL 1.1 Graph Store HTTP Protocol to remove a list of named graphs from an endpoint.
+---
+
+<p class="flow-text">
+Special purpose component, allows the user to remove a list of named graphs from a <a href="https://www.w3.org/TR/sparql11-http-rdf-update/">SPARQL 1.1 Graph Store HTTP Protocol</a> endpoint.
+</p>
+<dl class="flow-text">
+    <dt>Graph store protocol endpoint</dt>
+    <dd>URL of the <a href="https://www.w3.org/TR/sparql11-http-rdf-update/">SPARQL 1.1 Graph Store HTTP Protocol</a> endpoint, e.g. <code>http://localhost:8890/sparql-graph-crud-auth</code></dd>
+    <dt>Use authentication</dt>
+    <dd>Use for endpoints requiring user authentication</dd>
+    <dt>User name</dt>
+    <dd>User name for the endpoint</dd>
+    <dt>Password</dt>
+    <dd>Password for the endpoint</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>RDF single graph - Tasks</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component is used to delete a list of named graphs from a <a href="https://www.w3.org/TR/sparql11-http-rdf-update/">SPARQL 1.1 Graph Store HTTP Protocol</a> endpoint.
+        </p>
+    </div>
+</div>
+
+<div class="row" id="tasks">
+<h3 class="orange-text center">Tasks specification</h3>
+<p class="flow-text">Below you can see sample task specification for the component. It is configured to remove 2 named graphs.
+</p>
+{% highlight turtle %}
+@prefix gsp: <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#> .
+
+<http://localhost/task/1> a gsp:Task;
+  gsp:graph <https://data.gov.cz/zdroj/lokální-katalogy/CRRCR/230272346> .
+
+<http://localhost/task/2> a gsp:Task;
+  gsp:graph <https://data.gov.cz/zdroj/lokální-katalogy/CRRCR/230272354> .
+{% endhighlight %}
+</div>
