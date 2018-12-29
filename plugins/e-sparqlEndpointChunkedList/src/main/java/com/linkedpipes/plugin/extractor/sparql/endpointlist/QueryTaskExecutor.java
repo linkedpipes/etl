@@ -105,6 +105,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     @Override
     public void accept(QueryTask task) throws LpException {
+        validateTask(task);
         this.task = task;
         try {
             LOG.debug("Executing: {} ...", task.getIri());
@@ -114,6 +115,12 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         } finally {
             progressReport.entryProcessed();
             repository.shutDown();
+        }
+    }
+
+    private void validateTask(QueryTask task) throws LpException {
+        if (task.getEndpoint() == null) {
+            throw new LpException("Missing endpoint for: {}", task.getIri());
         }
     }
 
