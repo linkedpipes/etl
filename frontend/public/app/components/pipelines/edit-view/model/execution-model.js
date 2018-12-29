@@ -127,5 +127,19 @@
         }
     };
 
+    /**
+     * Model that can be used if no execution is available.
+     */
+    service.emptyModel = () => {
+        return {
+          "execution": {
+              "iri": undefined,
+               "status": {}
+          },
+          "components": {},
+          "dataUnits": {}
+        }
+    };
+
     return service;
 });

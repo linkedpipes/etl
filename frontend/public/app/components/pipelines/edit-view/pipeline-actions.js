@@ -394,11 +394,11 @@
                 canvas, templates, dialogs, status, eventsActions);
             //
             $pipeline = undefined;
-            $execution = undefined;
+            $execution = execModel.emptyModel();;
             defaultVisual.setPipeline(undefined);
-            defaultVisual.setExecution(undefined);
+            defaultVisual.setExecution($execution);
             pipelineEvents.setPipeline(undefined);
-            pipelineEvents.setExecution(undefined);
+            pipelineEvents.setExecution($execution);
         }
     }
 });
