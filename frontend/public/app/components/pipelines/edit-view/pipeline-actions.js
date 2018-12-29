@@ -67,7 +67,8 @@
                 "color": "#FFAAFF",
                 "useLabel": template.isDisplayLabels.runtimeConfiguration,
                 "binding": port["binding"],
-                "content": port["content"]
+                "content": port["content"],
+                "label": port["label"]
             };
         } else if (port.isTaskList) {
             return {
@@ -75,7 +76,8 @@
                 "color": "#CCCCFF",
                 "useLabel": template.isDisplayLabels.taskList,
                 "binding": port["binding"],
-                "content": port["content"]
+                "content": port["content"],
+                "label": port["label"]
             };
         } else {
             return {
@@ -83,7 +85,8 @@
                 "color": "#CCFFCC",
                 "useLabel": template.isDisplayLabels.dataInput,
                 "binding": port["binding"],
-                "content": port["content"]
+                "content": port["content"],
+                "label": port["label"]
             };
         }
     }
@@ -91,7 +94,8 @@
     function getOutputPortInfo(template, port) {
         return {
             "binding": port["binding"],
-            "content": port["content"]
+            "content": port["content"],
+            "label": port["label"]
         };
     }
 
