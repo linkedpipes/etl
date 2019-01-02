@@ -122,11 +122,7 @@
             }
             executions.loadLocal($http, data.executionIri)
                 .then((jsonld) => {
-                    actions.executionFromJsonLd(jsonld, data.executionIri);
-                    $scope.isExecutionFinished = actions.isExecutionFinished();
-                    $scope.executionIcon =
-                        statusToIcon(actions.getExecutionStatus(), true);
-                    console.log("loadExecution", jsonld);
+                    updateExecutionFromJsonld(jsonld);
                     if (!$scope.isExecutionFinished) {
                         data.executionUpdate = true;
                         // As the refresher remove all listeners after
@@ -139,6 +135,13 @@
                 });
         }
 
+        function updateExecutionFromJsonld(jsonld) {
+            actions.executionFromJsonLd(jsonld, data.executionIri);
+            $scope.isExecutionFinished = actions.isExecutionFinished();
+            $scope.executionIcon =
+                statusToIcon(actions.getExecutionStatus(), true);
+        }
+
         // Replacing execution cause reload and redraw of everything.
         // TODO Do not replace execution, instead just update it.
         function updateExecution() {
@@ -147,8 +150,7 @@
             }
             executions.loadLocal($http, data.executionIri)
                 .then((jsonld) => {
-                    actions.executionFromJsonLd(jsonld, data.executionIri);
-                    $scope.isExecutionFinished = actions.isExecutionFinished();
+                    updateExecutionFromJsonld(jsonld);
                     if ($scope.isExecutionFinished) {
                         data.executionUpdate = false;
                     }
