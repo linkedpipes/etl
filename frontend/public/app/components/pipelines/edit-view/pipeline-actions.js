@@ -378,6 +378,9 @@
         "isExecutionFinished": () => {
             return execModel.isExecutionFinished($execution);
         },
+        "getExecutionStatus": () => {
+            return execModel.getExecutionStatus($execution);
+        },
         "asJsonLd": () => {
             return pplModel.asJsonLd($pipeline);
         },

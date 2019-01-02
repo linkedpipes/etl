@@ -4,14 +4,19 @@
                 layout-align="space-around center">
 
         <div flex layout-padding style="padding-top: 4px;padding-bottom: 4px">
-            <md-button
+            <div ng-show="!isEditMode"
+              style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align:left;width:100%;margin:0px;line-height:normal;text-transform: none;font-size:14px">
+                <md-icon md-svg-icon="{{executionIcon.name}}" class="md-avatar" ng-style="executionIcon.style"/>
+                Execution of {{pipelineLabel}}
+            </div>
+            <md-button ng-show="isEditMode"
                     style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align:left;width:100%;margin:0px;line-height:normal;text-transform: none;"
                     ng-click="onPipelineDetail($event)">
                 {{pipelineLabel}}
             </md-button>
         </div>
 
-        <md-menu style="padding-top: 4px;padding-bottom: 4px">
+        <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="isEditMode">
             <md-button class="md-icon-button"
                        ng-click="onOpenMenu($mdOpenMenu, $event)">
                 <md-icon md-menu-origin md-svg-src="settings" class="lp-icon"/>
@@ -32,7 +37,35 @@
             </md-menu-content>
         </md-menu>
 
-        <md-menu style="padding-top: 4px;padding-bottom: 4px">
+        <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="!isEditMode">
+            <md-button class="md-icon-button"
+                       ng-click="onOpenMenu($mdOpenMenu, $event)">
+                <md-icon md-menu-origin md-svg-icon="more_vert"/>
+            </md-button>
+            <md-menu-content width="3">
+                <md-menu-item>
+                    <md-button ng-click="onDownloadNoSave()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"/>
+                        Download
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onDownloadNoCredentialsNoSave()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"/>
+                        Download without credentials
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onCopyNoSave()">
+                        <md-icon md-svg-src="copy" class="lp-icon"
+                                 md-menu-origin/>
+                        Copy and Open
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+
+        <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="isEditMode">
             <md-button class="md-icon-button"
                        ng-click="onOpenMenu($mdOpenMenu, $event)">
                 <md-icon md-menu-origin md-svg-icon="more_vert"/>
@@ -52,7 +85,7 @@
                     </md-button>
                 </md-menu-item>
                 <md-menu-item>
-                    <md-button ng-click="onDownloadNoCredentials($event)">
+                    <md-button ng-click="onDownloadNoCredentials()">
                         <md-icon md-svg-icon="file_download" class="lp-icon"/>
                         Save and download without credentials
                     </md-button>

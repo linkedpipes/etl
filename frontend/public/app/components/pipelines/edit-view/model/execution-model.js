@@ -59,6 +59,10 @@
         return !model.execution.status.running;
     };
 
+    service.getExecutionStatus = (model) => {
+        return model.execution.status.iri;
+    };
+
     /**
      * True if mapping can be changed.
      */

@@ -13,13 +13,15 @@
             "../pipeline-api",
             "./pipeline-actions",
             "./canvas/pipeline-loader",
-            "../../executions/execution-api"
+            "../../executions/execution-api",
+            "app/components/executions/execution-status-to-icon",
+            "file-saver",
         ], definition);
     }
 })((_canvasService, _editModeService, _executionModeService,
     _templateSelectDialog, _pipelineDetailDialog, _componentDetailDialog,
     _pipelineImportDialog, _templateDialog, _dialogService,
-    pipelines, actions, loader, executions) => {
+    pipelines, actions, loader, executions, statusToIcon, saveAs) => {
     "use strict";
 
     function factory(
@@ -35,7 +37,7 @@
         };
 
         let actionsCallbacks = {
-            "onStartExecution":(iri) => {
+            "onStartExecution": (iri) => {
                 // Called when new execution is started.
                 activateExecutionMode();
                 data.executionIri = iri;
@@ -49,6 +51,10 @@
             $scope.isEditMode = true;
             $scope.pipelineLabel = "";
             $scope.isExecutionFinished = false;
+            $scope.executionIcon = {
+                "name": "",
+                "style": {}
+            };
             //
             data["pipelineIri"] = pipeline;
             data["executionIri"] = execution;
@@ -118,6 +124,8 @@
                 .then((jsonld) => {
                     actions.executionFromJsonLd(jsonld, data.executionIri);
                     $scope.isExecutionFinished = actions.isExecutionFinished();
+                    $scope.executionIcon =
+                        statusToIcon(actions.getExecutionStatus(), true);
                     console.log("loadExecution", jsonld);
                     if (!$scope.isExecutionFinished) {
                         data.executionUpdate = true;
@@ -197,7 +205,7 @@
             $canvas.synchronize();
             const pipeline = actions.asJsonLd();
             saveAs(createPipelineBlob(pipeline),
-                $scope.data.pipelineLabel + ".jsonld");
+                $scope.pipelineLabel + ".jsonld");
         }
 
         function createPipelineBlob(json) {
@@ -213,7 +221,7 @@
             actions.savePipeline().then(() => {
                 $http.get(url).then((response) => {
                     saveAs(createPipelineBlob(response.data),
-                        $scope.data.pipelineLabel + ".jsonld");
+                        $scope.pipelineLabel + ".jsonld");
                 });
             });
         }
@@ -226,7 +234,7 @@
             actions.savePipeline().then(() => {
                 $http.get(url).then((response) => {
                     saveAs(createPipelineBlob(response.data),
-                        $scope.data.pipelineLabel + ".jsonld");
+                        $scope.pipelineLabel + ".jsonld");
                 });
             });
         }
@@ -265,6 +273,44 @@
             }).catch(onCantSave);
         }
 
+        function onDownloadNoSave() {
+            const url = actions.getPipelineIri() +
+                "?templates=true" +
+                "&mappings=true" +
+                "&removePrivateConfig=false";
+            $http.get(url).then((response) => {
+                saveAs(createPipelineBlob(response.data),
+                    $scope.pipelineLabel + ".jsonld");
+            });
+        }
+
+        function onDownloadNoCredentialsNoSave() {
+            const url = actions.getPipelineIri() +
+                "?templates=true" +
+                "&mappings=true" +
+                "&removePrivateConfig=true";
+            $http.get(url).then((response) => {
+                saveAs(createPipelineBlob(response.data),
+                    $scope.pipelineLabel + ".jsonld");
+            });
+        }
+
+        function onCopyPipelineNoSave() {
+            pipelines.copy($http, {"iri": data.pipelineIri})
+                .then(onCopyPipelineSuccess)
+                .catch(() => {
+                    $status.error("Can't create new pipeline.", error)
+                });
+        }
+
+        function onCopyPipelineSuccess(response) {
+            const jsonld = response.data;
+            const iri = jsonld[0]["@graph"][0]["@id"];
+            $status.success("Pipeline has been successfully copied.");
+            $location.path("/pipelines/edit/canvas")
+                .search({"pipeline": iri});
+        }
+
         return {
             "initialize": initialize,
             "onHtmlReady": onHtmlReady,
@@ -280,7 +326,10 @@
             "onExecute": onExecute,
             "onExecuteWithoutDebugData": onExecuteWithoutDebugData,
             "onDisableAllLoaders": actions.onDisableAllLoaders,
-            "onEnableAllLoaders": actions.onEnableAllLoaders
+            "onEnableAllLoaders": actions.onEnableAllLoaders,
+            "onDownloadNoSave": onDownloadNoSave,
+            "onDownloadNoCredentialsNoSave": onDownloadNoCredentialsNoSave,
+            "onCopyNoSave": onCopyPipelineNoSave
         };
     }
 

@@ -44,6 +44,12 @@
 
         $scope.onEditMode = $service.onEditMode;
 
+        $scope.onDownloadNoSave = $service.onDownloadNoSave;
+
+        $scope.onDownloadNoCredentialsNoSave = $service.onDownloadNoCredentialsNoSave;
+
+        $scope.onCopyNoSave = $service.onCopyNoSave;
+
         $timeout($service.onHtmlReady);
 
     }
