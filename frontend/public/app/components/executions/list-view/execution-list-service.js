@@ -25,7 +25,10 @@
 
         function execute(execution) {
             const iri = execution["pipeline"]["iri"];
-            pipelineApi.executePipeline($http, iri)
+            const options = {
+                "keepDebugData": true
+            };
+            pipelineApi.executePipeline($http, iri, options)
                 .then(updateRepository)
                 .catch(handleExecutionStartFailure);
         }

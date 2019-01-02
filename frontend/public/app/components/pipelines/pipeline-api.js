@@ -7,9 +7,6 @@
     const LP = vocabulary.LP;
 
     function executePipeline($http, iri, options) {
-        if (options === undefined) {
-            options = {};
-        }
         const config = createExecutionConfiguration(options);
         return postPipelineExecution($http, iri, config);
     }
