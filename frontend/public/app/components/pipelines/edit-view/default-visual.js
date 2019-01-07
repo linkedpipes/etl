@@ -12,10 +12,6 @@
 
     const LP = vocabulary.LP;
 
-    const serviceData = {
-        "showRunning" : false
-    };
-
     let $pipeline;
 
     let $execution;
@@ -90,11 +86,9 @@
             return defaultRectStyle;
         }
         const status = execModel.getComponentStatus($execution, execComponent);
-        if (serviceData.showRunning) {
-            if (status === LP.EXEC_RUNNING ||
-                status === LP.EXEC_INITIALIZING) {
-                return statusToRectStyle[status];
-            }
+        if (status === LP.EXEC_RUNNING ||
+            status === LP.EXEC_INITIALIZING) {
+            return statusToRectStyle[status];
         }
 
         // Changed components are not available for mapping.
