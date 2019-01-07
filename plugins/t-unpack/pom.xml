@@ -52,7 +52,12 @@
                 <configuration>
                     <instructions>
                         <!-- Optional from commons-compress: org.tukaani.xz -->
-                        <Import-Package>org.tukaani.xz;resolution:=optional,*</Import-Package>
+                        <Import-Package>
+                            org.tukaani.*;resolution:=optional,
+                            com.github.luben.*;resolution:=optional,
+                            org.brotli.*;resolution:=optional,
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
