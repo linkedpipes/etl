@@ -95,11 +95,13 @@
                     return;
                 }
                 // Update resource with component information (name, ...)
-                pplModel.setResource($pipeline, component);
+                pplModel.setResource($pipeline, response.component);
                 $actions.setComponentConfiguration(
                     response.component, response.configuration);
-                // Mark component as changed.
-                componentChanged(jsonld.r.getId(component));
+                // Update visual and mark component as changed.
+                const componentIri = jsonld.r.getId(component);
+                $canvasService.updateComponent(componentIri);
+                componentChanged(componentIri);
             });
     }
 
@@ -114,6 +116,7 @@
             return;
         }
         execModel.onChange($execution, execComponent);
+        // We need to update visual as we've  may changed the mapping.
         $canvasService.updateComponent(iri);
         // Propagation - we need to disable all following.
         const connections = pplModel.getDataLinks($pipeline);
