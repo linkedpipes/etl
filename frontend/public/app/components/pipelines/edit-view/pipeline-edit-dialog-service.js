@@ -99,7 +99,6 @@
         };
 
         service.noDebugDataDialog = () => {
-            console.log("noDebugDataDialog");
             const dialog = $mdDialog.alert()
                 .parent(angular.element(document.querySelector("body")))
                 .clickOutsideToClose(true)
