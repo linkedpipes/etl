@@ -110,7 +110,7 @@
         };
 
         service.onPipelineDetail = (definition, profile) => {
-            $mdDialog.show({
+            return $mdDialog.show({
                 "controller": "components.pipelines.detail.dialog",
                 "templateUrl": "app/components/pipelines/edit-view/detail-dialog/pipeline-detail-dialog-view.html",
                 "parent": angular.element(document.body),
