@@ -14,7 +14,8 @@
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/userName> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/password> ,
         <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/useTolerantRepository> ,
-        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/literals> .
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/literals> ,
+        <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/handleInvalidData> .
 
 <http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/1.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
@@ -77,3 +78,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#literals> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#literalsControl> .
+
+<http://linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0/configuration/desc/handleInvalidData>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#handleInvalidData> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#handleInvalidDataControl> .

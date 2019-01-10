@@ -58,6 +58,10 @@ define([], function () {
             "$array": true,
             "$label": "Columns as literals"
         },
+        "handleInvalidData": {
+            "$type": "bool",
+            "$label": "Handle invalid data"
+        },
     };
 
     const MIME_TYPES = [

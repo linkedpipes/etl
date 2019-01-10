@@ -32,6 +32,9 @@ final class SparqlEndpointChunkedVocabulary {
 
     public static final String HAS_AS_LITERALS = PREFIX + "literals";
 
+    public static final String HAS_HANDLE_INVALID =
+            PREFIX + "handleInvalidData";
+
     private SparqlEndpointChunkedVocabulary() {
     }
 
