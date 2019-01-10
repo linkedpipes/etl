@@ -26,6 +26,9 @@ final class SparqlEndpointVocabulary {
     public static final String HAS_USE_TOLERANT_REPOSITORY =
             PREFIX + "useTolerantRepository";
 
+    public static final String HAS_HANDLE_INVALID =
+            PREFIX + "handleInvalidData";
+
     private SparqlEndpointVocabulary() {
     }
 

@@ -42,6 +42,10 @@ public class SparqlEndpointConfiguration {
             iri = SparqlEndpointVocabulary.HAS_USE_TOLERANT_REPOSITORY)
     private boolean useTolerantRepository = false;
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointVocabulary.HAS_HANDLE_INVALID)
+    private boolean handleInvalid = false;
+
     public SparqlEndpointConfiguration() {
     }
 
@@ -115,6 +119,14 @@ public class SparqlEndpointConfiguration {
 
     public void setUseTolerantRepository(boolean useTolerantRepository) {
         this.useTolerantRepository = useTolerantRepository;
+    }
+
+    public boolean isHandleInvalid() {
+        return handleInvalid;
+    }
+
+    public void setHandleInvalid(boolean handleInvalid) {
+        this.handleInvalid = handleInvalid;
     }
 
 }
