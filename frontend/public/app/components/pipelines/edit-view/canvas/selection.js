@@ -56,6 +56,9 @@
 
         service.graph.on("remove", onCellRemove);
         service.paper.on(EVENTS.selectionClean, clearAllSelection);
+        // The size of highlight element is not changed with the component,
+        // so we watch for changes and update manually.
+        service.graph.on("change:size", onComponentResize);
     };
 
     function onCellRemove(cell) {
@@ -76,6 +79,20 @@
             view.unhighlight(null, highlighter);
         }
         service.selection = {};
+    }
+
+    function onComponentResize(cellModel, newSize) {
+        if (cellModel === undefined) {
+            return;
+        }
+        const cellView = service.selection[cellModel.id];
+        if (cellView === undefined) {
+            return;
+        }
+        // Remove and add - I do not know a simpler way how to force
+        // size update.
+        cellView.unhighlight(null, highlighter);
+        cellView.highlight(null, highlighter);
     }
 
     return service;
