@@ -71,7 +71,7 @@
     }
 
     function clearAllSelection() {
-        if (Object.keys(service.selection).length == 0) {
+        if (Object.keys(service.selection).length === 0) {
             return;
         }
         for (let key in service.selection) {
