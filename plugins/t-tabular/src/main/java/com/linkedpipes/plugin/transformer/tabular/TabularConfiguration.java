@@ -422,6 +422,9 @@ public class TabularConfiguration {
     @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_LINES)
     private int skipLines = 0;
 
+    @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_ON_ERROR)
+    private boolean skipOnError = false;
+
     public TabularConfiguration() {
     }
 
@@ -504,4 +507,13 @@ public class TabularConfiguration {
     public void setSkipLines(int skipLines) {
         this.skipLines = skipLines;
     }
+
+    public boolean isSkipOnError() {
+        return skipOnError;
+    }
+
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
+    }
+
 }

@@ -10,8 +10,6 @@ import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class Tabular implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tabular.class);
@@ -56,9 +54,14 @@ public class Tabular implements Component, SequentialExecution {
             mapper.onTableStart(table, null);
             try {
                 parser.parse(entry, mapper);
-            } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
-                throw exceptionFactory.failure("Can't process file: {}",
-                        entry.getFileName(), ex);
+            } catch (Exception ex) {
+                if (configuration.isSkipOnError()) {
+                    LOG.error("Can't process file: {}",
+                            entry.getFileName(), ex);
+                } else {
+                    throw exceptionFactory.failure("Can't process file: {}",
+                            entry.getFileName(), ex);
+                }
             }
             mapper.onTableEnd();
             output.onFileEnd();
