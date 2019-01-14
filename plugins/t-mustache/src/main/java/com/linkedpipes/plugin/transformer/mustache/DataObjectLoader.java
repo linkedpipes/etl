@@ -1,14 +1,21 @@
 package com.linkedpipes.plugin.transformer.mustache;
 
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 class DataObjectLoader {
 
@@ -20,9 +27,12 @@ class DataObjectLoader {
 
     private final boolean includeFirstFlag;
 
+
     private Map<Resource, ObjectDataHolder> objectsInfo = new HashMap<>();
 
     private Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
+
+    private EscapeForJson escapeForJson;
 
     public DataObjectLoader(SingleGraphDataUnit dataUnit,
             MustacheConfiguration configuration) {
@@ -31,9 +41,13 @@ class DataObjectLoader {
         objectClass = SimpleValueFactory.getInstance().createIRI(
                 configuration.getResourceClass());
         includeFirstFlag = configuration.isAddFirstToCollection();
+        if (configuration.isEscapeForJson()) {
+            escapeForJson = new EscapeForJson();
+        }
+
     }
 
-    public List<ObjectDataHolder> loadData() throws LpException {
+    public List<ObjectDataHolder> loadData() {
         try (RepositoryConnection connection = repository.getConnection()) {
             try (RepositoryResult<Statement> result
                          = connection.getStatements(null, null, null, graph)) {
@@ -114,14 +128,14 @@ class DataObjectLoader {
 
     private Map<String, Object> buildEmptyDataObject(Resource resource) {
         Map<String, Object> result = new HashMap<>();
-        result.put("@id", resource.stringValue());
+        result.put("@id", escapeString(resource.stringValue()));
         return result;
     }
 
     private Map<String, Object> buildNonEmptyDataObject(Resource resource,
             Map<IRI, List<Value>> objectData) {
         Map<String, Object> result = new HashMap<>();
-        result.put("@id", resource.stringValue());
+        result.put("@id", escapeString(resource.stringValue()));
         for (Map.Entry<IRI, List<Value>> entry : objectData.entrySet()) {
             if (entry.getValue().isEmpty()) {
                 continue;
@@ -135,6 +149,20 @@ class DataObjectLoader {
         return result;
     }
 
+    private String escapeString(String string) {
+        if (escapeForJson == null) {
+            return string;
+        }
+        return escapeForJson.escape(string);
+    }
+
+    private String escapeString(Value value) {
+        if (escapeForJson == null) {
+            return value.stringValue();
+        }
+        return escapeForJson.escape(value.stringValue());
+    }
+
     private Map<String, Object> transformResource(
             Map.Entry<IRI, List<Value>> entry) {
         Map<String, Object> output = new HashMap<>();
@@ -144,9 +172,9 @@ class DataObjectLoader {
             if (includeFirstFlag) {
                 addFirstFlag(resourceObject);
             }
-            output.put(entry.getKey().stringValue(), resourceObject);
+            output.put(escapeString(entry.getKey()), resourceObject);
         } else {
-            output.put(entry.getKey().stringValue(),
+            output.put(escapeString(entry.getKey()),
                     transformResourceList(entry));
         }
         return output;
@@ -187,7 +215,7 @@ class DataObjectLoader {
 
     private Map<String, Object> transformValue(
             Map.Entry<IRI, List<Value>> entry) {
-        String predicate = entry.getKey().stringValue();
+        String predicate = escapeString(entry.getKey());
         if (entry.getValue().size() == 1) {
             Map<String, Object> output = new HashMap<>();
             output.put(predicate, getValue(entry.getValue().get(0)));
@@ -203,7 +231,7 @@ class DataObjectLoader {
         }
     }
 
-    private static Object getValue(Value value) {
+    private Object getValue(Value value) {
         if (value instanceof Literal) {
             Literal literal = (Literal) value;
             switch (literal.getDatatype().stringValue()) {
@@ -211,7 +239,7 @@ class DataObjectLoader {
                     return literal.booleanValue();
             }
         }
-        return value.stringValue();
+        return escapeString(value);
     }
 
     private void addFirstFlag(Object object) {

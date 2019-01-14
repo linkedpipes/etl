@@ -5,7 +5,8 @@
     config:type <http://plugins.linkedpipes.com/ontology/t-mustache#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/class> ,
         <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/template> ,
-        <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/addFirstFlag> .
+        <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/addFirstFlag> ,
+        <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/escapeForJson> .
 
 <http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/class>
     a config:ConfigurationMember ;
@@ -21,4 +22,10 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-mustache#addFirstFlag> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-mustache#addFirstFlagControl> .
+
+<http://linkedpipes.com/resources/components/t-mustache/0.0.0/configuration/desc/escapeForJson>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-mustache#escapeForJson> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-mustache#escapeForJsonControl> .
+
 
