@@ -5,7 +5,8 @@
     config:type <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/class> ,
         <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/template> ,
-        <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/addFirstFlag> .
+        <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/addFirstFlag> ,
+        <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/escapeForJson> .
 
 <http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/class>
     a config:ConfigurationMember ;
@@ -22,3 +23,7 @@
     config:property <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#addFirstFlag> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#addFirstFlagControl> .
 
+<http://linkedpipes.com/resources/components/t-mustacheChunked/0.0.0/configuration/desc/escapeForJson>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#escapeForJson> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-mustacheChunked#escapeForJsonControl> .
