@@ -7,7 +7,7 @@ description: Extracts a CSV table from a SPARQL endpoint according to a SPARQL S
 ---
 
 <p class="flow-text">
-Extractor, allows the user to extract a CSV table from a SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT query</a>, using the <a href="https://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtTipsAndTricksHowToHandleBandwidthLimitExceed" title="scrollable cursor">scrollable cursor technique for OpenLink Virtuoso</a>.
+Extractor, allows the user to extract a CSV table from a SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#select">SELECT query</a>, using the <a href="http://vos.openlinksw.com/owiki/wiki/VOS/VirtTipsAndTricksHowToHandleBandwidthLimitExceed" title="scrollable cursor">scrollable cursor technique for OpenLink Virtuoso</a>.
 </p>
 <dl class="flow-text">
     <dt>Endpoint URL</dt>
@@ -46,5 +46,6 @@ Extractor, allows the user to extract a CSV table from a SPARQL endpoint using a
         <p class="flow-text">
         The {{page.title}} component queries a remote SPARQL endpoint using a <a href="https://www.w3.org/TR/sparql11-query/#select">SPARQL SELECT</a> query, using the <a href="https://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtTipsAndTricksHowToHandleBandwidthLimitExceed" title="scrollable cursor">scrollable cursor technique for OpenLink Virtuoso</a>. This is helpful for getting larger results from an OpenLink Virtuoso SPARQL endpoint which would not return such a large result normally.
         This component is often used in combination with the <a href="./e-sparqlendpointchunked" title="SPARQL endpoint chunked">SPARQL endpoint chunked</a> component.
+        The SELECT query needs to have its results ordered using ORDER BY.    
     </div>
 </div>
