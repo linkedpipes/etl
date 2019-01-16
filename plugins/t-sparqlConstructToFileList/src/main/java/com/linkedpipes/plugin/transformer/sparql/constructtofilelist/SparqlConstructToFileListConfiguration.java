@@ -8,6 +8,9 @@ public class SparqlConstructToFileListConfiguration {
     @RdfToPojo.Property(iri = SparqlConstructToFileListVocabulary.HAS_DEDUPLICATION)
     private boolean useDeduplication = false;
 
+    @RdfToPojo.Property(iri = SparqlConstructToFileListVocabulary.HAS_PREFIX_TTL)
+    private String prefixTurtle = "";
+
     public SparqlConstructToFileListConfiguration() {
     }
 
@@ -17,6 +20,14 @@ public class SparqlConstructToFileListConfiguration {
 
     public void setUseDeduplication(boolean useDeduplication) {
         this.useDeduplication = useDeduplication;
+    }
+
+    public String getPrefixTurtle() {
+        return prefixTurtle;
+    }
+
+    public void setPrefixTurtle(String prefixTurtle) {
+        this.prefixTurtle = prefixTurtle;
     }
 
 }

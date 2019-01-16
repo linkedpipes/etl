@@ -3,4 +3,10 @@
     <md-switch ng-hide="dialog.deduplication.hide"
                ng-disabled="dialog.deduplication.disabled || dialog.deduplication.inherit"
                ng-model="dialog.deduplication.value">Use deduplication</md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.content.hide">
+        <label>Turtle file with prefixes to use for output (if applicable)</label>
+        <textarea id="prefixes" ng-model="dialog.prefixTurtle.value"
+                  ng-disabled="dialog.prefixTurtle.disabled || dialog.prefixTurtle.inherit"
+                  placeholder="@prefix  rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; ."/>
+    </md-input-container>
 </div>

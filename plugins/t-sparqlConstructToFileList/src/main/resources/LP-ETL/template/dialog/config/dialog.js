@@ -11,6 +11,10 @@ define([], function () {
         "deduplication": {
             "$type": "bool",
             "$label": "Deduplication"
+        },
+        "prefixTurtle": {
+            "$type": "str",
+            "$label": "Turtle with prefixes"
         }
     };
 

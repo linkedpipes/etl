@@ -19,8 +19,10 @@ import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.QueryResults;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +30,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class SparqlConstructToFileList
@@ -65,10 +71,33 @@ public class SparqlConstructToFileList
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
+    private final Map<String, String> namespaces = new HashMap<>();
+
     @Override
     public void execute() throws LpException {
+        loadNamespaces();
         loadTasksGroups();
         executeTaskGroups();
+    }
+
+    private void loadNamespaces() throws LpException {
+        if (configuration.getPrefixTurtle() == null) {
+            return;
+        }
+        RDFParser parser = Rio.createParser(RDFFormat.TURTLE);
+        try {
+            Reader reader = new StringReader(configuration.getPrefixTurtle());
+            parser.setRDFHandler(new AbstractRDFHandler() {
+                @Override
+                public void handleNamespace(String prefix, String uri) {
+                    namespaces.put(prefix, uri);
+                }
+            });
+            parser.parse(reader, "http://localhost");
+        } catch (IOException ex) {
+            throw exceptionFactory.failure(
+                    "Can't parse TTL with prefixes.", ex);
+        }
     }
 
     private void loadTasksGroups() throws LpException {
@@ -106,16 +135,23 @@ public class SparqlConstructToFileList
     }
 
     private void executeTasks(File outputFile, RDFFormat format,
-            List<QueryTask> tasks) throws LpException {
+                              List<QueryTask> tasks) throws LpException {
         try (OutputStream stream = new FileOutputStream(outputFile)) {
             RDFWriter writer = Rio.createWriter(format, stream);
             writer.startRDF();
+            addNamespaces(writer);
             for (QueryTask task : tasks) {
                 executeTask(task, writer);
             }
             writer.endRDF();
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't write result file.", ex);
+        }
+    }
+
+    private void addNamespaces(RDFWriter writer) {
+        for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+            writer.handleNamespace(entry.getKey(), entry.getValue());
         }
     }
 

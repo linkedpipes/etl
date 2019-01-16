@@ -23,6 +23,8 @@ public final class SparqlConstructToFileListVocabulary {
 
     public static final String HAS_DEDUPLICATION = PREFIX + "deduplication";
 
+    public static final String HAS_PREFIX_TTL  = PREFIX + "prefixTurtle";
+
     private SparqlConstructToFileListVocabulary() {
 
     }
