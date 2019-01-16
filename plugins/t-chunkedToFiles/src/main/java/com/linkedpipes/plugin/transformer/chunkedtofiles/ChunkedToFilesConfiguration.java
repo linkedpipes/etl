@@ -11,6 +11,9 @@ public class ChunkedToFilesConfiguration {
     @RdfToPojo.Property(iri = ChunkedToFilesVocabulary.HAS_GRAPH_URI)
     private String graphUri = null;
 
+    @RdfToPojo.Property(iri = ChunkedToFilesVocabulary.HAS_PREFIX_TTL)
+    private String prefixTurtle = "";
+
     public ChunkedToFilesConfiguration() {
     }
 
@@ -28,6 +31,14 @@ public class ChunkedToFilesConfiguration {
 
     public void setGraphUri(String graphUri) {
         this.graphUri = graphUri;
+    }
+
+    public String getPrefixTurtle() {
+        return prefixTurtle;
+    }
+
+    public void setPrefixTurtle(String prefixTurtle) {
+        this.prefixTurtle = prefixTurtle;
     }
 
 }

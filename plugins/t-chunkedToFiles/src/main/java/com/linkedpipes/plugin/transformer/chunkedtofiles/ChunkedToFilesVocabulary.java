@@ -11,6 +11,8 @@ public class ChunkedToFilesVocabulary {
 
     public static final String HAS_GRAPH_URI = PREFIX + "graphUri";
 
+    public static final String HAS_PREFIX_TTL  = PREFIX + "prefixTurtle";
+
     private ChunkedToFilesVocabulary() {
     }
 
