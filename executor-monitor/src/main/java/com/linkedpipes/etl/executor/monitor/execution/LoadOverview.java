@@ -36,6 +36,14 @@ public class LoadOverview {
     }
 
     public void load(Execution execution, JsonNode overview) {
+        Date oldLastUpdate = execution.getLastOverviewChange();
+        if (oldLastUpdate != null) {
+            Date newLastUpdate = OverviewObject.getLastChange(overview);
+            if (oldLastUpdate.after(newLastUpdate)) {
+                // We have never version, do not update.
+                return;
+            }
+        }
         addMonitorInformation(execution, overview);
         execution.setOverviewJson(overview);
         updateExecutionFromOverview(execution);

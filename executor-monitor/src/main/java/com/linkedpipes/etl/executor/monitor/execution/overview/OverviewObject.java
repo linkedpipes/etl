@@ -45,7 +45,7 @@ public class OverviewObject {
         OverviewObject overview = new OverviewObject();
 
         overview.status = root.get("status").get("@id").asText();
-        overview.lastChange = asDate(root.get("lastChange").asText());
+        overview.lastChange = getLastChange(root);
 
         if (root.get("pipeline") != null) {
             JsonNode id = root.get("pipeline").get("@id");
@@ -108,6 +108,10 @@ public class OverviewObject {
 
     public static String getIri(JsonNode root) {
         return root.get("execution").get("@id").asText();
+    }
+
+    public static Date getLastChange(JsonNode root) {
+        return asDate(root.get("lastChange").asText());
     }
 
     public String getPipeline() {
