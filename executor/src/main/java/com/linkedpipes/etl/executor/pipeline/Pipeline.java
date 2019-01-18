@@ -46,14 +46,11 @@ public class Pipeline {
 
     /**
      * Load pipeline definition from given file.
-     *
-     * @param file
-     * @param repositoryDirectory
      */
     public void load(File file, File repositoryDirectory)
             throws ExecutorException {
         // Check for definition file.
-        final RDFFormat rdfFormat = Rio.getParserFormatForFileName(
+        RDFFormat rdfFormat = Rio.getParserFormatForFileName(
                 file.getName()).orElse(null);
         if (rdfFormat == null) {
             throw new ExecutorException("Invalid definition format.");
@@ -69,10 +66,10 @@ public class Pipeline {
         }
         source = Rdf4jSource.wrapRepository(repository);
         // Search for a pipeline.
-        final String iri;
-        final String graph;
+        String iri;
+        String graph;
         try {
-            final List<Map<String, String>> bindings = RdfUtils.sparqlSelect(
+            List<Map<String, String>> bindings = RdfUtils.sparqlSelect(
                     source, getPipelineQuery());
             if (bindings.size() != 1) {
                 throw new ExecutorException("Invalid number of pipelines: {}",
@@ -100,9 +97,9 @@ public class Pipeline {
             try {
                 // TODO Implement more efficient approach
                 String descriptionGraph = RdfUtils.sparqlSelectSingle(source,
-                        "SELECT ?graph WHERE { GRAPH ?graph {" +
-                                "<" + description.getIri() + "> ?p ?o " +
-                                "} } LIMIT 1", "graph");
+                        "SELECT ?graph WHERE { GRAPH ?graph {"
+                                + "<" + description.getIri() + "> ?p ?o "
+                                + "} } LIMIT 1", "graph");
 
                 RdfUtils.load(source, description.getIri(),
                         descriptionGraph, description);
@@ -131,14 +128,12 @@ public class Pipeline {
 
     /**
      * Save content of the pipeline definition into given file.
-     *
-     * @param path
      */
     public void save(File path) throws ExecutorException {
-        final RDFFormat format = Rio.getWriterFormatForFileName(
+        RDFFormat format = Rio.getWriterFormatForFileName(
                 path.getName()).orElseThrow(() -> new ExecutorException(""));
-        try (final OutputStream stream = new FileOutputStream(path)) {
-            final RDFWriter writer = Rio.createWriter(format, stream);
+        try (OutputStream stream = new FileOutputStream(path)) {
+            RDFWriter writer = Rio.createWriter(format, stream);
             Repositories.consume(repository, (connection) -> {
                 connection.export(writer);
             });
@@ -158,23 +153,18 @@ public class Pipeline {
      * The given graph is set as a configuration for given component.
      * The writer write statements into the pipeline definition. The
      * writer must be closed for changes to apply.
-     *
-     * @param component
-     * @param graph
-     * @return Writer for given configuration.
      */
     public BackendTripleWriter setConfiguration(
-            PipelineComponent component, String graph)
-            throws ExecutorException {
+            PipelineComponent component, String graph) {
         LOG.info("setConfiguration {} {}", component.getIri(), graph);
         // TODO Save reference to the entity.
         return source.getTripleWriter(graph);
     }
 
     private static String getPipelineQuery() {
-        return "SELECT ?pipeline ?graph WHERE { GRAPH ?graph {\n" +
-                " ?pipeline a <" + LP_PIPELINE.PIPELINE + "> \n" +
-                "}}";
+        return "SELECT ?pipeline ?graph WHERE { GRAPH ?graph {\n"
+                + " ?pipeline a <" + LP_PIPELINE.PIPELINE + "> \n"
+                + "}}";
     }
 
 }

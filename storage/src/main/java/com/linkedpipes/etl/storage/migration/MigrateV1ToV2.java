@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 /**
  * Some components shared configuration types. This cause issues
  * when additional properties were added to one of the configurations.
- * <p>
- * The type is used to match the description. This cause that wrong
+ *
+ * <p>The type is used to match the description. This cause that wrong
  * description may be used to merge the configuration. This result
  * in removal of some properties.
- * <p>
- * This bug depends on the order of components.
- * <p>
- * As a solution the configuration of the components is changed to use
+ *
+ * <p>This bug depends on the order of components.
+ *
+ * <p>As a solution the configuration of the components is changed to use
  * different vocabularies.
- * <p>
- * Another thing is that a reference to a configuration description is
+ *
+ * <p>Another thing is that a reference to a configuration description is
  * added to definition of reference templates.
  */
 public class MigrateV1ToV2 {

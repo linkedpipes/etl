@@ -44,7 +44,7 @@ public class Pipeline {
      * with reference to the pipeline where the complete
      * pipeline definition is not required.
      */
-    private Collection<Statement> referenceRdf = new ArrayList<>(8);
+    private Collection<Statement> referenceRdf = new ArrayList<>();
 
     Pipeline(File file, PipelineInfo info) {
         this.file = file;
@@ -56,7 +56,7 @@ public class Pipeline {
     }
 
     /**
-     * @return Can be null if no information has been loaded.
+     * Can return Null if no information has been loaded.
      */
     public PipelineInfo getInfo() {
         return info;
@@ -67,7 +67,7 @@ public class Pipeline {
     }
 
     /**
-     * @return Null if pipeline information has not yet been loaded.
+     * Return Null if pipeline information has not yet been loaded.
      */
     public String getIri() {
         if (info == null) {

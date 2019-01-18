@@ -20,7 +20,14 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -93,17 +100,18 @@ final class ImportFromJarFile {
 
     private void loadJarEntries(File path) throws IOException {
         this.entries = new HashMap<>();
-        JarFile jar = new JarFile(path);
-        for (Enumeration<JarEntry> enums = jar.entries();
-             enums.hasMoreElements(); ) {
-            JarEntry entry = enums.nextElement();
-            String name = entry.getName();
-            boolean isDirectory = name.endsWith("/");
-            if (isDirectory || !name.startsWith("LP-ETL/template/")) {
-                continue;
+        try (JarFile jar = new JarFile(path)) {
+            for (Enumeration<JarEntry> enums = jar.entries();
+                    enums.hasMoreElements(); ) {
+                JarEntry entry = enums.nextElement();
+                String name = entry.getName();
+                boolean isDirectory = name.endsWith("/");
+                if (isDirectory || !name.startsWith("LP-ETL/template/")) {
+                    continue;
+                }
+                String key = name.substring("LP-ETL/template/".length());
+                this.entries.put(key, entry);
             }
-            String key = name.substring("LP-ETL/template/".length());
-            this.entries.put(key, entry);
         }
     }
 
@@ -117,9 +125,9 @@ final class ImportFromJarFile {
     }
 
     private JarEntry selectEntryByPrefix(String prefix) throws BaseException {
-        for (String name : this.entries.keySet()) {
-            if (name.startsWith(prefix)) {
-                return this.entries.get(name);
+        for (Map.Entry<String, JarEntry> entry : entries.entrySet()) {
+            if (entry.getKey().startsWith(prefix)) {
+                return entry.getValue();
             }
         }
         throw new BaseException("Missing jar file entry: {}", prefix);
@@ -149,7 +157,7 @@ final class ImportFromJarFile {
     }
 
     private RepositoryReference templateRef(String id) {
-        return RepositoryReference.Jar(id);
+        return RepositoryReference.createJar(id);
     }
 
     private Collection<String> copyDialogFiles(String id) throws IOException {
@@ -198,7 +206,7 @@ final class ImportFromJarFile {
 
     private Collection<Statement> createDefinitionForDialogs(
             Resource resource, Collection<String> dialogs) {
-        List<Statement> output = new ArrayList<>(dialogs.size() * 3);
+        List<Statement> output = new ArrayList<>(dialogs.size());
         for (String dialog : dialogs) {
             IRI dialogResource = valueFactory.createIRI(
                     resource.stringValue(), "/dialog/" + dialog);

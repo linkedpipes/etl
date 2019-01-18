@@ -39,7 +39,7 @@ public class Configuration {
 
     @PostConstruct
     public void init() {
-        final String propertiesFile = System.getProperty("configFileLocation");
+        String propertiesFile = System.getProperty("configFileLocation");
         if (propertiesFile == null) {
             LOG.error("Missing property '-configFileLocation' "
                     + "with path to configuration file.");
@@ -78,7 +78,7 @@ public class Configuration {
     }
 
     public File getLogDirectory() {
-        final File logDirectory = new File(logDirectoryPath);
+        File logDirectory = new File(logDirectoryPath);
         logDirectory.mkdirs();
         return logDirectory;
     }
@@ -116,7 +116,7 @@ public class Configuration {
     }
 
     private String getProperty(String name) {
-        final String value;
+        String value;
         try {
             value = properties.getProperty(name);
         } catch (RuntimeException ex) {
@@ -125,17 +125,17 @@ public class Configuration {
         }
         if (value == null) {
             LOG.error("Missing configuration property: '{}'", name);
-            throw new RuntimeException("Missing configuration property:" +
-                    name);
+            throw new RuntimeException(
+                    "Missing configuration property:" + name);
         } else {
             return value;
         }
     }
 
     protected Integer getPropertyInteger(String name) {
-        final String value = getProperty(name);
+        String value = getProperty(name);
         try {
-            final Integer valueAsInteger = Integer.parseInt(value);
+            Integer valueAsInteger = Integer.parseInt(value);
             return valueAsInteger;
         } catch (Exception ex) {
             LOG.error("Invalid configuration property: '{}'", name);

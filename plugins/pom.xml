@@ -5,8 +5,7 @@
     <artifactId>plugins</artifactId>
     <version>0.0.0</version>
     <packaging>pom</packaging>
-    <name>lp-plugins</name>
-    <description>Plugins master build project.</description>
+    <name>LinkedPipes Plugins</name>
 
     <modules>
         <module>t-chunkedToGraph</module>

@@ -53,6 +53,13 @@
         <md-tooltip>Fix rdf:langString without language tag.
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.handleInvalidData.value"
+               ng-hide="dialog.handleInvalidData.hide"
+               ng-disabled="dialog.handleInvalidData.disabled || dialog.handleInvalidData.inherit">
+        Try to handle invalid data
+        <md-tooltip>Depends on user parser
+        </md-tooltip>
+    </md-switch>
     <lp-iri-list label-top="Default graph" label-item="Graph IRI"
                  ng-model="dialog.defaultGraph.value"
                  lp-disabled="dialog.defaultGraph.disabled || dialog.defaultGraph.inherit"

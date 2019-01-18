@@ -19,6 +19,8 @@ public final class MustacheVocabulary {
 
     public static final String HAS_IS_FIRST = PREFIX + "first";
 
+    public static final String HAS_ESCAPE_FOR_JSON = PREFIX + "escapeForJson";
+
     private MustacheVocabulary() {
     }
 

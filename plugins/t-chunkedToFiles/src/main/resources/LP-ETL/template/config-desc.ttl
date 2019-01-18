@@ -4,7 +4,8 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/fileType> ,
-        <http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/graphUri> .
+        <http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/graphUri> ,
+        <http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/prefixTurtle> .
 
 <http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/fileType>
     a config:ConfigurationMember ;
@@ -15,3 +16,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#graphUri> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#graphUriControl> .
+
+<http://linkedpipes.com/resources/components/t-chunkedToFiles/0.0.0/configuration/desc/prefixTurtle>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#prefixTurtle> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-chunkedToFiles#prefixTurtleControl> .

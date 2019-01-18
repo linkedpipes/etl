@@ -79,7 +79,8 @@ class TemplateExpander {
         return component;
     }
 
-    private void copyBasicInformation(DesignerComponent sourceComponent,
+    private void copyBasicInformation(
+            DesignerComponent sourceComponent,
             ExecutorComponent targetComponent) {
         targetComponent.setLabel(sourceComponent.getLabel());
     }

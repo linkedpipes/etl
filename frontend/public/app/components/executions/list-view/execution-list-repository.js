@@ -4,10 +4,11 @@
             "vocabulary",
             "app/modules/repository-infinite-scroll",
             "app/modules/jsonld-source",
+            "app/components/executions/execution-status-to-icon",
             "app/components/personalization/personalization"
         ], definition);
     }
-})((vocab, repositoryService, jsonLdSource, _personalization) => {
+})((vocab, repositoryService, jsonLdSource, statusToIcon, _personalization) => {
     "use strict";
 
     const LP = vocab.LP;
@@ -112,11 +113,7 @@
         item["progress"]["value"] = getProgressValue(item["progress"]);
         updateExecutionStatus(item);
         updateExecutionMetadata(item);
-        if (item["label"]) {
-            item["searchLabel"] = item["label"].toLowerCase();
-        } else {
-            item["searchLabel"] = item["iri"].toLowerCase();
-        }
+        item["searchLabel"] = item["label"].toLowerCase();
         item["filterLabel"] = true;
         if (item["size"] === undefined) {
             item["size"] = "?";
@@ -157,101 +154,53 @@
             parseInt(total) === 0) {
             return 0;
         } else {
-            return 100 * (current / total);
+            return 100.0 * (current / total);
         }
     }
 
-    // TODO Move IRIs to vocabulary.
     function updateExecutionStatus(execution) {
+        execution.icon = statusToIcon(execution.status);
         switch (execution.status) {
             case LP.EXEC_CANCELLED:
                 execution.canDelete = true;
                 execution.canCancel = false;
-                execution.icon = {
-                    'name': 'done',
-                    'style': {
-                        'color': '#ff9900'
-                    }
-                };
                 execution.detailType = 'FULL';
                 execution.canDelete = true;
                 break;
             case LP.EXEC_QUEUED:
                 execution.canDelete = true;
                 execution.canCancel = false;
-                execution.icon = {
-                    'name': 'hourglass',
-                    'style': {
-                        'color': 'black'
-                    }
-                };
                 execution.detailType = 'NONE';
                 break;
             case LP.EXEC_INITIALIZING:
             case LP.EXEC_RUNNING:
                 execution.canDelete = false;
                 execution.canCancel = true;
-                execution.icon = {
-                    'name': 'run',
-                    'style': {
-                        'color': 'blue'
-                    }
-                };
                 execution.detailType = 'PROGRESS';
                 break;
             case LP.EXEC_FINISHED:
                 execution.canDelete = true;
                 execution.canCancel = false;
-                execution.icon = {
-                    'name': 'done',
-                    'style': {
-                        'color': 'green'
-                    }
-                };
                 execution.detailType = 'FULL';
                 break;
             case LP.EXEC_FAILED:
                 execution.canDelete = true;
                 execution.canCancel = false;
-                execution.icon = {
-                    'name': 'error',
-                    'style': {
-                        'color': 'red'
-                    }
-                };
                 execution.detailType = 'FULL';
                 break;
             case LP.EXEC_CANCELLING:
                 execution.canDelete = false;
                 execution.canCancel = false;
-                execution.icon = {
-                    'name': 'run',
-                    'style': {
-                        'color': '#ff9900'
-                    }
-                };
                 execution.detailType = 'PROGRESS';
                 break;
             case LP.EXEC_UNRESPONSIVE:
                 execution.canDelete = false;
                 execution.canCancel = false;
-                execution.icon = {
-                    'name': 'help_outline',
-                    'style': {
-                        'color': 'orange'
-                    }
-                };
                 break;
             case LP.EXEC_INVALID:
             case LP.EXEC_DANGLING:
                 execution.canDelete = true;
                 execution.canCancel = false;
-                execution.icon = {
-                    'name': 'help_outline',
-                    'style': {
-                        'color': 'red'
-                    }
-                };
                 break;
             default:
                 execution.detailType = 'NONE';

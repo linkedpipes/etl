@@ -30,7 +30,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         implements SingleGraphDataUnit, WritableSingleGraphDataUnit,
         RuntimeConfiguration {
 
-    private final static String COPY_QUERY
+    private static final String COPY_QUERY
             = "INSERT {?s ?p ?o} WHERE {?s ?p ?o}";
 
     private IRI graph;

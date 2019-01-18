@@ -12,6 +12,8 @@ import java.util.Date;
 
 public class OverviewFactoryTest {
 
+    private OverviewFactory overviewFactory = new OverviewFactory();
+
     @Test
     public void loadFromJsonDeleted() {
         Date date = new Date();
@@ -19,7 +21,7 @@ public class OverviewFactoryTest {
         String iri = "http://execution";
         Mockito.when(execution.getIri()).thenReturn(iri);
         OverviewObject overview = OverviewObject.fromJson(
-                OverviewFactory.createDeleted(execution, date));
+                overviewFactory.createDeleted(execution, date));
         //
         Assert.assertEquals(
                 ExecutionStatus.DELETED.asStr(),
@@ -36,7 +38,7 @@ public class OverviewFactoryTest {
                 "http://pipeline");
         Mockito.when(execution.getPipeline()).thenReturn(pipeline);
         OverviewObject overview = OverviewObject.fromJson(
-                OverviewFactory.createQueued(execution));
+                overviewFactory.createQueued(execution));
         //
         Assert.assertEquals(
                 ExecutionStatus.QUEUED.asStr(),
@@ -52,7 +54,7 @@ public class OverviewFactoryTest {
         Mockito.when(execution.getIri()).thenReturn(iri);
         Mockito.when(execution.getLastOverviewChange()).thenReturn(date);
         OverviewObject overview = OverviewObject.fromJson(
-                OverviewFactory.createQueued(execution));
+                overviewFactory.createQueued(execution));
         //
         Assert.assertEquals(
                 ExecutionStatus.QUEUED.asStr(),

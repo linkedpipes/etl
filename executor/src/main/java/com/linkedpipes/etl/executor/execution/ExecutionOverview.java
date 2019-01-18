@@ -34,6 +34,8 @@ public class ExecutionOverview {
 
     private Long directorySize = null;
 
+    private final RdfFormatter rdfFormat = new RdfFormatter();
+
     /**
      * Used only to read the status.
      */
@@ -56,7 +58,7 @@ public class ExecutionOverview {
      * execution, so we need to change tha last change status.
      */
     public void onExecutionBegin(Date date) {
-        pipelineStarted = RdfFormatter.toXsdDate(date);
+        pipelineStarted = rdfFormat.toXsdDate(date);
         onAfterUpdate();
     }
 
@@ -80,7 +82,7 @@ public class ExecutionOverview {
     }
 
     private void onAfterUpdate() {
-        this.lastChange = RdfFormatter.toXsdDate(new Date());
+        this.lastChange = rdfFormat.toXsdDate(new Date());
     }
 
     public void onComponentMapped() {
@@ -98,7 +100,7 @@ public class ExecutionOverview {
     }
 
     public void onExecutionEnd(Date date) {
-        pipelineFinished = RdfFormatter.toXsdDate(date);
+        pipelineFinished = rdfFormat.toXsdDate(date);
         computeDirectorySize();
         onAfterUpdate();
     }

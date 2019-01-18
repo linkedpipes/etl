@@ -3,6 +3,8 @@ package com.linkedpipes.etl.storage.web.servlet;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +13,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 @RestController
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static class RestException {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(RestExceptionHandler.class);
 
-        private final String source = "STORAGE";
+    private static class ErrorResponse {
+
+        private static final String SOURCE = "STORAGE";
 
         private HttpStatus status;
 
@@ -26,14 +34,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private String cause;
 
-        public RestException(HttpStatus status, String message, String cause) {
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private String stackTrace;
+
+        public ErrorResponse(
+                HttpStatus status, String message,
+                String cause, String stackTrace) {
             this.status = status;
             this.message = message;
             this.cause = cause;
+            this.stackTrace = stackTrace;
         }
 
-        public String getSource() {
-            return source;
+        public String getSOURCE() {
+            return SOURCE;
         }
 
         public HttpStatus getStatus() {
@@ -44,29 +58,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             return message;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
         public String getCause() {
             return cause;
         }
 
-        public void setCause(String cause) {
-            this.cause = cause;
+        public String getStackTrace() {
+            return stackTrace;
         }
 
     }
 
     private static class RestExceptionEnvelop {
 
-        private RestException error;
+        private ErrorResponse error;
 
-        public RestExceptionEnvelop(RestException error) {
+        public RestExceptionEnvelop(ErrorResponse error) {
             this.error = error;
         }
 
-        public RestException getError() {
+        public ErrorResponse getError() {
             return error;
         }
     }
@@ -74,28 +84,32 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MissingResource.class)
     protected ResponseEntity<String> handleMissingResource(MissingResource ex)
             throws JsonProcessingException {
-        RestException response = new RestException(
+        LOG.error("Missing entry.", ex);
+        ErrorResponse response = new ErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getLocalizedMessage(),
-                null);
+                null, null);
         return buildResponseEntity(response);
     }
 
     @ExceptionHandler(Throwable.class)
     protected ResponseEntity<String> handleThrowable(Throwable ex)
             throws JsonProcessingException {
+        LOG.error("Handling error.", ex);
         Throwable cause = getRootCause(ex);
-        RestException response;
+        ErrorResponse response;
         if (cause == ex) {
-            response = new RestException(
+            response = new ErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getLocalizedMessage(),
-                    null);
+                    null,
+                    getStackTraceAsString(ex));
         } else {
-            response = new RestException(
+            response = new ErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getLocalizedMessage(),
-                    cause.getLocalizedMessage());
+                    cause.getLocalizedMessage(),
+                    getStackTraceAsString(cause));
         }
         return buildResponseEntity(response);
     }
@@ -107,8 +121,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ex;
     }
 
+    private String getStackTraceAsString(Throwable t) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        t.printStackTrace(printWriter);
+        return stringWriter.toString();
+    }
+
     private ResponseEntity<String> buildResponseEntity(
-            RestException error) throws JsonProcessingException {
+            ErrorResponse error) throws JsonProcessingException {
         // This is to force JSON response for missing Accept header.
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(

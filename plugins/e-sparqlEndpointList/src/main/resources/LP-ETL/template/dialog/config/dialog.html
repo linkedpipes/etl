@@ -7,7 +7,7 @@
                type="number" min="1">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.timeLimit.hide">
-        <label>Query time limit in seconds (-1 for infinite)</label>
+        <label>Query time limit in seconds (-1 for no limit)</label>
         <input ng-model="dialog.timeLimit.value"
                ng-disabled="dialog.timeLimit.disabled || dialog.timeLimit.inherit"
                type="number" min="-1">
@@ -23,11 +23,11 @@
                ng-hide="dialog.useTolerantRepository.hide"
                ng-disabled="dialog.useTolerantRepository.disabled || dialog.useTolerantRepository.inherit">
         Fix missing language tags on rdf:langString literals
-        <md-tooltip>Fix rdf:langString without language tag.
+        <md-tooltip>Fix rdf:langString without language tag by replacing it with xsd:string.
         </md-tooltip>
     </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.taskPerGroupLimit.hide">
-        <label>Limit task per group (0 to no limit)</label>
+        <label>Limit number of tasks running in parallel in a group (0 for no limit)</label>
         <input ng-model="dialog.taskPerGroupLimit.value"
                ng-disabled="dialog.taskPerGroupLimit.disabled || dialog.taskPerGroupLimit.inherit"
                type="number" min="0">

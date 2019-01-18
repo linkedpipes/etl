@@ -47,8 +47,8 @@ public class FilesDataUnitFactory
     }
 
     @Override
-    public void onPipelineBegin(String pipeline,
-            RdfSource definition) throws LpException {
+    public void onPipelineBegin(
+            String pipeline, RdfSource definition) throws LpException {
         this.pipelineModel.load(pipeline, definition);
     }
 

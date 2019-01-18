@@ -5,7 +5,7 @@
     <artifactId>frontend</artifactId>
     <version>0.0.0</version>
     <packaging>pom</packaging>
-    <name>lp-frontend</name>
+    <name>LinkedPipes Frontend</name>
 
     <properties>
         <deploy.directory>../deploy/frontend/</deploy.directory>

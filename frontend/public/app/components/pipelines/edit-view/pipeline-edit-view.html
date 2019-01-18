@@ -1,0 +1,170 @@
+<div flex layout="column">
+
+    <md-content style="width:100%;" layout="row"
+                layout-align="space-around center">
+
+        <div flex layout-padding style="padding-top: 4px;padding-bottom: 4px">
+            <div ng-show="!isEditMode"
+              style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align:left;width:100%;margin:0px;line-height:normal;text-transform: none;font-size:14px">
+                <md-icon md-svg-icon="{{executionIcon.name}}" class="md-avatar" ng-style="executionIcon.style"/>
+                Execution of {{pipelineLabel}}
+            </div>
+            <md-button ng-show="isEditMode"
+                    style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align:left;width:100%;margin:0px;line-height:normal;text-transform: none;"
+                    ng-click="onPipelineDetail($event)">
+                {{pipelineLabel}}
+            </md-button>
+        </div>
+
+        <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="isEditMode">
+            <md-button class="md-icon-button"
+                       ng-click="onOpenMenu($mdOpenMenu, $event)">
+                <md-icon md-menu-origin md-svg-src="settings" class="lp-icon"/>
+            </md-button>
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button ng-click="onDisableAllLoaders()">
+                        <md-icon md-svg-icon="flash_off" class="lp-icon"/>
+                        Disable loaders
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onEnableAllLoaders()">
+                        <md-icon md-svg-icon="flash_on" class="lp-icon"/>
+                        Enable loaders
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+
+        <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="!isEditMode">
+            <md-button class="md-icon-button"
+                       ng-click="onOpenMenu($mdOpenMenu, $event)">
+                <md-icon md-menu-origin md-svg-icon="more_vert"/>
+            </md-button>
+            <md-menu-content width="3">
+                <md-menu-item>
+                    <md-button ng-click="onDownloadNoSave()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"/>
+                        Download
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onDownloadNoCredentialsNoSave()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"/>
+                        Download without credentials
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onCopyNoSave()">
+                        <md-icon md-svg-src="copy" class="lp-icon"
+                                 md-menu-origin/>
+                        Copy and Open
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+
+        <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="isEditMode">
+            <md-button class="md-icon-button"
+                       ng-click="onOpenMenu($mdOpenMenu, $event)">
+                <md-icon md-menu-origin md-svg-icon="more_vert"/>
+            </md-button>
+            <md-menu-content width="3">
+                <md-menu-item>
+                    <md-button ng-click="onPipelineDetail($event)">
+                        <md-icon md-svg-src="settings" class="lp-icon"
+                                 md-menu-origin/>
+                        Pipeline detail
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onDownload()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"/>
+                        Save and download
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onDownloadNoCredentials()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"/>
+                        Save and download without credentials
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onBackupDownload()">
+                        <md-icon md-svg-icon="file_download" class="lp-icon"/>
+                        Download backup (without templates)
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onExecuteWithoutDebugData($event)">
+                        <md-icon md-svg-icon="play_circle_outline"
+                                 class="lp-icon"/>
+                        Execute without debug data
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onCopy()">
+                        <md-icon md-svg-src="copy" class="lp-icon"
+                                 md-menu-origin/>
+                        Copy and Open
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="onDelete($event)">
+                        <md-icon md-svg-icon="delete_forever" class="lp-icon"
+                                 md-menu-origin/>
+                        Delete
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+
+    </md-content>
+
+    <md-content style="overflow-x: hidden; overflow-y: hidden;">
+        <md-content id="canvas">
+            <lp-canvas/>
+        </md-content>
+        <lp-canvas-edit/>
+    </md-content>
+
+    <md-content layout="row" layout-align="space-around center"
+                hide show-gt-sm>
+        <md-button ng-click="onSave()" ng-show="isEditMode">
+            <md-icon md-menu-origin md-svg-src="save"/>
+            Save
+        </md-button>
+        <md-button ng-click="onExecute()" ng-show="isEditMode"
+                   class="md-primary">
+            <md-icon md-menu-origin md-svg-src="play_circle_outline"/>
+            Execute
+        </md-button>
+        <md-button ng-click="onClose()" class="md-warn">
+            <md-icon md-menu-origin md-svg-src="close"/>
+            Close
+        </md-button>
+        <md-button ng-click="onEditMode()"
+                   ng-show="isExecutionFinished && !isEditMode">
+            Edit mode
+        </md-button>
+    </md-content>
+
+    <md-content hide-gt-sm layout="row" layout-align="space-around center">
+        <md-button ng-click="onSave()" ng-show="isEditMode">
+            <md-icon md-menu-origin md-svg-src="save"/>
+        </md-button>
+        <md-button ng-click="onExecute()" ng-show="isEditMode"
+                   class="md-primary">
+            <md-icon md-menu-origin md-svg-src="play_circle_outline"/>
+        </md-button>
+        <md-button ng-click="onClose()" class="md-warn">
+            <md-icon md-menu-origin md-svg-src="close"/>
+        </md-button>
+        <md-button ng-click="onEditMode()"
+                   ng-show="isExecutionFinished && !isEditMode">
+            Edit mode
+        </md-button>
+    </md-content>
+
+</div>

@@ -1,7 +1,11 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -11,7 +15,8 @@ import java.util.Collection;
 
 class EmptyPipelineFactory {
 
-    private static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
+    private static final ValueFactory VALUE_FACTORY =
+            SimpleValueFactory.getInstance();
 
     private static IRI HAS_PROFILE;
 
@@ -45,12 +50,14 @@ class EmptyPipelineFactory {
         model.add(iri, Pipeline.HAS_VERSION, version, iri);
         Value label = VALUE_FACTORY.createLiteral(iriAsStr);
         model.add(iri, SKOS.PREF_LABEL, label, iri);
-        IRI profileIri = VALUE_FACTORY.createIRI(iriAsStr + "/profile/default");
+        IRI profileIri = VALUE_FACTORY.createIRI(
+                iriAsStr + "/profile/default");
         model.add(iri, HAS_PROFILE, profileIri, iri);
 
         model.add(profileIri, RDF.TYPE, PROFILE, iri);
 
-        model.add(profileIri, HAS_RDF_REPOSITORY_POLICY, SINGLE_REPOSITORY, iri);
+        model.add(
+                profileIri, HAS_RDF_REPOSITORY_POLICY, SINGLE_REPOSITORY, iri);
         model.add(profileIri, HAS_RDF_REPOSITORY_TYPE, NATIVE_STORE, iri);
 
         return model;

@@ -3,7 +3,9 @@ package com.linkedpipes.etl.storage.configuration;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 class SelectPrivateStatements {

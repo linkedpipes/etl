@@ -3,8 +3,8 @@ package com.linkedpipes.etl.rdf.utils.rdf4j;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.model.TripleHandler;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.TripleHandler;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -19,9 +19,15 @@ import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.util.Repositories;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-public class Rdf4jSource implements BackendRdfSource, BackendRdfSource.SparqlQueryable {
+
+public class Rdf4jSource
+        implements BackendRdfSource, BackendRdfSource.SparqlQueryable {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -53,7 +59,8 @@ public class Rdf4jSource implements BackendRdfSource, BackendRdfSource.SparqlQue
         return output;
     }
 
-    private Map<String, BackendRdfValue> convertBinding(BindingSet bindingSet) {
+    private Map<String, BackendRdfValue> convertBinding(
+            BindingSet bindingSet) {
         Map<String, BackendRdfValue> output = new HashMap<>();
         for (Binding binding : bindingSet) {
             output.put(binding.getName(), new Rdf4jValue(binding.getValue()));
@@ -96,8 +103,9 @@ public class Rdf4jSource implements BackendRdfSource, BackendRdfSource.SparqlQue
         statements(null, graph, handler);
     }
 
-    public void statements(String resource, String graph,
-            StatementHandler handler) throws RdfUtilsException {
+    public void statements(
+            String resource, String graph, StatementHandler handler)
+            throws RdfUtilsException {
         Resource resourceFilter = resourceOrNull(resource);
         try (RepositoryConnection connection = repository.getConnection()) {
             RepositoryResult<Statement> result;

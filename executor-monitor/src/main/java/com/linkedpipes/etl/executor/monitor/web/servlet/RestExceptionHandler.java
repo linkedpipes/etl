@@ -15,9 +15,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static class RestException {
+    private static class ErrorResponse {
 
-        private final String source = "EXECUTOR-MONITOR";
+        private static final String SOURCE = "EXECUTOR-MONITOR";
 
         private HttpStatus status;
 
@@ -26,14 +26,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private String cause;
 
-        public RestException(HttpStatus status, String message, String cause) {
+        public ErrorResponse(HttpStatus status, String message, String cause) {
             this.status = status;
             this.message = message;
             this.cause = cause;
         }
 
         public String getSource() {
-            return source;
+            return SOURCE;
         }
 
         public HttpStatus getStatus() {
@@ -60,13 +60,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static class RestExceptionEnvelop {
 
-        private RestException error;
+        private ErrorResponse error;
 
-        public RestExceptionEnvelop(RestException error) {
+        public RestExceptionEnvelop(ErrorResponse error) {
             this.error = error;
         }
 
-        public RestException getError() {
+        public ErrorResponse getError() {
             return error;
         }
     }
@@ -74,7 +74,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MissingResource.class)
     protected ResponseEntity<String> handleMissingResource(MissingResource ex)
             throws JsonProcessingException {
-        RestException response = new RestException(
+        ErrorResponse response = new ErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getLocalizedMessage(),
                 null);
@@ -85,14 +85,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<String> handleThrowable(Throwable ex)
             throws JsonProcessingException {
         Throwable cause = getRootCause(ex);
-        RestException response;
+        ErrorResponse response;
         if (cause == ex) {
-            response = new RestException(
+            response = new ErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getLocalizedMessage(),
                     null);
         } else {
-            response = new RestException(
+            response = new ErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getLocalizedMessage(),
                     cause.getLocalizedMessage());
@@ -108,7 +108,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<String> buildResponseEntity(
-            RestException error) throws JsonProcessingException {
+            ErrorResponse error) throws JsonProcessingException {
         // This is to force JSON response for missing Accept header.
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(

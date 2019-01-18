@@ -33,49 +33,48 @@ class PipelineLoader {
     }
 
     public void loadPipelineIntoExecution() throws MonitorException {
-        File file = this.getPipelineFile();
-        Statements pipeline = this.loadPipelineFile(file);
-        this.searchForPipelineAndMetadata(pipeline);
+        File file = getPipelineFile();
+        Statements pipeline = loadPipelineFile(file);
+        searchForPipelineAndMetadata(pipeline);
 
-        this.execution.setPipeline(this.pipelineResource);
-        if (this.pipelineResource == null) {
+        execution.setPipeline(pipelineResource);
+        if (pipelineResource == null) {
             throw new MonitorException(
                     "Missing pipeline resource for: {}",
-                    this.execution.getId());
+                    execution.getId());
         }
 
-        Statements output = Statements.ArrayList();
+        Statements output = Statements.arrayList();
         output.setDefaultGraph(execution.getListGraph());
-        output.addAll(this.processMetadata(pipeline));
-        output.addAll(this.processPipeline());
-        this.selectUsedLabels(pipeline).forEach(output::integrate);
+        output.addAll(processMetadata(pipeline));
+        output.addAll(processPipeline());
+        selectUsedLabels(pipeline).forEach(output::integrate);
 
-        this.execution.setPipelineStatements(output);
+        execution.setPipelineStatements(output);
     }
 
     private File getPipelineFile() throws MonitorException {
-        File pipelineFile = new File(
-                this.execution.getDirectory(), "pipeline.trig");
+        File pipelineFile = new File(execution.getDirectory(), "pipeline.trig");
         if (pipelineFile.exists()) {
             return pipelineFile;
         }
         File definitionFile = new File(
-                this.execution.getDirectory(), "definition/definition.trig");
+                execution.getDirectory(), "definition/definition.trig");
         if (definitionFile.exists()) {
             return definitionFile;
         }
         File definitionFileJsonld = new File(
-                this.execution.getDirectory(), "definition/definition.jsonld");
+                execution.getDirectory(), "definition/definition.jsonld");
         if (definitionFileJsonld.exists()) {
             return definitionFileJsonld;
         }
         throw new MonitorException(
                 "Missing pipeline file for execution: {}",
-                this.execution.getIri());
+                execution.getIri());
     }
 
     private Statements loadPipelineFile(File file) throws MonitorException {
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         try {
             statements.addAll(file);
         } catch (IOException ex) {
@@ -91,41 +90,43 @@ class PipelineLoader {
                     String object = st.getObject().stringValue();
                     switch (object) {
                         case LP_PIPELINE.PIPELINE:
-                            this.pipelineResource = st.getSubject();
-                            this.subjectWithLabels.add(st.getSubject());
+                            pipelineResource = st.getSubject();
+                            subjectWithLabels.add(st.getSubject());
                             break;
                         case LP_PIPELINE.EXECUTION_METADATA:
-                            this.pipelineMetadata = st.getSubject();
+                            pipelineMetadata = st.getSubject();
+                            break;
+                        default:
                             break;
                     }
                 });
     }
 
     private Statements processMetadata(Statements pipeline) {
-        if (this.pipelineMetadata == null) {
-            return Statements.EmptyReadOnly();
+        if (pipelineMetadata == null) {
+            return Statements.emptyReadOnly();
         }
-        Statements statements = Statements.ArrayList();
-        statements.setDefaultGraph(this.execution.getListGraph());
+        Statements statements = Statements.arrayList();
+        statements.setDefaultGraph(execution.getListGraph());
         statements.addIri(
-                this.pipelineMetadata,
+                pipelineMetadata,
                 RDF.TYPE,
                 LP_PIPELINE.EXECUTION_METADATA);
         statements.add(
-                this.pipelineResource,
+                pipelineResource,
                 LP_PIPELINE.HAS_EXECUTION_METADATA,
-                this.pipelineMetadata);
+                pipelineMetadata);
 
         pipeline.stream()
-                .filter(st -> st.getSubject().equals(this.pipelineMetadata))
+                .filter(st -> st.getSubject().equals(pipelineMetadata))
                 .forEach(st -> {
                     switch (st.getPredicate().stringValue()) {
                         case LP_EXEC.HAS_TARGET_COMPONENT:
                             statements.add(
-                                    this.pipelineMetadata,
+                                    pipelineMetadata,
                                     LP_EXEC.HAS_TARGET_COMPONENT,
                                     st.getObject());
-                            this.subjectWithLabels.add(
+                            subjectWithLabels.add(
                                     (Resource) st.getObject());
                             break;
                         default:
@@ -137,10 +138,10 @@ class PipelineLoader {
     }
 
     private Statements processPipeline() {
-        Statements statements = Statements.ArrayList();
-        statements.setDefaultGraph(this.execution.getListGraph());
+        Statements statements = Statements.arrayList();
+        statements.setDefaultGraph(execution.getListGraph());
         statements.addIri(
-                this.pipelineResource,
+                pipelineResource,
                 RDF.TYPE,
                 LP_PIPELINE.PIPELINE);
         return statements;
@@ -149,7 +150,7 @@ class PipelineLoader {
     private Stream<Statement> selectUsedLabels(Statements pipeline) {
         return pipeline.stream()
                 .filter(st -> st.getPredicate().equals(SKOS.PREF_LABEL))
-                .filter(st -> this.subjectWithLabels.contains(st.getSubject()));
+                .filter(st -> subjectWithLabels.contains(st.getSubject()));
     }
 
 }

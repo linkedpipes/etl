@@ -40,9 +40,9 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
 
     @Override
     public FilesDataUnit.Entry next() {
-        FilesDataUnit.Entry output = this.nextEntry;
+        FilesDataUnit.Entry output = nextEntry;
         // Read next entry.
-        this.nextEntry = getNext();
+        nextEntry = getNext();
         if (output == null) {
             return null;
         } else {
@@ -51,16 +51,15 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
     }
 
     /**
-     * @return Next file entry or null.
+     * Return next file entry or null.
      */
     private FilesDataUnit.Entry getNext() {
-        if (this.fileIterator.hasNext()) {
-            File nextFile = this.fileIterator.next();
-            return new DefaultEntry(nextFile, this.currentDirectory);
-        } else if (this.directoryIterator.hasNext()) {
-            this.currentDirectory = this.directoryIterator.next();
-            this.fileIterator = FileUtils.iterateFiles(
-                    this.currentDirectory, null, true);
+        if (fileIterator.hasNext()) {
+            File nextFile = fileIterator.next();
+            return new DefaultEntry(nextFile, currentDirectory);
+        } else if (directoryIterator.hasNext()) {
+            currentDirectory = directoryIterator.next();
+            fileIterator = FileUtils.iterateFiles(currentDirectory, null, true);
             return getNext();
         } else {
             return null;

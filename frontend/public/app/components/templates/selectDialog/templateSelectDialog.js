@@ -75,12 +75,12 @@ define([], function () {
             return source === target;
         }
 
-        $scope.onSelect = function (component) {
-            $mdDialog.hide(component);
+        $scope.onSelect = function (value) {
+            $mdDialog.hide(value);
         };
 
         $scope.onCancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide(undefined);
         };
 
         $scope.$on("$routeChangeStart", function($event, next, current) {
@@ -109,7 +109,7 @@ define([], function () {
         function init() {
             templateService.load().then(() => {
                 const templatesList = templateService.getTemplatesList();
-                if (filter.source === undefined) {
+                if (filter.templateIri === undefined) {
                     templatesList.forEach(function (item) {
                         if (item.isInvalid) {
                             return;
@@ -119,13 +119,13 @@ define([], function () {
                 } else {
                     // Get source port.
                     const sourceTemplate = templateService.getTemplate(
-                        filter.source.templateIri);
+                        filter.templateIri);
                     const sourceCore = templateService.getCoreTemplate(
                         sourceTemplate);
                     var sourcePort;
                     for (let i = 0; i < sourceCore.outputs.length; ++i) {
                         if (sourceCore.outputs[i].binding ===
-                            filter.source.binding) {
+                            filter.binding) {
                             sourcePort = sourceCore.outputs[i];
                             break;
                         }

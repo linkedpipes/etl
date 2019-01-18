@@ -16,7 +16,8 @@ define([], function () {
             'baseUri': '',
             'skipRows': -1,
             'encodeType' : '',
-            'skipLines' : 0
+            'skipLines' : 0,
+            'skipOnError': false
         };
 
         var prefix = {
@@ -70,6 +71,7 @@ define([], function () {
             $scope.dialog.generateNullHeaderNames = rdf.getBoolean(table, prefix.tabular + 'generateNullHeaderNames');
             $scope.dialog.encodeType = rdf.getString(table, prefix.tabular + 'encodeType');
             $scope.dialog.skipLines = rdf.getInteger(table, prefix.tabular + 'skipLines');
+            $scope.dialog.skipOnError = rdf.getBoolean(table, prefix.tabular + 'skipOnError');
 
             if ($scope.dialog.encodeType === undefined || $scope.dialog.encodeType === '') {
                 $scope.dialog.encodeType = "default";
@@ -117,6 +119,7 @@ define([], function () {
             rdf.setBoolean(table, prefix.tabular + 'generateNullHeaderNames', $scope.dialog.generateNullHeaderNames);
             rdf.setString(table, prefix.tabular + 'encodeType', $scope.dialog.encodeType);
             rdf.setInteger(table, prefix.tabular + 'skipLines', $scope.dialog.skipLines);
+            rdf.setBoolean(table, prefix.tabular + 'skipOnError', $scope.dialog.skipOnError);
 
             var dialect = rdf.secureObject(table, prefix.csvw + 'dialect', 'Dialect');
             rdf.setString(dialect, prefix.csvw + 'delimeter', $scope.dialog.delimeter);

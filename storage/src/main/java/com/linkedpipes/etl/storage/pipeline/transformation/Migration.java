@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline.transformation;
 
+import com.linkedpipes.etl.storage.SuppressFBWarnings;
 import com.linkedpipes.etl.storage.migration.MigrateV0ToV1;
 import com.linkedpipes.etl.storage.migration.MigrateV1ToV2;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
@@ -47,6 +48,7 @@ class Migration {
         this.throwOnWarning = throwOnWarning;
     }
 
+    @SuppressFBWarnings(value = "SF_SWITCH_FALLTHROUGH")
     public Collection<Statement> migrate(Collection<Statement> pipeline)
             throws TransformationFailed {
         this.findPipelineResource(pipeline);

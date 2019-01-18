@@ -16,9 +16,6 @@ import java.util.Date;
  */
 public class OverviewObject {
 
-    private static final DateFormat DATE_FORMAT = new
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
     private static final Logger LOG =
             LoggerFactory.getLogger(OverviewObject.class);
 
@@ -48,7 +45,7 @@ public class OverviewObject {
         OverviewObject overview = new OverviewObject();
 
         overview.status = root.get("status").get("@id").asText();
-        overview.lastChange = asDate(root.get("lastChange").asText());
+        overview.lastChange = getLastChange(root);
 
         if (root.get("pipeline") != null) {
             JsonNode id = root.get("pipeline").get("@id");
@@ -91,10 +88,11 @@ public class OverviewObject {
         if (str == null) {
             return null;
         }
-
+        DateFormat dateFormat = new
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         try {
-            return DATE_FORMAT.parse(str);
-        } catch(ParseException ex) {
+            return dateFormat.parse(str);
+        } catch (ParseException ex) {
             LOG.info("Can not parse date from overview: ", str);
             return null;
         }
@@ -110,6 +108,10 @@ public class OverviewObject {
 
     public static String getIri(JsonNode root) {
         return root.get("execution").get("@id").asText();
+    }
+
+    public static Date getLastChange(JsonNode root) {
+        return asDate(root.get("lastChange").asText());
     }
 
     public String getPipeline() {
@@ -137,11 +139,17 @@ public class OverviewObject {
     }
 
     public Date getStart() {
-        return start;
+        if (start == null) {
+            return null;
+        }
+        return new Date(start.getTime());
     }
 
     public Date getFinish() {
-        return finish;
+        if (finish == null) {
+            return null;
+        }
+        return new Date(finish.getTime());
     }
 
     public String getStatus() {
@@ -153,7 +161,10 @@ public class OverviewObject {
     }
 
     public Date getLastChange() {
-        return lastChange;
+        if (lastChange == null) {
+            return null;
+        }
+        return new Date(lastChange.getTime());
     }
 
     public Long getDirectorySize() {

@@ -1,0 +1,33 @@
+<md-dialog aria-label="Template dialog" flex="50">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h4>Create template from : {{::templateToEdit.label}}</h4>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-if="infoLink"
+                           ng-href="{{infoLink}}" target="_blank">
+                    <md-icon md-svg-src="info_outline"
+                             aria-label="Show help"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="onCancel()">
+                    <md-icon md-svg-src="close"
+                             aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <lp-template-detail api="api" show-template-management="false" enable-template-link="false"></lp-template-detail>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="onCancel()">
+                DISCARD CHANGES
+            </md-button>
+            <md-button ng-click="onSave()" class="md-primary">
+                CREATE TEMPLATE
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

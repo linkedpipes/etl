@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-component</artifactId>
+        <artifactId>pom-plugin</artifactId>
         <version>0.0.0</version>
-        <relativePath>../../pom-component/pom.xml</relativePath>
+        <relativePath>../../pom-plugin/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
     <artifactId>l-dcatApToCkan</artifactId>
@@ -44,14 +44,6 @@
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-repository-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.linkedpipes</groupId>
-            <artifactId>test-environment</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>

@@ -3,14 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.linkedpipes</groupId>
-		<artifactId>pom-parent</artifactId>
+		<artifactId>pom-plugin</artifactId>
 		<version>0.0.0</version>
-		<relativePath>../pom-parent/pom.xml</relativePath>
+		<relativePath>../pom-plugin/pom.xml</relativePath>
 	</parent>
-
 	<artifactId>rdf4j-storage-light</artifactId>
 	<version>${rdf4j.version}</version>
 	<packaging>bundle</packaging>
+	<name>LinkedPipes Rdf4j Storage Light</name>
 	<description>Lightweight packaged version of RDF4j storage.</description>
 
 	<dependencies>
@@ -468,27 +468,18 @@
 							!*prop-base,
 							org.eclipse.rdf4j.*
 						</Export-Package>
-						<!--
-							!org.apache.lucene.*,
-							!com.spatial4j.*,
-						-->
 						<Import-Package>
 							javax.*;resolution:=optional,
 							org.apache.lucene.*;resolution:=optional,
 							com.spatial4j.*;resolution:=optional,
 							*
 						</Import-Package>
-						<!--<Include-Resource>-->
-							<!--{maven-resources},-->
-							<!--META-INF/services=target/services/META-INF/services-->
-						<!--</Include-Resource>-->
 						<Embed-Dependency>
 							*;
 							groupId=org.eclipse.rdf4j;
 							artifactId=!rdf4j-client;
-							scope=compile|runtime;
 							type=!pom;
-							inline=true
+							inline=true;
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>

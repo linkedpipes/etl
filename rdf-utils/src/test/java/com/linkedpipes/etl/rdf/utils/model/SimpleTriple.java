@@ -8,7 +8,8 @@ public class SimpleTriple implements RdfTriple {
 
     private final BackendRdfValue object;
 
-    public SimpleTriple(String subject, String predicate, BackendRdfValue object) {
+    public SimpleTriple(
+            String subject, String predicate, BackendRdfValue object) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;

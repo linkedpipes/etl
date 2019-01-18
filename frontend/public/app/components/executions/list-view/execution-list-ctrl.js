@@ -12,7 +12,7 @@
 
         service.initialize($scope);
 
-        $scope.onExecute = service.execute;
+        $scope.onExecute = service.executePipeline;
 
         $scope.onCancel = service.cancel;
 

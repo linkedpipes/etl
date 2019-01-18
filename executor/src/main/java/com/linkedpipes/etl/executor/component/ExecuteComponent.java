@@ -27,7 +27,7 @@ import java.util.Map;
  * The component is initialized with data units and configuration in
  * the initialization phase.
  *
- * In the execution phase the execution interface is detected and
+ * <p>In the execution phase the execution interface is detected and
  * component is executed.
  */
 class ExecuteComponent implements ComponentExecutor {
@@ -69,10 +69,10 @@ class ExecuteComponent implements ComponentExecutor {
     public boolean execute(DataUnitManager dataUnitManager) {
         try {
             execution.onExecuteComponentInitializing(execComponent);
-            final Map<String, DataUnit> dataUnits =
+            Map<String, DataUnit> dataUnits =
                     dataUnitManager.onComponentWillExecute(execComponent);
             initialize(dataUnits);
-            execute();
+            executeInstance();
             execution.onExecuteComponentSuccessful(execComponent);
         } catch (ExecutorException ex) {
             try {
@@ -112,10 +112,9 @@ class ExecuteComponent implements ComponentExecutor {
         configureComponent();
     }
 
-    private void execute() throws ExecutorException {
+    private void executeInstance() throws ExecutorException {
         if (instance instanceof SequentialExecution) {
-            final SequentialExecution executable =
-                    (SequentialExecution) instance;
+            SequentialExecution executable = (SequentialExecution) instance;
             executeSequential(executable);
         } else {
             throw new ExecutorException("Unknown execution interface.");
@@ -124,10 +123,10 @@ class ExecuteComponent implements ComponentExecutor {
 
     private void executeSequential(SequentialExecution executable)
             throws ExecutorException {
-        final SequentialComponentExecutor executor =
+        SequentialComponentExecutor executor =
                 new SequentialComponentExecutor(
                         executable, execution, execComponent);
-        final Thread thread = new Thread(executor, pplComponent.getLabel());
+        Thread thread = new Thread(executor, pplComponent.getLabel());
         thread.start();
         waitForThreadToFinish(thread);
         if (executor.getException() != null) {
@@ -150,16 +149,15 @@ class ExecuteComponent implements ComponentExecutor {
      * into the component.
      */
     private void configureComponent() throws ExecutorException {
-        final RuntimeConfiguration runtimeConfig;
+        RuntimeConfiguration runtimeConfig;
         try {
             runtimeConfig = instance.getRuntimeConfiguration();
         } catch (LpException ex) {
             throw new ExecutorException("Can't get runtime configuration.", ex);
         }
 
-        final String configGraph =
-                pplComponent.getIri() + "/configuration/effective";
-        final BackendTripleWriter writer = pipeline.setConfiguration(
+        String configGraph = pplComponent.getIri() + "/configuration/effective";
+        BackendTripleWriter writer = pipeline.setConfiguration(
                 pplComponent, configGraph);
 
         if (runtimeConfig == null) {
@@ -186,8 +184,8 @@ class ExecuteComponent implements ComponentExecutor {
     private BackendRdfSource wrapRuntimeConfiguration(
             RuntimeConfiguration runtimeConfiguration)
             throws ExecutorException {
-        final BackendRdfSource source = Rdf4jSource.createInMemory();
-        final BackendTripleWriter writer =
+        BackendRdfSource source = Rdf4jSource.createInMemory();
+        BackendTripleWriter writer =
                 source.getTripleWriter(RUNTIME_CONFIGURATION_GRAPH);
         try {
             runtimeConfiguration.write(new TripleWriterWrap(writer));

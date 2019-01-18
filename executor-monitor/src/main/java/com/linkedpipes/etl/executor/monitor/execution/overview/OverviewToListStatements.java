@@ -30,7 +30,7 @@ public class OverviewToListStatements {
         }
 
         IRI iri = this.valueFactory.createIRI(execution.getIri());
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         statements.setDefaultGraph(execution.getListGraph());
 
         statements.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
@@ -90,7 +90,7 @@ public class OverviewToListStatements {
 
     private Statements deletedAsStatements(Execution execution) {
         IRI iri = this.valueFactory.createIRI(execution.getIri());
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         statements.setDefaultGraph(execution.getListGraph());
         statements.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
         return statements;

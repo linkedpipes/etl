@@ -17,7 +17,11 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,8 +63,7 @@ public class ComponentServlet {
             throws BaseException {
         Template template = getTemplate(iri);
         RdfUtils.write(
-                request, response,
-                templateFacade.getInterface(template));
+                request, response, templateFacade.getInterface(template));
     }
 
     private Template getTemplate(String iri) throws MissingResource {
@@ -80,8 +83,7 @@ public class ComponentServlet {
             throws BaseException {
         Template template = getTemplate(iri);
         RdfUtils.write(
-                request, response,
-                templateFacade.getDefinition(template));
+                request, response, templateFacade.getDefinition(template));
     }
 
     @RequestMapping(value = "/component", method = RequestMethod.POST)
@@ -101,8 +103,7 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         Template template = getTemplate(iri);
-        RdfUtils.write(request, response,
-                templateFacade.getConfig(template));
+        RdfUtils.write(request, response, templateFacade.getConfig(template));
     }
 
     @RequestMapping(value = "/config", method = RequestMethod.POST)
@@ -122,8 +123,8 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         Template template = getTemplate(iri);
-        RdfUtils.write(request, response,
-                templateFacade.getConfigEffective(template));
+        RdfUtils.write(
+                request, response, templateFacade.getConfigEffective(template));
     }
 
     @RequestMapping(value = "/configTemplate", method = RequestMethod.GET)
@@ -133,8 +134,8 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         Template template = getTemplate(iri);
-        RdfUtils.write(request, response,
-                templateFacade.getConfigInstance(template));
+        RdfUtils.write(
+                request, response, templateFacade.getConfigInstance(template));
     }
 
     @RequestMapping(value = "/configDescription", method = RequestMethod.GET)
@@ -144,7 +145,8 @@ public class ComponentServlet {
             HttpServletRequest request, HttpServletResponse response)
             throws BaseException {
         Template template = getTemplate(iri);
-        RdfUtils.write(request, response,
+        RdfUtils.write(
+                request, response,
                 templateFacade.getConfigDescription(template));
     }
 

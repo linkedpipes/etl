@@ -227,10 +227,10 @@ define(["jsonld"], function (jsonld) {
 
         // Load rowsClass to rowClass if rowClass is not set.
         if ($scope.dialog.rowClass.value === undefined) {
-            const instanceTriples = jsonld.triples($service.config.instance);
+            const triples = jsonld.q.getGraph($service.config.instance, null);
             const prefix = 'http://plugins.linkedpipes.com/ontology/t-tabularUv#';
-            const resource = instanceTriples.getResource(
-                instanceTriples.findByType(prefix + 'Configuration'))
+            const resource = jsonld.t.getResourceByType(
+                triples, prefix + 'Configuration');
             $scope.dialog.rowClass.value =
                 i18_str(jsonld.r.getString(resource, prefix + 'rowsClass'));
         }

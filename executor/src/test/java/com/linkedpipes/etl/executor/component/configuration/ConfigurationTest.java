@@ -1,48 +1,37 @@
 package com.linkedpipes.etl.executor.component.configuration;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ConfigurationTest {
 
-    /**
-     * Test object used to load all properties.
-     */
-    private static class TestObject implements Loadable {
-
-        private Map<String, List<String>> values = new HashMap();
-
-        @Override
-        public Loadable load(String predicate, BackendRdfValue object)
-                throws RdfUtilsException {
-            if (!values.containsKey(predicate)) {
-                values.put(predicate, new ArrayList<>());
-            }
-            values.get(predicate).add(object.asString());
-            return null;
-        }
-    }
-
-    private static class ReferenceTestObject implements Loadable {
-
-        private TestObject reference;
-
-        @Override
-        public Loadable load(String predicate, BackendRdfValue object)
-                throws RdfUtilsException {
-            if (predicate.equals("http://value/reference")) {
-                reference = new TestObject();
-                return reference;
-            }
-            return null;
-        }
-    }
+//    /**
+//     * Test object used to load all properties.
+//     */
+//    private static class TestObject implements Loadable {
+//
+//        private Map<String, List<String>> values = new HashMap();
+//
+//        @Override
+//        public Loadable load(String predicate, BackendRdfValue object) {
+//            if (!values.containsKey(predicate)) {
+//                values.put(predicate, new ArrayList<>());
+//            }
+//            values.get(predicate).add(object.asString());
+//            return null;
+//        }
+//    }
+//
+//    private static class ReferenceTestObject implements Loadable {
+//
+//        private TestObject reference;
+//
+//        @Override
+//        public Loadable load(String predicate, BackendRdfValue object) {
+//            if (predicate.equals("http://value/reference")) {
+//                reference = new TestObject();
+//                return reference;
+//            }
+//            return null;
+//        }
+//    }
 
 //    @Test
 //    public void mergeThreeConfigurations() throws Exception {

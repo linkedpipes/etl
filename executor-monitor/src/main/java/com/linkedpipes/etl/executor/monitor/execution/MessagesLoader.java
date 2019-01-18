@@ -17,7 +17,7 @@ class MessagesLoader {
             throws IOException {
         String fileName = name + ".trig";
         File file = new File(execution.getDirectory(), "messages/" + fileName);
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         if (file.exists()) {
             statements.addAll(file);
         }

@@ -15,8 +15,7 @@ import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 public interface ComponentExecutor {
 
     /**
-     * @param dataUnitManager
-     * @return True if pipeline can continue
+     * True if pipeline execution should continue.
      */
     boolean execute(DataUnitManager dataUnitManager);
 
@@ -27,13 +26,6 @@ public interface ComponentExecutor {
         // By default do nothing.
     }
 
-    /**
-     * @param pipeline
-     * @param execution
-     * @param component
-     * @param instance PipelineComponent instance, can be null.
-     * @return Never return null.
-     */
     static ComponentExecutor create(
             Pipeline pipeline, ExecutionObserver execution,
             PipelineComponent component, ManageableComponent instance)
@@ -48,9 +40,10 @@ public interface ComponentExecutor {
                 return new MapComponent(execution, execComponent);
             case SKIP:
                 return new SkipComponent();
+            default:
+                throw new ExecutorException("Unknown execution type: {} for {}",
+                        component.getExecutionType(), component.getIri());
         }
-        throw new ExecutorException("Unknown execution type: {} for {}",
-                component.getExecutionType(), component.getIri());
     }
 
 }

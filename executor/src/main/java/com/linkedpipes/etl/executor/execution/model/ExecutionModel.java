@@ -1,7 +1,11 @@
 package com.linkedpipes.etl.executor.execution.model;
 
 import com.linkedpipes.etl.executor.execution.ResourceManager;
-import com.linkedpipes.etl.executor.pipeline.model.*;
+import com.linkedpipes.etl.executor.pipeline.model.DataSource;
+import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.Port;
 
 import java.io.File;
 import java.util.HashMap;

@@ -44,24 +44,18 @@ function createFromNonMultipartRequest(req, res) {
     let configuration = "";
     req.on("data", (chunk) => configuration += chunk);
     req.on("end", () => {
-        unpackPipeline(pipeline, configuration, (error, result) => {
+        unpackPipeline(pipeline, configuration, (error, body) => {
             if (error) {
-                console.error(
-                    "Can't unpack pipeline from url:", pipeline.iri, error);
-                res.status(500).json({
-                    "error": {
-                        "type": errors.ERROR,
-                        "source": "FRONTEND",
-                        "message": error.message
-                    }
-                });
+                console.error("Can't unpack pipeline from url:", pipeline.iri,
+                    "\n",error);
+                res.status(500).json(error);
                 return;
             }
             // Post execution.
             const formData = {
                 "format": "application/ld+json",
                 "pipeline": {
-                    "value": result,
+                    "value": body,
                     "options": {
                         "contentType": "application/octet-stream",
                         "filename": "options.jsonld"
@@ -130,23 +124,19 @@ function unpackPipeline(pipeline, optionsAsString, callback) {
     request.post({"url": url, "formData": formData, "headers": headers},
         (error, httpResponse, body) => {
             console.timeEnd("[POST] /unpack");
-            if (httpResponse.statusCode === 404) {
+            if (error) {
+                // Connection error.
                 callback({
-                    "errorResponse": {
-                        "type": errors.MISSING,
-                        "source": "FRONTEND",
-                        "message": "Missing pipeline."
-                    }
-                }, body);
-            } else if (httpResponse.statusCode !== 200) {
-                callback({
-                    "errorResponse": {
+                    "error": {
                         "type": errors.ERROR,
-                        "source": "FRONTEND"
+                        "source": "FRONTEND",
+                        "message": JSON.stringify(error)
                     }
-                }, body);
+                }, undefined);
+            } else if (httpResponse.statusCode !== 200) {
+                callback(JSON.parse(body), undefined);
             } else {
-                callback(error, body);
+                callback(undefined, body);
             }
         });
 }
@@ -225,8 +215,8 @@ function createFromMultipartRequest(req, res) {
         unpackPipeline(pipeline, configurationAsString, (error, result) => {
             if (error) {
                 console.error("Can't unpack pipeline.", error, result);
-                if (error.errorResponse) {
-                    res.status(500).json(error.errorResponse);
+                if (error.error) {
+                    res.status(500).json(error.error);
                 } else {
                     res.status(500).json({"error": {
                         "type": errors.ERROR,

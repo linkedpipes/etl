@@ -39,18 +39,18 @@ public class RdfDataUnitFactory
                 case LP_PIPELINE.SINGLE_GRAPH_DATA_UNIT:
                     return new DefaultSingleGraphDataUnit(
                             configuration,
-                            this.repositoryManager,
-                            this.pipelineModel.getSourcesFor(dataUnit)
+                            repositoryManager,
+                            pipelineModel.getSourcesFor(dataUnit)
                     );
                 case LP_PIPELINE.GRAPH_LIST_DATA_UNIT:
                     return new DefaultGraphListDataUnit(
                             configuration,
-                            this.repositoryManager,
-                            this.pipelineModel.getSourcesFor(dataUnit));
+                            repositoryManager,
+                            pipelineModel.getSourcesFor(dataUnit));
                 case LP_PIPELINE.CHUNKED_TRIPLES_DATA_UNIT:
                     return new DefaultChunkedTriples(
                             configuration,
-                            this.pipelineModel.getSourcesFor(dataUnit));
+                            pipelineModel.getSourcesFor(dataUnit));
                 default:
                     break;
             }
@@ -68,10 +68,10 @@ public class RdfDataUnitFactory
     }
 
     @Override
-    public void onPipelineBegin(String pipeline,
-                                RdfSource definition) throws LpException {
-        this.pipelineModel.load(pipeline, definition);
-        if (this.pipelineModel.getRdfRepository() == null) {
+    public void onPipelineBegin(
+            String pipeline, RdfSource definition) throws LpException {
+        pipelineModel.load(pipeline, definition);
+        if (pipelineModel.getRdfRepository() == null) {
             return;
         }
         loadFactoryConfiguration(definition);
@@ -80,28 +80,28 @@ public class RdfDataUnitFactory
 
     private void loadFactoryConfiguration(RdfSource definition)
             throws RdfException {
-        this.factoryConfiguration = new FactoryConfiguration();
+        factoryConfiguration = new FactoryConfiguration();
         RdfToPojoLoader.load(
                 definition,
-                this.pipelineModel.getRdfRepository(),
-                this.factoryConfiguration);
+                pipelineModel.getRdfRepository(),
+                factoryConfiguration);
     }
 
     private void initializeRepositoryManager() {
-        this.repositoryManager = new RepositoryManager(
-                this.pipelineModel.getRdfRepositoryPolicy(),
-                this.pipelineModel.getRdfRepositoryType(),
-                this.factoryConfiguration.getDirectory());
+        repositoryManager = new RepositoryManager(
+                pipelineModel.getRdfRepositoryPolicy(),
+                pipelineModel.getRdfRepositoryType(),
+                factoryConfiguration.getDirectory());
     }
 
     @Override
     public void onPipelineEnd() {
-        this.pipelineModel.clear();
-        if (this.repositoryManager == null) {
+        pipelineModel.clear();
+        if (repositoryManager == null) {
             return;
         }
-        this.repositoryManager.closeAll();
-        this.repositoryManager = null;
+        repositoryManager.closeAll();
+        repositoryManager = null;
     }
 
 }

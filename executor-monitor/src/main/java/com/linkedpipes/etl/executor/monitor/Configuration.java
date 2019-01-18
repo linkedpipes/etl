@@ -41,7 +41,7 @@ public class Configuration {
 
     @PostConstruct
     public void init() {
-        final String propertiesFile = System.getProperty("configFileLocation");
+        String propertiesFile = System.getProperty("configFileLocation");
         if (propertiesFile == null) {
             LOG.error("Missing property '-configFileLocation' "
                     + "with path to configuration file.");
@@ -81,14 +81,14 @@ public class Configuration {
     }
 
     public File getWorkingDirectory() {
-        final File workingDirectory =
+        File workingDirectory =
                 new File(workingDirectoryPath + File.separator + "data");
         workingDirectory.mkdirs();
         return workingDirectory;
     }
 
     public File getLogDirectory() {
-        final File logDirectory = new File(logDirectoryPath);
+        File logDirectory = new File(logDirectoryPath);
         logDirectory.mkdirs();
         return logDirectory;
     }
@@ -135,7 +135,7 @@ public class Configuration {
     }
 
     private String getProperty(String name) {
-        final String value;
+        String value;
         try {
             value = properties.getProperty(name);
         } catch (RuntimeException ex) {
@@ -151,7 +151,7 @@ public class Configuration {
     }
 
     protected int getPropertyInteger(String name) {
-        final String value = getProperty(name);
+        String value = getProperty(name);
         try {
             return Integer.parseInt(value);
         } catch (Exception ex) {

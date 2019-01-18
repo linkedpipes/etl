@@ -48,6 +48,10 @@ define([], function () {
         "useTolerantRepository": {
             "$type": "bool",
             "$label": "Fix invalid types"
+        },
+        "handleInvalidData": {
+            "$type": "bool",
+            "$label": "Handle invalid data"
         }
     };
 

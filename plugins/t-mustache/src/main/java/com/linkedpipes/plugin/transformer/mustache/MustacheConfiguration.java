@@ -14,6 +14,9 @@ public class MustacheConfiguration {
     @RdfToPojo.Property(iri = MustacheVocabulary.HAS_ADD_FIRST_FLAG)
     private boolean addFirstToCollection = false;
 
+    @RdfToPojo.Property(iri = MustacheVocabulary.HAS_ESCAPE_FOR_JSON)
+    private boolean escapeForJson = false;
+
     public MustacheConfiguration() {
     }
 
@@ -39,6 +42,14 @@ public class MustacheConfiguration {
 
     public void setAddFirstToCollection(boolean addFirstToCollection) {
         this.addFirstToCollection = addFirstToCollection;
+    }
+
+    public boolean isEscapeForJson() {
+        return escapeForJson;
+    }
+
+    public void setEscapeForJson(boolean escapeForJson) {
+        this.escapeForJson = escapeForJson;
     }
 
 }

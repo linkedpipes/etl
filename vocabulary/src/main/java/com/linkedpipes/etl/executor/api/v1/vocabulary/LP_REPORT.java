@@ -1,13 +1,13 @@
 package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
-public class LP_REPORT {
+public final class LP_REPORT {
 
     public static final String PREFIX =
             "https://vocabulary.etl.linkedpipes.com/report/";
 
     public static final String REPORT = PREFIX + "Report";
 
-    public static final String HAS_TASK  = PREFIX + "task";
+    public static final String HAS_TASK = PREFIX + "task";
 
     public static final String HAS_EXCEPTION = PREFIX + "exception";
 

@@ -6,8 +6,6 @@ import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
@@ -17,7 +15,8 @@ public class StatusSetterTest {
     public void updateState() {
         Execution execution = new Execution();
         execution.setIri("http://execution");
-        JsonNode overview = OverviewFactory.createQueued(execution);
+        OverviewFactory overviewFactory = new OverviewFactory();
+        JsonNode overview = overviewFactory.createQueued(execution);
         execution.setOverviewJson(overview);
         Date beforeDate = new Date();
         StatusSetter.setStatus(execution, ExecutionStatus.RUNNING);
@@ -28,7 +27,7 @@ public class StatusSetterTest {
         // the the values can be same as getLastChange.
         Assert.assertFalse(beforeDate.after(execution.getLastChange()));
         Assert.assertFalse(afterDate.before(execution.getLastChange()));
-        Statements expected = Statements.ArrayList();
+        Statements expected = Statements.arrayList();
         expected.setDefaultGraph(execution.getListGraph());
         expected.addIri(execution.getIri(), LP_OVERVIEW.HAS_STATUS,
                 ExecutionStatus.RUNNING.asStr());

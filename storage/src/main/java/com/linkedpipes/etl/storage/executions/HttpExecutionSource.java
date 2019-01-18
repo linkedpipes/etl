@@ -3,6 +3,7 @@ package com.linkedpipes.etl.storage.executions;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -17,7 +18,7 @@ import java.util.Collection;
 
 class HttpExecutionSource {
 
-    private final String BASE_URL = "http://localhost/base";
+    private static final String BASE_URL = "http://localhost/base";
 
     private final Configuration configuration;
 
@@ -33,7 +34,7 @@ class HttpExecutionSource {
             request.addHeader("Accept", RDFFormat.JSONLD.getDefaultMIMEType());
             HttpResponse response = client.execute(request);
             checkResponse(response, iri);
-            return this.responseToRdf(response);
+            return responseToRdf(response);
         } catch (MalformedURLException ex) {
             throw new BaseException("Invalid execution IRI.", ex);
         } catch (IOException ex) {
@@ -43,13 +44,14 @@ class HttpExecutionSource {
 
     private String getExecutionSourceUrl(String iri) {
         String id = iri.substring(iri.lastIndexOf("/") + 1);
-        return this.configuration.getExecutorMonitorUrl() + "executions/" + id;
+        return configuration.getExecutorMonitorUrl() + "executions/" + id;
     }
 
     private void checkResponse(HttpResponse response, String iri)
             throws BaseException {
         int status = response.getStatusLine().getStatusCode();
-        if (status < 200 || status > 299) {
+        if (status < HttpStatus.SC_OK
+                || status >= HttpStatus.SC_MULTIPLE_CHOICES) {
             throw new BaseException(
                     "Invalid response code: {} from {}", status, iri);
         }

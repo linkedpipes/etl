@@ -31,7 +31,7 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
 
     protected void initializeFromSource(
             Map<String, ManageableDataUnit> dataUnits) throws LpException {
-        for (String iri : this.sources) {
+        for (String iri : sources) {
             if (!dataUnits.containsKey(iri)) {
                 throw new LpException("Missing input: {}", iri);
             }
@@ -41,20 +41,18 @@ public abstract class AbstractDataUnit implements ManageableDataUnit {
 
     /**
      * Merge content of given data unit to this data unit.
-     *
-     * @param dataUnit
      */
     protected abstract void merge(ManageableDataUnit dataUnit)
             throws LpException;
 
     @Override
     public String getBinding() {
-        return this.configuration.getBinding();
+        return configuration.getBinding();
     }
 
     @Override
     public String getIri() {
-        return this.configuration.getResource();
+        return configuration.getResource();
     }
 
     @Override

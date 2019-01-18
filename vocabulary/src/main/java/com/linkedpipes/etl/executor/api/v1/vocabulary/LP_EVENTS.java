@@ -1,13 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
-/**
- * Definition of LinkedPipes specific vocabulary used for execution events.
- */
 public final class LP_EVENTS {
-
-    private LP_EVENTS() {
-
-    }
 
     private static final String PREFIX =
             "http://linkedpipes.com/ontology/";
@@ -48,7 +41,8 @@ public final class LP_EVENTS {
     public static final String PROGRESS_START =
             PREFIX + "progress/ProgressStart";
 
-    public static final String PROGRESS_DONE = PREFIX + "progress/ProgressDone";
+    public static final String PROGRESS_DONE =
+            PREFIX + "progress/ProgressDone";
 
     public static final String HAS_TOTAL = PREFIX + "progress/total";
 

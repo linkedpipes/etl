@@ -97,8 +97,8 @@ public class ComponentMessageWriter extends BaseMessageWriter {
                     LP_PREFIX + "events/rootException",
                     rootCause.getClass().getSimpleName());
         } else {
-            String message = rootCause.getClass().getSimpleName() +
-                    " : " + rootCause.getMessage();
+            String message = rootCause.getClass().getSimpleName()
+                    + " : " + rootCause.getMessage();
             this.statements.addString(iri,
                     LP_PREFIX + "events/rootException",
                     message);

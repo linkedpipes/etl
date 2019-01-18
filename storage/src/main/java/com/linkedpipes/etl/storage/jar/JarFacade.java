@@ -13,23 +13,21 @@ public class JarFacade {
     private JarManager manager;
 
     /**
-     * @return Collection of all components.
+     * Return collection of all components.
      */
     public Collection<JarComponent> getJarComponents() {
         return manager.getComponents().values();
     }
 
     /**
-     * @param name
-     * @return Null if there is no such component.
+     * Return Null if there is no such component.
      */
     public JarComponent getJarComponent(String name) {
         return manager.getComponents().get(name);
     }
 
     /**
-     * @param component
-     * @return Path to the JAR file.
+     * Return path to the JAR file.
      */
     public File getJarFile(JarComponent component) {
         return component.getFile();

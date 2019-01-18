@@ -1,0 +1,55 @@
+<div id="componentMenu" style="position:absolute;overflow:visible;width:0px;display:none;">
+    <div class="topLine" style="position:relative;top:-60px;">
+        <md-button class="md-fab md-mini" style="position:absolute;left:-30px;" aria-label="Edit" ng-click="onEditComponent()">
+            <md-tooltip md-direction="top">Edit</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="edit"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini" style="position:absolute;left:20px;" aria-label="Delete" ng-click="onDeleteComponent()">
+            <md-tooltip md-direction="top">Delete</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="delete_forever"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini" style="position:absolute;left:70px;" aria-label="Copy" ng-click="onCopyComponent()">
+            <md-tooltip md-direction="top">Copy</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="copy"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini" style="position:absolute;left:120px;" aria-label="Enable Disable" ng-click="onEnableDisable()">
+            <md-tooltip md-direction="top">Enable/disable component</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="ic_power_settings_new"></md-icon>
+        </md-button>
+    </div>
+    <div id="bottomBar" style="position:relative;">
+        <md-button class="md-fab md-mini" style="position:absolute;left:-30px;top:55px;" aria-label="Prerequisity" ng-click="onPrerequisiteComponent()">
+            <md-tooltip md-direction="bottom">Run before</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
+        </md-button>
+        <span id="execute" style="display:none;">
+            <md-button class="md-fab md-mini" style="position:absolute;left:20px;top:55px;" aria-label="Debug to" ng-click="onDebugToComponent()">
+                <md-tooltip md-direction="bottom">Debug to this component</md-tooltip>
+                <md-icon md-menu-origin md-svg-src="keyboard_tab"></md-icon>
+            </md-button>
+        </span>
+        <span id="mapping" style="display:none;">
+            <md-button class="md-fab md-mini" style="position:absolute;left:70px;top:55px;" aria-label="Change mapping" ng-click="onMappingComponent()">
+                <md-tooltip md-direction="bottom">Toggle data invalidation</md-tooltip>
+                <md-icon md-menu-origin md-svg-src="autorenew"></md-icon>
+            </md-button>
+        </span>
+        <md-button class="md-fab md-mini" style="position:absolute;left:120px;top:55px;" aria-label="Create template" ng-click="onCreateTemplate()" id="createTemplate">
+            <md-tooltip md-direction="bottom">Create template</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="add"></md-icon>
+        </md-button>
+    </div>
+</div>
+
+<div id="blankMenu" style="position:absolute;overflow:visible;width:0px;display:none;">
+    <div style="position:relative;left:-25px;top:-70px;">
+        <md-button class="md-fab md-mini" style="position:absolute;left:-40px;" ng-click="onAddComponent()">
+            <md-tooltip md-direction="top">Insert component</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="edit"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini" style="position:absolute;left:40px;" ng-click="onImportPipeline()">
+            <md-tooltip md-direction="top">Insert pipeline</md-tooltip>
+            <md-icon md-menu-origin md-svg-src="timeline"></md-icon>
+        </md-button>
+    </div>
+</div>

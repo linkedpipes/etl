@@ -2,10 +2,8 @@ package com.linkedpipes.etl.storage.unpacker.model.execution;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.pojo.LoaderException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,13 +18,12 @@ public class Execution implements Loadable {
     private List<ExecutionComponent> components = new ArrayList<>();
 
     @Override
-    public void resource(String resource) throws LoaderException {
+    public void resource(String resource) {
         iri = resource;
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, BackendRdfValue value) {
         switch (predicate) {
             case LP_PIPELINE.HAS_COMPONENT:
                 ExecutionComponent newComponent = new ExecutionComponent();

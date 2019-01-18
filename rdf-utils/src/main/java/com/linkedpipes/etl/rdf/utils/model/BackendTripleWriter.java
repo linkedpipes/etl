@@ -8,8 +8,8 @@ public interface BackendTripleWriter {
 
     void bool(String subject, String predicate, boolean object);
 
-    void string(String subject, String predicate, String object,
-            String language);
+    void string(
+            String subject, String predicate, String object, String language);
 
     void typed(String subject, String predicate, String object, String type);
 

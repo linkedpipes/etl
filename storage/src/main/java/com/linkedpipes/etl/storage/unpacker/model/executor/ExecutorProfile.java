@@ -17,7 +17,8 @@ public class ExecutorProfile {
 
     public void write(BackendTripleWriter writer) {
         // TODO Add class for ExecutionProfile
-        writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryPolicy);
+        writer.iri(
+                iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryPolicy);
         writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE, repositoryType);
     }
 

@@ -19,6 +19,10 @@ define([], function () {
         "addFirstFlag" : {
             "$type" : "bool",
             "$label" : "Add predicate for first items"
+        },
+        "escapeForJson" : {
+            "$type" : "bool",
+            "$label" : "Escape values for JSON output."
         }
     };
 

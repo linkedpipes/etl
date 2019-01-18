@@ -106,4 +106,5 @@ public class DesignerComponent implements Loadable {
     public boolean isDisabled() {
         return disabled;
     }
+
 }

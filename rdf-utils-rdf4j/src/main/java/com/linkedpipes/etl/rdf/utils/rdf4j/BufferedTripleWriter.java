@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO Add support for RdfValue implemented by Rdf4j
- * TODO Add support for RdfTriple implemented by Rdf4j
+ * TODO Add support for RdfValue implemented by Rdf4j.
+ * TODO Add support for RdfTriple implemented by Rdf4j.
  */
 class BufferedTripleWriter implements BackendTripleWriter {
 
@@ -55,8 +55,8 @@ class BufferedTripleWriter implements BackendTripleWriter {
     }
 
     @Override
-    public void string(String subject, String predicate, String object,
-            String language) {
+    public void string(
+            String subject, String predicate, String object, String language) {
         Value value;
         if (language == null) {
             value = valueFactory.createLiteral(object);
@@ -71,8 +71,8 @@ class BufferedTripleWriter implements BackendTripleWriter {
     }
 
     @Override
-    public void typed(String subject, String predicate, String object,
-            String type) {
+    public void typed(
+            String subject, String predicate, String object, String type) {
         buffer.add(valueFactory.createStatement(
                 valueFactory.createIRI(subject),
                 valueFactory.createIRI(predicate),
@@ -91,6 +91,11 @@ class BufferedTripleWriter implements BackendTripleWriter {
         ));
     }
 
+    @Override
+    public void add(RdfTriple triple) {
+        add(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    }
+
     private Value asRdf4jValue(BackendRdfValue value) {
         if (value.isIri()) {
             return valueFactory.createIRI(value.asString());
@@ -105,11 +110,6 @@ class BufferedTripleWriter implements BackendTripleWriter {
         }
         return valueFactory.createLiteral(value.asString(),
                 valueFactory.createIRI(type));
-    }
-
-    @Override
-    public void add(RdfTriple triple) {
-        add(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
     @Override

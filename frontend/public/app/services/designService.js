@@ -55,7 +55,6 @@ define([], function () {
             } else {
                 data.tags = [parsedResponse.tags];
             }
-
             data.followup = {};
             if (parsedResponse.followup) {
                 parsedResponse.followup.forEach((item) => {

@@ -30,7 +30,8 @@ public class DataUnitManager {
 
     public DataUnitManager(PipelineModel pipeline) {
         this.pipelineQuery = new PipelineQuery(pipeline);
-        this.portCloser = new DataUnitCloser(this.dataUnits, this.pipelineQuery);
+        this.portCloser =
+                new DataUnitCloser(this.dataUnits, this.pipelineQuery);
     }
 
     public void initialize(
@@ -66,7 +67,7 @@ public class DataUnitManager {
     }
 
     public Map<String, com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit>
-    onComponentWillExecute(ExecutionComponent component)
+            onComponentWillExecute(ExecutionComponent component)
             throws ExecutorException {
         Map<String, com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit>
                 result = new HashMap<>();

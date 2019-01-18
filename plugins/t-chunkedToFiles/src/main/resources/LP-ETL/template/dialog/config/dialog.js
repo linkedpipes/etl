@@ -15,6 +15,10 @@ define([], function () {
         "graphUri": {
             "$type": "iri",
             "$label": "URI of output graph"
+        },
+        "prefixTurtle": {
+            "$type": "str",
+            "$label": "Turtle with prefixes"
         }
     };
 

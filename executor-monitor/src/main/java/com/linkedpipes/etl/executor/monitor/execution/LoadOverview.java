@@ -25,14 +25,28 @@ public class LoadOverview {
     private final OverviewFactory overviewFactory = new OverviewFactory();
 
     public void load(Execution execution) throws MonitorException {
-        File file = this.getOverviewFile(execution);
+        File file = getOverviewFile(execution);
         JsonNode overview;
         if (file.exists()) {
             overview = loadJson(file);
         } else {
-            overview = this.overviewFactory.createQueued(execution);
+            overview = overviewFactory.createQueued(execution);
         }
         load(execution, overview);
+    }
+
+    public void load(Execution execution, JsonNode overview) {
+        Date oldLastUpdate = execution.getLastOverviewChange();
+        if (oldLastUpdate != null) {
+            Date newLastUpdate = OverviewObject.getLastChange(overview);
+            if (oldLastUpdate.after(newLastUpdate)) {
+                // We have never version, do not update.
+                return;
+            }
+        }
+        addMonitorInformation(execution, overview);
+        execution.setOverviewJson(overview);
+        updateExecutionFromOverview(execution);
     }
 
     private File getOverviewFile(Execution execution) {
@@ -47,15 +61,9 @@ public class LoadOverview {
         }
     }
 
-    public void load(Execution execution, JsonNode overview) {
-        addMonitorInformation(execution, overview);
-        execution.setOverviewJson(overview);
-        this.updateExecutionFromOverview(execution);
-    }
-
     public void addMonitorInformation(Execution execution, JsonNode node) {
-        ObjectNode root = (ObjectNode)node;
-        ObjectNode context = (ObjectNode)root.get("@context");
+        ObjectNode root = (ObjectNode) node;
+        ObjectNode context = (ObjectNode) root.get("@context");
         context.put("finalData", LP_MONITOR.HAS_FINAL_DATA);
         root.put("finalData", execution.isHasFinalData());
     }
@@ -69,15 +77,16 @@ public class LoadOverview {
         setLastChange(execution, overview, statusChanged);
     }
 
-    private void updateStatements(Execution execution, OverviewObject overview) {
-        OverviewToListStatements overviewToStatements = new OverviewToListStatements();
+    private void updateStatements(
+            Execution execution, OverviewObject overview) {
+        OverviewToListStatements overviewToStatements =
+                new OverviewToListStatements();
         execution.setOverviewStatements(
                 overviewToStatements.asStatements(execution, overview));
     }
 
     private void setLastChange(
-            Execution execution,
-            OverviewObject overview,
+            Execution execution, OverviewObject overview,
             boolean statusChanged) {
         if (!statusChanged && !hasOverviewChanged(execution, overview)) {
             return;

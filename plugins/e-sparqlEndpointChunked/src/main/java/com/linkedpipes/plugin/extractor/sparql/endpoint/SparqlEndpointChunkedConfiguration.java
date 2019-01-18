@@ -54,6 +54,10 @@ public class SparqlEndpointChunkedConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_AS_LITERALS)
     private List<String> asLiterals = new ArrayList<>();
 
+    @RdfToPojo.Property(
+            iri = SparqlEndpointChunkedVocabulary.HAS_HANDLE_INVALID)
+    private boolean handleInvalid = false;
+
     public SparqlEndpointChunkedConfiguration() {
     }
 
@@ -151,6 +155,14 @@ public class SparqlEndpointChunkedConfiguration {
 
     public void setAsLiterals(List<String> asLiterals) {
         this.asLiterals = asLiterals;
+    }
+
+    public boolean isHandleInvalid() {
+        return handleInvalid;
+    }
+
+    public void setHandleInvalid(boolean handleInvalid) {
+        this.handleInvalid = handleInvalid;
     }
 
 }

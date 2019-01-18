@@ -16,15 +16,17 @@ import java.util.concurrent.TimeUnit;
 public abstract class TaskExecution<T extends Task>
         implements Component, SequentialExecution {
 
+    private static final int TERMINATION_CHECK = 5;
+
     private TaskExecutionConfiguration configuration;
 
     @Override
     public void execute() throws LpException {
         initialization();
-        this.configuration = getExecutionConfiguration();
+        configuration = getExecutionConfiguration();
         ExecutorService executor = createExecutorService();
         TaskSource<T> taskSource = createTaskSource();
-        taskSource.setSkipOnError(this.configuration.isSkipOnError());
+        taskSource.setSkipOnError(configuration.isSkipOnError());
         beforeExecution();
         createWorkers(executor, taskSource);
         waitForShutdown(executor);
@@ -56,8 +58,7 @@ public abstract class TaskExecution<T extends Task>
     }
 
     private void createWorkers(
-            ExecutorService executor,
-            TaskSource<T> taskSource) {
+            ExecutorService executor, TaskSource<T> taskSource) {
         for (int i = 0; i < configuration.getThreadsNumber(); ++i) {
             TaskExecutor<T> taskExecutor = createTaskExecutor(taskSource);
             executor.submit(taskExecutor);
@@ -82,7 +83,8 @@ public abstract class TaskExecution<T extends Task>
         executor.shutdown();
         while (true) {
             try {
-                if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                if (executor.awaitTermination(
+                        TERMINATION_CHECK, TimeUnit.SECONDS)) {
                     break;
                 }
             } catch (InterruptedException ex) {

@@ -3,15 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-backend</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>storage</artifactId>
     <version>0.0.0</version>
     <packaging>jar</packaging>
-    <name>lp-storage</name>
-    <description>Provides a storage for pipelines and components.</description>
+    <name>LinkedPipes Storage</name>
 
     <properties>
         <deploy.directory>../deploy/storage/</deploy.directory>

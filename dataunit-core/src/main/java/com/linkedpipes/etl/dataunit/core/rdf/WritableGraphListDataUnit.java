@@ -7,8 +7,6 @@ public interface WritableGraphListDataUnit extends Rdf4jDataUnit {
 
     /**
      * Create a graph and return its IRI.
-     *
-     * @return
      */
     IRI createGraph() throws LpException;
 

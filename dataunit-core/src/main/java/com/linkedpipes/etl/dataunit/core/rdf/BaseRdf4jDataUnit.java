@@ -18,7 +18,7 @@ import java.util.Map;
 abstract class BaseRdf4jDataUnit extends AbstractDataUnit
         implements Rdf4jDataUnit, ManageableDataUnit {
 
-    protected final static ValueFactory VF = SimpleValueFactory.getInstance();
+    protected static final ValueFactory VF = SimpleValueFactory.getInstance();
 
     protected final RepositoryManager repositoryManager;
 

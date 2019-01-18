@@ -22,7 +22,16 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Responsible for storing information about existing executions.
@@ -33,6 +42,8 @@ class ExecutionStorage
 
     private static final Logger LOG
             = LoggerFactory.getLogger(ExecutionStorage.class);
+
+    private static final int TOMBSTONE_TTL = 5 * 60;
 
     private final Configuration configuration;
 
@@ -56,7 +67,7 @@ class ExecutionStorage
     }
 
     private File getExecutionsDirectory() throws MonitorException {
-        File directory = this.configuration.getWorkingDirectory();
+        File directory = configuration.getWorkingDirectory();
         if (!directory.isDirectory()) {
             throw new MonitorException(
                     "Execution working directory does not exists");
@@ -65,7 +76,7 @@ class ExecutionStorage
     }
 
     private Execution loadExecutionForFirstTime(File directory) {
-        Date updateTime = new Date();
+        final Date updateTime = new Date();
 
         Execution execution = new Execution();
         execution.setIri(getExecutionIri(directory));
@@ -116,7 +127,8 @@ class ExecutionStorage
 
     private void updateDebugData(Execution execution) throws MonitorException {
         ExecutionLoader executionLoader = new ExecutionLoader();
-        updateFromExecution(execution, executionLoader.loadStatements(execution));
+        updateFromExecution(
+                execution, executionLoader.loadStatements(execution));
     }
 
     public List<Execution> getExecutions() {
@@ -124,7 +136,7 @@ class ExecutionStorage
     }
 
     /**
-     * @param id Last part of the execution IRI after the last '/'.
+     * Return last part of the execution IRI after the last '/'.
      */
     public Execution getExecution(String id) {
         for (Execution execution : executions) {
@@ -154,14 +166,14 @@ class ExecutionStorage
 
     @Override
     public Execution getExecution(Executor executor) {
-        return this.executors.get(executor);
+        return executors.get(executor);
     }
 
     /**
      * Perform full execution update from directory.
      */
     public void update(Execution execution) {
-        if (!(shouldUpdate(execution))){
+        if (!(shouldUpdate(execution))) {
             // We do not reload dangling or invalid executions.
             return;
         }
@@ -204,12 +216,13 @@ class ExecutionStorage
     public Execution createExecution(
             Collection<Statement> pipeline, List<MultipartFile> inputs)
             throws MonitorException {
-        String uuid = this.createExecutionGuid();
+        String uuid = createExecutionGuid();
         File directory = new File(configuration.getWorkingDirectory(), uuid);
         try {
-            ExecutionFactory.prepareExecutionInDirectory(directory, pipeline, inputs);
+            ExecutionFactory.prepareExecutionInDirectory(
+                    directory, pipeline, inputs);
         } catch (MonitorException ex) {
-            this.deleteDirectory(directory);
+            deleteDirectory(directory);
             throw ex;
         }
         Execution execution = loadExecutionForFirstTime(directory);
@@ -220,9 +233,9 @@ class ExecutionStorage
     }
 
     private String createExecutionGuid() {
-        return (new Date()).getTime() + "-" +
-                Integer.toString(executions.size()) + "-" +
-                UUID.randomUUID().toString();
+        return (new Date()).getTime() + "-"
+                + Integer.toString(executions.size()) + "-"
+                + UUID.randomUUID().toString();
     }
 
     private void deleteDirectory(File directory) {
@@ -237,12 +250,13 @@ class ExecutionStorage
         if (execution == null) {
             return;
         }
-        execution.setTimeToLive(this.getNowShiftedBySeconds(5 * 60));
+        execution.setTimeToLive(getNowShiftedBySeconds(TOMBSTONE_TTL));
         // Clear statements that we do not need any more.
         execution.setPipelineStatements(Collections.emptyList());
+        OverviewFactory overviewFactory = new OverviewFactory();
         updateFromOverview(
                 execution,
-                OverviewFactory.createDeleted(execution, new Date()));
+                overviewFactory.createDeleted(execution, new Date()));
         this.directoriesToDelete.add(execution.getDirectory());
     }
 
@@ -266,8 +280,8 @@ class ExecutionStorage
     }
 
     private boolean shouldUpdate(Execution execution) {
-        if (execution.getStatus() == ExecutionStatus.DELETED ||
-                execution.getStatus() == ExecutionStatus.INVALID) {
+        if (execution.getStatus() == ExecutionStatus.DELETED
+                || execution.getStatus() == ExecutionStatus.INVALID) {
             return false;
         }
         return !execution.isHasFinalData();
@@ -275,7 +289,7 @@ class ExecutionStorage
 
     private void deleteTombstones(Date time) {
         Collection<Execution> toDelete = new ArrayList<>(2);
-        for (Execution execution : this.executions) {
+        for (Execution execution : executions) {
             if (execution.getStatus() == ExecutionStatus.DELETED) {
                 if (execution.getTimeToLive().before(time)) {
                     toDelete.add(execution);
@@ -287,7 +301,7 @@ class ExecutionStorage
 
     private void deleteDirectories() {
         List<File> toRemove = new ArrayList<>(2);
-        for (File directory : this.directoriesToDelete) {
+        for (File directory : directoriesToDelete) {
             try {
                 FileUtils.deleteDirectory(directory);
                 toRemove.add(directory);
@@ -296,29 +310,31 @@ class ExecutionStorage
                 // so it may take more attempts to delete the directory.
             }
         }
-        this.directoriesToDelete.removeAll(toRemove);
+        directoriesToDelete.removeAll(toRemove);
     }
 
     @Override
     public void onExecutorHasExecution(Execution execution, Executor executor) {
-        LOG.info("onExecutorHasExecution: {}", execution.getId());
-        Execution oldExecution = this.executors.get(executor);
+        LOG.info("onExecutorHasExecution: {}",
+                execution == null ? "null" : execution.getId());
+        Execution oldExecution = executors.get(executor);
         if (oldExecution == null) {
-            this.executors.put(executor, execution);
+            executors.put(executor, execution);
             execution.setExecutor(true);
             execution.setExecutorResponsive(true);
             return;
         }
         if (execution == oldExecution) {
+            // There is no change in the execution.
             return;
         }
         // Executor stop execution of one execution and start with another.
         oldExecution.setExecutor(false);
         oldExecution.setExecutorResponsive(false);
         if (execution == null) {
-            this.executors.remove(executor);
+            executors.remove(executor);
         } else {
-            this.executors.put(executor, execution);
+            executors.put(executor, execution);
             execution.setExecutor(true);
             execution.setExecutorResponsive(true);
         }
@@ -329,19 +345,19 @@ class ExecutionStorage
         // We have execution assigned to this executor, but now it is not
         // executing anything. We need to update from disk as the
         // execution might have been finished in a meantime.
-        Execution execution = this.executors.get(executor);
+        Execution execution = executors.get(executor);
         if (execution == null) {
             return;
         }
         execution.setExecutor(false);
         execution.setExecutorResponsive(false);
-        this.executors.remove(executor);
+        executors.remove(executor);
         update(execution);
     }
 
     @Override
     public void onExecutorUnavailable(Executor executor) {
-        Execution execution = this.executors.get(executor);
+        Execution execution = executors.get(executor);
         if (execution == null) {
             return;
         }

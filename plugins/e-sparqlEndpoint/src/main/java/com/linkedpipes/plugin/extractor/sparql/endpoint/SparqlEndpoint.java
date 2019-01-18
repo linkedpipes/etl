@@ -66,19 +66,7 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
                     SparqlEndpointVocabulary.HAS_QUERY);
         }
         //
-        final SPARQLRepository repository;
-        if (configuration.isUseTolerantRepository()) {
-            repository = new TolerantSparqlRepository(getEndpoint());
-        } else {
-            repository = new SPARQLRepository(getEndpoint());
-        }
-        // Customize repository.
-        final Map<String, String> headers = new HashMap<>();
-        headers.putAll(repository.getAdditionalHttpHeaders());
-        if (configuration.getTransferMimeType() != null) {
-            headers.put("Accept", configuration.getTransferMimeType());
-        }
-        repository.setAdditionalHttpHeaders(headers);
+        final SPARQLRepository repository = createRepository();
         //
         try {
             repository.initialize();
@@ -100,6 +88,26 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
         }
     }
 
+    private SPARQLRepository createRepository() {
+        TolerantSparqlRepository repository =
+                new TolerantSparqlRepository(getEndpoint());
+        if (configuration.isUseTolerantRepository()) {
+            repository.fixMissingLanguageTag();
+        }
+        if (configuration.isHandleInvalid()) {
+            repository.ignoreInvalidData();
+        }
+        // Set headers.
+        Map<String, String> headers = new HashMap<>();
+        headers.putAll(repository.getAdditionalHttpHeaders());
+        if (configuration.getTransferMimeType() != null) {
+            headers.put("Accept", configuration.getTransferMimeType());
+        }
+        repository.setAdditionalHttpHeaders(headers);
+
+        return repository;
+    }
+
     private String getEndpoint() {
         String[] tokens = configuration.getEndpoint().split("://", 2);
         return tokens[0] + "://" + IDN.toASCII(tokens[1]);
@@ -117,7 +125,6 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
         return HttpClients.custom()
                 .setDefaultCredentialsProvider(provider).build();
     }
-
 
     public void queryRemote(SPARQLRepository repository) throws LpException {
         final IRI graph = outputRdf.getWriteGraph();

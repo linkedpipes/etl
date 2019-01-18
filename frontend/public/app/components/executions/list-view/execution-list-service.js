@@ -25,7 +25,10 @@
 
         function execute(execution) {
             const iri = execution["pipeline"]["iri"];
-            pipelineApi.execute($http, iri)
+            const options = {
+                "keepDebugData": true
+            };
+            pipelineApi.executePipeline($http, iri, options)
                 .then(updateRepository)
                 .catch(handleExecutionStartFailure);
         }
@@ -87,7 +90,7 @@
 
         return {
             "initialize": initialize,
-            "execute": execute,
+            "executePipeline": execute,
             "cancel": cancelExecution,
             "openLogTail": openLogTail,
             "delete": deleteExecution,

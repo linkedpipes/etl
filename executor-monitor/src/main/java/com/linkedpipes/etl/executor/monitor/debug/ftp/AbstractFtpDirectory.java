@@ -13,6 +13,11 @@ import java.util.Date;
 abstract class AbstractFtpDirectory implements FtpFile {
 
     /**
+     * Directory hav 3 link.
+     */
+    private static final int LINK_IN_DIRECTORY = 3;
+
+    /**
      * Full ftp path to the directory.
      */
     protected final String ftpPath;
@@ -99,8 +104,7 @@ abstract class AbstractFtpDirectory implements FtpFile {
 
     @Override
     public int getLinkCount() {
-        // It's a directory so it has 3 links.
-        return 3;
+        return LINK_IN_DIRECTORY;
     }
 
     @Override
@@ -115,7 +119,7 @@ abstract class AbstractFtpDirectory implements FtpFile {
 
     @Override
     public long getSize() {
-        // Return 0 as we represents a directory.
+        // Return 0 as we represent a directory.
         return 0L;
     }
 

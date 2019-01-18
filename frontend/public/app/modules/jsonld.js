@@ -85,6 +85,17 @@
         }
     };
 
+    const setId = function (resource, value) {
+        if (resource["@id"]) {
+            resource["@id"] = value;
+        } else if (resource["id"]) {
+            delete resource["id"];
+            resource["@id"] = value;
+        } else {
+            resource["@id"] = value;
+        }
+    };
+
     /**
      *
      * @param resource
@@ -489,9 +500,9 @@
     /**
      * Iterate over all resources in all graphs.
      *
-     * The callback is given the graph data and the graph IRI as a second
-     * argument. If callback returns something else than undefined and false
-     * then stops the iteration and return what callback returned.
+     * The callback is given the graph data and the graph IRI as a second and
+     * third, argument. If callback returns something else than undefined
+     * and false then stops the iteration and return what callback returned.
      *
      * @param data
      * @param callback
@@ -507,6 +518,7 @@
     const resourceService = {
         "getTypes": getTypes,
         "getId": getId,
+        "setId": setId,
         "getStrings": getStrings,
         "getString": (resource, predicate) =>
             select(getStrings(resource, predicate)),
@@ -551,6 +563,9 @@
         "iterateResources": iterateResources,
         "getResource": (graph, iri) => {
             return iterateResources(graph, (resource) => {
+                if (resource === undefined) {
+                    return;
+                }
                 if (getId(resource) === iri) {
                     return resource;
                 }
@@ -558,6 +573,9 @@
         },
         "getResourceByType": (graph, type) => {
             return iterateResources(graph, (resource) => {
+                if (resource === undefined) {
+                    return;
+                }
                 const types = getTypes(resource);
                 if (types.indexOf(type) !== -1) {
                     return resource;

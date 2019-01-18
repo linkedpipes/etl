@@ -11,15 +11,11 @@ public interface ProgressReport {
 
     /**
      * Report start of progress report.
-     *
-     * @param entriesToProcess
      */
     void start(long entriesToProcess);
 
     /**
      * Report start of progress report.
-     *
-     * @param collection
      */
     void start(Collection<?> collection);
 

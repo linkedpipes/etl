@@ -12,7 +12,14 @@ import org.eclipse.rdf4j.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 class ExportPipeline {
@@ -97,13 +104,13 @@ class ExportPipeline {
         for (Map.Entry<Resource, Resource> entry : types.entrySet()) {
             List<Statement> configuration =
                     graphs.get(configurations.get(entry.getKey()));
-            Template template = this.templatesFacade.getTemplate(
+            Template template = templatesFacade.getTemplate(
                     entry.getValue().stringValue());
             Collection<Statement> description =
-                    this.templatesFacade.getConfigurationDescription(
+                    templatesFacade.getConfigurationDescription(
                             template.getIri());
             Collection<Statement> privateProperties =
-                    this.configurationFacade.selectPrivateStatements(
+                    configurationFacade.selectPrivateStatements(
                             new Statements(configuration),
                             new Statements(description));
             rdf.removeAll(privateProperties);

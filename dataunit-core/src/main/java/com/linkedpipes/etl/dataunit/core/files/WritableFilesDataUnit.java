@@ -9,13 +9,12 @@ public interface WritableFilesDataUnit {
     /**
      * Fail if the file of given name already exists.
      *
-     * @param fileName
      * @return Path to yet not existing file, in the data unit storage.
      */
     File createFile(String fileName) throws LpException;
 
     /**
-     * @return Write root directory.
+     * Return write root directory.
      */
     File getWriteDirectory();
 

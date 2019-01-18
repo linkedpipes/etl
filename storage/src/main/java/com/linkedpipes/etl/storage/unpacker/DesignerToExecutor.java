@@ -7,11 +7,21 @@ import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
-import com.linkedpipes.etl.storage.unpacker.model.designer.*;
+import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
+import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerConnection;
+import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
+import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerRunAfter;
+import com.linkedpipes.etl.storage.unpacker.model.designer.ExecutionProfile;
 import com.linkedpipes.etl.storage.unpacker.model.execution.Execution;
 import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionComponent;
 import com.linkedpipes.etl.storage.unpacker.model.execution.ExecutionPort;
-import com.linkedpipes.etl.storage.unpacker.model.executor.*;
+import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorComponent;
+import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorConnection;
+import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorDataSource;
+import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorMetadata;
+import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPipeline;
+import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPort;
+import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorProfile;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +47,15 @@ public class DesignerToExecutor {
 
     private final ExecutionSource executionSource;
 
-    public DesignerToExecutor(TemplateSource templateSource,
+    public DesignerToExecutor(
+            TemplateSource templateSource,
             ExecutionSource executionSource) {
         this.jarTemplateExpander = new TemplateExpander(templateSource);
         this.executionSource = executionSource;
     }
 
-    public void transform(DesignerPipeline pipeline, GraphCollection graphs,
+    public void transform(
+            DesignerPipeline pipeline, GraphCollection graphs,
             UnpackOptions options) throws BaseException {
         this.source = pipeline;
         this.graphs = graphs;
@@ -103,7 +115,7 @@ public class DesignerToExecutor {
     private void convertAndExpandComponents() throws BaseException {
         jarTemplateExpander.setGraphs(graphs);
         for (DesignerComponent component : source.getComponents()) {
-            // TODO Also pass connections and runAfter for possible modification
+            // TODO Pass connections and runAfter for possible modification
             target.addComponent(jarTemplateExpander.expand(component));
         }
     }
@@ -173,7 +185,8 @@ public class DesignerToExecutor {
     }
 
     // TODO Extract mapping functionality to another class.
-    private void mapExecution(Execution execution,
+    private void mapExecution(
+            Execution execution,
             UnpackOptions.ExecutionMapping executionMapping) {
         for (UnpackOptions.ComponentMapping mapping
                 : executionMapping.getComponents()) {
@@ -247,8 +260,8 @@ public class DesignerToExecutor {
     private void removeConnectionsForNonExecutedComponents() {
         List<ExecutorConnection> connectionToRemove = new ArrayList<>();
         for (ExecutorConnection connection : target.getConnections()) {
-            if (!componentActive(connection.getSourceComponent()) ||
-                    !componentActive(connection.getTargetComponent())) {
+            if (!componentActive(connection.getSourceComponent())
+                    || !componentActive(connection.getTargetComponent())) {
                 connectionToRemove.add(connection);
             }
         }
@@ -257,8 +270,8 @@ public class DesignerToExecutor {
 
     private boolean componentActive(String componentIri) {
         String type = target.getComponent(componentIri).getExecutionType();
-        return LP_EXEC.TYPE_EXECUTE.equals(type) ||
-                LP_EXEC.TYPE_MAPPED.equals(type);
+        return LP_EXEC.TYPE_EXECUTE.equals(type)
+                || LP_EXEC.TYPE_MAPPED.equals(type);
     }
 
     private void computeDataUnitGroups() {

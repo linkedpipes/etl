@@ -22,7 +22,6 @@ import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
@@ -96,11 +95,13 @@ public final class SparqlEndpointChunked implements Component,
     }
 
     protected Repository createRepository() {
-        final SPARQLRepository repository;
+        TolerantSparqlRepository repository =
+                new TolerantSparqlRepository(getEndpoint());
         if (configuration.isUseTolerantRepository()) {
-            repository = new TolerantSparqlRepository(getEndpoint());
-        } else {
-            repository = new SPARQLRepository(getEndpoint());
+            repository.fixMissingLanguageTag();
+        }
+        if (configuration.isHandleInvalid()) {
+            repository.ignoreInvalidData();
         }
         // Customize repository.
         final Map<String, String> headers = new HashMap<>();

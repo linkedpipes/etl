@@ -35,7 +35,7 @@ class TemplateLoader {
     public JarTemplate loadJarTemplate(
             RepositoryReference reference) throws BaseException {
         Collection<Statement> definition =
-                this.repository.getDefinition(reference);
+                repository.getDefinition(reference);
         JarTemplate template = new JarTemplate();
         template.setId(reference.getId());
         PojoLoader.loadOfType(definition, JarTemplate.TYPE, template);
@@ -45,7 +45,7 @@ class TemplateLoader {
     public ReferenceTemplate loadReferenceTemplate(
             RepositoryReference reference) throws BaseException {
         Collection<Statement> definition =
-                this.repository.getDefinition(reference);
+                repository.getDefinition(reference);
         ReferenceTemplate template = new ReferenceTemplate();
         template.setId(reference.getId());
         PojoLoader.loadOfType(definition, ReferenceTemplate.TYPE, template);

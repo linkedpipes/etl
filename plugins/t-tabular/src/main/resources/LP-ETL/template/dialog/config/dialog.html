@@ -47,6 +47,7 @@
         <label>Row and property IRI base</label>
         <input type="uri" ng-model="dialog.baseUri" placeholder="http://ex.org/resource/tabular/">
     </md-input-container>
+    <md-switch ng-model="dialog.skipOnError">Skip on error</md-switch>
     <md-switch ng-model="dialog.fullMapping">Use CSV on the Web mapping</md-switch>
     <md-content ng-hide="dialog.fullMapping">
         <section style="background: #f7f7f7; margin-top: 1em;" layout-gt-sm="row" ng-repeat="item in dialog.columns">

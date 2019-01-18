@@ -21,16 +21,18 @@ import java.util.GregorianCalendar;
 
 public class OverviewToListStatementsTest {
 
-    private static final DateFormat DATE_FORMAT = new
+    private final DateFormat dateFormat = new
             SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     private OverviewToListStatements toStatements =
             new OverviewToListStatements();
 
+    private OverviewFactory overviewFactory = new OverviewFactory();
+
     @Test
     public void deleted() {
         Execution execution = Mockito.mock(Execution.class);
-        JsonNode node = OverviewFactory.createQueued(execution);
+        JsonNode node = overviewFactory.createQueued(execution);
         Mockito.when(execution.getStatus()).thenReturn(ExecutionStatus.DELETED);
         String graph = "http://graph";
         Mockito.when(execution.getListGraph()).thenReturn(graph);
@@ -38,7 +40,7 @@ public class OverviewToListStatementsTest {
         Mockito.when(execution.getIri()).thenReturn(iri);
         Statements actual = this.toStatements.asStatements(execution, node);
         //
-        Statements expected = Statements.ArrayList();
+        Statements expected = Statements.arrayList();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
         Assert.assertTrue(actual.containsAllLogMissing(expected));
@@ -55,26 +57,26 @@ public class OverviewToListStatementsTest {
                 .put("@id", pipeline));
         Date start = new GregorianCalendar(2019, 1, 1, 23, 2, 10).getTime();
         Date finished = new GregorianCalendar(2019, 1, 5, 13, 6, 30).getTime();
-        root.put("executionStarted", DATE_FORMAT.format(start));
-        root.put("executionFinished", DATE_FORMAT.format(finished));
+        root.put("executionStarted", dateFormat.format(start));
+        root.put("executionFinished", dateFormat.format(finished));
         root.put("directorySize", 1204);
         root.set("pipelineProgress", mapper.createObjectNode()
                 .put("current", 3)
                 .put("total", 10));
-        Date lastChange = new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
-        root.put("lastChange", DATE_FORMAT.format(lastChange));
+        Date lastChange =
+                new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
+        root.put("lastChange", dateFormat.format(lastChange));
 
         Execution execution = Mockito.mock(Execution.class);
         String graph = "http://graph";
         Mockito.when(execution.getListGraph()).thenReturn(graph);
         String iri = "http://execution";
         Mockito.when(execution.getIri()).thenReturn(iri);
-        Statements actual = this.toStatements.asStatements(execution, root);
         //
-        Statements expected = Statements.ArrayList();
+        Statements expected = Statements.arrayList();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
-        expected.addLong(iri, LP_EXEC.HAS_SIZE, 1204l);
+        expected.addLong(iri, LP_EXEC.HAS_SIZE, 1204L);
         expected.addIri(iri, LP_OVERVIEW.HAS_PIPELINE, pipeline);
         expected.addDate(iri, LP_OVERVIEW.HAS_START, start);
         expected.addDate(iri, LP_OVERVIEW.HAS_END, finished);
@@ -83,6 +85,7 @@ public class OverviewToListStatementsTest {
 
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
+        Statements actual = this.toStatements.asStatements(execution, root);
         Assert.assertTrue(actual.containsAllLogMissing(expected));
     }
 
@@ -97,8 +100,8 @@ public class OverviewToListStatementsTest {
                 .put("@id", pipeline));
         Date start = new GregorianCalendar(2019, 1, 1, 23, 2, 10).getTime();
         Date finished = new GregorianCalendar(2019, 1, 5, 13, 6, 30).getTime();
-        root.put("executionStarted", DATE_FORMAT.format(start));
-        root.put("executionFinished", DATE_FORMAT.format(finished));
+        root.put("executionStarted", dateFormat.format(start));
+        root.put("executionFinished", dateFormat.format(finished));
         root.put("directorySize", 1204);
         root.set("pipelineProgress", mapper.createObjectNode()
                 .put("current", 3)
@@ -106,20 +109,20 @@ public class OverviewToListStatementsTest {
                 .put("total_map", 5)
                 .put("current_mapped", 2)
                 .put("current_executed", 1));
-        Date lastChange = new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
-        root.put("lastChange", DATE_FORMAT.format(lastChange));
+        Date lastChange =
+                new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
+        root.put("lastChange", dateFormat.format(lastChange));
 
         Execution execution = Mockito.mock(Execution.class);
         String graph = "http://graph";
         Mockito.when(execution.getListGraph()).thenReturn(graph);
         String iri = "http://execution";
         Mockito.when(execution.getIri()).thenReturn(iri);
-        Statements actual = this.toStatements.asStatements(execution, root);
         //
-        Statements expected = Statements.ArrayList();
+        Statements expected = Statements.arrayList();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
-        expected.addLong(iri, LP_EXEC.HAS_SIZE, 1204l);
+        expected.addLong(iri, LP_EXEC.HAS_SIZE, 1204L);
         expected.addIri(iri, LP_OVERVIEW.HAS_PIPELINE, pipeline);
         expected.addDate(iri, LP_OVERVIEW.HAS_START, start);
         expected.addDate(iri, LP_OVERVIEW.HAS_END, finished);
@@ -131,6 +134,7 @@ public class OverviewToListStatementsTest {
 
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
+        Statements actual = this.toStatements.asStatements(execution, root);
         Assert.assertTrue(actual.containsAllLogMissing(expected));
     }
 

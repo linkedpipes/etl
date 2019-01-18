@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-component</artifactId>
+        <artifactId>pom-plugin</artifactId>
         <version>0.0.0</version>
-        <relativePath>../../pom-component/pom.xml</relativePath>
+        <relativePath>../../pom-plugin/pom.xml</relativePath>
     </parent>
     <groupId>com.linkedpipes</groupId>
     <artifactId>t-unpack</artifactId>
@@ -52,7 +52,12 @@
                 <configuration>
                     <instructions>
                         <!-- Optional from commons-compress: org.tukaani.xz -->
-                        <Import-Package>org.tukaani.xz;resolution:=optional,*</Import-Package>
+                        <Import-Package>
+                            org.tukaani.*;resolution:=optional,
+                            com.github.luben.*;resolution:=optional,
+                            org.brotli.*;resolution:=optional,
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

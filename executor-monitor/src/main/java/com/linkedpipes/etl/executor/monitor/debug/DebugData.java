@@ -51,8 +51,8 @@ public class DebugData {
     }
 
     private boolean isDataUnitObject(Statement st) {
-        return st.getPredicate().equals(RDF.TYPE) &&
-                st.getObject().stringValue().equals(LP_EXEC.DATA_UNIT);
+        return st.getPredicate().equals(RDF.TYPE)
+                && st.getObject().stringValue().equals(LP_EXEC.DATA_UNIT);
     }
 
     private void addStatement(Statement statement, DataUnit dataUnit) {
@@ -68,6 +68,8 @@ public class DebugData {
             case LP_EXEC.HAS_EXECUTION_ETL:
                 dataUnit.setMappedFromExecution(
                         statement.getObject().stringValue());
+                break;
+            default:
                 break;
         }
     }

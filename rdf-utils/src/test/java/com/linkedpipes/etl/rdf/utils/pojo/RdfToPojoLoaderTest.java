@@ -22,13 +22,12 @@ public class RdfToPojoLoaderTest {
         public TestObject object;
 
         @Override
-        public void resource(String resource) throws LoaderException {
+        public void resource(String resource) {
             this.resource = resource;
         }
 
         @Override
-        public Loadable load(String predicate, BackendRdfValue value)
-                throws RdfUtilsException {
+        public Loadable load(String predicate, BackendRdfValue value) {
             switch (predicate) {
                 case "title":
                     title = value.asString();
@@ -36,6 +35,8 @@ public class RdfToPojoLoaderTest {
                 case "object":
                     object = new TestObject();
                     return object;
+                default:
+                    break;
             }
             return null;
         }
@@ -102,6 +103,5 @@ public class RdfToPojoLoaderTest {
         Assert.assertEquals("ref", testObject.object.resource);
         Assert.assertEquals("InnerObject", testObject.object.title);
     }
-
 
 }

@@ -164,14 +164,14 @@ public class Execution {
     }
 
     /**
-     * @return True if there were changes to this execution since given time.
+     * Return true if there were changes to this execution since given time.
      */
     boolean changedAfter(Date date) {
         return date.before(this.lastChange);
     }
 
     /**
-     * @return Name of graph used to store data in execution list.
+     * Return name of graph used to store data in execution list.
      */
     public String getListGraph() {
         return this.iri + "/list";
@@ -186,7 +186,10 @@ public class Execution {
     }
 
     public Date getLastOverviewChange() {
-        return lastOverviewChange;
+        if (lastOverviewChange == null) {
+            return null;
+        }
+        return new Date(lastOverviewChange.getTime());
     }
 
     void setLastOverviewChange(Date lastOverviewChange) {

@@ -67,6 +67,13 @@
         <md-tooltip>Fix rdf:langString without language tag.
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.handleInvalidData.value"
+               ng-hide="dialog.handleInvalidData.hide"
+               ng-disabled="dialog.handleInvalidData.disabled || dialog.handleInvalidData.inherit">
+        Try to handle invalid data
+        <md-tooltip>Depends on user parser
+        </md-tooltip>
+    </md-switch>
     <md-chips ng-model="dialog.literals.value"
               ng-disabled="dialog.literals.disabled || dialog.literals.inherit"
               ng-hide="dialog.literals.hide"

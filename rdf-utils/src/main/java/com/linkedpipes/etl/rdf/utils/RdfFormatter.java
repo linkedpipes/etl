@@ -6,21 +6,21 @@ import java.util.Date;
 
 public class RdfFormatter {
 
-    private final static DateFormat DATE_FORMAT
+    private final DateFormat dateFormat
             = new SimpleDateFormat("YYYY-MM-dd");
 
-    private final static DateFormat TIME_FORMAT
+    private final DateFormat timeFormat
             = new SimpleDateFormat("HH:mm:ss.SSS");
 
-    private RdfFormatter() {
+    public RdfFormatter() {
 
     }
 
-    public static String toXsdDate(Date date) {
+    public String toXsdDate(Date date) {
         final StringBuilder dateAsString = new StringBuilder(25);
-        dateAsString.append(DATE_FORMAT.format(date));
+        dateAsString.append(dateFormat.format(date));
         dateAsString.append("T");
-        dateAsString.append(TIME_FORMAT.format(date));
+        dateAsString.append(timeFormat.format(date));
         return dateAsString.toString();
     }
 

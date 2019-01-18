@@ -46,10 +46,10 @@ class PostCreateExecutionHandler {
 
     public Response handle(MultipartFile pipeline, List<MultipartFile> inputs)
             throws MonitorException {
-        Statements pipelineRdf = this.readPipeline(pipeline);
-        Execution execution = this.executionFacade.createExecution(
+        Statements pipelineRdf = readPipeline(pipeline);
+        Execution execution = executionFacade.createExecution(
                 pipelineRdf, inputs);
-        this.executorService.asyncStartExecutions();
+        executorService.asyncStartExecutions();
         return new Response(execution);
     }
 
@@ -63,14 +63,13 @@ class PostCreateExecutionHandler {
         if (!format.isPresent()) {
             throw new MonitorException("Can't determined format type.");
         }
-        Statements statements = Statements.ArrayList();
+        Statements statements = Statements.arrayList();
         try (InputStream stream = pipeline.getInputStream()) {
             statements.addAll(stream, format.get());
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw new MonitorException("Can't read pipeline.", ex);
         }
         return statements;
     }
-
 
 }

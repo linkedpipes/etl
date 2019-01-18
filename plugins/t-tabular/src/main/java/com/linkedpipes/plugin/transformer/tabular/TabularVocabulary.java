@@ -82,6 +82,8 @@ public final class TabularVocabulary {
 
     public static final String HAS_SKIP_LINES = LOCAL_PREFIX + "skipLines";
 
+    public static final String HAS_SKIP_ON_ERROR = LOCAL_PREFIX + "skipOnError";
+
     private TabularVocabulary() {
     }
 

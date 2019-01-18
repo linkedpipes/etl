@@ -6,15 +6,13 @@ import org.eclipse.rdf4j.model.Statement;
 import java.util.Collection;
 
 /**
- * Write interface for chunked
+ * Write interface for chunked.
  */
 public interface WritableChunkedTriples {
 
     /**
      * Store data from the collection into data unit. The collection
      * can be cleared after this call.
-     *
-     * @param statements
      */
     void submit(Collection<Statement> statements) throws LpException;
 

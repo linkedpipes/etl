@@ -3,7 +3,11 @@ package com.linkedpipes.etl.executor.dataunit;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.execution.model.DataUnit;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
-import com.linkedpipes.etl.executor.pipeline.model.*;
+import com.linkedpipes.etl.executor.pipeline.model.Connection;
+import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.executor.pipeline.model.Port;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,8 +96,8 @@ class PipelineQuery {
             if (!connection.isDataConnection()) {
                 continue;
             }
-            if (isSource(connection, component, port) ||
-                    isTarget(connection, component, port)) {
+            if (isSource(connection, component, port)
+                    || isTarget(connection, component, port)) {
                 output.add(connection);
             }
         }
@@ -102,21 +106,19 @@ class PipelineQuery {
 
     private boolean isSource(
             Connection connection, PipelineComponent component, Port port) {
-        return connection.getSourceComponent().equals(component.getIri()) &&
-                connection.getSourceBinding().equals(port.getBinding());
+        return connection.getSourceComponent().equals(component.getIri())
+                && connection.getSourceBinding().equals(port.getBinding());
     }
 
     private boolean isTarget(
             Connection connection, PipelineComponent component, Port port) {
-        return connection.getTargetComponent().equals(component.getIri()) &&
-                connection.getTargetBinding().equals(port.getBinding());
+        return connection.getTargetComponent().equals(component.getIri())
+                && connection.getTargetBinding().equals(port.getBinding());
     }
 
     public boolean isNoLongerUsed(
-            Set<String> executedComponents,
-            ExecutionComponent component,
-            DataUnit dataUnit)
-            throws ExecutorException {
+            Set<String> executedComponents, ExecutionComponent component,
+            DataUnit dataUnit) throws ExecutorException {
         List<PipelineComponent> targetComponents =
                 getTargets(component, dataUnit);
         for (PipelineComponent pplTarget : targetComponents) {

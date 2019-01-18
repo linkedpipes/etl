@@ -20,8 +20,7 @@ public class PipelineLoaderTest {
         PipelineLoader loader = new PipelineLoader(execution);
         loader.loadPipelineIntoExecution();
         //
-        Statements actual = new Statements(execution.getPipelineStatements());
-        Statements expected = Statements.ArrayList();
+        Statements expected = Statements.arrayList();
         expected.setDefaultGraph(execution.getListGraph());
         expected.addIri("http://pipeline", RDF.TYPE, LP_PIPELINE.PIPELINE);
         expected.addString("http://pipeline", SKOS.PREF_LABEL, "Pipeline");
@@ -30,6 +29,7 @@ public class PipelineLoaderTest {
         expected.addIri(meta, LP_EXEC.HAS_TARGET_COMPONENT, "http://component");
         expected.addString("http://component", SKOS.PREF_LABEL, "Component");
         //
+        Statements actual = new Statements(execution.getPipelineStatements());
         Assert.assertTrue(actual.containsAllLogMissing(expected));
     }
 

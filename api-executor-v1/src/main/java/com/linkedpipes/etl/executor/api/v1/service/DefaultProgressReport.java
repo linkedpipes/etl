@@ -15,6 +15,10 @@ class DefaultProgressReport implements ProgressReport {
     private static final Logger LOG =
             LoggerFactory.getLogger(DefaultProgressReport.class);
 
+    private static final int EXPECTED_LABEL_LEN = 24;
+
+    private static final float REPORT_STEP_SIZE = 0.1f;
+
     /**
      * Specific implementation or event to report component progress.
      */
@@ -32,7 +36,7 @@ class DefaultProgressReport implements ProgressReport {
             this.total = total;
             this.component = componentUri;
             // TODO REFACTORING Extract as a function.
-            StringBuilder message = new StringBuilder(24);
+            StringBuilder message = new StringBuilder(EXPECTED_LABEL_LEN);
             message.append("Progress ");
             message.append(Long.toString(current));
             message.append(" / ");
@@ -65,7 +69,9 @@ class DefaultProgressReport implements ProgressReport {
     private final Object lock = new Object();
 
     /**
-     * @param context
+     * Constructor.
+     *
+     * @paran context Component execution context.
      * @param component Component IRI.
      */
     public DefaultProgressReport(Component.Context context, String component) {
@@ -78,7 +84,7 @@ class DefaultProgressReport implements ProgressReport {
         LOG.info("Progress report start 0/{}", entriesToProcess);
         current = 0;
         total = entriesToProcess;
-        reportStep = (long) (total * 0.1f);
+        reportStep = (long) (total * REPORT_STEP_SIZE);
         reportNext = reportStep;
         context.sendMessage(new ReportProgress(0, total, component));
     }

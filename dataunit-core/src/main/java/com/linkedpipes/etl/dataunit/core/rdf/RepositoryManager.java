@@ -64,19 +64,22 @@ class RepositoryManager {
 
     }
 
+    private static final int DELETE_WAIT_TIME = 1000;
+
     private static final Logger LOG =
             LoggerFactory.getLogger(RepositoryManager.class);
 
     private final ManagerConfiguration configuration;
 
-    private final Map<String, RepositoryContainer> repositories = new HashMap<>();
+    private final Map<String, RepositoryContainer> repositories =
+            new HashMap<>();
 
     public RepositoryManager(
             String repositoryPolicy, String repositoryType, File directory) {
         LOG.info("Repository policy: {}", repositoryPolicy);
         LOG.info("Repository type: {}", repositoryType);
         LOG.info("Directory: {}", directory);
-        this.configuration = new ManagerConfiguration(
+        configuration = new ManagerConfiguration(
                 repositoryPolicy, repositoryType, directory);
     }
 
@@ -86,7 +89,7 @@ class RepositoryManager {
         if (this.configuration.isSingleRepository()) {
             group = "single";
         }
-        RepositoryContainer container  = getOrCreateRepository(group);
+        RepositoryContainer container = getOrCreateRepository(group);
         ++container.useCounter;
         LOG.info("Using repository group: {} ({}) for: {}",
                 group, container.useCounter, configuration.getResource());
@@ -95,18 +98,18 @@ class RepositoryManager {
 
     private RepositoryContainer getOrCreateRepository(String group)
             throws LpException {
-        if (this.repositories.containsKey(group)) {
-            return this.repositories.get(group);
+        if (repositories.containsKey(group)) {
+            return repositories.get(group);
         } else {
-            Repository newRepository = getRepository(group);
+            Repository newRepository = getGroupRepository(group);
             RepositoryContainer container =
                     new RepositoryContainer(group, newRepository);
-            this.repositories.put(group, container);
+            repositories.put(group, container);
             return container;
         }
     }
 
-    private Repository getRepository(String group) throws LpException {
+    private Repository getGroupRepository(String group) throws LpException {
         Repository repository;
         if (configuration.isInMemory()) {
             repository = createInMemory();
@@ -176,8 +179,10 @@ class RepositoryManager {
         // It may take some time before the file is released.
         while (directory.exists()) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(DELETE_WAIT_TIME);
             } catch (InterruptedException ex) {
+                LOG.debug("Interrupt ignored while "
+                        + "waiting for directory to be deleted.");
             }
             FileUtils.deleteQuietly(directory);
         }

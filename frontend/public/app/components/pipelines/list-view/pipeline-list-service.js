@@ -29,7 +29,8 @@
         }
 
         function executePipeline(pipeline) {
-            pipelineApi.execute($http, pipeline.iri)
+            pipelineApi.executePipeline(
+                $http, pipeline.iri, {"keepDebugData": true})
                 .then(redirectToExecutionList)
                 .catch(handleExecutionPostFailure);
         }
@@ -45,7 +46,8 @@
         }
 
         function executeWithoutDebugData(pipeline) {
-            pipelineApi.executeWithoutDebugData($http, pipeline.iri)
+            pipelineApi.executePipeline(
+                $http, pipeline.iri, {"keepDebugData": false})
                 .then(redirectToExecutionList)
                 .catch(handleExecutionPostFailure);
         }
@@ -130,7 +132,9 @@
             return repository
                 .load($scope.repository)
                 .catch(angular.noop)
-                .then(() => {$scope.$apply()});
+                .then(() => {
+                    $scope.$apply()
+                });
         }
 
         function getTagsMatchingQuery(query) {
@@ -149,7 +153,7 @@
 
         return {
             "initialize": initialize,
-            "execute": executePipeline,
+            "executePipeline": executePipeline,
             "executeWithoutDebugData": executeWithoutDebugData,
             "create": createPipeline,
             "redirectToUpload": redirectToPipelineUpload,

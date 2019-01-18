@@ -97,6 +97,9 @@ public class ValuesSource {
     }
 
     private String addQuotes(String value, String name) {
+        if (value == null) {
+            return " UNDEF ";
+        }
         if (this.literals.contains(name)) {
             return " \"" + value + "\"";
         } else {

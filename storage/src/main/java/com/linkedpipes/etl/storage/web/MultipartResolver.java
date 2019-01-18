@@ -17,8 +17,8 @@ class MultipartResolver extends CommonsMultipartResolver {
             return false;
         }
         // Enable POST and PUT method names.
-        if (!"POST".equalsIgnoreCase(request.getMethod()) &&
-                !"PUT".equalsIgnoreCase(request.getMethod())) {
+        if (!"POST".equalsIgnoreCase(request.getMethod())
+                && !"PUT".equalsIgnoreCase(request.getMethod())) {
             return false;
         }
         //

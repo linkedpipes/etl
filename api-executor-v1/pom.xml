@@ -3,15 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-parent</artifactId>
+        <artifactId>pom-backend</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-parent/pom.xml</relativePath>
+        <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>api-executor-v1</artifactId>
-    <name>lp-api-executor-v1</name>
-    <version>0.0.0</version>
+    <name>LinkedPipes Executor API</name>
     <packaging>jar</packaging>
-    <description>Contains definition of API for Java components.</description>
+
     <dependencies>
         <!-- OSGI. -->
         <dependency>
@@ -34,4 +33,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

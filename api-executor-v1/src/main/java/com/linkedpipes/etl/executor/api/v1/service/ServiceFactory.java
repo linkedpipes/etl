@@ -10,14 +10,17 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 public interface ServiceFactory {
 
     /**
-     * @param serviceType
-     * @param component Resource of a component to create service for.
-     * @param definition
-     * @param context
+     * Create a service.
+     *
+     * @param serviceType Required service class.
+     * @param component   Resource of a component to create service for.
+     * @param definition  Access to RDF definition.
+     * @param context     Component context.
      * @return Null if no service of given type can be instantiated.
      */
-    Object create(Class<?> serviceType, String component,
-            RdfSource definition, Component.Context context)
+    Object create(
+            Class<?> serviceType, String component, RdfSource definition,
+            Component.Context context)
             throws LpException;
 
 }

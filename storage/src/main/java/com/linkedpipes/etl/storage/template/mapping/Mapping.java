@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.storage.template.mapping;
 
-
 import com.linkedpipes.etl.storage.template.Template;
 
 import java.util.Map;
@@ -37,13 +36,13 @@ public class Mapping {
      * Try to resolve local IRI for given remote IRI.
      */
     public String remoteToLocal(String iri) {
-        String local = this.remoteToLocal.get(iri);
+        String local = remoteToLocal.get(iri);
         if (local == null) {
             // This can happen if the pipeline is exported from the original
             // server, as such the server do not include mappings. That is
             // why it is not included in remoteToLocal, but we need
             // to use the IRI directly as the "original" IRI.
-            local = this.mappingFacade.originalToLocal(iri);
+            local = mappingFacade.originalToLocal(iri);
         }
         return local;
 
@@ -53,13 +52,13 @@ public class Mapping {
      * Add temporary mapping.
      */
     public void onImport(Template local, String remote) {
-        this.remoteToLocal.put(remote, local.getIri());
-        String original = this.remoteToOriginal.get(remote);
+        remoteToLocal.put(remote, local.getIri());
+        String original = remoteToOriginal.get(remote);
         if (original == null) {
             // There is no link to original, so original must be the source.
             original = remote;
         }
-        this.mappingFacade.add(local, original);
+        mappingFacade.add(local, original);
     }
 
 }

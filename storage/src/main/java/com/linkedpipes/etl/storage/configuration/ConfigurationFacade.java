@@ -72,7 +72,8 @@ public class ConfigurationFacade {
         return new Statements(worker.selectPrivate(rdf, description));
     }
 
-    public Statements finalizeAfterMergeFromBottom(Statements configurationRdf) {
+    public Statements finalizeAfterMergeFromBottom(
+            Statements configurationRdf) {
         MergeFromBottom worker = new MergeFromBottom();
         return worker.finalize(configurationRdf);
     }
