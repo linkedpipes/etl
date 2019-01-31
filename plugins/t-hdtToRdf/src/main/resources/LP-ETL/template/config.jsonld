@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-hdtToRdf/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-hdtToRdf#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-hdtToRdf#commitSize" : 50000,
+        "http://plugins.linkedpipes.com/ontology/t-hdtToRdf#commitSizeControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

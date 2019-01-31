@@ -95,6 +95,7 @@
         <module>t-propertyLinkerChunked</module>
         <module>t-jsonLdToRdf</module>
         <module>t-jsonLdToRdfChunked</module>
+        <module>t-hdtToRdf</module>
     </modules>
 
 </project>

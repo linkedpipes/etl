@@ -61,6 +61,7 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
             + "javax.xml.bind.util,"
             + "javax.xml.bind.annotation,"
             + "javax.xml.bind.annotation.adapters,"
+            + "javax.annotation,"
             + "" // slf4j
             + "org.slf4j;version=\"1.7.21\","
             + "org.slf4j.helpers;version=\"1.7.21\","
