@@ -58,6 +58,42 @@
                                 </goals>
                                 <configuration>
                                     <artifactItems>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-math3</artifactId>
+                                            <version>3.6.1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.jena</groupId>
+                                            <artifactId>jena-osgi</artifactId>
+                                            <version>3.10.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.github.andrewoma.dexx</groupId>
+                                            <artifactId>collection</artifactId>
+                                            <version>0.7</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-csv</artifactId>
+                                            <version>1.6</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.thrift</groupId>
+                                            <artifactId>libthrift</artifactId>
+                                            <version>0.12.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-compress</artifactId>
+                                            <version>1.18</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
                                         <!-- Apache POI (excel) bundle dependencies. -->
                                         <dependency>
                                             <groupId>commons-codec</groupId>
@@ -112,6 +148,12 @@
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-lang3</artifactId>
                                             <version>3.3.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-lang3</artifactId>
+                                            <version>3.8.1</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -186,9 +228,21 @@
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
+                                            <groupId>com.google.guava</groupId>
+                                            <artifactId>guava</artifactId>
+                                            <version>24.1-jre</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
                                             <groupId>com.github.jsonld-java</groupId>
                                             <artifactId>jsonld-java</artifactId>
                                             <version>0.11.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.github.jsonld-java</groupId>
+                                            <artifactId>jsonld-java</artifactId>
+                                            <version>0.12.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
