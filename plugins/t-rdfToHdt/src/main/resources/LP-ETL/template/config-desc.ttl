@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-rdfToHdt/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-rdfToHdt#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-rdfToHdt/1.0.0/configuration/desc/fileName> ,
+        <http://linkedpipes.com/resources/components/t-rdfToHdt/1.0.0/configuration/desc/baseIri> .
+
+<http://linkedpipes.com/resources/components/t-rdfToHdt/1.0.0/configuration/desc/fileName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-rdfToHdt#fileName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-rdfToHdt#fileNameControl> .
+
+<http://linkedpipes.com/resources/components/t-rdfToHdt/1.0.0/configuration/desc/baseIri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-rdfToHdt#baseIri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-rdfToHdt#baseIriControl> .
