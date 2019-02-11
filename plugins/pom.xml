@@ -96,6 +96,6 @@
         <module>t-jsonLdToRdf</module>
         <module>t-jsonLdToRdfChunked</module>
         <module>t-hdtToRdf</module>
+        <module>t-rdfToHdt</module>
     </modules>
-
 </project>
