@@ -25,7 +25,7 @@
     }
 
     function parseJarTemplate(resource, graph) {
-        const keywords = jsonld.r.getPlainStrings(resource, LP.keyword);
+        const keywords = jsonld.r.getPlainStrings(resource, LP.HAS_KEYWORD);
         const type = jsonld.r.getIRIs(resource, LP.HAS_TYPE);
         const infoLink = jsonld.r.getIRI(resource, LP.HAS_INFO_LINK);
         const supportControl = getSupportControl(resource);
