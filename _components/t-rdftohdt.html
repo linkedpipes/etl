@@ -1,0 +1,42 @@
+---
+short: t-rdftohdt
+type: transformer
+color: indigo
+title: RDF to HDT
+description: Converts RDF data to an HDT file (binary serialization).
+---
+
+<p class="flow-text">
+Transformer, allows the user to convert RDF data (RDF data unit) to an <a href="http://www.rdfhdt.org/" title="HDT – Your binary format for RDF">HDT</a> file (Files Data Unit).
+</p>
+<dl class="flow-text">
+    <dt>Output file name</dt>
+    <dd>File name under which the file will be visible in the pipeline, including extension.</dd>
+    <dt>Output base IRI</dt>
+    <dd>Base IRI for relative IRIs in the <a href="http://www.rdfhdt.org/" title="HDT – Your binary format for RDF">HDT</a> file.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Configuration</dd>
+            <dd>RDF single graph</dd>
+            <dt>Outputs</dt>
+            <dd>Files</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the RDF data on the input and serializes it into an <a href="http://www.rdfhdt.org/" title="HDT – Your binary format for RDF">HDT</a> file.
+		The HDT format is a binary RDF serialization.
+        </p>
+    </div>
+</div>

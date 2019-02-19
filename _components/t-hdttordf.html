@@ -1,0 +1,39 @@
+---
+short: t-hdttordf
+type: transformer
+color: indigo
+title: HDT to RDF
+description: Converts an HDT file (binary serialization) to RDF data.
+---
+
+<p class="flow-text">
+Transformer, allows the user to convert an <a href="http://www.rdfhdt.org/" title="HDT – Your binary format for RDF">HDT</a> file (Files Data Unit) to RDF data (RDF data unit).
+</p>
+<dl class="flow-text">
+    <dt>Commit size</dt>
+    <dd>Number of triples processed before commiting to database</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Configuration</dd>
+            <dd>Files</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component takes the <a href="http://www.rdfhdt.org/" title="HDT – Your binary format for RDF">HDT</a> files on the input and deserializes it into RDF data in a single RDF graph.
+        </p>
+    </div>
+</div>
