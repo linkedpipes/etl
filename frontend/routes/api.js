@@ -113,3 +113,12 @@ router.get("/jars/file", (req, res) => {
         .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
 });
+
+router.get("/autocomplete/terms", (req, res) => {
+    const endpoint = "http://lov.okfn.org/dataset/lov/api/v2/autocomplete/terms";
+    const remote_url = req.originalUrl.replace("/api/v1/autocomplete/terms", endpoint);
+    //
+    request.get(remote_url)
+        .on("error", (error) => handleConnectionError(res, error))
+        .pipe(res);
+});

@@ -1,5 +1,8 @@
 define(["yasqe"], (YASQE) => {
 
+    console.log("YASQE", YASQE.defaults.autocompleters);
+    console.log("Autocompletion ", YASQE.Autocompleters);
+
     /**
      * Initialize only one way binding.
      */
