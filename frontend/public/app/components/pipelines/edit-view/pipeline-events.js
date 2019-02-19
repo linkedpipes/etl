@@ -136,6 +136,8 @@
     function onCopyComponent(component) {
         // Clone in the pipeline.
         const clone = pplModel.cloneComponent($pipeline, component);
+        console.log("onCopyComponent");
+        console.log(component);
         const templateIri = pplModel.component.getTemplateIri(clone);
         const template = $templatesService.getTemplate(templateIri);
         // Add to canvas graph.

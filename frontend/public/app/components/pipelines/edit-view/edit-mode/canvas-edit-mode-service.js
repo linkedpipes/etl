@@ -220,6 +220,8 @@
             componentMenu.component["@id"] !== iri) {
             return;
         }
+        // Update component reference.
+        componentMenu.component = component;
         // Refresh component menu.
         showComponentMenu(componentMenu.cell, componentMenu.component);
     }
