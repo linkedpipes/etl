@@ -16,7 +16,7 @@
         "http://linkedpipes.com/ontology/keyword": [
             "HDT"
         ],
-        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/t-filestordf"},
+        "http://linkedpipes.com/ontology/infoLink": {"@id" : "https://etl.linkedpipes.com/components/t-hdttordf"},
         "http://linkedpipes.com/ontology/configurationDescription" : {
             "@id": "http://linkedpipes.com/resources/components/t-hdtToRdf/0.0.0/configuration/desc"
         }
