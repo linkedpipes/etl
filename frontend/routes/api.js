@@ -115,7 +115,7 @@ router.get("/jars/file", (req, res) => {
 });
 
 router.get("/autocomplete/terms", (req, res) => {
-    const endpoint = "http://lov.okfn.org/dataset/lov/api/v2/autocomplete/terms";
+    const endpoint = "http://lov.linkeddata.es/dataset/lov/api/v2/autocomplete/terms";
     const remote_url = req.originalUrl.replace("/api/v1/autocomplete/terms", endpoint);
     //
     request.get(remote_url)
