@@ -2,6 +2,8 @@ package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
+import com.linkedpipes.etl.executor.monitor.debug.DebugData;
+import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.eclipse.rdf4j.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ExecutionFacade {
+public class ExecutionFacade implements DebugDataSource {
 
     private ExecutionStorage storage;
 
@@ -91,6 +93,15 @@ public class ExecutionFacade {
     public Statements getMessages(Execution execution, String component)
             throws IOException {
         return this.messageLoader.loadComponentMessages(execution, component);
+    }
+
+    @Override
+    public DebugData getDebugData(String id) {
+        Execution execution = getExecution(id);
+        if (execution == null) {
+            return null;
+        }
+        return execution.getDebugData();
     }
 
 }

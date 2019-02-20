@@ -21,13 +21,30 @@ public class DataUnit {
 
     private String relativeDataPath;
 
+    /**
+     * If provided the content of the DataUnit is located inside
+     * another execution.
+     */
     private String mappedFromExecution;
 
+    /**
+     * List of directories that contains all files for this
+     * data unit.
+     */
     private List<File> debugDirectories = Collections.emptyList();
 
     private boolean loaded = false;
 
-    DataUnit() {
+    public DataUnit() {
+    }
+
+    public DataUnit(
+            String name, String relativeDataPath, String mappedFromExecution,
+            List<File> debugDirectories) {
+        this.name = name;
+        this.relativeDataPath = relativeDataPath;
+        this.mappedFromExecution = mappedFromExecution;
+        this.debugDirectories = debugDirectories;
     }
 
     public String getName() {
@@ -47,8 +64,8 @@ public class DataUnit {
             return null;
         }
         String iri = mappedFromExecution;
-        return iri.substring(
-                iri.indexOf("executions/") + "executions/".length());
+        int idStartIndex = iri.indexOf("executions/") + "executions/".length();
+        return iri.substring(idStartIndex);
     }
 
     void setMappedFromExecution(String execution) {

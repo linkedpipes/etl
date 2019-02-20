@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.monitor.execution;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
-import com.linkedpipes.etl.executor.monitor.debug.DebugData;
+import com.linkedpipes.etl.executor.monitor.debug.DebugDataFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutionSource;
@@ -210,7 +210,7 @@ class ExecutionStorage
      */
     public void updateFromExecution(
             Execution execution, Statements statements) {
-        execution.setDebugData(new DebugData(statements, execution));
+        execution.setDebugData(DebugDataFactory.create(execution, statements));
     }
 
     public Execution createExecution(

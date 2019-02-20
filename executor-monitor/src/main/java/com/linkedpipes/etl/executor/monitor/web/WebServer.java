@@ -72,7 +72,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     }
 
     private void buildServer() throws IOException {
-        LOG.info("Starting server on port: {}",
+        LOG.info("Starting web server on port: {}",
                 configuration.getWebServerPort());
         //
         ServletContextHandler handler;

@@ -10,6 +10,7 @@ const router = express.Router();
 module.exports = router;
 
 const storageApiUrlPrefix = config.storage.url + "/api/v1/components/";
+const monitorApiUrl = config.executor.monitor.url;
 
 router.get("/components/:type", (req, res) => {
     let url = storageApiUrlPrefix;
@@ -121,4 +122,21 @@ router.get("/autocomplete/terms", (req, res) => {
     request.get(remote_url)
         .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
+});
+
+router.get("/debug/metadata/**", (req, res) => {
+  let url = monitorApiUrl + req.originalUrl.replace("/api/v1/", "");
+  console.log(url);
+  request.get(url)
+    .on("error", (error) => handleConnectionError(res, error))
+    .pipe(res);
+});
+
+
+router.get("/debug/data/**", (req, res) => {
+  let url = monitorApiUrl + req.originalUrl.replace("/api/v1/", "");
+  console.log(url);
+  request.get(url)
+    .on("error", (error) => handleConnectionError(res, error))
+    .pipe(res);
 });
