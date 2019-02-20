@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataFactory;
+import com.linkedpipes.etl.executor.monitor.events.EventListener;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutionSource;
@@ -53,9 +54,13 @@ class ExecutionStorage
 
     private final Map<Executor, Execution> executors = new HashMap<>();
 
+    private final EventListener eventListener;
+
     @Autowired
-    public ExecutionStorage(Configuration configuration) {
+    public ExecutionStorage(
+            Configuration configuration, EventListener eventListener) {
         this.configuration = configuration;
+        this.eventListener = eventListener;
     }
 
     @PostConstruct
@@ -173,6 +178,7 @@ class ExecutionStorage
      * Perform full execution update from directory.
      */
     public void update(Execution execution) {
+        ExecutionStatus oldStatus = execution.getStatus();
         if (!(shouldUpdate(execution))) {
             // We do not reload dangling or invalid executions.
             return;
@@ -195,14 +201,22 @@ class ExecutionStorage
                     execution.getId(), ex);
             return;
         }
+        if (oldStatus != execution.getStatus()) {
+            eventListener.onExecutionStatusDidChange(execution, oldStatus);
+        }
         if (ExecutionStatus.isFinished(execution.getStatus())) {
             execution.setHasFinalData(true);
+            eventListener.onExecutionHasFinalData(execution);
         }
     }
 
     private void updateFromOverview(Execution execution, JsonNode overview) {
+        ExecutionStatus oldStatus = execution.getStatus();
         LoadOverview overviewLoader = new LoadOverview();
         overviewLoader.load(execution, overview);
+        if (oldStatus != execution.getStatus()) {
+            eventListener.onExecutionStatusDidChange(execution, oldStatus);
+        }
     }
 
     /**
