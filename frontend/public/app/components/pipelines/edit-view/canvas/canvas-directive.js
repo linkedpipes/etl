@@ -21,7 +21,7 @@ define([
             "width": "100%",
             "height": "100%",
             "model": graph,
-            "gridSize": 20,
+            "gridSize": 1,
             "linkPinning": false,
             "snapLinks": {
                 "radius": 50
