@@ -41,6 +41,8 @@ public class Configuration {
 
     private String slackWebhook;
 
+    private String localUrl;
+
     @PostConstruct
     public void init() {
         String propertiesFile = System.getProperty("configFileLocation");
@@ -78,6 +80,7 @@ public class Configuration {
                 "executor-monitor.ftp.data_ports_interval.end");
         slackWebhook = getOptionalProperty(
                 "executor-monitor.slack_webhook");
+        localUrl = getProperty("domain.uri");
         //
         validateUri(executorUri, "executor.execution.working_directory");
         validateDirectory(workingDirectoryPath);
@@ -183,6 +186,10 @@ public class Configuration {
 
     public String getSlackWebhook() {
         return slackWebhook;
+    }
+
+    public String getLocalUrl() {
+        return localUrl;
     }
 
 }

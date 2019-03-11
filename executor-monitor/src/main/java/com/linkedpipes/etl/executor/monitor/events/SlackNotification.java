@@ -7,8 +7,10 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 class SlackNotification implements EventListener {
 
@@ -17,8 +19,11 @@ class SlackNotification implements EventListener {
 
     private final String slackUrl;
 
-    public SlackNotification(String slackUrl) {
+    private final String localPublicUrl;
+
+    public SlackNotification(String slackUrl, String localPublicUrl) {
         this.slackUrl = slackUrl;
+        this.localPublicUrl = localPublicUrl;
     }
 
     @Override
@@ -36,13 +41,26 @@ class SlackNotification implements EventListener {
         String message = createMessage(
                 "Pipeline lost executor.",
                 "#f44242",
-                getPipelineName(execution), execution.getIri());
+                getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message);
     }
 
+    private String getOpenExecutionUrl(Execution execution) {
+        String pipelineIri = execution.getPipeline().stringValue();
+        String executionIri = execution.getIri();
+        try {
+            return localPublicUrl + "/#/pipelines/edit/canvas?" +
+                    "pipeline=" + URLEncoder.encode(pipelineIri, "UTF-8") +
+                    "&execution=" + URLEncoder.encode(executionIri, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     private String createMessage(
-            String message, String color, String pipelineName,
-            String executionIri) {
+            String message, String color,
+            String pipelineName,
+            String attachmentOpenLink) {
         StringBuilder builder = new StringBuilder();
         builder.append("{\"attachments\": [ {");
 
@@ -63,7 +81,7 @@ class SlackNotification implements EventListener {
         builder.append("\",");
 
         builder.append("\"title_link\": \"");
-        builder.append(executionIri);
+        builder.append(attachmentOpenLink);
         builder.append("\",");
 
         builder.append("} ] }");
@@ -123,7 +141,7 @@ class SlackNotification implements EventListener {
         String message = createMessage(
                 "Pipeline execution finished.",
                 "#2b8727",
-                getPipelineName(execution), execution.getIri());
+                getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message);
     }
 
@@ -131,7 +149,7 @@ class SlackNotification implements EventListener {
         String message = createMessage(
                 "Pipeline execution failed.",
                 "#f44242",
-                getPipelineName(execution), execution.getIri());
+                getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message);
     }
 
@@ -139,7 +157,7 @@ class SlackNotification implements EventListener {
         String message = createMessage(
                 "Pipeline execution cancelled.",
                 "#dd9a3b",
-                getPipelineName(execution), execution.getIri());
+                getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message);
     }
 
