@@ -13,6 +13,8 @@ public final class HttpGetVocabulary {
 
     public static final String HAS_FOLLOW_REDIRECT = PREFIX + "hardRedirect";
 
+    public static final String HAS_UTF8_REDIRECT = PREFIX + "utf8Redirect";
+
     public static final String HAS_USER_AGENT = PREFIX + "userAgent";
 
     public static final String ENCODE_URL = PREFIX + "encodeUrl";

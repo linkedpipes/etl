@@ -10,7 +10,8 @@
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/header> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/timeout> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/threadsPerGroup> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/encodeUrl> .
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/encodeUrl> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/utf8Redirect> .
 
 [] config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference> .
 
@@ -53,3 +54,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#encodeUrl> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#encodeUrlControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/utf8Redirect>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#utf8Redirect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#utf8RedirectControl> .

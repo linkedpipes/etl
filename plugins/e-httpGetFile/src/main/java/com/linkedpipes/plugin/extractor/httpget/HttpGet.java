@@ -47,8 +47,7 @@ public final class HttpGet implements Component, SequentialExecution {
         Downloader.Task fileToDownload = new Downloader.Task(
                 configuration.getUri(), outputFile, header, null);
         Downloader downloader = new Downloader(
-                configuration.isForceFollowRedirect(), fileToDownload, false,
-                configuration.isEncodeUrl());
+                fileToDownload, configuration.asDownloaderConfiguration());
         try {
             downloader.download();
         } catch (Exception ex) {

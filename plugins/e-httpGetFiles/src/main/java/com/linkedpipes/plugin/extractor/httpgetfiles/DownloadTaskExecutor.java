@@ -47,10 +47,9 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
     public void accept(DownloadTask task) throws LpException {
         requestReport.setTask(task);
         Downloader downloader = new Downloader(
-                configuration.isForceFollowRedirect(),
                 createDownloaderTask(task),
-                configuration.isDetailLogging(),
-                requestReport, configuration.isEncodeUrl());
+                configuration.asDownloaderConfiguration(),
+                requestReport);
         try {
             downloader.download();
         } catch (Exception ex) {

@@ -23,6 +23,9 @@ public final class HttpGetFilesVocabulary {
     public static final String HAS_FOLLOW_REDIRECT
             = PREFIX + "hardRedirect";
 
+    public static final String HAS_UTF8_REDIRECT
+            = PREFIX + "utf8Redirect";
+
     public static final String HAS_HEADER = PREFIX + "header";
 
     public static final String HAS_THREADS = PREFIX + "threads";

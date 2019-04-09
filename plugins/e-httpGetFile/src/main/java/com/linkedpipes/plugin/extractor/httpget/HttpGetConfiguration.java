@@ -16,11 +16,14 @@ public class HttpGetConfiguration {
      * a protocol. So specially it does not allow redirect from http
      * to https - see
      * http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4620571 .
-     *
+     * <p>
      * If true DPU follow redirect to any location and protocol.
      */
     @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_FOLLOW_REDIRECT)
-    private boolean forceFollowRedirect;
+    private boolean manualFollowRedirect;
+
+    @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_UTF8_REDIRECT)
+    private boolean utf8Redirect;
 
     @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_USER_AGENT)
     private String userAgent = null;
@@ -47,12 +50,20 @@ public class HttpGetConfiguration {
         this.fileName = fileName;
     }
 
-    public boolean isForceFollowRedirect() {
-        return forceFollowRedirect;
+    public boolean isManualFollowRedirect() {
+        return manualFollowRedirect;
     }
 
-    public void setForceFollowRedirect(boolean forceFollowRedirect) {
-        this.forceFollowRedirect = forceFollowRedirect;
+    public void setManualFollowRedirect(boolean manualFollowRedirect) {
+        this.manualFollowRedirect = manualFollowRedirect;
+    }
+
+    public boolean isUtf8Redirect() {
+        return utf8Redirect;
+    }
+
+    public void setUtf8Redirect(boolean utf8Redirect) {
+        this.utf8Redirect = utf8Redirect;
     }
 
     public String getUserAgent() {
@@ -69,6 +80,11 @@ public class HttpGetConfiguration {
 
     public void setEncodeUrl(boolean encodeUrl) {
         this.encodeUrl = encodeUrl;
+    }
+
+    public Downloader.Configuration asDownloaderConfiguration() {
+        return new Downloader.Configuration(
+                manualFollowRedirect, false, encodeUrl, utf8Redirect);
     }
 
 }
