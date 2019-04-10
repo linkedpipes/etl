@@ -33,6 +33,10 @@ define([], function () {
         "timeout" : {
             "$type" : "int",
             "$label" : "Timeout"
+        },
+        "utf8Redirect" : {
+            "$type": "bool",
+            "$label": "Use UTF-8 encoding for redirect"
         }
     };
 

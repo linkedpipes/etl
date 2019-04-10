@@ -55,4 +55,6 @@ public final class HttpRequestVocabulary {
 
     public static final String HAS_TIME_OUT = PREFIX + "timeout";
 
+    public static final String HAS_UTF8_REDIRECT = PREFIX + "utf8Redirect";
+
 }

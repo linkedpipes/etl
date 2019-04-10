@@ -25,6 +25,14 @@
                ng-disabled="dialog.followRedirect.disabled || dialog.followRedirect.inherit">
         Follow redirects
     </md-switch>
+    <md-switch ng-model="dialog.utf8Redirect.value"
+               ng-hide="dialog.utf8Redirect.hide"
+               ng-disabled="dialog.utf8Redirect.disabled">
+        Use UTF-8 encoding for redirect
+        <md-tooltip>Can be used together with 'Follow redirects'.
+            Interpret Location header using UTF-8.
+        </md-tooltip>
+    </md-switch>
     <md-switch ng-model="dialog.encodeUrl.value"
                ng-hide="dialog.encodeUrl.hide"
                ng-disabled="dialog.encodeUrl.disabled">

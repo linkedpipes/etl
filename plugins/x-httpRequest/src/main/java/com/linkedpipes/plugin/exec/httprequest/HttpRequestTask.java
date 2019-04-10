@@ -117,6 +117,9 @@ public class HttpRequestTask implements GroupTask {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_TIME_OUT)
     private Integer timeOut = null;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_UTF8_REDIRECT)
+    private Boolean hasUtf8Redirect = null;
+
     @Override
     public String getIri() {
         return iri;
@@ -206,6 +209,14 @@ public class HttpRequestTask implements GroupTask {
 
     public void setTimeOut(Integer timeOut) {
         this.timeOut = timeOut;
+    }
+
+    public Boolean isHasUtf8Redirect() {
+        return hasUtf8Redirect;
+    }
+
+    public void setHasUtf8Redirect(Boolean hasUtf8Redirect) {
+        this.hasUtf8Redirect = hasUtf8Redirect;
     }
 
 }

@@ -24,6 +24,9 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_TIME_OUT)
     private Integer timeOut = null;
 
+    @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_UTF8_REDIRECT)
+    private boolean hasUtf8Redirect = false;
+
     @Override
     public int getThreadsNumber() {
         return threadsNumber;
@@ -72,6 +75,14 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
 
     public void setTimeOut(Integer timeOut) {
         this.timeOut = timeOut;
+    }
+
+    public boolean isHasUtf8Redirect() {
+        return hasUtf8Redirect;
+    }
+
+    public void setHasUtf8Redirect(boolean hasUtf8Redirect) {
+        this.hasUtf8Redirect = hasUtf8Redirect;
     }
 
 }

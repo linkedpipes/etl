@@ -101,10 +101,10 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private boolean shouldFollowRedirect(Connection connection)
             throws IOException {
-        if (task.isFollowRedirect() == null) {
+        if (!connection.requestRedirect()) {
             return false;
         }
-        return task.isFollowRedirect() && connection.requestRedirect();
+        return task.isFollowRedirect() || task.isHasUtf8Redirect();
     }
 
     private Connection createConnection(URL url)
@@ -133,6 +133,10 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     private HttpURLConnection createHttpConnection(URL url)
             throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        if (task.isHasUtf8Redirect()) {
+            // We need to do this manually.
+            connection.setInstanceFollowRedirects(false);
+        }
         connection.setRequestMethod(task.getMethod());
         if (task.getTimeOut() != null) {
             connection.setConnectTimeout(task.getTimeOut());
@@ -170,7 +174,11 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private void handleRedirect(Connection connection)
             throws Exception {
-        URL urlToFollow = new URL(connection.getResponseHeader("Location"));
+        String location = connection.getResponseHeader("Location");
+        if (task.isHasUtf8Redirect()) {
+            location = new String(location.getBytes("ISO-8859-1"), "UTF-8");
+        }
+        URL urlToFollow = new URL(location);
         connection.close();
         performRequest(urlToFollow);
     }
