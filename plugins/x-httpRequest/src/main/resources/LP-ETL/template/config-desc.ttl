@@ -38,10 +38,10 @@
 
 <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/timeout>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#timeout> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#timeoutControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-httpRequest#timeout> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-httpRequest#timeoutControl> .
 
 <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/utf8Redirect>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#utf8Redirect> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#utf8RedirectControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-httpRequest#utf8Redirect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-httpRequest#utf8RedirectControl> .
