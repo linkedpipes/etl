@@ -69,9 +69,13 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <!--
+                        org.rdfhdt.hdt.pro - added by Bnd-4.2.0
+                         -->
                         <Import-Package>
                             !com.sun.management,
                             !com.sun.xml.internal.ws.encoding.soap,
+                            !org.rdfhdt.hdt.pro,
                             *
                         </Import-Package>
                     </instructions>
