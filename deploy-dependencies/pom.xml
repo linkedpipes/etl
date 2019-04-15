@@ -7,7 +7,7 @@
         <version>0.0.0</version>
         <relativePath>../pom-plugin/pom.xml</relativePath>
     </parent>
-    <artifactId>dependencies</artifactId>
+    <artifactId>deploy-dependencies</artifactId>
     <packaging>pom</packaging>
     <name>LinkedPipes Deploy Plugins</name>
 
@@ -257,49 +257,6 @@
                                             <version>3.3</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
-                                        <!-- GeoTools -->
-                                        <dependency>
-                                            <groupId>com.googlecode.efficient-java-matrix-library</groupId>
-                                            <artifactId>core-osgi</artifactId>
-                                            <version>0.26</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>net.sf.geographiclib</groupId>
-                                            <artifactId>GeographicLib-Java-osgi</artifactId>
-                                            <version>1.44</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.geotools</groupId>
-                                            <artifactId>gt-opengis-osgi</artifactId>
-                                            <version>16.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.geotools</groupId>
-                                            <artifactId>gt-osgi</artifactId>
-                                            <version>16.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.hsqldb</groupId>
-                                            <artifactId>hsqldb-osgi</artifactId>
-                                            <version>2.3.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>jgridshift</groupId>
-                                            <artifactId>jgridshift-osgi</artifactId>
-                                            <version>1.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>javax.measure</groupId>
-                                            <artifactId>jsr-275-osgi</artifactId>
-                                            <version>1.0-beta-2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
                                         <dependency>
                                             <groupId>commons-pool</groupId>
                                             <artifactId>commons-pool</artifactId>
@@ -326,11 +283,17 @@
                                             <version>${lp.version}</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
-                                        <!-- RDF -->
+                                        <!-- LinkedPipes Libraries -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>rdf4j-storage-light</artifactId>
                                             <version>${rdf4j.version}</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>geotools</artifactId>
+                                            <version>21.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Core components. -->

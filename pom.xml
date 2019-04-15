@@ -51,6 +51,7 @@
                 <module>rdf-utils-rdf4j</module>
                 <module>test-environment</module>
                 <module>plugins</module>
+                <module>plugin-libraries</module>
                 <module>deploy-dependencies</module>
             </modules>
         </profile>
@@ -68,7 +69,7 @@
             <modules>
                 <module>pom-backend</module>
                 <module>pom-plugin</module>
-                <module>rdf4j-storage-light</module>
+                <module>plugin-libraries</module>
                 <module>vocabulary</module>
                 <module>api-executor-v1</module>
                 <module>dataunit-core</module>
