@@ -81,8 +81,12 @@ executor-monitor.ftp.data_ports_interval.end = 2225
 executor-monitor.ftp.uri = ftp://localhost:2221
 
 # Optional property, can be used to send notification to slack
-# about pipeline executions (fail, finished, cancelled, ...).
-# executor-monitor.slack_webhook =
+# about pipeline successfully finished executions.
+# executor-monitor.slack_finished_executions_webhook =
+
+# Optional property, can be used to send notification to slack.
+# Include executions related error/cancelled messages.
+# executor-monitor.slack_error_webhook =
 
 ##############
 #  Storage   #

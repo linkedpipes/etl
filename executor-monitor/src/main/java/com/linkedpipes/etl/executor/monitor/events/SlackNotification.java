@@ -17,12 +17,18 @@ class SlackNotification implements EventListener {
     private static final Logger LOG =
             LoggerFactory.getLogger(SlackNotification.class);
 
-    private final String slackUrl;
-
     private final String localPublicUrl;
 
-    public SlackNotification(String slackUrl, String localPublicUrl) {
-        this.slackUrl = slackUrl;
+    private final String slackForFinished;
+
+    private final String slackForError;
+
+    public SlackNotification(
+            String slackForFinished,
+            String slackForError,
+            String localPublicUrl) {
+        this.slackForFinished = slackForFinished;
+        this.slackForError = slackForError;
         this.localPublicUrl = localPublicUrl;
     }
 
@@ -42,7 +48,7 @@ class SlackNotification implements EventListener {
                 "Pipeline lost executor.",
                 "#f44242",
                 getPipelineName(execution), getOpenExecutionUrl(execution));
-        sendMessage(message);
+        sendMessage(message, slackForError);
     }
 
     private String getOpenExecutionUrl(Execution execution) {
@@ -100,7 +106,10 @@ class SlackNotification implements EventListener {
         return "[unknown]";
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(String message, String slackUrl) {
+        if (slackUrl == null) {
+            return;
+        }
         try {
             URL url = new URL(slackUrl);
             HttpURLConnection connection =
@@ -142,7 +151,7 @@ class SlackNotification implements EventListener {
                 "Pipeline execution finished.",
                 "#2b8727",
                 getPipelineName(execution), getOpenExecutionUrl(execution));
-        sendMessage(message);
+        sendMessage(message, slackForFinished);
     }
 
     private void onExecutionFailed(Execution execution) {
@@ -150,7 +159,7 @@ class SlackNotification implements EventListener {
                 "Pipeline execution failed.",
                 "#f44242",
                 getPipelineName(execution), getOpenExecutionUrl(execution));
-        sendMessage(message);
+        sendMessage(message, slackForError);
     }
 
     private void onExecutionCancelled(Execution execution) {
@@ -158,8 +167,7 @@ class SlackNotification implements EventListener {
                 "Pipeline execution cancelled.",
                 "#dd9a3b",
                 getPipelineName(execution), getOpenExecutionUrl(execution));
-        sendMessage(message);
+        sendMessage(message, slackForError);
     }
-
 
 }

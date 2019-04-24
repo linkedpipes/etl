@@ -39,7 +39,9 @@ public class Configuration {
 
     private final Properties properties = new Properties();
 
-    private String slackWebhook;
+    private String slackFinishedWebhook;
+
+    private String slackErrorWebhook;
 
     private String localUrl;
 
@@ -78,8 +80,10 @@ public class Configuration {
                 "executor-monitor.ftp.data_ports_interval.start");
         ftpDataPortsEnd = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.end");
-        slackWebhook = getOptionalProperty(
-                "executor-monitor.slack_webhook");
+        slackFinishedWebhook = getOptionalProperty(
+                "executor-monitor.slack_finished_executions_webhook");
+        slackErrorWebhook = getOptionalProperty(
+                "executor-monitor.slack_error_webhook");
         localUrl = getProperty("domain.uri");
         //
         validateUri(executorUri, "executor.execution.working_directory");
@@ -184,8 +188,12 @@ public class Configuration {
         }
     }
 
-    public String getSlackWebhook() {
-        return slackWebhook;
+    public String getSlackFinishedWebhook() {
+        return slackFinishedWebhook;
+    }
+
+    public String getSlackErrorWebhook() {
+        return slackErrorWebhook;
     }
 
     public String getLocalUrl() {

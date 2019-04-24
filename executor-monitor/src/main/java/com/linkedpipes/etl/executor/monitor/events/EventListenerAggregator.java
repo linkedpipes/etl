@@ -16,10 +16,12 @@ class EventListenerAggregator implements EventListener {
 
     @Autowired
     public EventListenerAggregator(Configuration configuration) {
-        String slackUrl = configuration.getSlackWebhook();
+        String slackFinished = configuration.getSlackFinishedWebhook();
+        String slackError = configuration.getSlackErrorWebhook();
         String localUrl = configuration.getLocalUrl();
-        if (slackUrl != null) {
-            listeners.add(new SlackNotification(slackUrl, localUrl));
+        if (slackFinished != null || slackError != null) {
+            listeners.add(new SlackNotification(
+                    slackFinished, slackError, localUrl));
         }
     }
 
