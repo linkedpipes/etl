@@ -12,15 +12,7 @@
     <version>0.0.0</version>
     <packaging>bundle</packaging>
     <name>plugin x-virtuoso</name>
-
-    <repositories>
-        <repository>
-            <id>artefacts.linkedpipes.com</id>
-            <name>artefacts.linkedpipes.com</name>
-            <url>https://artefacts.linkedpipes.com/repository/maven-public/</url>
-        </repository>
-    </repositories>
-
+    
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
@@ -38,12 +30,16 @@
         <dependency>
             <groupId>com.openlinksw.virtuoso</groupId>
             <artifactId>virt_rdf4j</artifactId>
-            <version>20170111</version>
+            <version>0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/virt_rdf4j.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.openlinksw.virtuoso</groupId>
             <artifactId>virtjdbc4</artifactId>
-            <version>20170111</version>
+            <scope>system</scope>
+            <version>0</version>
+            <systemPath>${project.basedir}/libs/virtjdbc4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
