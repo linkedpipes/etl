@@ -28,14 +28,15 @@ public class FileContentEntry extends DebugEntry {
             String nameFilter, String sourceFilter, long offset, long limit)
             throws IOException {
         ResponseContent content = new ResponseContent(Collections.emptyList());
-        content.metadata.count = 0;
         content.metadata.type = ResponseContent.TYPE_FILE;
+        content.metadata.size = getFileSize();
+        content.metadata.mimeType = getFileMimeType();
         contentAsString = content.asJsonString();
         return this;
     }
 
     public String getFileMimeType() {
-        return URLConnection.getFileNameMap().getContentTypeFor(file.getName());
+        return getMimeType(file);
     }
 
     public Long getFileSize() {
@@ -44,6 +45,10 @@ public class FileContentEntry extends DebugEntry {
 
     public void writeFileContent(OutputStream outputStream) throws IOException {
         FileUtils.copyFile(file, outputStream);
+    }
+
+    public static String getMimeType(File file) {
+        return URLConnection.getFileNameMap().getContentTypeFor(file.getName());
     }
 
 }

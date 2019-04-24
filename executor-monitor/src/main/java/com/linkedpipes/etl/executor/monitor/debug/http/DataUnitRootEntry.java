@@ -62,14 +62,14 @@ class DataUnitRootEntry extends DebugEntry {
                     data.add(new ResponseContent.Entry(
                             ResponseContent.TYPE_DIR,
                             file.getName(),
-                            directory.getName(),
-                            null));
+                            directory.getName()));
                 } else {
                     data.add(new ResponseContent.Entry(
                             ResponseContent.TYPE_FILE,
                             file.getName(),
                             directory.getName(),
-                            file.length()));
+                            file.length(),
+                            FileContentEntry.getMimeType(file)));
                 }
             }
         }

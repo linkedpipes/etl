@@ -32,7 +32,7 @@ class ExecutionRootEntry extends DebugEntry {
                 .limit(limit)
                 .collect(Collectors.toList());
         ResponseContent content = new ResponseContent(data);
-        content.metadata.count = debugData.getDataUnits().size();
+        content.metadata.count = (long)debugData.getDataUnits().size();
         content.metadata.type = ResponseContent.TYPE_DIR;
         contentAsString = content.asJsonString();
         return this;
@@ -43,7 +43,6 @@ class ExecutionRootEntry extends DebugEntry {
         return new ResponseContent.Entry(
                 ResponseContent.TYPE_DIR,
                 entry.getKey(),
-                null,
                 null);
     }
 

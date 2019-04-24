@@ -61,14 +61,14 @@ class DirectoryEntry extends DebugEntry {
                 data.add(new ResponseContent.Entry(
                         ResponseContent.TYPE_DIR,
                         file.getName(),
-                        source,
-                        null));
+                        source));
             } else {
                 data.add(new ResponseContent.Entry(
                         ResponseContent.TYPE_FILE,
                         file.getName(),
                         source,
-                        file.length()));
+                        file.length(),
+                        FileContentEntry.getMimeType(file)));
             }
         }
 

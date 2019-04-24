@@ -134,7 +134,8 @@ class AmbiguousEntry extends DebugEntry {
                 ResponseContent.TYPE_FILE,
                 entry.file.getName(),
                 entry.source,
-                entry.file.length()));
+                entry.getFileSize(),
+                entry.getFileMimeType()));
 
     }
 
