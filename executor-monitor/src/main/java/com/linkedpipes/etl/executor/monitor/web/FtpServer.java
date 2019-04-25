@@ -42,6 +42,11 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
     private org.apache.ftpserver.FtpServer server = null;
 
     protected void start() {
+        LOG.info("Starting FTP server on ports: {}, {} - {}",
+                configuration.getFtpCommandPort(),
+                configuration.getFtpDataPortsStart(),
+                configuration.getFtpDataPortsEnd());
+
         DataConnectionConfigurationFactory dataFactory
                 = new DataConnectionConfigurationFactory();
 

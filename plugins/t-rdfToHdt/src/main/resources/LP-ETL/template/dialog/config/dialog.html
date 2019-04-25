@@ -1,0 +1,15 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
+        <label>Output file name</label>
+        <input ng-model="dialog.fileName.value"
+               ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
+               placeholder="output.hdt">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.baseIri.hide">
+        <label>Output base IRI</label>
+        <input ng-model="dialog.baseIri.value"
+               ng-disabled="dialog.baseIri.disabled || dialog.baseIri.inherit"
+               placeholder="https://localhost/base">
+    </md-input-container>
+</div>

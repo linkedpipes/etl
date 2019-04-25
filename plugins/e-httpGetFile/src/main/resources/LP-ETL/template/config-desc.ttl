@@ -7,7 +7,8 @@
         <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileName> ,
         <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/hardRedirect> ,
         <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/userAgent> ,
-        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/encodeUrl> .
+        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/encodeUrl> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/utf8Redirect> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/fileUri>
     a config:ConfigurationMember ;
@@ -33,3 +34,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#encodeUrl> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#encodeUrlControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFile/0.0.0/configuration/desc/utf8Redirect>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#utf8Redirect> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#utf8RedirectControl> .

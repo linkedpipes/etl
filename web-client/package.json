@@ -1,0 +1,74 @@
+{
+  "name": "linkedpipes-etl-web-client",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Web client for LinkedPipes ETL.",
+  "scripts": {
+    "dev": "node ./server/server.develop.js",
+    "pretest": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
+    "test": "jest",
+    "build": "cross-env NODE_ENV=production webpack --config build/webpack.production.js",
+    "start": "node server/server.production.js"
+  },
+  "license": "MIT",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ]
+  },
+  "dependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@mdi/font": "^3.6.95",
+    "@vue/test-utils": "^1.0.0-beta.25",
+    "babel-loader": "^8.0.5",
+    "clean-webpack-plugin": "^2.0.1",
+    "copy-webpack-plugin": "^5.0.2",
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.1",
+    "express": "^4.16.4",
+    "html-webpack-plugin": "^3.2.0",
+    "jest": "^24.7.1",
+    "jest-serializer-vue": "^2.0.2",
+    "mini-css-extract-plugin": "^0.6.0",
+    "moment": "^2.24.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "terser-webpack-plugin": "^1.2.3",
+    "triple-beam": "^1.3.0",
+    "vue": "^2.6.10",
+    "vue-jest": "^3.0.4",
+    "vue-loader": "^15.7.0",
+    "vue-router": "^3.0.6",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify": "^1.5.12",
+    "vuex": "^3.1.0",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpack-dev-middleware": "^3.6.2",
+    "webpack-hot-middleware": "^2.24.3",
+    "webpack-merge": "^4.2.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-vue": "^5.2.2",
+    "stylelint": "^10.0.1",
+    "ts-loader": "^5.4.3",
+    "typescript": "^3.4.4"
+  }
+}

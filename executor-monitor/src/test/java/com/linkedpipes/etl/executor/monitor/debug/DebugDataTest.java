@@ -22,7 +22,7 @@ public class DebugDataTest {
         Mockito.when(execution.getIri()).thenReturn(executionIri);
         Mockito.when(execution.getDirectory()).thenReturn(directory);
         Statements statements = twoDataUnitsWithValidAndInvalidDebugFiles();
-        DebugData debugData = new DebugData(statements, execution);
+        DebugData debugData = DebugDataFactory.create(execution, statements);
         //
         Assert.assertEquals(executionIri, debugData.getExecution());
         Assert.assertEquals(directory, debugData.getExecutionDirectory());

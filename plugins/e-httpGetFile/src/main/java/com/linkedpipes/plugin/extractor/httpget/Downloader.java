@@ -28,8 +28,9 @@ class Downloader {
 
         private final Integer timeOut;
 
-        public Task(String getSourceUrl, File targetFile,
-                    Map<String, String> headers, Integer timeOut) {
+        public Task(
+                String getSourceUrl, File targetFile,
+                Map<String, String> headers, Integer timeOut) {
             this.getSourceUrl = getSourceUrl;
             this.targetFile = targetFile;
             this.headers = headers;
@@ -54,26 +55,40 @@ class Downloader {
 
     }
 
+    public static class Configuration {
+
+        private final boolean manualFollowRedirect;
+
+        private final boolean logDetail;
+
+        private final boolean encodeUrl;
+
+        private final boolean useUtf8ForRedirect;
+
+        public Configuration(
+                boolean manualFollowRedirect,
+                boolean logDetail,
+                boolean encodeUrl,
+                boolean useUtf8ForRedirect) {
+            this.manualFollowRedirect = manualFollowRedirect;
+            this.logDetail = logDetail;
+            this.encodeUrl = encodeUrl;
+            this.useUtf8ForRedirect = useUtf8ForRedirect;
+        }
+
+    }
+
     public static final int HTTP_TEMPORARY_REDIRECT = 307;
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
 
-    private final boolean followRedirect;
-
     private final Task toDownload;
 
-    private final boolean logDetail;
+    private final Configuration configuration;
 
-    private final boolean encodeUrl;
-
-    public Downloader(boolean followRedirect,
-                      Task toDownload,
-                      boolean logDetail,
-                      boolean encodeUrl) {
-        this.followRedirect = followRedirect;
+    public Downloader(Task toDownload, Configuration configuration) {
         this.toDownload = toDownload;
-        this.logDetail = logDetail;
-        this.encodeUrl = encodeUrl;
+        this.configuration = configuration;
     }
 
     public void download() throws IOException {
@@ -100,7 +115,7 @@ class Downloader {
     }
 
     private URL createUrl(String stringAsUrl) throws IOException {
-        if (encodeUrl) {
+        if (configuration.encodeUrl) {
             try {
                 stringAsUrl = (new URL(stringAsUrl)).toURI().toASCIIString();
             } catch (URISyntaxException ex) {
@@ -110,12 +125,13 @@ class Downloader {
         return new URL(stringAsUrl);
     }
 
-    private HttpURLConnection connect(URL target)
-            throws IOException {
+    private HttpURLConnection connect(URL target) throws IOException {
         HttpURLConnection connection = createConnection(target);
-        if (followRedirect) {
+        if (configuration.manualFollowRedirect) {
+            connection.setInstanceFollowRedirects(false);
             return resolveRedirects(connection);
         } else {
+            connection.setInstanceFollowRedirects(true);
             return connection;
         }
     }
@@ -125,7 +141,7 @@ class Downloader {
                 (HttpURLConnection) target.openConnection();
         setHeaders(connection);
         setTimeOut(connection);
-        if (logDetail) {
+        if (configuration.logDetail) {
             logConnectionDetails(connection);
         }
         return connection;
@@ -173,6 +189,9 @@ class Downloader {
         int responseCode = connection.getResponseCode();
         while (isResponseRedirect(responseCode)) {
             String location = connection.getHeaderField("Location");
+            if (configuration.useUtf8ForRedirect) {
+                location = new String(location.getBytes("ISO-8859-1"), "UTF-8");
+            }
             connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
             connection = createConnection(createUrl(location));
@@ -200,8 +219,7 @@ class Downloader {
         }
         LOG.info("Error: {}", writer.toString());
 
-
-        for (Map.Entry<String,List<String>> entry :
+        for (Map.Entry<String, List<String>> entry :
                 connection.getHeaderFields().entrySet()) {
             LOG.info("Header: {}", entry.getKey());
             for (String value : entry.getValue()) {

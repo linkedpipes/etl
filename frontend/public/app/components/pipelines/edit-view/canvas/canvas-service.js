@@ -215,7 +215,7 @@
     }
 
     function onComponentChanged(iri, component) {
-        const cell = getCellForIri(this, iri);
+        const cell = getCellForIri(iri);
         if (!component) {
             component = getComponentById(cell.id);
         }
@@ -257,9 +257,7 @@
             return;
         }
         const component = getComponentById(cell.id);
-        const templateIri = $userService.getComponentTemplateIri(component);
-        const template = $userService.getTemplate(templateIri);
-        componentService.update($userService, template, component, cell);
+        $canvas.getGraph().trigger(EVENTS.changeComponent, iri, component);
     }
 
     function setConnectionValidator(fnc) {

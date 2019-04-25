@@ -7,7 +7,7 @@
         <version>0.0.0</version>
         <relativePath>../pom-plugin/pom.xml</relativePath>
     </parent>
-    <artifactId>dependencies</artifactId>
+    <artifactId>deploy-dependencies</artifactId>
     <packaging>pom</packaging>
     <name>LinkedPipes Deploy Plugins</name>
 
@@ -58,6 +58,42 @@
                                 </goals>
                                 <configuration>
                                     <artifactItems>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-math3</artifactId>
+                                            <version>3.6.1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.jena</groupId>
+                                            <artifactId>jena-osgi</artifactId>
+                                            <version>3.10.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.github.andrewoma.dexx</groupId>
+                                            <artifactId>collection</artifactId>
+                                            <version>0.7</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-csv</artifactId>
+                                            <version>1.6</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.thrift</groupId>
+                                            <artifactId>libthrift</artifactId>
+                                            <version>0.12.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-compress</artifactId>
+                                            <version>1.18</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
                                         <!-- Apache POI (excel) bundle dependencies. -->
                                         <dependency>
                                             <groupId>commons-codec</groupId>
@@ -112,6 +148,12 @@
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-lang3</artifactId>
                                             <version>3.3.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-lang3</artifactId>
+                                            <version>3.8.1</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -186,9 +228,21 @@
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
+                                            <groupId>com.google.guava</groupId>
+                                            <artifactId>guava</artifactId>
+                                            <version>24.1-jre</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
                                             <groupId>com.github.jsonld-java</groupId>
                                             <artifactId>jsonld-java</artifactId>
                                             <version>0.11.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.github.jsonld-java</groupId>
+                                            <artifactId>jsonld-java</artifactId>
+                                            <version>0.12.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -201,49 +255,6 @@
                                             <groupId>com.opencsv</groupId>
                                             <artifactId>opencsv</artifactId>
                                             <version>3.3</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <!-- GeoTools -->
-                                        <dependency>
-                                            <groupId>com.googlecode.efficient-java-matrix-library</groupId>
-                                            <artifactId>core-osgi</artifactId>
-                                            <version>0.26</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>net.sf.geographiclib</groupId>
-                                            <artifactId>GeographicLib-Java-osgi</artifactId>
-                                            <version>1.44</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.geotools</groupId>
-                                            <artifactId>gt-opengis-osgi</artifactId>
-                                            <version>16.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.geotools</groupId>
-                                            <artifactId>gt-osgi</artifactId>
-                                            <version>16.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.hsqldb</groupId>
-                                            <artifactId>hsqldb-osgi</artifactId>
-                                            <version>2.3.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>jgridshift</groupId>
-                                            <artifactId>jgridshift-osgi</artifactId>
-                                            <version>1.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>javax.measure</groupId>
-                                            <artifactId>jsr-275-osgi</artifactId>
-                                            <version>1.0-beta-2</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -272,11 +283,17 @@
                                             <version>${lp.version}</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
-                                        <!-- RDF -->
+                                        <!-- LinkedPipes Libraries -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>rdf4j-storage-light</artifactId>
                                             <version>${rdf4j.version}</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>geotools</artifactId>
+                                            <version>21.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Core components. -->
@@ -801,6 +818,18 @@
                                             <artifactId>t-jsonLdToRdfChunked</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-jsonLdToRdfChunked/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-hdtToRdf</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-hdtToRdf/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-rdfToHdt</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-rdfToHdt/</outputDirectory>
                                         </dependency>
                                     </artifactItems>
                                 </configuration>

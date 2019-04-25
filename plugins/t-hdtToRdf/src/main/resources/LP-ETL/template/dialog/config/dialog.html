@@ -1,0 +1,9 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.commitSize.hide">
+        <label>Commit size</label>
+        <input type="number" ng-model="dialog.commitSize.value"
+               placeholder="100000" min="10000"
+               ng-disabled="dialog.commitSize.disabled || dialog.commitSize.inherit">
+    </md-input-container>
+</div>

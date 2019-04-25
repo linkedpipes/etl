@@ -90,7 +90,6 @@ public class Statements implements Collection<Statement> {
         this.add(s, p, valueFactory.createLiteral(o));
     }
 
-
     public void addString(String s, IRI p, String o) {
         this.add(
                 valueFactory.createIRI(s),
@@ -119,6 +118,10 @@ public class Statements implements Collection<Statement> {
     }
 
     public void addBoolean(String s, String p, boolean o) {
+        this.addBoolean(s, valueFactory.createIRI(p), o);
+    }
+
+    public void addBoolean(Resource s, String p, boolean o) {
         this.addBoolean(s, valueFactory.createIRI(p), o);
     }
 
@@ -152,6 +155,12 @@ public class Statements implements Collection<Statement> {
                 valueFactory.createLiteral(o));
     }
 
+    public void addLong(Resource s, String p, Long o) {
+        this.add(
+                s, valueFactory.createIRI(p), valueFactory.createLiteral(o));
+    }
+
+
     public void add(Resource s, String p, Value o) {
         this.add(s, valueFactory.createIRI(p), o);
     }
@@ -165,7 +174,6 @@ public class Statements implements Collection<Statement> {
     public boolean add(Statement statement) {
         return this.collection.add(statement);
     }
-
 
     public void addAll(File file) throws IOException {
         Optional<RDFFormat> format =
@@ -208,6 +216,14 @@ public class Statements implements Collection<Statement> {
                 .filter((st) -> graph.equals(st.getContext()))
                 .forEach((st) -> result.collection.add(st));
         return result;
+    }
+
+    public StatementsBuilder subject(String subject) {
+        return subject(valueFactory.createIRI(subject));
+    }
+
+    public StatementsBuilder subject(Resource subject) {
+        return new StatementsBuilder(subject, this);
     }
 
     @Override

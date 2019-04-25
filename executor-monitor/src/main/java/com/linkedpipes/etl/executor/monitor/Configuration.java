@@ -39,6 +39,12 @@ public class Configuration {
 
     private final Properties properties = new Properties();
 
+    private String slackFinishedWebhook;
+
+    private String slackErrorWebhook;
+
+    private String localUrl;
+
     @PostConstruct
     public void init() {
         String propertiesFile = System.getProperty("configFileLocation");
@@ -74,6 +80,11 @@ public class Configuration {
                 "executor-monitor.ftp.data_ports_interval.start");
         ftpDataPortsEnd = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.end");
+        slackFinishedWebhook = getOptionalProperty(
+                "executor-monitor.slack_finished_executions_webhook");
+        slackErrorWebhook = getOptionalProperty(
+                "executor-monitor.slack_error_webhook");
+        localUrl = getProperty("domain.uri");
         //
         validateUri(executorUri, "executor.execution.working_directory");
         validateDirectory(workingDirectoryPath);
@@ -150,6 +161,23 @@ public class Configuration {
         }
     }
 
+    private String getOptionalProperty(String name) {
+        String value;
+        try {
+            value = properties.getProperty(name);
+        } catch (RuntimeException ex) {
+            LOG.error("Invalid configuration property: '{}'", name);
+            throw ex;
+        }
+        if (value == null) {
+            return null;
+        }
+        if (value.equals("")) {
+            value = null;
+        }
+        return value;
+    }
+
     protected int getPropertyInteger(String name) {
         String value = getProperty(name);
         try {
@@ -158,6 +186,18 @@ public class Configuration {
             LOG.error("Invalid configuration property: '{}'", name);
             throw new RuntimeException(ex);
         }
+    }
+
+    public String getSlackFinishedWebhook() {
+        return slackFinishedWebhook;
+    }
+
+    public String getSlackErrorWebhook() {
+        return slackErrorWebhook;
+    }
+
+    public String getLocalUrl() {
+        return localUrl;
     }
 
 }

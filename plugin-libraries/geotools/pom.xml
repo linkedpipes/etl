@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.linkedpipes</groupId>
+        <artifactId>pom-plugin</artifactId>
+        <version>0.0.0</version>
+        <relativePath>../../pom-plugin/pom.xml</relativePath>
+    </parent>
+    <artifactId>geotools</artifactId>
+    <version>${geotools.version}</version>
+    <packaging>bundle</packaging>
+    <name>LinkedPipes GeoTools</name>
+    <description>GeoTools OSGI bundle.</description>
+
+    <properties>
+        <geotools.version>21.0</geotools.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>boundless</id>
+            <name>Boundless Maven Repository</name>
+            <url>http://repo.boundlessgeo.com/main</url>
+        </repository>
+        <repository>
+            <id>geomajas</id>
+            <name>Geomajas Repository</name>
+            <url>http://maven.geomajas.org/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-referencing</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+        <!-- SHARED commons-pool » commons-pool -->
+        <!-- BUNDLE jgridshift » jgridshift 1.0 -->
+        <!-- BUNDLE net.sf.geographiclib » GeographicLib-Java 1.49 -->
+        <!-- BUNDLE org.ejml » ejml-ddense 0.34 -->
+        <!-- BUNDLE org.geotools » gt-metadata -->
+
+        <dependency>
+            <groupId>jgridshift</groupId>
+            <artifactId>jgridshift</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.geographiclib</groupId>
+            <artifactId>GeographicLib-Java</artifactId>
+            <version>1.49</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ejml</groupId>
+            <artifactId>ejml-ddense</artifactId>
+            <version>0.34</version>
+        </dependency>
+        <!-- BUNDLE org.ejml » ejml-core 0.34 -->
+
+        <dependency>
+            <groupId>org.ejml</groupId>
+            <artifactId>ejml-core</artifactId>
+            <version>0.34</version>
+        </dependency>
+        <!-- BUNDLE com.google.code.findbugs » jsr305 -->
+
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-metadata</artifactId>
+            <version>21.0</version>
+        </dependency>
+        <!-- OPTIONAL javax.media » jai_core -->
+        <!-- SHARED org.apache.commons » commons-lang3 -->
+        <!-- BUNDLE org.geotools » gt-opengis -->
+        <!-- org.locationtech.jts » jts-core (optional) 1.16.0 -->
+
+        <dependency>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.16.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-opengis</artifactId>
+            <version>21.0</version>
+        </dependency>
+        <!-- SHARED commons-pool » commons-pool -->
+        <!-- BUNDLE systems.uom » systems-common-java8 0.7.2 -->
+
+        <dependency>
+            <groupId>systems.uom</groupId>
+            <artifactId>systems-common-java8</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+        <!-- BUNDLE si.uom » si-quantity 0.7.1 -->
+        <!-- BUNDLE si.uom » si-units-java8 0.7.1 -->
+        <!-- BUNDLE tec.uom » uom-se ${se.version} -->
+
+        <dependency>
+            <groupId>si.uom</groupId>
+            <artifactId>si-quantity</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+        <!-- BUNDLE javax.measure » unit-api 1.0 -->
+
+        <dependency>
+            <groupId>javax.measure</groupId>
+            <artifactId>unit-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>si.uom</groupId>
+            <artifactId>si-units-java8</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+        <!-- BUNDLE javax.measure » unit-api 1.0 -->
+        <!-- BUNDLE si.uom » si-quantity 0.7.1 -->
+        <!-- BUNDLE tec.uom » uom-se ${se.version} -->
+
+        <dependency>
+            <groupId>tec.uom</groupId>
+            <artifactId>uom-se</artifactId>
+            <version>1.0.8</version>  <!-- ${se.version} -->
+        </dependency>
+        <!-- BUNDLE javax.measure » unit-api 1.0 -->
+        <!-- BUNDLE tec.uom.lib » uom-lib-common -->
+
+        <dependency>
+            <groupId>tec.uom.lib</groupId>
+            <artifactId>uom-lib-common</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <!-- BUNDLE javax.measure » unit-api 1.0 -->
+
+        <dependency>
+            <groupId>systems.uom</groupId>
+            <artifactId>systems-quantity</artifactId>
+            <version>0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-epsg-hsql</artifactId>
+            <version>21.0</version>
+        </dependency>
+        <!-- BUNDLE org.geotools » gt-referencing -->
+        <!-- BUNDLE org.hsqldb » hsqldb 2.4.1 -->
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.4.1</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.5.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.geotools.*;version=${geotools.version},
+                            org.opengis.*;version=${geotools.version},
+                            <!-- For backward references. -->
+                            tec.uom.se.format.*,
+                            javax.measure.*
+                        </Export-Package>
+                        <Import-Package>
+                            javax.swing;resolution:=optional,
+                            javax.swing.*;resolution:=optional,
+                            javax.media.*;resolution:=optional,
+                            javax.servlet.*;resolution:=optional,
+                            org.geotools.gui.swing.*;resolution:=optional,
+                            <!-- Required by hsqldb. -->
+                            org.apache.logging.log4j;resolution:=optional,
+                            sun.security.action;resolution:=optional,
+                            *
+                        </Import-Package>
+                        <Embed-Dependency>
+                            *;inline=true;
+                        </Embed-Dependency>
+                        <Embed-Transitive>false</Embed-Transitive>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

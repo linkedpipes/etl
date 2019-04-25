@@ -10,6 +10,7 @@ const router = express.Router();
 module.exports = router;
 
 const storageApiUrlPrefix = config.storage.url + "/api/v1/components/";
+const monitorApiUrl = config.executor.monitor.url;
 
 router.get("/components/:type", (req, res) => {
     let url = storageApiUrlPrefix;
@@ -112,4 +113,30 @@ router.get("/jars/file", (req, res) => {
     request.get(iri)
         .on("error", (error) => handleConnectionError(res, error))
         .pipe(res);
+});
+
+router.get("/autocomplete/terms", (req, res) => {
+    const endpoint = "http://lov.linkeddata.es/dataset/lov/api/v2/autocomplete/terms";
+    const remote_url = req.originalUrl.replace("/api/v1/autocomplete/terms", endpoint);
+    //
+    request.get(remote_url)
+        .on("error", (error) => handleConnectionError(res, error))
+        .pipe(res);
+});
+
+router.get("/debug/metadata/**", (req, res) => {
+  let url = monitorApiUrl + req.originalUrl.replace("/api/v1/", "");
+  console.log(url);
+  request.get(url)
+    .on("error", (error) => handleConnectionError(res, error))
+    .pipe(res);
+});
+
+
+router.get("/debug/data/**", (req, res) => {
+  let url = monitorApiUrl + req.originalUrl.replace("/api/v1/", "");
+  console.log(url);
+  request.get(url)
+    .on("error", (error) => handleConnectionError(res, error))
+    .pipe(res);
 });

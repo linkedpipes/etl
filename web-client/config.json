@@ -1,0 +1,4 @@
+{
+  "web-client-port": 8060,
+  "lp-etl-api-url": "http://localhost:8080/"
+}

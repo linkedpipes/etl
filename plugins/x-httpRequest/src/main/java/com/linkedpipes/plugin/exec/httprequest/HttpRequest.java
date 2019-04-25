@@ -95,6 +95,9 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
             if (task.isFollowRedirect() == null) {
                 task.setFollowRedirect(configuration.isFollowRedirect());
             }
+            if (task.isHasUtf8Redirect() == null) {
+                task.setHasUtf8Redirect(configuration.isHasUtf8Redirect());
+            }
             if (task.getTimeOut() == null) {
                 task.setTimeOut(configuration.getTimeOut());
             }

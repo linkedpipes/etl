@@ -30,11 +30,17 @@
             URL contains non-ASCI characters.
         </md-tooltip>
     </md-switch>
+    <md-switch ng-model="dialog.utf8Redirect.value"
+               ng-hide="dialog.utf8Redirect.hide"
+               ng-disabled="dialog.utf8Redirect.disabled">
+        Use UTF-8 encoding for redirect
+        <md-tooltip>Can be used together with 'Force to follow redirects'.
+            Interpret Location header using UTF-8.
+        </md-tooltip>
+    </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.userAgent.hide">
         <label>User agent</label>
         <input type="text" ng-model="dialog.userAgent.value"
                ng-disabled="dialog.userAgent.disabled || dialog.userAgent.inherit">
     </md-input-container>
 </div>
-
-

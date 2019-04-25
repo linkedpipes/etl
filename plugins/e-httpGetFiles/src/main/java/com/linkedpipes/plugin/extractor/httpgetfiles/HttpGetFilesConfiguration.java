@@ -18,7 +18,10 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
      * If true DPU follow redirect to any location and protocol.
      */
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_FOLLOW_REDIRECT)
-    private boolean forceFollowRedirect = true;
+    private boolean manualFollowRedirect = true;
+
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_UTF8_REDIRECT)
+    private boolean utf8Redirect;
 
     /**
      * If true skip file in case of an error.
@@ -47,12 +50,20 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
     public HttpGetFilesConfiguration() {
     }
 
-    public boolean isForceFollowRedirect() {
-        return forceFollowRedirect;
+    public boolean isManualFollowRedirect() {
+        return manualFollowRedirect;
     }
 
-    public void setForceFollowRedirect(boolean forceFollowRedirect) {
-        this.forceFollowRedirect = forceFollowRedirect;
+    public void setManualFollowRedirect(boolean manualFollowRedirect) {
+        this.manualFollowRedirect = manualFollowRedirect;
+    }
+
+    public boolean isUtf8Redirect() {
+        return utf8Redirect;
+    }
+
+    public void setUtf8Redirect(boolean utf8Redirect) {
+        this.utf8Redirect = utf8Redirect;
     }
 
     @Override
@@ -116,4 +127,10 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
     public void setEncodeUrl(boolean encodeUrl) {
         this.encodeUrl = encodeUrl;
     }
+
+    public Downloader.Configuration asDownloaderConfiguration() {
+        return new Downloader.Configuration(
+                manualFollowRedirect, false, encodeUrl, utf8Redirect);
+    }
+
 }

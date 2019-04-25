@@ -26,8 +26,9 @@ class Downloader {
 
         private final Integer timeOut;
 
-        public Task(String getSourceUrl, File targetFile,
-                    Map<String, String> headers, Integer timeOut) {
+        public Task(
+                String getSourceUrl, File targetFile,
+                Map<String, String> headers, Integer timeOut) {
             this.getSourceUrl = getSourceUrl;
             this.targetFile = targetFile;
             this.headers = headers;
@@ -52,28 +53,43 @@ class Downloader {
 
     }
 
+    public static class Configuration {
+
+        private final boolean manualFollowRedirect;
+
+        private final boolean logDetail;
+
+        private final boolean encodeUrl;
+
+        private final boolean useUtf8ForRedirect;
+
+        public Configuration(
+                boolean manualFollowRedirect,
+                boolean logDetail,
+                boolean encodeUrl,
+                boolean useUtf8ForRedirect) {
+            this.manualFollowRedirect = manualFollowRedirect;
+            this.logDetail = logDetail;
+            this.encodeUrl = encodeUrl;
+            this.useUtf8ForRedirect = useUtf8ForRedirect;
+        }
+
+    }
+
     public static final int HTTP_TEMPORARY_REDIRECT = 307;
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
 
-    private final boolean followRedirect;
-
     private final Task toDownload;
 
-    private final boolean logDetail;
+    private final Configuration configuration;
 
     private final HttpRequestReport requestReport;
 
-    private final boolean encodeUrl;
-
-    public Downloader(
-            boolean followRedirect, Task toDownload, boolean logDetail,
-            HttpRequestReport requestReport, boolean encodeUrl) {
-        this.followRedirect = followRedirect;
+    public Downloader(Task toDownload, Configuration configuration, HttpRequestReport requestReport) {
         this.toDownload = toDownload;
-        this.logDetail = logDetail;
+        this.configuration = configuration;
         this.requestReport = requestReport;
-        this.encodeUrl = encodeUrl;
     }
 
     public void download() throws IOException, LpException {
@@ -84,8 +100,8 @@ class Downloader {
         HttpURLConnection connection = null;
         Date startTime = new Date();
         try {
-            connection = createConnectionResolveRedirect(url);
-            if (logDetail) {
+            connection = connect(url);
+            if (configuration.logDetail) {
                 requestReport.reportHeaderResponse(connection);
             }
             checkResponseCode(connection);
@@ -103,7 +119,7 @@ class Downloader {
     }
 
     private URL createUrl(String stringAsUrl) throws IOException {
-        if (encodeUrl) {
+        if (configuration.encodeUrl) {
             try {
                 stringAsUrl = (new URL(stringAsUrl)).toURI().toASCIIString();
             } catch (URISyntaxException ex) {
@@ -113,12 +129,13 @@ class Downloader {
         return new URL(stringAsUrl);
     }
 
-    private HttpURLConnection createConnectionResolveRedirect(URL target)
-            throws IOException {
+    private HttpURLConnection connect(URL target) throws IOException {
         HttpURLConnection connection = createConnection(target);
-        if (followRedirect) {
+        if (configuration.manualFollowRedirect) {
+            connection.setInstanceFollowRedirects(false);
             return resolveRedirects(connection);
         } else {
+            connection.setInstanceFollowRedirects(true);
             return connection;
         }
     }
@@ -151,6 +168,9 @@ class Downloader {
         int responseCode = connection.getResponseCode();
         while (isResponseRedirect(responseCode)) {
             String location = connection.getHeaderField("Location");
+            if (configuration.useUtf8ForRedirect) {
+                location = new String(location.getBytes("ISO-8859-1"), "UTF-8");
+            }
             connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
             connection = createConnection(createUrl(location));
@@ -169,6 +189,7 @@ class Downloader {
     private void checkResponseCode(HttpURLConnection connection)
             throws IOException {
         int responseCode = connection.getResponseCode();
+
         if (responseCode < 200 || responseCode > 299) {
             IOException ex = new IOException(
                     responseCode + " : " + connection.getResponseMessage());

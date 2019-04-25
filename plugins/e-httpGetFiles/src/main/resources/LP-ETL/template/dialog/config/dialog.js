@@ -35,6 +35,10 @@ define([], function () {
         "encodeUrl": {
             "$type" : "bool",
             "$label" : "Encode input URL"
+        },
+        "utf8Redirect": {
+            "$type" : "bool",
+            "$label" : "Use UTF-8 encoding for redirect"
         }
     };
 

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.linkedpipes</groupId>
+        <artifactId>pom-plugin</artifactId>
+        <version>0.0.0</version>
+        <relativePath>../../pom-plugin/pom.xml</relativePath>
+    </parent>
+    <groupId>com.linkedpipes</groupId>
+    <artifactId>t-hdtToRdf</artifactId>
+    <version>0.0.0</version>
+    <packaging>bundle</packaging>
+    <name>plugin t-hdtToRdf</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>api-executor-v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>dataunit-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-n3</artifactId>
+            <version>${rdf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>test-environment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>eu.wdaqua</groupId>
+            <artifactId>hdt-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.wdaqua</groupId>
+            <artifactId>hdt-java-core</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm</groupId>
+            <artifactId>JLargeArrays</artifactId>
+            <version>1.6</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <!--
+                        org.rdfhdt.hdt.pro - added by Bnd-4.2.0
+                         -->
+                        <Import-Package>
+                            !com.sun.management,
+                            !com.sun.xml.internal.ws.encoding.soap,
+                            !org.rdfhdt.hdt.pro,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

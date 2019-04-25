@@ -33,6 +33,12 @@ define([], function () {
             "$property" : "userAgent",
             "$control": "userAgentControl",
             "$label" : "User agent"
+        },
+        "utf8Redirect": {
+          "$type" : "bool",
+          "$property" : "utf8Redirect",
+          "$control": "utf8RedirectControl",
+          "$label" : "Use UTF-8 encoding for redirect"
         }
     };
 
