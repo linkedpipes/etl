@@ -1,6 +1,6 @@
 <template>
   <div>
-    Welcome to LinkedPipes ETL.
+
   </div>
 </template>
 
