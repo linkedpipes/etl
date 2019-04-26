@@ -1,28 +1,32 @@
 <template>
   <v-content style="margin-bottom: 1rem">
-    <v-flex xs9 sm6 offset-sm3>
+    <v-flex
+      xs9
+      sm6
+      offset-sm3
+    >
       <div>
-        Debug data for execution: {{ this.$route.params["execution"] }}<br/>
-        Path: {{ this.query.path }}<br/>
-        <br/>
+        Debug data for execution: {{ this.$route.params["execution"] }}<br>
+        Path: {{ this.query.path }}<br>
+        <br>
       </div>
     </v-flex>
     <directory-view
+      v-show="metadata.type === 'dir'"
       :metadata="metadata"
       :data="data"
       :query="query"
-      v-show="metadata.type === 'dir'"
     />
     <file-view
+      v-if="metadata.type === 'file'"
       :metadata="metadata"
       :query="query"
-      v-if="metadata.type === 'file'"
     />
     <ambiguous-view
+      v-if="metadata.type === 'ambiguous'"
       :data="data"
       :metadata="metadata"
       :query="query"
-      v-if="metadata.type === 'ambiguous'"
     />
   </v-content>
 </template>

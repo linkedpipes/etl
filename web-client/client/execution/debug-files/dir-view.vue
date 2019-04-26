@@ -1,19 +1,23 @@
 <template>
-  <v-flex xs9 sm6 offset-sm3>
-    Number of records: {{metadata.count}}<br/>
+  <v-flex
+    xs9
+    sm6
+    offset-sm3
+  >
+    Number of records: {{ metadata.count }}<br>
     <v-list two-line>
       <template v-for="(item, index) in data">
         <list-item-dir
+          v-show="item.type === 'dir'"
           :key="`dir-${index}`"
           :value="item"
-          v-on:onNavigateTo="onNavigateTo"
-          v-show="item.type === 'dir'"
+          @onNavigateTo="onNavigateTo"
         />
         <list-item-file
+          v-show="item.type === 'file'"
           :key="`file-${index}`"
           :value="item"
-          v-on:onNavigateTo="onNavigateTo"
-          v-show="item.type === 'file'"
+          @onNavigateTo="onNavigateTo"
         />
         <v-divider
           v-if="index + 1 < data.length"
@@ -21,22 +25,22 @@
         />
       </template>
     </v-list>
-    <br/>
+    <br>
     <v-layout row>
       <v-flex xs9>
         <v-pagination
           v-show="metadata.pageCount > 1"
           v-model="query.page"
           :length="metadata.pageCount"
-          v-on:input="onPageChange"
-        ></v-pagination>
+          @input="onPageChange"
+        />
       </v-flex>
       <v-flex xs2>
         <v-select
           v-model="query.pageSize"
           :items="[10, 50, 100]"
-          v-on:input="onPageSizeChange"
           label="Page size"
+          @input="onPageSizeChange"
         />
       </v-flex>
     </v-layout>

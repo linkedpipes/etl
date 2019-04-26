@@ -1,5 +1,5 @@
 const config = require("../config");
 
 module.exports = {
-  "port": config["web-client-port"]
+  "port": config["web-client-port"],
 };

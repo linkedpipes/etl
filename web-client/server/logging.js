@@ -1,11 +1,11 @@
 const winston = require("winston");
 const moment = require("moment");
-const {SPLAT} = require("triple-beam");
+const { SPLAT } = require("triple-beam");
 
 (function initialize() {
   const logger = winston.createLogger({
     "level": "info",
-    "transports": []
+    "transports": [],
   });
   addConsoleLogger(logger);
 

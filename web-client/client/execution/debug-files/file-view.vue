@@ -7,24 +7,35 @@
       <div v-else-if="error">
         Can't load data.
       </div>
-      <div v-else-if="loading" class="text-xs-center">
+      <div
+        v-else-if="loading"
+        class="text-xs-center"
+      >
         Loading ...
-        <br/>
-        <br/>
+        <br>
+        <br>
         <v-progress-circular
           :size="50"
           color="primary"
           indeterminate
         />
-        <br/>
+        <br>
       </div>
       <div v-else>
-        <pre><code style="width:100%;padding: 1rem;">{{content}}</code></pre>
+        <pre><code style="width:100%;padding: 1rem;">{{ content }}</code></pre>
       </div>
-      <br/>
+      <br>
     </div>
-    <v-flex xs9 sm6 offset-sm3>
-      <v-btn :href="downloadUrl" target="_blank" style="float:right;">
+    <v-flex
+      xs9
+      sm6
+      offset-sm3
+    >
+      <v-btn
+        :href="downloadUrl"
+        target="_blank"
+        style="float:right;"
+      >
         Open in new tab / Download
       </v-btn>
     </v-flex>

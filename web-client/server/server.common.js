@@ -11,10 +11,10 @@ function initialize(app) {
 function start(app) {
   const port = config.port;
   app.listen(port, (error) => {
-      if (error) {
-          logger.error("Can't start server: ", error);
-      }
-      logger.info("Listening on port: ", port);
+    if (error) {
+      logger.error("Can't start server: ", error);
+    }
+    logger.info("Listening on port: ", port);
   });
 }
 
