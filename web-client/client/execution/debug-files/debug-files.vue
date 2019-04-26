@@ -86,8 +86,9 @@
           ...responseData.metadata,
           "count": responseData.metadata["count"] || 0,
           "pageCount": Math.ceil(
-            (this.metadata.count || 0) / this.query.pageSize)
+            (responseData.metadata["count"] || 0) / this.query.pageSize)
         };
+        console.log(this.metadata);
         this.data = responseData.data || [];
       }
     }
