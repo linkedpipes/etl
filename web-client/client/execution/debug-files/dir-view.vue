@@ -25,7 +25,7 @@
     <v-layout row>
       <v-flex xs9>
         <v-pagination
-          v-show="onPageChange > 1"
+          v-show="metadata.pageCount > 1"
           v-model="query.page"
           :length="metadata.pageCount"
           v-on:input="onPageChange"
