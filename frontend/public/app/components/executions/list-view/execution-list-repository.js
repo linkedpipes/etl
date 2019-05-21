@@ -272,7 +272,7 @@
 
         function createRepository(filters) {
             const builder = jsonLdSource.createBuilder();
-            builder.url("/resources/executions");
+            builder.url("resources/executions");
             builder.itemType(LP.EXECUTION);
             builder.tombstoneType(LP.TOMBSTONE);
             builder.itemTemplate(REPOSITORY_TEMPLATE);

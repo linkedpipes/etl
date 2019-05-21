@@ -63,7 +63,7 @@
 
     function forceLoad() {
         serviceData.loaded = false;
-        return $http.get("./resources/components").then((response) => {
+        return $http.get("resources/components").then((response) => {
             console.time("Loading templates");
             clearData(serviceData);
             loader.parseResponse(serviceData, response);
@@ -200,7 +200,7 @@
      */
     function fetchEffectiveConfig(iri) {
         const id = "effective:" + iri;
-        const url = "/api/v1/components/effective?iri=" + encodeURI(iri);
+        const url = "api/v1/components/effective?iri=" + encodeURI(iri);
         return fetchJsonLd(id, url);
     }
 
@@ -235,7 +235,7 @@
                 return;
             }
             //
-            const baseUrl = '/api/v1/components/dialog' +
+            const baseUrl = 'api/v1/components/dialog' +
                 '?iri=' + encodeURIComponent(core.id) +
                 '&name=' + encodeURIComponent(name) +
                 '&file=';
@@ -321,7 +321,7 @@
      * Return usage of the template and all its descendants in pipelines.
      */
     function getUsage(iri) {
-        const url = "/api/v1/usage?iri=" + encodeURI(iri);
+        const url = "api/v1/usage?iri=" + encodeURI(iri);
         const options = {"headers": {"Accept": "application/ld+json"}};
         return $http.get(url, options).then((response) => {
             const pipelines = {};

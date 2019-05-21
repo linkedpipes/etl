@@ -56,7 +56,7 @@
                 "type": "application/ld+json"
             }), "options.jsonld");
             data.append('pipeline', $scope.file);
-            const url = "/resources/pipelines";
+            const url = "resources/pipelines";
             postFormData(url, data);
         }
 

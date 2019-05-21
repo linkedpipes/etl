@@ -11,7 +11,7 @@
     function cancelExecution($http, iri, message) {
         const id = iri.substring(iri.lastIndexOf("/") + 1)
         const body = {"reason": message};
-        const url = "/resources/executions/" + id + "/cancel";
+        const url = "resources/executions/" + id + "/cancel";
         return $http.post(url, body);
     }
 
