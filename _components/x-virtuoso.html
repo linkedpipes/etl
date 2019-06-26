@@ -24,6 +24,8 @@ Special purpose component, allows the user to instruct <a href="http://virtuoso.
     <dd>Target RDF graph for input triple files and default graph in quad files</dd>
     <dt>Clear target graph before loading</dt>
     <dd>When checked, executes SPARQL CLEAR GRAPH on the target graph before loading</dd>
+    <dt>Execute checkpoint</dt>
+    <dd>When checked, executes the <code>checkpoint;</code> command after loading. Otherwise, checkpoint will be executed as configured in the Virtuoso instance. If that instance crashes before <code>checkpoint;</code> is executed, the loaded data will be lost.</dd>
     <dt>Number of loaders to use</dt>
     <dd>Virtuoso can load multiple files in parallel. This specifies how many and it should correspond to the available number of cores on the server.</dd>
     <dt>Status update interval in seconds</dt>
