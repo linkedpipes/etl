@@ -46,6 +46,11 @@
                ng-hide="dialog.clearGraph.hide">
         Clear target graph before loading
     </md-switch>
+    <md-switch ng-model="dialog.checkpoint.value"
+               ng-disabled="dialog.checkpoint.disabled || dialog.checkpoint.inherit"
+               ng-hide="dialog.checkpoint.hide">
+        Execute checkpoint
+    </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.loaderCount.hide">
         <label>Number of loaders to use</label>
         <input ng-model="dialog.loaderCount.value"

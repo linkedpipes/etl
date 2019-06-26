@@ -28,4 +28,7 @@ public final class VirtuosoVocabulary {
 
     public static final String LOADER_COUNT = PREFIX + "loaderCount";
 
+    public static final String CHECKPOINT = PREFIX + "checkpoint";
+
 }
+

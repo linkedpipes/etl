@@ -32,6 +32,9 @@ public class VirtuosoConfiguration {
     @RdfToPojo.Property(iri = VirtuosoVocabulary.LOADER_COUNT)
     private int loaderCount = 1;
 
+    @RdfToPojo.Property(iri = VirtuosoVocabulary.CHECKPOINT)
+    private boolean checkpoint = false;
+
     public VirtuosoConfiguration() {
     }
 
@@ -106,4 +109,13 @@ public class VirtuosoConfiguration {
     public void setLoaderCount(int loaderCount) {
         this.loaderCount = loaderCount;
     }
+
+    public boolean isCheckpoint() {
+        return checkpoint;
+    }
+
+    public void setCheckpoint(boolean checkpoint) {
+        this.checkpoint = checkpoint;
+    }
+
 }
