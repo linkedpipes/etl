@@ -12,7 +12,7 @@
         <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/graph> ,
         <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/updateInterval> ,
         <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/query> ,
-        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/loaderCount> ;
+        <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/loaderCount> ,
         <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/checkpoint> .
 
 <http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/uri>
@@ -68,7 +68,7 @@
     config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#loaderCount> ;
     config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#loaderCountControl> .
 
-<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/commit>
+<http://linkedpipes.com/resources/components/x-virtuoso/0.0.0/configuration/desc/checkpoint>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/x-virtuoso#checkpoint> ;
     config:control <http://plugins.linkedpipes.com/ontology/x-virtuoso#checkpointControl> .
