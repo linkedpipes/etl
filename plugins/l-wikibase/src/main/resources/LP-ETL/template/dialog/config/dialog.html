@@ -1,0 +1,26 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.endpoint.hide" flex>
+        <label>Endpoint</label>
+        <input type="url" ng-model="dialog.endpoint.value"
+               ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
+               placeholder="https://wikibase.localhost.cz/w/api.php">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.siteIri.hide" flex>
+        <label>Site IRI</label>
+        <input ng-model="dialog.siteIri.value"
+               ng-disabled="dialog.siteIri.disabled || dialog.siteIri.inherit"
+               placeholder="https://wikibase.localhost.cz/entity/">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.userName.hide" flex>
+        <label>User name</label>
+        <input ng-model="dialog.userName.value"
+               ng-disabled="dialog.userName.disabled || dialog.userName.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.password.hide"
+                        flex>
+        <label>Password</label>
+        <input type="password" ng-model="dialog.password.value"
+               ng-disabled="dialog.password.disabled || dialog.password.inherit">
+    </md-input-container>
+</div>

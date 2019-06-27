@@ -97,5 +97,6 @@
         <module>t-jsonLdToRdfChunked</module>
         <module>t-hdtToRdf</module>
         <module>t-rdfToHdt</module>
+        <module>l-wikibase</module>
     </modules>
 </project>
