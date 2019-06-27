@@ -38,6 +38,7 @@ class SlackNotification implements EventListener {
         switch (execution.getStatus()) {
             case DANGLING:
                 onExecutionDangling(execution);
+                break;
             default:
                 break;
         }
@@ -55,9 +56,9 @@ class SlackNotification implements EventListener {
         String pipelineIri = execution.getPipeline().stringValue();
         String executionIri = execution.getIri();
         try {
-            return localPublicUrl + "/#/pipelines/edit/canvas?" +
-                    "pipeline=" + URLEncoder.encode(pipelineIri, "UTF-8") +
-                    "&execution=" + URLEncoder.encode(executionIri, "UTF-8");
+            return localPublicUrl + "/#/pipelines/edit/canvas?"
+                    + "pipeline=" + URLEncoder.encode(pipelineIri, "UTF-8")
+                    + "&execution=" + URLEncoder.encode(executionIri, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

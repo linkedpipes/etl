@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 /**
  * While in all other entries we filter the content only,
  * here we also used filters for disambiguation.
- * <p>
- * If only one entry remains then we return that entry.
+ *
+ * <p>If only one entry remains then we return that entry.
  */
 class AmbiguousEntry extends DebugEntry {
 

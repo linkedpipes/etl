@@ -202,8 +202,14 @@ public final class RdfUtils {
                     rdfFormat = RdfUtils.getFormat(file.getContentType());
                 } catch (Exception ex) {
                     // Use the file name.
-                    rdfFormat = RdfUtils.getFormat(
-                            new File(file.getOriginalFilename()));
+                    String originalName = file.getOriginalFilename();
+                    if (originalName == null) {
+                        rdfFormat = RdfUtils.getFormat(
+                                new File(file.getName()));
+                    } else {
+                        rdfFormat = RdfUtils.getFormat(
+                                new File(originalName));
+                    }
                 }
                 return RdfUtils.read(file.getInputStream(), rdfFormat);
             } catch (IOException ex) {

@@ -10,13 +10,13 @@
         <relativePath>../../pom-plugin/pom.xml</relativePath>
     </parent>
     <artifactId>geotools</artifactId>
-    <version>${geotools.version}</version>
+    <version>21.0</version>
     <packaging>bundle</packaging>
     <name>LinkedPipes GeoTools</name>
     <description>GeoTools OSGI bundle.</description>
 
     <properties>
-        <geotools.version>21.0</geotools.version>
+        <geotools.version>${project.version}</geotools.version>
     </properties>
 
     <repositories>

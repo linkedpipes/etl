@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
-
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;

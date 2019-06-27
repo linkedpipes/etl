@@ -114,6 +114,13 @@ public class OverviewObject {
         return asDate(root.get("lastChange").asText());
     }
 
+    public Date getLastChange() {
+        if (lastChange == null) {
+            return null;
+        }
+        return new Date(lastChange.getTime());
+    }
+
     public String getPipeline() {
         return pipeline;
     }
@@ -158,13 +165,6 @@ public class OverviewObject {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Date getLastChange() {
-        if (lastChange == null) {
-            return null;
-        }
-        return new Date(lastChange.getTime());
     }
 
     public Long getDirectorySize() {

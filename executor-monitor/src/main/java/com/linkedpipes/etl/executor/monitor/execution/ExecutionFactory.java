@@ -33,8 +33,12 @@ class ExecutionFactory {
         // Save resources.
         File inputDirectory = new File(directory, "input");
         for (MultipartFile input : inputs) {
-            File inputFile = new File(
-                    inputDirectory, input.getOriginalFilename());
+            String originalFileName = input.getOriginalFilename();
+            if (originalFileName == null) {
+                throw new MonitorException(
+                        "Missing original name for: {}", input.getName());
+            }
+            File inputFile = new File(inputDirectory, originalFileName);
             inputFile.getParentFile().mkdirs();
             try {
                 input.transferTo(inputFile);

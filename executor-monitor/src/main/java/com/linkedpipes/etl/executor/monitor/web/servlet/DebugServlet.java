@@ -51,8 +51,8 @@ public class DebugServlet {
         offset = Math.max(0, offset);
         limit = Math.max(1, limit);
         //
-        DebugEntry data = dataHolder.get().
-                prepareData(name, source, offset, limit);
+        DebugEntry data = dataHolder.get()
+                .prepareData(name, source, offset, limit);
         response.setHeader("Content-Type", "application/json");
         response.setHeader("Content-Length", Integer.toString(data.getSize()));
         response.setStatus(HttpServletResponse.SC_OK);

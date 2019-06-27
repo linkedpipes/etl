@@ -36,7 +36,7 @@ public class RdfToPojo {
         String iri();
 
         /**
-         * @return Alternative IRIs for given predicate.
+         * Alternative IRIs for given predicate.
          */
         String[] alternatives() default {};
 
