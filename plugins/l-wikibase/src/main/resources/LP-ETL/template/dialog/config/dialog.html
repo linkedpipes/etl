@@ -1,16 +1,16 @@
 <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <md-input-container class="md-block" ng-hide="dialog.endpoint.hide" flex>
-        <label>Endpoint</label>
+        <label>Wikibase API Endpoint URL</label>
         <input type="url" ng-model="dialog.endpoint.value"
                ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
-               placeholder="https://wikibase.localhost.cz/w/api.php">
+               placeholder="https://your.wikibase.org/w/api.php">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.siteIri.hide" flex>
-        <label>Site IRI</label>
+        <label>Wikibase Entity IRI prefix</label>
         <input ng-model="dialog.siteIri.value"
                ng-disabled="dialog.siteIri.disabled || dialog.siteIri.inherit"
-               placeholder="https://wikibase.localhost.cz/entity/">
+               placeholder="https://your.wikibase.org/entity/">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.userName.hide" flex>
         <label>User name</label>

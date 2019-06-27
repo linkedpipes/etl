@@ -10,7 +10,7 @@ define([], function () {
         },
         "endpoint": {
             "$type": "str",
-            "$label": "Endpoint"
+            "$label": "Wikibase API Endpoint URL"
         },
         "userName": {
             "$type": "str",
@@ -22,7 +22,7 @@ define([], function () {
         },
       "siteIri": {
         "$type": "str",
-        "$label": "Site IRI"
+        "$label": "Wikibase Entity IRI prefix"
       }
     };
 
