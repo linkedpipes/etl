@@ -171,6 +171,10 @@
 
   function disableMapping(iri) {
     const execComponent = execModel.getComponent($execution, iri);
+    if (execComponent === undefined) {
+      // Component was not executed.
+      return;
+    }
     execModel.disableMapping($execution, execComponent);
     $canvasService.updateComponent(iri);
     // Propagation - we need to disable all following.
