@@ -22,7 +22,7 @@
         <logback.version>1.2.3</logback.version>
         <jackson.version>2.9.9</jackson.version>
         <springframework.version>5.1.8.RELEASE</springframework.version>
-        <rdf4j.version>2.3.2</rdf4j.version>
+        <rdf4j.version>2.5.2</rdf4j.version>
         <jetty.version>9.4.19.v20190610</jetty.version>
         <osgi.version>4.3.1</osgi.version>
         <mockito.version>2.28.2</mockito.version>
@@ -189,7 +189,7 @@
                         <version>3.1.12</version>
                         <configuration>
                             <excludeFilterFile>
-                                ../findbugs-exclude.xml
+                                ../spotbugs-exclude.xml
                             </excludeFilterFile>
                             <includeTests>false</includeTests>
                         </configuration>

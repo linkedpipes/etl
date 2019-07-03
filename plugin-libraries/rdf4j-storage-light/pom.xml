@@ -8,7 +8,7 @@
 		<relativePath>../../pom-plugin/pom.xml</relativePath>
 	</parent>
 	<artifactId>rdf4j-storage-light</artifactId>
-	<version>2.3.2</version>
+	<version>2.5.2</version>
 	<packaging>bundle</packaging>
 	<name>LinkedPipes Rdf4j Storage Light</name>
 	<description>Lightweight packaged version of RDF4j storage.</description>
