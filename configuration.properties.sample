@@ -127,3 +127,6 @@ storage.log.core.level = INFO
 
 # Port for web server - for now used by storage.domain.
 frontend.webserver.port = 8080
+
+# Frontend Title
+frontend.instance-label = LinkedPipes ETL

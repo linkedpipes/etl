@@ -1,0 +1,30 @@
+<div ng-switch on="template.parents.length" class="layout-padding">
+  <div ng-switch-when="0">
+    This is a core template as provided by the JAR file.
+  </div>
+  <div ng-switch-default>
+    List of ancestors, starting with the core template.
+    <md-list flex>
+      <md-list-item class="md-1-line" ng-click="onTemplate(template)"
+                    ng-repeat="template in template._parents"
+                    ng-disabled="template.core || !enableTemplateLink">
+        <div class="md-list-item-text" layout="column">
+          <p>{{::template.label}}</p>
+        </div>
+        <md-divider></md-divider>
+      </md-list-item>
+    </md-list>
+  </div>
+  <div ng-show="{{::showChildren}}">
+    List of all children.
+    <md-list flex>
+      <md-list-item class="md-1-line" ng-click="onTemplate(template)"
+                    ng-repeat="template in template._children">
+        <div class="md-list-item-text" layout="column">
+          <p>{{::template.label}}</p>
+        </div>
+        <md-divider></md-divider>
+      </md-list-item>
+    </md-list>
+  </div>
+</div>

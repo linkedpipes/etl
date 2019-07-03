@@ -1,0 +1,46 @@
+<md-dialog aria-label="Select template">
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h4>Select component</h4>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="onCancel()">
+          <md-icon class="material-icons" aria-label="Close dialog">close</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="min-width:400px;">
+      <div class="md-dialog-content" layout="column">
+        <md-input-container class="md-block">
+          <label>Label search</label>
+          <input ng-model="searchLabel" md-autofocus/>
+        </md-input-container>
+        <md-list>
+          <md-list-item class="md-2-line"
+                        ng-repeat="template in templates | orderBy:'-order'"
+                        ng-click="onSelect(template)"
+                        ng-show="template.visible">
+            <div class="md-primary">
+              <md-icon class="material-icons lp-icon-avatar md-avatar">
+                {{::template.icon}}
+              </md-icon>
+            </div>
+            <div class="md-list-item-text" layout="column">
+              <div>
+                {{::template.label}}
+              </div>
+              <div style="font-size: 80%; line-height: 80%;margin-left: 0.5em">
+                {{::template.parent}}
+              </div>
+              <div
+                style="font-size: 80%; line-height: 150%; margin-left: 0.5em">
+                {{::template.portLabel}}
+              </div>
+            </div>
+          </md-list-item>
+        </md-list>
+      </div>
+    </md-dialog-content>
+  </form>
+</md-dialog>
+

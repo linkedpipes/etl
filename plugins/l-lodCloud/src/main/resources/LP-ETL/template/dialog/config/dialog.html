@@ -193,9 +193,13 @@
                     <label>Link count</label>
                     <input ng-model="link.linkCount.value" type="number">
                 </md-input-container>
-                <button ng-click="onDeleteLinkCount($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                <button ng-click="onDeleteLinkCount($index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                    <md-icon class="material-icons lp-icon">clear</md-icon>
+                </button>
             </section>
-            <button ng-click="onAddLinkCount()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+            <button ng-click="onAddLinkCount()" class="md-icon-button md-primary md-button md-ink-ripple">
+                <md-icon class="material-icons lp-icon">add_circle_outline</md-icon>
+            </button>
         </div>
         <div ng-hide="dialog.mappingFiles.disabled || dialog.mappingFiles.inherit || dialog.mappingFiles.hide">
             Vocabulary mapping files and formats<br/>
@@ -212,9 +216,13 @@
                     <label>File</label>
                     <input ng-model="mappingFile.mappingFile.value">
                 </md-input-container>
-                <button ng-click="onDeleteMappingFile($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                <button ng-click="onDeleteMappingFile($index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                    <md-icon class="material-icons lp-icon">clear</md-icon>
+                </button>
             </section>
-            <button ng-click="onAddMappingFile()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+            <button ng-click="onAddMappingFile()" class="md-icon-button md-primary md-button md-ink-ripple">
+                <md-icon class="material-icons lp-icon">add_circle_outline</md-icon>
+            </button>
         </div>
     </md-tab>
 </md-tabs>

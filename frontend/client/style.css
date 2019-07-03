@@ -1,0 +1,74 @@
+/*
+Wrap content of a notifications.
+*/
+
+.ui-notification>.message {
+    word-break: break-word;
+}
+
+/*
+Custom style for icons, used mainly in application lists. Designed to make it look more responsive.
+*/
+
+.lp-icon {
+    color: #9E9E9E;
+}
+
+.lp-icon:hover {
+    color: #000000;
+}
+
+.lp-icon-avatar {
+    width: 1.1em !important;
+    height: 1.1em !important;
+    font-size: 48px;
+    margin-top: 0px;
+}
+
+/*
+Custom style used to format list. What is special here is that we need to line-heigh slightly smaller than in
+Angular Material.
+*/
+
+.lp-font-list-label {
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    line-height: 24px;
+}
+
+.lp-font-list-content {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.010em;
+    line-height: 20px;
+    color:grey;
+}
+
+/**
+YASQE editor, support for read-only mode.
+*/
+lp-yasqe.readOnly > .yasqe > .CodeMirror {
+    background-color: #E0E0E0;
+}
+
+/**
+scroll-watch
+*/
+
+.scroll-watch-list-tail {
+    margin-top: 2REM;
+    text-align: center;
+    min-height: 4REM;
+    line-height: 4REM;
+    cursor: pointer;
+}
+
+.scroll-watch-list-tail:hover {
+    background-color: #DADADA;
+}
+
+/* Remove blue outline after component is clicked. */
+.scroll-watch-list-tail:focus {
+    outline: none;
+}

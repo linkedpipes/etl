@@ -150,9 +150,13 @@
                         <label>Property IRI</label>
                         <input ng-model="item.uri.value">
                     </md-input-container>
-                    <button ng-click="onDelete(dialog.column.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                    <button ng-click="onDelete(dialog.column.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                        <md-icon class="material-icons lp-icon">clear</md-icon>
+                    </button>
                 </section>
-                <button ng-click="onAddColumn()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+                <button ng-click="onAddColumn()" class="md-icon-button md-primary md-button md-ink-ripple">
+                    <md-icon class="material-icons lp-icon">add_circle_outline</md-icon>
+                </button>
             </div>
         </md-tab>
         <md-tab label="Advanced">
@@ -166,9 +170,13 @@
                         <label>Template</label>
                         <input ng-model="item.template.value">
                     </md-input-container>
-                    <button ng-click="onDelete(dialog.advancedMapping.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                    <button ng-click="onDelete(dialog.advancedMapping.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                        <md-icon class="material-icons lp-icon">clear</md-icon>
+                    </button>
                 </section>
-                <button ng-click="onAddAdvancedColumn()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+                <button ng-click="onAddAdvancedColumn()" class="md-icon-button md-primary md-button md-ink-ripple">
+                    <md-icon class="material-icons lp-icon">add_circle_outline</md-icon>
+                </button>
             </div>
         </md-tab>
         <md-tab label="XLS Mapping">
@@ -186,9 +194,13 @@
                         <label>Column</label>
                         <input ng-model="item.columnNumber.value">
                     </md-input-container>
-                    <button ng-click="onDelete(dialog.namedCell.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+                    <button ng-click="onDelete(dialog.namedCell.value, $index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                        <md-icon class="material-icons lp-icon">clear</md-icon>
+                    </button>
                 </section>
-                <button ng-click="onAddNamedCell()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+                <button ng-click="onAddNamedCell()" class="md-icon-button md-primary md-button md-ink-ripple">
+                    <md-icon class="material-icons lp-icon">add_circle_outline</md-icon>
+                </button>
             </div>
         </md-tab>
     </md-tabs>

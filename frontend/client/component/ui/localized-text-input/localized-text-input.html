@@ -1,0 +1,50 @@
+<div layout="column" tabindex="-1" flex style="margin-top:18px;">
+  <label style="margin-bottom: 18px">{{topLabel}}</label>
+  <md-button class="md-icon-button" ng-click="onAdd(0)"
+             style="margin-left:0px;" ng-show="data.length === 0"
+             ng-disabled="disabled">
+    <md-icon class="material-icons" aria-label="Add">
+      add_circle_outline
+    </md-icon>
+  </md-button>
+  <div layout="row" ng-repeat="item in data">
+    <md-button class="md-icon-button" ng-click="onAdd($index)"
+               style="margin-left:0px;" ng-disabled="disabled">
+      <md-icon class="material-icons" aria-label="Add">
+        add_circle_outline
+      </md-icon>
+    </md-button>
+    <md-button class="md-icon-button" ng-click="onDelete($index)"
+               style="margin-left:0px;" ng-disabled="last || disabled">
+      <md-icon class="material-icons" aria-label="Delete">
+        clear
+      </md-icon>
+    </md-button>
+    <md-input-container class="md-block" style="width:4em;margin-top:0px;">
+      <label>Lang.</label>
+      <input ng-model="item['@language']" aria-label="Language"
+             ng-change="onChange()" ng-disabled="disabled">
+    </md-input-container>
+    <div ng-switch="multiline" flex>
+      <div ng-switch-when="true" flex>
+        <md-input-container class="md-block"
+                            style="width:100%;margin-top:0px;">
+          <label>{{itemLabel}}</label>
+          <textarea ng-model="item['@value']" aria-label="{{label}}"
+                    ng-change="onChange()"
+                    ng-disabled="disabled"></textarea>
+        </md-input-container>
+      </div>
+      <div ng-switch-default flex>
+        <md-input-container class="md-block"
+                            style="width:100%;margin-top:0px;">
+          <label>{{itemLabel}}</label>
+          <input ng-model="item['@value']" aria-label="{{label}}"
+                 ng-change="onChange()" ng-disabled="disabled">
+        </md-input-container>
+      </div>
+    </div>
+  </div>
+
+</div>
+
