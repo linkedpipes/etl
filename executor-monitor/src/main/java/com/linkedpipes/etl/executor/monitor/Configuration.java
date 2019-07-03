@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
@@ -55,8 +55,8 @@ public class Configuration {
         }
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
-        try (InputStream stream = new FileInputStream(
-                new File(propertiesFile))) {
+        try (InputStreamReader stream = new InputStreamReader(
+                new FileInputStream(new File(propertiesFile)), "UTF8")) {
             properties.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("Can't load configuration file.", ex);
