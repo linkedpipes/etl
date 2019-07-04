@@ -8,7 +8,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 
 ## Requirements
 - Linux, Windows, iOS
-- [Java] 11, 10 or [Java] 8 update 101 or newer
+- [Java] 12 or [Java] 8 update 101 or newer
 - [Git]
 - [Maven], 3.2.5 or newer
 - [Node.js] & npm
