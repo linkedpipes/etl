@@ -24,6 +24,5 @@ export function getDownloadDebugUrl(
     if (source) {
         url += "?source=" + source;
     }
-    console.log("url", url);
     return url;
 }

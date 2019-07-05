@@ -1,5 +1,6 @@
 <template>
   <v-flex
+    style="margin-top: 1em"
     xs9
     sm6
     offset-sm3

@@ -1,44 +1,53 @@
 <template>
-  <div>
-    <div style="margin-left: 1rem;margin-right: 1rem;">
-      <div v-if="tooBig">
-        File is too big {{ metadata.size }} to show it as a preview.
-      </div>
-      <div v-else-if="error">
-        Can't load data.
-      </div>
-      <div
-        v-else-if="loading"
-        class="text-xs-center"
+  <div style="margin-top: 1em">
+    <div
+      v-if="tooBig"
+      class="text-xs-center"
+    >
+      File is too big {{ metadata.size }} to show it as a preview.<br>
+      <v-btn
+        :href="downloadUrl"
+        target="_blank"
+        download
+        flat
       >
-        Loading ...
-        <br>
-        <br>
-        <v-progress-circular
-          :size="50"
-          color="primary"
-          indeterminate
-        />
-        <br>
-      </div>
-      <div v-else>
-        <pre><code style="width:100%;padding: 1rem;">{{ content }}</code></pre>
-      </div>
+        <v-icon>cloud_download</v-icon>
+        &nbsp;
+        Download file
+      </v-btn>
+    </div>
+    <div
+      v-else-if="error"
+      class="text-xs-center"
+    >
+      Can't load data.
+    </div>
+    <div
+      v-else-if="loading"
+      class="text-xs-center"
+    >
+      Loading ...
+      <br>
+      <br>
+      <v-progress-circular
+        :size="50"
+        color="primary"
+        indeterminate
+      />
       <br>
     </div>
+    <div
+      v-else
+      style="margin-left: 1rem;margin-right: 1rem;"
+    >
+      <pre><code style="width:100%;padding: 1rem;">{{ content }}</code></pre>
+    </div>
+    <br>
     <v-flex
       xs9
       sm6
       offset-sm3
-    >
-      <v-btn
-        :href="downloadUrl"
-        target="_blank"
-        style="float:right;"
-      >
-        Open in new tab / Download
-      </v-btn>
-    </v-flex>
+    />
   </div>
 </template>
 

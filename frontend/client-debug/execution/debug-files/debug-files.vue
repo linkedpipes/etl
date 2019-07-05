@@ -4,13 +4,7 @@
       xs9
       sm6
       offset-sm3
-    >
-      <div>
-        Debug data for execution: {{ $route.params["execution"] }}<br>
-        Path: {{ query.path }}<br>
-        <br>
-      </div>
-    </v-flex>
+    />
     <directory-view
       v-show="metadata.type === 'dir'"
       :metadata="metadata"
@@ -37,6 +31,8 @@
   import DirectoryView from "./dir-view";
   import FileView from "./file-view";
   import AmbiguousView from "./ambiguous-view";
+  import {onHome, onListing, onDetail} from "@client-debug/app/header-data"
+  import {getDownloadDebugUrl} from "./debug-files-service";
 
   export default Vue.extend({
     "name": "debug-files",
@@ -92,10 +88,29 @@
           "pageCount": Math.ceil(
             (responseData.metadata["count"] || 0) / this.query.pageSize)
         };
-        console.log(this.metadata);
         this.data = responseData.data || [];
+        // Update header.
+        updateHeader(
+          this.metadata,
+          this.$route,
+          this.query);
       }
     }
   });
+
+  function updateHeader(metadata, route, query) {
+    const execution = route.params["execution"];
+    if (metadata.type === "dir") {
+      onListing(execution, query.path);
+    } else if (metadata.type === "file") {
+      const downloadUrl = getDownloadDebugUrl(
+        execution, query.path, route.query["source"]);
+      onDetail(execution, query.path, metadata.size, downloadUrl)
+    } else if (metadata.type === "ambiguous") {
+      onListing(execution, query.path);
+    } else {
+      onHome();
+    }
+  }
 
 </script>
