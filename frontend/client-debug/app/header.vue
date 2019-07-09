@@ -20,7 +20,7 @@
       flat
     >
       <v-icon>
-        open_in_new
+        cloud_download
       </v-icon>
     </v-btn>
   </v-toolbar>
@@ -33,11 +33,6 @@
   export default Vue.extend({
     "name": "app-header",
     "data": getData,
-    "watch": {
-      "$route": function () {
-        console.log(this.$router.history);
-      }
-    },
     "methods": {
       "onBack": function () {
         this.$router.go(-1);
