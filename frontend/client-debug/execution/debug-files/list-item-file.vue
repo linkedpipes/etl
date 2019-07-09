@@ -17,13 +17,6 @@
     <v-btn
       :href="downloadUrl"
       target="_blank"
-      @click.stop="() => {}"
-    >
-      <v-icon>open_in_new</v-icon>
-    </v-btn>
-    <v-btn
-      :href="downloadUrl"
-      target="_blank"
       download
       @click.stop="() => {}"
     >
