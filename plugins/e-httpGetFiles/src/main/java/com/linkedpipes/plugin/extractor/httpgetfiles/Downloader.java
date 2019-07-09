@@ -2,17 +2,21 @@ package com.linkedpipes.plugin.extractor.httpgetfiles;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 class Downloader {
 
@@ -86,7 +90,9 @@ class Downloader {
 
     private final HttpRequestReport requestReport;
 
-    public Downloader(Task toDownload, Configuration configuration, HttpRequestReport requestReport) {
+    public Downloader(
+            Task toDownload, Configuration configuration,
+            HttpRequestReport requestReport) {
         this.toDownload = toDownload;
         this.configuration = configuration;
         this.requestReport = requestReport;
@@ -150,6 +156,8 @@ class Downloader {
 
     private void setHeaders(HttpURLConnection connection) {
         Map<String, String> headers = toDownload.getHeader();
+        // Fixed headers, #697.
+        connection.setRequestProperty("accept-encoding", "gzip");
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             connection.setRequestProperty(entry.getKey(), entry.getValue());
         }
@@ -190,6 +198,22 @@ class Downloader {
             throws IOException {
         int responseCode = connection.getResponseCode();
 
+        StringWriter writer = new StringWriter();
+        try (InputStream err = connection.getErrorStream()) {
+            if (err != null) {
+                IOUtils.copy(err, writer, "UTF-8");
+            }
+        }
+        LOG.info("Error: {}", writer.toString());
+
+        for (Map.Entry<String, List<String>> entry :
+                connection.getHeaderFields().entrySet()) {
+            LOG.info("Header: {}", entry.getKey());
+            for (String value : entry.getValue()) {
+                LOG.info("  {}", value);
+            }
+        }
+
         if (responseCode < 200 || responseCode > 299) {
             IOException ex = new IOException(
                     responseCode + " : " + connection.getResponseMessage());
@@ -200,9 +224,30 @@ class Downloader {
 
     private void saveContentToFile(HttpURLConnection connection, File file)
             throws IOException {
-        try (InputStream inputStream = connection.getInputStream()) {
-            FileUtils.copyInputStreamToFile(inputStream, file);
+        InputStream inputStream;
+        if (isGzip(connection)) {
+            inputStream = new GZIPInputStream(connection.getInputStream());
+        } else {
+            inputStream = connection.getInputStream();
         }
+        try {
+            FileUtils.copyInputStreamToFile(inputStream, file);
+        } finally {
+            inputStream.close();
+        }
+    }
+
+    private boolean isGzip(HttpURLConnection connection) {
+        Map<String, List<String>> headers = connection.getHeaderFields();
+        if (!headers.containsKey("Content-Encoding")) {
+            return false;
+        }
+        for (String value : headers.get("Content-Encoding")) {
+            if ("gzip".equals(value.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
