@@ -18,6 +18,8 @@
       :href="downloadUrl"
       target="_blank"
       download
+      icon
+      ripple
       @click.stop="() => {}"
     >
       <v-icon>cloud_download</v-icon>
