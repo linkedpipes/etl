@@ -11,7 +11,7 @@
         {{ value.name }}
       </v-list-tile-title>
       <v-list-tile-sub-title>
-        {{ value.size }} bytes
+        {{ asHumanReadableSize(value.size) }}
       </v-list-tile-sub-title>
     </v-list-tile-content>
     <v-btn
@@ -30,6 +30,7 @@
 <script>
   import Vue from "vue";
   import {getDownloadDebugUrl} from "./debug-files-service";
+  import {asHumanReadableSize} from "@client-debug/app-service/formats";
 
   export default Vue.extend({
     "name": "debug-files-list-item-file",
@@ -44,6 +45,9 @@
           path,
           this.value["source"]);
       }
+    },
+    "methods": {
+      "asHumanReadableSize": asHumanReadableSize
     }
   });
 </script>

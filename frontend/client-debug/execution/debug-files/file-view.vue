@@ -1,7 +1,22 @@
 <template>
   <div style="margin-top: 1em">
     <div
-      v-if="error"
+      v-if="tooBig"
+      class="text-xs-center"
+      style="margin-left: 1em;margin-right: 1em"
+    >
+      <v-alert
+        :value="true"
+        type="warning"
+      >
+        This file may be too big for preview and may cause browser to crash.
+      </v-alert>
+      <v-btn @click="loadData">
+        Show preview anyway
+      </v-btn>
+    </div>
+    <div
+      v-else-if="error"
       class="text-xs-center"
     >
       Can't load data.
@@ -40,6 +55,8 @@
   import {fetchPlainText} from "@client-debug/app-service/http";
   import {getDownloadDebugUrl} from "./debug-files-service";
 
+  const FILE_PREVIEW_LIMIT = 512 * 1024;
+
   export default Vue.extend({
     "name": "debug-files-file-view",
     "props": {
@@ -49,13 +66,19 @@
     "data": () => ({
       "loading": false,
       "error": false,
-      "content": undefined
+      "content": undefined,
+      "tooBig": false
     }),
     "mounted": function mounted() {
+      if (this.metadata["size"] > FILE_PREVIEW_LIMIT) {
+        this.tooBig = true;
+        return;
+      }
       this.loadData();
     },
     "methods": {
       "loadData": async function () {
+        this.tooBig = false;
         try {
           this.loading = true;
           const response = await fetchPlainText(this.downloadUrl);

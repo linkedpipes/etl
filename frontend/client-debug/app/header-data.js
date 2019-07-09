@@ -1,3 +1,5 @@
+import {asHumanReadableSize} from "../app-service/formats";
+
 const publicData = {
   "title": "",
   "downloadUrl": undefined
@@ -12,12 +14,15 @@ export function onHome() {
   publicData["downloadUrl"] = undefined;
 }
 
-export function onListing(execution, path) {
-  publicData["title"] = execution + "/" + path;
+export function onListing(execution, path, count) {
+  publicData["title"] = execution + "/" + path +
+    " (records count: " + count + ")";
   publicData["downloadUrl"] = undefined;
 }
 
 export function onDetail(execution, path, size, downloadUrl) {
-  publicData["title"] = execution + "/" + path + " (size: " + size + "B)";
+  const humanReadableSize = asHumanReadableSize(size);
+  publicData["title"] = execution + "/" + path + " (size: " + humanReadableSize + ")";
   publicData["downloadUrl"] = downloadUrl;
 }
+
