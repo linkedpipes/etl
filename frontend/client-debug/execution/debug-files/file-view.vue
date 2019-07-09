@@ -1,23 +1,7 @@
 <template>
   <div style="margin-top: 1em">
     <div
-      v-if="tooBig"
-      class="text-xs-center"
-    >
-      File is too big {{ metadata.size }} to show it as a preview.<br>
-      <v-btn
-        :href="downloadUrl"
-        target="_blank"
-        download
-        flat
-      >
-        <v-icon>cloud_download</v-icon>
-        &nbsp;
-        Download file
-      </v-btn>
-    </div>
-    <div
-      v-else-if="error"
+      v-if="error"
       class="text-xs-center"
     >
       Can't load data.
@@ -56,8 +40,6 @@
   import {fetchPlainText} from "@client-debug/app-service/http";
   import {getDownloadDebugUrl} from "./debug-files-service";
 
-  const FILE_PREVIEW_LIMIT = 256 * 1024;
-
   export default Vue.extend({
     "name": "debug-files-file-view",
     "props": {
@@ -67,7 +49,6 @@
     "data": () => ({
       "loading": false,
       "error": false,
-      "tooBig": false,
       "content": undefined
     }),
     "mounted": function mounted() {
@@ -75,10 +56,6 @@
     },
     "methods": {
       "loadData": async function () {
-        if (this.metadata["size"] > FILE_PREVIEW_LIMIT) {
-          this.tooBig = true;
-          return;
-        }
         try {
           this.loading = true;
           const response = await fetchPlainText(this.downloadUrl);
