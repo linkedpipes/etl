@@ -54,7 +54,6 @@ public class DebugServlet {
         DebugEntry data = dataHolder.get()
                 .prepareData(name, source, offset, limit);
         response.setHeader("Content-Type", "application/json");
-        response.setHeader("Content-Length", Integer.toString(data.getSize()));
         response.setStatus(HttpServletResponse.SC_OK);
         data.write(response.getOutputStream());
         response.getOutputStream().flush();
