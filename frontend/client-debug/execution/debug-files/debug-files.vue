@@ -1,10 +1,5 @@
 <template>
   <v-content style="margin-bottom: 1rem">
-    <v-flex
-      xs9
-      sm6
-      offset-sm3
-    />
     <directory-view
       v-show="metadata.type === 'dir'"
       :metadata="metadata"

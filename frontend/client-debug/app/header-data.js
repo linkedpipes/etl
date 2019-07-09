@@ -15,14 +15,23 @@ export function onHome() {
 }
 
 export function onListing(execution, path, count) {
-  publicData["title"] = execution + "/" + path +
+  publicData["title"] =
+    removeDataUnitDirectory(path) +
     " (records count: " + count + ")";
   publicData["downloadUrl"] = undefined;
 }
 
+function removeDataUnitDirectory(path) {
+  if (path === "/") {
+    return path;
+  }
+  return path.substr(4);
+}
+
 export function onDetail(execution, path, size, downloadUrl) {
-  const humanReadableSize = asHumanReadableSize(size);
-  publicData["title"] = execution + "/" + path + " (size: " + humanReadableSize + ")";
+  publicData["title"] =
+    removeDataUnitDirectory(path) +
+    " (size: " + asHumanReadableSize(size) + ")";
   publicData["downloadUrl"] = downloadUrl;
 }
 

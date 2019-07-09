@@ -5,7 +5,9 @@
     fixed
     app
   >
-    <v-btn flat>
+    <v-btn
+      icon
+    >
       <v-icon @click="onBack">
         arrow_back
       </v-icon>
@@ -17,7 +19,7 @@
       :href="downloadUrl"
       target="_blank"
       download
-      flat
+      icon
     >
       <v-icon>
         cloud_download
