@@ -20,7 +20,10 @@ function getMetadataUrl(execution: string, path: string): string {
 
 export function getDownloadDebugUrl(
     execution: string, path: string, source: string) {
-    let url = "./api/v1/debug/data/" + execution + "/" + path;
+    if (path.length > 0 && path[0] !== "/") {
+        path = "/" + path
+    }
+    let url = "./api/v1/debug/data/" + execution + path;
     if (source) {
         url += "?source=" + source;
     }
