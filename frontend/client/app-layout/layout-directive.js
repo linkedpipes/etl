@@ -40,7 +40,7 @@ define([
         return;
       }
       if (current.$$route.color !== undefined) {
-        $scope.color = current.$$route.color;
+        $scope.layout.color = current.$$route.color;
       }
       $scope.pageTitle = current.$$route.pageTitle;
       updateDocumentTitle()
