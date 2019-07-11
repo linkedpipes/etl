@@ -11,11 +11,15 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Should be used to represent an execution in execution list.
  */
 public class OverviewToListStatements {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OverviewToListStatements.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -41,10 +45,11 @@ public class OverviewToListStatements {
                     valueFactory.createLiteral(overview.getDirectorySize()));
         }
 
-        if (overview.getPipeline() != null) {
+        String pipeline = overview.getPipeline();
+        if (pipeline != null && !"null".equals(pipeline)) {
             statements.addIri(
                     iri, LP_OVERVIEW.HAS_PIPELINE,
-                    overview.getPipeline());
+                    pipeline);
         }
 
         if (overview.getStart() != null) {
