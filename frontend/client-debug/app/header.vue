@@ -7,8 +7,9 @@
   >
     <v-btn
       icon
+      @click="onBack"
     >
-      <v-icon @click="onBack">
+      <v-icon>
         arrow_back
       </v-icon>
     </v-btn>

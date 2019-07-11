@@ -1,5 +1,9 @@
 <template>
-  <v-flex xs12 sm8 offset-sm2>
+  <v-flex
+    xs12
+    sm8
+    offset-sm2
+  >
     This path is ambiguous and represent multiple sources.
     <v-list two-line>
       <template v-for="(item, index) in data">
