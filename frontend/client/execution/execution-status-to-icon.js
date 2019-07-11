@@ -19,7 +19,7 @@
         };
       case LP.EXEC_QUEUED:
         return {
-          "name": "hourglass",
+          "name": "hourglass_empty",
           "style": {
             "color": "black"
           }
@@ -27,7 +27,7 @@
       case LP.EXEC_INITIALIZING:
       case LP.EXEC_RUNNING:
         return {
-          "name": "run",
+          "name": "directions_run",
           "style": {
             "color": "blue"
           }
@@ -41,7 +41,7 @@
         };
       case LP.EXEC_FAILED:
         return {
-          "name": "error",
+          "name": "error_outline",
           "style": {
             "color": "red"
           }
@@ -71,7 +71,7 @@
       default:
         if (defaultToRunning) {
           return {
-            "name": "hourglass",
+            "name": "hourglass_empty",
             "style": {
               "color": "black"
             }
