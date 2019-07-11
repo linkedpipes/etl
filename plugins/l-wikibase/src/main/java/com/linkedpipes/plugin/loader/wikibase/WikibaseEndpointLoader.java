@@ -1,11 +1,13 @@
 package com.linkedpipes.plugin.loader.wikibase;
 
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.SKOS;
@@ -23,8 +25,14 @@ public class WikibaseEndpointLoader implements Component, SequentialExecution {
     public static final String WIKIDATA_ENTITY =
             "http://localhost/WikidataEntity";
 
-    public static final String WIKIDATA_QID =
-            "http://localhost/qid";
+    public static final String WIKIDATA_NEW_ENTITY =
+            "http://localhost/New";
+
+    public static final String WIKIDATA_DELETE_ENTITY =
+            "http://localhost/Remove";
+
+    public static final String WIKIDATA_MAPPING =
+            "http://localhost/mappedTp";
 
     public static final String SKOS_LABEL = SKOS.PREF_LABEL;
 
@@ -36,6 +44,9 @@ public class WikibaseEndpointLoader implements Component, SequentialExecution {
 
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
+
+    @Component.InputPort(iri = "OutputRdf")
+    public WritableSingleGraphDataUnit outputRdf;
 
     @Component.Configuration
     public WikibaseLoaderConfiguration configuration;
@@ -50,7 +61,10 @@ public class WikibaseEndpointLoader implements Component, SequentialExecution {
         initializeConnection();
         List<WikibaseDocument> documents = loadDocuments();
         DocumentSynchronizer synchronize = new DocumentSynchronizer(
-                exceptionFactory, connection, configuration.getSiteIri());
+                exceptionFactory, connection,
+                configuration.getInstanceIriBase(),
+                outputRdf,
+                configuration.getAverageTimePerEdit());
         for (WikibaseDocument document : documents) {
             try {
                 synchronize.synchronize(document);
@@ -86,20 +100,26 @@ public class WikibaseEndpointLoader implements Component, SequentialExecution {
     }
 
     private List<WikibaseDocument> loadDocuments() throws RdfException {
+        String propertyPrefix =
+                configuration.getOntologyIriBase();
+        String statementPrefix =
+                configuration.getInstanceIriBase() + "statement/";
+
         RdfSource source = inputRdf.asRdfSource();
         List<String> refs = source.getByType(WIKIDATA_ENTITY);
         List<WikibaseDocument> documents = new ArrayList<>(refs.size());
         for (String iri : refs) {
-            WikibaseDocument document = new WikibaseDocument();
+            WikibaseDocument document = new WikibaseDocument(iri);
             source.statements(iri, (predicate, value) -> {
-                if (WIKIDATA_QID.equals(predicate)) {
-                    document.setQid(value.asString());
-                } else if (RDF.TYPE.equals(predicate)) {
+                if (RDF.TYPE.equals(predicate)) {
                     document.getTypes().add(value.asString());
                 } else if (isLabel(predicate)) {
                     document.setLabel(value.asString(), value.getLanguage());
-                } else {
-                    document.addStatement(predicate, value.asString());
+                } else if (
+                        predicate.startsWith(propertyPrefix) &&
+                        value.asString().startsWith(statementPrefix)) {
+                    document.addStatement(
+                            loadStatement(source, value, predicate));
                 }
             });
             documents.add(document);
@@ -109,6 +129,24 @@ public class WikibaseEndpointLoader implements Component, SequentialExecution {
 
     private boolean isLabel(String predicate) {
         return SKOS_LABEL.equals(predicate) || RDFS_LABEL.equals(predicate);
+    }
+
+    private WikibaseDocument.Statement loadStatement(
+            RdfSource source, RdfValue statementIri, String statementPredicate)
+            throws RdfException {
+        WikibaseDocument.Statement statement =
+                new WikibaseDocument.Statement(
+                        statementIri.asString(), statementPredicate);
+        String valuePredicate = configuration.getOntologyIriBase() +
+                "statement/" + statement.getPredicate();
+        source.statements(statementIri.asString(), (predicate, value) -> {
+            if (RDF.TYPE.equals(predicate)) {
+                statement.getTypes().add(value.asString());
+            } else if (valuePredicate.equals(predicate)) {
+                statement.setValue(value.asString());
+            }
+        });
+        return statement;
     }
 
 }

@@ -20,9 +20,17 @@ define([], function () {
             "$type": "str",
             "$label": "Password"
         },
-      "siteIri": {
+      "ontologyIriBase": {
         "$type": "str",
-        "$label": "Wikibase Entity IRI prefix"
+        "$label": "Wikibase ontology base IRI"
+      },
+      "instanceIriBase": {
+        "$type": "str",
+        "$label": "Wikibase instance base IRI"
+      },
+      "averageTimePerEdit": {
+        "$type": "int",
+        "$label": "Average time per edit"
       }
     };
 

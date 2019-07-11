@@ -7,41 +7,93 @@ import java.util.Map;
 
 class WikibaseDocument {
 
+    // <https://wikibase.opendata.cz/entity/statement/Q2066-99C627E9-A027-4C4D-85E6-DA0AD38DEC45>
     public static class Statement {
 
-        private String predicate;
+        private final String iri;
 
+        private final String qid;
+
+        private final String predicateIri;
+
+        // <https://wikibase.opendata.cz/prop/statement/P3>
         private String value;
 
-        public Statement(String predicate, String value) {
-            this.predicate = predicate;
-            this.value = value;
+        //
+        private final List<String> types = new ArrayList<>();
+
+        private String ownerQid;
+
+        public Statement(String iri, String predicate) {
+            this.iri = iri;
+            String id = iri.substring(iri.lastIndexOf("/"));
+            this.qid = id.substring(id.indexOf("-") + 1);
+            this.predicateIri = predicate;
+        }
+
+        public String getIri() {
+            return iri;
         }
 
         public String getPredicate() {
-            return predicate;
+            return predicateIri.substring(predicateIri.lastIndexOf("/") + 1);
         }
 
         public String getValue() {
             return value;
         }
 
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public List<String> getTypes() {
+            return types;
+        }
+
+        public boolean isNew() {
+            return types.contains(WikibaseEndpointLoader.WIKIDATA_NEW_ENTITY);
+        }
+
+        public boolean isForDelete() {
+            return types.contains(WikibaseEndpointLoader.WIKIDATA_DELETE_ENTITY);
+        }
+
+        public void setOwnerQid(String ownerQid) {
+            this.ownerQid = ownerQid;
+        }
+
+        public String getStatementId() {
+            return ownerQid + "$" + qid;
+        }
+
     }
+
+    private String iri;
 
     private String qid;
 
+    // http://www.w3.org/2000/01/rdf-schema#label
     private Map<String, String> labels = new HashMap<>();
 
+    // ...
+    // https://wikibase.opendata.cz/prop/P3
     private List<Statement> statements = new ArrayList<>();
 
+    //
     private List<String> types = new ArrayList<>();
+
+    public WikibaseDocument(String iri) {
+        this.iri = iri;
+        this.qid = iri.substring(iri.lastIndexOf("/") + 1);
+    }
+
+    public String getIri() {
+        return iri;
+    }
 
     public String getQid() {
         return qid;
-    }
-
-    public void setQid(String qid) {
-        this.qid = qid;
     }
 
     public Map<String, String> getLabels() {
@@ -56,8 +108,9 @@ class WikibaseDocument {
         return statements;
     }
 
-    public void addStatement(String predicate, String value) {
-        statements.add(new Statement(predicate, value));
+    public void addStatement(Statement statement) {
+        statement.setOwnerQid(qid);
+        statements.add(statement);
     }
 
     public List<String> getTypes() {

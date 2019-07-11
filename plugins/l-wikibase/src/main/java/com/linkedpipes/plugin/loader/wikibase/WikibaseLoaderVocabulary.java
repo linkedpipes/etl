@@ -13,7 +13,11 @@ final class WikibaseLoaderVocabulary {
 
     public static final String HAS_PASSWORD = PREFIX + "password";
 
-    public static final String HAS_SITE_IRI = PREFIX + "siteIri";
+    public static final String HAS_ONTOLOGY_IRI = PREFIX + "ontologyIriBase";
+
+    public static final String HAS_INSTANCE_IRI = PREFIX + "instanceIriBase";
+
+    public static final String HAS_EDIT_TIME = PREFIX + "averageTimePerEdit";
 
     private WikibaseLoaderVocabulary() {
     }

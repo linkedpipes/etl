@@ -6,7 +6,9 @@
     config:member <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/endpoint> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/userName> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/password> ,
-        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/siteIri> .
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/ontologyIriBase> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/instanceIriBase> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/averageTimePerEdit> .
 
 <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
@@ -25,7 +27,17 @@
     config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#passwordControl> ;
     config:private true .
 
-<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/siteIri>
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/ontologyIriBase>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#siteIri> ;
-    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#siteIriControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#ontologyIriBase> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#ontologyIriBaseControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/instanceIriBase>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#instanceIriBase> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#instanceIriBaseControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/averageTimePerEdit>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEdit> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEditControl> .

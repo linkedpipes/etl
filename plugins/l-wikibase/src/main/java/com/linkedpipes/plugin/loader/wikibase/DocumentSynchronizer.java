@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.loader.wikibase;
 
+import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
@@ -7,25 +8,48 @@ import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.helpers.ItemDocumentBuilder;
 import org.wikidata.wdtk.datamodel.helpers.StatementBuilder;
-import org.wikidata.wdtk.datamodel.implementation.PropertyIdValueImpl;
-import org.wikidata.wdtk.datamodel.implementation.TermImpl;
 import org.wikidata.wdtk.datamodel.interfaces.EntityDocument;
 import org.wikidata.wdtk.datamodel.interfaces.ItemDocument;
 import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.MonolingualTextValue;
 import org.wikidata.wdtk.datamodel.interfaces.PropertyIdValue;
-import org.wikidata.wdtk.datamodel.interfaces.Snak;
 import org.wikidata.wdtk.datamodel.interfaces.Statement;
-import org.wikidata.wdtk.datamodel.interfaces.ValueSnak;
+import org.wikidata.wdtk.datamodel.interfaces.StringValue;
 import org.wikidata.wdtk.wikibaseapi.ApiConnection;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataEditor;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 class DocumentSynchronizer {
+
+    private static class StatementRef {
+
+        public final String id;
+
+        public final String predicate;
+
+        public final String value;
+
+        public String iri;
+
+        public Boolean isNew;
+
+        public StatementRef(String id, String predicate, String value) {
+            this.id = id;
+            this.predicate = predicate;
+            this.value = value;
+            this.iri = null;
+        }
+    }
 
     private static final Logger LOG =
             LoggerFactory.getLogger(DocumentSynchronizer.class);
@@ -36,17 +60,31 @@ class DocumentSynchronizer {
 
     private final WikibaseDataFetcher wbdf;
 
+    private final WritableSingleGraphDataUnit reportOutput;
+
     private WikibaseDocument expectedState;
 
     private ItemDocument document;
 
+    /**
+     * Predicates are using siteIri given to WikibaseDataFetcher,
+     * so we need to use the same IRI when we construct them.
+     */
+    private String siteIri;
+
     public DocumentSynchronizer(
             ExceptionFactory exceptionFactory,
             ApiConnection connection,
-            String siteIri) {
+            String siteIri,
+            WritableSingleGraphDataUnit output,
+            int averageTimePerEdit) {
+        this.siteIri = siteIri;
         this.exceptionFactory = exceptionFactory;
-        this.wbde = new WikibaseDataEditor(connection, siteIri);
-        this.wbdf = new WikibaseDataFetcher(connection, siteIri);
+        this.wbde = new WikibaseDataEditor(connection, this.siteIri);
+        this.wbde.setAverageTimePerEdit(averageTimePerEdit);
+        this.wbde.setEditAsBot(true);
+        this.wbdf = new WikibaseDataFetcher(connection, this.siteIri);
+        this.reportOutput = output;
     }
 
     public void synchronize(WikibaseDocument expectedState)
@@ -54,10 +92,10 @@ class DocumentSynchronizer {
         this.expectedState = expectedState;
         document = getDocumentFromWikidata(expectedState);
         synchronizeLabels();
-        for (WikibaseDocument.Statement st : expectedState.getStatements()) {
-            synchronizeStatement(st);
-        }
-        saveDocument();
+        List<Statement> statementsToUpdate = synchronizeStatements();
+        ItemDocument oldDocument = document;
+        saveDocumentChanges();
+        emitMapping();
     }
 
     private ItemDocument getDocumentFromWikidata(
@@ -82,64 +120,164 @@ class DocumentSynchronizer {
     }
 
     private void synchronizeLabels() {
-        expectedState.getLabels().forEach((key, value1) -> {
+        expectedState.getLabels().forEach((key, strValue) -> {
             MonolingualTextValue value =
-                    new TermImpl(key, value1);
+                    Datamodel.makeMonolingualTextValue(key, strValue);
             document = document.withLabel(value);
         });
     }
 
-    // https://wikibase.opendata.cz/prop/direct/P3 - > https://wikibase.opendata.cz/entity/P3
-    private void synchronizeStatement(WikibaseDocument.Statement st) {
-        Iterator<Statement> statements = document.getAllStatements();
-        String stPredicate = getPredicateName(st.getPredicate());
-        String stValue = "\"" + st.getValue() + "\"";
-        while (statements.hasNext()) {
-            Statement statement = statements.next();
-            Snak snak = statement.getMainSnak();
-            PropertyIdValue property = snak.getPropertyId();
-            String propertyIri = getPredicateName(property.getIri());
-            if (!propertyIri.equals(stPredicate)) {
+    private List<Statement> synchronizeStatements() {
+        List<Statement> statementsToUpdate = new ArrayList<>();
+        Set<String> toRemove = new HashSet<>();
+        for (WikibaseDocument.Statement expected :
+                expectedState.getStatements()) {
+            if (expected.isNew()) {
+                statementsToUpdate.add(createNewStatement(expected));
                 continue;
             }
-            if (snak instanceof ValueSnak) {
-                ValueSnak valueSnak = (ValueSnak) snak;
-                String valueSnakStr = valueSnak.getValue().toString();
-                if (valueSnakStr.equals(stValue)) {
-                    // Statement is already set.
-                    return;
-                }
+            Statement actual = getStatement(expected.getStatementId());
+            if (actual == null) {
+                LOG.info("Missing statement: {}", expected.getStatementId());
+                continue;
+            }
+            toRemove.add(actual.getStatementId());
+            if (expected.isForDelete()) {
+                continue;
+            }
+            statementsToUpdate.add(synchronizeStatement(actual, expected));
+        }
+        document = document.withoutStatementIds(toRemove);
+        for (Statement statement : statementsToUpdate) {
+            document = document.withStatement(statement);
+        }
+        return statementsToUpdate;
+    }
+
+    private Statement createNewStatement(WikibaseDocument.Statement expected) {
+        PropertyIdValue property = createProperty(expected);
+        StringValue value = Datamodel.makeStringValue(expected.getValue());
+        return StatementBuilder
+                .forSubjectAndProperty(document.getEntityId(), property)
+                .withValue(value).build();
+    }
+
+    private PropertyIdValue createProperty(
+            WikibaseDocument.Statement expected) {
+        return Datamodel.makePropertyIdValue(
+                expected.getPredicate(),
+                siteIri);
+    }
+
+    private Statement getStatement(String statementId) {
+        Iterator<Statement> statements = document.getAllStatements();
+        while (statements.hasNext()) {
+            Statement statement = statements.next();
+            if (statement.getStatementId().equals(statementId)) {
+                return statement;
             }
         }
-        createNewStatement(st);
+        return null;
     }
 
-    private void createNewStatement(WikibaseDocument.Statement st) {
-        LOG.debug("New statement: {} {}", st.getPredicate(), st.getValue());
-        PropertyIdValue property = new PropertyIdValueImpl(
-                getPredicateName(st.getPredicate()),
-                st.getPredicate());
-
-        Statement statement = StatementBuilder
-                .forSubjectAndProperty(ItemIdValue.NULL, property)
-                .withValue(Datamodel.makeStringValue(st.getValue())).build();
-
-        document = document.withStatement(statement);
+    private Statement synchronizeStatement(
+            Statement actual, WikibaseDocument.Statement expected) {
+        PropertyIdValue property = createProperty(expected);
+        StringValue value = Datamodel.makeStringValue(expected.getValue());
+        return StatementBuilder.forSubjectAndProperty(
+                actual.getSubject(), property)
+                .withQualifiers(actual.getQualifiers())
+                .withReferences(actual.getReferences())
+                .withRank(actual.getRank())
+                .withId(actual.getStatementId())
+                .withValue(value)
+                .build();
     }
 
-    private String getPredicateName(String iri) {
-        return iri.substring(iri.lastIndexOf("/") + 1);
-    }
-
-    private void saveDocument() throws IOException, MediaWikiApiErrorException {
+    private void saveDocumentChanges()
+            throws IOException, MediaWikiApiErrorException {
         if (expectedState.getQid() == null) {
             document = wbde.createItemDocument(document, "Create new entity.");
         } else {
-            document = wbde.editItemDocument(document, false, "Edit entity.");
+            // We need to use replace here as we need to be able
+            // to delete statements.
+            document = wbde.editItemDocument(document, true, "Edit entity.");
         }
         LOG.debug("Saving document: {} revision: {}",
                 document.getEntityId(),
                 document.getRevisionId());
     }
+
+    private void emitMapping() {
+        Map<String, String> mapping;
+        if (expectedState.getQid() == null) {
+            mapping = collectMappingNewDocument();
+        } else {
+            mapping = collectMappingUpdate();
+        }
+        for (Map.Entry<String, String> entry : mapping.entrySet()) {
+            reportOutput.getWriter().iri(
+                    entry.getKey(),
+                    WikibaseEndpointLoader.WIKIDATA_MAPPING,
+                    entry.getValue());
+        }
+    }
+
+    private Map<String, String> collectMappingNewDocument() {
+        Map<String, String> result = collectMappingUpdate();
+        result.put(expectedState.getIri(), document.getEntityId().getIri());
+        return result;
+    }
+
+    private Map<String, String> collectMappingUpdate() {
+        List<StatementRef> newRefs = statementRefs(document);
+        mapRefsToExpectedState(newRefs);
+        Map<String, String> results = new HashMap<>();
+        for (StatementRef newRef : newRefs) {
+            if (newRef.iri == null) {
+                continue;
+            }
+            results.put(newRef.iri, siteIri + "statement/" + newRef.id);
+        }
+        return results;
+    }
+
+    private List<StatementRef> statementRefs(ItemDocument document) {
+        List<StatementRef> results = new ArrayList<>();
+        document.getStatementGroups().forEach((group) -> {
+            group.getStatements().forEach((statement) -> {
+                String value = statement.getValue().toString();
+                if (value.startsWith("\"") && value.endsWith("\"")) {
+                    value = value.substring(1, value.length() - 1);
+                }
+                results.add(new StatementRef(
+                        statement.getStatementId(),
+                        group.getProperty().getId(),
+                        value));
+            });
+        });
+        return results;
+    }
+
+    private void mapRefsToExpectedState(List<StatementRef> refs) {
+        for (WikibaseDocument.Statement expected :
+                expectedState.getStatements()) {
+            if (expected.isForDelete()) {
+                continue;
+            }
+            for (StatementRef ref : refs) {
+                if (!ref.predicate.equals(expected.getPredicate())) {
+                    continue;
+                }
+                if (!ref.value.equals(expected.getValue())) {
+                    continue;
+                }
+                ref.iri = expected.getIri();
+                ref.isNew = expected.isNew();
+                break;
+            }
+        }
+    }
+
 
 }
