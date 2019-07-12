@@ -266,13 +266,13 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
             newMap[item["@id"]] = item;
           });
           // Remove.
-          const toRemove = $(oldList).not(newList).get();
+          const toRemove = oldList.filter(x => !newList.includes(x));
           for (let index in toRemove) {
             service.deleteByUri(toRemove[index]);
           }
           // Add.
           if (addNew) {
-            const toAdd = $(oldList).not(newList).get();
+            const toAdd = newList.filter(x => !oldList.includes(x));
             for (let index in toAdd) {
               service.graph.push(newMap[toAdd[index]]);
             }
@@ -402,7 +402,7 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
 
         service.setValueList = function (resource, property, value) {
           property = service.prefix + property;
-          if (typeof value === "undefined" || !$.isArray(value) ||
+          if (typeof value === "undefined" || !Array.isArray(value) ||
             value.length === 0) {
             delete resource[property];
           } else {

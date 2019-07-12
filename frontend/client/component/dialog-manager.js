@@ -280,12 +280,13 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
             "@type": [desc.$type]
         };
         // Check object control.
-        if (desc.$control !== undefined && toSave.$cotrol !== undefined &&
+        if (desc.$control !== undefined && toSave.$control !== undefined &&
             toSave.$control.inherit !== undefined &&
             toSave.$control.force !== undefined) {
             jsonld.r.setIRIs(instance, desc.$control,
                 controlToIri(toSave.$control.inherit, toSave.$control.force));
         }
+        let objectIndex = 0;
         // Save object data properties.
         for (let key in desc) {
             if (!desc.hasOwnProperty(key)) {
@@ -320,7 +321,8 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
                 }
                 const iris = [];
                 for (let i = 0; i < valueToSave.length; ++i) {
-                    const newIri = iri + "/" + i;
+                    ++objectIndex;
+                    const newIri = iri + "/" + objectIndex;
                     saveObject(descItem.$object, valueToSave[i], graph, newIri);
                     iris.push(newIri);
                 }
