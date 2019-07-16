@@ -115,11 +115,18 @@ public class WikibaseEndpointLoader implements Component, SequentialExecution {
                     document.getTypes().add(value.asString());
                 } else if (isLabel(predicate)) {
                     document.setLabel(value.asString(), value.getLanguage());
-                } else if (
-                        predicate.startsWith(propertyPrefix) &&
-                        value.asString().startsWith(statementPrefix)) {
-                    document.addStatement(
-                            loadStatement(source, value, predicate));
+                } else if (predicate.startsWith(propertyPrefix)) {
+                    if (value.getType() != null) {
+                        // It is not IRI.
+                        return;
+                    }
+                    WikibaseDocument.Statement statement =
+                            loadStatement(source, value, predicate);
+                    // Statement must be either new or have given prefix.
+                    if (statement.isNew() ||
+                            value.asString().startsWith(statementPrefix)) {
+                        document.addStatement(statement);
+                    }
                 }
             });
             documents.add(document);

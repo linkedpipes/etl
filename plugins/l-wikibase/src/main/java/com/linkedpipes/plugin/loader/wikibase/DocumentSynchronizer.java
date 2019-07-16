@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.loader.wikibase;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,7 @@ class DocumentSynchronizer {
 
     private final WikibaseDataFetcher wbdf;
 
-    private final WritableSingleGraphDataUnit reportOutput;
+    private final TripleWriter reportOutput;
 
     private WikibaseDocument expectedState;
 
@@ -84,7 +85,7 @@ class DocumentSynchronizer {
         this.wbde.setAverageTimePerEdit(averageTimePerEdit);
         this.wbde.setEditAsBot(true);
         this.wbdf = new WikibaseDataFetcher(connection, this.siteIri);
-        this.reportOutput = output;
+        this.reportOutput = output.getWriter();
     }
 
     public void synchronize(WikibaseDocument expectedState)
@@ -92,10 +93,10 @@ class DocumentSynchronizer {
         this.expectedState = expectedState;
         document = getDocumentFromWikidata(expectedState);
         synchronizeLabels();
-        List<Statement> statementsToUpdate = synchronizeStatements();
-        ItemDocument oldDocument = document;
+        synchronizeStatements();
         saveDocumentChanges();
         emitMapping();
+        this.reportOutput.flush();
     }
 
     private ItemDocument getDocumentFromWikidata(
@@ -127,7 +128,7 @@ class DocumentSynchronizer {
         });
     }
 
-    private List<Statement> synchronizeStatements() {
+    private void synchronizeStatements() {
         List<Statement> statementsToUpdate = new ArrayList<>();
         Set<String> toRemove = new HashSet<>();
         for (WikibaseDocument.Statement expected :
@@ -151,7 +152,6 @@ class DocumentSynchronizer {
         for (Statement statement : statementsToUpdate) {
             document = document.withStatement(statement);
         }
-        return statementsToUpdate;
     }
 
     private Statement createNewStatement(WikibaseDocument.Statement expected) {
@@ -216,7 +216,7 @@ class DocumentSynchronizer {
             mapping = collectMappingUpdate();
         }
         for (Map.Entry<String, String> entry : mapping.entrySet()) {
-            reportOutput.getWriter().iri(
+            reportOutput.iri(
                     entry.getKey(),
                     WikibaseEndpointLoader.WIKIDATA_MAPPING,
                     entry.getValue());
@@ -230,10 +230,10 @@ class DocumentSynchronizer {
     }
 
     private Map<String, String> collectMappingUpdate() {
-        List<StatementRef> newRefs = statementRefs(document);
-        mapRefsToExpectedState(newRefs);
+        List<StatementRef> statementRefs = collectStatementRefs(document);
+        mapRefsToExpectedState(statementRefs);
         Map<String, String> results = new HashMap<>();
-        for (StatementRef newRef : newRefs) {
+        for (StatementRef newRef : statementRefs) {
             if (newRef.iri == null) {
                 continue;
             }
@@ -242,7 +242,7 @@ class DocumentSynchronizer {
         return results;
     }
 
-    private List<StatementRef> statementRefs(ItemDocument document) {
+    private List<StatementRef> collectStatementRefs(ItemDocument document) {
         List<StatementRef> results = new ArrayList<>();
         document.getStatementGroups().forEach((group) -> {
             group.getStatements().forEach((statement) -> {

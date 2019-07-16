@@ -12,8 +12,6 @@ class WikibaseDocument {
 
         private final String iri;
 
-        private final String qid;
-
         private final String predicateIri;
 
         // <https://wikibase.opendata.cz/prop/statement/P3>
@@ -26,8 +24,6 @@ class WikibaseDocument {
 
         public Statement(String iri, String predicate) {
             this.iri = iri;
-            String id = iri.substring(iri.lastIndexOf("/"));
-            this.qid = id.substring(id.indexOf("-") + 1);
             this.predicateIri = predicate;
         }
 
@@ -64,14 +60,17 @@ class WikibaseDocument {
         }
 
         public String getStatementId() {
-            return ownerQid + "$" + qid;
+            return ownerQid + "$" + getQid();
+        }
+
+        private String getQid() {
+            String id = iri.substring(iri.lastIndexOf("/"));
+            return id.substring(id.indexOf("-") + 1);
         }
 
     }
 
     private String iri;
-
-    private String qid;
 
     // http://www.w3.org/2000/01/rdf-schema#label
     private Map<String, String> labels = new HashMap<>();
@@ -85,7 +84,6 @@ class WikibaseDocument {
 
     public WikibaseDocument(String iri) {
         this.iri = iri;
-        this.qid = iri.substring(iri.lastIndexOf("/") + 1);
     }
 
     public String getIri() {
@@ -93,7 +91,7 @@ class WikibaseDocument {
     }
 
     public String getQid() {
-        return qid;
+        return iri.substring(iri.lastIndexOf("/") + 1);
     }
 
     public Map<String, String> getLabels() {
@@ -109,7 +107,7 @@ class WikibaseDocument {
     }
 
     public void addStatement(Statement statement) {
-        statement.setOwnerQid(qid);
+        statement.setOwnerQid(getQid());
         statements.add(statement);
     }
 
