@@ -99,7 +99,7 @@
 
     angular.element(document).ready(() => {
       scrollWatch = document.getElementById("scrollWatch");
-      scrollWatch.addEventListener("scroll", onScroll);
+      window.addEventListener("scroll", onScroll);
     });
   }
 
