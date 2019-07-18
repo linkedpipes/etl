@@ -13,8 +13,12 @@ class DataUnitRootEntry extends DebugEntry {
 
     private long totalEntryCount;
 
-    public DataUnitRootEntry(DataUnit dataUnit) {
+    final CreatePublicPath createPublicPath;
+
+    public DataUnitRootEntry(
+            DataUnit dataUnit, CreatePublicPath createPublicPath) {
         this.dataUnit = dataUnit;
+        this.createPublicPath = createPublicPath;
     }
 
     @Override
@@ -69,7 +73,8 @@ class DataUnitRootEntry extends DebugEntry {
                             file.getName(),
                             directory.getName(),
                             file.length(),
-                            FileContentEntry.getMimeType(file)));
+                            FileContentEntry.getMimeType(file),
+                            createPublicPath.apply(file)));
                 }
             }
         }

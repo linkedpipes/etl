@@ -12,9 +12,13 @@ class DirectoryEntry extends DebugEntry {
 
     final String source;
 
-    public DirectoryEntry(File directory, String source) {
+    final CreatePublicPath createPublicPath;
+
+    public DirectoryEntry(
+            File directory, String source, CreatePublicPath createPublicPath) {
         this.directory = directory;
         this.source = source;
+        this.createPublicPath = createPublicPath;
     }
 
     @Override
@@ -22,14 +26,16 @@ class DirectoryEntry extends DebugEntry {
             String nameFilter, String sourceFilter, long offset, long limit)
             throws IOException {
         ResponseContent content = prepareResponse(
-                directory, source, nameFilter, sourceFilter, offset, limit);
+                directory, source, nameFilter, sourceFilter, offset, limit,
+                createPublicPath);
         contentAsString = content.asJsonString();
         return this;
     }
 
     public static ResponseContent prepareResponse(
             File directory, String source,
-            String nameFilter, String sourceFilter, long offset, long limit) {
+            String nameFilter, String sourceFilter, long offset, long limit,
+            CreatePublicPath createPublicPath) {
         long totalEntryCount = 0;
         long end = offset + limit;
         File[] files = directory.listFiles();
@@ -68,7 +74,8 @@ class DirectoryEntry extends DebugEntry {
                         file.getName(),
                         source,
                         file.length(),
-                        FileContentEntry.getMimeType(file)));
+                        FileContentEntry.getMimeType(file),
+                        createPublicPath.apply(file)));
             }
         }
 

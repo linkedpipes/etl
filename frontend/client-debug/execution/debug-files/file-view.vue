@@ -93,10 +93,8 @@
     },
     "computed": {
       "downloadUrl": function () {
-        if (this.metadata["publicDataPath"] !== undefined) {
-          return this.metadata["publicDataPath"];
-        }
         return getDownloadDebugUrl(
+          this.metadata,
           this.$route.params["execution"],
           this.$route.query["path"],
           this.$route.query["source"]);

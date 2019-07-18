@@ -41,6 +41,7 @@
       "downloadUrl": function () {
         let path = this.$route.query["path"] + "/" + this.value["name"];
         return getDownloadDebugUrl(
+          this.value,
           this.$route.params["execution"],
           path,
           this.value["source"]);

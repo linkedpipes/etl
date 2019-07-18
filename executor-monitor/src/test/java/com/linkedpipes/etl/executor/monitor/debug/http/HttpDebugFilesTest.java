@@ -114,15 +114,14 @@ public class HttpDebugFilesTest {
         Assert.assertEquals("001", content.source);
         //
         ResponseContent response = DirectoryEntry.prepareResponse(
-                content.directory, content.source, null, null, 0, 99);
+                content.directory, content.source, null, null, 0, 99,
+                (file)->null);
         Assert.assertEquals(Long.valueOf(1), response.metadata.count);
         Assert.assertEquals(ResponseContent.TYPE_DIR, response.metadata.type);
         Assert.assertEquals("001", response.data.get(0).source);
         Assert.assertEquals("file.txt", response.data.get(0).name);
         Assert.assertEquals(
                 ResponseContent.TYPE_FILE, response.data.get(0).type);
-
-        return;
     }
 
     @Test

@@ -25,13 +25,24 @@ class ResponseContent {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String source;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public Long size;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String mimeType;
+
+        /**
+         * Used for file type.
+         * Path that can be used to access data.
+         */
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        public String publicDataPath;
 
         public Entry(String type, String name, String source) {
             this.type = type;
@@ -43,12 +54,13 @@ class ResponseContent {
 
         public Entry(
                 String type, String name, String source,
-                Long size, String mimeType) {
+                Long size, String mimeType, String publicDataPath) {
             this.type = type;
             this.name = name;
             this.source = source;
             this.size = size;
             this.mimeType = mimeType;
+            this.publicDataPath = publicDataPath;
         }
 
     }

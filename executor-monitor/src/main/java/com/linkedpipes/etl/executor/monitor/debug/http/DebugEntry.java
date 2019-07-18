@@ -1,9 +1,17 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
 public abstract class DebugEntry {
+
+    @FunctionalInterface
+    public interface CreatePublicPath {
+
+        String apply(File file);
+
+    }
 
     protected String contentAsString = null;
 

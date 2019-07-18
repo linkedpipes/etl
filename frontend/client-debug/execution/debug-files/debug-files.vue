@@ -99,7 +99,7 @@
       onListing(execution, query.path, metadata.count);
     } else if (metadata.type === "file") {
       const downloadUrl = getDownloadDebugUrl(
-        execution, query.path, route.query["source"]);
+        metadata, execution, query.path, route.query["source"]);
       onDetail(execution, query.path, metadata.size, downloadUrl)
     } else if (metadata.type === "ambiguous") {
       onListing(execution, query.path, metadata.count);

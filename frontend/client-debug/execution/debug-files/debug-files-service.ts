@@ -19,7 +19,10 @@ function getMetadataUrl(execution: string, path: string): string {
 }
 
 export function getDownloadDebugUrl(
-    execution: string, path: string, source: string) {
+    metadata: any, execution: string, path: string, source: string) {
+    if (metadata["publicDataPath"] !== undefined) {
+        return metadata["publicDataPath"];
+    }
     if (path.length > 0 && path[0] !== "/") {
         path = "/" + path
     }
