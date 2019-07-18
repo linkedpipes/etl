@@ -54,7 +54,6 @@
   import Vue from "vue";
   import {fetchPlainText} from "@client-debug/app-service/http";
   import {getDownloadDebugUrl} from "./debug-files-service";
-  import Prism from "prismjs";
 
   const FILE_PREVIEW_LIMIT = 512 * 1024;
 
@@ -86,10 +85,6 @@
           this.content = response.text;
           this.loading = false;
           this.error = false;
-          Vue.nextTick(() => {
-            // TODO We can be more specifi here.
-            Prism.highlightAll();
-          });
         } catch (ex) {
           console.error("Can't download data", ex);
           this.error = true;
