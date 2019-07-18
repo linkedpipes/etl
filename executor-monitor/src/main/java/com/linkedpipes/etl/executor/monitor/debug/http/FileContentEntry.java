@@ -16,10 +16,14 @@ public class FileContentEntry extends DebugEntry {
 
     final String source;
 
-    FileContentEntry(DataUnit dataUnit, File file, String source) {
+    final String publicPath;
+
+    FileContentEntry(DataUnit dataUnit, File file, String source,
+                     String publicPath) {
         this.dataUnit = dataUnit;
         this.file = file;
         this.source = source;
+        this.publicPath = publicPath;
     }
 
     @Override
@@ -30,6 +34,7 @@ public class FileContentEntry extends DebugEntry {
         content.metadata.type = ResponseContent.TYPE_FILE;
         content.metadata.size = getFileSize();
         content.metadata.mimeType = getFileMimeType();
+        content.metadata.publicDataPath = publicPath;
         contentAsString = content.asJsonString();
         return this;
     }

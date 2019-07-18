@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
+import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.TestUtils;
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
@@ -29,7 +30,7 @@ public class HttpDebugFilesTest {
     public void prepare() {
         File root = TestUtils.resource("debug");
 
-        DataUnit dataUnit = new DataUnit(DATA_UNIT, "content", null, null);
+        DataUnit dataUnit = new DataUnit("", DATA_UNIT, "content", null, null);
         dataUnit.updateDebugDirectories(root);
 
         Map<String, DataUnit> dataUnits = new HashMap<>();
@@ -40,7 +41,8 @@ public class HttpDebugFilesTest {
         dataSource = Mockito.mock(DebugDataSource.class);
         Mockito.when(dataSource.getDebugData(EXECUTION)).thenReturn(debugData);
 
-        debugFacade = new HttpDebugFilesFacade(dataSource);
+        Configuration configuration = Mockito.mock(Configuration.class);
+        debugFacade = new HttpDebugFilesFacade(configuration, dataSource);
     }
 
     @Test

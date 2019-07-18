@@ -146,8 +146,7 @@ public class VirtualFileSystem {
             // We need the execution directory, but if we use data
             // from this execution we can not get it from
             // {@link #executions} as it has not been yet loaded.
-            if (dataUnit.getExecutionId() == null || debugData.getExecution()
-                    .equals(dataUnit.getExecutionId())) {
+            if (debugData.getExecutionId().equals(dataUnit.getExecutionId())) {
                 // We use data from this execution.
                 dataUnit.updateDebugDirectories(
                         debugData.getExecutionDirectory());
@@ -231,7 +230,7 @@ public class VirtualFileSystem {
                     dataUnit);
         }
         // The execution can be change here.
-        if (dataUnit.getExecutionId() != null) {
+        if (dataUnit.isMapped()) {
             execution = executions.getExecution(dataUnit.getExecutionId());
             if (execution == null) {
                 // Missing execution.

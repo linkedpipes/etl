@@ -1,12 +1,16 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
+import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +19,17 @@ import java.util.Optional;
 @Service
 public class HttpDebugFilesFacade {
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(HttpDebugFilesFacade.class);
+
+    private final Configuration configuration;
+
     private final DebugDataSource dataSource;
 
     @Autowired
-    public HttpDebugFilesFacade(DebugDataSource dataSource) {
+    public HttpDebugFilesFacade(
+            Configuration configuration, DebugDataSource dataSource) {
+        this.configuration = configuration;
         this.dataSource = dataSource;
     }
 
@@ -65,7 +76,8 @@ public class HttpDebugFilesFacade {
                 entriesFound.add(new DirectoryEntry(resolved, file.getName()));
             } else {
                 entriesFound.add(new FileContentEntry(
-                        dataUnit, resolved, file.getName()));
+                        dataUnit, resolved, file.getName(),
+                        preparePublicPath(resolved)));
             }
         }
         if (entriesFound.size() == 0) {
@@ -86,6 +98,23 @@ public class HttpDebugFilesFacade {
         if (nextFile.exists() || nextFile.isDirectory()) {
             return resolvePath(path, pathIndex + 1, nextFile);
         } else {
+            return null;
+        }
+    }
+
+    private String preparePublicPath(File file) {
+        String urlPrefix = configuration.getPublicWorkingDataUrlPrefix();
+        if (urlPrefix == null) {
+            return null;
+        }
+        try {
+            String filePath = file.getCanonicalPath();
+            String workingPath =
+                    configuration.getRawWorkingDirectory().getCanonicalPath();
+            String relativePath = filePath.substring(workingPath.length());
+            return urlPrefix + relativePath.replace(File.separator, "/");
+        } catch (IOException ex) {
+            LOG.warn("Can't prepare public path for: {}", file, ex);
             return null;
         }
     }

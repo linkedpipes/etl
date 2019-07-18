@@ -88,6 +88,13 @@ executor-monitor.ftp.uri = ftp://localhost:2221
 # Include executions related error/cancelled messages.
 # executor-monitor.slack_error_webhook =
 
+# Optional property, can be used to provide alternative access to debug files.
+# If provided the the URL must resolve to the
+# 'executor.execution.working_directory' and any sub-path to
+# appropriate file in this directory.
+# This property allow to use custom service to provide access to debug data.
+#executor-monitor.public_working_data_url_prefix = http://localhost
+
 ##############
 #  Storage   #
 ##############

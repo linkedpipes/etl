@@ -21,6 +21,8 @@ public class DataUnit {
 
     private String relativeDataPath;
 
+    private String ownerExecution;
+
     /**
      * If provided the content of the DataUnit is located inside
      * another execution.
@@ -39,12 +41,18 @@ public class DataUnit {
     }
 
     public DataUnit(
-            String name, String relativeDataPath, String mappedFromExecution,
+            String ownerExecution, String name,
+            String relativeDataPath, String mappedFromExecution,
             List<File> debugDirectories) {
+        this.ownerExecution = ownerExecution;
         this.name = name;
         this.relativeDataPath = relativeDataPath;
         this.mappedFromExecution = mappedFromExecution;
         this.debugDirectories = debugDirectories;
+    }
+
+    public void setOwnerExecution(String ownerExecution) {
+        this.ownerExecution = ownerExecution;
     }
 
     public String getName() {
@@ -61,11 +69,15 @@ public class DataUnit {
 
     public String getExecutionId() {
         if (mappedFromExecution == null) {
-            return null;
+            return ownerExecution;
         }
         String iri = mappedFromExecution;
         int idStartIndex = iri.indexOf("executions/") + "executions/".length();
         return iri.substring(idStartIndex);
+    }
+
+    public boolean isMapped() {
+        return mappedFromExecution != null;
     }
 
     void setMappedFromExecution(String execution) {

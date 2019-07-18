@@ -58,17 +58,30 @@ class ResponseContent {
 
         public String type;
 
-        // Used for directories.
+        /**
+         * Used for directories.
+          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public Long count;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public Long size;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String mimeType;
+
+        /**
+         * Used for file type.
+         * Path that can be used to access data.
+          */
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        public String publicDataPath;
 
     }
 

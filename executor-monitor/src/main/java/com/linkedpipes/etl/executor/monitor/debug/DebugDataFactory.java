@@ -14,15 +14,16 @@ public class DebugDataFactory {
 
     public static DebugData create(
             Execution execution, Collection<Statement> statements) {
-        Map<String, DataUnit> dataUnits = parseFromStatements(statements);
+        Map<String, DataUnit> dataUnits =
+                parseFromStatements(execution, statements);
         return new DebugData(
-                execution.getIri(),
+                execution.getId(),
                 execution.getDirectory(),
                 dataUnits);
     }
 
     private static Map<String, DataUnit> parseFromStatements(
-            Collection<Statement> statements) {
+            Execution execution, Collection<Statement> statements) {
         Map<Resource, DataUnit> newDataUnits = statements.stream()
                 .filter((st) -> isDataUnitObject(st))
                 .collect(Collectors.toMap(
@@ -34,6 +35,7 @@ public class DebugDataFactory {
             if (dataUnit == null) {
                 continue;
             }
+            dataUnit.setOwnerExecution(execution.getId());
             addStatement(statement, dataUnit);
         }
         // Some may not be loaded, so there is just a reference with no

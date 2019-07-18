@@ -9,23 +9,23 @@ import java.util.Map;
  */
 public class DebugData {
 
-    private final String execution;
+    private final String executionId;
 
     private final File executionDirectory;
 
     private final Map<String, DataUnit> dataUnits;
 
     public DebugData(
-            String execution,
+            String executionId,
             File executionDirectory,
             Map<String, DataUnit> dataUnits) {
-        this.execution = execution;
+        this.executionId = executionId;
         this.executionDirectory = executionDirectory;
         this.dataUnits = dataUnits;
     }
 
-    public String getExecution() {
-        return execution;
+    public String getExecutionId() {
+        return executionId;
     }
 
     public File getExecutionDirectory() {

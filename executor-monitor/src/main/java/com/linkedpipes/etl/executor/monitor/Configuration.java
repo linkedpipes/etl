@@ -45,6 +45,8 @@ public class Configuration {
 
     private String localUrl;
 
+    private String publicWorkingDataUrlPrefix;
+
     @PostConstruct
     public void init() {
         String propertiesFile = System.getProperty("configFileLocation");
@@ -85,10 +87,16 @@ public class Configuration {
         slackErrorWebhook = getOptionalProperty(
                 "executor-monitor.slack_error_webhook");
         localUrl = getProperty("domain.uri");
+        publicWorkingDataUrlPrefix = getOptionalProperty(
+                "executor-monitor.public_working_data_url_prefix");
         //
         validateUri(executorUri, "executor.execution.working_directory");
         validateDirectory(workingDirectoryPath);
         validateDirectory(logDirectoryPath);
+    }
+
+    public File getRawWorkingDirectory() {
+        return new File(workingDirectoryPath);
     }
 
     public File getWorkingDirectory() {
@@ -198,6 +206,10 @@ public class Configuration {
 
     public String getLocalUrl() {
         return localUrl;
+    }
+
+    public String getPublicWorkingDataUrlPrefix() {
+        return publicWorkingDataUrlPrefix;
     }
 
 }

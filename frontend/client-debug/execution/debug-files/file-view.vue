@@ -39,7 +39,7 @@
       v-else
       style="margin-left: 1rem;margin-right: 1rem;"
     >
-      <pre><code style="width:100%;padding: 1rem;">{{ content }}</code></pre>
+      <pre class="language-none line-numbers"><code class="language-none" style="width: 100%; box-shadow: none;">{{content}}</code></pre>
     </div>
     <br>
     <v-flex
@@ -54,6 +54,7 @@
   import Vue from "vue";
   import {fetchPlainText} from "@client-debug/app-service/http";
   import {getDownloadDebugUrl} from "./debug-files-service";
+  import Prism from "prismjs";
 
   const FILE_PREVIEW_LIMIT = 512 * 1024;
 
@@ -85,6 +86,10 @@
           this.content = response.text;
           this.loading = false;
           this.error = false;
+          Vue.nextTick(() => {
+            // TODO We can be more specifi here.
+            Prism.highlightAll();
+          });
         } catch (ex) {
           console.error("Can't download data", ex);
           this.error = true;
@@ -93,6 +98,9 @@
     },
     "computed": {
       "downloadUrl": function () {
+        if (this.metadata["publicDataPath"] !== undefined) {
+          return this.metadata["publicDataPath"];
+        }
         return getDownloadDebugUrl(
           this.$route.params["execution"],
           this.$route.query["path"],
