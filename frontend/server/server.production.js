@@ -28,26 +28,24 @@ function initializeStatic(app) {
 // Add event handlers.
 
 process.on("SIGTERM", () => {
-  server.close(() => {
-    console.error("Closing server on 'SIGTERM'.");
-    process.exit(0);
-  });
+  logger.info("Closing server on 'SIGTERM'.");
+  process.exit(0);
 });
 
 process.on("SIGHUP", () => {
-  console.error("Closing server on 'SIGHUP'.");
+  logger.info("Closing server on 'SIGHUP'.");
   process.exit(0);
 });
 
 process.on("SIGINT", () => {
-  console.error("Closing server on 'SIGINT'.");
+  logger.info("Closing server on 'SIGINT'.");
   process.exit(0);
 });
 
 process.on("exit", (code) => {
-  console.error("About to exit with code:", code);
+  logger.info("About to exit with code:", code);
 });
 
 process.on("uncaughtException", (err) => {
-  console.error("Caught exception:", err, err.stack);
+  logger.info("Caught exception:", err, err.stack);
 });
