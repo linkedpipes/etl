@@ -22,11 +22,11 @@ define([], function () {
         },
       "ontologyIriBase": {
         "$type": "str",
-        "$label": "Wikibase ontology base IRI"
+        "$label": "Wikibase ontology IRI prefix (wikibase:)"
       },
       "instanceIriBase": {
         "$type": "str",
-        "$label": "Wikibase instance base IRI"
+        "$label": "Wikibase instance IRI prefix (wd:)"
       },
       "averageTimePerEdit": {
         "$type": "int",
