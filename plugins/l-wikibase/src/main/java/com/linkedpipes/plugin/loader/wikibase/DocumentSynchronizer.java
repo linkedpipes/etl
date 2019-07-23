@@ -121,9 +121,10 @@ class DocumentSynchronizer {
     }
 
     private void synchronizeLabels() {
-        expectedState.getLabels().forEach((key, strValue) -> {
-            MonolingualTextValue value =
-                    Datamodel.makeMonolingualTextValue(key, strValue);
+        expectedState.getLabels().forEach((lang, label) -> {
+            // We do not use MonolingualTextValue as it does not serialize
+            // well. It is designed as interface class for builders.
+            TermImpl value = new TermImpl(lang, label);
             document = document.withLabel(value);
         });
     }
