@@ -141,9 +141,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private boolean isStatement(WikibaseDocument.Statement statement) {
         return statement.getTypes().contains(
-                WikibaseLoaderVocabulary.WIKIDATA_STATEMENT) ||
-                statement.getTypes().contains(
-                        WikibaseLoaderVocabulary.WIKIDATA_NEW_ENTITY);
+                WikibaseLoaderVocabulary.WIKIDATA_STATEMENT);
     }
 
     public void onAfterExecution() throws LpException {

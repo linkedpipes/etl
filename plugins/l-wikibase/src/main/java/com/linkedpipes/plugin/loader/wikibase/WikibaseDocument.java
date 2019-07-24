@@ -65,13 +65,9 @@ class WikibaseDocument {
             if (isNew()) {
                 return null;
             } else {
-                return ownerQid + "$" + getQid();
+                String id = iri.substring(iri.lastIndexOf("/"));
+                return ownerQid + "$" + id.substring(id.indexOf("-") + 1);
             }
-        }
-
-        private String getQid() {
-            String id = iri.substring(iri.lastIndexOf("/"));
-            return id.substring(id.indexOf("-") + 1);
         }
 
     }

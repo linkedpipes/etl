@@ -14,6 +14,7 @@ import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WikibaseLoader extends TaskExecution<WikibaseTask> {
 
@@ -59,16 +60,10 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
 
     private List<WikibaseTask> loadDocumentReferences() throws RdfException {
         RdfSource source = inputRdf.asRdfSource();
-        List<WikibaseTask> result = new ArrayList<>();
-        source.getByType(WikibaseLoaderVocabulary.WIKIDATA_ENTITY)
+        return source.getByType(WikibaseLoaderVocabulary.WIKIDATA_ENTITY)
                 .stream()
                 .map((iri) -> new WikibaseTask(iri))
-                .forEach((task) -> result.add(task));
-        source.getByType(WikibaseLoaderVocabulary.WIKIDATA_NEW_ENTITY)
-                .stream()
-                .map((iri) -> new WikibaseTask(iri))
-                .forEach((task) -> result.add(task));
-        return result;
+                .collect(Collectors.toList());
     }
 
     @Override
