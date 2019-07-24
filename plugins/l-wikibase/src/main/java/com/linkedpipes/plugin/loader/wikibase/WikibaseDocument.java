@@ -97,7 +97,11 @@ class WikibaseDocument {
     }
 
     public String getQid() {
-        return iri.substring(iri.lastIndexOf("/") + 1);
+        if (isNew()) {
+            return null;
+        } else {
+            return iri.substring(iri.lastIndexOf("/") + 1);
+        }
     }
 
     public Map<String, String> getLabels() {

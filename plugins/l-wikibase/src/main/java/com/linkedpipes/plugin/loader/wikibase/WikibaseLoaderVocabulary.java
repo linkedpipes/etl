@@ -30,7 +30,7 @@ final class WikibaseLoaderVocabulary {
             PREFIX  + "Remove";
 
     public static final String WIKIDATA_MAPPING =
-            PREFIX  + "mappedTp";
+            PREFIX  + "mappedTo";
 
     private WikibaseLoaderVocabulary() {
     }
