@@ -81,11 +81,6 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
                     "Error processing document: {}",
                     document.getIri(), ex);
         }
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException ex) {
-            // Ignore.
-        }
     }
 
     private WikibaseDocument loadDocument(WikibaseTask task)

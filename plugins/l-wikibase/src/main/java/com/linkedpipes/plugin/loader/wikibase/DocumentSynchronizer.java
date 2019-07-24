@@ -42,8 +42,6 @@ class DocumentSynchronizer {
 
         private String iri;
 
-        private Boolean isNew;
-
         private StatementRef(String id, String predicate, String value) {
             this.id = id;
             this.predicate = predicate;
@@ -275,7 +273,6 @@ class DocumentSynchronizer {
                     continue;
                 }
                 ref.iri = expected.getIri();
-                ref.isNew = expected.isNew();
                 break;
             }
         }
