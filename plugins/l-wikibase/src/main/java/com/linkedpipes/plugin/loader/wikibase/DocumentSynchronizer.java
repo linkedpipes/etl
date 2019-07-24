@@ -128,12 +128,11 @@ class DocumentSynchronizer {
     }
 
     private void synchronizeStatements() {
-        boolean isDocumentNew = expectedState.isNew();
         List<Statement> statementsToUpdate = new ArrayList<>();
         Set<String> toRemove = new HashSet<>();
         for (WikibaseDocument.Statement expected :
                 expectedState.getStatements()) {
-            if (isDocumentNew || expected.isNew()) {
+            if (expected.isNew()) {
                 statementsToUpdate.add(createNewStatement(expected));
                 continue;
             }

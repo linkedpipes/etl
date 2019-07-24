@@ -62,7 +62,11 @@ class WikibaseDocument {
         }
 
         public String getStatementId() {
-            return ownerQid + "$" + getQid();
+            if (isNew()) {
+                return null;
+            } else {
+                return ownerQid + "$" + getQid();
+            }
         }
 
         private String getQid() {
