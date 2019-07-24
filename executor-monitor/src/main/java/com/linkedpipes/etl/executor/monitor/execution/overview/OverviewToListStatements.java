@@ -11,15 +11,11 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Should be used to represent an execution in execution list.
  */
 public class OverviewToListStatements {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OverviewToListStatements.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 

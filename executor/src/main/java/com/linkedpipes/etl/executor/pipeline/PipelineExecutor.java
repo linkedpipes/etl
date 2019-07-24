@@ -198,7 +198,8 @@ public class PipelineExecutor {
             throw new ExecutorException("Can't update pipeline.", ex);
         }
         // Load data from previous executions.
-        for (PipelineComponent component : pipeline.getModel().getComponents()) {
+        for (PipelineComponent component :
+                pipeline.getModel().getComponents()) {
             if (!component.isPlannedForExecution()) {
                 continue;
             }

@@ -114,13 +114,13 @@ class ExecuteComponent implements ComponentExecutor {
     }
 
     private void executeInstance() throws ExecutorException {
-        if (instance instanceof ResumableComponent &&
-                pplComponent.getLastWorkingDirectory() != null) {
+        if (instance instanceof ResumableComponent
+                && pplComponent.getLastWorkingDirectory() != null) {
             ResumableComponent resumable = (ResumableComponent) instance;
             try {
                 resumable.resumeExecution(
                         pplComponent.getLastWorkingDirectory());
-            } catch(LpException ex) {
+            } catch (LpException ex) {
                 throw new ExecutorException("Can't resume component.", ex);
             }
         }

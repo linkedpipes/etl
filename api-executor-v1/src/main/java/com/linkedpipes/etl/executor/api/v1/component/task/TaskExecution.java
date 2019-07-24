@@ -48,6 +48,7 @@ public abstract class TaskExecution<T extends Task>
     @Override
     public void execute(Component.Context context) throws LpException {
         this.context = context;
+        initialization();
         configuration = getExecutionConfiguration();
         prepareCheckpointDir();
         TaskSource<T> taskSource = createTaskSource();
@@ -62,9 +63,16 @@ public abstract class TaskExecution<T extends Task>
     }
 
     /**
+     * Called after only context is set in execute method.
+     */
+    protected void initialization() throws LpException {
+        // No action here.
+    }
+
+    /**
      * This function is called before any other method.
      */
-    private void prepareCheckpointDir() throws LpException{
+    private void prepareCheckpointDir() throws LpException {
         if (checkpointDir == null) {
             checkpointDir = getCheckpointDir(workingDirectory);
             checkpointDir.mkdirs();
