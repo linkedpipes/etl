@@ -48,11 +48,13 @@ class WikibaseDocument {
         }
 
         public boolean isNew() {
-            return types.contains(WikibaseEndpointLoader.WIKIDATA_NEW_ENTITY);
+            return types.contains(
+                    WikibaseLoaderVocabulary.WIKIDATA_NEW_ENTITY);
         }
 
         public boolean isForDelete() {
-            return types.contains(WikibaseEndpointLoader.WIKIDATA_DELETE_ENTITY);
+            return types.contains(
+                    WikibaseLoaderVocabulary.WIKIDATA_DELETE_ENTITY);
         }
 
         public void setOwnerQid(String ownerQid) {
@@ -113,6 +115,11 @@ class WikibaseDocument {
 
     public List<String> getTypes() {
         return types;
+    }
+
+    public boolean isNew() {
+        return types.contains(
+                WikibaseLoaderVocabulary.WIKIDATA_NEW_ENTITY);
     }
 
 }

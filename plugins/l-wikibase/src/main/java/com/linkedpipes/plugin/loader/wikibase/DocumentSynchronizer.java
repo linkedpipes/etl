@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.helpers.ItemDocumentBuilder;
 import org.wikidata.wdtk.datamodel.helpers.StatementBuilder;
+import org.wikidata.wdtk.datamodel.implementation.TermImpl;
 import org.wikidata.wdtk.datamodel.interfaces.EntityDocument;
 import org.wikidata.wdtk.datamodel.interfaces.ItemDocument;
 import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
-import org.wikidata.wdtk.datamodel.interfaces.MonolingualTextValue;
 import org.wikidata.wdtk.datamodel.interfaces.PropertyIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.Statement;
 import org.wikidata.wdtk.datamodel.interfaces.StringValue;
@@ -34,17 +34,17 @@ class DocumentSynchronizer {
 
     private static class StatementRef {
 
-        public final String id;
+        private final String id;
 
-        public final String predicate;
+        private final String predicate;
 
-        public final String value;
+        private final String value;
 
-        public String iri;
+        private String iri;
 
-        public Boolean isNew;
+        private Boolean isNew;
 
-        public StatementRef(String id, String predicate, String value) {
+        private StatementRef(String id, String predicate, String value) {
             this.id = id;
             this.predicate = predicate;
             this.value = value;
@@ -102,7 +102,7 @@ class DocumentSynchronizer {
     private ItemDocument getDocumentFromWikidata(
             WikibaseDocument expectedState)
             throws LpException, MediaWikiApiErrorException {
-        if (expectedState.getQid() == null) {
+        if (expectedState.isNew()) {
             LOG.debug("New document created.");
             return ItemDocumentBuilder.forItemId(ItemIdValue.NULL).build();
         }
@@ -121,19 +121,21 @@ class DocumentSynchronizer {
     }
 
     private void synchronizeLabels() {
-        expectedState.getLabels().forEach((key, strValue) -> {
-            MonolingualTextValue value =
-                    Datamodel.makeMonolingualTextValue(key, strValue);
+        expectedState.getLabels().forEach((lang, label) -> {
+            // We do not use MonolingualTextValue as it does not serialize
+            // well. It is designed as interface class for builders.
+            TermImpl value = new TermImpl(lang, label);
             document = document.withLabel(value);
         });
     }
 
     private void synchronizeStatements() {
+        boolean isDocumentNew = expectedState.isNew();
         List<Statement> statementsToUpdate = new ArrayList<>();
         Set<String> toRemove = new HashSet<>();
         for (WikibaseDocument.Statement expected :
                 expectedState.getStatements()) {
-            if (expected.isNew()) {
+            if (isDocumentNew || expected.isNew()) {
                 statementsToUpdate.add(createNewStatement(expected));
                 continue;
             }
@@ -196,7 +198,7 @@ class DocumentSynchronizer {
 
     private void saveDocumentChanges()
             throws IOException, MediaWikiApiErrorException {
-        if (expectedState.getQid() == null) {
+        if (expectedState.isNew()) {
             document = wbde.createItemDocument(document, "Create new entity.");
         } else {
             // We need to use replace here as we need to be able
@@ -218,7 +220,7 @@ class DocumentSynchronizer {
         for (Map.Entry<String, String> entry : mapping.entrySet()) {
             reportOutput.iri(
                     entry.getKey(),
-                    WikibaseEndpointLoader.WIKIDATA_MAPPING,
+                    WikibaseLoaderVocabulary.WIKIDATA_MAPPING,
                     entry.getValue());
         }
     }

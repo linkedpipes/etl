@@ -20,18 +20,14 @@ define([], function () {
             "$type": "str",
             "$label": "Password"
         },
-      "ontologyIriBase": {
-        "$type": "str",
-        "$label": "Wikibase ontology base IRI"
-      },
-      "instanceIriBase": {
-        "$type": "str",
-        "$label": "Wikibase instance base IRI"
-      },
-      "averageTimePerEdit": {
-        "$type": "int",
-        "$label": "Average time per edit"
-      }
+        "siteIri": {
+            "$type": "str",
+            "$label": "Wikibase instance IRI"
+        },
+        "averageTimePerEdit": {
+            "$type": "int",
+            "$label": "Average time per edit"
+        }
     };
 
     function controller($scope, $service) {
