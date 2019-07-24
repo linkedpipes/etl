@@ -19,13 +19,23 @@
      */
     "FINISHED": 1,
     /**
-     * Failed component, it has always the same style.
+     * Failed component with mapping.
      */
-    "FAILED": 3,
+    "FAILED_MAPPED": 3,
     /**
-     * Represent an unfinished component.
+     * Failed component with disabled mapping. Mapping
+     * can be enabled.
+     */
+    "FAILED": 6,
+    /**
+     * Represent an unfinished component with mapping.
      */
     "UNFINISHED": 4,
+    /**
+     * Represent an unfinished component with disabled mapping. Mapping
+     * can be enabled.
+     */
+    "UNFINISHED_MAPPED": 4,
     /**
      * Changed component, mapping is not available and can not be changed.
      */

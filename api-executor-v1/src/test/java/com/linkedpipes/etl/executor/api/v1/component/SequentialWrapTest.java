@@ -41,7 +41,7 @@ public class SequentialWrapTest {
         boolean executed = false;
 
         @Override
-        public void execute() {
+        public void execute(Component.Context context) {
             executed = true;
         }
 
@@ -82,7 +82,7 @@ public class SequentialWrapTest {
                 component.workingDirectory.getAbsolutePath());
         //
         Assert.assertFalse(component.executed);
-        wrap.execute();
+        wrap.execute(null);
         Assert.assertTrue(component.executed);
         //
         path.delete();

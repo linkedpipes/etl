@@ -10,9 +10,14 @@ public interface TaskSource<T extends Task> {
     void setSkipOnError(boolean endOnError);
 
     /**
-     * Null if there is no Task to execute.
+     * Null if there is no {@link Task} to execute right now.
      */
     T getTask();
+
+    /**
+     * True when there are no more tasks to execute.
+     */
+    boolean isAllExecuted();
 
     void onTaskFinished(T task);
 

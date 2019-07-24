@@ -7,6 +7,7 @@ import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,8 @@ public class PipelineComponent implements Loadable {
     private ConfigurationDescription configurationDescription;
 
     private String execution;
+
+    private File lastWorkingDirectory;
 
     public PipelineComponent(String iri) {
         this.iri = iri;
@@ -171,4 +174,13 @@ public class PipelineComponent implements Loadable {
     public String getExecution() {
         return execution;
     }
+
+    public File getLastWorkingDirectory() {
+        return lastWorkingDirectory;
+    }
+
+    public void setLastWorkingDirectory(File lastWorkingDirectory) {
+        this.lastWorkingDirectory = lastWorkingDirectory;
+    }
+
 }

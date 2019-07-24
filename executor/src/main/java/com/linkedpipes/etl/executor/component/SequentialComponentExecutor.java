@@ -17,13 +17,17 @@ class SequentialComponentExecutor implements Runnable {
 
     private ExecutorException exception;
 
+    private ExecutionContext context;
+
     public SequentialComponentExecutor(
             SequentialExecution executable,
             ExecutionObserver execution,
-            ExecutionComponent component) {
+            ExecutionComponent component,
+            ExecutionContext context) {
         this.executable = executable;
         this.execution = execution;
         this.component = component;
+        this.context = context;
     }
 
     @Override
@@ -31,7 +35,7 @@ class SequentialComponentExecutor implements Runnable {
         MDC.put(LoggerFacade.EXECUTION_MDC, null);
         try {
             execution.onComponentUserCodeBegin(component);
-            executable.execute();
+            executable.execute(context);
             execution.onComponentUserCodeSuccessful(component);
         } catch (Throwable ex) {
             execution.onComponentUserCodeFailed(component, ex);

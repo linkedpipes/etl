@@ -70,6 +70,10 @@
       "stroke": "gray",
       "stroke-width": 2
     },
+    "disabled-failed": {
+      "stroke": "red",
+      "stroke-width": 2
+    },
     "notAvailable": {
       "stroke": "black",
       "stroke-width": 1
@@ -86,6 +90,7 @@
       return defaultRectStyle;
     }
     const status = execModel.getComponentStatus($execution, execComponent);
+
     if (status === LP.EXEC_RUNNING ||
       status === LP.EXEC_INITIALIZING) {
       return statusToRectStyle[status];
@@ -98,9 +103,11 @@
 
     // Disabled mapping.
     if (!execModel.isMappingEnabled($execution, execComponent)) {
+      if (status === LP.EXEC_FAILED) {
+        return statusToRectStyle["disabled-failed"];
+      }
       return statusToRectStyle["disabled"];
     }
-
     return statusToRectStyle[status];
   }
 

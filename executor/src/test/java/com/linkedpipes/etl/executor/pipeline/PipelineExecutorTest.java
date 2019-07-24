@@ -42,7 +42,7 @@ public class PipelineExecutorTest {
         }
 
         @Override
-        public void execute() {
+        public void execute(Component.Context context) {
             LOG.info("execute");
         }
 

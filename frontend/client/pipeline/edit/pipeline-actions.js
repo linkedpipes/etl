@@ -247,7 +247,7 @@
   function executePipeline(options) {
     if ($execution) {
       options["execution"] = execModel.getIri($execution);
-      options["mapping"] = createMapping(options);
+      addMappingToOptions(options);
     }
     const pipelineIri = $pipeline.pipeline.iri;
     return pipelinesApi.executePipeline($httpService, pipelineIri, options)
@@ -266,25 +266,32 @@
       });
   }
 
-  function createMapping(options) {
-    const result = [];
+  function addMappingToOptions(options) {
+    const mapped = [];
+    const resume = [];
+
     pplModel.getComponents($pipeline).forEach((component) => {
       const iri = pplModel.component.getIri(component);
-      if (iri === options["debugTo"]) {
-        return;
-      }
       const execComponent = execModel.getComponent($execution, iri);
       if (execComponent === undefined) {
         return;
       }
-      if (execModel.isUsedForExecution($execution, execComponent)) {
-        result.push({
+      if (execModel.shouldBeMapped($execution, execComponent)) {
+        mapped.push({
+          "source": iri,
+          "target": iri
+        })
+      }
+      if (execModel.shouldBeResumed($execution, execComponent)) {
+        resume.push({
           "source": iri,
           "target": iri
         })
       }
     });
-    return result;
+
+    options["mapping"] = mapped;
+    options["resume"] = resume;
   }
 
   const eventsActions = {

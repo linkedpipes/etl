@@ -106,6 +106,7 @@
         "RUN_TO": "http://etl.linkedpipes.com/ontology/runTo",
         "EXECUTION_MAPPING": "http://etl.linkedpipes.com/ontology/executionMapping",
         "MAPPING": "http://etl.linkedpipes.com/ontology/mapping",
+        "RESUME": "http://etl.linkedpipes.com/ontology/resume",
         "MAPPING_SOURCE": "http://etl.linkedpipes.com/ontology/mappingSource",
         "MAPPING_TARGET": "http://etl.linkedpipes.com/ontology/mappingTarget",
         "INHERIT": "http://plugins.linkedpipes.com/resource/configuration/Inherit"

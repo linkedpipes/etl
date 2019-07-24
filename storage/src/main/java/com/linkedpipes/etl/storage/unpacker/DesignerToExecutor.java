@@ -69,6 +69,8 @@ public class DesignerToExecutor {
         createExecutionMetadata(options);
         computeExecutionFlow(options);
         configurePorts(options);
+        setPortMapping(options);
+        setResumeComponents(options);
         removeConnectionsForNonExecutedComponents();
         computeDataUnitGroups();
     }
@@ -159,11 +161,9 @@ public class DesignerToExecutor {
                 port.setSaveDebugData(options.isSaveDebugData());
             }
         }
-        setPortMapping(options);
     }
 
     private void setPortMapping(UnpackOptions options) throws BaseException {
-        // TODO Extract to another method
         for (UnpackOptions.ExecutionMapping executionMapping
                 : options.getExecutionMapping()) {
             Execution execution = getExecution(executionMapping.getExecution());
@@ -184,12 +184,11 @@ public class DesignerToExecutor {
         }
     }
 
-    // TODO Extract mapping functionality to another class.
     private void mapExecution(
             Execution execution,
             UnpackOptions.ExecutionMapping executionMapping) {
         for (UnpackOptions.ComponentMapping mapping
-                : executionMapping.getComponents()) {
+                : executionMapping.getMappings()) {
             mapComponent(execution, mapping, executionMapping);
         }
     }
@@ -252,6 +251,25 @@ public class DesignerToExecutor {
                     sourcePort.getExecution());
         }
 
+    }
+
+    /**
+     * Update components that should resume their executions.
+     */
+    private void setResumeComponents(UnpackOptions options) {
+        for (UnpackOptions.ExecutionMapping executionMapping :
+                options.getExecutionMapping()) {
+            for (UnpackOptions.ComponentMapping mapping :
+                    executionMapping.getResumes()) {
+                ExecutorComponent targetComponent =
+                        target.getComponent(mapping.getTarget());
+                // We need to map this component from the last execution,
+                // unlike in case of mapping, where the data can be
+                // from some previous executions.
+                targetComponent.setExecution(
+                        executionMapping.getExecution());
+            }
+        }
     }
 
     /**

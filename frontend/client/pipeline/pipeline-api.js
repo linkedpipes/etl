@@ -14,7 +14,7 @@
   }
 
   function createExecutionConfiguration(options) {
-    const {keepDebugData, debugTo, execution, mapping} = options;
+    const {keepDebugData, debugTo, execution, mapping, resume} = options;
     const configuration = {
       "@id": "",
       "@type": LP.EXEC_OPTIONS,
@@ -37,6 +37,9 @@
       executionMapping[LP.HAS_EXECUTION_ETL] = {"@id": execution};
       if (mapping) {
         executionMapping[LP.MAPPING] = createComponentMapping(mapping);
+      }
+      if (resume) {
+        executionMapping[LP.RESUME] = createComponentMapping(resume);
       }
       configuration[LP.EXECUTION_MAPPING] = executionMapping;
     }

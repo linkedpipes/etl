@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.component;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
+import com.linkedpipes.etl.executor.api.v1.component.ResumableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
@@ -113,6 +114,16 @@ class ExecuteComponent implements ComponentExecutor {
     }
 
     private void executeInstance() throws ExecutorException {
+        if (instance instanceof ResumableComponent &&
+                pplComponent.getLastWorkingDirectory() != null) {
+            ResumableComponent resumable = (ResumableComponent) instance;
+            try {
+                resumable.resumeExecution(
+                        pplComponent.getLastWorkingDirectory());
+            } catch(LpException ex) {
+                throw new ExecutorException("Can't resume component.", ex);
+            }
+        }
         if (instance instanceof SequentialExecution) {
             SequentialExecution executable = (SequentialExecution) instance;
             executeSequential(executable);
@@ -125,7 +136,7 @@ class ExecuteComponent implements ComponentExecutor {
             throws ExecutorException {
         SequentialComponentExecutor executor =
                 new SequentialComponentExecutor(
-                        executable, execution, execComponent);
+                        executable, execution, execComponent, context);
         Thread thread = new Thread(executor, pplComponent.getLabel());
         thread.start();
         waitForThreadToFinish(thread);

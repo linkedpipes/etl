@@ -70,6 +70,10 @@
     switch (component.mapping) {
       case MAPPING_STATUS.FINISHED_MAPPED:
       case MAPPING_STATUS.FINISHED:
+      case MAPPING_STATUS.FAILED:
+      case MAPPING_STATUS.FAILED_MAPPED:
+      case MAPPING_STATUS.UNFINISHED:
+      case MAPPING_STATUS.UNFINISHED_MAPPED:
         return true;
       default:
         return false;
@@ -86,6 +90,12 @@
       case MAPPING_STATUS.FINISHED:
         component.mapping = MAPPING_STATUS.CHANGED;
         break;
+      case MAPPING_STATUS.FAILED_MAPPED:
+        component.mapping = MAPPING_STATUS.FAILED;
+        break;
+      case MAPPING_STATUS.UNFINISHED_MAPPED:
+        component.mapping = MAPPING_STATUS.UNFINISHED;
+        break;
     }
   };
 
@@ -93,8 +103,16 @@
    * If component has not changed, mapping is available and is
    * enabled, then it's used in the execution.
    */
-  service.isUsedForExecution = (model, component) => {
+  service.shouldBeMapped = (model, component) => {
     return component.mapping === MAPPING_STATUS.FINISHED_MAPPED;
+  };
+
+  /**
+   * Similar to 'shouldBeMapped' but for unfinished components.
+   */
+  service.shouldBeResumed = (model, component) => {
+    return component.mapping === MAPPING_STATUS.FAILED_MAPPED ||
+      component.mapping === MAPPING_STATUS.UNFINISHED_MAPPED;
   };
 
   /**
@@ -104,7 +122,8 @@
   service.isMappingEnabled = (model, component) => {
     switch (component.mapping) {
       case MAPPING_STATUS.FINISHED_MAPPED:
-      case MAPPING_STATUS.FAILED:
+      case MAPPING_STATUS.FAILED_MAPPED:
+      case MAPPING_STATUS.UNFINISHED_MAPPED:
         return true;
       default:
         return false;
@@ -119,7 +138,13 @@
     switch (component.mapping) {
       case MAPPING_STATUS.FINISHED:
         component.mapping = MAPPING_STATUS.FINISHED_MAPPED;
-        break
+        break;
+      case MAPPING_STATUS.FAILED:
+        component.mapping = MAPPING_STATUS.FAILED_MAPPED;
+        break;
+      case MAPPING_STATUS.UNFINISHED:
+        component.mapping = MAPPING_STATUS.UNFINISHED_MAPPED;
+        break;
     }
   };
 
@@ -127,7 +152,13 @@
     switch (component.mapping) {
       case MAPPING_STATUS.FINISHED_MAPPED:
         component.mapping = MAPPING_STATUS.FINISHED;
-        break
+        break;
+      case MAPPING_STATUS.FAILED_MAPPED:
+        component.mapping = MAPPING_STATUS.FAILED;
+        break;
+      case MAPPING_STATUS.UNFINISHED_MAPPED:
+        component.mapping = MAPPING_STATUS.UNFINISHED;
+        break;
     }
   };
 

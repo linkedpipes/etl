@@ -30,6 +30,11 @@ class SimpleTaskSource<T extends Task> implements TaskSource<T> {
     }
 
     @Override
+    public boolean isAllExecuted() {
+        return !shouldHandleNextTask() || tasks.isEmpty();
+    }
+
+    @Override
     public void onTaskFinished(T task) {
         // No operation here.
     }
@@ -44,7 +49,7 @@ class SimpleTaskSource<T extends Task> implements TaskSource<T> {
         return this.taskFailed;
     }
 
-    public SimpleTaskSource(Collection<T> tasks) {
+    SimpleTaskSource(Collection<T> tasks) {
         this.tasks = new ConcurrentLinkedDeque<>(tasks);
     }
 
