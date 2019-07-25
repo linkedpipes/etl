@@ -26,6 +26,7 @@ frontend/dist
 
 # All files/directiries starting with dot.
 .*
+!.travis.yml
 
 # Configuraiton file.
 configuration.properties
