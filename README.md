@@ -1,4 +1,5 @@
 # LinkedPipes ETL
+[![Build Status](https://travis-ci.com/linkedpipes/etl.svg?branch=develop)](https://travis-ci.com/linkedpipes/etl)
 
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [REST API](https://github.com/linkedpipes/etl/wiki) based set of components for easy integration
@@ -8,7 +9,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 
 ## Requirements
 - Linux, Windows, iOS
-- [Java] 12 or [Java] 8 update 101 or newer
+- [Java] 11 or 12
 - [Git]
 - [Maven], 3.2.5 or newer
 - [Node.js] & npm
@@ -54,7 +55,8 @@ There are components in the ```jars``` directory. Detailed description of how to
 The configuration file in the `deploy` directory can be edited, mainly changing paths to working, storage, log and library directories. 
 
 ## Update script
-Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse it if you wish. The script sets the path to Java 8, kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```
+Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse it if you wish. The script kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```.
+We recommend running the 4 components as individual services though.
 ```sh
 #!/bin/bash
 echo Killing Executor
@@ -82,8 +84,6 @@ echo Running frontend
 echo Disowning
 disown
 ```
-## Known issues
- * If you are using Oracle Java 8, accessing HTTPS based URLs and getting ```SSLHandshakeException : Received fatal alert: handshake_failure``` when the same URL works from, e.g. Chrome, try installing the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html) or for Java 9
  
 ## Update notes
 > Update note 4: 2019-07-03 we changed the way fronend is run. If you do not use our script to run it, you need to update yours. 
