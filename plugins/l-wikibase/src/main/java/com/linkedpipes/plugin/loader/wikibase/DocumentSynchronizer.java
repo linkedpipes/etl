@@ -77,7 +77,7 @@ class DocumentSynchronizer {
             String siteIri,
             WritableSingleGraphDataUnit output,
             int averageTimePerEdit) {
-        this.siteIri = siteIri;
+        this.siteIri = siteIri + "entity/";
         this.exceptionFactory = exceptionFactory;
         this.wbde = new WikibaseDataEditor(connection, this.siteIri);
         this.wbde.setAverageTimePerEdit(averageTimePerEdit);
@@ -209,7 +209,7 @@ class DocumentSynchronizer {
 
     private void emitMapping() {
         Map<String, String> mapping;
-        if (expectedState.getQid() == null) {
+        if (expectedState.isNew()) {
             mapping = collectMappingNewDocument();
         } else {
             mapping = collectMappingUpdate();
@@ -236,7 +236,8 @@ class DocumentSynchronizer {
             if (newRef.iri == null) {
                 continue;
             }
-            results.put(newRef.iri, siteIri + "statement/" + newRef.id);
+            results.put(newRef.iri,
+                    siteIri + "statement/" + newRef.id.replace("$", "-"));
         }
         return results;
     }
@@ -262,6 +263,10 @@ class DocumentSynchronizer {
         for (WikibaseDocument.Statement expected :
                 expectedState.getStatements()) {
             if (expected.isForDelete()) {
+                continue;
+            }
+            if (!expected.isNew()){
+                // Skip updated as the ID is preserved.
                 continue;
             }
             for (StatementRef ref : refs) {
