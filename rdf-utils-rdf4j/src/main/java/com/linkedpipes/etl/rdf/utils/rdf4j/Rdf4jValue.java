@@ -2,9 +2,12 @@ package com.linkedpipes.etl.rdf.utils.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
+import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
+
+import java.util.Calendar;
 
 class Rdf4jValue implements BackendRdfValue {
 
@@ -56,5 +59,26 @@ class Rdf4jValue implements BackendRdfValue {
     @Override
     public boolean isIri() {
         return value instanceof Resource;
+    }
+
+    @Override
+    public Double asDouble() {
+        if (value instanceof  Literal) {
+            return ((Literal) value).doubleValue();
+        }
+        return null;
+    }
+
+    @Override
+    public Calendar asCalendar() {
+        if (value instanceof  Literal) {
+            return ((Literal) value).calendarValue().toGregorianCalendar();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isBlankNode() {
+        return value instanceof BNode;
     }
 }

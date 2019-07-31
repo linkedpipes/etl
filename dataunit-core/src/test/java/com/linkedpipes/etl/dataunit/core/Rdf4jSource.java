@@ -54,7 +54,7 @@ public class Rdf4jSource implements RdfSource {
         @Override
         public Long asLong() {
             if (value instanceof Literal) {
-                return ((Literal)value).longValue();
+                return ((Literal) value).longValue();
             }
             return null;
         }
@@ -62,14 +62,16 @@ public class Rdf4jSource implements RdfSource {
         @Override
         public Double asDouble() {
             if (value instanceof Literal) {
-                return ((Literal)value).doubleValue();
+                return ((Literal) value).doubleValue();
             }
             return null;
         }
+
         @Override
         public Calendar asCalendar() {
             if (this.value instanceof Literal) {
-                return ((Literal) this.value).calendarValue().toGregorianCalendar();
+                return ((Literal) this.value)
+                        .calendarValue().toGregorianCalendar();
             }
             return null;
         }
