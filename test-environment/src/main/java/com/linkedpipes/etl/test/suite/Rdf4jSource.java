@@ -3,6 +3,8 @@ package com.linkedpipes.etl.test.suite;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
@@ -15,10 +17,11 @@ import org.eclipse.rdf4j.rio.Rio;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class Rdf4jSource implements RdfSource {
+public class Rdf4jSource implements RdfSource {
 
     private class Rdf4jValue implements RdfValue {
 
@@ -35,7 +38,7 @@ class Rdf4jSource implements RdfSource {
 
         @Override
         public String getLanguage() {
-            throw new UnsupportedOperationException();
+            return ((Literal) value).getLanguage().orElse("");
         }
 
         @Override
@@ -44,13 +47,37 @@ class Rdf4jSource implements RdfSource {
         }
 
         @Override
-        public Boolean asBoolean() throws RdfException {
+        public Boolean asBoolean() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public Long asLong() throws RdfException {
-            throw new UnsupportedOperationException();
+        public Long asLong() {
+            if (value instanceof Literal) {
+                return ((Literal) value).longValue();
+            }
+            return null;
+        }
+
+        @Override
+        public Double asDouble() {
+            if (value instanceof Literal) {
+                return ((Literal) value).doubleValue();
+            }
+            return null;
+        }
+
+        @Override
+        public Calendar asCalendar() {
+            if (this.value instanceof Literal) {
+                return ((Literal) this.value).calendarValue().toGregorianCalendar();
+            }
+            return null;
+        }
+
+        @Override
+        public boolean isBlankNode() {
+            return value instanceof BNode;
         }
 
     }
