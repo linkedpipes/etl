@@ -1,0 +1,27 @@
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix pqv: <https://wikibase.opendata.cz/prop/qualifier/value/> .
+@prefix psv: <https://wikibase.opendata.cz/prop/statement/value/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:NewItem> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Item;
+  rdfs:label "Timevalue test item"@en;
+  p:P11 <urn:NewStatement> .
+
+<urn:NewStatement> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Statement;
+  pqv:P11 <urn:value2>;
+  psv:P11 <urn:value1> .
+
+<urn:value1> a wikibase:TimeValue;
+  wikibase:timeCalendarModel <http://www.wikidata.org/entity/Q1985727>;
+  wikibase:timePrecision 11;
+  wikibase:timeTimezone 0;
+  wikibase:timeValue "1990-11-01T00:00:00+00:00"^^xsd:dateTime .
+
+<urn:value2> a wikibase:TimeValue;
+  wikibase:timeCalendarModel <http://www.wikidata.org/entity/Q1985727>;
+  wikibase:timePrecision 11;
+  wikibase:timeTimezone 0;
+  wikibase:timeValue "2020-01-01T00:00:00Z"^^xsd:dateTime .

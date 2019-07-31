@@ -4,10 +4,18 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import com.linkedpipes.plugin.loader.wikibase.model.GlobeCoordinateValue;
+import com.linkedpipes.plugin.loader.wikibase.model.QuantityValue;
+import com.linkedpipes.plugin.loader.wikibase.model.TimeValue;
+import com.linkedpipes.plugin.loader.wikibase.model.WikibaseDocument;
+import com.linkedpipes.plugin.loader.wikibase.model.WikibaseReference;
+import com.linkedpipes.plugin.loader.wikibase.model.WikibaseStatement;
+import com.linkedpipes.plugin.loader.wikibase.model.WikibaseValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.helpers.ItemDocumentBuilder;
+import org.wikidata.wdtk.datamodel.helpers.ReferenceBuilder;
 import org.wikidata.wdtk.datamodel.helpers.StatementBuilder;
 import org.wikidata.wdtk.datamodel.implementation.TermImpl;
 import org.wikidata.wdtk.datamodel.interfaces.EntityDocument;
@@ -16,6 +24,7 @@ import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.PropertyIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.Statement;
 import org.wikidata.wdtk.datamodel.interfaces.StringValue;
+import org.wikidata.wdtk.datamodel.interfaces.Value;
 import org.wikidata.wdtk.wikibaseapi.ApiConnection;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataEditor;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
@@ -83,7 +92,11 @@ class DocumentSynchronizer {
         this.wbde.setAverageTimePerEdit(averageTimePerEdit);
         this.wbde.setEditAsBot(true);
         this.wbdf = new WikibaseDataFetcher(connection, this.siteIri);
-        this.reportOutput = output.getWriter();
+        if (output == null) {
+            this.reportOutput = null;
+        } else {
+            this.reportOutput = output.getWriter();
+        }
     }
 
     public void synchronize(WikibaseDocument expectedState)
@@ -91,10 +104,13 @@ class DocumentSynchronizer {
         this.expectedState = expectedState;
         document = getDocumentFromWikidata(expectedState);
         synchronizeLabels();
+        synchronizeNoValueStatements();
         synchronizeStatements();
         saveDocumentChanges();
         emitMapping();
-        this.reportOutput.flush();
+        if (this.reportOutput != null) {
+            this.reportOutput.flush();
+        }
     }
 
     private ItemDocument getDocumentFromWikidata(
@@ -127,10 +143,33 @@ class DocumentSynchronizer {
         });
     }
 
+    private void synchronizeNoValueStatements() {
+        for (String predicate : expectedState.getNoValuePredicates()) {
+            PropertyIdValue property = createProperty(predicate);
+            if (hasNoValueStatement(property)) {
+                continue;
+            }
+            StatementBuilder builder =
+                    StatementBuilder.forSubjectAndProperty(
+                            document.getEntityId(), property);
+            builder.withNoValue();
+            document = document.withStatement(builder.build());
+        }
+    }
+
+    private boolean hasNoValueStatement(PropertyIdValue property) {
+        Iterator<Statement> statements = document.getAllStatements();
+        while (statements.hasNext()) {
+            Statement statement = statements.next();
+            // TODO Check if there is no value property.
+        }
+        return false;
+    }
+
     private void synchronizeStatements() {
         List<Statement> statementsToUpdate = new ArrayList<>();
         Set<String> toRemove = new HashSet<>();
-        for (WikibaseDocument.Statement expected :
+        for (WikibaseStatement expected :
                 expectedState.getStatements()) {
             if (expected.isNew()) {
                 statementsToUpdate.add(createNewStatement(expected));
@@ -153,19 +192,70 @@ class DocumentSynchronizer {
         }
     }
 
-    private Statement createNewStatement(WikibaseDocument.Statement expected) {
+    private Statement createNewStatement(WikibaseStatement expected) {
         PropertyIdValue property = createProperty(expected);
-        StringValue value = Datamodel.makeStringValue(expected.getValue());
-        return StatementBuilder
-                .forSubjectAndProperty(document.getEntityId(), property)
-                .withValue(value).build();
+        StatementBuilder builder = StatementBuilder
+                .forSubjectAndProperty(document.getEntityId(), property);
+
+        if (expected.getSimpleValue() != null) {
+            StringValue value =
+                    Datamodel.makeStringValue(expected.getSimpleValue());
+            builder.withValue(value);
+        }
+
+        for (WikibaseValue value : expected.getQualifierValues()) {
+            builder.withQualifierValue(property, createValue(value));
+        }
+
+        for (WikibaseValue value : expected.getStatementValues()) {
+            builder.withValue(createValue(value));
+        }
+
+        for (WikibaseReference reference : expected.getReferences()) {
+            ReferenceBuilder refBuilder = ReferenceBuilder.newInstance();
+            for (WikibaseValue refValue : reference.getValues()) {
+                // Reference values use same property as the reference.
+                refBuilder.withPropertyValue(property, createValue(refValue));
+            }
+            builder.withReference(refBuilder.build());
+        }
+
+        return builder.build();
     }
 
-    private PropertyIdValue createProperty(
-            WikibaseDocument.Statement expected) {
-        return Datamodel.makePropertyIdValue(
-                expected.getPredicate(),
-                siteIri);
+    private PropertyIdValue createProperty(WikibaseStatement expected) {
+        return createProperty(expected.getPredicate());
+    }
+
+    private PropertyIdValue createProperty(String predicate) {
+        return Datamodel.makePropertyIdValue(predicate, siteIri);
+    }
+
+    private Value createValue(WikibaseValue value) {
+        if (value instanceof QuantityValue) {
+            QuantityValue quantity = (QuantityValue)value;
+            return Datamodel.makeQuantityValue(
+                    quantity.amount,
+                    quantity.lowerBound, quantity.upperBound,
+                    quantity.unit);
+        } else if (value instanceof TimeValue) {
+            TimeValue time = (TimeValue)value;
+            return Datamodel.makeTimeValue(
+                    time.year, time.month, time.day,
+                    time.hour, time.minute, time.second,
+                    time.precision,
+                    0, 0,
+                    time.timezone,
+                    time.calendarModel);
+        } else if (value instanceof GlobeCoordinateValue) {
+            GlobeCoordinateValue globe = (GlobeCoordinateValue)value;
+            return Datamodel.makeGlobeCoordinatesValue(
+                    globe.latitude, globe.longitude,
+                    globe.precision, globe.globe);
+        } else {
+            // TODO Throw exception.
+            return null;
+        }
     }
 
     private Statement getStatement(String statementId) {
@@ -180,9 +270,9 @@ class DocumentSynchronizer {
     }
 
     private Statement synchronizeStatement(
-            Statement actual, WikibaseDocument.Statement expected) {
+            Statement actual, WikibaseStatement expected) {
         PropertyIdValue property = createProperty(expected);
-        StringValue value = Datamodel.makeStringValue(expected.getValue());
+        StringValue value = Datamodel.makeStringValue(expected.getSimpleValue());
         return StatementBuilder.forSubjectAndProperty(
                 actual.getSubject(), property)
                 .withQualifiers(actual.getQualifiers())
@@ -208,6 +298,9 @@ class DocumentSynchronizer {
     }
 
     private void emitMapping() {
+        if (this.reportOutput == null) {
+            return;
+        }
         Map<String, String> mapping;
         if (expectedState.isNew()) {
             mapping = collectMappingNewDocument();
@@ -260,12 +353,12 @@ class DocumentSynchronizer {
     }
 
     private void mapRefsToExpectedState(List<StatementRef> refs) {
-        for (WikibaseDocument.Statement expected :
+        for (WikibaseStatement expected :
                 expectedState.getStatements()) {
             if (expected.isForDelete()) {
                 continue;
             }
-            if (!expected.isNew()){
+            if (!expected.isNew()) {
                 // Skip updated as the ID is preserved.
                 continue;
             }
@@ -273,7 +366,7 @@ class DocumentSynchronizer {
                 if (!ref.predicate.equals(expected.getPredicate())) {
                     continue;
                 }
-                if (!ref.value.equals(expected.getValue())) {
+                if (!ref.value.equals(expected.getSimpleValue())) {
                     continue;
                 }
                 ref.iri = expected.getIri();
@@ -281,6 +374,5 @@ class DocumentSynchronizer {
             }
         }
     }
-
 
 }

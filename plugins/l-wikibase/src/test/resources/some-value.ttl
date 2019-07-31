@@ -1,0 +1,8 @@
+@prefix ps: <https://wikibase.opendata.cz/prop/statement/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+
+<urn:NewItem> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Item;
+  rdfs:label "SomeValue test item"@en;
+  ps:P11 _:node1dgjupn5cx2601 . # We must test for blank node, and use some-value.

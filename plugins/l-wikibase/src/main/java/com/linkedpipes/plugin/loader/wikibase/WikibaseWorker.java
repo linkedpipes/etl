@@ -7,8 +7,10 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.SKOS;
+import com.linkedpipes.plugin.loader.wikibase.model.WikibaseDocument;
+import com.linkedpipes.plugin.loader.wikibase.model.WikibaseStatement;
+import com.linkedpipes.plugin.loader.wikibase.model.Wikidata;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,25 +90,25 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         String statementPropertyPrefix =
                 configuration.getSiteIri() + "prop/";
         String iri = task.getIri();
-        WikibaseDocument document = new WikibaseDocument(iri);
-        source.statements(iri, (predicate, value) -> {
-            if (RDF.TYPE.equals(predicate)) {
-                document.getTypes().add(value.asString());
-            } else if (isLabel(predicate)) {
-                document.setLabel(value.asString(), value.getLanguage());
-            } else if (predicate.startsWith(statementPropertyPrefix)) {
-                if (value.getType() != null) {
-                    // It is not IRI.
-                    return;
-                }
-                WikibaseDocument.Statement statement =
-                        loadStatement(source, value, predicate);
-                if (statement != null) {
-                    document.addStatement(statement);
-                }
-            }
-        });
-        return document;
+//        WikibaseDocument document = new WikibaseDocument(iri);
+//        source.statements(iri, (predicate, value) -> {
+//            if (RDF.TYPE.equals(predicate)) {
+//                document.getTypes().add(value.asString());
+//            } else if (isLabel(predicate)) {
+//                document.setLabel(value.asString(), value.getLanguage());
+//            } else if (predicate.startsWith(statementPropertyPrefix)) {
+//                if (value.getType() != null) {
+//                    // It is not IRI.
+//                    return;
+//                }
+//                WikibaseStatement statement =
+//                        loadStatement(source, value, predicate);
+//                if (statement != null) {
+//                    document.addStatement(statement);
+//                }
+//            }
+//        });
+        return null;
     }
 
     private boolean isLabel(String predicate) {
@@ -117,31 +119,31 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
     /**
      * Return null if the given entity is not Wikidata statement.
      */
-    private WikibaseDocument.Statement loadStatement(
+    private WikibaseStatement loadStatement(
             RdfSource source, RdfValue statementIri, String statementPredicate)
             throws RdfException {
-        WikibaseDocument.Statement statement =
-                new WikibaseDocument.Statement(
-                        statementIri.asString(), statementPredicate);
-        String valuePredicate = configuration.getSiteIri() +
-                "prop/statement/" + statement.getPredicate();
-        source.statements(statementIri.asString(), (predicate, value) -> {
-            if (RDF.TYPE.equals(predicate)) {
-                statement.getTypes().add(value.asString());
-            } else if (valuePredicate.equals(predicate)) {
-                statement.setValue(value.asString());
-            }
-        });
-        if (isStatement(statement)) {
-            return statement;
-        } else {
-            return null;
-        }
+//        WikibaseStatement statement =
+//                new WikibaseStatement(
+//                        statementIri.asString(), statementPredicate);
+//        String valuePredicate = configuration.getSiteIri() +
+//                "prop/statement/" + statement.getPredicate();
+//        source.statements(statementIri.asString(), (predicate, value) -> {
+//            if (RDF.TYPE.equals(predicate)) {
+//                statement.getTypes().add(value.asString());
+//            } else if (valuePredicate.equals(predicate)) {
+//                statement.setValue(value.asString());
+//            }
+//        });
+//        if (isStatement(statement)) {
+//            return statement;
+//        } else {
+//            return null;
+//        }
+        return null;
     }
 
-    private boolean isStatement(WikibaseDocument.Statement statement) {
-        return statement.getTypes().contains(
-                WikibaseLoaderVocabulary.WIKIDATA_STATEMENT);
+    private boolean isStatement(WikibaseStatement statement) {
+        return statement.getTypes().contains(Wikidata.STATEMENT);
     }
 
     public void onAfterExecution() throws LpException {
