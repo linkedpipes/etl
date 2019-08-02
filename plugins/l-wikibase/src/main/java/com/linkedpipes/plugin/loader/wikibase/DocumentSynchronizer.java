@@ -339,6 +339,10 @@ class DocumentSynchronizer {
         List<StatementRef> results = new ArrayList<>();
         document.getStatementGroups().forEach((group) -> {
             group.getStatements().forEach((statement) -> {
+                if (statement.getValue() == null) {
+                    // Might be SomeValue or NoValue, for now we ignore these.
+                    return;
+                }
                 String value = statement.getValue().toString();
                 if (value.startsWith("\"") && value.endsWith("\"")) {
                     value = value.substring(1, value.length() - 1);
