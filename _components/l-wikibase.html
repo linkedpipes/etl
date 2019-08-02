@@ -1,0 +1,105 @@
+---
+short: l-wikibase
+type: loader
+color: green
+title: Load to Wikibase
+description: Loads RDF data to Wikibase.
+---
+
+<p class="flow-text">
+Loader, allows the user to load RDF data using the <a href="https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format">Wikibase RDF Dump Format</a> to a <a href="https://www.mediawiki.org/wiki/Wikibase">Wikibase</a> instance.
+</p>
+<dl class="flow-text">
+    <dt>Wikibase API Endpoint URL (api.php)</dt>
+    <dd>This is the URL of the <code>api.php</code> in the target Wikibase instance. For example <code>https://www.wikidata.org/w/api.php</code></dd>
+    <dt>Wikibase ontology IRI prefix</dt>
+    <dd>This is the common part of the IRI prefixes used by the target Wikibase instance. For example <code>http://www.wikidata.org/</code>. This can be determined by looking at e.g. <code>https://www.wikidata.org/wiki/Special:EntityData/Q1.ttl</code>, specifically the <code>wd:</code> and similar prefixes.</dd>
+    <dt>User name</dt>
+    <dd>User name for the Wikibase instance.</dd>
+    <dt>Password</dt>
+    <dd>Password for the Wikibase instance.</dd>
+    <dt>Average time per edit in ms</dt>
+    <dd>This is used by the wrapped <a href="https://www.mediawiki.org/wiki/Wikidata_Toolkit">Wikidata Toolkit</a> to pace the API calls.</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>RDF single graph - Configuration</dd>
+            <dd>RDF single graph - Data</dd>
+            <dt>Outputs</dt>
+            <dd>RDF single graph - Output mapping</dd>
+            <dd>RDF single graph - Report</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+			The {{page.title}} component takes the input RDF data using the <a href="https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format">Wikibase RDF Dump Format</a> and loads it to a specified <a href="https://www.mediawiki.org/wiki/Wikibase">Wikibase</a> instance.
+		</p>
+
+        <p class="flow-text">
+			This component was developed thanks to the <a href="https://meta.wikimedia.org/wiki/Grants:Project/MFFUK/Wikidata_%26_ETL">Wikimedia Foundation Project Grant Wikidata &amp; ETL</a>.
+		</p>
+    </div>
+</div>
+
+<div class="row" id="inputs">
+    <h3 class="orange-text center">Requirements on the input data</h3>
+    <p class="flow-text">
+		Simply put, the component input represents the desired state of the data in the Wikibase instance.
+		Specifically, this means that the IRIs of Items and Statements on the input need to match those in their RDF representations in the target Wikibase, if they are to be updated.
+		The expected format can be seen by using the <code>Special:EntityData</code> function on the Item to be updated in the target Wikibase, e.g.  <code>https://www.wikidata.org/wiki/Special:EntityData/Q1.ttl</code>.
+		There, we may see data like this:
+	</p>
+{% highlight turtle %}
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+
+wd:Q1 rdfs:label "Univers"@fr, "universe"@en-gb, "vesmír"@cs, 
+	"فضاء كوني"@ar, "گەردوون"@ckb, "Çут Тĕнче"@cv, 
+	"σύμπαν"@el, "گیتی"@fa, "બ્રહ્માંડ"@gu, ...
+{% endhighlight %}
+	<p class="flow-text">
+		Note that by default, the RDF format is missing statements about types of things such as:
+	</p>
+{% highlight turtle %}
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+
+wd:Q1 a wikibase:Item .
+{% endhighlight %}
+	<p class="flow-text">
+		These are, however, required on the input, so that the loader can distinguish an Item from a Statement and other things which may be present in the input.
+	</p>
+	<p class="flow-text">
+		Next is the question of how the IRIs of items to be created in the target Wikibase should look like, when they do not have their Q number assigned yet.
+		The answer is that they can by any IRI (not a blank node), as long as they are tagged by the <code>http://plugins.linkedpipes.com/ontology/l-wikibase#New</code> class, like this:
+	</p>
+{% highlight turtle %}
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+
+<urn:MyNewItem> a wikibase:Item, loader:New ;
+	rdfs:label "My new Item to be created"@en .
+{% endhighlight %}
+	<p class="flow-text">
+		The resulting mapping of the newly created Items is given by the component as a linkset using the <code>http://plugins.linkedpipes.com/ontology/l-wikibase#mappedTo</code> predicate on the output, like this:
+	</p>
+{% highlight turtle %}
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
+
+<urn:MyNewItem> loader:mappedTo wd:Q9999999999 .
+{% endhighlight %}
+
+</div>
