@@ -199,8 +199,20 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
+                                            <artifactId>httpclient-osgi</artifactId>
+                                            <version>4.5.8</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpcore-osgi</artifactId>
                                             <version>4.4.4</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.httpcomponents</groupId>
+                                            <artifactId>httpcore-osgi</artifactId>
+                                            <version>4.4.11</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- OSGI Implementation. -->
