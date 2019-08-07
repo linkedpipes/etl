@@ -24,6 +24,10 @@
                 <label>Label</label>
                 <input ng-model="detail.label" md-autofocus>
               </md-input-container>
+              <md-input-container class="md-block" flex>
+                <label>Note</label>
+                <textarea ng-model="detail.note">
+              </md-input-container>
               <md-chips ng-model="detail.tags"
                         placeholder="Enter a tag"
                         md-require-match="False"

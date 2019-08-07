@@ -113,7 +113,8 @@
     };
 
     const SKOS_VOCAB = {
-        "PREF_LABEL": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        "PREF_LABEL": "http://www.w3.org/2004/02/skos/core#prefLabel",
+        "NOTE": "http://www.w3.org/2004/02/skos/core#note"
     };
 
     const DCTERMS_VOCAB = {

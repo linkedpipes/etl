@@ -50,10 +50,13 @@
     }
 
     function saveDialogToPipeline() {
+      console.log($scope);
       jsonld.r.setStrings(model.definition, SKOS.PREF_LABEL,
         $scope.detail.label);
       jsonld.r.setStrings(model.definition, LP.HAS_TAG,
         $scope.detail.tags);
+      jsonld.r.setStrings(model.definition, SKOS.NOTE,
+          $scope.detail.note);
       jsonld.r.setIRIs(model.profile, LP.HAS_REPO_POLICY,
         $scope.profile.rdfRepositoryPolicy);
       jsonld.r.setIRIs(model.profile, LP.HAS_REPO_TYPE,
@@ -75,7 +78,8 @@
     return {
       "uri": model.definition["@id"],
       "label": jsonld.r.getPlainString(model.definition, SKOS.PREF_LABEL),
-      "tags": jsonld.r.getPlainStrings(model.definition, LP.HAS_TAG)
+      "tags": jsonld.r.getPlainStrings(model.definition, LP.HAS_TAG),
+      "note": jsonld.r.getPlainString(model.definition, SKOS.NOTE)
     }
   }
 
