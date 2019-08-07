@@ -33,7 +33,8 @@ define([
     // Register events for panning (mouse and touch).
     jQuery(document.body).on({
       "mousemove.panning touchmove.panning": panning.bind(this),
-      "mouseup.panning touchend.panning mouseout.panning": stopPanning.bind(this)
+      "mouseup.panning touchend.panning": stopPanning.bind(this),
+      "mouseleave.panning": stopPanning.bind(this)
     });
   }
 
