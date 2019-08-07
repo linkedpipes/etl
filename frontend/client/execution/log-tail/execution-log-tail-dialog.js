@@ -1,4 +1,4 @@
-define([], function () {
+define(["angular"], function (angular) {
 
   const htmlPrefix = "log-tail-dialog-";
 
@@ -38,16 +38,14 @@ define([], function () {
       );
     };
 
-    const refreshStop = $interval(refreshData, 5000);
-    $scope.label = execution.label;
-
     $scope.onClose = function () {
-      $interval.cancel(refreshStop);
       $refresh.remove("log-tail");
       $mdDialog.hide();
     };
 
-    refreshData();
+    angular.element(document).ready(refreshData);
+
+    $scope.label = execution.label;
     $refresh.add("log-tail", refreshData);
   }
 
