@@ -14,7 +14,8 @@ define([
   };
 
   const SKOS = {
-    "prefLabel": "http://www.w3.org/2004/02/skos/core#prefLabel"
+    "prefLabel": "http://www.w3.org/2004/02/skos/core#prefLabel",
+    "note": "http://www.w3.org/2004/02/skos/core#note"
   };
 
   const DCTERMS = {
@@ -35,10 +36,16 @@ define([
       $scope.api.save();
 
       const promise = createTemplate(
-        $http, $scope.templateToEdit,
-        template,
-        $scope.configuration,
-        $templates);
+        $http, $scope.templateToEdit, template,
+        $scope.configuration, $templates)
+        .then((response) => {
+          $status.success("Template created.");
+          return response;
+        })
+        .catch((error) => {
+          $status.error("Can't create template.", error);
+          return {};
+        });
       $mdDialog.hide(promise);
     };
 
@@ -52,7 +59,8 @@ define([
         "label": jsonld.r.getPlainString(component, SKOS.prefLabel),
         "description": jsonld.r.getPlainString(
           component, DCTERMS.description),
-        "color": jsonld.r.getPlainString(component, LP.color)
+        "color": jsonld.r.getPlainString(component, LP.color),
+        "note": jsonld.r.getPlainString(component, SKOS.note)
       };
 
       $scope.infoLink = template._coreReference.infoLink;
@@ -120,7 +128,7 @@ define([
     if (template.color !== undefined) {
       jsonld.r.setStrings(resource, LP.color, template.color);
     }
-
+    jsonld.r.setStrings(resource, SKOS.note, template.note);
     return postNewTemplate($http, resource, configuration)
       .then((response) => {
         return $templates.forceLoad().then(() => {

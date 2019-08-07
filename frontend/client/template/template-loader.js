@@ -128,7 +128,8 @@
       "id": id,
       "label": label,
       "description": description,
-      "color": color
+      "color": color,
+      "note": jsonld.r.getPlainString(resource, SKOS.NOTE)
     }
   }
 

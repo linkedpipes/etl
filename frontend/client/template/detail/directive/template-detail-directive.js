@@ -63,7 +63,6 @@ define([
         });
         // Load usage.
         templateService.getUsage(template.id).then((usage) => {
-          console.log("usage", usage);
           $scope.usage = usage;
           $scope.isUsed = Object.keys(usage).length !== 0;
         });

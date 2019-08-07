@@ -254,6 +254,10 @@
     $dialogsService.createTemplate(component, template, configuration)
       .then((data) => {
         // Update template.
+        if (data["template"] === undefined) {
+          // No template was created.
+          return;
+        }
         const {
           "template": template,
           "configuration": configuration
@@ -262,12 +266,8 @@
           .then((description) => {
             updateComponentTemplate(
               component, template, description, configuration);
-          });
-      })
-      .then(() => $statusService.success("Template created."))
-      .catch((error) => {
-        $statusService.error("Can't create template.", error);
-      });
+          })
+      }).catch(() => {}); // To handle dialog close.
   }
 
   function updateComponentTemplate(
@@ -278,6 +278,8 @@
       pplModel.getComponentConfiguration($pipeline, component);
     $actions.updateConfigurationToInherit(templateDescription, configuration);
     pplModel.setComponentConfiguration($pipeline, component, configuration);
+    // Template may change component color.
+    $canvasService.updateComponent(jsonld.r.getId(component));
   }
 
   function onInsertRunAfter(source, target) {

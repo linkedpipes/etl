@@ -69,7 +69,6 @@
       loader.parseResponse(serviceData, response);
       expander.expandTemplates(serviceData);
       serviceData.loaded = true;
-      console.log("components-data:", serviceData);
       console.timeEnd("Loading components");
     })
   }
@@ -136,7 +135,8 @@
       "id": template.id,
       "label": template.label,
       "description": template.description,
-      "color": template.color
+      "color": template.color,
+      "note": template.note
     };
   }
 
@@ -315,6 +315,7 @@
     result[SKOS.PREF_LABEL] = template.label;
     result[LP.HAS_COLOR] = template.color;
     result[DCTERMS.DESCRIPTION] = template.description;
+    result[SKOS.NOTE] = template.note;
     return result;
   }
 

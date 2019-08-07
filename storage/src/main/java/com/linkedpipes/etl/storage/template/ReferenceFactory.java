@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.rdf.utils.vocabulary.DCTERMS;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
@@ -32,6 +33,12 @@ class ReferenceFactory {
     private Resource templateResource = null;
 
     private String label = null;
+
+    private String color = null;
+
+    private String description = null;
+
+    private String note = null;
 
     private IRI iri;
 
@@ -97,6 +104,15 @@ class ReferenceFactory {
                 case SKOS.PREF_LABEL:
                     label = statement.getObject().stringValue();
                     break;
+                case SKOS.NOTE:
+                    note = statement.getObject().stringValue();
+                    break;
+                case DCTERMS.DESCRIPTION:
+                    description = statement.getObject().stringValue();
+                    break;
+                case LP_PIPELINE.HAS_COLOR:
+                    color = statement.getObject().stringValue();
+                    break;
                 default:
                     break;
             }
@@ -116,6 +132,25 @@ class ReferenceFactory {
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(SKOS.PREF_LABEL),
                 valueFactory.createLiteral(label), iri));
+
+        if (description != null) {
+            output.add(valueFactory.createStatement(iri,
+                    valueFactory.createIRI(DCTERMS.DESCRIPTION),
+                    valueFactory.createLiteral(description), iri));
+        }
+
+        if (color != null) {
+            output.add(valueFactory.createStatement(iri,
+                    valueFactory.createIRI(LP_PIPELINE.HAS_COLOR),
+                    valueFactory.createLiteral(color), iri));
+        }
+
+        if (note != null) {
+            output.add(valueFactory.createStatement(iri,
+                    valueFactory.createIRI(SKOS.NOTE),
+                    valueFactory.createLiteral(note), iri));
+        }
+
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_CONFIGURATION_GRAPH),
                 configIri, iri));

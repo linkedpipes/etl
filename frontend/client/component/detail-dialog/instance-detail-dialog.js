@@ -13,7 +13,8 @@ define([
   };
 
   const SKOS = {
-    "prefLabel": "http://www.w3.org/2004/02/skos/core#prefLabel"
+    "prefLabel": "http://www.w3.org/2004/02/skos/core#prefLabel",
+    "note": "http://www.w3.org/2004/02/skos/core#note"
   };
 
   const DCTERMS = {
@@ -67,6 +68,8 @@ define([
       } else {
         newComponent[LP.color] = $scope.componentToEdit.color;
       }
+      jsonld.r.setStrings(newComponent, SKOS.note,
+          $scope.componentToEdit.note);
       $mdDialog.hide({
         "saved": true,
         "component": newComponent,
@@ -112,7 +115,9 @@ define([
         "description": i18.str(jsonld.r.getString(
           component, DCTERMS.description)),
         "color": i18.str(jsonld.r.getString(
-          component, LP.color))
+          component, LP.color)),
+        "note": i18.str(jsonld.r.getString(
+            component, SKOS.note))
       };
 
       $scope.infoLink = template._coreReference.infoLink;

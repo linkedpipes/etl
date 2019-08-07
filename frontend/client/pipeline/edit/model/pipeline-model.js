@@ -321,7 +321,6 @@
    * Remove undefined and null objects in configuration graph.
    */
   function shakeOffPipelineGraph(model) {
-    console.time("shakeOffPipelineGraph");
     const target = [];
     getPipelineGraph(model).forEach((value) => {
       if (value === undefined || value === null) {
@@ -331,7 +330,6 @@
     });
     model.pipeline.graph = target;
     model.graphs[model.pipeline.iri] = target;
-    console.timeEnd("shakeOffPipelineGraph");
   }
 
   service.cloneComponent = (model, component) => {

@@ -7,7 +7,14 @@
     <md-input-container class="md-block" flex>
         <label>Description</label>
         <textarea ng-model="template.description"
-                  ng-disabled="template.readonly"/>
+                  ng-disabled="template.readonly">
+        </textarea>
+    </md-input-container>
+    <md-input-container class="md-block" flex>
+        <label>Note</label>
+        <textarea ng-model="template.note"
+                  ng-disabled="template.readonly">
+        </textarea>
     </md-input-container>
     <div ng-show="!template.readonly">
         <md-switch ng-model="useTemplateColor" ng-change="onUseTemplateColor()">
