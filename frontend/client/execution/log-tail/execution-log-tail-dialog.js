@@ -2,7 +2,7 @@ define([], function () {
 
   const htmlPrefix = "log-tail-dialog-";
 
-  function controller($scope, $mdDialog, $interval, $http, execution) {
+  function controller($scope, $mdDialog, $interval, $http, $refresh, execution) {
 
     function scrollToBottom() {
       const div = document.getElementById(htmlPrefix + "content-end");
@@ -15,34 +15,40 @@ define([], function () {
     }
 
     const refreshData = () => {
+      const element = document.getElementById(htmlPrefix + "content");
+      if (element === null || element === undefined) {
+        // Dialog was closed.
+        $refresh.remove("log-tail");
+        return;
+      }
       const url = execution.iri + "/logs-tail?n=100";
       $http.get(url).then((response) => {
-          setContent(response.data);
-          scrollToBottom();
+          const lastSize = element.textContent.length;
+          element.textContent = response.data;
+          if (response.data.length !== lastSize) {
+            scrollToBottom();
+          }
           if (isExecutionFinished(execution)) {
             $interval.cancel(refreshStop);
           }
         }, (response) => {
-          setContent("There are no log data available.");
+        element.textContent = "There are no log data available.";
           console.warn("Request failed.", response);
         }
       );
     };
-
-    function setContent(data) {
-      const element = document.getElementById(htmlPrefix + "content");
-      element.textContent = data;
-    }
 
     const refreshStop = $interval(refreshData, 5000);
     $scope.label = execution.label;
 
     $scope.onClose = function () {
       $interval.cancel(refreshStop);
+      $refresh.remove("log-tail");
       $mdDialog.hide();
     };
 
     refreshData();
+    $refresh.add("log-tail", refreshData);
   }
 
   controller.$inject = [
@@ -50,6 +56,7 @@ define([], function () {
     "$mdDialog",
     "$interval",
     "$http",
+    "refresh",
     "execution"
   ];
 
