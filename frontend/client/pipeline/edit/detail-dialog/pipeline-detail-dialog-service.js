@@ -29,11 +29,17 @@
       $scope.detail = createScopeDetail(model);
       $scope.profile = createScopeProfile(model);
 
-      // TODO Made clear that this returns all tags in the instance.
-      $scope.tags.all = pipelineService.getTags();
+      pipelineService.update(() => {
+        $scope.tags.all = pipelineService.getTags();
+        console.log("$scope", $scope.tags);
+      });
     }
 
     function tagQuerySearch(query) {
+      if ($scope.tags.all === undefined) {
+        // Data not loaded yet.
+        return;
+      }
       query = query.toLowerCase();
       return $scope.tags.all.filter((item) => {
         return item.toLowerCase().indexOf(query) !== -1;
