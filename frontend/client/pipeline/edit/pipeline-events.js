@@ -178,13 +178,14 @@
     execModel.disableMapping($execution, execComponent);
     $canvasService.updateComponent(iri);
     // Propagation - we need to disable all following.
-    const connections = pplModel.getDataLinks($pipeline);
     const conService = pplModel.connection;
-    connections.forEach((connection) => {
+    const onConnection = (connection) => {
       if (conService.getSource(connection) === iri) {
         disableMapping(conService.getTarget(connection));
       }
-    });
+    };
+    pplModel.getDataLinks($pipeline).forEach(onConnection);
+    pplModel.getRunAfter($pipeline).forEach(onConnection);
   }
 
   function enableMapping(iri) {
@@ -196,13 +197,14 @@
     execModel.enableMapping($execution, execComponent);
     $canvasService.updateComponent(iri);
     // Propagation - we need to enable all out sources.
-    const connections = pplModel.getDataLinks($pipeline);
     const conService = pplModel.connection;
-    connections.forEach((connection) => {
+    const onConnection = (connection) => {
       if (conService.getTarget(connection) === iri) {
         enableMapping(conService.getSource(connection));
       }
-    });
+    };
+    pplModel.getDataLinks($pipeline).forEach(onConnection);
+    pplModel.getRunAfter($pipeline).forEach(onConnection);
   }
 
   function onAddComponent(x, y) {
