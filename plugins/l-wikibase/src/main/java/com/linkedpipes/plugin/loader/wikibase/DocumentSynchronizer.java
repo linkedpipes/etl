@@ -184,7 +184,7 @@ class DocumentSynchronizer {
             if (expected.isForDelete()) {
                 continue;
             }
-            statementsToUpdate.add(synchronizeStatement(actual, expected));
+            statementsToUpdate.add(updateStatement(actual, expected));
         }
         document = document.withoutStatementIds(toRemove);
         for (Statement statement : statementsToUpdate) {
@@ -196,6 +196,70 @@ class DocumentSynchronizer {
         PropertyIdValue property = createProperty(expected);
         StatementBuilder builder = StatementBuilder
                 .forSubjectAndProperty(document.getEntityId(), property);
+        synchronizeStatement(builder, expected, property);
+        return builder.build();
+    }
+
+    private PropertyIdValue createProperty(WikibaseStatement expected) {
+        return createProperty(expected.getPredicate());
+    }
+
+    private PropertyIdValue createProperty(String predicate) {
+        return Datamodel.makePropertyIdValue(predicate, siteIri);
+    }
+
+    private Value createValue(WikibaseValue value) {
+        if (value instanceof QuantityValue) {
+            QuantityValue quantity = (QuantityValue) value;
+            return Datamodel.makeQuantityValue(
+                    quantity.amount,
+                    quantity.lowerBound, quantity.upperBound,
+                    quantity.unit);
+        } else if (value instanceof TimeValue) {
+            TimeValue time = (TimeValue) value;
+            return Datamodel.makeTimeValue(
+                    time.year, time.month, time.day,
+                    time.hour, time.minute, time.second,
+                    time.precision,
+                    0, 0,
+                    time.timezone,
+                    time.calendarModel);
+        } else if (value instanceof GlobeCoordinateValue) {
+            GlobeCoordinateValue globe = (GlobeCoordinateValue) value;
+            return Datamodel.makeGlobeCoordinatesValue(
+                    globe.latitude, globe.longitude,
+                    globe.precision, globe.globe);
+        } else {
+            // TODO Throw exception.
+            return null;
+        }
+    }
+
+    private Statement getStatement(String statementId) {
+        Iterator<Statement> statements = document.getAllStatements();
+        while (statements.hasNext()) {
+            Statement statement = statements.next();
+            if (statement.getStatementId().equals(statementId)) {
+                return statement;
+            }
+        }
+        return null;
+    }
+
+    private Statement updateStatement(Statement actual, WikibaseStatement expected) {
+        PropertyIdValue property = createProperty(expected);
+        StatementBuilder builder = StatementBuilder
+                .forSubjectAndProperty(actual.getSubject(), property)
+                .withRank(actual.getRank())
+                .withId(actual.getStatementId());
+        synchronizeStatement(builder, expected, property);
+        return builder.build();
+    }
+
+    private void synchronizeStatement(
+            StatementBuilder builder,
+            WikibaseStatement expected,
+            PropertyIdValue property) {
 
         if (expected.getSimpleValue() != null) {
             StringValue value =
@@ -220,67 +284,6 @@ class DocumentSynchronizer {
             builder.withReference(refBuilder.build());
         }
 
-        return builder.build();
-    }
-
-    private PropertyIdValue createProperty(WikibaseStatement expected) {
-        return createProperty(expected.getPredicate());
-    }
-
-    private PropertyIdValue createProperty(String predicate) {
-        return Datamodel.makePropertyIdValue(predicate, siteIri);
-    }
-
-    private Value createValue(WikibaseValue value) {
-        if (value instanceof QuantityValue) {
-            QuantityValue quantity = (QuantityValue)value;
-            return Datamodel.makeQuantityValue(
-                    quantity.amount,
-                    quantity.lowerBound, quantity.upperBound,
-                    quantity.unit);
-        } else if (value instanceof TimeValue) {
-            TimeValue time = (TimeValue)value;
-            return Datamodel.makeTimeValue(
-                    time.year, time.month, time.day,
-                    time.hour, time.minute, time.second,
-                    time.precision,
-                    0, 0,
-                    time.timezone,
-                    time.calendarModel);
-        } else if (value instanceof GlobeCoordinateValue) {
-            GlobeCoordinateValue globe = (GlobeCoordinateValue)value;
-            return Datamodel.makeGlobeCoordinatesValue(
-                    globe.latitude, globe.longitude,
-                    globe.precision, globe.globe);
-        } else {
-            // TODO Throw exception.
-            return null;
-        }
-    }
-
-    private Statement getStatement(String statementId) {
-        Iterator<Statement> statements = document.getAllStatements();
-        while (statements.hasNext()) {
-            Statement statement = statements.next();
-            if (statement.getStatementId().equals(statementId)) {
-                return statement;
-            }
-        }
-        return null;
-    }
-
-    private Statement synchronizeStatement(
-            Statement actual, WikibaseStatement expected) {
-        PropertyIdValue property = createProperty(expected);
-        StringValue value = Datamodel.makeStringValue(expected.getSimpleValue());
-        return StatementBuilder.forSubjectAndProperty(
-                actual.getSubject(), property)
-                .withQualifiers(actual.getQualifiers())
-                .withReferences(actual.getReferences())
-                .withRank(actual.getRank())
-                .withId(actual.getStatementId())
-                .withValue(value)
-                .build();
     }
 
     private void saveDocumentChanges()
