@@ -25,4 +25,8 @@ public class WikibaseReference {
         values.add(value);
     }
 
+    public String getPredicate() {
+        return predicate;
+    }
+
 }

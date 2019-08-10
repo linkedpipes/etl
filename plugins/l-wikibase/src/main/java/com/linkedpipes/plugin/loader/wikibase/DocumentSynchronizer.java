@@ -196,7 +196,7 @@ class DocumentSynchronizer {
         PropertyIdValue property = createProperty(expected);
         StatementBuilder builder = StatementBuilder
                 .forSubjectAndProperty(document.getEntityId(), property);
-        synchronizeStatement(builder, expected, property);
+        synchronizeStatement(builder, expected);
         return builder.build();
     }
 
@@ -252,14 +252,12 @@ class DocumentSynchronizer {
                 .forSubjectAndProperty(actual.getSubject(), property)
                 .withRank(actual.getRank())
                 .withId(actual.getStatementId());
-        synchronizeStatement(builder, expected, property);
+        synchronizeStatement(builder, expected);
         return builder.build();
     }
 
     private void synchronizeStatement(
-            StatementBuilder builder,
-            WikibaseStatement expected,
-            PropertyIdValue property) {
+            StatementBuilder builder,WikibaseStatement expected) {
 
         if (expected.getSimpleValue() != null) {
             StringValue value =
@@ -267,8 +265,11 @@ class DocumentSynchronizer {
             builder.withValue(value);
         }
 
-        for (WikibaseValue value : expected.getQualifierValues()) {
-            builder.withQualifierValue(property, createValue(value));
+        for (String propStr : expected.getQualifierProperties()) {
+            PropertyIdValue property = createProperty(propStr);
+            for (WikibaseValue value : expected.getQualifierValues(propStr)) {
+                builder.withQualifierValue(property, createValue(value));
+            }
         }
 
         for (WikibaseValue value : expected.getStatementValues()) {
@@ -279,7 +280,9 @@ class DocumentSynchronizer {
             ReferenceBuilder refBuilder = ReferenceBuilder.newInstance();
             for (WikibaseValue refValue : reference.getValues()) {
                 // Reference values use same property as the reference.
-                refBuilder.withPropertyValue(property, createValue(refValue));
+                refBuilder.withPropertyValue(
+                        createProperty(reference.getPredicate()),
+                        createValue(refValue));
             }
             builder.withReference(refBuilder.build());
         }

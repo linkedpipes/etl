@@ -4,7 +4,11 @@ import com.linkedpipes.plugin.loader.wikibase.WikibaseLoaderVocabulary;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class WikibaseStatement {
 
@@ -21,9 +25,9 @@ public class WikibaseStatement {
 
     private String ownerQid;
 
-    private List<WikibaseValue> qualifierValues = new ArrayList<>();
+    private Map<String, List<WikibaseValue>> qualifierValues = new HashMap<>();
 
-    private List<WikibaseValue> statementValues = new ArrayList<>();
+    private List<WikibaseValue> statementValues = new LinkedList<>();
 
     private List<WikibaseReference> references = new ArrayList<>();
 
@@ -83,12 +87,23 @@ public class WikibaseStatement {
         }
     }
 
-    void addQualifierValue(WikibaseValue value) {
-        qualifierValues.add(value);
+    void addQualifierValue(String property, WikibaseValue value) {
+        if (!qualifierValues.containsKey(property)) {
+            qualifierValues.put(property, new ArrayList<>());
+        }
+        qualifierValues.get(property).add(value);
     }
 
-    public List<WikibaseValue> getQualifierValues() {
-        return Collections.unmodifiableList(qualifierValues);
+    public Set<String> getQualifierProperties() {
+        return Collections.unmodifiableSet(qualifierValues.keySet());
+    }
+
+    public List<WikibaseValue> getQualifierValues(String property) {
+        if (qualifierValues.containsKey(property)) {
+            return Collections.unmodifiableList(qualifierValues.get(property));
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public List<WikibaseValue> getStatementValues() {

@@ -92,8 +92,17 @@ public class DocumentsLoader {
             } else if (stPredicate.equals(valuePrefix)) {
                 statement.setValue(stValue.asString());
             } else if (stPredicate.startsWith(statementQualifierPrefix)) {
-                loadPropQualifier(statement, stValue);
+                String stWikiPredicate =
+                        stPredicate.substring(statementValuePrefix.length());
+                loadPropQualifier(statement, stWikiPredicate, stValue);
             } else if (stPredicate.startsWith(statementValuePrefix)) {
+                String stWikiPredicate =
+                        stPredicate.substring(statementValuePrefix.length());
+                if (!wikiPredicate.equals(stWikiPredicate)) {
+                    throw new RdfException(
+                            "Predicate missmatch for {} : {} vs. {} ",
+                            iri.asString(), wikiPredicate, stWikiPredicate);
+                }
                 loadPropValue(statement, stValue);
             } else if (stPredicate.equals(Wikidata.DERIVED_FROM)) {
                 statement.addReference(loadReference(predicate, stValue));
@@ -102,10 +111,11 @@ public class DocumentsLoader {
         return statement;
     }
 
-    private void loadPropQualifier(WikibaseStatement statement, RdfValue iri)
+    private void loadPropQualifier(
+            WikibaseStatement statement, String predicate, RdfValue iri)
             throws RdfException {
         WikibaseValue value = loadValue(iri);
-        statement.addQualifierValue(value);
+        statement.addQualifierValue(predicate, value);
     }
 
     private WikibaseValue loadValue(RdfValue iri) throws RdfException {
@@ -153,13 +163,13 @@ public class DocumentsLoader {
         if (properties.containsKey(Wikidata.TIME_VALUE)) {
             Calendar calendar =
                     properties.get(Wikidata.TIME_VALUE).asCalendar();
-            value.year = (long)calendar.get(Calendar.YEAR);
+            value.year = (long) calendar.get(Calendar.YEAR);
             // Java start with 0 for first month.
-            value.month = (byte)(calendar.get(Calendar.MONTH) + 1);
-            value.day = (byte)calendar.get(Calendar.DAY_OF_MONTH);
-            value.hour = (byte)calendar.get(Calendar.HOUR);
-            value.minute = (byte)calendar.get(Calendar.MINUTE);
-            value.second = (byte)calendar.get(Calendar.SECOND);
+            value.month = (byte) (calendar.get(Calendar.MONTH) + 1);
+            value.day = (byte) calendar.get(Calendar.DAY_OF_MONTH);
+            value.hour = (byte) calendar.get(Calendar.HOUR);
+            value.minute = (byte) calendar.get(Calendar.MINUTE);
+            value.second = (byte) calendar.get(Calendar.SECOND);
         }
         return value;
     }
@@ -205,7 +215,8 @@ public class DocumentsLoader {
         return value;
     }
 
-    private void loadPropValue(WikibaseStatement statement, RdfValue iri)
+    private void loadPropValue
+            (WikibaseStatement statement, RdfValue iri)
             throws RdfException {
         WikibaseValue value = loadValue(iri);
         statement.addStatementValue(value);
