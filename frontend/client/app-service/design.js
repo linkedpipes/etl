@@ -18,7 +18,7 @@ define([
   const INFO_TEMPLATE = {
     "tags": {
       "$property": "http://etl.linkedpipes.com/ontology/tag",
-      "$type": "plain-string"
+      "$type": "plain-array"
     },
     "followup": {
       "$property": "http://etl.linkedpipes.com/ontology/followup",
@@ -65,7 +65,6 @@ define([
             item["frequency"];
         });
       }
-      console.log("design-data", data);
       //
       _status.ready = true;
       _status.loading = false;
