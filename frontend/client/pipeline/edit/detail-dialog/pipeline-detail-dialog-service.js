@@ -31,7 +31,6 @@
 
       pipelineService.update(() => {
         $scope.tags.all = pipelineService.getTags();
-        console.log("$scope", $scope.tags);
       });
     }
 
