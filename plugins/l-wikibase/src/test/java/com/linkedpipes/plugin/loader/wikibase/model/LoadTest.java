@@ -137,7 +137,7 @@ public class LoadTest {
         Assert.assertEquals(new BigDecimal("362.0"),
                 value.upperBound);
         QuantityValue qualifier =
-                (QuantityValue) st.getQualifierValues("p8").get(0);
+                (QuantityValue) st.getQualifierValues("P8").get(0);
         Assert.assertEquals(new BigDecimal("3.62"),
                 qualifier.amount);
         Assert.assertEquals(new BigDecimal("3.62"),
