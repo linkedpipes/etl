@@ -73,8 +73,8 @@ public class LoadTest {
         Assert.assertEquals(0, value.second.byteValue());
 
         Assert.assertEquals(1,
-                st.getQualifierValues().size());
-        TimeValue qualifier = (TimeValue) st.getQualifierValues().get(0);
+                st.getQualifierValues("P11").size());
+        TimeValue qualifier = (TimeValue) st.getQualifierValues("P11").get(0);
         Assert.assertEquals("http://www.wikidata.org/entity/Q1985727",
                 qualifier.calendarModel
         );
@@ -136,7 +136,8 @@ public class LoadTest {
                 value.unit);
         Assert.assertEquals(new BigDecimal("362.0"),
                 value.upperBound);
-        QuantityValue qualifier = (QuantityValue) st.getQualifierValues().get(0);
+        QuantityValue qualifier =
+                (QuantityValue) st.getQualifierValues("p8").get(0);
         Assert.assertEquals(new BigDecimal("3.62"),
                 qualifier.amount);
         Assert.assertEquals(new BigDecimal("3.62"),
@@ -183,7 +184,7 @@ public class LoadTest {
         Assert.assertEquals((Double) 2.77778E-4,
                 value.precision);
         GlobeCoordinateValue qualifier =
-                (GlobeCoordinateValue) st.getQualifierValues().get(0);
+                (GlobeCoordinateValue) st.getQualifierValues("P12").get(0);
         Assert.assertEquals("http://www.wikidata.org/entity/Q2",
                 qualifier.globe);
         Assert.assertEquals((Double) 5.0675546897005E1,
