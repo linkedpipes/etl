@@ -229,8 +229,10 @@ public class DocumentsLoader {
                 iri.asString(), wikiPredicate);
         source.statements(iri.asString(), (stPredicate, stValue) -> {
             if (stPredicate.startsWith(statementReferencePrefix)) {
+                String stWikiPredicate =
+                        stPredicate.substring(statementValuePrefix.length());
                 WikibaseValue value = loadValue(stValue);
-                reference.addValue(value);
+                reference.addValue(stWikiPredicate, value);
             }
         });
         return reference;

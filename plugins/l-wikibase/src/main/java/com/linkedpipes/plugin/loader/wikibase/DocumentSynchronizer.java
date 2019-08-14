@@ -278,11 +278,13 @@ class DocumentSynchronizer {
 
         for (WikibaseReference reference : expected.getReferences()) {
             ReferenceBuilder refBuilder = ReferenceBuilder.newInstance();
-            for (WikibaseValue refValue : reference.getValues()) {
-                // Reference values use same property as the reference.
-                refBuilder.withPropertyValue(
-                        createProperty(reference.getPredicate()),
-                        createValue(refValue));
+            for (String property : reference.getValueProperties()) {
+                for (WikibaseValue refValue : reference.getValues(property)) {
+                    // Reference values use same property as the reference.
+                    refBuilder.withPropertyValue(
+                            createProperty(property),
+                            createValue(refValue));
+                }
             }
             builder.withReference(refBuilder.build());
         }
