@@ -212,7 +212,7 @@ public class LoadTest {
         Assert.assertEquals(1,
                 primary.getReferences().size());
         WikibaseReference reference = primary.getReferences().get(0);
-        Assert.assertEquals(2, reference.getValues().size());
+        Assert.assertEquals(2, reference.getValues("P8").size());
     }
 
 //    public void parserDateTest() throws ParseException {
