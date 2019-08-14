@@ -115,7 +115,7 @@ class DocumentSynchronizer {
 
     private ItemDocument getDocumentFromWikidata(
             WikibaseDocument expectedState)
-            throws LpException, MediaWikiApiErrorException {
+            throws LpException, MediaWikiApiErrorException, IOException {
         if (expectedState.isNew()) {
             LOG.debug("New document created.");
             return ItemDocumentBuilder.forItemId(ItemIdValue.NULL).build();

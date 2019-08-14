@@ -32,6 +32,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private DocumentSynchronizer synchronizer;
 
+    private Exception lastException;
+
     public WikibaseWorker(
             WikibaseLoaderConfiguration configuration,
             ExceptionFactory exceptionFactory,
@@ -76,6 +78,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         try {
             synchronizer.synchronize(document);
         } catch (MediaWikiApiErrorException | IOException ex) {
+            lastException = ex;
             throw exceptionFactory.failure(
                     "Error processing document: {}",
                     document.getIri(), ex);
@@ -95,6 +98,10 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't close connection.", ex);
         }
+    }
+
+    public Exception getLastException() {
+        return lastException;
     }
 
 }

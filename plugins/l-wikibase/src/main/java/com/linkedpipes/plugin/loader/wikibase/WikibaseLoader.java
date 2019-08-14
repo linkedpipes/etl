@@ -97,4 +97,19 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
         }
     }
 
+    @Override
+    protected void checkForFailures(TaskSource<WikibaseTask> taskSource)
+            throws LpException {
+        // Quick hack to put the last exception to the output.
+        if (taskSource.doesTaskFailed()) {
+            for (WikibaseWorker worker : workers) {
+                Exception ex = worker.getLastException();
+                if (ex == null) {
+                    return;
+                }
+                throw new LpException("Operation failed.", ex);
+            }
+        }
+    }
+
 }
