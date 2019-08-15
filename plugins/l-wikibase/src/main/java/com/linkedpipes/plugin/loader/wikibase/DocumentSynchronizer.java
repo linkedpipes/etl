@@ -33,6 +33,9 @@ import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -311,18 +314,42 @@ class DocumentSynchronizer {
                         value.asString(),
                         value.getLanguage());
             case Wikidata.TYPE_COMMONS_MEDIA:
+                return createCommonsMedia(value);
             case Wikidata.TYPE_WIKIBASE_PROPERTY:
-                return Datamodel.makeWikidataPropertyIdValue(value.asString());
+                return createProperty(value);
             default:
                 return Datamodel.makeStringValue(value.asString());
         }
     }
 
-    private Value createSimpleGeoShape(RdfValue value) {
+    private Value createSimpleGeoShape(RdfValue rdfValue) {
         String prefix = "http://commons.wikimedia.org/data/main/";
-        String strValue = value.asString();
-        String refValue = strValue.substring(prefix.length());
-        return Datamodel.makeStringValue(refValue);
+        String strValue = rdfValue.asString();
+        String value = strValue.substring(prefix.length());
+        return Datamodel.makeStringValue(value);
+    }
+
+    private Value createCommonsMedia(RdfValue rdfValue) {
+        // Convert from:
+        // http://commons.wikimedia.org/wiki/Special:FilePath/Wikidata%20%26%20ETL%20Wikimania%202019%20poster.pdf
+        // to:
+        // Wikidata & ETL Wikimania 2019 poster.pdf
+        String strValue = rdfValue.asString();
+        String value = strValue.substring(strValue.lastIndexOf("/") + 1);
+        Charset charset;
+        try {
+            charset = Charset.forName("UTF-8");
+        } catch (UnsupportedCharsetException ex) {
+            throw new RuntimeException(ex);
+        }
+        String decodedValue = URLDecoder.decode(value, charset);
+        return Datamodel.makeStringValue(decodedValue);
+    }
+
+    private Value createProperty(RdfValue rdfValue) {
+        String strValue = rdfValue.asString();
+        String value = strValue.substring(strValue.lastIndexOf("/") + 1);
+        return Datamodel.makeWikidataPropertyIdValue(value);
     }
 
     private void saveDocumentChanges()
