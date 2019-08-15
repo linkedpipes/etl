@@ -6,6 +6,8 @@ import com.linkedpipes.plugin.loader.wikibase.model.DocumentsLoader;
 import com.linkedpipes.plugin.loader.wikibase.model.Property;
 import com.linkedpipes.plugin.loader.wikibase.model.WikibaseDocument;
 import org.junit.Test;
+import org.wikidata.wdtk.datamodel.implementation.DatatypeIdImpl;
+import org.wikidata.wdtk.datamodel.implementation.ValueSnakImpl;
 import org.wikidata.wdtk.datamodel.interfaces.EntityDocument;
 import org.wikidata.wdtk.wikibaseapi.ApiConnection;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
@@ -45,20 +47,26 @@ public class Wikibase {
     }
 
 
-    //    @Test
+        @Test
     public void readTest() throws Exception {
         ApiConnection connection = new ApiConnection(
-                "https://wikibase.opendata.cz/w/api.php");
+                "https://www.wikidata.org/w/api.php");
         connection.login(
-                "Klimek@Postman",
-                "pbnslciirrtimjr689kgb6n8sbg40ku0");
+                "Linkedpipes-etl@lpetl",
+                "l2q4gft2fl5nhrdsdpvenc62km00lopj");
+
 
         WikibaseDataFetcher fetch =
                 new WikibaseDataFetcher(
-                        connection, "https://wikibase.opendata.cz/");
+                        connection, "www.wikidata.org/");
 
-        EntityDocument document = fetch.getEntityDocument("Q2189");
+        EntityDocument document = fetch.getEntityDocument("Q4115189");
         connection.logout();
+
+        // musical-notation
+
+        ValueSnakImpl snak;
+        DatatypeIdImpl impl;
     }
 
     //    @Test
