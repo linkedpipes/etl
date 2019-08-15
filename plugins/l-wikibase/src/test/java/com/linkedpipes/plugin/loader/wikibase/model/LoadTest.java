@@ -28,8 +28,7 @@ public class LoadTest {
         Assert.assertEquals(1,
                 document.getStatements().size());
         WikibaseStatement st = document.getStatements().get(0);
-        Assert.assertEquals("103064",
-                st.getSimpleValue());
+        Assert.assertEquals("103064", st.getSimpleValue().asString());
         Assert.assertEquals(
                 "https://wikibase.opendata.cz/entity/statement/" +
                         "Q2077-088175BA-D4FF-488D-A555-CC0CE9F48BE6",
@@ -214,26 +213,5 @@ public class LoadTest {
         WikibaseReference reference = primary.getReferences().get(0);
         Assert.assertEquals(2, reference.getValues("P8").size());
     }
-
-//    public void parserDateTest() throws ParseException {
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-//        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-//
-//        Calendar valueDate = GregorianCalendar.getInstance();
-//        valueDate.set(1990, Calendar.NOVEMBER, 1, 0, 0, 0);
-//        valueDate.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        String valueStr = "1990-11-01T00:00:00+00:00";
-//
-//        Assert.assertEquals(valueDate.getTime(),
-//                format.parse(valueStr));
-//
-//        Calendar qualifierDate = GregorianCalendar.getInstance();
-//        qualifierDate.set(2020, Calendar.JANUARY, 1, 0, 0, 0);
-//        qualifierDate.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        String qualifierStr = "2020-01-01T00:00:00Z";
-//
-//        Assert.assertEquals(qualifierDate.getTime(),
-//                format.parse(qualifierStr));
-//    }
 
 }

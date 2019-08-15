@@ -11,10 +11,13 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
+import com.linkedpipes.plugin.loader.wikibase.model.OntologyLoader;
+import com.linkedpipes.plugin.loader.wikibase.model.Property;
 import com.linkedpipes.plugin.loader.wikibase.model.Wikidata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class WikibaseLoader extends TaskExecution<WikibaseTask> {
@@ -26,6 +29,9 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
+    @Component.InputPort(iri = "OntologyRdf")
+    public SingleGraphDataUnit ontologyRdf;
+
     @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
@@ -36,6 +42,15 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     public WikibaseLoaderConfiguration configuration;
 
     private List<WikibaseWorker> workers = new ArrayList<>();
+
+    private Map<String, Property> ontology;
+
+    @Override
+    protected void initialization() throws LpException {
+        super.initialization();
+        OntologyLoader loader = new OntologyLoader();
+        ontology = loader.loadProperties(ontologyRdf.asRdfSource());
+    }
 
     @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
@@ -80,7 +95,7 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     protected void beforeExecution() throws LpException {
         super.beforeExecution();
         for (WikibaseWorker worker : workers) {
-            worker.onBeforeExecution();
+            worker.onBeforeExecution(ontology);
         }
     }
 

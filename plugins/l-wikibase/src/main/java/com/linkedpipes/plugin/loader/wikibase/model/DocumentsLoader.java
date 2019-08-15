@@ -90,7 +90,7 @@ public class DocumentsLoader {
             if (RDF.TYPE.equals(stPredicate)) {
                 statement.getTypes().add(stValue.asString());
             } else if (stPredicate.equals(valuePrefix)) {
-                statement.setValue(stValue.asString());
+                statement.setValue(stValue);
             } else if (stPredicate.startsWith(statementQualifierPrefix)) {
                 String stWikiPredicate =
                         stPredicate.substring(statementValuePrefix.length());

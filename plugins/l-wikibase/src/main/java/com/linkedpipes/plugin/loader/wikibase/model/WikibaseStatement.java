@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.loader.wikibase.model;
 
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.plugin.loader.wikibase.WikibaseLoaderVocabulary;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class WikibaseStatement {
     /**
      * A simple value if presented
      */
-    private String value;
+    private RdfValue value;
 
     private final List<String> types = new ArrayList<>();
 
@@ -52,11 +53,11 @@ public class WikibaseStatement {
         return predicate;
     }
 
-    public String getSimpleValue() {
+    public RdfValue getSimpleValue() {
         return value;
     }
 
-    void setValue(String value) {
+    void setValue(RdfValue value) {
         this.value = value;
     }
 

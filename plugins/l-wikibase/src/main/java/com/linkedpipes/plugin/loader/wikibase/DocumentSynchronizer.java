@@ -2,15 +2,18 @@ package com.linkedpipes.plugin.loader.wikibase;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.loader.wikibase.model.GlobeCoordinateValue;
+import com.linkedpipes.plugin.loader.wikibase.model.Property;
 import com.linkedpipes.plugin.loader.wikibase.model.QuantityValue;
 import com.linkedpipes.plugin.loader.wikibase.model.TimeValue;
 import com.linkedpipes.plugin.loader.wikibase.model.WikibaseDocument;
 import com.linkedpipes.plugin.loader.wikibase.model.WikibaseReference;
 import com.linkedpipes.plugin.loader.wikibase.model.WikibaseStatement;
 import com.linkedpipes.plugin.loader.wikibase.model.WikibaseValue;
+import com.linkedpipes.plugin.loader.wikibase.model.Wikidata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
@@ -23,7 +26,6 @@ import org.wikidata.wdtk.datamodel.interfaces.ItemDocument;
 import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.PropertyIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.Statement;
-import org.wikidata.wdtk.datamodel.interfaces.StringValue;
 import org.wikidata.wdtk.datamodel.interfaces.Value;
 import org.wikidata.wdtk.wikibaseapi.ApiConnection;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataEditor;
@@ -80,12 +82,15 @@ class DocumentSynchronizer {
      */
     private String siteIri;
 
+    private final Map<String, Property> ontology;
+
     public DocumentSynchronizer(
             ExceptionFactory exceptionFactory,
             ApiConnection connection,
             String siteIri,
             WritableSingleGraphDataUnit output,
-            int averageTimePerEdit) {
+            int averageTimePerEdit,
+            Map<String, Property> ontology) {
         this.siteIri = siteIri + "entity/";
         this.exceptionFactory = exceptionFactory;
         this.wbde = new WikibaseDataEditor(connection, this.siteIri);
@@ -97,6 +102,7 @@ class DocumentSynchronizer {
         } else {
             this.reportOutput = output.getWriter();
         }
+        this.ontology = ontology;
     }
 
     public void synchronize(WikibaseDocument expectedState)
@@ -246,7 +252,8 @@ class DocumentSynchronizer {
         return null;
     }
 
-    private Statement updateStatement(Statement actual, WikibaseStatement expected) {
+    private Statement updateStatement(
+            Statement actual, WikibaseStatement expected) {
         PropertyIdValue property = createProperty(expected);
         StatementBuilder builder = StatementBuilder
                 .forSubjectAndProperty(actual.getSubject(), property)
@@ -257,12 +264,10 @@ class DocumentSynchronizer {
     }
 
     private void synchronizeStatement(
-            StatementBuilder builder,WikibaseStatement expected) {
+            StatementBuilder builder, WikibaseStatement expected) {
 
         if (expected.getSimpleValue() != null) {
-            StringValue value =
-                    Datamodel.makeStringValue(expected.getSimpleValue());
-            builder.withValue(value);
+            builder.withValue(createSimpleValue(expected));
         }
 
         for (String propStr : expected.getQualifierProperties()) {
@@ -289,6 +294,35 @@ class DocumentSynchronizer {
             builder.withReference(refBuilder.build());
         }
 
+    }
+
+    private Value createSimpleValue(WikibaseStatement expected) {
+        RdfValue value = expected.getSimpleValue();
+        Property property = ontology.get(expected.getPredicate());
+        if (property == null) {
+            // Fallback.
+            return Datamodel.makeStringValue(value.asString());
+        }
+        switch (property.getType()) {
+            case Wikidata.TYPE_GEO_SHAPE:
+                return createSimpleGeoShape(value);
+            case Wikidata.TYPE_MONOLINGUAL_TEXT:
+                return Datamodel.makeMonolingualTextValue(
+                        value.asString(),
+                        value.getLanguage());
+            case Wikidata.TYPE_COMMONS_MEDIA:
+            case Wikidata.TYPE_WIKIBASE_PROPERTY:
+                return Datamodel.makeWikidataPropertyIdValue(value.asString());
+            default:
+                return Datamodel.makeStringValue(value.asString());
+        }
+    }
+
+    private Value createSimpleGeoShape(RdfValue value) {
+        String prefix = "http://commons.wikimedia.org/data/main/";
+        String strValue = value.asString();
+        String refValue = strValue.substring(prefix.length());
+        return Datamodel.makeStringValue(refValue);
     }
 
     private void saveDocumentChanges()

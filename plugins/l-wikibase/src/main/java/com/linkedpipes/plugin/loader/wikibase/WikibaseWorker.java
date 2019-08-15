@@ -6,6 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.loader.wikibase.model.DocumentsLoader;
+import com.linkedpipes.plugin.loader.wikibase.model.Property;
 import com.linkedpipes.plugin.loader.wikibase.model.WikibaseDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.wikidata.wdtk.wikibaseapi.LoginFailedException;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import java.io.IOException;
+import java.util.Map;
 
 class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
@@ -34,6 +36,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private Exception lastException;
 
+    private Map<String, Property> ontology;
+
     public WikibaseWorker(
             WikibaseLoaderConfiguration configuration,
             ExceptionFactory exceptionFactory,
@@ -45,7 +49,9 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         this.source = source;
     }
 
-    public void onBeforeExecution() throws LpException {
+    public void onBeforeExecution(
+            Map<String, Property> ontology) throws LpException {
+        this.ontology = ontology;
         initializeConnection();
         createSynchronizer();
     }
@@ -66,7 +72,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
                 exceptionFactory, connection,
                 configuration.getSiteIri(),
                 outputRdf,
-                configuration.getAverageTimePerEdit());
+                configuration.getAverageTimePerEdit(),
+                ontology);
     }
 
     @Override
