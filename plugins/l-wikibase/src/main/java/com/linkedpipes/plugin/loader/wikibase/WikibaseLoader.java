@@ -118,13 +118,14 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
         // Quick hack to put the last exception to the output.
         if (taskSource.doesTaskFailed()) {
             for (WikibaseWorker worker : workers) {
-                Exception ex = worker.getLastException();
+                Throwable ex = worker.getLastException();
                 if (ex == null) {
                     return;
                 }
                 throw new LpException("Operation failed.", ex);
             }
         }
+        super.checkForFailures(taskSource);
     }
 
 }

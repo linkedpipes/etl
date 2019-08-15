@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.wikibaseapi.ApiConnection;
 import org.wikidata.wdtk.wikibaseapi.LoginFailedException;
-import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -34,7 +33,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private DocumentSynchronizer synchronizer;
 
-    private Exception lastException;
+    private Throwable lastException;
 
     private Map<String, Property> ontology;
 
@@ -84,7 +83,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         LOG.debug("Processing: {}", task.getIri());
         try {
             synchronizer.synchronize(document);
-        } catch (MediaWikiApiErrorException | IOException ex) {
+        } catch (Throwable  ex) {
             lastException = ex;
             throw exceptionFactory.failure(
                     "Error processing document: {}",
@@ -107,7 +106,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         }
     }
 
-    public Exception getLastException() {
+    public Throwable getLastException() {
         return lastException;
     }
 
