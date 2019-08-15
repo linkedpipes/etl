@@ -33,9 +33,8 @@ import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -336,14 +335,12 @@ class DocumentSynchronizer {
         // Wikidata & ETL Wikimania 2019 poster.pdf
         String strValue = rdfValue.asString();
         String value = strValue.substring(strValue.lastIndexOf("/") + 1);
-        Charset charset;
         try {
-            charset = Charset.forName("UTF-8");
-        } catch (UnsupportedCharsetException ex) {
+            String decodedValue = URLDecoder.decode(value, "UTF-8");
+            return Datamodel.makeStringValue(decodedValue);
+        } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
-        String decodedValue = URLDecoder.decode(value, charset);
-        return Datamodel.makeStringValue(decodedValue);
     }
 
     private Value createProperty(RdfValue rdfValue) {
