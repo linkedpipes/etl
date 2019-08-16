@@ -32,7 +32,8 @@ Loader, allows the user to load RDF data using the <a href="https://www.mediawik
             <dd>{{ page.type }}</dd>
             <dt>Inputs</dt>
             <dd>RDF single graph - Configuration</dd>
-            <dd>RDF single graph - Data</dd>
+            <dd>RDF single graph - Input</dd>
+            <dd>RDF single graph - Ontology</dd>
             <dt>Outputs</dt>
             <dd>RDF single graph - Output mapping</dd>
             <dd>RDF single graph - Report</dd>
@@ -102,4 +103,41 @@ wd:Q1 a wikibase:Item .
 <urn:MyNewItem> loader:mappedTo wd:Q9999999999 .
 {% endhighlight %}
 
+	<h3 class="orange-text center">Wikibase ontology</h3>
+	
+	<p class="flow-text">
+		If you plan to use some of the less conventional data types used in Wikibases, you need to provide the definitions of those property data types.
+		The definition looks, for instance, like this:
+	</p>
+{% highlight turtle %}
+<https://wikibase.opendata.cz/entity/P3> a <http://wikiba.se/ontology#Property> ;
+    <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#String> .
+    
+<https://wikibase.opendata.cz/entity/P4> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#ExternalId> .
+     
+<https://wikibase.opendata.cz/entity/P6> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#WikibaseItem> .
+     
+<https://wikibase.opendata.cz/entity/P7> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#Quantity> .
+          
+<https://wikibase.opendata.cz/entity/P11> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#Time> .
+     
+<https://wikibase.opendata.cz/entity/P12> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#GlobeCoordinate> .
+     
+<https://wikibase.opendata.cz/entity/P13> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#GeoShape> .
+     
+<https://wikibase.opendata.cz/entity/P14> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#Monolingualtext> .
+     
+<https://wikibase.opendata.cz/entity/P15> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#CommonsMedia> .
+
+<https://wikibase.opendata.cz/entity/P17> a <http://wikiba.se/ontology#Property> ;
+     <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#WikibaseProperty> .
+{% endhighlight %}
 </div>
