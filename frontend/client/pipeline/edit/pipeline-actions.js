@@ -276,6 +276,10 @@
       if (execComponent === undefined) {
         return;
       }
+      if (iri === options["debugTo"]) {
+        // Do not map component to debug to.
+        return;
+      }
       if (execModel.shouldBeMapped($execution, execComponent)) {
         mapped.push({
           "source": iri,
