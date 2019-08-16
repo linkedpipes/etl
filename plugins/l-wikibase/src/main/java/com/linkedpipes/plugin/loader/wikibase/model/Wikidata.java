@@ -92,4 +92,7 @@ public class Wikidata {
     public static final String TYPE_TABULAR_DATA =
             "http://wikiba.se/ontology#TabularData";
 
+    public static final String TYPE_MUSICAL_NOTATION =
+            "http://wikiba.se/ontology#MusicalNotation";
+
 }
