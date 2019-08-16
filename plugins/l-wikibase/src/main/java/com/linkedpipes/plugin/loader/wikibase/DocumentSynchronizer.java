@@ -325,7 +325,12 @@ class DocumentSynchronizer {
         String prefix = "http://commons.wikimedia.org/data/main/";
         String strValue = rdfValue.asString();
         String value = strValue.substring(prefix.length());
-        return Datamodel.makeStringValue(value);
+        try {
+            String decodedValue = URLDecoder.decode(value, "UTF-8");
+            return Datamodel.makeStringValue(decodedValue);
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private Value createCommonsMedia(RdfValue rdfValue) {
