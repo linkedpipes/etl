@@ -216,7 +216,7 @@ class DocumentSynchronizer {
         return Datamodel.makePropertyIdValue(predicate, siteIri);
     }
 
-    private Value createValue(WikibaseValue value) {
+    private Value createComplexValue(WikibaseValue value) {
         if (value instanceof QuantityValue) {
             QuantityValue quantity = (QuantityValue) value;
             return Datamodel.makeQuantityValue(
@@ -275,12 +275,12 @@ class DocumentSynchronizer {
         for (String propStr : expected.getQualifierProperties()) {
             PropertyIdValue property = createProperty(propStr);
             for (WikibaseValue value : expected.getQualifierValues(propStr)) {
-                builder.withQualifierValue(property, createValue(value));
+                builder.withQualifierValue(property, createComplexValue(value));
             }
         }
 
         for (WikibaseValue value : expected.getStatementValues()) {
-            builder.withValue(createValue(value));
+            builder.withValue(createComplexValue(value));
         }
 
         for (WikibaseReference reference : expected.getReferences()) {
@@ -290,7 +290,7 @@ class DocumentSynchronizer {
                     // Reference values use same property as the reference.
                     refBuilder.withPropertyValue(
                             createProperty(property),
-                            createValue(refValue));
+                            createComplexValue(refValue));
                 }
             }
             builder.withReference(refBuilder.build());
