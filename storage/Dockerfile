@@ -2,7 +2,7 @@ FROM openjdk:12-jdk-alpine as lp-etl-build
 RUN apk add --no-cache maven git
 WORKDIR /opt/lp/etl
 ARG BRANCH=master
-RUN git clone --single-branch --branch BRANCH https://github.com/linkedpipes/etl.git .
+RUN git clone --single-branch --branch $BRANCH https://github.com/linkedpipes/etl.git .
 RUN mvn install -P install-all
 
 FROM openjdk:12-jdk-alpine

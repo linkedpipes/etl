@@ -2,7 +2,7 @@ FROM node:12-alpine as lp-etl-frontend-build
 RUN apk add --no-cache git
 WORKDIR /opt/lp/etl
 ARG BRANCH=master
-RUN git clone --single-branch --branch BRANCH https://github.com/linkedpipes/etl.git .
+RUN git clone --single-branch --branch $BRANCH https://github.com/linkedpipes/etl.git .
 WORKDIR /opt/lp/etl/frontend
 RUN npm run build
 
