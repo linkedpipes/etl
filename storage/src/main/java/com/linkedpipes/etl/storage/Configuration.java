@@ -63,7 +63,7 @@ public class Configuration {
         logCoreFilter = getProperty("storage.log.core.level");
 
         jarDirectory = getProperty("storage.jars.directory");
-        domainName = getProperty("domain.uri");
+        domainName = getEnvOrProperty("LP.ETL.DOMAIN", "domain.uri");
 
         String storageDirectory = getProperty("storage.directory");
         templatesDirectory = storageDirectory + File.separator + "templates";
@@ -130,6 +130,14 @@ public class Configuration {
         } else {
             return value;
         }
+    }
+
+    private String getEnvOrProperty(String env, String name) {
+        String value = System.getenv(env);
+        if (value != null && !value.isBlank()) {
+            return value;
+        }
+        return getProperty(name);
     }
 
     protected Integer getPropertyInteger(String name) {

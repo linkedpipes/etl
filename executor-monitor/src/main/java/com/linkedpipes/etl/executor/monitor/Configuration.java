@@ -86,7 +86,7 @@ public class Configuration {
                 "executor-monitor.slack_finished_executions_webhook");
         slackErrorWebhook = getOptionalProperty(
                 "executor-monitor.slack_error_webhook");
-        localUrl = getProperty("domain.uri");
+        localUrl = getEnvOrProperty("LP.ETL.DOMAIN", "domain.uri");
         publicWorkingDataUrlPrefix = getOptionalProperty(
                 "executor-monitor.public_working_data_url_prefix");
         //
@@ -167,6 +167,14 @@ public class Configuration {
         } else {
             return value;
         }
+    }
+
+    private String getEnvOrProperty(String env, String name) {
+        String value = System.getenv(env);
+        if (value != null && !value.isBlank()) {
+            return value;
+        }
+        return getProperty(name);
     }
 
     private String getOptionalProperty(String name) {

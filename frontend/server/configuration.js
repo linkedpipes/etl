@@ -12,7 +12,7 @@ module.exports = {
   "port": properties.get("frontend.webserver.port"),
   "storage": {
     "url": properties.get("storage.uri"),
-    "domain": properties.get("domain.uri")
+    "domain": process.env["LP.ETL.DOMAIN"] || properties.get("domain.uri")
   },
   "executor": {
     "monitor": {
