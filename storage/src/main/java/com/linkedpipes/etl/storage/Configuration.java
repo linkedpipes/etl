@@ -70,7 +70,8 @@ public class Configuration {
         pipelinesDirectory = storageDirectory + File.separator + "pipelines";
         knowledgeDirectory = storageDirectory + File.separator + "knowledge";
 
-        executorMonitorUrl = getProperty("executor-monitor.webserver.uri");
+        executorMonitorUrl =
+                getProperty("executor-monitor.webserver.uri") + "/api/v1/";
     }
 
     public int getStoragePort() {

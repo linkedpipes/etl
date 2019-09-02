@@ -76,7 +76,7 @@ public class Configuration {
         logFilter = getProperty("executor-monitor.log.core.level");
         ftpCommandPort =
                 getPropertyInteger("executor-monitor.ftp.command_port");
-        executionPrefix = getProperty("executor.execution.uriPrefix");
+        executionPrefix = getProperty("domain.uri") + "/resources/executions/";
         //
         ftpDataPortsStart = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.start");

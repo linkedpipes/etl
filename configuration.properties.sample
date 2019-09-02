@@ -22,11 +22,6 @@ executor.webserver.uri = http://localhost:8085
 # Linux ex: /data/lp/etl/working
 executor.execution.working_directory = ./data/working
 
-# Prefix used for the IRIs of pipelines executions. Can be used
-# to ensure ability to dereference the IRIs.
-# Must end with '/'.
-executor.execution.uriPrefix = http://localhost:8080/resources/executions/
-
 # Directory used for logs.
 # Windows ex: C:\\Tools\\lp\\etl\\log
 # Linux ex: /data/lp/etl/log
@@ -58,8 +53,8 @@ executor.banned_jar_iri_patterns = ".*e-filesFromLocal.*",".*l-filesToLocal.*","
 executor-monitor.webserver.port = 8081
 
 # URL of the executor-monitor REST API to be used.
-# Must end with '/'.
-executor-monitor.webserver.uri = http://localhost:8081/api/v1/
+# Must NOT end with '/'.
+executor-monitor.webserver.uri = http://localhost:8081
 
 # Directory used for logs.
 # Windows ex: C:\\Tools\\lp\\etl\\log
