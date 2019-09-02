@@ -18,7 +18,7 @@ module.exports = {
   },
   "executor": {
     "monitor": {
-      "url": properties.get("executor-monitor.webserver.uri") + "/api/v1/ "
+      "url": properties.get("executor-monitor.webserver.uri") + "/api/v1/"
     },
     "ftp": {
       "uri": fptUrl
