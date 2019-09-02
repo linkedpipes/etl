@@ -25,10 +25,16 @@
             <name>Boundless Maven Repository</name>
             <url>http://repo.boundlessgeo.com/main</url>
         </repository>
+        <!-- Alternatives. -->
         <repository>
             <id>geomajas</id>
             <name>Geomajas Repository</name>
             <url>http://maven.geomajas.org/</url>
+        </repository>
+        <repository>
+            <id>osgeo</id>
+            <name>OSGeo Repository</name>
+            <url>https://download.osgeo.org/webdav/geotools/</url>
         </repository>
     </repositories>
 
