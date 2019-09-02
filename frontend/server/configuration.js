@@ -7,8 +7,8 @@ if (process.env.configFileLocation === undefined) {
 
 const propertiesReader = require("properties-reader");
 const properties = propertiesReader(process.env.configFileLocation);
-const domain = process.env["LP.ETL.DOMAIN"] || properties.get("domain.uri");
-const fptUrl = process.env["LP.ETL.DEBUG.FTP"] || properties.get("executor-monitor.ftp.uri");
+const domain = process.env["LP_ETL_DOMAIN"] || properties.get("domain.uri");
+const fptUrl = process.env["LP_ETL_FTP"] || properties.get("executor-monitor.ftp.uri");
 
 module.exports = {
   "port": properties.get("frontend.webserver.port"),

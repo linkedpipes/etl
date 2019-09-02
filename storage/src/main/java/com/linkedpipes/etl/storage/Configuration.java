@@ -63,7 +63,7 @@ public class Configuration {
         logCoreFilter = getProperty("storage.log.core.level");
 
         jarDirectory = getProperty("storage.jars.directory");
-        domainName = getEnvOrProperty("LP.ETL.DOMAIN", "domain.uri");
+        domainName = getEnvOrProperty("LP_ETL_DOMAIN", "domain.uri");
 
         String storageDirectory = getProperty("storage.directory");
         templatesDirectory = storageDirectory + File.separator + "templates";
