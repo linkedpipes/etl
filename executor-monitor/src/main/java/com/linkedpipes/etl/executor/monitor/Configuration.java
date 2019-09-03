@@ -76,7 +76,6 @@ public class Configuration {
         logFilter = getProperty("executor-monitor.log.core.level");
         ftpCommandPort =
                 getPropertyInteger("executor-monitor.ftp.command_port");
-        executionPrefix = getProperty("domain.uri") + "/resources/executions/";
         //
         ftpDataPortsStart = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.start");
@@ -87,6 +86,7 @@ public class Configuration {
         slackErrorWebhook = getOptionalProperty(
                 "executor-monitor.slack_error_webhook");
         localUrl = getEnvOrProperty("LP_ETL_DOMAIN", "domain.uri");
+        executionPrefix = localUrl + "/resources/executions/";
         publicWorkingDataUrlPrefix = getOptionalProperty(
                 "executor-monitor.public_working_data_url_prefix");
         //
