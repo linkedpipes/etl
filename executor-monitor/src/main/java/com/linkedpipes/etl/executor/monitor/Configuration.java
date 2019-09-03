@@ -76,7 +76,6 @@ public class Configuration {
         logFilter = getProperty("executor-monitor.log.core.level");
         ftpCommandPort =
                 getPropertyInteger("executor-monitor.ftp.command_port");
-        executionPrefix = getProperty("executor.execution.uriPrefix");
         //
         ftpDataPortsStart = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.start");
@@ -86,7 +85,8 @@ public class Configuration {
                 "executor-monitor.slack_finished_executions_webhook");
         slackErrorWebhook = getOptionalProperty(
                 "executor-monitor.slack_error_webhook");
-        localUrl = getProperty("domain.uri");
+        localUrl = getEnvOrProperty("LP_ETL_DOMAIN", "domain.uri");
+        executionPrefix = localUrl + "/resources/executions/";
         publicWorkingDataUrlPrefix = getOptionalProperty(
                 "executor-monitor.public_working_data_url_prefix");
         //
@@ -167,6 +167,14 @@ public class Configuration {
         } else {
             return value;
         }
+    }
+
+    private String getEnvOrProperty(String env, String name) {
+        String value = System.getenv(env);
+        if (value != null && !value.isEmpty()) {
+            return value;
+        }
+        return getProperty(name);
     }
 
     private String getOptionalProperty(String name) {

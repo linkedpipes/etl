@@ -3,6 +3,8 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestController
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(RestExceptionHandler.class);
 
     private static class ErrorResponse {
 
@@ -84,6 +89,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Throwable.class)
     protected ResponseEntity<String> handleThrowable(Throwable ex)
             throws JsonProcessingException {
+        LOG.error("Request failed for exceptions:", ex);
         Throwable cause = getRootCause(ex);
         ErrorResponse response;
         if (cause == ex) {
