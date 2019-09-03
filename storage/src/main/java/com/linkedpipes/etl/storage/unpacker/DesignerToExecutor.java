@@ -242,6 +242,9 @@ public class DesignerToExecutor {
     private ExecutorDataSource createDataSource(
             ExecutionPort sourcePort,
             UnpackOptions.ExecutionMapping executionMapping) {
+        if (sourcePort.getDataPath() == null) {
+            throw new RuntimeException("Missing debug data!");
+        }
         if (sourcePort.getExecution() == null) {
             return new ExecutorDataSource(sourcePort.getDataPath(),
                     executionMapping.getExecution());
