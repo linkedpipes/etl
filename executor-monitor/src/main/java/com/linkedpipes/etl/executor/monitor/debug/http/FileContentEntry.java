@@ -52,9 +52,13 @@ public class FileContentEntry extends DebugEntry {
     }
 
     public static String getMimeType(File file) {
-        String mimeType;
         String fileName = file.getName().toLowerCase();
-        String extension =  fileName.substring(fileName.lastIndexOf("."));
+        int extensionIndex = fileName.lastIndexOf(".");
+        if (extensionIndex == -1) {
+            return "text/plain; charset=utf-8";
+        }
+        String extension =  fileName.substring(extensionIndex);
+        String mimeType;
         switch (extension) {
             case ".txt":
                 mimeType = "text/plain";
