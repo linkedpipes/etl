@@ -128,7 +128,7 @@
     if (pipeline["label"]) {
       return pipeline["label"];
     } else {
-      return execution["id"];
+      return execution["iri"];
     }
   }
 
