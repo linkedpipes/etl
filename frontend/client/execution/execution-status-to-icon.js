@@ -48,7 +48,7 @@
         };
       case LP.EXEC_CANCELLING:
         return {
-          "name": "run",
+          "name": "directions_run",
           "style": {
             "color": "#ff9900"
           }
