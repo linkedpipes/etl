@@ -135,7 +135,7 @@ public class Configuration {
 
     private String getEnvOrProperty(String env, String name) {
         String value = System.getenv(env);
-        if (value != null && !value.isBlank()) {
+        if (value != null && !value.isEmpty()) {
             return value;
         }
         return getProperty(name);
