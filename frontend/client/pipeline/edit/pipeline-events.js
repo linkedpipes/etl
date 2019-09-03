@@ -115,14 +115,15 @@
     execModel.onChange($execution, execComponent);
     // We need to update visual as we"ve  may changed the mapping.
     $canvasService.updateComponent(iri);
-    // Propagation - we need to disable all following.
-    const connections = pplModel.getDataLinks($pipeline);
     const conService = pplModel.connection;
-    connections.forEach((connection) => {
+    // Propagation - we need to disable all following.
+    const onConnection = (connection) => {
       if (conService.getSource(connection) === iri) {
         componentChanged(conService.getTarget(connection));
       }
-    });
+    };
+    pplModel.getDataLinks($pipeline).forEach(onConnection);
+    pplModel.getRunAfter($pipeline).forEach(onConnection);
   }
 
   function onDeleteComponent(component) {
