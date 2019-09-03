@@ -48,6 +48,31 @@ Otherwise, in the ```deploy``` folder, run
  * ```frontend.bat```
 
 Unless configured otherwise, LinkedPipes ETL should now run on ```http://localhost:8080```.
+
+## Docker
+LP-ETL is ready to be run using [Docker]. Each component (executor, executor-monitor, storage, frontend) has separate ```Dockerfile```.
+
+Environment variables:
+ * ```LP_ETL_BUILD_BRANCH``` - The ```Dockerfiles``` are designed to run build from the github repository, the branch is set using this property, default is ```master```.
+ * ```LP_ETL_BUILD_JAVA_TEST``` - Set to empty to allow to run Java tests, this will slow down the build.
+ * ```LP_ETL_DOMAIN``` - The URL of the instance, this is used instead of the ```domain.uri``` from the configuration.
+ * ```LP_ETL_FTP``` - The URL of the FTP server, this is used instead of the ```executor-monitor.ftp.uri``` from the configuration. 
+ 
+As there are multiple components we decide to employ [Docker Compose] to make running LP-ETL easier. There are additional environment variables:
+ * ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance. This does NOT have to be the same as port in ```LP_ETL_DOMAIN```. 
+
+The ```docker-compose``` utilizes several volumes that can be used to access/provide data (see ```docker-compose.yml``` comments for example) and configuration. 
+
+You can run the LP-ETL using ```docker-compose``` with a one-liner:
+```
+curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 docker-compose -f - up
+```
+you may need to run this as ```sudo``` based on your system configuration. This example start LP-ETL from ```master``` branch, and made it available on port ```9080``` with domain URL ```http://localhost:9080```. 
+NOTE: To change the branch you need to use ```LP_ETL_BUILD_BRANCH``` to change code,  change the URL to use different version of ```docker-compose``` file.
+```
+curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 LP_ETL_BUILD_BRANCH=develop docker-compose -f - up
+```
+
 ## Plugins - Components
 There are components in the ```jars``` directory. Detailed description of how to create your own coming soon.
 
@@ -102,3 +127,5 @@ disown
 [Node.js]: <https://nodejs.org>
 [Cygwin]: <https://www.cygwin.com/>
 [Bash on Ubuntu on Windows]: <https://msdn.microsoft.com/en-us/commandline/wsl/about>
+[Docker]: <https://www.docker.com/>
+[Docker Compose]: <https://docs.docker.com/compose/>
