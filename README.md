@@ -9,28 +9,58 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 
 ## Requirements
 - Linux, Windows, iOS
+- [Docker], [Docker Compose]
+
+### For building locally
 - [Java] 11 or 12
 - [Git]
 - [Maven], 3.2.5 or newer
 - [Node.js] & npm
 
-## Installation
-So far, you need to compile LP-ETL on your own:
+## Installation and startup
+You can run LP-ETL in Docker, or build it from the source.
 
-### Linux
+### Docker
+Using ```docker-compose``` one-liner:
+```
+curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 docker-compose -f - up
+```
+This starts LP-ETL ```master``` branch, on ```http://localhost:9080```.
+
+You may need to run this as ```sudo``` or be in the ```docker``` group.
+
+#### Configuration
+Each component (executor, executor-monitor, storage, frontend) has separate ```Dockerfile```.
+
+Environment variables:
+ * ```LP_ETL_BUILD_BRANCH``` - The ```Dockerfiles``` are designed to run build from the github repository, the branch is set using this property, default is ```master```.
+ * ```LP_ETL_BUILD_JAVA_TEST``` - Set to empty to allow to run Java tests, this will slow down the build.
+ * ```LP_ETL_DOMAIN``` - The URL of the instance, this is used instead of the ```domain.uri``` from the configuration.
+ * ```LP_ETL_FTP``` - The URL of the FTP server, this is used instead of the ```executor-monitor.ftp.uri``` from the configuration. 
+ 
+For [Docker Compose], there are additional environment variables:
+ * ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance.
+This does NOT have to be the same as port in ```LP_ETL_DOMAIN``` in case of reverse-proxying.
+
+```docker-compose``` utilizes several volumes that can be used to access/provide data.
+See ```docker-compose.yml``` comments for examples and configuration.
+You may want to create your own ```docker-compose.yml``` for custom configuration.
+
+### From source on Linux
+
+#### Installation
+
 ```sh
 $ git clone https://github.com/linkedpipes/etl.git
 $ cd etl
 $ mvn install
 ```
-### Windows
-We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux.
-Nevertheless, it is possible to build and use LP-ETL with pure Windows-based versions of tools.
 
-## Running LinkedPipes ETL
-To run LP-ETL, you need to run the four components it consists of. For debugging purposes, it is useful to store the console logs.
+#### Configuration
+The configuration file `deploy/configuration.properties' can be edited, mainly changing paths to working, storage, log and library directories. 
 
-### Linux
+#### Startup
+
 ```sh
 $ cd deploy
 $ ./executor.sh >> executor.log &
@@ -39,48 +69,33 @@ $ ./storage.sh >> storage.log &
 $ ./frontend.sh >> frontend.log &
 ```
 
-### Windows
-We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux. 
-Otherwise, in the ```deploy``` folder, run
+### From source on Windows
+Note that it is also possible to use [Bash on Ubuntu on Windows] or [Cygwin] and proceed as with Linux.
+
+#### Installation
+```sh
+git clone https://github.com/linkedpipes/etl.git
+cd etl
+mvn install
+```
+#### Configuration
+The configuration file `deploy/configuration.properties' can be edited, mainly changing paths to working, storage, log and library directories. 
+
+#### Startup
+In the ```deploy``` folder, run
  * ```executor.bat```
  * ```executor-monitor.bat```
  * ```storage.bat```
  * ```frontend.bat```
 
-Unless configured otherwise, LinkedPipes ETL should now run on ```http://localhost:8080```.
-
-## Docker
-LP-ETL is ready to be run using [Docker]. Each component (executor, executor-monitor, storage, frontend) has separate ```Dockerfile```.
-
-Environment variables:
- * ```LP_ETL_BUILD_BRANCH``` - The ```Dockerfiles``` are designed to run build from the github repository, the branch is set using this property, default is ```master```.
- * ```LP_ETL_BUILD_JAVA_TEST``` - Set to empty to allow to run Java tests, this will slow down the build.
- * ```LP_ETL_DOMAIN``` - The URL of the instance, this is used instead of the ```domain.uri``` from the configuration.
- * ```LP_ETL_FTP``` - The URL of the FTP server, this is used instead of the ```executor-monitor.ftp.uri``` from the configuration. 
- 
-As there are multiple components we decide to employ [Docker Compose] to make running LP-ETL easier. There are additional environment variables:
- * ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance. This does NOT have to be the same as port in ```LP_ETL_DOMAIN```. 
-
-The ```docker-compose``` utilizes several volumes that can be used to access/provide data (see ```docker-compose.yml``` comments for example) and configuration. 
-
-You can run the LP-ETL using ```docker-compose``` with a one-liner:
-```
-curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 docker-compose -f - up
-```
-you may need to run this as ```sudo``` based on your system configuration. This example start LP-ETL from ```master``` branch, and made it available on port ```9080``` with domain URL ```http://localhost:9080```. 
-NOTE: To change the branch you need to use ```LP_ETL_BUILD_BRANCH``` to change code,  change the URL to use different version of ```docker-compose``` file.
-```
-curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 LP_ETL_BUILD_BRANCH=develop docker-compose -f - up
-```
-
 ## Plugins - Components
-There are components in the ```jars``` directory. Detailed description of how to create your own coming soon.
-
-## Configuration
-The configuration file in the `deploy` directory can be edited, mainly changing paths to working, storage, log and library directories. 
+The components live in the ```jars``` directory.
+Detailed description of how to create your own is coming soon, in the meantime, you can copy an existing component and change it.
 
 ## Update script
-Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse it if you wish. The script kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```.
+Since we are still in the rapid development phase, we update our instance often.
+This is an update script that we use or get inspired by.
+The script kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```.
 We recommend running the 4 components as individual services though.
 ```sh
 #!/bin/bash
