@@ -23,9 +23,9 @@ You can run LP-ETL in Docker, or build it from the source.
 ### Docker
 Using ```docker-compose``` one-liner:
 ```
-curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 docker-compose -f - up
+curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | docker-compose -f - up
 ```
-This starts LP-ETL ```master``` branch, on ```http://localhost:9080```.
+This starts LP-ETL ```master``` branch, on ```http://localhost:8080```.
 
 You may need to run this as ```sudo``` or be in the ```docker``` group.
 
@@ -41,6 +41,11 @@ Environment variables:
 For [Docker Compose], there are additional environment variables:
  * ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance.
 This does NOT have to be the same as port in ```LP_ETL_DOMAIN``` in case of reverse-proxying.
+
+For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080``` use can use following command:
+```
+curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 LP_ETL_BUILD_BRANCH=develop docker-compose -f - up
+```
 
 ```docker-compose``` utilizes several volumes that can be used to access/provide data.
 See ```docker-compose.yml``` comments for examples and configuration.
