@@ -10,7 +10,7 @@ FROM openjdk:12-jdk-alpine
 LABEL component="storage"
 WORKDIR /opt/lp/etl
 COPY --from=lp-etl-build /opt/lp/etl/deploy/storage /opt/lp/etl/storage
-COPY --from=lp-etl-build /opt/lp/etl/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
+COPY --from=lp-etl-build /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
 COPY --from=lp-etl-build /opt/lp/etl/deploy/jars /opt/lp/etl/components
 VOLUME ["/data/lp/etl/storage", "/data/lp/etl/logs", "/data/lp/elt/configuration"]
 EXPOSE 8083

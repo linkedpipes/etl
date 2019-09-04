@@ -10,7 +10,7 @@ FROM openjdk:12-jdk-alpine
 LABEL component="executor-monitor"
 WORKDIR /opt/lp/etl
 COPY --from=lp-etl-build /opt/lp/etl/deploy/executor-monitor /opt/lp/etl/executor-monitor
-COPY --from=lp-etl-build /opt/lp/etl/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
+COPY --from=lp-etl-build /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
 VOLUME ["/data/lp/etl/executor", "/data/lp/etl/logs", "/data/lp/etl/configuration"]
 EXPOSE 8081
 CMD ["java", "-DconfigFileLocation=/data/lp/etl/configuration/configuration.properties", "-jar" ,"./executor-monitor/executor-monitor.jar"]
