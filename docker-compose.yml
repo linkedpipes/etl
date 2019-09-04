@@ -69,7 +69,7 @@ volumes:
   data-logs:
   data-execution:
 # Uncomment following lines to allow local data binding.
-#      driver_opts:
+#    driver_opts:
 #      type: none
 #      device: /opt/lp/etl-docker/data
 #      o: bind
