@@ -21,13 +21,22 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 You can run LP-ETL in Docker, or build it from the source.
 
 ### Docker
-Using ```docker-compose``` one-liner:
+To start LP-ETL ```master``` branch on ```http://localhost:8080```, you can use a one-liner:
 ```
 curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | docker-compose -f - up
 ```
-This starts LP-ETL ```master``` branch, on ```http://localhost:8080```.
 
-You may need to run this as ```sudo``` or be in the ```docker``` group.
+Alternatively, you can clone the entire repository
+```sh
+git clone https://github.com/linkedpipes/etl.git
+```
+and run
+```sh
+docker-compose up
+```
+Note that this uses just the ```docker-compose.yml``` file, so the rest of the clonde repository is useless.
+
+You may need to run the commands as ```sudo``` or be in the ```docker``` group.
 
 #### Configuration
 Each component (executor, executor-monitor, storage, frontend) has separate ```Dockerfile```.
@@ -74,6 +83,9 @@ $ ./storage.sh >> storage.log &
 $ ./frontend.sh >> frontend.log &
 ```
 
+#### Running LP-ETL as a systemd service
+See example service files in the ```systemd``` folder.
+
 ### From source on Windows
 Note that it is also possible to use [Bash on Ubuntu on Windows] or [Cygwin] and proceed as with Linux.
 
@@ -96,39 +108,6 @@ In the ```deploy``` folder, run
 ## Plugins - Components
 The components live in the ```jars``` directory.
 Detailed description of how to create your own is coming soon, in the meantime, you can copy an existing component and change it.
-
-## Update script
-Since we are still in the rapid development phase, we update our instance often.
-This is an update script that we use or get inspired by.
-The script kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```.
-We recommend running the 4 components as individual services though.
-```sh
-#!/bin/bash
-echo Killing Executor
-kill `ps ax | grep /executor.jar | grep -v grep | awk '{print $1}'`
-echo Killing Executor-monitor
-kill `ps ax | grep /executor-monitor.jar | grep -v grep | awk '{print $1}'`
-echo Killing Frontend
-kill `ps ax | grep node | grep -v grep | awk '{print $1}'`
-echo Killing Storage
-kill `ps ax | grep /storage.jar | grep -v grep | awk '{print $1}'`
-cd /opt/lp/etl
-echo Git Pull
-git pull
-echo Mvn install
-mvn clean install
-cd deploy
-echo Running executor
-./executor.sh >> /data/lp/etl/executor.log &
-echo Running executor-monitor
-./executor-monitor.sh >> /data/lp/etl/executor-monitor.log &
-echo Running storage
-./storage.sh >> /data/lp/etl/storage.log &
-echo Running frontend
-./frontend.sh >> /data/lp/etl/frontend.log &
-echo Disowning
-disown
-```
  
 ## Update notes
 > Update note 5: 2019-09-03 breaking changes in the configuration file. Remove ```/api/v1``` from the ```executor-monitor.webserver.uri```, so it loolks like: ```executor-monitor.webserver.uri = http://localhost:8081```. You can also remove ```executor.execution.uriPrefix``` as the value is derived from ```domain.uri```.
