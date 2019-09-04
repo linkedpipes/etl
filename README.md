@@ -71,7 +71,7 @@ $ mvn install
 ```
 
 #### Configuration
-The configuration file `deploy/configuration.properties' can be edited, mainly changing paths to working, storage, log and library directories. 
+The configuration file ```deploy/configuration.properties``` can be edited, mainly changing paths to working, storage, log and library directories. 
 
 #### Startup
 
@@ -96,7 +96,7 @@ cd etl
 mvn install
 ```
 #### Configuration
-The configuration file `deploy/configuration.properties' can be edited, mainly changing paths to working, storage, log and library directories. 
+The configuration file ```deploy/configuration.properties``` can be edited, mainly changing paths to working, storage, log and library directories. 
 
 #### Startup
 In the ```deploy``` folder, run
