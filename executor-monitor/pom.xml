@@ -229,6 +229,18 @@
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${deploy.directory}</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>1.8</version>
@@ -242,11 +254,6 @@
                                 <configuration>
                                     <target>
                                         <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}/..">
-                                            <fileset dir="{project.build.directory}/../deploy">
-                                                <include name="*.*"/>
-                                            </fileset>
-                                        </copy>
                                         <copy todir="${deploy.directory}">
                                             <fileset dir="${project.build.directory}">
                                                 <include name="executor-monitor.jar"/>
@@ -256,7 +263,6 @@
                                         <copy todir="${deploy.directory}/lib">
                                             <fileset dir="${project.build.directory}/lib" />
                                         </copy>
-                                        <chmod perm="u+x" file="${deploy.directory}/../executor-monitor.sh" />
                                     </target>
                                 </configuration>
                             </execution>

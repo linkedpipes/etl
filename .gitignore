@@ -32,7 +32,13 @@ frontend/dist
 configuration.properties
 
 # Deploy directory.
-/deploy
+deploy/configuration.properties
+deploy/executor
+deploy/executor-monitor
+deploy/storage
+deploy/frontend
+deploy/jar
+deploy/osg
 
 # Intellij IDEA
 *.iml

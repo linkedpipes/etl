@@ -34,7 +34,7 @@ and run
 ```sh
 docker-compose up
 ```
-Note that this uses just the ```docker-compose.yml``` file, so the rest of the clonde repository is useless.
+Note that this uses just the ```docker-compose.yml``` file, so the rest of the cloned repository is useless.
 
 You may need to run the commands as ```sudo``` or be in the ```docker``` group.
 
@@ -84,7 +84,7 @@ $ ./frontend.sh >> frontend.log &
 ```
 
 #### Running LP-ETL as a systemd service
-See example service files in the ```systemd``` folder.
+See example service files in the ```deploy/systemd``` folder.
 
 ### From source on Windows
 Note that it is also possible to use [Bash on Ubuntu on Windows] or [Cygwin] and proceed as with Linux.
