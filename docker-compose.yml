@@ -12,9 +12,9 @@ version: '3'
 services:
   storage:
     build: 
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:storage
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:storage
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
     image: lp/etl/storage
     volumes:
@@ -26,9 +26,9 @@ services:
     restart: on-failure 
   frontend:
     build:
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:context
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:context
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
     image: lp/etl/frontend
     volumes:
       - configuration:/data/lp/etl/configuration
@@ -39,9 +39,9 @@ services:
     restart: on-failure
   executor-monitor:
     build:
-      context: https://github.com/linkedpipes/etl.git#r${LP_ETL_BUILD_BRANCH-master}:executor-monitor
+      context: https://github.com/linkedpipes/etl.git#r${LP_ETL_BUILD_BRANCH-develop}:executor-monitor
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
     image: lp/etl/executor-monitor
     volumes:
@@ -53,9 +53,9 @@ services:
     restart: on-failure
   executor:
     build:
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:executor
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:executor
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
     image: lp/etl/executor
     volumes:
