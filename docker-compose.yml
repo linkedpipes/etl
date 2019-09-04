@@ -26,7 +26,7 @@ services:
     restart: on-failure 
   frontend:
     build:
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:context
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:frontend
       args:
         LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
     image: lp/etl/frontend
