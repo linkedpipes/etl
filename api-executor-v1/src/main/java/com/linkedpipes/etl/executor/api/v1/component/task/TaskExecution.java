@@ -153,7 +153,8 @@ public abstract class TaskExecution<T extends Task>
         // No operation here.
     }
 
-    protected void checkForFailures(TaskSource<T> taskSource) throws LpException {
+    protected void checkForFailures(TaskSource<T> taskSource)
+            throws LpException {
         if (taskSource.doesTaskFailed() && !configuration.isSkipOnError()) {
             throw new LpException("At least one task failed.");
         }
