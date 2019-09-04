@@ -39,7 +39,7 @@ services:
     restart: on-failure
   executor-monitor:
     build:
-      context: https://github.com/linkedpipes/etl.git#r${LP_ETL_BUILD_BRANCH-develop}:executor-monitor
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:executor-monitor
       args:
         LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
