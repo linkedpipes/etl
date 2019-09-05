@@ -1,13 +1,17 @@
-FROM node:12-alpine
-LABEL component="frontend"
+FROM node:12-alpine as lp-etl-build
 ARG LP_ETL_BUILD_BRANCH=master
-RUN apk add --no-cache git
+ARG LP_ETL_BUILD_JAVA_TEST=-DskipTests
+RUN apk add --no-cache maven git
 WORKDIR /opt/lp/etl
 RUN git clone --single-branch --branch $LP_ETL_BUILD_BRANCH https://github.com/linkedpipes/etl.git .
+RUN mvn install $LP_ETL_BUILD_JAVA_TEST -P "install-frontend"
+
+FROM node:12-alpine
+LABEL component="frontend"
 WORKDIR /opt/lp/etl/frontend
-RUN npm install && npm run build
-RUN mkdir --parents /data/lp/etl/configuration && cp /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
-ENV configFileLocation="/data/lp/etl/configuration/configuration.properties"
+COPY --from=lp-etl-build /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
+COPY --from=lp-etl-build /opt/lp/etl/deploy/frontend /opt/lp/etl/frontend
 VOLUME ["/data/lp/elt/configuration"]
 EXPOSE 8080
+ENV configFileLocation="/data/lp/etl/configuration/configuration.properties"
 CMD ["npm", "run", "start"]
