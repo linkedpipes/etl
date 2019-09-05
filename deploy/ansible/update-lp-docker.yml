@@ -1,0 +1,15 @@
+---
+- hosts: etl_docker 
+  tasks:
+          - name: Stop LP-ETL
+            docker_compose:
+                    project_src: /opt/lp/etl-docker
+                    state: absent
+                    remove_images: all
+          - name: Build and start LP-ETL
+            environment:
+                    LP_ETL_PORT: 8090
+            docker_compose:
+                    project_src: /opt/lp/etl-docker
+                    state: present
+                    build: yes
