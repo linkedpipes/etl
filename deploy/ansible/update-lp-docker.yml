@@ -8,7 +8,7 @@
                     remove_images: all
           - name: Remove images
             shell: docker image rm $(docker images --filter "label=lp_project=etl" -q)
-          - name: Build and start LP-ETL
+          - name: Build and start LP-ETL # this will work, but ansible will fail due to https://github.com/ansible/ansible/issues/42506
             environment:
                     LP_ETL_PORT: 8090
             docker_compose:
