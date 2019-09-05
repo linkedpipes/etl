@@ -15,3 +15,4 @@
                     project_src: /opt/lp/etl-docker
                     state: present
                     build: yes
+                    debug: yes
