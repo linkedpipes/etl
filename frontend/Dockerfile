@@ -1,13 +1,15 @@
 FROM node:12-alpine as lp-etl-build
 ARG LP_ETL_BUILD_BRANCH=master
 ARG LP_ETL_BUILD_JAVA_TEST=-DskipTests
+LABEL lp_project=etl
 RUN apk add --no-cache maven git
 WORKDIR /opt/lp/etl
 RUN git clone --single-branch --branch $LP_ETL_BUILD_BRANCH https://github.com/linkedpipes/etl.git .
 RUN mvn install $LP_ETL_BUILD_JAVA_TEST -P "install-frontend"
 
 FROM node:12-alpine
-LABEL component="frontend"
+LABEL lp_project=etl
+LABEL component=frontend
 WORKDIR /opt/lp/etl/frontend
 COPY --from=lp-etl-build /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
 COPY --from=lp-etl-build /opt/lp/etl/deploy/frontend /opt/lp/etl/frontend
