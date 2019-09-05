@@ -6,6 +6,8 @@
                     project_src: /opt/lp/etl-docker
                     state: absent
                     remove_images: all
+          - name: Remove images
+            shell: docker image rm $(docker images --filter "label=lp_project=etl" -q)
           - name: Build and start LP-ETL
             environment:
                     LP_ETL_PORT: 8090
