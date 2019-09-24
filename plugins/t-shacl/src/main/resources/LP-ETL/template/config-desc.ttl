@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-shacl/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-shacl#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-shacl/0.0.0/configuration/desc/rulesInTurtle> ,
+        <http://linkedpipes.com/resources/components/t-shacl/0.0.0/configuration/desc/failOnError> .
+
+<http://linkedpipes.com/resources/components/t-shacl/0.0.0/configuration/desc/rulesInTurtle>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-shacl#rulesInTurtle> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-shacl#rulesInTurtleControl> .
+
+<http://linkedpipes.com/resources/components/t-shacl/0.0.0/configuration/desc/failOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-shacl#failOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-shacl#failOnErrorControl> .

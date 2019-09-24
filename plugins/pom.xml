@@ -98,5 +98,6 @@
         <module>t-hdtToRdf</module>
         <module>t-rdfToHdt</module>
         <module>l-wikibase</module>
+        <module>t-shacl</module>
     </modules>
 </project>

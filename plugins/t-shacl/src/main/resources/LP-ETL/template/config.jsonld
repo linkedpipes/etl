@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-shacl/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-shacl#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-shacl#failOnError": true,
+        "http://plugins.linkedpipes.com/ontology/t-shacl#failOnErrorControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]
