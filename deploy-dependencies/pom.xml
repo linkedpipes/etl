@@ -99,7 +99,7 @@
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-compress</artifactId>
-                                            <version>1.18</version>
+                                            <version>1.19</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Apache POI (excel) bundle dependencies. -->
@@ -179,57 +179,27 @@
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-lang3</artifactId>
-                                            <version>3.3.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.apache.commons</groupId>
-                                            <artifactId>commons-lang3</artifactId>
-                                            <version>3.8.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.apache.commons</groupId>
-                                            <artifactId>commons-lang3</artifactId>
                                             <version>3.9</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>commons-lang</groupId>
-                                            <artifactId>commons-lang</artifactId>
-                                            <version>2.6</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- HttpClient, for example: l-graphStoreProtocol -->
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpclient-osgi</artifactId>
-                                            <version>4.5.2</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.apache.httpcomponents</groupId>
-                                            <artifactId>httpclient-osgi</artifactId>
-                                            <version>4.5.8</version>
+                                            <version>4.5.10</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpcore-osgi</artifactId>
-                                            <version>4.4.4</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>org.apache.httpcomponents</groupId>
-                                            <artifactId>httpcore-osgi</artifactId>
-                                            <version>4.4.11</version>
+                                            <version>4.4.12</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- OSGI Implementation. -->
                                         <dependency>
                                             <groupId>org.apache.felix</groupId>
                                             <artifactId>org.apache.felix.scr</artifactId>
-                                            <version>2.1.0</version>
+                                            <version>2.1.16</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- OSGI. -->
@@ -242,7 +212,13 @@
                                         <dependency>
                                             <groupId>org.osgi</groupId>
                                             <artifactId>org.osgi.core</artifactId>
-                                            <version>5.0.0</version>
+                                            <version>6.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.osgi</groupId>
+                                            <artifactId>osgi.promise</artifactId>
+                                            <version>7.0.1</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Jackson. -->
@@ -298,13 +274,7 @@
                                         <dependency>
                                             <groupId>com.github.jsonld-java</groupId>
                                             <artifactId>jsonld-java</artifactId>
-                                            <version>0.11.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.github.jsonld-java</groupId>
-                                            <artifactId>jsonld-java</artifactId>
-                                            <version>0.12.4</version>
+                                            <version>0.12.5</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
