@@ -55,14 +55,14 @@
   }
 
   function postPipelineExecution($http, iri, config) {
-    const url = "resources/executions?pipeline=" + iri;
+    const url = "./resources/executions?pipeline=" + iri;
     return $http.post(url, config);
   }
 
   function createPipeline($http) {
     const data = createPipelineCreatePostData();
     const config = createPostConfigWithJsonLd();
-    const url = "resources/pipelines/";
+    const url = "./resources/pipelines/";
     return $http.post(url, data, config);
   }
 
@@ -101,7 +101,7 @@
     const data = createPipelineCopyPostData();
     const config = createPostConfigWithJsonLd();
     const url =
-      "resources/pipelines?fromLocal=true&pipeline=" + pipeline.iri;
+      "./resources/pipelines?fromLocal=true&pipeline=" + pipeline.iri;
     return $http.post(url, data, config);
   }
 
@@ -123,7 +123,7 @@
   function asLocalFromIri($http, pipelineIri, updateTemplates) {
     const formData = new FormData();
     addTransformOptions(formData, true, updateTemplates);
-    const iri = "resources/pipelines/localize?pipeline=" + pipelineIri;
+    const iri = "./resources/pipelines/localize?pipeline=" + pipelineIri;
     return $http.post(iri, formData, noTransformConfiguration())
       .then((data) => data["data"]);
   }
@@ -132,7 +132,7 @@
     const formData = new FormData();
     formData.append("pipeline", fileWithPipeline);
     addTransformOptions(formData, true, updateTemplates);
-    const iri = "resources/pipelines/localize";
+    const iri = "./resources/pipelines/localize";
     return $http.post(iri, formData, noTransformConfiguration())
       .then((data) => data["data"]);
   }
@@ -206,10 +206,9 @@
         // By this angular add Content-Type itself.
         "Content-Type": undefined,
         "accept": "application/ld+json"
-
       }
     };
-    return $http.post("resources/pipelines", data, config)
+    return $http.post("./resources/pipelines", data, config)
       .then((response) => {
         const jsonld = response.data;
         return jsonld[0]["@graph"][0]["@id"];
