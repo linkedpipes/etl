@@ -24,6 +24,14 @@ define([], function () {
             "$type": "str",
             "$label": "Wikibase instance IRI"
         },
+        "sparqlUrl": {
+            "$type": "str",
+            "$label": "Wikibase SPARQL URL"
+        },
+        "referenceProperty": {
+            "$type": "str",
+            "$label": "Property from the Wikibase"
+        },
         "averageTimePerEdit": {
             "$type": "int",
             "$label": "Average time per edit"

@@ -17,6 +17,12 @@ public class WikibaseLoaderConfiguration {
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_SITE_IRI)
     private String siteIri;
 
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_SPARQL_URL)
+    private String sparqlUrl;
+
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_REF_PROPERTY)
+    private String refProperty;
+
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_EDIT_TIME)
     private int averageTimePerEdit = 2000;
 
@@ -53,6 +59,22 @@ public class WikibaseLoaderConfiguration {
 
     public void setSiteIri(String siteIri) {
         this.siteIri = siteIri;
+    }
+
+    public String getSparqlUrl() {
+        return sparqlUrl;
+    }
+
+    public void setSparqlUrl(String sparqlUrl) {
+        this.sparqlUrl = sparqlUrl;
+    }
+
+    public String getRefProperty() {
+        return refProperty;
+    }
+
+    public void setRefProperty(String refProperty) {
+        this.refProperty = refProperty;
     }
 
     public int getAverageTimePerEdit() {

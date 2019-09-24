@@ -15,16 +15,25 @@ public final class WikibaseLoaderVocabulary {
 
     public static final String HAS_SITE_IRI = PREFIX + "siteIri";
 
+    public static final String HAS_SPARQL_URL = PREFIX + "sparqlUrl";
+
+    public static final String HAS_REF_PROPERTY = PREFIX + "referenceProperty";
+
     public static final String HAS_EDIT_TIME = PREFIX + "averageTimePerEdit";
 
-    public static final String WIKIDATA_NEW_ENTITY =
+    public static final String WIKIDATA_MAPPING = PREFIX + "mappedTo";
+
+    public static final String NEW_STRATEGY =
             PREFIX + "New";
 
-    public static final String WIKIDATA_DELETE_ENTITY =
-            PREFIX  + "Remove";
+    public static final String REPLACE_STRATEGY =
+            PREFIX + "Remove";
 
-    public static final String WIKIDATA_MAPPING =
-            PREFIX  + "mappedTo";
+    public static final String DELETE_STRATEGY =
+            PREFIX + "Delete";
+
+    public static final String MERGE_STRATEGY =
+            PREFIX + "Merge";
 
     private WikibaseLoaderVocabulary() {
     }

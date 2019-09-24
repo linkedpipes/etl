@@ -6,6 +6,18 @@
                ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
                placeholder="https://your.wikibase.org/w/api.php">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.sparqlUrl.hide" flex>
+        <label>Wikibase API Endpoint URL (api.php)</label>
+        <input type="url" ng-model="dialog.sparqlUrl.value"
+               ng-disabled="dialog.sparqlUrl.disabled || dialog.sparqlUrl.inherit"
+               placeholder="https://wbqs.opendata.cz/bigdata/namespace/wdq/sparql">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.referenceProperty.hide" flex>
+        <label>Any property from the Wikibase</label>
+        <input ng-model="dialog.referenceProperty.value"
+               ng-disabled="dialog.referenceProperty.disabled || dialog.referenceProperty.inherit"
+               placeholder="P1921">
+    </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.siteIri.hide" flex>
         <label>Wikibase ontology IRI prefix</label>
         <input ng-model="dialog.siteIri.value"

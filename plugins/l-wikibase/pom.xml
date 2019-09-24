@@ -13,7 +13,7 @@
     <packaging>bundle</packaging>
     <name>plugin l-wikibase</name>
     <properties>
-        <wikidataToolkitVersion>0.10.0</wikidataToolkitVersion>
+        <wikidataToolkitVersion>0.11.0-SNAPSHOT</wikidataToolkitVersion>
     </properties>
 
     <dependencies>
@@ -70,6 +70,12 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

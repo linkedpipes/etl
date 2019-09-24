@@ -11,16 +11,17 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.plugin.loader.wikibase.model.OntologyLoader;
-import com.linkedpipes.plugin.loader.wikibase.model.Property;
-import com.linkedpipes.plugin.loader.wikibase.model.Wikidata;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class WikibaseLoader extends TaskExecution<WikibaseTask> {
+
+    private static final String WIKIBASE_ITEM =
+            "http://wikiba.se/ontology#Item";
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -28,9 +29,6 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
 
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
-
-    @Component.InputPort(iri = "OntologyRdf")
-    public SingleGraphDataUnit ontologyRdf;
 
     @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
@@ -42,15 +40,6 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     public WikibaseLoaderConfiguration configuration;
 
     private List<WikibaseWorker> workers = new ArrayList<>();
-
-    private Map<String, Property> ontology;
-
-    @Override
-    protected void initialization() throws LpException {
-        super.initialization();
-        OntologyLoader loader = new OntologyLoader();
-        ontology = loader.loadProperties(ontologyRdf.asRdfSource());
-    }
 
     @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
@@ -71,31 +60,46 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
 
     @Override
     protected TaskSource<WikibaseTask> createTaskSource() throws LpException {
-        return TaskSource.defaultTaskSource(loadDocumentReferences());
+        List<WikibaseTask> tasks = loadDocumentReferences();
+        return TaskSource.defaultTaskSource(tasks);
     }
 
     private List<WikibaseTask> loadDocumentReferences() throws RdfException {
         RdfSource source = inputRdf.asRdfSource();
-        return source.getByType(Wikidata.ENTITY)
+        return source.getByType(WIKIBASE_ITEM)
                 .stream()
                 .map((iri) -> new WikibaseTask(iri))
                 .collect(Collectors.toList());
     }
 
     @Override
-    protected TaskConsumer<WikibaseTask> createConsumer() {
+    protected TaskConsumer<WikibaseTask> createConsumer() throws LpException {
         WikibaseWorker worker = new WikibaseWorker(
                 configuration, exceptionFactory,
-                outputRdf, inputRdf.asRdfSource());
+                outputRdf, collectStatements());
         workers.add(worker);
         return worker;
+    }
+
+    private List<Statement> collectStatements() throws LpException {
+        List<Statement> result = new ArrayList<>();
+        inputRdf.execute((connection) -> {
+            connection.exportStatements(
+                    null, null, null, false, new AbstractRDFHandler() {
+                        @Override
+                        public void handleStatement(Statement st) {
+                            result.add(st);
+                        }
+                    }, inputRdf.getReadGraph());
+        });
+        return result;
     }
 
     @Override
     protected void beforeExecution() throws LpException {
         super.beforeExecution();
         for (WikibaseWorker worker : workers) {
-            worker.onBeforeExecution(ontology);
+            worker.onBeforeExecution();
         }
     }
 
