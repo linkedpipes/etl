@@ -10,7 +10,7 @@ define([], function () {
         },
         "shapesInTurtle": {
             "$type": "str",
-            "$label": "Rules to apply"
+            "$label": "Shapes to apply"
         },
         "failOnError": {
             "$type": "bool",
