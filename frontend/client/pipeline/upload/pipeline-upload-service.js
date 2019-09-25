@@ -94,7 +94,7 @@
     }
 
     function redirectToPipeline(response) {
-      $location.path("./pipelines/edit/canvas").search({
+      $location.path("/pipelines/edit/canvas").search({
         "pipeline": response.data[0]["@graph"][0]["@id"]
       });
     }
