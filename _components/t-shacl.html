@@ -1,0 +1,49 @@
+---
+short: t-shacl
+type: transformer
+color: indigo
+title: SHACL
+description: Validates input data using SHACL shapes
+---
+
+<p class="flow-text">
+Transformer, allows the user to validate input RDF data using <a href="https://www.w3.org/TR/shacl/">SHACL</a> shapes.
+</p>
+<dl class="flow-text">
+    <dt>Fail on rule violation</dt>
+    <dd>
+		When on and a shape validation fails, the whole component, and therefore the pipeline, fails.
+		When off, the failures are in the output report.
+	</dd>
+    <dt>Shapes graph in Turtle</dt>
+    <dd>
+		An alternative way of providing the shapes graph.
+		This is merged into the Shapes input.
+	</dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Inputs</dt>
+            <dd>Data - RDF single graph</dd>
+            <dd>Shapes - RDF single graph</dd>
+            <dt>Outputs</dt>
+            <dd>Results - RDF single graph</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component allows the user to validate input RDF data using the <a href="https://www.w3.org/TR/shacl/">Shapes Constraint Language (SHACL)</a> shapes.
+		The result of the validation is given on the output.
+		Optionally, validation fail can stop the pipeline execution.
+        </p>
+    </div>
+</div>
