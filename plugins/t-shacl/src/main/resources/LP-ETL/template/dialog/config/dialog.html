@@ -1,11 +1,10 @@
 <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
     <md-input-container class="md-block" ng-hide="dialog.failOnError.hide">
-        <md-switch ng-model="dialog.failOnError" ng-disabled="dialog.failOnError.disabled || dialog.failOnError.inherit">
+        <md-switch ng-model="dialog.failOnError.value" ng-disabled="dialog.failOnError.disabled || dialog.failOnError.inherit">
             Fail on a rule violation
         </md-switch>
     </md-input-container>
-
     <md-input-container class="md-block" ng-hide="dialog.rulesInTurtle.hide">
         <label>Rules to apply (as Turtle)</label>
         <textarea ng-model="dialog.rulesInTurtle.value"
