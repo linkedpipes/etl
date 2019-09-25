@@ -9,14 +9,6 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>D:/Temp/04/executor.log</file>
-        <encoder>
-            <charset>UTF-8</charset>
-            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-
     <root level="ALL">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE" />
