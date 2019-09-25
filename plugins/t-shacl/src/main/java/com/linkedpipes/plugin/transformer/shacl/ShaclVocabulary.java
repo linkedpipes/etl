@@ -7,7 +7,7 @@ final class ShaclVocabulary {
 
     public static final String CONFIG = PREFIX + "Configuration";
 
-    public static final String HAS_RULE = PREFIX + "rulesInTurtle";
+    public static final String HAS_SHAPE = PREFIX + "shapesInTurtle";
 
     public static final String HAS_FAIL_ON_ERROR = PREFIX + "failOnError";
 

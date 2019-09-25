@@ -8,7 +8,7 @@ define([], function () {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "rulesInTurtle": {
+        "shapesInTurtle": {
             "$type": "str",
             "$label": "Rules to apply"
         },

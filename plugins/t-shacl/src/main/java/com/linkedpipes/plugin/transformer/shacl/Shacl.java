@@ -28,17 +28,17 @@ public final class Shacl implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Shacl.class);
 
-    @Component.InputPort(iri = "RulesRdf")
+    @Component.InputPort(iri = "Shapes")
     public SingleGraphDataUnit rulesRdf;
 
-    @Component.InputPort(iri = "InputRdf")
+    @Component.InputPort(iri = "Data")
     public SingleGraphDataUnit inputRdf;
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.OutputPort(iri = "ReportRdf")
+    @Component.OutputPort(iri = "Results")
     public WritableSingleGraphDataUnit reportRdf;
 
     @Component.Configuration
@@ -86,7 +86,7 @@ public final class Shacl implements Component, SequentialExecution {
 
     private void addRulesFromConfiguration(RepositoryConnection connection)
             throws IOException {
-        StringReader reader = new StringReader(configuration.getRule());
+        StringReader reader = new StringReader(configuration.getShapes());
         connection.add(
                 reader, "", RDFFormat.TURTLE, RDF4J.SHACL_SHAPE_GRAPH);
     }

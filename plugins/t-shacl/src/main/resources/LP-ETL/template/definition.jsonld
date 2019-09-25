@@ -9,10 +9,10 @@
         "http://linkedpipes.com/ontology/requirement": {"@id": "http://linkedpipes.com/resources/requirement/workingDirectory"},
         "http://linkedpipes.com/ontology/supportControl" : true,
         "http://linkedpipes.com/ontology/port": [
-            {"@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/input"},
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/data"},
             {"@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/configuration"},
-            {"@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/report"},
-            {"@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/rules"}
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/results"},
+            {"@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/shapes"}
         ],
         "http://linkedpipes.com/ontology/keyword": [
             "SHACL", "validation", "shape", "constraint"
@@ -23,24 +23,24 @@
         ]
     },
     {
-        "@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/input",
-        "http://www.w3.org/2004/02/skos/core#prefLabel": "Input",
+        "@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/data",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Data",
         "@type": [
             "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
             "http://linkedpipes.com/ontology/Port",
             "http://linkedpipes.com/ontology/Input"
         ],
-        "http://linkedpipes.com/ontology/binding": "InputRdf"
+        "http://linkedpipes.com/ontology/binding": "Data"
     },
     {
-        "@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/rules",
-        "http://www.w3.org/2004/02/skos/core#prefLabel": "Rules",
+        "@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/shapes",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Shapes",
         "@type": [
             "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
             "http://linkedpipes.com/ontology/Port",
             "http://linkedpipes.com/ontology/Input"
         ],
-        "http://linkedpipes.com/ontology/binding": "RulesRdf"
+        "http://linkedpipes.com/ontology/binding": "Shapes"
     },
     {
         "@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/configuration",
@@ -52,13 +52,13 @@
         "http://linkedpipes.com/ontology/binding": "Configuration"
     },
     {
-        "@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/report",
-        "http://www.w3.org/2004/02/skos/core#prefLabel": "Report",
+        "@id": "http://etl.linkedpipes.com/resources/components/t-shacl/0.0.0/results",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "Results",
         "@type": [
             "http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph",
             "http://linkedpipes.com/ontology/Port",
             "http://linkedpipes.com/ontology/Output"
         ],
-        "http://linkedpipes.com/ontology/binding": "ReportRdf"
+        "http://linkedpipes.com/ontology/binding": "Results"
     }
 ]
