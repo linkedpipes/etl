@@ -256,7 +256,11 @@ class Downloader {
         Map<String, List<String>> result = new HashMap<>();
         for (Map.Entry<String, List<String>> entry :
                 connection.getHeaderFields().entrySet()) {
-            result.put(entry.getKey().toLowerCase(), entry.getValue());
+            if (entry.getKey() == null) {
+                result.put(null, entry.getValue());
+            } else {
+                result.put(entry.getKey().toLowerCase(), entry.getValue());
+            }
         }
         return result;
     }
