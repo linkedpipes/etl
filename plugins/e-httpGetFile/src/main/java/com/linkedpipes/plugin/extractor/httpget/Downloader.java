@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -254,16 +255,30 @@ class Downloader {
     }
 
     private boolean isGzip(HttpURLConnection connection) {
-        Map<String, List<String>> headers = connection.getHeaderFields();
-        if (!headers.containsKey("Content-Encoding")) {
+        Map<String, List<String>> headers = getNormalizedHeader(connection);
+        if (!headers.containsKey("content-encoding")) {
             return false;
         }
-        for (String value : headers.get("Content-Encoding")) {
+        for (String value : headers.get("content-encoding")) {
             if ("gzip".equals(value.toLowerCase())) {
                 return true;
             }
         }
         return false;
+    }
+
+    private Map<String, List<String>> getNormalizedHeader(
+            HttpURLConnection connection) {
+        Map<String, List<String>> result = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry :
+                connection.getHeaderFields().entrySet()) {
+            if (entry.getKey() == null) {
+                result.put(null, entry.getValue());
+            } else {
+                result.put(entry.getKey().toLowerCase(), entry.getValue());
+            }
+        }
+        return result;
     }
 
 }
