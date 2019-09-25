@@ -7,9 +7,11 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF4J;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -26,6 +28,9 @@ public final class Shacl implements Component, SequentialExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(Shacl.class);
 
+    @Component.InputPort(iri = "RulesRdf")
+    public SingleGraphDataUnit rulesRdf;
+
     @Component.InputPort(iri = "InputRdf")
     public SingleGraphDataUnit inputRdf;
 
@@ -33,7 +38,7 @@ public final class Shacl implements Component, SequentialExecution {
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.InputPort(iri = "ReportRdf")
+    @Component.OutputPort(iri = "ReportRdf")
     public WritableSingleGraphDataUnit reportRdf;
 
     @Component.Configuration
@@ -58,16 +63,32 @@ public final class Shacl implements Component, SequentialExecution {
 
     private void loadRules(SailRepository sailRepository) throws LpException {
         LOG.info("Adding rules to SHACL repository ...");
-        try (SailRepositoryConnection connection =
+        try (RepositoryConnection connection =
                      sailRepository.getConnection()) {
             connection.begin();
-            StringReader reader = new StringReader(configuration.getRule());
-            connection.add(
-                    reader, "", RDFFormat.TURTLE, RDF4J.SHACL_SHAPE_GRAPH);
+            addRulesFromInput(connection);
+            addRulesFromConfiguration(connection);
             connection.commit();
         } catch (RuntimeException | IOException ex) {
             throw exceptionFactory.failure("Can't load rules.", ex);
         }
+    }
+
+    private void addRulesFromInput(RepositoryConnection connection)
+            throws LpException {
+        rulesRdf.execute((inputConnection) -> {
+            RepositoryResult<Statement> statements =
+                    inputConnection.getStatements(
+                            null, null, null, rulesRdf.getReadGraph());
+            connection.add(statements, RDF4J.SHACL_SHAPE_GRAPH);
+        });
+    }
+
+    private void addRulesFromConfiguration(RepositoryConnection connection)
+            throws IOException {
+        StringReader reader = new StringReader(configuration.getRule());
+        connection.add(
+                reader, "", RDFFormat.TURTLE, RDF4J.SHACL_SHAPE_GRAPH);
     }
 
     private void validateData(SailRepository sailRepository) throws LpException {
@@ -76,9 +97,10 @@ public final class Shacl implements Component, SequentialExecution {
             connection.begin();
             LOG.info("Adding content to SHACL repository ...");
             inputRdf.execute((inputConnection) -> {
-                connection.add(
+                RepositoryResult<Statement> statements =
                         inputConnection.getStatements(
-                                null, null, null, inputRdf.getReadGraph()));
+                                null, null, null, inputRdf.getReadGraph());
+                connection.add(statements);
             });
             LOG.info("Validating ..");
             try {
@@ -86,7 +108,7 @@ public final class Shacl implements Component, SequentialExecution {
             } catch (RepositoryException ex) {
                 Throwable cause = ex.getCause();
                 if (cause instanceof ShaclSailValidationException) {
-                    onRuleViolation((ShaclSailValidationException)cause);
+                    onRuleViolation((ShaclSailValidationException) cause);
                 } else {
                     throw exceptionFactory.failure("Can't validate data", ex);
                 }
