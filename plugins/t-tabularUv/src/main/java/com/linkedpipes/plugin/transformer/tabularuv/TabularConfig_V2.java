@@ -301,7 +301,8 @@ public class TabularConfig_V2 {
     /**
      * If true then triple with row number is generated for each line.
      */
-    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#rowTriple")
+    @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#generateRowTriple",
+            alternatives = {"http://plugins.linkedpipes.com/ontology/t-tabularUv#rowTriple"})
     private boolean generateRowTriple = false;
 
     @RdfToPojo.Property( iri ="http://plugins.linkedpipes.com/ontology/t-tabularUv#tableSubject")

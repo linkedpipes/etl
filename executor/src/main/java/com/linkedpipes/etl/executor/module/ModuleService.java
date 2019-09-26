@@ -57,10 +57,10 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
             + "" // javax additional - FIND BUNDLE WITH THIS !
             + "javax.servlet;version=\"2.4.0\","
             + "javax.servlet.http;version=\"2.4.0\","
-            + "javax.xml.bind,"
-            + "javax.xml.bind.util,"
-            + "javax.xml.bind.annotation,"
-            + "javax.xml.bind.annotation.adapters,"
+            + "javax.xml.bind;version=\"2.3.0\","
+            + "javax.xml.bind.util;version=\"2.3.0\","
+            + "javax.xml.bind.annotation;version=\"2.3.0\","
+            + "javax.xml.bind.annotation.adapters;version=\"2.3.0\","
             + "javax.annotation,"
             + "" // slf4j
             + "org.slf4j;version=\"1.7.21\","

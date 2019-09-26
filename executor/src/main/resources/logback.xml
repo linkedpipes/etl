@@ -11,8 +11,10 @@
 
     <root level="ALL">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE" />
     </root>
 
+    <logger name="org.springframework.*" level="ERROR"/>
     <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="ERROR"/>
 
 </configuration>

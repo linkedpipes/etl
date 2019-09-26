@@ -119,10 +119,6 @@ define([], function () {
             "$type": "bool",
             "$label": "Use static row counter"
         },
-        "rowTriple": {
-            "$type": "bool",
-            "$label": "Generate row column"
-        },
         "tableSubject": {
             "$type": "bool",
             "$label": "Generate subject for table"

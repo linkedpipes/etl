@@ -54,7 +54,7 @@
         "type": "application/ld+json"
       }), "options.jsonld");
       data.append("pipeline", $scope.file);
-      const url = "resources/pipelines";
+      const url = "./resources/pipelines";
       postFormData(url, data);
     }
 
@@ -105,7 +105,7 @@
       data.append("options", new Blob([JSON.stringify(options)], {
         "type": "application/ld+json"
       }), "options.jsonld");
-      const url = "/resources/pipelines?pipeline=" +
+      const url = "./resources/pipelines?pipeline=" +
         encodeURIComponent($scope.url);
       postFormData(url, data);
     }
