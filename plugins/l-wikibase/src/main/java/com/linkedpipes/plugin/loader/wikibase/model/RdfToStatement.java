@@ -86,7 +86,10 @@ public class RdfToStatement {
                 });
 
         if (types.contains(WIKIBASE_STATEMENT) || resource instanceof BNode) {
-            return builder.build();
+            org.wikidata.wdtk.datamodel.interfaces.Statement result =
+                    builder.build();
+            selectMergerStrategy(result);
+            return result;
         } else {
             return null;
         }
@@ -164,6 +167,11 @@ public class RdfToStatement {
                         register, entityPrefix, propPrefix, mergeStrategy);
         builder.withReference(rdfToReference.loadReference(
                 (Resource) rdfValue, statements));
+    }
+
+    private void selectMergerStrategy(
+            org.wikidata.wdtk.datamodel.interfaces.Statement statement) {
+        mergeStrategy.put(statement, MergeStrategy.fromTypes(types));
     }
 
 }

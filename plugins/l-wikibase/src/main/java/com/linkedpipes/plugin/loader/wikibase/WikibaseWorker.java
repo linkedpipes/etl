@@ -166,7 +166,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
             ItemDocument newDocument = merger.assembleReplaceDocument();
             return wbde.editItemDocument(
                     newDocument,
-                    false, "Update by replace.", null);
+                    true, "Update by replace.", null);
         }
     }
 
