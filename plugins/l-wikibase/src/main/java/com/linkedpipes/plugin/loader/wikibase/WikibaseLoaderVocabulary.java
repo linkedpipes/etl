@@ -27,7 +27,7 @@ public final class WikibaseLoaderVocabulary {
             PREFIX + "New";
 
     public static final String REPLACE_STRATEGY =
-            PREFIX + "Remove";
+            PREFIX + "Replace";
 
     public static final String DELETE_STRATEGY =
             PREFIX + "Delete";
