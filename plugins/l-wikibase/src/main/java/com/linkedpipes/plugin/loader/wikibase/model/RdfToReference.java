@@ -100,7 +100,7 @@ public class RdfToReference {
         }
         Resource rdfResource = (Resource) rdfValue;
         org.wikidata.wdtk.datamodel.interfaces.Value value =
-                RdfToValue.get(type).getValue(statements, rdfResource);
+                RdfToValue.get(type).getValue(statements, rdfResource, type);
         builder.withPropertyValue(storeProperty(property), value);
     }
 

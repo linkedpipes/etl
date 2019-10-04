@@ -44,7 +44,7 @@ public class RdfToQuantityValue implements ValueConverter<QuantityValue> {
 
     @Override
     public QuantityValue getValue(
-            Collection<Statement> statements, Resource resource) {
+            Collection<Statement> statements, Resource resource, String type) {
         BigDecimal value = BigDecimal.ZERO;
         BigDecimal lowerBound = null;
         BigDecimal upperBound = null;

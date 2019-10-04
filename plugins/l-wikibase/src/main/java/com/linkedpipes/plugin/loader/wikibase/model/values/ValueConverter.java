@@ -19,7 +19,7 @@ public interface ValueConverter
 
     V getValue(Value value, String type);
 
-    V getValue(Collection<Statement> statements, Resource resource);
+    V getValue(Collection<Statement> statements, Resource resource, String type);
 
     default void register(Map<String, ValueConverter> register) {
         for (String type : this.getSupportedTypes()) {

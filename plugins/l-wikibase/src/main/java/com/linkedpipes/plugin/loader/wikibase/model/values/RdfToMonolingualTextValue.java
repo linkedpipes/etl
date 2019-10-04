@@ -35,7 +35,7 @@ public class RdfToMonolingualTextValue
 
     @Override
     public MonolingualTextValue getValue(
-            Collection<Statement> statements, Resource resource) {
+            Collection<Statement> statements, Resource resource, String type) {
         throw new UnsupportedOperationException();
     }
 

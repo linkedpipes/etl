@@ -131,7 +131,7 @@ public class RdfToStatement {
         }
         Resource rdfResource = (Resource) rdfValue;
         org.wikidata.wdtk.datamodel.interfaces.Value value =
-                RdfToValue.get(type).getValue(statements, rdfResource);
+                RdfToValue.get(type).getValue(statements, rdfResource, type);
         builder.withValue(value);
     }
 
@@ -153,7 +153,7 @@ public class RdfToStatement {
         }
         Resource rdfResource = (Resource) rdfValue;
         org.wikidata.wdtk.datamodel.interfaces.Value value =
-                RdfToValue.get(type).getValue(statements, rdfResource);
+                RdfToValue.get(type).getValue(statements, rdfResource, type);
         builder.withQualifierValue(storeProperty(property), value);
     }
 

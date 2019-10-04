@@ -55,7 +55,7 @@ public class RdfToTimeValue implements ValueConverter<TimeValue> {
 
     @Override
     public TimeValue getValue(
-            Collection<Statement> statements, Resource resource) {
+            Collection<Statement> statements, Resource resource, String type) {
         // Default values.
         String calendarModel = TimeValue.CM_GREGORIAN_PRO;
         byte precision = 0;

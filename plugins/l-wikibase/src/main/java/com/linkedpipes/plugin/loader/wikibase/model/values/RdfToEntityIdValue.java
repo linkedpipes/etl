@@ -50,7 +50,7 @@ public class RdfToEntityIdValue implements ValueConverter<EntityIdValue> {
 
     @Override
     public EntityIdValue getValue(
-            Collection<Statement> statements, Resource resource) {
+            Collection<Statement> statements, Resource resource, String type) {
         throw new UnsupportedOperationException();
     }
 

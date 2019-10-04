@@ -64,7 +64,7 @@ public class RdfToGlobeCoordinatesValue
 
     @Override
     public GlobeCoordinatesValue getValue(
-            Collection<Statement> statements, Resource resource) {
+            Collection<Statement> statements, Resource resource, String type) {
         double latitude = 0;
         double longitude = 0;
         double precision = 0;

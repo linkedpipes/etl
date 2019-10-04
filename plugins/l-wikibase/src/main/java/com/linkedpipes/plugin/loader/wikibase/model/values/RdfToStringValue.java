@@ -56,7 +56,11 @@ public class RdfToStringValue implements ValueConverter<StringValue> {
     @Override
     public StringValue getValue(
             Collection<Statement> statements,
-            Resource resource) {
+            Resource resource,
+            String type) {
+        if (DatatypeIdValue.DT_URL.equals(type)) {
+            return Datamodel.makeStringValue(resource.stringValue());
+        }
         throw new UnsupportedOperationException();
     }
 
