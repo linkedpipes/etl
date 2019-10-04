@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.helpers.StatementBuilder;
 import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
@@ -18,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 public class RdfToStatement {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(RdfToStatement.class);
 
     private static final String WIKIBASE_STATEMENT =
             "http://wikiba.se/ontology#Statement";
@@ -126,6 +131,9 @@ public class RdfToStatement {
             builder.withSomeValue();
             return;
         } else if (!(rdfValue instanceof Resource)) {
+            LOG.warn(
+                    "Ignoring simple values, as complex was expected: {}",
+                    rdfValue);
             // TODO Invalid schema.
             return;
         }
