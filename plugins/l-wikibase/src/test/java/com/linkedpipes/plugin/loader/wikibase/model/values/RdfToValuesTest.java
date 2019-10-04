@@ -179,7 +179,7 @@ public class RdfToValuesTest {
         stream.close();
 
         RdfToGlobeCoordinatesValue reverse = new RdfToGlobeCoordinatesValue();
-        GlobeCoordinatesValue actual = reverse.getValue(model, resource);
+        GlobeCoordinatesValue actual = reverse.getValue(model, resource, null);
 
         Assert.assertEquals(expected.getGlobe(), actual.getGlobe());
         Assert.assertEquals(
@@ -297,7 +297,7 @@ public class RdfToValuesTest {
         stream.close();
 
         RdfToQuantityValue reverse = new RdfToQuantityValue();
-        QuantityValue actual = reverse.getValue(model, resource);
+        QuantityValue actual = reverse.getValue(model, resource, null);
 
         Assert.assertEquals(expected.getLowerBound(), actual.getLowerBound());
         Assert.assertEquals(expected.getUpperBound(), actual.getUpperBound());
@@ -560,7 +560,7 @@ public class RdfToValuesTest {
         stream.close();
 
         RdfToTimeValue reverse = new RdfToTimeValue();
-        TimeValue actual = reverse.getValue(model, resource);
+        TimeValue actual = reverse.getValue(model, resource, null);
 
         Assert.assertEquals(expected.getYear(), actual.getYear());
         Assert.assertEquals(expected.getMonth(), actual.getMonth());
