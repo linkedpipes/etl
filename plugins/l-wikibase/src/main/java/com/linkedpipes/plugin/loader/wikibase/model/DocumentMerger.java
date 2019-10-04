@@ -146,6 +146,7 @@ public class DocumentMerger {
                 // Values are different so we need to replace them.
                 toDelete.put(key, toKeep.get(key));
                 toAdd.put(key, entry.getValue());
+                toKeep.remove(key);
             } else {
                 // Just add a new one.
                 toAdd.put(key, entry.getValue());
