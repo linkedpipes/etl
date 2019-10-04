@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.loader.wikibase.model;
 
+import com.linkedpipes.plugin.loader.wikibase.WikibaseLoaderVocabulary;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
@@ -62,8 +63,6 @@ public class RdfToStatement {
         types = new ArrayList<>();
         this.statements = statements;
 
-        setStatementId(resource);
-
         String propPrefix = property.getSiteIri();
         String shortValuePredicate =
                 propPrefix + "statement/" + property.getId();
@@ -89,6 +88,11 @@ public class RdfToStatement {
                         loadWasDerivedFrom(propPrefix, st.getObject());
                     }
                 });
+
+        // Set ID only if it is not a new statement.
+        if (!types.contains(WikibaseLoaderVocabulary.NEW_STRATEGY)) {
+            setStatementId(resource);
+        }
 
         if (types.contains(WIKIBASE_STATEMENT) || resource instanceof BNode) {
             org.wikidata.wdtk.datamodel.interfaces.Statement result =
