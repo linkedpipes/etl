@@ -183,7 +183,9 @@ public class RdfToStatement {
 
     private void selectMergerStrategy(
             org.wikidata.wdtk.datamodel.interfaces.Statement statement) {
-        mergeStrategy.put(statement, MergeStrategy.fromTypes(types));
+        mergeStrategy.put(
+                statement,
+                MergeStrategy.fromTypesOrDefault(types, MergeStrategy.MERGE));
     }
 
 }

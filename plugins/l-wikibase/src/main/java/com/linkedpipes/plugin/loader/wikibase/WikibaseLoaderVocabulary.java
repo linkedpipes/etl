@@ -35,6 +35,9 @@ public final class WikibaseLoaderVocabulary {
     public static final String MERGE_STRATEGY =
             PREFIX + "Merge";
 
+    public static final String EXACT_STRATEGY =
+            PREFIX + "Exact";
+
     private WikibaseLoaderVocabulary() {
     }
 

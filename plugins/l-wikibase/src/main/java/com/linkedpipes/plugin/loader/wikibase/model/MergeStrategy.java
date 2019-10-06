@@ -8,9 +8,11 @@ public enum MergeStrategy {
     NEW,
     REPLACE,
     DELETE,
-    MERGE;
+    MERGE,
+    EXACT;
 
-    public static MergeStrategy fromTypes(List<String> types) {
+    public static MergeStrategy fromTypesOrDefault(
+            List<String> types, MergeStrategy defaultStrategy) {
         if (types.contains(WikibaseLoaderVocabulary.NEW_STRATEGY)) {
             return NEW;
         } else if (types.contains(WikibaseLoaderVocabulary.REPLACE_STRATEGY)) {
@@ -19,8 +21,10 @@ public enum MergeStrategy {
             return DELETE;
         } else if (types.contains(WikibaseLoaderVocabulary.MERGE_STRATEGY)) {
             return MERGE;
+        } else if (types.contains(WikibaseLoaderVocabulary.EXACT_STRATEGY)) {
+            return EXACT;
         }
-        return MERGE;
+        return defaultStrategy;
     }
 
 }

@@ -121,7 +121,9 @@ public class RdfToDocument {
 
     private void handleDescription(Value value) {
         Literal literal = (Literal) value;
-        builder.withDescription(literal.getLabel(), literal.getLanguage().get());
+        builder.withDescription(
+                literal.getLabel(),
+                literal.getLanguage().get());
     }
 
     private PropertyIdValue iriToPropertyId(IRI iri) {
@@ -173,7 +175,9 @@ public class RdfToDocument {
     }
 
     private void selectMergerStrategy(ItemDocument document) {
-        mergeStrategy.put(document, MergeStrategy.fromTypes(types));
+        mergeStrategy.put(
+                document,
+                MergeStrategy.fromTypesOrDefault(types, MergeStrategy.MERGE));
     }
 
     public Map<Object, MergeStrategy> getMergeStrategyForLastLoadedDocument() {

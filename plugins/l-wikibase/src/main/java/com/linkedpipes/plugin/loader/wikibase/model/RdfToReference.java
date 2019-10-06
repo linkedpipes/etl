@@ -123,7 +123,9 @@ public class RdfToReference {
     }
 
     private void selectMergerStrategy(Reference reference) {
-        mergeStrategy.put(reference, MergeStrategy.fromTypes(types));
+        mergeStrategy.put(
+                reference,
+                MergeStrategy.fromTypesOrDefault(types, MergeStrategy.EXACT));
     }
 
 }
