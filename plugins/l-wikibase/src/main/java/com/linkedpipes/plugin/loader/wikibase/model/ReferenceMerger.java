@@ -13,88 +13,109 @@ import java.util.Map;
 
 class ReferenceMerger {
 
+    private static class SimilarityPair {
+
+        final Reference local;
+
+        final Reference remote;
+
+        final Double similarity;
+
+        final boolean exactMatch;
+
+        public SimilarityPair(
+                Reference local, Reference remote, Double similarity,
+                boolean exactMatch) {
+            this.local = local;
+            this.remote = remote;
+            this.similarity = similarity;
+            this.exactMatch = exactMatch;
+        }
+
+    }
+
     private final Map<Object, MergeStrategy> mergeStrategy;
+
+    private ArrayList<SimilarityPair> similarities;
+
+    private List<Reference> results;
 
     public ReferenceMerger(Map<Object, MergeStrategy> mergeStrategy) {
         this.mergeStrategy = mergeStrategy;
     }
 
     public List<Reference> merge(
-            List<Reference> local, List<Reference> remote) {
+            List<Reference> locals, List<Reference> remotes) {
         // Make copy of remove as we perform update, and we do not know
         // if would not change some internal state.
-        remote = new ArrayList<>(remote);
-        List<Reference> results = new ArrayList<>();
-        // For each from local find best match in remote and merge.
-        for (Reference reference : local) {
-            MergeStrategy mergeStrategy = getMergeStrategy(local);
-            if (mergeStrategy.equals(MergeStrategy.NEW)) {
-                // Just add the new one.
-                results.add(reference);
+        locals = new ArrayList<>(locals);
+        remotes = new ArrayList<>(remotes);
+        computeSimilarities(locals, remotes);
+        results = new ArrayList<>();
+        // We start with locals, as they describe what need to be changed.
+        for (int index = 0; index < similarities.size(); ++index) {
+            SimilarityPair pair = similarities.get(index);
+            if (pair == null) {
+                // Item is no longer valid.
                 continue;
             }
-            Reference bestRemote = findBestMatchReference(reference, remote);
-            if (bestRemote == null) {
-                // Can happen if there is no best match, ie. all remote
-                // references were already consumed.
-                switch (mergeStrategy) {
-                    case DELETE:
-                        // There is no match so we have nothing to delete.
+            // Remove from locals and remotes.
+            locals.remove(pair.local);
+            remotes.remove(pair.remote);
+            // Now we have the best match of local and remote.
+            MergeStrategy mergeStrategy = getMergeStrategy(pair.local);
+            switch (mergeStrategy) {
+                case DELETE:
+                    // We already removed the reference.
+                    break;
+                case MERGE:
+                    results.add(mergeReferences(pair.local, pair.remote));
+                    break;
+                case EXACT:
+                    if (pair.exactMatch) {
+                        // Data are already there.
                         break;
-                    case REPLACE:
-                    case MERGE:
-                        // As there is no match we can just add the new one.
-                        results.add(reference);
+                    } else {
+                        // We require exact data, so we need to add them.
+                        results.add(pair.local);
                         break;
-                    default:
-                        throwUnsupportedStrategy(mergeStrategy);
-                }
-            } else {
-                // Consume best match, so it can not be used anymore.
-                remote.remove(bestRemote);
-                switch (mergeStrategy) {
-                    case DELETE:
-                        // We already removed the reference.
-                        break;
-                    case REPLACE:
-                        results.add(reference);
-                        break;
-                    case MERGE:
-                        results.add(mergeReferences(reference, bestRemote));
-                        break;
-                    default:
-                        throwUnsupportedStrategy(mergeStrategy);
-                }
+                    }
+                case REPLACE:
+                default:
+                    throwUnsupportedStrategy(mergeStrategy);
             }
+            removeSimilarityPairs(pair.local, pair.remote);
+        }
+        // We may be left with some locals that were not processed.
+        for (Reference local : locals) {
+            mergeRemainingLocal(local);
         }
         // Add what is left as it is unchanged.
-        results.addAll(remote);
+        results.addAll(remotes);
         return results;
     }
 
-    private MergeStrategy getMergeStrategy(Object object) {
-        return mergeStrategy.getOrDefault(object, MergeStrategy.MERGE);
-    }
-
-
-    /**
-     * @return Null if no reference match.
-     */
-    private Reference findBestMatchReference(
-            Reference query, List<Reference> database) {
-        Reference bestMath = null;
-        double bestMatchScore = -1.0;
-        for (Reference item : database) {
-            double score = calculateReferenceSimilarity(query, item);
-            if (score >= bestMatchScore) {
-                bestMatchScore = score;
-                bestMath = item;
+    private void computeSimilarities(
+            List<Reference> local, List<Reference> remote) {
+        similarities = new ArrayList<>(local.size() * remote.size());
+        for (Reference localRef : local) {
+            for (Reference remoteRef : remote) {
+                int shared = countShared(localRef, remoteRef);
+                int total =
+                        Math.max(countValues(localRef), countValues(remoteRef));
+                similarities.add(new SimilarityPair(
+                        localRef, remoteRef,
+                        (double)shared / total,
+                        shared == total
+                        ));
             }
         }
-        return bestMath;
+        similarities.sort(
+                (left, right) -> Double.compare(
+                        left.similarity, right.similarity));
     }
 
-    private double calculateReferenceSimilarity(
+    private int countShared(
             Reference left, Reference right) {
         int shared = 0;
         for (SnakGroup leftSnakGroup : left.getSnakGroups()) {
@@ -114,13 +135,7 @@ class ReferenceMerger {
                 }
             }
         }
-        //
-        int total = countValues(left) + countValues(right);
-        return (double) shared / (double) total;
-    }
-
-    private void throwUnsupportedStrategy(MergeStrategy strategy) {
-        throw new RuntimeException("Unsupported strategy: " + strategy);
+        return shared;
     }
 
     private int countValues(Reference reference) {
@@ -133,6 +148,30 @@ class ReferenceMerger {
         return result;
     }
 
+    /**
+     * Remove all records mentioning local or remote reference.
+     */
+    private void removeSimilarityPairs(Reference local, Reference remote) {
+        for (int index = 0; index < similarities.size(); ++index) {
+            SimilarityPair pair = similarities.get(index);
+            if (pair == null) {
+                continue;
+            }
+            if (pair.local.equals(local) || pair.remote.equals(remote)) {
+                similarities.set(index, null);
+            }
+
+        }
+    }
+
+    private MergeStrategy getMergeStrategy(Object object) {
+        return mergeStrategy.getOrDefault(object, MergeStrategy.MERGE);
+    }
+
+    private void throwUnsupportedStrategy(MergeStrategy strategy) {
+        throw new RuntimeException("Unsupported strategy: " + strategy);
+    }
+
     private Reference mergeReferences(Reference local, Reference remote) {
         ReferenceBuilder builder = ReferenceBuilder.newInstance();
         SnakMerger snakMerger = new SnakMerger();
@@ -143,9 +182,25 @@ class ReferenceMerger {
                         builder.withPropertyValue(entry.getKey(), value);
                     });
                 });
-
         Reference result = builder.build();
         return result;
+    }
+
+    private void mergeRemainingLocal(Reference local) {
+        MergeStrategy mergeStrategy = getMergeStrategy(local);
+        switch (mergeStrategy) {
+            case DELETE:
+                // There is no match so we have nothing to delete.
+                break;
+            case NEW:
+            case EXACT:
+                // As there is no match we can just add the new one.
+                results.add(local);
+                break;
+            case REPLACE:
+            default:
+                throwUnsupportedStrategy(mergeStrategy);
+        }
     }
 
 }
