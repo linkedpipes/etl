@@ -26,6 +26,9 @@ public class WikibaseLoaderConfiguration {
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_EDIT_TIME)
     private int averageTimePerEdit = 2000;
 
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_STRICT_MATCHING)
+    private boolean strictMatching = false;
+
     public WikibaseLoaderConfiguration() {
     }
 
@@ -83,6 +86,14 @@ public class WikibaseLoaderConfiguration {
 
     public void setAverageTimePerEdit(int averageTimePerEdit) {
         this.averageTimePerEdit = averageTimePerEdit;
+    }
+
+    public boolean isStrictMatching() {
+        return strictMatching;
+    }
+
+    public void setStrictMatching(boolean strictMatching) {
+        this.strictMatching = strictMatching;
     }
 
 }

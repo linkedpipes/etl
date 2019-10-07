@@ -35,6 +35,10 @@ define([], function () {
         "averageTimePerEdit": {
             "$type": "int",
             "$label": "Average time per edit"
+        },
+        "strictMatching": {
+            "$type": "bool",
+            "$label": "Strict matching"
         }
     };
 

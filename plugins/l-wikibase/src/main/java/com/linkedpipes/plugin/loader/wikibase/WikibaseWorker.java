@@ -9,6 +9,7 @@ import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.loader.wikibase.model.DocumentMerger;
 import com.linkedpipes.plugin.loader.wikibase.model.MergeStrategy;
 import com.linkedpipes.plugin.loader.wikibase.model.RdfToDocument;
+import com.linkedpipes.plugin.loader.wikibase.model.SnakEqual;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,7 +157,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
                 (ItemDocument) wbdf.getEntityDocument(
                         local.getEntityId().getId());
         DocumentMerger merger =
-                new DocumentMerger(local, remote, mergeStrategy);
+                new DocumentMerger(
+                        local, remote, mergeStrategy, createSnakEqual());
         if (merger.canUpdateExisting()) {
             ItemDocument newDocument = merger.assembleMergeDocument();
             return wbde.editItemDocument(
@@ -167,6 +169,14 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
             return wbde.editItemDocument(
                     newDocument,
                     true, "Update by replace.", null);
+        }
+    }
+
+    private SnakEqual createSnakEqual() {
+        if (configuration.isStrictMatching()) {
+            return SnakEqual.strict();
+        } else {
+            return SnakEqual.relaxed();
         }
     }
 

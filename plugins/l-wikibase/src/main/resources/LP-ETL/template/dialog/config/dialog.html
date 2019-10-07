@@ -41,4 +41,8 @@
                ng-disabled="dialog.averageTimePerEdit.disabled || dialog.averageTimePerEdit.inherit"
                placeholder="2000">
     </md-input-container>
+    <md-switch ng-hide="dialog.strictMatching.hide"
+               ng-disabled="dialog.strictMatching.disabled || dialog.strictMatching.inherit"
+               ng-model="dialog.strictMatching.value">Use strict matching (string-based) for value matching
+    </md-switch>
 </div>

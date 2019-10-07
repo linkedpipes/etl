@@ -92,12 +92,16 @@ public class DocumentMerger {
 
     private boolean merged = false;
 
+    private final SnakEqual snakEqualStrategy;
+
     public DocumentMerger(
             ItemDocument local, ItemDocument remote,
-            Map<Object, MergeStrategy> mergeStrategy) {
+            Map<Object, MergeStrategy> mergeStrategy,
+            SnakEqual snakEqualStrategy) {
         this.localDocument = local;
         this.remoteDocument = remote;
         this.mergeStrategy = mergeStrategy;
+        this.snakEqualStrategy = snakEqualStrategy;
         merge();
     }
 
@@ -232,9 +236,16 @@ public class DocumentMerger {
         // Defaults and not supported values.
         builder.withId(remote.getStatementId());
         builder.withRank(remote.getRank());
-        builder.withValue(local.getValue());
+        if (local.getValue() == null) {
+            // If no local value is give, then use remote value to
+            // allow user not specify a local value.
+            builder.withValue(remote.getValue());
+        } else {
+            builder.withValue(local.getValue());
+        }
         //
-        ReferenceMerger referenceMerger = new ReferenceMerger(mergeStrategy);
+        ReferenceMerger referenceMerger =
+                new ReferenceMerger(mergeStrategy, snakEqualStrategy);
         builder.withReferences(referenceMerger.merge(
                 local.getReferences(), remote.getReferences()));
         builder.withQualifiers(mergeQualifierLists(
@@ -247,7 +258,7 @@ public class DocumentMerger {
     private List<SnakGroup> mergeQualifierLists(
             List<SnakGroup> local, List<SnakGroup> remote) {
         List<SnakGroup> result = new ArrayList<>();
-        SnakMerger snakMerger = new SnakMerger();
+        SnakMerger snakMerger = new SnakMerger(snakEqualStrategy);
         snakMerger.merge(local, remote).entrySet().forEach((entry) -> {
             PropertyIdValue property = entry.getKey();
             List<Snak> snaks = entry.getValue().stream()

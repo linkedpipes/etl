@@ -40,8 +40,13 @@ class ReferenceMerger {
 
     private List<Reference> results;
 
-    public ReferenceMerger(Map<Object, MergeStrategy> mergeStrategy) {
+    private final SnakEqual snakEqualStrategy;
+
+    public ReferenceMerger(
+            Map<Object, MergeStrategy> mergeStrategy,
+            SnakEqual snakEqualStrategy) {
         this.mergeStrategy = mergeStrategy;
+        this.snakEqualStrategy = snakEqualStrategy;
     }
 
     public List<Reference> merge(
@@ -59,11 +64,30 @@ class ReferenceMerger {
                 // Item is no longer valid.
                 continue;
             }
+            // Now we have the best match of local and remote.
+            MergeStrategy mergeStrategy = getMergeStrategy(pair.local);
+            if (MergeStrategy.EXACT.equals(mergeStrategy)) {
+                // We handle this here as we need to call
+                // removeSimilarityPairs with different arguments.
+                if (pair.exactMatch) {
+                    // Data are same, so just add local data.
+                    results.add(pair.local);
+                    removeSimilarityPairs(pair.local, pair.remote);
+                    locals.remove(pair.local);
+                    remotes.remove(pair.remote);
+                } else {
+                    // Data are similar but not same,
+                    // so we add the local value and leave the remote
+                    // value untouched.
+                    results.add(pair.local);
+                    removeSimilarityPairs(pair.local, null);
+                    locals.remove(pair.local);
+                }
+                continue;
+            }
             // Remove from locals and remotes.
             locals.remove(pair.local);
             remotes.remove(pair.remote);
-            // Now we have the best match of local and remote.
-            MergeStrategy mergeStrategy = getMergeStrategy(pair.local);
             switch (mergeStrategy) {
                 case DELETE:
                     // We already removed the reference.
@@ -71,15 +95,6 @@ class ReferenceMerger {
                 case MERGE:
                     results.add(mergeReferences(pair.local, pair.remote));
                     break;
-                case EXACT:
-                    if (pair.exactMatch) {
-                        // Data are already there.
-                        break;
-                    } else {
-                        // We require exact data, so we need to add them.
-                        results.add(pair.local);
-                        break;
-                    }
                 case REPLACE:
                 default:
                     throwUnsupportedStrategy(mergeStrategy);
@@ -128,7 +143,7 @@ class ReferenceMerger {
                 // values.
                 for (Snak leftSnak : leftSnakGroup) {
                     for (Snak rightSnak : rightSnakGroup) {
-                        if (leftSnak.equals(rightSnak)) {
+                        if (snakEqualStrategy.equal(leftSnak, rightSnak)) {
                             shared += 1;
                         }
                     }
@@ -174,7 +189,7 @@ class ReferenceMerger {
 
     private Reference mergeReferences(Reference local, Reference remote) {
         ReferenceBuilder builder = ReferenceBuilder.newInstance();
-        SnakMerger snakMerger = new SnakMerger();
+        SnakMerger snakMerger = new SnakMerger(snakEqualStrategy);
         snakMerger.merge(local.getSnakGroups(), remote.getSnakGroups())
                 .entrySet()
                 .forEach((entry) -> {

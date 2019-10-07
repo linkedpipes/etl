@@ -23,6 +23,8 @@ public final class WikibaseLoaderVocabulary {
 
     public static final String WIKIDATA_MAPPING = PREFIX + "mappedTo";
 
+    public static final String HAS_STRICT_MATCHING = PREFIX + "strictMatching";
+
     public static final String NEW_STRATEGY =
             PREFIX + "New";
 

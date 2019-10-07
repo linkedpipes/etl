@@ -75,7 +75,7 @@ public class DocumentMergerTest {
         expected.withStatement(expectedBuilder.build());
         // With no strategy, ie. merge by default we should get merged results.
         DocumentMerger merger = new DocumentMerger(
-                local.build(), remote.build(), strategy);
+                local.build(), remote.build(), strategy, SnakEqual.strict());
         Assert.assertTrue(merger.canUpdateExisting());
         ItemDocument actual = merger.assembleMergeDocument();
         Assert.assertEquals(expected.build(), actual);
