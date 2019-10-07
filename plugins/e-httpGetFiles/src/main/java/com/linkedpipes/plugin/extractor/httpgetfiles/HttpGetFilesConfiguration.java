@@ -47,6 +47,12 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.ENCODE_URL)
     private boolean encodeUrl = false;
 
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_RETRY_COUNT)
+    private int retryCount = 1;
+
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_WAIT_TIME)
+    private int waitTime = 0;
+
     public HttpGetFilesConfiguration() {
     }
 
@@ -131,6 +137,22 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
     public Downloader.Configuration asDownloaderConfiguration() {
         return new Downloader.Configuration(
                 manualFollowRedirect, false, encodeUrl, utf8Redirect);
+    }
+
+    public int getRetryCount() {
+        return retryCount;
+    }
+
+    public void setRetryCount(int retryCount) {
+        this.retryCount = retryCount;
+    }
+
+    public int getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
     }
 
 }

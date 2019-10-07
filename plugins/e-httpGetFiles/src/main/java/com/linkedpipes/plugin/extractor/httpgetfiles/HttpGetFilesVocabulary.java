@@ -57,4 +57,8 @@ public final class HttpGetFilesVocabulary {
 
     public static final String ENCODE_URL = PREFIX + "encodeUrl";
 
+    public static final String HAS_RETRY_COUNT = PREFIX + "retryCount";
+
+    public static final String HAS_WAIT_TIME = PREFIX + "waitTime";
+
 }

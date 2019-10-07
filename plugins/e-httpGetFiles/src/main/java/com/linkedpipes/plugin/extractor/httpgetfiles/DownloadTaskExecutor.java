@@ -46,17 +46,43 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
     @Override
     public void accept(DownloadTask task) throws LpException {
         requestReport.setTask(task);
+        // Try download.
+        try {
+            tryDownloading(task);
+            progressReport.entryProcessed();
+            return;
+        } catch (Exception ex) {
+            LOG.error("Can't download file.", ex);
+
+        }
+        // Download failed so now re-try again.
+        for(int index = 0; index < configuration.getRetryCount(); ++index) {
+            waitForNextDownload();
+            try {
+                tryDownloading(task);
+                progressReport.entryProcessed();
+                return;
+            } catch (Exception ex) {
+                LOG.error("Can't download file.", ex);
+            }
+        }
+        // Download failed.
+        throw exceptionFactory.failure("Can't download file.");
+    }
+
+    private void tryDownloading(DownloadTask task) throws Exception {
         Downloader downloader = new Downloader(
                 createDownloaderTask(task),
                 configuration.asDownloaderConfiguration(),
                 requestReport);
-        try {
             downloader.download();
-        } catch (Exception ex) {
-            LOG.error("Can't download file from: {}", task.getUri(), ex);
-            throw exceptionFactory.failure("Can't download file.", ex);
-        } finally {
-            progressReport.entryProcessed();
+    }
+
+    private void waitForNextDownload() {
+        try {
+            Thread.sleep(configuration.getWaitTime());
+        } catch (InterruptedException ex) {
+            // Do nothing.
         }
     }
 
