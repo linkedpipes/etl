@@ -46,17 +46,9 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
     @Override
     public void accept(DownloadTask task) throws LpException {
         requestReport.setTask(task);
-        // Try download.
-        try {
-            tryDownloading(task);
-            progressReport.entryProcessed();
-            return;
-        } catch (Exception ex) {
-            LOG.error("Can't download file.", ex);
-
-        }
-        // Download failed so now re-try again.
-        for(int index = 0; index < configuration.getRetryCount(); ++index) {
+        // Try 1 + retry count.
+        int tryCount = 1 + Math.max(configuration.getRetryCount(), 0);
+        for(int index = 0; index < tryCount; ++index) {
             waitForNextDownload();
             try {
                 tryDownloading(task);
