@@ -120,14 +120,27 @@ class ReferenceMerger {
                         Math.max(countValues(localRef), countValues(remoteRef));
                 similarities.add(new SimilarityPair(
                         localRef, remoteRef,
-                        (double)shared / total,
+                        (double) shared / total,
                         shared == total
-                        ));
+                ));
             }
         }
-        similarities.sort(
-                (left, right) -> Double.compare(
-                        left.similarity, right.similarity));
+        // Sort in decreasing order and put exactMatch first.
+        similarities.sort((left, right) -> {
+            int compare = Double.compare(left.similarity, right.similarity);
+            if (compare == 0) {
+                if (left.exactMatch && right.exactMatch) {
+                    return 0;
+                } else if (left.exactMatch) {
+                    // Left has exactMatch and right does not, put left first.
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+            // Reverse order.
+            return -compare;
+        });
     }
 
     private int countShared(
