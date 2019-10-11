@@ -16,6 +16,7 @@ WORKDIR /opt/lp/etl
 COPY --from=lp-etl-build /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
 COPY --from=lp-etl-build /opt/lp/etl/deploy/storage /opt/lp/etl/storage
 COPY --from=lp-etl-build /opt/lp/etl/deploy/jars /opt/lp/etl/components
+USER $LP_ETL_USER
 VOLUME ["/data/lp/etl/storage", "/data/lp/etl/logs", "/data/lp/elt/configuration"]
 EXPOSE 8083
 CMD ["java", "-DconfigFileLocation=/data/lp/etl/configuration/configuration.properties", "-jar" ,"./storage/storage.jar"]

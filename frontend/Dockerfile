@@ -15,6 +15,7 @@ RUN addgroup --gid "$LP_ETL_USER" "linkedpipes" && adduser -D --home /opt/lp --i
 WORKDIR /opt/lp/etl/frontend
 COPY --from=lp-etl-build /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
 COPY --from=lp-etl-build /opt/lp/etl/deploy/frontend /opt/lp/etl/frontend
+USER $LP_ETL_USER
 VOLUME ["/data/lp/elt/configuration"]
 EXPOSE 8080
 ENV configFileLocation="/data/lp/etl/configuration/configuration.properties"
