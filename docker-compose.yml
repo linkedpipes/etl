@@ -16,6 +16,7 @@ services:
       args:
         LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/storage
     volumes:
        - data-storage:/data/lp/etl/storage
@@ -29,6 +30,7 @@ services:
       context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:frontend
       args:
         LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/frontend
     volumes:
       - configuration:/data/lp/etl/configuration
@@ -43,6 +45,7 @@ services:
       args:
         LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/executor-monitor
     volumes:
       - data-execution:/data/lp/etl/executor
@@ -57,6 +60,7 @@ services:
       args:
         LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/executor
     volumes:
       - data-execution:/data/lp/etl/executor
