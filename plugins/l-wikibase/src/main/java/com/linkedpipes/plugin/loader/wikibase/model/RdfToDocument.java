@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Does not support:
@@ -65,13 +66,20 @@ public class RdfToDocument {
     public ItemDocument loadItemDocument(
             Collection<Statement> statements,
             Resource resource) {
+        List<Statement> filteredStatements = statements.stream()
+                .filter((st) -> st.getSubject().equals(resource))
+                .collect(Collectors.toList());
         types = new ArrayList<>();
-        documentId = resourceToItemId(resource);
+        if (isItemNew(filteredStatements, resource)) {
+            documentId = ItemIdValue.NULL;
+        } else {
+            documentId = resourceToItemId(resource);
+        }
         builder = ItemDocumentBuilder.forItemId(documentId);
         mergeStrategy = new HashMap<>();
         this.statements = statements;
 
-        statements.stream()
+        filteredStatements.stream()
                 .filter((st) -> st.getSubject().equals(resource))
                 .forEach((st) -> {
                     IRI predicate = st.getPredicate();
@@ -94,11 +102,20 @@ public class RdfToDocument {
         return results;
     }
 
+    private boolean isItemNew(
+            Collection<Statement> statements, Resource resource) {
+        List<String> types = statements.stream()
+                .filter((st) -> st.getSubject().equals(resource))
+                .filter((st) -> RDF.TYPE.equals(st.getPredicate()))
+                .map((st) -> st.getObject().stringValue())
+                .collect(Collectors.toList());
+        MergeStrategy strategy =
+                MergeStrategy.fromTypesOrDefault(types, MergeStrategy.MERGE);
+        return MergeStrategy.NEW.equals(strategy);
+    }
+
     private ItemIdValue resourceToItemId(Resource resource) {
         String strValue = resource.stringValue();
-        if (strValue.lastIndexOf("/") == -1) {
-            return ItemIdValue.NULL;
-        }
         String id = strValue.substring(strValue.lastIndexOf("/") + 1);
         String siteIri = strValue.substring(0, strValue.lastIndexOf("/") + 1);
         return Datamodel.makeItemIdValue(id, siteIri);
