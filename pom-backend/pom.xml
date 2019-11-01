@@ -20,7 +20,7 @@
         <!-- Libraries. -->
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
-        <jackson.version>2.9.7</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <springframework.version>4.3.20.RELEASE</springframework.version>
         <rdf4j.version>2.3.2</rdf4j.version>
         <jetty.version>9.4.12.v20180830</jetty.version>
