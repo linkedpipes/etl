@@ -94,7 +94,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
     public void accept(WikibaseTask task) throws LpException {
         RdfToDocument rdfToDocument =
                 new RdfToDocument(register, configuration.getSiteIri());
-        LOG.debug("Processing: {}", task.getIri());
+        LOG.info("Processing: {}", task.getIri());
         try {
             ItemDocument local =
                     rdfToDocument.loadItemDocument(source, task.getIri());
