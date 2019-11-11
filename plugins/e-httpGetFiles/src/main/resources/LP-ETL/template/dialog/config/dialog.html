@@ -59,4 +59,14 @@
         <input type="number" ng-model="dialog.timeout.value"
                ng-disabled="dialog.timeout.disabled || dialog.timeout.inherit">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.retryCount.hide">
+        <label>Number of download retries in-case of failure</label>
+        <input type="number" ng-model="dialog.retryCount.value"
+               ng-disabled="dialog.retryCount.disabled || dialog.retryCount.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.waitTime.hide">
+        <label>Wait time between retry (in milliseconds)</label>
+        <input type="number" ng-model="dialog.waitTime.value"
+               ng-disabled="dialog.waitTime.disabled || dialog.waitTime.inherit">
+    </md-input-container>
 </div>
