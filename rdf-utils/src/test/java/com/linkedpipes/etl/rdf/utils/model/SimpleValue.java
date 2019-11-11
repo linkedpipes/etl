@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.model;
 
+import java.util.Calendar;
+
 public class SimpleValue implements BackendRdfValue {
 
     private String value;
@@ -23,6 +25,21 @@ public class SimpleValue implements BackendRdfValue {
 
     @Override
     public boolean asBoolean() {
+        return false;
+    }
+
+    @Override
+    public Double asDouble() {
+        return null;
+    }
+
+    @Override
+    public Calendar asCalendar() {
+        return null;
+    }
+
+    @Override
+    public boolean isBlankNode() {
         return false;
     }
 

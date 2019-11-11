@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
@@ -45,6 +45,8 @@ public class Configuration {
 
     private String localUrl;
 
+    private String publicWorkingDataUrlPrefix;
+
     @PostConstruct
     public void init() {
         String propertiesFile = System.getProperty("configFileLocation");
@@ -55,8 +57,8 @@ public class Configuration {
         }
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
-        try (InputStream stream = new FileInputStream(
-                new File(propertiesFile))) {
+        try (InputStreamReader stream = new InputStreamReader(
+                new FileInputStream(new File(propertiesFile)), "UTF8")) {
             properties.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("Can't load configuration file.", ex);
@@ -74,7 +76,6 @@ public class Configuration {
         logFilter = getProperty("executor-monitor.log.core.level");
         ftpCommandPort =
                 getPropertyInteger("executor-monitor.ftp.command_port");
-        executionPrefix = getProperty("executor.execution.uriPrefix");
         //
         ftpDataPortsStart = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.start");
@@ -84,11 +85,18 @@ public class Configuration {
                 "executor-monitor.slack_finished_executions_webhook");
         slackErrorWebhook = getOptionalProperty(
                 "executor-monitor.slack_error_webhook");
-        localUrl = getProperty("domain.uri");
+        localUrl = getEnvOrProperty("LP_ETL_DOMAIN", "domain.uri");
+        executionPrefix = localUrl + "/resources/executions/";
+        publicWorkingDataUrlPrefix = getOptionalProperty(
+                "executor-monitor.public_working_data_url_prefix");
         //
         validateUri(executorUri, "executor.execution.working_directory");
         validateDirectory(workingDirectoryPath);
         validateDirectory(logDirectoryPath);
+    }
+
+    public File getRawWorkingDirectory() {
+        return new File(workingDirectoryPath);
     }
 
     public File getWorkingDirectory() {
@@ -161,6 +169,14 @@ public class Configuration {
         }
     }
 
+    private String getEnvOrProperty(String env, String name) {
+        String value = System.getenv(env);
+        if (value != null && !value.isEmpty()) {
+            return value;
+        }
+        return getProperty(name);
+    }
+
     private String getOptionalProperty(String name) {
         String value;
         try {
@@ -198,6 +214,10 @@ public class Configuration {
 
     public String getLocalUrl() {
         return localUrl;
+    }
+
+    public String getPublicWorkingDataUrlPrefix() {
+        return publicWorkingDataUrlPrefix;
     }
 
 }

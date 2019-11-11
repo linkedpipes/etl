@@ -8,7 +8,7 @@
 		<relativePath>../../pom-plugin/pom.xml</relativePath>
 	</parent>
 	<artifactId>rdf4j-storage-light</artifactId>
-	<version>${rdf4j.version}</version>
+	<version>3.0.0</version>
 	<packaging>bundle</packaging>
 	<name>LinkedPipes Rdf4j Storage Light</name>
 	<description>Lightweight packaged version of RDF4j storage.</description>
@@ -459,7 +459,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>4.2.1</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
@@ -469,7 +469,6 @@
 							org.eclipse.rdf4j.*
 						</Export-Package>
 						<Import-Package>
-							javax.*;resolution:=optional,
 							org.apache.lucene.*;resolution:=optional,
 							com.spatial4j.*;resolution:=optional,
 							*
@@ -488,7 +487,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<phase>package</phase>

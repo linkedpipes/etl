@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URLConnection;
 import java.util.Collections;
 
 public class FileContentEntry extends DebugEntry {
@@ -17,10 +16,14 @@ public class FileContentEntry extends DebugEntry {
 
     final String source;
 
-    FileContentEntry(DataUnit dataUnit, File file, String source) {
+    final String publicPath;
+
+    FileContentEntry(DataUnit dataUnit, File file, String source,
+                     String publicPath) {
         this.dataUnit = dataUnit;
         this.file = file;
         this.source = source;
+        this.publicPath = publicPath;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class FileContentEntry extends DebugEntry {
         content.metadata.type = ResponseContent.TYPE_FILE;
         content.metadata.size = getFileSize();
         content.metadata.mimeType = getFileMimeType();
+        content.metadata.publicDataPath = publicPath;
         contentAsString = content.asJsonString();
         return this;
     }
@@ -48,7 +52,52 @@ public class FileContentEntry extends DebugEntry {
     }
 
     public static String getMimeType(File file) {
-        return URLConnection.getFileNameMap().getContentTypeFor(file.getName());
+        String fileName = file.getName().toLowerCase();
+        int extensionIndex = fileName.lastIndexOf(".");
+        if (extensionIndex == -1) {
+            return "text/plain; charset=utf-8";
+        }
+        String extension =  fileName.substring(extensionIndex);
+        String mimeType;
+        switch (extension) {
+            case ".txt":
+                mimeType = "text/plain";
+                break;
+            case ".html":
+                mimeType = "text/html";
+                break;
+            case ".csv":
+                mimeType = "text/csv";
+                break;
+            case ".json":
+                mimeType = "application/json";
+                break;
+            case ".xml":
+                mimeType = "application/xml";
+                break;
+            case ".jsonld":
+                mimeType = "application/ld+json";
+                break;
+            case ".ttl":
+                mimeType = "text/turtle";
+                break;
+            case ".trig":
+                mimeType = "application/trig";
+                break;
+            case ".rdf":
+                mimeType = "application/rdf+xml";
+                break;
+            case ".nt":
+                mimeType = "application/n-triples";
+                break;
+            case ".nq":
+                mimeType = "application/n-quads";
+                break;
+            default:
+                mimeType = "text/plain";
+                break;
+        }
+        return mimeType + "; charset=utf-8";
     }
 
 }

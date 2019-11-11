@@ -15,7 +15,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.eclipse.rdf4j.repository.Repository;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +68,22 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
     private Map<String, List<File>> inputFilesByName;
 
     @Override
+    protected void initialization() throws LpException {
+        super.initialization();
+        this.consumer = new StatementsConsumer(outputRdf);
+        initializeInputFileMap();
+    }
+
+    private void initializeInputFileMap() {
+        this.inputFilesByName = new HashMap<>();
+        for (FilesDataUnit.Entry entry : this.inputFiles) {
+            this.inputFilesByName.computeIfAbsent(entry.getFileName(),
+                    (name) -> new ArrayList<>(EXPECTED_FILES_WITH_SAME_NAME))
+                    .add(entry.toFile());
+        }
+    }
+
+    @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
         return this.configuration;
     }
@@ -101,26 +116,13 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
 
     @Override
     protected ReportWriter createReportWriter() {
-        String graph = reportRdf.getWriteGraph().stringValue();
-        Repository repository = reportRdf.getRepository();
         return ReportWriter.create(reportRdf.getWriter());
     }
 
     @Override
     protected void beforeExecution() throws LpException {
         super.beforeExecution();
-        this.consumer = new StatementsConsumer(outputRdf);
         this.progressReport.start(tasks);
-        initializeInputFileMap();
-    }
-
-    private void initializeInputFileMap() {
-        this.inputFilesByName = new HashMap<>();
-        for (FilesDataUnit.Entry entry : this.inputFiles) {
-            this.inputFilesByName.computeIfAbsent(entry.getFileName(),
-                    (name) -> new ArrayList<>(EXPECTED_FILES_WITH_SAME_NAME))
-                    .add(entry.toFile());
-        }
     }
 
     @Override

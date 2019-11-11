@@ -1,4 +1,4 @@
-define(["jsonld"], function (jsonld) {
+define([], function () {
     "use strict";
 
     const DESC = {
@@ -119,10 +119,6 @@ define(["jsonld"], function (jsonld) {
             "$type": "bool",
             "$label": "Use static row counter"
         },
-        "rowTriple": {
-            "$type": "bool",
-            "$label": "Generate row column"
-        },
         "tableSubject": {
             "$type": "bool",
             "$label": "Generate subject for table"
@@ -225,15 +221,6 @@ define(["jsonld"], function (jsonld) {
 
         dialogManager.load();
 
-        // Load rowsClass to rowClass if rowClass is not set.
-        if ($scope.dialog.rowClass.value === undefined) {
-            const triples = jsonld.q.getGraph($service.config.instance, null);
-            const prefix = 'http://plugins.linkedpipes.com/ontology/t-tabularUv#';
-            const resource = jsonld.t.getResourceByType(
-                triples, prefix + 'Configuration');
-            $scope.dialog.rowClass.value =
-                i18_str(jsonld.r.getString(resource, prefix + 'rowsClass'));
-        }
     }
 
     controller.$inject = ['$scope', '$service'];

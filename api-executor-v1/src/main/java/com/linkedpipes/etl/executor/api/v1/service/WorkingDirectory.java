@@ -8,6 +8,11 @@ import java.net.URI;
  */
 public class WorkingDirectory extends File {
 
+    public WorkingDirectory(File file) {
+        super(file.toURI());
+        super.mkdirs();
+    }
+
     public WorkingDirectory(URI uri) {
         super(uri);
         super.mkdirs();

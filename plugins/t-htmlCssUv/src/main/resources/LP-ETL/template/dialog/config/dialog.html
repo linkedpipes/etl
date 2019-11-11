@@ -42,8 +42,12 @@
                 <label>Output</label>
                 <input ng-model="item.output.value">
             </md-input-container>
-            <button ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+            <button ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                <md-icon class="material-icons lp-icon">clear</md-icon>
+            </button>
         </section>
-        <button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+        <button ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple">
+            <md-icon class="material-icons lp-icon">add_circle_outline</md-icon>
+        </button>
     </div>
 </div>

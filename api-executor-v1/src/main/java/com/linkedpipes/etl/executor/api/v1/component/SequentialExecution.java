@@ -7,6 +7,15 @@ public interface SequentialExecution {
     /**
      * Perform execution of the component.
      */
-    void execute() throws LpException;
+    default void execute(Component.Context context) throws LpException {
+        execute();
+    }
 
+
+    /**
+     * Preserved for backward compatibility.
+     */
+    default void execute() throws LpException {
+
+    }
 }

@@ -7,13 +7,15 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.service.ServiceFactory;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
  * Implementation for default manageable wrap for sequential component.
  */
-class SequentialWrap implements ManageableComponent, SequentialExecution {
+class SequentialWrap implements
+        ManageableComponent, SequentialExecution, ResumableComponent {
 
     private final SequentialExecution component;
 
@@ -33,9 +35,18 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
     }
 
     @Override
-    public void execute() throws LpException {
+    public void resumeExecution(File previousWorkingDirectory)
+            throws LpException {
+        if (component instanceof ResumableComponent) {
+            ((ResumableComponent)component)
+                    .resumeExecution(previousWorkingDirectory);
+        }
+    }
+
+    @Override
+    public void execute(Component.Context context) throws LpException {
         try {
-            component.execute();
+            component.execute(context);
         } catch (Throwable t) {
             throw new LpException("Execution failed.", t);
         }

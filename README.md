@@ -1,4 +1,5 @@
 # LinkedPipes ETL
+[![Build Status](https://travis-ci.com/linkedpipes/etl.svg?branch=develop)](https://travis-ci.com/linkedpipes/etl)
 
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [REST API](https://github.com/linkedpipes/etl/wiki) based set of components for easy integration
@@ -8,28 +9,72 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 
 ## Requirements
 - Linux, Windows, iOS
-- [Java] 11, 10 or [Java] 8 update 101 or newer
+- [Docker], [Docker Compose]
+
+### For building locally
+- [Java] 11 or 13
 - [Git]
 - [Maven], 3.2.5 or newer
 - [Node.js] & npm
 
-## Installation
-So far, you need to compile LP-ETL on your own:
+## Installation and startup
+You can run LP-ETL in Docker, or build it from the source.
 
-### Linux
+### Docker
+To start LP-ETL ```master``` branch on ```http://localhost:8080```, you can use a one-liner:
+```
+curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | docker-compose -f - up
+```
+
+Alternatively, you can clone the entire repository
+```sh
+git clone https://github.com/linkedpipes/etl.git
+```
+and run
+```sh
+docker-compose up
+```
+Note that this uses just the ```docker-compose.yml``` file, so the rest of the cloned repository is useless.
+
+You may need to run the commands as ```sudo``` or be in the ```docker``` group.
+
+#### Configuration
+Each component (executor, executor-monitor, storage, frontend) has separate ```Dockerfile```.
+
+Environment variables:
+ * ```LP_ETL_BUILD_BRANCH``` - The ```Dockerfiles``` are designed to run build from the github repository, the branch is set using this property, default is ```master```.
+ * ```LP_ETL_BUILD_JAVA_TEST``` - Set to empty to allow to run Java tests, this will slow down the build.
+ * ```LP_ETL_DOMAIN``` - The URL of the instance, this is used instead of the ```domain.uri``` from the configuration.
+ * ```LP_ETL_FTP``` - The URL of the FTP server, this is used instead of the ```executor-monitor.ftp.uri``` from the configuration. 
+ 
+For [Docker Compose], there are additional environment variables:
+ * ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance.
+This does NOT have to be the same as port in ```LP_ETL_DOMAIN``` in case of reverse-proxying.
+
+For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080``` use can use following command:
+```
+curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 docker-compose -f - up
+```
+
+```docker-compose``` utilizes several volumes that can be used to access/provide data.
+See ```docker-compose.yml``` comments for examples and configuration.
+You may want to create your own ```docker-compose.yml``` for custom configuration.
+
+### From source on Linux
+
+#### Installation
+
 ```sh
 $ git clone https://github.com/linkedpipes/etl.git
 $ cd etl
 $ mvn install
 ```
-### Windows
-We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux.
-Nevertheless, it is possible to build and use LP-ETL with pure Windows-based versions of tools.
 
-## Running LinkedPipes ETL
-To run LP-ETL, you need to run the four components it consists of. For debugging purposes, it is useful to store the console logs.
+#### Configuration
+The configuration file ```deploy/configuration.properties``` can be edited, mainly changing paths to working, storage, log and library directories. 
 
-### Linux
+#### Startup
+
 ```sh
 $ cd deploy
 $ ./executor.sh >> executor.log &
@@ -38,55 +83,37 @@ $ ./storage.sh >> storage.log &
 $ ./frontend.sh >> frontend.log &
 ```
 
-### Windows
-We recommend using [Bash on Ubuntu on Windows] or [Cygwin] and proceeding as with Linux. 
-Otherwise, in the ```deploy``` folder, run
+#### Running LP-ETL as a systemd service
+See example service files in the ```deploy/systemd``` folder.
+
+### From source on Windows
+Note that it is also possible to use [Bash on Ubuntu on Windows] or [Cygwin] and proceed as with Linux.
+
+#### Installation
+```sh
+git clone https://github.com/linkedpipes/etl.git
+cd etl
+mvn install
+```
+#### Configuration
+The configuration file ```deploy/configuration.properties``` can be edited, mainly changing paths to working, storage, log and library directories. 
+
+#### Startup
+In the ```deploy``` folder, run
  * ```executor.bat```
  * ```executor-monitor.bat```
  * ```storage.bat```
  * ```frontend.bat```
 
-Unless configured otherwise, LinkedPipes ETL should now run on ```http://localhost:8080```.
 ## Plugins - Components
-There are components in the ```jars``` directory. Detailed description of how to create your own coming soon.
-
-## Configuration
-The configuration file in the `deploy` directory can be edited, mainly changing paths to working, storage, log and library directories. 
-
-## Update script
-Since we are still in the rapid development phase, we update our instance often. This is an update script that we use and you can reuse it if you wish. The script sets the path to Java 8, kills the running components (yeah, it is dirty), the repo is cloned in ```/opt/lp/etl``` and we store the console logs in ```/data/lp/etl```
-```sh
-#!/bin/bash
-echo Killing Executor
-kill `ps ax | grep /executor.jar | grep -v grep | awk '{print $1}'`
-echo Killing Executor-monitor
-kill `ps ax | grep /executor-monitor.jar | grep -v grep | awk '{print $1}'`
-echo Killing Frontend
-kill `ps ax | grep node | grep -v grep | awk '{print $1}'`
-echo Killing Storage
-kill `ps ax | grep /storage.jar | grep -v grep | awk '{print $1}'`
-cd /opt/lp/etl
-echo Git Pull
-git pull
-echo Mvn install
-mvn clean install
-cd deploy
-echo Running executor
-./executor.sh >> /data/lp/etl/executor.log &
-echo Running executor-monitor
-./executor-monitor.sh >> /data/lp/etl/executor-monitor.log &
-echo Running storage
-./storage.sh >> /data/lp/etl/storage.log &
-echo Running frontend
-./frontend.sh >> /data/lp/etl/frontend.log &
-echo Disowning
-disown
-```
-## Known issues
- * On some Linux systems, Node.js may be run by ```nodejs``` instead of ```node```. In that case, you need to rewrite this in the ```deploy/frontend.sh``` script.
- * If you are using Oracle Java 8, accessing HTTPS based URLs and getting ```SSLHandshakeException : Received fatal alert: handshake_failure``` when the same URL works from, e.g. Chrome, try installing the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html) or for Java 9
+The components live in the ```jars``` directory.
+Detailed description of how to create your own is coming soon, in the meantime, you can copy an existing component and change it.
  
 ## Update notes
+> Update note 5: 2019-09-03 breaking changes in the configuration file. Remove ```/api/v1``` from the ```executor-monitor.webserver.uri```, so it loolks like: ```executor-monitor.webserver.uri = http://localhost:8081```. You can also remove ```executor.execution.uriPrefix``` as the value is derived from ```domain.uri```.
+
+> Update note 4: 2019-07-03 we changed the way frontend is run. If you do not use our script to run it, you need to update yours. 
+
 > Update note 3: When upgrading from develop prior to 2017-02-14, you need to delete ```{deploy}/jars``` and ```{deploy}/osgi```. 
 
 > Update note 2: When upgrading from master prior to 2016-11-04, you need to move your pipelines folder from e.g., ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
@@ -99,3 +126,5 @@ disown
 [Node.js]: <https://nodejs.org>
 [Cygwin]: <https://www.cygwin.com/>
 [Bash on Ubuntu on Windows]: <https://msdn.microsoft.com/en-us/commandline/wsl/about>
+[Docker]: <https://www.docker.com/>
+[Docker Compose]: <https://docs.docker.com/compose/>

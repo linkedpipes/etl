@@ -18,7 +18,7 @@
             checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <rdf4j.version>2.3.2</rdf4j.version>
+        <rdf4j.version>3.0.0</rdf4j.version>
         <commons-io.version>2.5</commons-io.version>
         <commons-net.version>3.6</commons-net.version>
         <httpclient-osgi.version>4.5.2</httpclient-osgi.version>
@@ -119,7 +119,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.1.0</version>
                         <configuration>
                             <includeTestSourceDirectory>
                                 true
@@ -136,48 +136,11 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.puppycrawl.tools</groupId>
-                                <artifactId>checkstyle</artifactId>
-                                <version>8.13</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
         </profile>
         <!-- Java profiles. -->
-        <profile>
-            <id>java-8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>1.8</maven.compiler.source>
-                <maven.compiler.target>1.8</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
-            <id>java-9</id>
-            <activation>
-                <jdk>9</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>1.9</maven.compiler.source>
-                <maven.compiler.target>1.9</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
-            <id>java-10</id>
-            <activation>
-                <jdk>10</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>10</maven.compiler.source>
-                <maven.compiler.target>10</maven.compiler.target>
-            </properties>
-        </profile>
         <profile>
             <id>java-11</id>
             <activation>
@@ -189,13 +152,13 @@
             </properties>
         </profile>
         <profile>
-            <id>java-12</id>
+            <id>java-13</id>
             <activation>
-                <jdk>12</jdk>
+                <jdk>13</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>12</maven.compiler.source>
-                <maven.compiler.target>12</maven.compiler.target>
+                <maven.compiler.source>13</maven.compiler.source>
+                <maven.compiler.target>13</maven.compiler.target>
             </properties>
         </profile>
     </profiles>
@@ -206,7 +169,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>4.0.0</version>
+                    <version>4.2.1</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -220,7 +183,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>4.2.0</version>
+                            <version>4.3.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>

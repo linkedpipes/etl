@@ -1,0 +1,62 @@
+---
+- hosts: etl 
+  tasks:
+          - name: Stop LinkedPipes ETL executor
+            become: true
+            service:
+                    name: lpetl-executor
+                    state: stopped
+          - name: Stop LinkedPipes ETL executor-monitor
+            become: true
+            service:
+                    name: lpetl-executor-monitor
+                    state: stopped
+          - name: Stop LinkedPipes ETL storage
+            become: true
+            service:
+                    name: lpetl-storage
+                    state: stopped
+          - name: Stop LinkedPipes ETL frontend
+            become: true
+            service:
+                    name: lpetl-frontend
+                    state: stopped
+          - name: Pull LinkedPipes ETL from Git
+            git:
+                    repo: 'https://github.com/linkedpipes/etl.git'
+                    dest: /opt/lp/etl
+                    force: yes
+                    version: develop
+            become: true
+          - name: Build LinkedPipes ETL using Maven
+            shell: mvn clean install -DskipTests
+            args:
+                    chdir: /opt/lp/etl
+            become: true
+          - name: Chown to lpetl
+            become: true
+            file:
+                    dest: /opt/lp/etl
+                    owner: lpetl
+                    group: lpetl
+                    recurse: yes
+          - name: Start LinkedPipes ETL executor
+            become: true
+            service:
+                    name: lpetl-executor
+                    state: started
+          - name: Start LinkedPipes ETL executor-monitor
+            become: true
+            service:
+                    name: lpetl-executor-monitor
+                    state: started
+          - name: Start LinkedPipes ETL storage
+            become: true
+            service:
+                    name: lpetl-storage
+                    state: started
+          - name: Start LinkedPipes ETL frontend
+            become: true
+            service:
+                    name: lpetl-frontend
+                    state: started

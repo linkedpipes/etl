@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.linkedpipes</groupId>
     <artifactId>frontend</artifactId>
@@ -22,24 +24,15 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>pl.project13.maven</groupId>
-                        <artifactId>git-commit-id-plugin</artifactId>
-                        <version>2.1.12</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>revision</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.0.0</version>
                         <configuration>
-                            <prefix>git</prefix>
-                            <useNativeGit>false</useNativeGit>
-                            <skipPoms>false</skipPoms>
-                            <runOnlyOnce>false</runOnlyOnce>
-                            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                            <generateGitPropertiesFilename>${project.basedir}/data/git.json</generateGitPropertiesFilename>
-                            <format>json</format>
+                            <filesets>
+                                <fileset>
+                                    <directory>${deploy.directory}</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -47,6 +40,19 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>1.8</version>
                         <executions>
+                            <execution>
+                                <id>clean-dist</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <delete dir="${deploy.directory}/dist"/>
+                                        <delete dir="${project.basedir}/dist"/>
+                                    </target>
+                                </configuration>
+                            </execution>
                             <execution>
                                 <id>copy-dependencies</id>
                                 <phase>package</phase>
@@ -56,21 +62,67 @@
                                 <configuration>
                                     <target>
                                         <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}/..">
-                                            <fileset dir="{project.build.directory}/../deploy">
-                                                <include name="*.*"/>
-                                            </fileset>
+                                        <copy todir="${deploy.directory}/server">
+                                            <fileset dir="${project.basedir}/server"/>
                                         </copy>
-                                        <chmod perm="u+x" file="${deploy.directory}/../frontend.sh"/>
-                                        <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}">
-                                            <fileset dir="${project.build.directory}/..">
-                                                <exclude name="target/**"/>
-                                                <exclude name="pom.xml"/>
-                                                <exclude name="deploy/**"/>
-                                            </fileset>
+                                        <copy todir="${deploy.directory}/dist">
+                                            <fileset dir="${project.basedir}/dist"/>
+                                        </copy>
+                                        <copy todir="${deploy.directory}/">
+                                            <fileset file="${project.basedir}/package.json"/>
                                         </copy>
                                     </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>npm-install</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <executable>npm</executable>
+                                    <arguments>
+                                        <argument>install</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm-build</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <executable>npm</executable>
+                                    <arguments>
+                                        <argument>run</argument>
+                                        <argument>build</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm-install-deploy</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <executable>npm</executable>
+                                    <arguments>
+                                        <argument>install</argument>
+                                        <argument>--production</argument>
+                                    </arguments>
+                                    <workingDirectory>
+                                        ${deploy.directory}
+                                    </workingDirectory>
                                 </configuration>
                             </execution>
                         </executions>

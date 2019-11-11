@@ -92,6 +92,11 @@ class DefaultReportWriter implements ReportWriter {
         }
     }
 
+    public void onTaskFinishedInPreviousRun(Task task) {
+        // Ignore tasks executed in previous run.
+        LOG.info("Task ({}) finished in previous execution.", task.getIri());
+    }
+
     @Override
     public String getIriForReport(Task task) {
         return task.getIri() + "/report";

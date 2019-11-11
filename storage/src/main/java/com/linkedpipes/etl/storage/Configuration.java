@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 @Service
@@ -47,8 +47,8 @@ public class Configuration {
         }
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
-        try (InputStream stream = new FileInputStream(
-                new File(propertiesFile))) {
+        try (InputStreamReader stream = new InputStreamReader(
+                     new FileInputStream(new File(propertiesFile)),"UTF8")) {
             properties.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("Can't load configuration file.", ex);
@@ -63,14 +63,15 @@ public class Configuration {
         logCoreFilter = getProperty("storage.log.core.level");
 
         jarDirectory = getProperty("storage.jars.directory");
-        domainName = getProperty("domain.uri");
+        domainName = getEnvOrProperty("LP_ETL_DOMAIN", "domain.uri");
 
         String storageDirectory = getProperty("storage.directory");
         templatesDirectory = storageDirectory + File.separator + "templates";
         pipelinesDirectory = storageDirectory + File.separator + "pipelines";
         knowledgeDirectory = storageDirectory + File.separator + "knowledge";
 
-        executorMonitorUrl = getProperty("executor-monitor.webserver.uri");
+        executorMonitorUrl =
+                getProperty("executor-monitor.webserver.uri") + "/api/v1/";
     }
 
     public int getStoragePort() {
@@ -130,6 +131,14 @@ public class Configuration {
         } else {
             return value;
         }
+    }
+
+    private String getEnvOrProperty(String env, String name) {
+        String value = System.getenv(env);
+        if (value != null && !value.isEmpty()) {
+            return value;
+        }
+        return getProperty(name);
     }
 
     protected Integer getPropertyInteger(String name) {

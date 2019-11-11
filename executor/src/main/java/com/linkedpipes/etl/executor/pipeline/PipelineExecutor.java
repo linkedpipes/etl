@@ -4,6 +4,7 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitInstanceSource;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
@@ -18,12 +19,20 @@ import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -187,6 +196,49 @@ public class PipelineExecutor {
                     pipeline.getPipelineGraph(), resources);
         } catch (LpException ex) {
             throw new ExecutorException("Can't update pipeline.", ex);
+        }
+        // Load data from previous executions.
+        for (PipelineComponent component :
+                pipeline.getModel().getComponents()) {
+            if (!component.isPlannedForExecution()) {
+                continue;
+            }
+            if (component.getExecution() == null) {
+                continue;
+            }
+            resolveWorkingDirectory(component);
+        }
+    }
+
+    private void resolveWorkingDirectory(
+            PipelineComponent component)
+            throws ExecutorException {
+        String execution = component.getExecution();
+        File pipelineFile = resources.resolveExecutionPath(
+                execution, "pipeline.trig");
+        try (InputStream stream = new FileInputStream(pipelineFile)) {
+            RDFParser parser = Rio.createParser(RDFFormat.TRIG);
+            parser.setRDFHandler(new AbstractRDFHandler() {
+
+                @Override
+                public void handleStatement(Statement st) {
+                    if (!st.getSubject().stringValue().equals(
+                            component.getIri())) {
+                        return;
+                    }
+                    if (!st.getPredicate().stringValue().equals(
+                            LP.HAS_WORKING_DIRECTORY)) {
+                        return;
+                    }
+                    component.setLastWorkingDirectory(
+                            new File(URI.create(st.getObject().stringValue())));
+                }
+            });
+            parser.parse(stream, "http://localhost/default");
+        } catch (Exception ex) {
+            throw new ExecutorException(
+                    "Can't resolve working directory for: %s from %s",
+                    component, execution, ex);
         }
     }
 

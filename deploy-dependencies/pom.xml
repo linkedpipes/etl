@@ -43,6 +43,14 @@
                                     <directory>${deploy.directory}/osgi/core</directory>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
+                                <fileset>
+                                    <directory>${deploy.directory}/osgi/libs</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                                <fileset>
+                                    <directory>${deploy.directory}/jars/core</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
                             </filesets>
                         </configuration>
                     </plugin>
@@ -91,7 +99,7 @@
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-compress</artifactId>
-                                            <version>1.18</version>
+                                            <version>1.19</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Apache POI (excel) bundle dependencies. -->
@@ -127,9 +135,27 @@
                                         </dependency>
                                         <!-- Apache commons. -->
                                         <dependency>
+                                            <groupId>commons-beanutils</groupId>
+                                            <artifactId>commons-beanutils</artifactId>
+                                            <version>1.9.3</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>commons-collections</groupId>
+                                            <artifactId>commons-collections</artifactId>
+                                            <version>3.2.2</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
                                             <groupId>commons-io</groupId>
                                             <artifactId>commons-io</artifactId>
                                             <version>2.5</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-collections4</artifactId>
+                                            <version>4.3</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -146,40 +172,34 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
-                                            <artifactId>commons-lang3</artifactId>
-                                            <version>3.3.2</version>
+                                            <artifactId>commons-text</artifactId>
+                                            <version>1.6</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-lang3</artifactId>
-                                            <version>3.8.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>commons-lang</groupId>
-                                            <artifactId>commons-lang</artifactId>
-                                            <version>2.6</version>
+                                            <version>3.9</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- HttpClient, for example: l-graphStoreProtocol -->
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpclient-osgi</artifactId>
-                                            <version>4.5.2</version>
+                                            <version>4.5.10</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.httpcomponents</groupId>
                                             <artifactId>httpcore-osgi</artifactId>
-                                            <version>4.4.4</version>
+                                            <version>4.4.12</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- OSGI Implementation. -->
                                         <dependency>
                                             <groupId>org.apache.felix</groupId>
                                             <artifactId>org.apache.felix.scr</artifactId>
-                                            <version>2.1.0</version>
+                                            <version>2.1.16</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- OSGI. -->
@@ -192,29 +212,47 @@
                                         <dependency>
                                             <groupId>org.osgi</groupId>
                                             <artifactId>org.osgi.core</artifactId>
-                                            <version>5.0.0</version>
+                                            <version>6.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.osgi</groupId>
+                                            <artifactId>osgi.promise</artifactId>
+                                            <version>7.0.1</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Jackson. -->
                                         <dependency>
                                             <groupId>com.fasterxml.jackson.core</groupId>
                                             <artifactId>jackson-annotations</artifactId>
-                                            <version>2.9.6</version>
+                                            <version>2.9.9</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.fasterxml.jackson.core</groupId>
                                             <artifactId>jackson-core</artifactId>
-                                            <version>2.9.6</version>
+                                            <version>2.9.9</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.fasterxml.jackson.core</groupId>
                                             <artifactId>jackson-databind</artifactId>
-                                            <version>2.9.6</version>
+                                            <version>2.9.9.3</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Others. -->
+                                        <dependency>
+                                            <groupId>org.locationtech.jts</groupId>
+                                            <artifactId>jts-core</artifactId>
+                                            <version>1.16.1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.locationtech.spatial4j</groupId>
+                                            <artifactId>spatial4j</artifactId>
+                                            <version>0.7</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
                                         <dependency>
                                             <groupId>org.jsoup</groupId>
                                             <artifactId>jsoup</artifactId>
@@ -236,13 +274,7 @@
                                         <dependency>
                                             <groupId>com.github.jsonld-java</groupId>
                                             <artifactId>jsonld-java</artifactId>
-                                            <version>0.11.0</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.github.jsonld-java</groupId>
-                                            <artifactId>jsonld-java</artifactId>
-                                            <version>0.12.0</version>
+                                            <version>0.12.5</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -254,7 +286,7 @@
                                         <dependency>
                                             <groupId>com.opencsv</groupId>
                                             <artifactId>opencsv</artifactId>
-                                            <version>3.3</version>
+                                            <version>4.6</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -831,6 +863,18 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-rdfToHdt/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>l-wikibase</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/l-wikibase/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-shacl</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-shacl/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>
@@ -853,7 +897,7 @@
                                         <if>
                                             <available file="${deploy.directory}/configuration.properties"/>
                                             <else>
-                                                <copy file="../configuration.properties.sample" toFile="${deploy.directory}/configuration.properties"/>
+                                                <copy file="${deploy.directory}/configuration.properties.sample" toFile="${deploy.directory}/configuration.properties"/>
                                             </else>
                                         </if>
                                     </tasks>

@@ -41,10 +41,11 @@ public class OverviewToListStatements {
                     valueFactory.createLiteral(overview.getDirectorySize()));
         }
 
-        if (overview.getPipeline() != null) {
+        String pipeline = overview.getPipeline();
+        if (pipeline != null && !"null".equals(pipeline)) {
             statements.addIri(
                     iri, LP_OVERVIEW.HAS_PIPELINE,
-                    overview.getPipeline());
+                    pipeline);
         }
 
         if (overview.getStart() != null) {

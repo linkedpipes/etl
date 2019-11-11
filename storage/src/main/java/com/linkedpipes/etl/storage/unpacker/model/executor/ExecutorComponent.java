@@ -79,6 +79,9 @@ public class ExecutorComponent {
             writer.iri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
             port.write(writer);
         }
+        if (execution != null) {
+            writer.iri(iri, LP_EXEC.HAS_EXECUTION, execution);
+        }
     }
 
     private void writeMapped(BackendTripleWriter writer) {

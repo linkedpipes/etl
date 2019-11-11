@@ -2,6 +2,7 @@ package com.linkedpipes.etl.test;
 
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
@@ -18,6 +19,20 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 public class TestEnvironment implements AutoCloseable {
+
+    private static class TestContext implements  Component.Context {
+
+        @Override
+        public void sendMessage(Event message) {
+            // Do nothing.
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
+
+    }
 
     private final SequentialExecution component;
 
@@ -37,7 +52,7 @@ public class TestEnvironment implements AutoCloseable {
 
     public void execute() throws Exception {
         bindExtensions();
-        component.execute();
+        component.execute(new TestContext());
     }
 
     @Override

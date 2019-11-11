@@ -16,15 +16,16 @@ public class DebugDataTest {
 
     @Test
     public void loadDebugData() {
-        String executionIri = "http://execution";
+        String executionIri = "http://execution/abc";
         File directory = TestUtils.resource("debug");
         Execution execution = Mockito.mock(Execution.class);
         Mockito.when(execution.getIri()).thenReturn(executionIri);
+        Mockito.when(execution.getId()).thenReturn("abc");
         Mockito.when(execution.getDirectory()).thenReturn(directory);
         Statements statements = twoDataUnitsWithValidAndInvalidDebugFiles();
         DebugData debugData = DebugDataFactory.create(execution, statements);
         //
-        Assert.assertEquals(executionIri, debugData.getExecution());
+        Assert.assertEquals("abc", debugData.getExecutionId());
         Assert.assertEquals(directory, debugData.getExecutionDirectory());
         Assert.assertEquals(2, debugData.getDataUnits().size());
         DataUnit valid = debugData.getDataUnits().get("valid");

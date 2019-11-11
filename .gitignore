@@ -18,6 +18,7 @@ bin/
 
 # Nodejs module directory.
 node_modules/
+frontend/dist
 
 # Package files.
 *.war
@@ -25,16 +26,22 @@ node_modules/
 
 # All files/directiries starting with dot.
 .*
+!.travis.yml
 
 # Configuraiton file.
 configuration.properties
 
 # Deploy directory.
-/deploy
+deploy/configuration.properties
+deploy/executor
+deploy/executor-monitor
+deploy/storage
+deploy/frontend
+deploy/jar
+deploy/osg
 
 # Intellij IDEA
 *.iml
-frontend/data/
 
 # Specific files.
 dependency-reduced-pom.xml

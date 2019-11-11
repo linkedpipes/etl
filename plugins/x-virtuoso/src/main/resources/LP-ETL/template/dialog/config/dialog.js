@@ -43,6 +43,10 @@ define([], function () {
         "loaderCount": {
             "$type": "int",
             "$label": "Number of loaders to use"
+        },
+        "checkpoint": {
+            "$type": "bool",
+            "$label": "Execute checkpoint"
         }
     };
 

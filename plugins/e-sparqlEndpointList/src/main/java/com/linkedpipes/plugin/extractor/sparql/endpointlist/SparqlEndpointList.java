@@ -49,6 +49,12 @@ public final class SparqlEndpointList extends TaskExecution<QueryTask> {
     private List<QueryTask> tasks;
 
     @Override
+    protected void initialization() throws LpException {
+        super.initialization();
+        this.consumer = new StatementsConsumer(outputRdf);
+    }
+
+    @Override
     protected TaskSource<QueryTask> createTaskSource() throws LpException {
         loadTasks();
         if (configuration.getTaskPerGroupLimit() == 0) {
@@ -93,7 +99,6 @@ public final class SparqlEndpointList extends TaskExecution<QueryTask> {
     @Override
     protected void beforeExecution() throws LpException {
         super.beforeExecution();
-        this.consumer = new StatementsConsumer(outputRdf);
         this.progressReport.start(tasks);
     }
 

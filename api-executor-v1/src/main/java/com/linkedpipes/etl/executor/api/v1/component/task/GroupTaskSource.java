@@ -8,6 +8,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
 
+    /**
+     * Group of tasks, limit the number of running tasks.
+     */
     private class Group<G> {
 
         private volatile AtomicInteger numberOfRunning = new AtomicInteger();
@@ -15,15 +18,15 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
         protected ConcurrentLinkedDeque<G> tasks =
                 new ConcurrentLinkedDeque<>();
 
-        public void addTask(G task) {
+        private void addTask(G task) {
             this.tasks.add(task);
         }
 
-        public void onTaskExecutionFinished() {
+        private void onTaskExecutionFinished() {
             numberOfRunning.decrementAndGet();
         }
 
-        public G getTask(int runningLimit) {
+        protected G getTask(int runningLimit) {
             if (numberOfRunning.get() >= runningLimit) {
                 return null;
             }
@@ -38,16 +41,19 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
 
     }
 
-    private class NullGroup<G> extends Group {
+    /**
+     * Group for all tasks without the group, i.e. where group is null.
+     */
+    private class NullGroup<G> extends Group<G> {
 
         @Override
-        public Object getTask(int runningLimit) {
+        public G getTask(int runningLimit) {
             return tasks.poll();
         }
 
     }
 
-    private final Map<Object, Group> groups = new HashMap<>();
+    private final Map<Object, Group<T>> groups = new HashMap<>();
 
     private final int runningLimit;
 
@@ -57,7 +63,7 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
 
     private final Object lock = new Object();
 
-    public GroupTaskSource(Collection<T> tasks, int runningLimit) {
+    GroupTaskSource(Collection<T> tasks, int runningLimit) {
         this.runningLimit = runningLimit;
         this.groups.put(null, new NullGroup<>());
         splitTasks(tasks);
@@ -66,10 +72,10 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
     private void splitTasks(Collection<T> tasks) {
         tasks.forEach((T task) -> {
             Group<T> group = groups.computeIfAbsent(
-                    task.getGroup(), (x) -> new Group<>());
+                    task.getGroup(),
+                    (x) -> new Group<T>());
             group.addTask(task);
         });
-
     }
 
     @Override
@@ -86,6 +92,11 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
         }
     }
 
+    private boolean shouldHandleNextTask() {
+        return skipOnError || !taskFailed;
+    }
+
+
     private T getTaskToExecute() {
         synchronized (lock) {
             for (Group<T> group : groups.values()) {
@@ -98,8 +109,19 @@ class GroupTaskSource<T extends GroupTask> implements TaskSource<T> {
         return null;
     }
 
-    private boolean shouldHandleNextTask() {
-        return skipOnError || !taskFailed;
+    @Override
+    public boolean isAllExecuted() {
+        if (!shouldHandleNextTask()) {
+            return true;
+        }
+        synchronized (lock) {
+            for (Group<T> group : groups.values()) {
+                if (!group.tasks.isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

@@ -1,0 +1,16 @@
+[Unit]
+Description=LinkedPipes ETL frontend service
+After=network.target
+
+[Service]
+Type=simple
+User=lpetl
+WorkingDirectory=/opt/lp/etl/deploy/frontend
+Environment=configFileLocation=../configuration.properties
+ExecStart=/usr/bin/npm run start
+Restart=always
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
+

@@ -205,4 +205,7 @@ public final class LP_PIPELINE {
     public static final String HAS_TAG =
             "http://etl.linkedpipes.com/ontology/tag";
 
+    public static final String HAS_COLOR =
+            "http://linkedpipes.com/ontology/color";
+
 }

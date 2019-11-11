@@ -5,6 +5,8 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 
+import java.util.Calendar;
+
 public class RdfValueWrap implements RdfValue {
 
     private final BackendRdfValue value;
@@ -44,6 +46,29 @@ public class RdfValueWrap implements RdfValue {
         } catch (RdfUtilsException ex) {
             throw new RdfException("", ex);
         }
+    }
+
+    @Override
+    public Double asDouble() throws RdfException {
+        try {
+            return value.asDouble();
+        } catch (RdfUtilsException ex) {
+            throw new RdfException("", ex);
+        }
+    }
+
+    @Override
+    public Calendar asCalendar() throws RdfException {
+        try {
+            return value.asCalendar();
+        } catch (RdfUtilsException ex) {
+            throw new RdfException("", ex);
+        }
+    }
+
+    @Override
+    public boolean isBlankNode() {
+        return value.isBlankNode();
     }
 
 }

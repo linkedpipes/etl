@@ -82,6 +82,9 @@ public final class Virtuoso implements Component, SequentialExecution {
         }
         progressReport.start(filesToLoadCount);
         runLoaders(filesToLoadCount);
+        if (configuration.isCheckpoint()) {
+            checkpoint();
+        }
         progressReport.done();
         clearLoadList();
     }
@@ -106,11 +109,11 @@ public final class Virtuoso implements Component, SequentialExecution {
                 configuration.getTargetGraph());
     }
 
-    private void clearDestinationGraph() throws LpException {
+    private void clearDestinationGraph() {
         LOG.debug("clearDestinationGraph ... ");
         final RepositoryConnection connection = repository.getConnection();
         try {
-            final Update update = connection.prepareUpdate(
+            Update update = connection.prepareUpdate(
                     QueryLanguage.SPARQL,
                     getClearQuery());
             update.execute();
@@ -140,6 +143,12 @@ public final class Virtuoso implements Component, SequentialExecution {
         MultiThreadLoader loader = new MultiThreadLoader(
                 sqlExecutor, configuration, exceptionFactory, progressReport);
         loader.loadData(filesToLoad);
+    }
+
+    private void checkpoint() throws LpException {
+        LOG.info("Checkpoint ... ");
+        sqlExecutor.checkpoint();
+        LOG.info("Checkpoint ... done");
     }
 
     private void clearLoadList() throws LpException {

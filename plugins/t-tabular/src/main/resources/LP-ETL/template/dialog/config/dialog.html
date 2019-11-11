@@ -87,9 +87,13 @@
                 <input type="url" ng-model="item.valueUrl" placeholder="http://ex.org/resource">
             </md-input-container>
             <button hide-gt-sm ng-click="onDelete($index)" class="md-raised md-warn md-button md-ink-ripple">Remove column</button>
-            <button hide show-gt-sm ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple"><md-icon md-svg-icon="clear" class="lp-icon"></md-icon></button>
+            <button hide show-gt-sm ng-click="onDelete($index)" class="md-icon-button md-accent md-button md-ink-ripple">
+                <md-icon class="material-icons lp-icon">clear</md-icon>
+            </button>
         </section>
         <button hide-gt-sm ng-click="onAdd()" class="md-raised md-primary md-button md-ink-ripple">Add column</button>
-        <button hide show-gt-sm ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple"><md-icon md-svg-icon="add_circle_outline" class="lp-icon"></md-icon></button>
+        <button hide show-gt-sm ng-click="onAdd()" class="md-icon-button md-primary md-button md-ink-ripple">
+            <md-icon class="material-icons lp-icon">add_circle_outline</md-icon>
+        </button>
     </md-content>
 </div>

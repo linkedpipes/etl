@@ -3,6 +3,8 @@ package com.linkedpipes.etl.dataunit.core;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
@@ -15,6 +17,7 @@ import org.eclipse.rdf4j.rio.Rio;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,9 +53,33 @@ public class Rdf4jSource implements RdfSource {
 
         @Override
         public Long asLong() {
-            throw new UnsupportedOperationException();
+            if (value instanceof Literal) {
+                return ((Literal) value).longValue();
+            }
+            return null;
         }
 
+        @Override
+        public Double asDouble() {
+            if (value instanceof Literal) {
+                return ((Literal) value).doubleValue();
+            }
+            return null;
+        }
+
+        @Override
+        public Calendar asCalendar() {
+            if (this.value instanceof Literal) {
+                return ((Literal) this.value)
+                        .calendarValue().toGregorianCalendar();
+            }
+            return null;
+        }
+
+        @Override
+        public boolean isBlankNode() {
+            return value instanceof BNode;
+        }
     }
 
     private Model model;

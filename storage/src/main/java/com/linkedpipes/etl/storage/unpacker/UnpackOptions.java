@@ -54,7 +54,9 @@ class UnpackOptions implements Loadable {
 
         private String execution;
 
-        private final List<ComponentMapping> components = new LinkedList<>();
+        private final List<ComponentMapping> mappings = new LinkedList<>();
+
+        private final List<ComponentMapping> resumes = new LinkedList<>();
 
         @Override
         public Loadable load(String predicate, BackendRdfValue value) {
@@ -64,8 +66,12 @@ class UnpackOptions implements Loadable {
                     return null;
                 case "http://etl.linkedpipes.com/ontology/mapping":
                     ComponentMapping mapping = new ComponentMapping();
-                    components.add(mapping);
+                    mappings.add(mapping);
                     return mapping;
+                case "http://etl.linkedpipes.com/ontology/resume":
+                    ComponentMapping resume = new ComponentMapping();
+                    resumes.add(resume);
+                    return resume;
                 default:
                     return null;
             }
@@ -76,8 +82,12 @@ class UnpackOptions implements Loadable {
             return execution;
         }
 
-        public List<ComponentMapping> getComponents() {
-            return Collections.unmodifiableList(components);
+        public List<ComponentMapping> getMappings() {
+            return Collections.unmodifiableList(mappings);
+        }
+
+        public List<ComponentMapping> getResumes() {
+            return Collections.unmodifiableList(resumes);
         }
     }
 

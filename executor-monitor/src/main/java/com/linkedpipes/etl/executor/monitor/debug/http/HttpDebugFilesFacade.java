@@ -1,13 +1,16 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
-
+import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,10 +19,17 @@ import java.util.Optional;
 @Service
 public class HttpDebugFilesFacade {
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(HttpDebugFilesFacade.class);
+
+    private final Configuration configuration;
+
     private final DebugDataSource dataSource;
 
     @Autowired
-    public HttpDebugFilesFacade(DebugDataSource dataSource) {
+    public HttpDebugFilesFacade(
+            Configuration configuration, DebugDataSource dataSource) {
+        this.configuration = configuration;
         this.dataSource = dataSource;
     }
 
@@ -53,7 +63,9 @@ public class HttpDebugFilesFacade {
     private Optional<DebugEntry> resolveDataUnit(
             List<String> path, DataUnit dataUnit) {
         if (path.size() == 2) {
-            return Optional.of(new DataUnitRootEntry(dataUnit));
+            return Optional.of(new DataUnitRootEntry(
+                    dataUnit,
+                    (fileToResolve) -> preparePublicPath(fileToResolve)));
         }
         // The same file can be in multiple data units.
         List<DebugEntry> entriesFound = new ArrayList<>(2);
@@ -63,10 +75,13 @@ public class HttpDebugFilesFacade {
                 continue;
             }
             if (resolved.isDirectory()) {
-                entriesFound.add(new DirectoryEntry(resolved, file.getName()));
+                entriesFound.add(new DirectoryEntry(
+                        resolved, file.getName(),
+                        (fileToResolve) -> preparePublicPath(fileToResolve)));
             } else {
                 entriesFound.add(new FileContentEntry(
-                        dataUnit, resolved, file.getName()));
+                        dataUnit, resolved, file.getName(),
+                        preparePublicPath(resolved)));
             }
         }
         if (entriesFound.size() == 0) {
@@ -74,7 +89,9 @@ public class HttpDebugFilesFacade {
         } else if (entriesFound.size() == 1) {
             return Optional.of(entriesFound.get(0));
         } else {
-            return Optional.of(new AmbiguousEntry(entriesFound));
+            return Optional.of(new AmbiguousEntry(
+                    entriesFound,
+                    (fileToResolve) -> preparePublicPath(fileToResolve)));
         }
     }
 
@@ -87,6 +104,23 @@ public class HttpDebugFilesFacade {
         if (nextFile.exists() || nextFile.isDirectory()) {
             return resolvePath(path, pathIndex + 1, nextFile);
         } else {
+            return null;
+        }
+    }
+
+    private String preparePublicPath(File file) {
+        String urlPrefix = configuration.getPublicWorkingDataUrlPrefix();
+        if (urlPrefix == null) {
+            return null;
+        }
+        try {
+            String filePath = file.getCanonicalPath();
+            String workingPath =
+                    configuration.getRawWorkingDirectory().getCanonicalPath();
+            String relativePath = filePath.substring(workingPath.length());
+            return urlPrefix + relativePath.replace(File.separator, "/");
+        } catch (IOException ex) {
+            LOG.warn("Can't prepare public path for: {}", file, ex);
             return null;
         }
     }

@@ -2,6 +2,7 @@ package com.linkedpipes.etl.executor.monitor.debug.http;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,6 +15,7 @@ class ResponseContent {
 
     public static final String TYPE_AMBIGUOUS = "ambiguous";
 
+    @SuppressFBWarnings
     public static class Entry {
 
         public String type;
@@ -23,13 +25,24 @@ class ResponseContent {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String source;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public Long size;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String mimeType;
+
+        /**
+         * Used for file type.
+         * Path that can be used to access data.
+         */
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        public String publicDataPath;
 
         public Entry(String type, String name, String source) {
             this.type = type;
@@ -41,31 +54,46 @@ class ResponseContent {
 
         public Entry(
                 String type, String name, String source,
-                Long size, String mimeType) {
+                Long size, String mimeType, String publicDataPath) {
             this.type = type;
             this.name = name;
             this.source = source;
             this.size = size;
             this.mimeType = mimeType;
+            this.publicDataPath = publicDataPath;
         }
 
     }
 
+    @SuppressFBWarnings
     public static class Metadata {
 
         public String type;
 
-        // Used for directories.
+        /**
+         * Used for directories.
+          */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public Long count;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public Long size;
 
-        // Used for file type.
+        /**
+         * Used for file type.
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String mimeType;
+
+        /**
+         * Used for file type.
+         * Path that can be used to access data.
+          */
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        public String publicDataPath;
 
     }
 

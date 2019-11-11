@@ -1,0 +1,15 @@
+[Unit]
+Description=LinkedPipes ETL storage service
+After=network.target
+
+[Service]
+Type=simple
+User=lpetl
+WorkingDirectory=/opt/lp/etl/deploy
+ExecStart=/usr/bin/java -DconfigFileLocation=configuration.properties -jar ./storage/storage.jar
+Restart=always
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
+

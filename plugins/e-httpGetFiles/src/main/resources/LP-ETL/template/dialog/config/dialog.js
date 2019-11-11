@@ -39,6 +39,14 @@ define([], function () {
         "utf8Redirect": {
             "$type" : "bool",
             "$label" : "Use UTF-8 encoding for redirect"
+        },
+        "retryCount": {
+            "$type" : "int",
+            "$label" : "Retry count"
+        },
+        "waitTime":{
+            "$type" : "int",
+            "$label" : "Wait time between retry"
         }
     };
 

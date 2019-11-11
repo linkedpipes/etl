@@ -178,7 +178,6 @@ class ExecutionStorage
      * Perform full execution update from directory.
      */
     public void update(Execution execution) {
-        ExecutionStatus oldStatus = execution.getStatus();
         if (!(shouldUpdate(execution))) {
             // We do not reload dangling or invalid executions.
             return;
@@ -201,6 +200,7 @@ class ExecutionStorage
                     execution.getId(), ex);
             return;
         }
+        ExecutionStatus oldStatus = execution.getStatus();
         if (oldStatus != execution.getStatus()) {
             eventListener.onExecutionStatusDidChange(execution, oldStatus);
         }

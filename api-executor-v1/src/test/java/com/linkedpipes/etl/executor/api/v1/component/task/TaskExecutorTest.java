@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.component.task;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,6 +26,8 @@ public class TaskExecutorTest {
 
     private ReportWriter report;
 
+    private Component.Context context;
+
     @BeforeClass
     public static void initializeMdcContext() {
         MDC.setContextMap(Collections.EMPTY_MAP);
@@ -34,6 +37,8 @@ public class TaskExecutorTest {
     public void before() {
         consumer = Mockito.mock(TaskConsumer.class);
         report = Mockito.mock(ReportWriter.class);
+        context = Mockito.mock(Component.Context.class);
+        Mockito.when(context.isCancelled()).thenReturn(false);
     }
 
     @Test
@@ -42,7 +47,8 @@ public class TaskExecutorTest {
         TaskSource<Task> source = TaskSource.defaultTaskSource(
                 Arrays.asList(first));
         TaskExecutor<Task> executor = new TaskExecutor<>(
-                consumer, source, report);
+                consumer, source, report, context, null,
+                Collections.emptySet());
         executor.run();
 
         Mockito.verify(report, Mockito.times(1)).onTaskFinished(
@@ -55,7 +61,8 @@ public class TaskExecutorTest {
         TaskSource<Task> source = TaskSource.defaultTaskSource(
                 Arrays.asList(first));
         TaskExecutor<Task> executor = new TaskExecutor<>(
-                consumer, source, report);
+                consumer, source, report, context, null,
+                Collections.emptySet());
         Mockito.doThrow(LpException.class).when(consumer)
                 .accept(Mockito.any());
         executor.run();
@@ -72,7 +79,8 @@ public class TaskExecutorTest {
                 Arrays.asList(first, second));
         source.setSkipOnError(true);
         TaskExecutor<Task> executor = new TaskExecutor<>(
-                consumer, source, report);
+                consumer, source, report, context, null,
+                Collections.emptySet());
         Mockito.doThrow(LpException.class).when(consumer)
                 .accept(Mockito.eq(first));
         executor.run();
@@ -91,7 +99,8 @@ public class TaskExecutorTest {
                 Arrays.asList(first, second));
         source.setSkipOnError(false);
         TaskExecutor<Task> executor = new TaskExecutor<>(
-                consumer, source, report);
+                consumer, source, report, context, null,
+                Collections.emptySet());
         Mockito.doThrow(LpException.class).when(consumer)
                 .accept(Mockito.eq(first));
         executor.run();

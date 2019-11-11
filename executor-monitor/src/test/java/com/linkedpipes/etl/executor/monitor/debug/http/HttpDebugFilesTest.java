@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
+import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.TestUtils;
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
@@ -29,7 +30,7 @@ public class HttpDebugFilesTest {
     public void prepare() {
         File root = TestUtils.resource("debug");
 
-        DataUnit dataUnit = new DataUnit(DATA_UNIT, "content", null, null);
+        DataUnit dataUnit = new DataUnit("", DATA_UNIT, "content", null, null);
         dataUnit.updateDebugDirectories(root);
 
         Map<String, DataUnit> dataUnits = new HashMap<>();
@@ -40,7 +41,8 @@ public class HttpDebugFilesTest {
         dataSource = Mockito.mock(DebugDataSource.class);
         Mockito.when(dataSource.getDebugData(EXECUTION)).thenReturn(debugData);
 
-        debugFacade = new HttpDebugFilesFacade(dataSource);
+        Configuration configuration = Mockito.mock(Configuration.class);
+        debugFacade = new HttpDebugFilesFacade(configuration, dataSource);
     }
 
     @Test
@@ -112,15 +114,14 @@ public class HttpDebugFilesTest {
         Assert.assertEquals("001", content.source);
         //
         ResponseContent response = DirectoryEntry.prepareResponse(
-                content.directory, content.source, null, null, 0, 99);
+                content.directory, content.source, null, null, 0, 99,
+                (file) -> null);
         Assert.assertEquals(Long.valueOf(1), response.metadata.count);
         Assert.assertEquals(ResponseContent.TYPE_DIR, response.metadata.type);
         Assert.assertEquals("001", response.data.get(0).source);
         Assert.assertEquals("file.txt", response.data.get(0).name);
         Assert.assertEquals(
                 ResponseContent.TYPE_FILE, response.data.get(0).type);
-
-        return;
     }
 
     @Test

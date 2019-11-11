@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 /**
  * While in all other entries we filter the content only,
  * here we also used filters for disambiguation.
- * <p>
- * If only one entry remains then we return that entry.
+ *
+ * <p>If only one entry remains then we return that entry.
  */
 class AmbiguousEntry extends DebugEntry {
 
@@ -22,8 +22,12 @@ class AmbiguousEntry extends DebugEntry {
 
     private long collectedEntries;
 
-    public AmbiguousEntry(List<DebugEntry> entries) {
+    final CreatePublicPath createPublicPath;
+
+    public AmbiguousEntry(
+            List<DebugEntry> entries, CreatePublicPath createPublicPath) {
         this.entries = entries;
+        this.createPublicPath = createPublicPath;
     }
 
     @Override
@@ -99,9 +103,8 @@ class AmbiguousEntry extends DebugEntry {
         long remainingOffset = Math.max(0, offset - totalEntryCount);
         long remainingLimit = limit - collectedEntries;
         ResponseContent content = DirectoryEntry.prepareResponse(
-                entry.directory, entry.source,
-                nameFilter, sourceFilter,
-                remainingOffset, remainingLimit);
+                entry.directory, entry.source, nameFilter, sourceFilter,
+                remainingOffset, remainingLimit, createPublicPath);
         totalEntryCount += content.metadata.count;
         collectedEntries += content.data.size();
         return content.data;
@@ -135,7 +138,8 @@ class AmbiguousEntry extends DebugEntry {
                 entry.file.getName(),
                 entry.source,
                 entry.getFileSize(),
-                entry.getFileMimeType()));
+                entry.getFileMimeType(),
+                createPublicPath.apply(entry.file)));
 
     }
 

@@ -1,0 +1,44 @@
+<div layout="row" layout-align="space-around">
+  <md-content flex layout-padding style="max-width: 66em;">
+    <form style="max-width: 20REM" name="personalizationForm">
+      <md-input-container class="md-block">
+        <label>Default landing page</label>
+        <md-select ng-model="landingPage">
+          <md-option value="/executions">Executions</md-option>
+          <md-option value="/pipelines">Pipelines</md-option>
+        </md-select>
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Maximum initial list (pipelines,executions) size</label>
+        <input type="number" step="any" name="initialListSize"
+               ng-model="initialListSize" ng-pattern="/^[0-9]+$/" min="1"/>
+        <div ng-messages="personalizationForm.initialListSize.$error" multiple
+             md-auto-hide="false">
+          <div ng-message="min">
+            At least one record should be visible at the start.
+          </div>
+        </div>
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Pipeline list ordering</label>
+        <md-select ng-model="pipelineOrdering">
+          <md-option value="default">Pipeline IRI</md-option>
+          <md-option value="title asc">Title ascending</md-option>
+          <md-option value="title desc">Title descending</md-option>
+        </md-select>
+      </md-input-container>
+
+    </form>
+    <div layout="row">
+      <span flex></span>
+      <md-button ng-click="onDiscard()">
+        Discard changes
+      </md-button>
+      <md-button ng-click="onSave()" class="md-primary">
+        Save changes
+      </md-button>
+    </div>
+  </md-content>
+</div>

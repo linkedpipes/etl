@@ -42,7 +42,7 @@ public class ExecutorServiceTest {
         ExecutorRestClient restClient = Mockito.mock(ExecutorRestClient.class);
         CheckExecutor checker = Mockito.mock(CheckExecutor.class);
         Mockito.doAnswer((call) -> {
-            call.getArgumentAt(0, Executor.class).setAlive(true);
+            call.getArgument(0, Executor.class).setAlive(true);
             return null;
         }).when(checker).check(Mockito.any());
         ExecutorService service = new ExecutorService(

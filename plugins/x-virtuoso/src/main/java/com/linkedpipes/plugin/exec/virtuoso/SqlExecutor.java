@@ -3,7 +3,11 @@ package com.linkedpipes.plugin.exec.virtuoso;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 class SqlExecutor {
 
@@ -20,6 +24,8 @@ class SqlExecutor {
 
     public static final String SQL_LOAD = "rdf_loader_run()";
 
+    public static final String SQL_CHECKPOINT = "checkpoint";
+
     private final String url;
 
     private final String username;
@@ -31,7 +37,7 @@ class SqlExecutor {
     private final ExceptionFactory exceptionFactory;
 
     public SqlExecutor(String url, String username, String password,
-            String directory, ExceptionFactory exceptionFactory) {
+                       String directory, ExceptionFactory exceptionFactory) {
         this.url = url;
         this.username = username;
         this.password = password;
@@ -52,7 +58,7 @@ class SqlExecutor {
     }
 
     private static PreparedStatement createLdStatement(Connection connection,
-            String directory, String fileName, String graph)
+                                                       String directory, String fileName, String graph)
             throws SQLException {
         final PreparedStatement statement =
                 connection.prepareStatement(SQL_LD_DIR);
@@ -141,8 +147,8 @@ class SqlExecutor {
      */
     public void loadData() throws LpException {
         try (Connection connection = getSqlConnection()) {
-            try (PreparedStatement statement = prepareLoadStatement(
-                    connection)) {
+            try (PreparedStatement statement =
+                         prepareStatement(connection, SQL_LOAD)) {
                 statement.executeQuery();
             }
         } catch (SQLException ex) {
@@ -151,9 +157,22 @@ class SqlExecutor {
         }
     }
 
-    public PreparedStatement prepareLoadStatement(Connection connection)
+    public PreparedStatement prepareStatement(
+            Connection connection, String statement)
             throws SQLException {
-        return connection.prepareStatement(SQL_LOAD);
+        return connection.prepareStatement(statement);
+    }
+
+    public void checkpoint() throws LpException {
+        try (Connection connection = getSqlConnection()) {
+            try (PreparedStatement statement =
+                         prepareStatement(connection, SQL_CHECKPOINT)) {
+                statement.executeQuery();
+            }
+        } catch (SQLException ex) {
+            throw exceptionFactory.failure(
+                    "Can't load data.", ex);
+        }
     }
 
 }
