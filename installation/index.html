@@ -9,41 +9,26 @@ order: 4
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <h2 class="header center orange-text">Installation</h2>
-    </div>
+		<p class="flow-text center">
+			You can run LP-ETL using Docker, or build it from source.
+		</p>
       <div class="row">
-        <div class="col s12 m12 l12">
-          <div class="icon-block">
-            <p class="flow-text">So far, we only support building from source. Binaries will be supplied once we reach our first release. Therefore, you need <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java</a> 8 update 101 or <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java</a> 10 or 11, <a href="https://git-scm.com/">Git</a>, <a href="https://maven.apache.org/">Maven</a> and <a href="https://nodejs.org">Node.js</a>.</p>
-          </div>
+        <div class="col s12 m6">
+			<h3 class="header center orange-text">Docker</h3>
+			<div class="icon-block">
+			<p class="flow-text">
+				For running using docker, you need <a href="https://docs.docker.com/install/">Docker</a> and <a href="https://docs.docker.com/install/">Docker Compose</a>.
+				Then, you can run it with a <a href="https://github.com/linkedpipes/etl#docker">one-liner</a>.
+			</p>
+			</div>
         </div>
-    </div>
-  </div>
-  <div class="section">
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center blue-text"><i class="material-icons">filter_1</i></h2>
-            <h5 class="center">Clone from GitHub</h5>
-            <p class="flow-text">First, <a href="https://github.com/linkedpipes/etl">clone the project from GitHub</a>.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center blue-text"><i class="material-icons">filter_2</i></h2>
-            <h5 class="center">Build using Maven</h5>
-            <p class="flow-text">Once the project is cloned, build it using Maven's <code>mvn install</code> command. You may consider skipping tests by using the <code>-DskipTests</code> parameter to speed things up.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center blue-text"><i class="material-icons">filter_3</i></h2>
-            <h5 class="center">Run our 4 components</h5>
-
-            <p class="flow-text">Currently, the ETL project consists of four components, which are ran individually from the deploy folder. Either run them in four separate console windows, or in shell or <a href="https://www.cygwin.com/">Cygwin</a> in the background, e.g. <code>./executor.sh &amp;</code>, <code>./storage.sh &amp;</code>, <code>./executor-monitor.sh &amp;</code> and <code>./frontend.sh &amp;</code>. The frontend should now run on <code>http://localhost:8080</code> or the port used in the configuration.</p>
+        <div class="col s12 m6">
+          	<h3 class="header center orange-text">Build from source</h3>
+				<div class="icon-block">
+				<p class="flow-text">For <a href="https://github.com/linkedpipes/etl#from-source-on-linux">building from source</a>, you need <a href="https://jdk.java.net/">Java</a> 11 or 13, <a href="https://git-scm.com/">Git</a>, <a href="https://maven.apache.org/">Maven</a> and <a href="https://nodejs.org">Node.js</a>.</p>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </div>
