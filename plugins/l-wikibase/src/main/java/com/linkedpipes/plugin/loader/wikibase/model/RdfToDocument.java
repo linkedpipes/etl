@@ -89,6 +89,8 @@ public class RdfToDocument {
                         handleLabel(st.getObject());
                     } else if (isDescriptionPredicate(predicate)) {
                         handleDescription(st.getObject());
+                    } else if (isAliasPredicate(predicate)) {
+                        handleAlias(st.getObject());
                     } else if (predicate.stringValue().startsWith(propPrefix)) {
                         PropertyIdValue property =
                                 iriToPropertyId(st.getPredicate());
@@ -139,6 +141,19 @@ public class RdfToDocument {
     private void handleDescription(Value value) {
         Literal literal = (Literal) value;
         builder.withDescription(
+                literal.getLabel(),
+                literal.getLanguage().get());
+    }
+
+    private boolean isAliasPredicate(IRI predicate) {
+        String predicateAsStr = predicate.stringValue();
+        return "http://www.w3.org/2004/02/skos/core#altLabel".equals(
+                predicateAsStr);
+    }
+
+    private void handleAlias(Value value) {
+        Literal literal = (Literal) value;
+        builder.withAlias(
                 literal.getLabel(),
                 literal.getLanguage().get());
     }

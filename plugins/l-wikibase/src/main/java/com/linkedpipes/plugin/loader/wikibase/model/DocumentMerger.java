@@ -1,5 +1,7 @@
 package com.linkedpipes.plugin.loader.wikibase.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.helpers.ItemDocumentBuilder;
 import org.wikidata.wdtk.datamodel.helpers.StatementBuilder;
@@ -13,8 +15,10 @@ import org.wikidata.wdtk.datamodel.interfaces.StatementGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +62,9 @@ public class DocumentMerger {
 
     }
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(DocumentMerger.class);
+
     private final ItemDocument localDocument;
 
     private final ItemDocument remoteDocument;
@@ -75,6 +82,12 @@ public class DocumentMerger {
     private Map<String, String> descriptionsToDelete = new HashMap<>();
 
     private Map<String, String> descriptionsToKeep = new HashMap<>();
+
+    private Map<String, Set<String>> aliasesToAdd = new HashMap<>();
+
+    private Map<String, Set<String>> aliasesToDelete = new HashMap<>();
+
+    private Map<String, Set<String>> aliasesToKeep = new HashMap<>();
 
     private List<Statement> statementsToAdd = new ArrayList<>();
 
@@ -122,6 +135,14 @@ public class DocumentMerger {
                 descriptionsToAdd,
                 descriptionsToDelete,
                 descriptionsToKeep);
+
+        mergeStringListMap(
+                collectAsListMap(localDocument.getAliases()),
+                collectAsListMap(remoteDocument.getAliases()),
+                aliasesToAdd,
+                aliasesToDelete,
+                aliasesToKeep);
+
         mergeStatements();
     }
 
@@ -136,19 +157,19 @@ public class DocumentMerger {
         // And update with local values.
         for (Map.Entry<String, String> entry : localMap.entrySet()) {
             String key = entry.getKey();
-            if (toKeep.containsKey(key)) {
-                if (toKeep.get(key).equals(entry.getValue())) {
-                    // The values are the same.
-                    continue;
-                }
-                // Values are different so we need to replace them.
-                toDelete.put(key, toKeep.get(key));
+            if (!toKeep.containsKey(key)) {
+                // This is a new value, so just add it.
                 toAdd.put(key, entry.getValue());
-                toKeep.remove(key);
-            } else {
-                // Just add a new one.
-                toAdd.put(key, entry.getValue());
+                continue;
             }
+            if (toKeep.get(key).equals(entry.getValue())) {
+                // The values are the same.
+                continue;
+            }
+            // Values are different so we need to replace them.
+            toDelete.put(key, toKeep.get(key));
+            toAdd.put(key, entry.getValue());
+            toKeep.remove(key);
         }
     }
 
@@ -158,6 +179,66 @@ public class DocumentMerger {
         for (Map.Entry<String, MonolingualTextValue> entry :
                 values.entrySet()) {
             result.put(entry.getKey(), entry.getValue().getText());
+        }
+        return result;
+    }
+
+    private void mergeStringListMap(
+            Map<String, Set<String>> localMap,
+            Map<String, Set<String>> remoteMap,
+            Map<String, Set<String>> toAdd,
+            Map<String, Set<String>> toDelete,
+            Map<String, Set<String>> toKeep) {
+        // By default keep all from remote.
+        toKeep.putAll(remoteMap);
+        // And update with local values.
+        for (Map.Entry<String, Set<String>> entry : localMap.entrySet()) {
+            String key = entry.getKey();
+            if (!toKeep.containsKey(key)) {
+                // This is a new value, so just add it.
+                toAdd.put(key, entry.getValue());
+                continue;
+            }
+            // There are values in local and remote, we need to merge them.
+            Set<String> localSet = entry.getValue();
+            Set<String> remoteSet = remoteMap.get(key);
+
+            Set<String> deleteSet = new HashSet<>(remoteSet);
+            deleteSet.removeAll(localSet);
+
+            Set<String> addSet = new HashSet<>(localSet);
+            localSet.removeAll(remoteSet);
+
+            Set<String> keepSet = new HashSet<>(localSet);
+            keepSet.retainAll(remoteSet);
+
+            //
+            toDelete.put(key, deleteSet);
+            toAdd.put(key, addSet);
+            if (keepSet.isEmpty()) {
+                toKeep.remove(key);
+            } else {
+                toKeep.put(key, keepSet);
+            }
+        }
+    }
+
+    private Map<String, Set<String>> collectAsListMap(
+            Map<String, List<MonolingualTextValue>> values) {
+        Map<String, Set<String>> result = new HashMap<>();
+        for (Map.Entry<String, List<MonolingualTextValue>> entry :
+                values.entrySet()) {
+            String lang = entry.getKey();
+            Set<String> output =
+                    result.computeIfAbsent(lang, (key) -> new HashSet<>());
+            for (MonolingualTextValue value : entry.getValue()) {
+                if (lang.equals(value.getLanguageCode())) {
+                    LOG.error(
+                            "Alias language mismatch {} {}",
+                            lang, value.getLanguageCode());
+                }
+                output.add(value.getText());
+            }
         }
         return result;
     }
@@ -286,6 +367,12 @@ public class DocumentMerger {
         for (Map.Entry<String, String> entry : descriptionsToAdd.entrySet()) {
             builder.withDescription(entry.getValue(), entry.getKey());
         }
+        // Aliases.
+        for (Map.Entry<String, Set<String>> entry : aliasesToAdd.entrySet()) {
+            for (String value : entry.getValue()) {
+                builder.withAlias(value, entry.getKey());
+            }
+        }
         // Statements - just new or changed.
         for (Statement statement : statementsToAdd) {
             builder.withStatement(statement);
@@ -319,6 +406,11 @@ public class DocumentMerger {
         for (Map.Entry<String, String> entry : descriptionsToKeep.entrySet()) {
             builder.withDescription(entry.getValue(), entry.getKey());
         }
+        for (Map.Entry<String, Set<String>> entry : aliasesToKeep.entrySet()) {
+            for (String value : entry.getValue()) {
+                builder.withAlias(value, entry.getKey());
+            }
+        }
         for (Statement statement : statementsToKeep) {
             builder.withStatement(statement);
         }
@@ -326,7 +418,7 @@ public class DocumentMerger {
 
     public boolean canUpdateExisting() {
         return labelsToDelete.isEmpty() && descriptionsToAdd.isEmpty() &&
-                statementsToDelete.isEmpty();
+                aliasesToDelete.isEmpty() && statementsToDelete.isEmpty();
     }
 
 }
