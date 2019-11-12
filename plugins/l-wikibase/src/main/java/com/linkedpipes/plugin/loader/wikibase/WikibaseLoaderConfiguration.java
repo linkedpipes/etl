@@ -29,6 +29,9 @@ public class WikibaseLoaderConfiguration {
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_STRICT_MATCHING)
     private boolean strictMatching = false;
 
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_SKIP_ON_ERROR)
+    private boolean skipOnError = false;
+
     public WikibaseLoaderConfiguration() {
     }
 
@@ -94,6 +97,14 @@ public class WikibaseLoaderConfiguration {
 
     public void setStrictMatching(boolean strictMatching) {
         this.strictMatching = strictMatching;
+    }
+
+    public boolean isSkipOnError() {
+        return skipOnError;
+    }
+
+    public void setSkipOnError(boolean skipOnError) {
+        this.skipOnError = skipOnError;
     }
 
 }

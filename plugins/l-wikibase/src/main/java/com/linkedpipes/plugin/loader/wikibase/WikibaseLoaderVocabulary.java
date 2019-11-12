@@ -25,6 +25,8 @@ public final class WikibaseLoaderVocabulary {
 
     public static final String HAS_STRICT_MATCHING = PREFIX + "strictMatching";
 
+    public static final String HAS_SKIP_ON_ERROR = PREFIX + "skipOnError";
+
     public static final String NEW_STRATEGY =
             PREFIX + "New";
 

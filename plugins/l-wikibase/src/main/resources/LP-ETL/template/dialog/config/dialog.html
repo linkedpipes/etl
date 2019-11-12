@@ -45,4 +45,8 @@
                ng-disabled="dialog.strictMatching.disabled || dialog.strictMatching.inherit"
                ng-model="dialog.strictMatching.value">Use strict matching (string-based) for value matching
     </md-switch>
+    <md-switch ng-hide="dialog.skipOnError.hide"
+               ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit"
+               ng-model="dialog.skipOnError.value">Skip on error
+    </md-switch>
 </div>

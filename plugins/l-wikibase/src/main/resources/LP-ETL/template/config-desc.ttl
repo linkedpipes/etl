@@ -10,7 +10,8 @@
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/sparqlUrl> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/referenceProperty> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/averageTimePerEdit> ,
-        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/strictMatching> .
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/strictMatching> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/skipOnError> .
 
 <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
@@ -54,3 +55,7 @@
     config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatching> ;
     config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatchingControl> .
 
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/skipOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnErrorControl> .

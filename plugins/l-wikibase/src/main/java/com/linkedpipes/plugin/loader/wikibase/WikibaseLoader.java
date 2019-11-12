@@ -52,7 +52,7 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
 
             @Override
             public boolean isSkipOnError() {
-                return false;
+                return configuration.isSkipOnError();
             }
 
         };

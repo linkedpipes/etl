@@ -39,6 +39,10 @@ define([], function () {
         "strictMatching": {
             "$type": "bool",
             "$label": "Strict matching"
+        },
+        "skipOnError": {
+            "$type": "bool",
+            "$label": "Skip on error"
         }
     };
 
