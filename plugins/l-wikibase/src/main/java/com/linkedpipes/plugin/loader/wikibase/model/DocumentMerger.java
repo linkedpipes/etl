@@ -232,8 +232,8 @@ public class DocumentMerger {
             Set<String> output =
                     result.computeIfAbsent(lang, (key) -> new HashSet<>());
             for (MonolingualTextValue value : entry.getValue()) {
-                if (lang.equals(value.getLanguageCode())) {
-                    LOG.error(
+                if (!lang.equals(value.getLanguageCode())) {
+                    LOG.warn(
                             "Alias language mismatch {} {}",
                             lang, value.getLanguageCode());
                 }

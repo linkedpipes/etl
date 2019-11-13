@@ -124,9 +124,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
             }
             if (remote != null) {
                 LOG.info(
-                        "Output document {} {} -> {}",
+                        "Output document: {} version: {}",
                         local.getEntityId(),
-                        local.getRevisionId(),
                         remote.getRevisionId());
             }
         } catch (Throwable ex) {
