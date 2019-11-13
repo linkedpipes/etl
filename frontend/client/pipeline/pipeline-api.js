@@ -208,7 +208,7 @@
         "accept": "application/ld+json"
       }
     };
-    return $http.post("./resources/pipelines", data, config)
+    return $http.post("./resources/pipelines", form, config)
       .then((response) => {
         const jsonld = response.data;
         return jsonld[0]["@graph"][0]["@id"];
