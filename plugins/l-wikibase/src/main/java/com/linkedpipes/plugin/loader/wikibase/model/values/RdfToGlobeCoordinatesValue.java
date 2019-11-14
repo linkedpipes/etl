@@ -56,8 +56,8 @@ public class RdfToGlobeCoordinatesValue
         String[] locations = point.split(" ");
 
         return Datamodel.makeGlobeCoordinatesValue(
-                Double.parseDouble(locations[0]),
                 Double.parseDouble(locations[1]),
+                Double.parseDouble(locations[0]),
                 1, // we use this as a default.
                 globeIri);
     }
