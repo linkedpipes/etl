@@ -4,6 +4,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
@@ -11,10 +12,12 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +44,11 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
 
     private List<WikibaseWorker> workers = new ArrayList<>();
 
+    @Component.Inject
+    public ProgressReport progressReport;
+
+    public List<WikibaseTask> tasks = null;
+
     @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
         return new TaskExecutionConfiguration() {
@@ -60,7 +68,7 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
 
     @Override
     protected TaskSource<WikibaseTask> createTaskSource() throws LpException {
-        List<WikibaseTask> tasks = loadDocumentReferences();
+        tasks = loadDocumentReferences();
         return TaskSource.defaultTaskSource(tasks);
     }
 
@@ -101,11 +109,40 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
         for (WikibaseWorker worker : workers) {
             worker.onBeforeExecution();
         }
+        if (tasks != null) {
+            progressReport.start(tasks.size());
+        }
     }
 
     @Override
     protected ReportWriter createReportWriter() {
-        return ReportWriter.create(reportRdf.getWriter());
+        ReportWriter writer = ReportWriter.create(reportRdf.getWriter());
+        return new ReportWriter() {
+
+            @Override
+            public void onTaskFinished(Task task, Date start, Date end) {
+                progressReport.entryProcessed();
+                writer.onTaskFinished(task, start, end);
+            }
+
+            @Override
+            public void onTaskFailed(
+                    Task task, Date start, Date end, Throwable throwable) {
+                progressReport.entryProcessed();
+                writer.onTaskFailed(task, start, end, throwable);
+            }
+
+            @Override
+            public void onTaskFinishedInPreviousRun(Task task) {
+                progressReport.entryProcessed();
+                writer.onTaskFinishedInPreviousRun(task);
+            }
+
+            @Override
+            public String getIriForReport(Task task) {
+                return writer.getIriForReport(task);
+            }
+        };
     }
 
     @Override
@@ -114,6 +151,7 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
         for (WikibaseWorker worker : workers) {
             worker.onAfterExecution();
         }
+        progressReport.done();
     }
 
     @Override
