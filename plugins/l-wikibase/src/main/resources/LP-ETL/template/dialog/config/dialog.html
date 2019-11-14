@@ -4,13 +4,13 @@
         <label>Wikibase API Endpoint URL (api.php)</label>
         <input type="url" ng-model="dialog.endpoint.value"
                ng-disabled="dialog.endpoint.disabled || dialog.endpoint.inherit"
-               placeholder="https://your.wikibase.org/w/api.php">
+               placeholder="https://www.wikidata.org/w/api.php">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.sparqlUrl.hide" flex>
         <label>Wikibase API Endpoint URL (api.php)</label>
         <input type="url" ng-model="dialog.sparqlUrl.value"
                ng-disabled="dialog.sparqlUrl.disabled || dialog.sparqlUrl.inherit"
-               placeholder="https://wbqs.opendata.cz/bigdata/namespace/wdq/sparql">
+               placeholder="https://query.wikidata.org/sparql">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.referenceProperty.hide" flex>
         <label>Any existing property from the target Wikibase instance</label>
@@ -22,7 +22,7 @@
         <label>Wikibase ontology IRI prefix</label>
         <input ng-model="dialog.siteIri.value"
                ng-disabled="dialog.siteIri.disabled || dialog.siteIri.inherit"
-               placeholder="https://your.wikibase.org/">
+               placeholder="http://www.wikidata.org/">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.userName.hide" flex>
         <label>User name</label>
