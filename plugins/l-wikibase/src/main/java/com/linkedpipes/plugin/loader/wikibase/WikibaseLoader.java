@@ -120,7 +120,7 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     protected void checkForFailures(TaskSource<WikibaseTask> taskSource)
             throws LpException {
         // Quick hack to put the last exception to the output.
-        if (taskSource.doesTaskFailed()) {
+        if (taskSource.doesTaskFailed() && !configuration.isSkipOnError()) {
             for (WikibaseWorker worker : workers) {
                 Throwable ex = worker.getLastException();
                 if (ex == null) {
