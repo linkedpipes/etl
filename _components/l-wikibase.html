@@ -11,15 +11,42 @@ Loader, allows the user to load RDF data using the <a href="https://www.mediawik
 </p>
 <dl class="flow-text">
     <dt>Wikibase API Endpoint URL (api.php)</dt>
-    <dd>This is the URL of the <code>api.php</code> in the target Wikibase instance. For example <code>https://www.wikidata.org/w/api.php</code></dd>
+    <dd>
+		This is the URL of the <code>api.php</code> in the target Wikibase instance.
+		For example <code>https://www.wikidata.org/w/api.php</code>
+	</dd>
+    <dt>Wikibase Query Service SPARQL Endpoint URL</dt>
+    <dd>
+		This is the URL of the SPARQL Endpoint of the Wikibase Query Service containing data from the target Wikibase instance.
+		For example <code>https://query.wikidata.org/sparql</code>
+	</dd>
+    <dt>Any existing property from the target Wikibase instance</dt>
+    <dd>
+		e.g. P1921 for Wikidata.
+		This is necessary, so that the used library is able to determine data types of properties used in the Wikibase.
+	</dd>
     <dt>Wikibase ontology IRI prefix</dt>
-    <dd>This is the common part of the IRI prefixes used by the target Wikibase instance. For example <code>http://www.wikidata.org/</code>. This can be determined by looking at e.g. <code>https://www.wikidata.org/wiki/Special:EntityData/Q1.ttl</code>, specifically the <code>wd:</code> and similar prefixes.</dd>
+    <dd>
+		This is the common part of the IRI prefixes used by the target Wikibase instance.
+		For example <code>http://www.wikidata.org/</code>.
+		This can be determined by looking at an <a href="https://www.wikidata.org/wiki/Special:EntityData/Q1.ttl">RDF representation of the Q1 entity in Wikidata</a>, specifically the <code>wd:</code> and similar prefixes.
+	</dd>
     <dt>User name</dt>
     <dd>User name for the Wikibase instance.</dd>
     <dt>Password</dt>
     <dd>Password for the Wikibase instance.</dd>
     <dt>Average time per edit in ms</dt>
     <dd>This is used by the wrapped <a href="https://www.mediawiki.org/wiki/Wikidata_Toolkit">Wikidata Toolkit</a> to pace the API calls.</dd>
+    <dt>Use strict matching (string-based) for value matching</dt>
+    <dd>
+		Wikibase distinguishes among various string representations of the same number, e.g. <code>1</code> and <code>01</code>, whereas in RDF, all those representations are considered equivalent and interchangable.
+		When enabled, the textual representations are considered different, which may lead to unnecessary duplicates.
+	</dd>
+    <dt>Skip on error</dt>
+    <dd>
+		When a Wikibase API call fails and this is enabled, the component continues its execution.
+		Errors are logged in the Report output.
+	</dd>
 </dl>
 <!--more-->
 <div class="row" id="characteristics">
@@ -33,7 +60,7 @@ Loader, allows the user to load RDF data using the <a href="https://www.mediawik
             <dt>Inputs</dt>
             <dd>RDF single graph - Configuration</dd>
             <dd>RDF single graph - Input</dd>
-            <dd>RDF single graph - Ontology</dd>
+            <!--<dd>RDF single graph - Ontology</dd>-->
             <dt>Outputs</dt>
             <dd>RDF single graph - Output mapping</dd>
             <dd>RDF single graph - Report</dd>
@@ -53,11 +80,11 @@ Loader, allows the user to load RDF data using the <a href="https://www.mediawik
 </div>
 
 <div class="row" id="inputs">
-    <h3 class="orange-text center">Requirements on the input data</h3>
+    <h3 class="orange-text center">Shape of the input data</h3>
     <p class="flow-text">
 		Simply put, the component input represents the desired state of the data in the Wikibase instance.
 		Specifically, this means that the IRIs of Items and Statements on the input need to match those in their RDF representations in the target Wikibase, if they are to be updated.
-		The expected format can be seen by using the <code>Special:EntityData</code> function on the Item to be updated in the target Wikibase, e.g.  <code>https://www.wikidata.org/wiki/Special:EntityData/Q1.ttl</code>.
+		The expected format can be seen by using the <code>Special:EntityData</code> function on the Item to be updated in the target Wikibase, e.g. <a href="https://www.wikidata.org/wiki/Special:EntityData/Q1.ttl">Q1 in RDF</a>.
 		There, we may see data like this:
 	</p>
 {% highlight turtle %}
@@ -78,23 +105,26 @@ wd:Q1 rdfs:label "Univers"@fr, "universe"@en-gb, "vesmír"@cs,
 wd:Q1 a wikibase:Item .
 {% endhighlight %}
 	<p class="flow-text">
-		These are, however, required on the input, so that the loader can distinguish an Item from a Statement and other things which may be present in the input.
+		These are, however, required on the input of the component, so that the loader can distinguish an Item from a Statement and other things which may be present in the input.
 	</p>
+	
+	<h4 class="orange-text">Creating new Items</h4>
+	
 	<p class="flow-text">
 		Next is the question of how the IRIs of items to be created in the target Wikibase should look like, when they do not have their Q number assigned yet.
-		The answer is that they can by any IRI (not a blank node), as long as they are tagged by the <code>http://plugins.linkedpipes.com/ontology/l-wikibase#New</code> class, like this:
+		The answer is that they can by any IRI (not a blank node), as long as they are tagged by the <code>loader:New</code> class, like this:
 	</p>
 {% highlight turtle %}
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
 @prefix wd: <http://www.wikidata.org/entity/> .
 @prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
 @prefix wikibase: <http://wikiba.se/ontology#> .
 
 <urn:MyNewItem> a wikibase:Item, loader:New ;
-	rdfs:label "My new Item to be created"@en .
+	schema:name "My new Item to be created"@en .
 {% endhighlight %}
 	<p class="flow-text">
-		The resulting mapping of the newly created Items is given by the component as a linkset using the <code>http://plugins.linkedpipes.com/ontology/l-wikibase#mappedTo</code> predicate on the output, like this:
+		The resulting mapping of the newly created Items is given by the component as a linkset using the <code>loader:mappedTo</code> predicate on the output, like this:
 	</p>
 {% highlight turtle %}
 @prefix wd: <http://www.wikidata.org/entity/> .
@@ -103,7 +133,20 @@ wd:Q1 a wikibase:Item .
 <urn:MyNewItem> loader:mappedTo wd:Q9999999999 .
 {% endhighlight %}
 
-	<h3 class="orange-text center">Wikibase ontology</h3>
+	<h4 class="orange-text">Working with labels</h4>
+	
+	<p class="flow-text">
+		To specify a label for an item, <code>schema:name</code> needs to be used on the component input.
+		Note that in the RDF representations of Items coming directly from Wikibase, e.g. <a href="https://www.wikidata.org/wiki/Special:EntityData/Q1.ttl">Q1 in RDF</a>, <code>schema:name</code>, <code>rdfs:label</code> and <code>skos:prefLabel</code> are used.
+		However, only <code>rdfs:label</code> is then present in the Wikibase SPARQL Endpoint.
+	</p>
+
+	<p class="flow-text">
+		Besides labels, there are descriptions (<code>schema:description</code>) and aliases (<code>skos:altLabel</code>).
+		Note that there is a constraint in Wikidata, that no 2 Items can share the same pair of label and description in any given language.
+	</p>
+
+<!--	<h3 class="orange-text center">Wikibase ontology</h3>
 	
 	<p class="flow-text">
 		If you plan to use some of the less conventional data types used in Wikibases, you need to provide the definitions of those property data types on the <code>Ontology</code> input.
@@ -139,5 +182,132 @@ wd:Q1 a wikibase:Item .
 
 <https://wikibase.opendata.cz/entity/P17> a <http://wikiba.se/ontology#Property> ;
      <http://wikiba.se/ontology#propertyType> <http://wikiba.se/ontology#WikibaseProperty> .
+{% endhighlight %}-->
+
+	<h4 class="orange-text">Working with Statements</h4>
+	
+	<p class="flow-text">
+		The same logic can be used to work with Statements.
+		To update an existing Statement, its IRI needs to be used in the input data.
+		To create a new statement, the IRI can be arbitrary, as long as the Statement instance is tagged by the <code>loader:New</code> class.
+		In the following data snippet, we want to make sure, that in our Wikibase instance (not Wikidata, note the prefixes), the item <code>Q2193</code> has the label <code>Test item</code> in English, and that the existing statement using property <code>P17</code> points to property <code>P16</code>.
+	</p>
+
+{% highlight turtle %}
+@prefix schema: <http://schema.org/> .
+@prefix wd: <https://wikibase.opendata.cz/entity/> .
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix ps: <https://wikibase.opendata.cz/prop/statement/> .
+@prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
+
+wd:Q2193 a wikibase:Item ;
+	schema:name "Test item"@en ;
+	p:P17 wds:Q2193-4ceab9fd-45b0-c7db-176f-15e4b0b6cb03 .
+
+wds:Q2193-4ceab9fd-45b0-c7db-176f-15e4b0b6cb03 a wikibase:Statement;
+	ps:P17 wd:P16 .
+{% endhighlight %}
+
+	<p class="flow-text">
+		The following snippet shows the creation of a new statement using property <code>P16</code> pointing to <code>https://google.com</code>.
+	</p>
+	
+{% highlight turtle %}
+@prefix schema: <http://schema.org/> .
+@prefix wd: <https://wikibase.opendata.cz/entity/> .
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix ps: <https://wikibase.opendata.cz/prop/statement/> .
+@prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
+
+wd:Q2192 a wikibase:Item ;
+	rdfs:label "URL property test item"@en ;
+	p:P16 <urn:1234> .
+
+<urn:1234> a loader:New ;
+	ps:P16 <https://google.com> .
+{% endhighlight %}
+
+	<h4 class="orange-text">Working with complex data types and qualifiers</h4>
+	
+	<p class="flow-text">
+		Wherever one needs to use a complex data type such as <code>wikibase:GlobecoordinateValue</code>, <code>wikibase:TimeValue</code> or <code>wikibase:QuantityValue</code>, only the full representation of that value is supported.
+		Note that values, references and qualifiers do not have their own identity and their IRI is based on their hash value.
+		Therefore, it does not matter which IRIs are used for those.
+	</p>
+	
+	<p class="flow-text">
+		The following snippet shows update of a statement with a <code>P12</code> for <code>wikibase:GlobecoordinateValue</code> and a qualifier using <code>P8</code> for a <code>wikibase:QuantityValue</code>.
+	</p>
+
+{% highlight turtle %}
+@prefix schema: <http://schema.org/> .
+@prefix wd: <https://wikibase.opendata.cz/entity/> .
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix ps: <https://wikibase.opendata.cz/prop/statement/> .
+@prefix psv: <https://wikibase.opendata.cz/prop/statement/value/> .
+@prefix pqv: <https://wikibase.opendata.cz/prop/qualifier/value/> .
+@prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
+
+wd:Q2181 a wikibase:Item ;
+    rdfs:label "qualifierTest item"@en ;
+    p:P12 wds:Q2181-4B493D40-A742-4791-8EAE-60E6D0B73501 .
+
+wds:Q2181-4B493D40-A742-4791-8EAE-60E6D0B73501 a wikibase:Statement ;
+    psv:P12 <urn:value1> ;
+    pqv:P8 <urn:valueQ> .
+
+<urn:value1> a wikibase:GlobecoordinateValue ;
+	wikibase:geoLatitude "28"^^xsd:double ;
+	wikibase:geoLongitude "20"^^xsd:double ;
+	wikibase:geoPrecision "0.000277778"^^xsd:double ;
+	wikibase:geoGlobe <http://www.wikidata.org/entity/Q2> .
+
+<urn:valueQ> a wikibase:QuantityValue ;
+	wikibase:quantityAmount "+4"^^xsd:decimal ;
+	wikibase:quantityUpperBound "5"^^xsd:decimal ;
+	wikibase:quantityLowerBound "2"^^xsd:decimal ;
+	wikibase:quantityUnit <https://wikibase.opendata.cz/entity/Q2153> .
+{% endhighlight %}
+
+	<h4 class="orange-text">Deleting statements</h4>
+	
+	<p class="flow-text">
+		It is also possible to delete existing statements, as in the snippet below:
+	</p>
+{% highlight turtle %}
+@prefix schema: <http://schema.org/> .
+@prefix wd: <https://wikibase.opendata.cz/entity/> .
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix ps: <https://wikibase.opendata.cz/prop/statement/> .
+@prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
+
+wd:Q2212 a wikibase:Item ;
+    p:P19 wds:Q2212-dc589db5-481a-e6e5-f742-2032c2de7fbd .
+
+wds:Q2212-dc589db5-481a-e6e5-f742-2032c2de7fbd a wikibase:Statement, lpetl:Delete .
+{% endhighlight %}
+
+	<h4 class="orange-text">Merging and replacing references</h4>
+	
+	<p class="flow-text">
+		The default strategy for existing statements is to merge existing references with the references specified in the input data.
+		Alternatively, references of the existing statement can be replaced by what is specified in the data, like in the snippet below:
+	</p>
+{% highlight turtle %}
+@prefix schema: <http://schema.org/> .
+@prefix wd: <https://wikibase.opendata.cz/entity/> .
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix ps: <https://wikibase.opendata.cz/prop/statement/> .
+@prefix loader: <http://plugins.linkedpipes.com/ontology/l-wikibase#> .
+
+wd:Q2212 a wikibase:Item ;
+    p:P19 wds:Q2212-dc589db5-481a-e6e5-f742-2032c2de7fbd .
+
+wds:Q2212-dc589db5-481a-e6e5-f742-2032c2de7fbd a wikibase:Statement, lpetl:Replace ;
+    ps:P19 wd:Q2211 ;
+    prov:wasDerivedFrom <urn:ref2> .
+
+<urn:ref2> a wikibase:Reference ;
+   pr:P16 <https://data.gov.cz> .
 {% endhighlight %}
 </div>
