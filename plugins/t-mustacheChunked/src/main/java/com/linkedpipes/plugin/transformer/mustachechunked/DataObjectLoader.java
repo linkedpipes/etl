@@ -55,6 +55,7 @@ class DataObjectLoader {
                 if (st.getObject().equals(objectClass)) {
                     getOrCreate(resource).output = true;
                 }
+                addStatement(st);
                 break;
             case MustacheVocabulary.HAS_ORDER:
                 Literal literal = (Literal) st.getObject();
