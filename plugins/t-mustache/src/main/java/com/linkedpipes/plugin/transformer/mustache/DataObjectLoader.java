@@ -35,7 +35,7 @@ class DataObjectLoader {
     private EscapeForJson escapeForJson;
 
     public DataObjectLoader(SingleGraphDataUnit dataUnit,
-            MustacheConfiguration configuration) {
+                            MustacheConfiguration configuration) {
         repository = dataUnit.getRepository();
         graph = dataUnit.getReadGraph();
         objectClass = SimpleValueFactory.getInstance().createIRI(
@@ -70,6 +70,7 @@ class DataObjectLoader {
                 if (st.getObject().equals(objectClass)) {
                     getOrCreate(resource).output = true;
                 }
+                addStatement(st);
                 break;
             case MustacheVocabulary.HAS_ORDER:
                 Literal literal = (Literal) st.getObject();
@@ -133,7 +134,7 @@ class DataObjectLoader {
     }
 
     private Map<String, Object> buildNonEmptyDataObject(Resource resource,
-            Map<IRI, List<Value>> objectData) {
+                                                        Map<IRI, List<Value>> objectData) {
         Map<String, Object> result = new HashMap<>();
         result.put("@id", escapeString(resource.stringValue()));
         for (Map.Entry<IRI, List<Value>> entry : objectData.entrySet()) {
