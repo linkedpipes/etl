@@ -244,9 +244,24 @@ public class DocumentMerger {
     }
 
     private void mergeStatements() {
+        // New items can be only added.
+        List<Statement> localNewSt = collectNewStatements(localDocument);
+        for (Statement statement : localNewSt) {
+            MergeStrategy mergeStrategy = getMergeStrategy(statement);
+            switch (mergeStrategy) {
+                case NEW:
+                    statementsToAdd.add(statement);
+                    break;
+                case DELETE:
+                case REPLACE:
+                case MERGE:
+                default:
+                    throwUnsupportedStrategyForNew(mergeStrategy);
+            }
+        }
+        // Map rest of the items.
         Map<StatementId, Statement> localSt = statementMap(localDocument);
         Map<StatementId, Statement> remoteSt = statementMap(remoteDocument);
-        //
         for (Map.Entry<StatementId, Statement> entry : localSt.entrySet()) {
             MergeStrategy mergeStrategy = getMergeStrategy(entry.getValue());
             switch (mergeStrategy) {
@@ -274,7 +289,7 @@ public class DocumentMerger {
                     }
                     break;
                 default:
-                    throwUnsupportedStrategy(mergeStrategy);
+                    throwUnsupportedStrategy(entry.getValue(), mergeStrategy);
             }
         }
         // We have some statements in the remoteSt that were not used
@@ -282,8 +297,31 @@ public class DocumentMerger {
         statementsToKeep.addAll(remoteSt.values());
     }
 
-    private void throwUnsupportedStrategy(MergeStrategy strategy) {
+    private void throwUnsupportedStrategyForNew(MergeStrategy strategy) {
         throw new RuntimeException("Unsupported strategy: " + strategy);
+    }
+
+    private void throwUnsupportedStrategy(
+            Statement statement, MergeStrategy strategy) {
+        throw new RuntimeException(
+                "Unsupported strategy: " + strategy +
+                        " for: " + statement.getStatementId());
+    }
+
+    private List<Statement> collectNewStatements(ItemDocument document) {
+        List<Statement> result = new ArrayList<>();
+        for (StatementGroup group : document.getStatementGroups()) {
+            for (Statement statement : group) {
+                if (isNewStatement(statement)) {
+                    result.add(statement);
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean isNewStatement(Statement st) {
+        return st.getStatementId().equals("");
     }
 
     private Map<StatementId, Statement> statementMap(ItemDocument document) {
@@ -291,6 +329,11 @@ public class DocumentMerger {
         for (StatementGroup group : document.getStatementGroups()) {
             PropertyIdValue property = group.getProperty();
             for (Statement statement : group) {
+                if (isNewStatement(statement)) {
+                    // Ignore new statements, statements from wiki always have
+                    // ID so they would not collide here.
+                    continue;
+                }
                 StatementId key = new StatementId(statement, property);
                 if (results.containsKey(key)) {
                     throw new RuntimeException(

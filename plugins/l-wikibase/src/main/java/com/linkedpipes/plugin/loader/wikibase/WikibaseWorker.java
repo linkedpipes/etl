@@ -114,7 +114,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
                     remote = onReplace(local);
                     break;
                 case MERGE:
-                    emitMapping(task, remote);
+                    remote = onMerge(local, mergeStrategy);
                     break;
                 default:
                     throw new RuntimeException(
