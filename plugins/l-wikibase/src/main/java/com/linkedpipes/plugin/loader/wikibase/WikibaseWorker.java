@@ -135,7 +135,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private ItemDocument onNew(ItemDocument local)
             throws IOException, MediaWikiApiErrorException {
-        return wbde.createItemDocument(local, "Create new entity.", null);
+        return wbde.createItemDocument(
+                local, configuration.getNewItemMessage(), null);
     }
 
     private void onDelete(ItemDocument local) {
@@ -144,7 +145,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private ItemDocument onReplace(ItemDocument local)
             throws IOException, MediaWikiApiErrorException {
-        return wbde.editItemDocument(local, true, "Replace entity.", null);
+        return wbde.editItemDocument(
+                local, true, configuration.getReplaceItemMessage(), null);
     }
 
     private ItemDocument onMerge(
@@ -160,12 +162,12 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
             ItemDocument newDocument = merger.assembleMergeDocument();
             return wbde.editItemDocument(
                     newDocument,
-                    false, "Update entity.", null);
+                    false, configuration.getMergeItemMessage(), null);
         } else {
             ItemDocument newDocument = merger.assembleReplaceDocument();
             return wbde.editItemDocument(
                     newDocument,
-                    true, "Update by replace.", null);
+                    true, configuration.getMergeByReplaceItemMessage(), null);
         }
     }
 

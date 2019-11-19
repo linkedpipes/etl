@@ -32,6 +32,19 @@ public class WikibaseLoaderConfiguration {
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_SKIP_ON_ERROR)
     private boolean skipOnError = false;
 
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_NEW_ITEM_MESSAGE)
+    private String newItemMessage = "Create new entity.";
+
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_REPLACE_ITEM_MESSAGE)
+    private String replaceItemMessage = "Replace entity.";
+
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_UPDATE_ITEM_MESSAGE)
+    private String mergeItemMessage = "Update entity.";
+
+    @RdfToPojo.Property(
+            iri = WikibaseLoaderVocabulary.HAS_UPDATE_BY_REPLACE_ITEM_MESSAGE)
+    private String mergeByReplaceItemMessage = "Update by replace.";
+
     public WikibaseLoaderConfiguration() {
     }
 
@@ -105,6 +118,38 @@ public class WikibaseLoaderConfiguration {
 
     public void setSkipOnError(boolean skipOnError) {
         this.skipOnError = skipOnError;
+    }
+
+    public String getNewItemMessage() {
+        return newItemMessage;
+    }
+
+    public void setNewItemMessage(String newItemMessage) {
+        this.newItemMessage = newItemMessage;
+    }
+
+    public String getReplaceItemMessage() {
+        return replaceItemMessage;
+    }
+
+    public void setReplaceItemMessage(String replaceItemMessage) {
+        this.replaceItemMessage = replaceItemMessage;
+    }
+
+    public String getMergeItemMessage() {
+        return mergeItemMessage;
+    }
+
+    public void setMergeItemMessage(String mergeItemMessage) {
+        this.mergeItemMessage = mergeItemMessage;
+    }
+
+    public String getMergeByReplaceItemMessage() {
+        return mergeByReplaceItemMessage;
+    }
+
+    public void setMergeByReplaceItemMessage(String mergeByReplaceItemMessage) {
+        this.mergeByReplaceItemMessage = mergeByReplaceItemMessage;
     }
 
 }

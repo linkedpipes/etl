@@ -11,7 +11,11 @@
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/referenceProperty> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/averageTimePerEdit> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/strictMatching> ,
-        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/skipOnError> .
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/skipOnError> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/newItemMessage> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/replaceItemMessage> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateItemMessage> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateByMergeMessage> .
 
 <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
@@ -59,3 +63,23 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnError> ;
     config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnErrorControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/newItemMessage>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessageControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/replaceItemMessage>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#replaceItemMessage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#replaceItemMessageControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateItemMessage>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessageControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateByMergeMessage>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#updateByMergeMessage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#updateByMergeMessageControl> .

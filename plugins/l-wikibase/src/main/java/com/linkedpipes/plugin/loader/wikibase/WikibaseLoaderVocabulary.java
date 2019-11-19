@@ -27,20 +27,27 @@ public final class WikibaseLoaderVocabulary {
 
     public static final String HAS_SKIP_ON_ERROR = PREFIX + "skipOnError";
 
-    public static final String NEW_STRATEGY =
-            PREFIX + "New";
+    public static final String NEW_STRATEGY = PREFIX + "New";
 
-    public static final String REPLACE_STRATEGY =
-            PREFIX + "Replace";
+    public static final String REPLACE_STRATEGY = PREFIX + "Replace";
 
-    public static final String DELETE_STRATEGY =
-            PREFIX + "Delete";
+    public static final String DELETE_STRATEGY = PREFIX + "Delete";
 
-    public static final String MERGE_STRATEGY =
-            PREFIX + "Merge";
+    public static final String MERGE_STRATEGY = PREFIX + "Merge";
 
-    public static final String EXACT_STRATEGY =
-            PREFIX + "Exact";
+    public static final String EXACT_STRATEGY = PREFIX + "Exact";
+
+    public static final String HAS_NEW_ITEM_MESSAGE  =
+            PREFIX + "newItemMessage";
+
+    public static final String HAS_REPLACE_ITEM_MESSAGE  =
+            PREFIX + "replaceItemMessage";
+
+    public static final String HAS_UPDATE_ITEM_MESSAGE  =
+            PREFIX + "updateItemMessage";
+
+    public static final String HAS_UPDATE_BY_REPLACE_ITEM_MESSAGE  =
+            PREFIX + "updateByMergeMessage";
 
     private WikibaseLoaderVocabulary() {
     }

@@ -49,4 +49,28 @@
                ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit"
                ng-model="dialog.skipOnError.value">Skip on error
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.newItemMessage.hide" flex>
+        <label>new item message</label>
+        <input ng-model="dialog.newItemMessage.value"
+               ng-disabled="dialog.newItemMessage.disabled || dialog.newItemMessage.inherit"
+               placeholder="">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.replaceItemMessage.hide" flex>
+        <label>Replace item message</label>
+        <input ng-model="dialog.replaceItemMessage.value"
+               ng-disabled="dialog.replaceItemMessage.disabled || dialog.replaceItemMessage.inherit"
+               placeholder="">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.updateItemMessage.hide" flex>
+        <label>Update item message</label>
+        <input ng-model="dialog.updateItemMessage.value"
+               ng-disabled="dialog.updateItemMessage.disabled || dialog.updateItemMessage.inherit"
+               placeholder="">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.updateByMergeMessage.hide" flex>
+        <label>Update by replace message</label>
+        <input ng-model="dialog.updateByMergeMessage.value"
+               ng-disabled="dialog.updateByMergeMessage.disabled || dialog.updateByMergeMessage.inherit"
+               placeholder="">
+    </md-input-container>
 </div>
