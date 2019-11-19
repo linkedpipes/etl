@@ -49,6 +49,16 @@
                ng-disabled="dialog.skipOnError.disabled || dialog.skipOnError.inherit"
                ng-model="dialog.skipOnError.value">Skip on error
     </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.retryCount.hide">
+        <label>Retry count</label>
+        <input ng-model="dialog.retryCount.value"
+               ng-disabled="dialog.retryCount.disabled || dialog.retryCount.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.retryPause.hide">
+        <label>Retry pause</label>
+        <input ng-model="dialog.retryPause.value"
+               ng-disabled="dialog.retryPause.disabled || dialog.retryPause.inherit">
+    </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.newItemMessage.hide" flex>
         <label>new item message</label>
         <input ng-model="dialog.newItemMessage.value"

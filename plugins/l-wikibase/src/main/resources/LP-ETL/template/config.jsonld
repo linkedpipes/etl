@@ -5,6 +5,8 @@
         "http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessage": "Create new entity.",
         "http://plugins.linkedpipes.com/ontology/l-wikibase#replaceItemMessage": "Replace entity.",
         "http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessage": "Update entity.",
-        "http://plugins.linkedpipes.com/ontology/l-wikibase#updateByMergeMessage": "Update by replace."
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#updateByMergeMessage": "Update by replace.",
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#retryCount": 0,
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#retryPause": 30000
     }
 ]

@@ -28,6 +28,13 @@ import java.util.Map;
 
 class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
+    @FunctionalInterface
+    private interface Action<T> {
+
+        T apply() throws IOException, MediaWikiApiErrorException;
+
+    }
+
     private static final Logger LOG =
             LoggerFactory.getLogger(WikibaseWorker.class);
 
@@ -135,8 +142,31 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private ItemDocument onNew(ItemDocument local)
             throws IOException, MediaWikiApiErrorException {
-        return wbde.createItemDocument(
-                local, configuration.getNewItemMessage(), null);
+        return execute(() -> wbde.createItemDocument(
+                local, configuration.getNewItemMessage(), null));
+    }
+
+    private <T> T execute(Action<T> action)
+            throws IOException, MediaWikiApiErrorException {
+        int tryCounter = 0;
+        while (true) {
+            IOException lastException = null;
+            try {
+                return action.apply();
+            } catch (IOException ex) {
+                lastException = ex;
+            }
+            tryCounter++;
+            if (tryCounter >= configuration.getRetryCount()) {
+                throw lastException;
+            }
+            LOG.warn("Operation failed, waiting before retry", lastException);
+            try {
+                Thread.sleep(configuration.getRetryWait());
+            } catch (InterruptedException ex) {
+                // Ignore.
+            }
+        }
     }
 
     private void onDelete(ItemDocument local) {
@@ -145,8 +175,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private ItemDocument onReplace(ItemDocument local)
             throws IOException, MediaWikiApiErrorException {
-        return wbde.editItemDocument(
-                local, true, configuration.getReplaceItemMessage(), null);
+        return execute(() -> wbde.editItemDocument(
+                local, true, configuration.getReplaceItemMessage(), null));
     }
 
     private ItemDocument onMerge(
@@ -160,14 +190,14 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
                         local, remote, mergeStrategy, createSnakEqual());
         if (merger.canUpdateExisting()) {
             ItemDocument newDocument = merger.assembleMergeDocument();
-            return wbde.editItemDocument(
+            return execute(() -> wbde.editItemDocument(
                     newDocument,
-                    false, configuration.getMergeItemMessage(), null);
+                    false, configuration.getMergeItemMessage(), null));
         } else {
             ItemDocument newDocument = merger.assembleReplaceDocument();
-            return wbde.editItemDocument(
+            return execute(() -> wbde.editItemDocument(
                     newDocument,
-                    true, configuration.getMergeByReplaceItemMessage(), null);
+                    true, configuration.getMergeByReplaceItemMessage(), null));
         }
     }
 

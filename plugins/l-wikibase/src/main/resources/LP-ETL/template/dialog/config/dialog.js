@@ -59,6 +59,14 @@ define([], function () {
         "updateByMergeMessage": {
             "$type": "str",
             "$label": "Update by replace message"
+        },
+        "retryCount": {
+            "$type": "int",
+            "$label": "Retry count"
+        },
+        "retryPause": {
+            "$type": "int",
+            "$label": "Retry pause"
         }
     };
 

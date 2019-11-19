@@ -45,6 +45,15 @@ public class WikibaseLoaderConfiguration {
             iri = WikibaseLoaderVocabulary.HAS_UPDATE_BY_REPLACE_ITEM_MESSAGE)
     private String mergeByReplaceItemMessage = "Update by replace.";
 
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_RETRY_COUNT)
+    private int retryCount = 0;
+
+    /**
+     * Pause in milliseconds.
+     */
+    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_RETRY_PAUSE)
+    private int retryWait = 30000;
+
     public WikibaseLoaderConfiguration() {
     }
 
@@ -150,6 +159,22 @@ public class WikibaseLoaderConfiguration {
 
     public void setMergeByReplaceItemMessage(String mergeByReplaceItemMessage) {
         this.mergeByReplaceItemMessage = mergeByReplaceItemMessage;
+    }
+
+    public int getRetryCount() {
+        return retryCount;
+    }
+
+    public void setRetryCount(int retryCount) {
+        this.retryCount = retryCount;
+    }
+
+    public int getRetryWait() {
+        return retryWait;
+    }
+
+    public void setRetryWait(int retryWait) {
+        this.retryWait = retryWait;
     }
 
 }

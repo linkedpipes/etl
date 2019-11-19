@@ -15,7 +15,9 @@
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/newItemMessage> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/replaceItemMessage> ,
         <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateItemMessage> ,
-        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateByMergeMessage> .
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateByMergeMessage> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryCount> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryPause> .
 
 <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
@@ -83,3 +85,13 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#updateByMergeMessage> ;
     config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#updateByMergeMessageControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryCount>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCount> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCountControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryPause>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPause> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPauseControl> .

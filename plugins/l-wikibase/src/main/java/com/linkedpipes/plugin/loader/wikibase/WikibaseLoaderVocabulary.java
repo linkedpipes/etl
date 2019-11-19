@@ -49,6 +49,10 @@ public final class WikibaseLoaderVocabulary {
     public static final String HAS_UPDATE_BY_REPLACE_ITEM_MESSAGE  =
             PREFIX + "updateByMergeMessage";
 
+    public static final String HAS_RETRY_COUNT = PREFIX + "retryCount";
+
+    public static final String HAS_RETRY_PAUSE = PREFIX + "retryPause";
+
     private WikibaseLoaderVocabulary() {
     }
 
