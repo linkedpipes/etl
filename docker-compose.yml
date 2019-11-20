@@ -68,7 +68,7 @@ services:
     volumes:
       - data-execution:/data/lp/etl/executor
       - data-logs:/data/lp/etl/logs
-      - configuration:/opt/data/lp/etl/configuration
+      - configuration:/data/lp/etl/configuration
       - maven-cache:/root/.m2/repository
     environment:
       - LP_ETL_DOMAIN
