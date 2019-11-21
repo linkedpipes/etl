@@ -48,7 +48,31 @@ There is a whole tutorial on <a href="../tutorials/loading-data-to-wikibase/">Lo
 		When a Wikibase API call fails and this is enabled, the component continues its execution.
 		Errors are logged in the Report output.
 	</dd>
-</dl>
+    <dt>Retry count</dt>
+    <dd>
+		Number of retries in case of <code>IOException</code>, i.e. not for all errors.
+	</dd>    
+	<dt>Retry pause</dt>
+    <dd>
+		Time between individual requests in case of failure.
+	</dd>
+	<dt>Create item message</dt>
+    <dd>
+		MediaWiki <a href="https://meta.wikimedia.org/wiki/Help:Edit_summary">edit summary message</a> when creating items.
+	</dd>
+	<dt>Replace item message</dt>
+    <dd>
+		MediaWiki <a href="https://meta.wikimedia.org/wiki/Help:Edit_summary">edit summary message</a> when replacing items.
+	</dd>
+	<dt>Update item message</dt>
+    <dd>
+		MediaWiki <a href="https://meta.wikimedia.org/wiki/Help:Edit_summary">edit summary message</a> when updating items.
+	</dd>
+	<dt>Update item by replacing it message</dt>
+    <dd>
+		MediaWiki <a href="https://meta.wikimedia.org/wiki/Help:Edit_summary">edit summary message</a> when updating items by replacing them.
+	</dd>
+	</dl>
 <!--more-->
 <div class="row" id="characteristics">
     <h3 class="orange-text center">Characteristics</h3>
