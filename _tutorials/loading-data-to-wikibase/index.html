@@ -1062,3 +1062,164 @@ WHERE {
 	In addition, in the <code>Output</code> output of the loader, we can see the Q ids of the newly created Items for future use.
 	The <a href="https://www.wikidata.org/wiki/Special:Contributions/LinkedPipes_ETL_Bot">contributions of the bot</a> should also be checked.
 </p>
+
+<hr></hr>
+
+<h2 class="orange-text center">Tips, Tricks and Experiences</h2>
+<p class="flow-text">
+	Here we list some observations we gathered during our project, which may be helpful to others.
+</p>
+
+<h3 class="orange-text center">Resuming pipeline execution side-effects</h3>
+<p class="flow-text">
+	Note that LP-ETL provides <a href="/documentation/#debug">debugging support</a> in the form of the ability to resume failed or cancelled pipeline execution.
+	When loading data to Wikidata, this may have an undesirable side-effect.
+	When we determine which Items and Statements we want to create, we do that based on the status of the Wikibase instance.
+	When those Items are created in the Wikibase, we cannot simply change something in the pipeline and run it again without again querying the Wikibase.
+	If we would do that, we would again create the already created Items, creating undesirable duplicates.
+</p>
+
+<h3 class="orange-text center">Generating complex data values</h3>
+<div class="row">
+	<div class="col s12 m12 l6">
+		<div class="section">
+			<p class="flow-text">
+				According to the <a href="https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format">Wikibase RDF Dump Format</a>, complex values such as <code>wikibase:GlobecoordinateValue</code>, have more items than usual in the data currently available on the web.
+				This leads to the need to generate these additional items such as <code>wikibase:geoPrecision</code> and <code>wikibase:geoGlobe</code> as constants e.g. in SPARQL.
+				In case where there is no data for the geocoordinate, the constants are then generated anyway, leading to undesired empty values.
+				In that case, an additional SPARQL Update query can be used to clean up the representations with no actual values.
+			</p>
+		</div>
+	</div>
+	<div class="col s12 m12 l6">
+		<div class="section">
+			<ul class="collapsible popout" data-collapsible="accordion">
+			  <li>
+				<div class="collapsible-header"><i class="material-icons">open_with</i>Sample of wikibase:GlobecoordinateValue in RDF</div>
+				<div class="collapsible-body">
+{% highlight turtle %}
+v:227fc74c25882e4f3f99399dedc4ce3f a wikibase:GlobecoordinateValue ;
+  wikibase:geoLatitude "50.22031784"^^xsd:double ;
+  wikibase:geoLongitude "14.15890026"^^xsd:double ;
+  wikibase:geoPrecision "0.014039747329343"^^xsd:double ;
+  wikibase:geoGlobe <http://www.wikidata.org/entity/Q2> .
+{% endhighlight %}
+				</div>
+			  </li>
+			</ul>
+			<ul class="collapsible popout" data-collapsible="accordion">
+			  <li>
+				<div class="collapsible-header"><i class="material-icons">open_with</i>SPARQL CONSTRUCT query for generating geocoordinates</div>
+				<div class="collapsible-body">
+{% highlight sparql %}
+CONSTRUCT {
+?geo a wikibase:GlobecoordinateValue ;
+  wikibase:geoLatitude ?lat_double ;
+  wikibase:geoLongitude ?lon_double ;
+  wikibase:geoPrecision "1.0E-6"^^xsd:double ;
+  wikibase:geoGlobe <http://www.wikidata.org/entity/Q2> .
+} WHERE {
+?tree a ?type .
+OPTIONAL { 
+  ?tree schema:geo ?geo .
+  ?geo schema:longitude ?lon ;
+       schema:latitude ?lat .
+}
+BIND(STRDT(?lat, xsd:double) as ?lat_double)
+BIND(STRDT(?lon, xsd:double) as ?lon_double)
+}
+{% endhighlight %}
+				</div>
+			  </li>
+			</ul>
+			<ul class="collapsible popout" data-collapsible="accordion">
+			  <li>
+				<div class="collapsible-header"><i class="material-icons">open_with</i>Sample of wikibase:GlobecoordinateValue with missing properties</div>
+				<div class="collapsible-body">
+{% highlight turtle %}
+<urn:value> a wikibase:GlobecoordinateValue ;
+  wikibase:geoPrecision "1.0E-6"^^xsd:double ;
+  wikibase:geoGlobe <http://www.wikidata.org/entity/Q2> .
+{% endhighlight %}
+				</div>
+			  </li>
+			</ul>
+			<ul class="collapsible popout" data-collapsible="accordion">
+			  <li>
+				<div class="collapsible-header"><i class="material-icons">open_with</i>SPARQL Update query for cleaning up missing values</div>
+				<div class="collapsible-body">
+{% highlight sparql %}
+DELETE {
+?tree p:P625 ?s_625 .
+  
+?s_625 a wikibase:Statement, fromSource: ;
+    #P625 - coordinate location
+    psv:P625 ?v_625 ;
+    prov:wasDerivedFrom ?ref_s_625 .
+
+?ref_s_625 a wikibase:Reference, fromSource: ;
+    #P248 - stated in
+    pr:P248 drúsop: .
+
+?v_625 a wikibase:GlobecoordinateValue ;
+    wikibase:geoPrecision "1.0E-6"^^xsd:double ;
+	wikibase:geoGlobe <http://www.wikidata.org/entity/Q2> .
+} 
+WHERE { 
+?tree a wikibase:Item, fromSource: ;
+    p:P625 ?s_625 .
+  
+?s_625 a wikibase:Statement, fromSource: ;
+    #P625 - coordinate location
+    psv:P625 ?v_625 ;
+    prov:wasDerivedFrom ?ref_s_625 .
+
+?ref_s_625 a wikibase:Reference, fromSource: ;
+    #P248 - stated in
+    pr:P248 drúsop: .
+
+?v_625 a wikibase:GlobecoordinateValue ;
+    wikibase:geoPrecision "1.0E-6"^^xsd:double ;
+	wikibase:geoGlobe <http://www.wikidata.org/entity/Q2> .
+  
+  FILTER NOT EXISTS {
+	?v_625 wikibase:geoLatitude ?lat_double ;
+        wikibase:geoLongitude ?lon_double ;
+  }
+}
+{% endhighlight %}
+				</div>
+			  </li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<h3 class="orange-text center">Wikidata Query Service lag</h3>
+<p class="flow-text">
+	When running a Wikidata loading pipeline multiple times, one has to be aware of the current <a href="https://grafana.wikimedia.org/d/000000489/wikidata-query-service?panelId=8&fullscreen&orgId=1&from=now-30d&to=now">Wikidata Query Service lag</a>.
+	This is the time required for the updates done to the Wikibase instance to be propagated to the <a href="https://blazegraph.com/">Blazegraph</a> triplestores on top of which the <a href="https://query.wikidata.org/">Wikidata Query Service</a> is running.
+	It may happen that, for example, an Item is created in the Wikibase, but it is not yet propagated to the Blazegraph instance. 
+	When a pipeline runs and queries the Wikidata Query Service, the Item is still missing there, even though it has already been created in the Wikibase.
+	This would lead to the creation of duplicates.
+	Therefore, the current maximum lag should be respected as the minimum time interval between making updates to Wikidata and querying the Wikidata Query Service for the updates.
+</p>
+
+<p class="flow-text">
+	It may also happen, that the Wikibase and Wikidata Query Service are so overloaded, they stop accepting requests from bots completely.
+	This can be then seen in the logs of the Wikibase loader like this:
+</p>
+<pre>
+2019-11-20 23:32:01,641 [pool-6-thread-1] INFO  o.w.w.w.WbEditingAction - We are editing too fast. Pausing for 1396 milliseconds.
+2019-11-20 23:32:03,258 [pool-6-thread-1] WARN  o.w.w.w.WbEditingAction - [maxlag] Waiting for all: 5.2166666666667 seconds lagged. -- pausing for 5 seconds.
+2019-11-20 23:32:08,499 [pool-6-thread-1] WARN  o.w.w.w.WbEditingAction - [maxlag] Waiting for all: 5.2166666666667 seconds lagged. -- pausing for 5 seconds.
+2019-11-20 23:32:13,707 [pool-6-thread-1] WARN  o.w.w.w.WbEditingAction - [maxlag] Waiting for all: 5.2166666666667 seconds lagged. -- pausing for 5 seconds.
+2019-11-20 23:32:19,177 [pool-6-thread-1] WARN  o.w.w.w.WbEditingAction - [maxlag] Waiting for all: 5.2166666666667 seconds lagged. -- pausing for 5 seconds.
+2019-11-20 23:32:24,411 [pool-6-thread-1] WARN  o.w.w.w.WbEditingAction - [maxlag] Waiting for all: 5.2166666666667 seconds lagged. -- pausing for 5 seconds.
+2019-11-20 23:32:29,412 [pool-6-thread-1] ERROR o.w.w.w.WbEditingAction - Gave up after several retries.
+    Last error was: org.wikidata.wdtk.wikibaseapi.apierrors.MaxlagErrorException: 
+	[maxlag] Waiting for all: 5.2166666666667 seconds lagged.
+</pre>
+<p class="flow-text">
+	In that case, the loading must be attemted later again.
+</p>
