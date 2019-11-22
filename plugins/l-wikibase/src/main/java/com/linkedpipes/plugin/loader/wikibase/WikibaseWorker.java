@@ -229,7 +229,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         }
         try {
             connection.logout();
-        } catch (IOException ex) {
+        } catch (IOException | MediaWikiApiErrorException ex) {
             throw exceptionFactory.failure("Can't close connection.", ex);
         }
     }
