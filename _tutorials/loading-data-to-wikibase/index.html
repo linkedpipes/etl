@@ -12,12 +12,6 @@ title: Loading data to Wikibase
 
 <h2 class="orange-text center">0. Prerequisites</h2>
 
-<p class="flow-text red-text center">
-	The <a href="/components/l-wikibase">Wikibase loader</a> component requires <a href="https://github.com/Wikidata/Wikidata-Toolkit/releases">release of Wikidata Toolkit &gt; 0.10.0</a>, which is not released at the moment.
-	The easiest way to run LP-ETL is using <a href="https://raw.githubusercontent.com/linkedpipes/etl/feature/l-wikibase/docker-compose.yml">this docker-compose file</a> from the <a href="https://github.com/linkedpipes/etl/tree/feature/l-wikibase"><code>feature/l-wikibase</code> branch</a>.
-	If you are building LP-ETL from source, you need to first build Wikidata Toolkit from their <a href="https://github.com/Wikidata/Wikidata-Toolkit/tree/master"><code>master</code> branch</a>, and then build LinkedPipes ETL from the <a href="https://github.com/linkedpipes/etl/tree/feature/l-wikibase"><code>feature/l-wikibase</code> branch</a>.
-</p>
-
 <p class="flow-text">
 	Before we start creating the pipeline, we will go through the prerequisites for the process.
 	For the creation of the pipeline, we need the following, and we provide the values used in this tutorial:
@@ -1223,5 +1217,5 @@ WHERE {
 	[maxlag] Waiting for all: 5.2166666666667 seconds lagged.
 </pre>
 <p class="flow-text">
-	In that case, the loading must be attempted later again.
+	In that case, the loading must be attemted later again.
 </p>
